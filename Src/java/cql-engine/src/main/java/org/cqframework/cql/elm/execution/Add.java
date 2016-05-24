@@ -151,11 +151,8 @@ public class Add
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;
@@ -163,7 +160,7 @@ public class Add
 
         // +(Integer, Integer)
         if (left instanceof Integer) {
-            return (Integer) left + (Integer) right;
+            return (Integer)left + (Integer)right;
         }
 
         // +(Decimal, Decimal)

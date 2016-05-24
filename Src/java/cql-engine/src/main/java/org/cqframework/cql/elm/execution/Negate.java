@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -127,29 +128,21 @@ public class Negate
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value instanceof Integer) {
             return -(int) value;
         }
 
-        if (value instanceof Long) {
-            return -(long) value;
-        }
-
-        if (value instanceof Float) {
-            return -(float) value;
-        }
-
-        if (value instanceof Number) {
-            return -((Number) value).doubleValue();
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal)value).negate();
         }
 
         if (value instanceof org.cqframework.cql.runtime.Quantity) {
-            ((org.cqframework.cql.runtime.Quantity) value).setValue(((org.cqframework.cql.runtime.Quantity) value).getValue().negate());
+            org.cqframework.cql.runtime.Quantity quantity = (org.cqframework.cql.runtime.Quantity)value;
+            return new org.cqframework.cql.runtime.Quantity()
+                    .withValue(quantity.getValue().negate())
+                    .withUnit(quantity.getUnit());
         }
 
         return value;

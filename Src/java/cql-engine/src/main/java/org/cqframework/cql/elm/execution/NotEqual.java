@@ -141,14 +141,6 @@ public class NotEqual
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) return null;
-
-        if (left instanceof Number && right instanceof Number) {
-            return Double.compare(((Number) left).doubleValue(), ((Number) right).doubleValue()) != 0;
-        }
-
-        if (left.equals(right) == false) return true;
-
-        return false;
+        return !org.cqframework.cql.runtime.Value.equals(left, right);
     }
 }

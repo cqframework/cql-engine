@@ -137,6 +137,7 @@ public class AllTrue
 
     @Override
     public Object evaluate(Context context) {
+        // TODO: Fix this
         Object src = getSource();
 
         if(src instanceof List) {

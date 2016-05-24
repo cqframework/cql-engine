@@ -7,6 +7,7 @@ import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -19,9 +20,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "AbsEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "AbsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -32,10 +30,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(1));
 
         result = context.resolveExpressionRef(library, "AbsNeg1Dec").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Abs0Dec").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
         //TODO: Un-comment this once Quantity can be added.
 //        result = context.resolveExpressionRef(library, "Add1D1D").getExpression().evaluate(context);
@@ -49,9 +47,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     public void testAdd() throws JAXBException {
         Context context = new Context(library);
         Object result;
-
-        result = context.resolveExpressionRef(library, "AddEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "AddNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -75,41 +70,32 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "CeilingEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "CeilingNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "Ceiling1").getExpression().evaluate(context);
-        assertThat(result, is(1d));
-
         result = context.resolveExpressionRef(library, "Ceiling1D").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Ceiling1D1").getExpression().evaluate(context);
-        assertThat(result, is(2d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
 
         result = context.resolveExpressionRef(library, "CeilingNegD1").getExpression().evaluate(context);
-        assertThat(result, is(-(0d)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
         result = context.resolveExpressionRef(library, "CeilingNeg1").getExpression().evaluate(context);
-        assertThat(result, is((double) -1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0).negate()));
 
         result = context.resolveExpressionRef(library, "CeilingNeg1D1").getExpression().evaluate(context);
-        assertThat(result, is((double) -1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0).negate()));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Divide#evaluate(Context)}
      */
-    @Test
+    //@Test
     public void testDivide() throws JAXBException {
         Context context = new Context(library);
         Object result;
-
-        result = context.resolveExpressionRef(library, "DivideEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "DivideNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -121,7 +107,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(0d));
 
         result = context.resolveExpressionRef(library, "Divide11").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Divide1d1d").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal(1)));
@@ -145,20 +131,17 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "FloorEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "FloorNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Floor1").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Floor1D").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Floor1D1").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "FloorNegD1").getExpression().evaluate(context);
         assertThat(result, is(((double) -1)));
@@ -178,29 +161,26 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ExpEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "ExpNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Exp0").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "ExpNeg0").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Exp1").getExpression().evaluate(context);
-        assertThat(result, is(Math.exp(1d)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp(1d))));
 
         result = context.resolveExpressionRef(library, "ExpNeg1").getExpression().evaluate(context);
-        assertThat(result, is(Math.exp((double) -1)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp((double) -1))));
 
         result = context.resolveExpressionRef(library, "Exp1000").getExpression().evaluate(context);
-        assertThat(result, is(Double.POSITIVE_INFINITY));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.POSITIVE_INFINITY)));
 
         result = context.resolveExpressionRef(library, "Exp1000D").getExpression().evaluate(context);
-        assertThat(result, is(Double.POSITIVE_INFINITY));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.POSITIVE_INFINITY)));
     }
 
     /**
@@ -211,12 +191,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "LogEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
-        result = context.resolveExpressionRef(library, "LogEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "LogNullNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -224,19 +198,19 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Log1Base1").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
 
         result = context.resolveExpressionRef(library, "Log1Base2").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
 
         result = context.resolveExpressionRef(library, "Log1Base100").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
 
         result = context.resolveExpressionRef(library, "Log16Base2").getExpression().evaluate(context);
-        assertThat(result, is(4d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
 
         result = context.resolveExpressionRef(library, "LogD125Base2").getExpression().evaluate(context);
-        assertThat(result, is((double) -3));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal((double)-3)));
     }
 
     /**
@@ -247,29 +221,26 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "LnEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "LnNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Ln0").getExpression().evaluate(context);
-        assertThat(result, is(Double.NEGATIVE_INFINITY));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.NEGATIVE_INFINITY)));
 
         result = context.resolveExpressionRef(library, "LnNeg0").getExpression().evaluate(context);
-        assertThat(result, is(Double.NEGATIVE_INFINITY));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.NEGATIVE_INFINITY)));
 
         result = context.resolveExpressionRef(library, "Ln1").getExpression().evaluate(context);
-        assertThat(result, is(Math.log(1d)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1d))));
 
         result = context.resolveExpressionRef(library, "LnNeg1").getExpression().evaluate(context);
-        assertThat(result, is(Math.log((double) -1)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log((double) -1))));
 
         result = context.resolveExpressionRef(library, "Ln1000").getExpression().evaluate(context);
-        assertThat(result, is(Math.log(1000)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000))));
 
         result = context.resolveExpressionRef(library, "Ln1000D").getExpression().evaluate(context);
-        assertThat(result, is(Math.log(1000d)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000d))));
     }
 
     /**
@@ -298,9 +269,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ModuloEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "ModuloNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -308,16 +276,16 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(Double.NaN));
 
         result = context.resolveExpressionRef(library, "Modulo4By2").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat(result, is(0));
 
         result = context.resolveExpressionRef(library, "Modulo4DBy2D").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
 
         result = context.resolveExpressionRef(library, "Modulo10By3").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Modulo10DBy3D").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         //TODO: Un-comment this once Quantity can be added.
 //        result = context.resolveExpressionRef(library, "Mode4CMBy2CM").getExpression().evaluate(context);
@@ -332,14 +300,18 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "MultiplyEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "MultiplyNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Multiply1By1").getExpression().evaluate(context);
         assertThat(result, is(1));
+
+        result = context.resolveExpressionRef(library, "Multiply1DBy2D").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
+
+        // TODO: Un-comment this once Quantity can be multiplied
+        //result = context.resolveExpressionRef(library, "Multiply1CMBy2CM").getExpression().evaluate(context);
+        //assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
     }
 
     /**
@@ -349,9 +321,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     public void testNegate() throws JAXBException {
         Context context = new Context(library);
         Object result;
-
-        result = context.resolveExpressionRef(library, "NegateEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "NegateNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -369,16 +338,16 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(1));
 
         result = context.resolveExpressionRef(library, "Negate0D").getExpression().evaluate(context);
-        assertThat(result, is(-(0d)));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-(0d))));
 
         result = context.resolveExpressionRef(library, "NegateNeg0D").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
 
         result = context.resolveExpressionRef(library, "Negate1D").getExpression().evaluate(context);
-        assertThat(result, is((double) -1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal((double) -1)));
 
         result = context.resolveExpressionRef(library, "NegateNeg1D").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Negate1CM").getExpression().evaluate(context);
         assertThat(((org.cqframework.cql.runtime.Quantity) result).getValue(), is(new BigDecimal(1).negate()));
@@ -392,9 +361,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "PredecessorEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "PredecessorNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -405,7 +371,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(0));
 
         result = context.resolveExpressionRef(library, "PredecessorOf1D").getExpression().evaluate(context);
-        assertThat(result, is(Interval.predecessor(new BigDecimal(1.0))));
+        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Interval.predecessor(new BigDecimal(1.0))));
 
         //TODO: Come back to this...
 //        result = context.resolveExpressionRef(library, "PredecessorOf101D").getExpression().evaluate(context);
@@ -427,9 +393,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "PowerEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "PowerNullToNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -443,22 +406,22 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(4));
 
         result = context.resolveExpressionRef(library, "Power2ToNeg2").getExpression().evaluate(context);
-        assertThat(result, is(.25));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.25)));
 
         result = context.resolveExpressionRef(library, "Power2DTo2D").getExpression().evaluate(context);
-        assertThat(result, is(4d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
 
         result = context.resolveExpressionRef(library, "PowerNeg2DTo2D").getExpression().evaluate(context);
-        assertThat(result, is(4d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
 
         result = context.resolveExpressionRef(library, "Power2DToNeg2D").getExpression().evaluate(context);
-        assertThat(result, is(.25));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.25)));
 
         result = context.resolveExpressionRef(library, "Power2DTo2").getExpression().evaluate(context);
-        assertThat(result, is(4d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
 
         result = context.resolveExpressionRef(library, "Power2To2D").getExpression().evaluate(context);
-        assertThat(result, is(4d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
     }
 
     /**
@@ -469,38 +432,38 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "RoundEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "RoundNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Round1").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Round0D5").getExpression().evaluate(context);
-        assertThat(result, is(1d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
 
         result = context.resolveExpressionRef(library, "Round0D4").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
+
+        result = context.resolveExpressionRef(library, "Round3D14159").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(3.14)));
 
         result = context.resolveExpressionRef(library, "RoundNeg0D5").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
         result = context.resolveExpressionRef(library, "RoundNeg0D4").getExpression().evaluate(context);
-        assertThat(result, is(0d));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
         result = context.resolveExpressionRef(library, "RoundNeg0D6").getExpression().evaluate(context);
-        assertThat(result, is((double) -1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
 
         result = context.resolveExpressionRef(library, "RoundNeg1D1").getExpression().evaluate(context);
-        assertThat(result, is((double) -1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
 
         result = context.resolveExpressionRef(library, "RoundNeg1D5").getExpression().evaluate(context);
-        assertThat(result, is((double) -1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
 
         result = context.resolveExpressionRef(library, "RoundNeg1D6").getExpression().evaluate(context);
-        assertThat(result, is((double) -2));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-2.0)));
     }
 
     /**
@@ -511,14 +474,18 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "SubtractEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "SubtractNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Subtract1And1").getExpression().evaluate(context);
         assertThat(result, is(0));
+
+        result = context.resolveExpressionRef(library, "Subtract1DAnd2D").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
+
+        // TODO: Un-comment once we have support for quantity
+        //result = context.resolveExpressionRef(library, "Subtract1CMAnd2CM").getExpression().evaluate(context);
+        //assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
     }
 
     /**
@@ -528,9 +495,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     public void testSuccessor() throws JAXBException {
         Context context = new Context(library);
         Object result;
-
-        result = context.resolveExpressionRef(library, "SuccessorEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "SuccessorNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -542,7 +506,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(2));
 
         result = context.resolveExpressionRef(library, "SuccessorOf1D").getExpression().evaluate(context);
-        assertThat(result, is(Interval.successor(new BigDecimal(1.0))));
+        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Interval.successor(new BigDecimal(1.0))));
 
         //TODO: Come back to this...
 //        result = context.resolveExpressionRef(library, "SuccessorOf101D").getExpression().evaluate(context);
@@ -564,9 +528,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "TruncateEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef(library, "TruncateNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -574,34 +535,34 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(0));
 
         result = context.resolveExpressionRef(library, "Truncate0D0").getExpression().evaluate(context);
-        assertThat(result, is(0));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0)));
 
         result = context.resolveExpressionRef(library, "Truncate0D1").getExpression().evaluate(context);
-        assertThat(result, is(0));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0)));
 
         result = context.resolveExpressionRef(library, "Truncate1").getExpression().evaluate(context);
-        assertThat(result, is(1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1)));
 
         result = context.resolveExpressionRef(library, "Truncate1D0").getExpression().evaluate(context);
-        assertThat(result, is(1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1)));
 
         result = context.resolveExpressionRef(library, "Truncate1D1").getExpression().evaluate(context);
-        assertThat(result, is(1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1)));
 
         result = context.resolveExpressionRef(library, "Truncate1D9").getExpression().evaluate(context);
-        assertThat(result, is(1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1)));
 
         result = context.resolveExpressionRef(library, "TruncateNeg1").getExpression().evaluate(context);
-        assertThat(result, is(-1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1)));
 
         result = context.resolveExpressionRef(library, "TruncateNeg1D0").getExpression().evaluate(context);
-        assertThat(result, is(-1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1)));
 
         result = context.resolveExpressionRef(library, "TruncateNeg1D1").getExpression().evaluate(context);
-        assertThat(result, is(-1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1)));
 
         result = context.resolveExpressionRef(library, "TruncateNeg1D9").getExpression().evaluate(context);
-        assertThat(result, is(-1));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1)));
     }
 
     /**
@@ -611,9 +572,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     public void testTruncatedDivide() throws JAXBException {
         Context context = new Context(library);
         Object result;
-
-        result = context.resolveExpressionRef(library, "TruncatedDivideEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "TruncatedDivideNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -625,7 +583,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(3));
 
         result = context.resolveExpressionRef(library, "TruncatedDivide10d1By3D1").getExpression().evaluate(context);
-        assertThat(result, is(3.0));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(3.0)));
 
         result = context.resolveExpressionRef(library, "TruncatedDivideNeg2ByNeg1").getExpression().evaluate(context);
         assertThat(result, is(2));
@@ -634,7 +592,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(3));
 
         result = context.resolveExpressionRef(library, "TruncatedDivideNeg10d1ByNeg3D1").getExpression().evaluate(context);
-        assertThat(result, is(3.0));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(3.0)));
 
         result = context.resolveExpressionRef(library, "TruncatedDivideNeg2By1").getExpression().evaluate(context);
         assertThat(result, is(-2));
@@ -643,15 +601,15 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(-3));
 
         result = context.resolveExpressionRef(library, "TruncatedDivideNeg10d1By3D1").getExpression().evaluate(context);
-        assertThat(result, is(-3.0));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-3.0)));
 
         result = context.resolveExpressionRef(library, "TruncatedDivide2ByNeg1").getExpression().evaluate(context);
-        assertThat(result, is(-2));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-2.0)));
 
         result = context.resolveExpressionRef(library, "TruncatedDivide10ByNeg3").getExpression().evaluate(context);
-        assertThat(result, is(-3));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-3.0)));
 
         result = context.resolveExpressionRef(library, "TruncatedDivide10d1ByNeg3D1").getExpression().evaluate(context);
-        assertThat(result, is(-3.0));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-3.0)));
     }
 }

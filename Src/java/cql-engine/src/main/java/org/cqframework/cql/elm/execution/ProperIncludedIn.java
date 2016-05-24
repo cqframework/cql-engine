@@ -200,35 +200,4 @@ public class ProperIncludedIn
         }
         return buffer;
     }
-
-    @Override
-    public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
-
-        if (left == null || right == null || left instanceof Iterable == false || right instanceof Iterable == false) {
-            return null;
-        }
-
-        ArrayList leftList = null;
-        if(left instanceof java.util.List){
-            leftList = new ArrayList((java.util.List)left);
-        }else  {
-            leftList = new ArrayList();
-            ((Iterable) left).forEach(leftList::add);
-        }
-
-        ArrayList rightList = null;
-        if(right instanceof java.util.List){
-            rightList = new ArrayList((java.util.List)right);
-        }else  {
-            rightList = new ArrayList();
-            ((Iterable) right).forEach(rightList::add);
-        }
-
-        return rightList.size() > leftList.size() ? rightList.containsAll(leftList) : false;
-    }
 }

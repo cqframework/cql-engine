@@ -223,17 +223,27 @@ public class Combine
         Object sourceVal = this.getSource().evaluate(context);
         String separator = this.getSeparator() == null ? "" : (String) this.getSeparator().evaluate(context);
 
-        if (sourceVal == null) {
+        if (sourceVal == null || separator == null) {
             return null;
         } else {
-            if (sourceVal instanceof java.util.List) {
+            if (sourceVal instanceof Iterable) {
                 StringBuffer buffer = new StringBuffer("");
-                Iterator iterator = ((java.util.List) sourceVal).iterator();
+                Iterator iterator = ((Iterable) sourceVal).iterator();
+                boolean first = true;
                 while (iterator.hasNext()) {
-                    buffer.append(iterator.next().toString());
-                    if (iterator.hasNext() && separator.length() > 0) {
+                    Object item = iterator.next();
+                    if (item == null) {
+                        return null;
+                    }
+
+                    if (!first) {
                         buffer.append(separator);
                     }
+                    else {
+                        first = false;
+                    }
+
+                    buffer.append((String)item);
                 }
 
                 return buffer.toString();

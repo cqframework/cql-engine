@@ -2,30 +2,51 @@ library LogicalOperator version '1'
 
 context Population
 
-//AND
-define AndTrue       : true and true
-define AndFalse      : true and false
-define AndAlsoFalse  : false and null
-define AndNull       :  true and null
-define AndAlsoNull   :  null and null
+//And
+define TrueAndTrue : true and true
+define TrueAndFalse : true and false
+define TrueAndNull : true and null
+define FalseAndTrue : false and true
+define FalseAndFalse : false and false
+define FalseAndNull : false and null
+define NullAndTrue : null and true
+define NullAndFalse : null and false
+define NullAndNull : null and null
 
-//NOT
-define NotTrue  : not true
+//Implies
+define TrueImpliesTrue : true implies true
+define TrueImpliesFalse : true implies false
+define TrueImpliesNull : true implies null
+define FalseImpliesTrue : false implies true
+define FalseImpliesFalse : false implies false
+define FalseImpliesNull : false implies null
+define NullImpliesTrue : null implies true
+define NullImpliesFalse : null implies false
+define NullImpliesNull : null implies null
+
+//Not
+define NotTrue : not true
 define NotFalse : not false
-define NotNull  : not null
+define NotNull : not null
 
-//OR
-define OrTrue       : true or false
-define OrAlsoTrue   : true or null
-define OrFalse      : false or false
-define OrNull       :  false or null
-define OrAlsoNull   :  null or null
+//Or
+define TrueOrTrue : true or true
+define TrueOrFalse : true or false
+define TrueOrNull : true or null
+define FalseOrTrue : false or true
+define FalseOrFalse : false or false
+define FalseOrNull : false or null
+define NullOrTrue : null or true
+define NullOrFalse : null or false
+define NullOrNull : null or null
 
-//XOR
-define XOrTrue      : true xor false
-define XOrAlsoTrue  : false xor true
-define XOrFalse     : false xor false
-define XOrAlsoFalse :  true xor true
-define XOrNull      :  null xor null
-define XOrAlsoNull1 :  true xor null
-define XOrAlsoNull2 :  false xor null
+//Xor
+define TrueXorTrue : true xor true
+define TrueXorFalse : true xor false
+define TrueXorNull : true xor null
+define FalseXorTrue : false xor true
+define FalseXorFalse : false xor false
+define FalseXorNull : false xor null
+define NullXorTrue : null xor true
+define NullXorFalse : null xor false
+define NullXorNull : null xor null

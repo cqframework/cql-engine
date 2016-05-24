@@ -17,19 +17,65 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testAnd() throws JAXBException {
         Context context = new Context(library);
-        Object result = context.resolveExpressionRef(library, "AndTrue").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef(library, "TrueAndTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "AndFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "TrueAndFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "AndAlsoFalse").getExpression().evaluate(context);
-        assertThat(result, is(false));
-
-        result = context.resolveExpressionRef(library, "AndNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "TrueAndNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "AndAlsoNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "FalseAndTrue").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "FalseAndFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "FalseAndNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "NullAndTrue").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "NullAndFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "NullAndNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+    }
+
+    /**
+     * {@link org.cqframework.cql.elm.execution.Implies#evaluate(Context)}
+     */
+    @Test
+    public void testImplies() throws JAXBException {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef(library, "TrueImpliesTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TrueImpliesFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TrueImpliesNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "FalseImpliesTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "FalseImpliesFalse").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "FalseImpliesNull").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "NullImpliesTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "NullImpliesFalse").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "NullImpliesNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
     }
 
@@ -55,19 +101,31 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testOr() throws JAXBException {
         Context context = new Context(library);
-        Object result = context.resolveExpressionRef(library, "OrTrue").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef(library, "TrueOrTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "OrAlsoTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "TrueOrFalse").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "OrFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "TrueOrNull").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "FalseOrTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "FalseOrFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "OrNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "FalseOrNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "OrAlsoNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "NullOrTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "NullOrFalse").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "NullOrNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
     }
 
@@ -77,25 +135,31 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testXOr() throws JAXBException {
         Context context = new Context(library);
-        Object result = context.resolveExpressionRef(library, "XOrTrue").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
-        result = context.resolveExpressionRef(library, "XOrAlsoTrue").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
-        result = context.resolveExpressionRef(library, "XOrFalse").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef(library, "TrueXorTrue").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "XOrAlsoFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "TrueXorFalse").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TrueXorNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "FalseXorTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "FalseXorFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "XOrNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "FalseXorNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "XOrAlsoNull1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "NullXorTrue").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "XOrAlsoNull2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "NullXorFalse").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "NullXorNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
     }
 }

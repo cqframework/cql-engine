@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -126,21 +127,14 @@ public class Exp
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if(expression == null) return null;
-
-        Object value = expression.evaluate(context);
-
+        Object value = getOperand().evaluate(context);
         if (value == null) {
             return null;
         }
 
-        if(value instanceof Number){
-            return Math.exp(((Number)value).doubleValue());
+        if (value instanceof BigDecimal){
+            return new BigDecimal(Math.exp(((BigDecimal)value).doubleValue()));
         }
-
-        // TODO: Finish implementation
-        // +(Quantity, Quantity)
 
         throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.",this.getClass().getSimpleName(), value.getClass().getName()));
     }

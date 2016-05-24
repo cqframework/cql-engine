@@ -234,32 +234,21 @@ public class IndexOf
 
     @Override
     public Object evaluate(Context context) {
-        Object sourceExp = this.getSource();
-        Object elementExp = this.getElement();
+        Object source = getSource().evaluate(context);
+        Object elementToFind = getElement().evaluate(context);
 
-        if(sourceExp == null || elementExp == null){
+        if (source == null) {
             return null;
         }
 
-        Object sourceVal = ((Expression)sourceExp).evaluate(context);
-        if(sourceVal == null){
-            return null;
-        }
-
-        Object elementVal = ((Expression)elementExp).evaluate(context);
-
-        if(sourceVal instanceof Iterable){
-            ArrayList sourceList = null;
-            if(sourceVal instanceof java.util.List){
-                sourceList = new ArrayList((java.util.List)sourceVal);
-            }else  {
-                sourceList = new ArrayList();
-                ((Iterable) sourceVal).forEach(sourceList::add);
+        int index = -1;
+        for (Object element : (Iterable)source) {
+            index++;
+            if (org.cqframework.cql.runtime.Value.equivalent(element, elementToFind)) {
+                return index;
             }
-
-            return sourceList.indexOf(elementVal);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), sourceExp.getClass().getName()));
+        return -1;
     }
 }

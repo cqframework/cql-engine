@@ -139,15 +139,7 @@ public class Distinct
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
-
-        if (value == null || (value instanceof Iterable) == false) {
-            return null;
-        }
-
+        Object value = this.getOperand().evaluate(context);
         return distinct((Iterable<Object>)value);
     }
 }

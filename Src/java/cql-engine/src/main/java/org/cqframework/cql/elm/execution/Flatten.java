@@ -126,28 +126,18 @@ public class Flatten
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
-        if (value == null || value instanceof Iterable == false) {
+        Object value = getOperand().evaluate(context);
+        if (value == null) {
             return null;
         }
 
-        return flattenLists((Iterable)value);
-    }
-
-    private java.util.List flattenLists(Iterable value) {
         ArrayList resultList = new ArrayList();
         for (Object element : (Iterable)value) {
-            if(element instanceof Iterable){
-                java.util.List flatList =flattenLists((Iterable)element);
-                flatList.forEach(resultList::add);
-            }
-            else{
-                resultList.add(element);
+            for (Object subElement : (Iterable)element) {
+                resultList.add(subElement);
             }
         }
+
         return resultList;
     }
 }

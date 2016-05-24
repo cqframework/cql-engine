@@ -124,21 +124,19 @@ public class Truncate
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value == null) {
             return null;
         }
 
-        if (value instanceof Number) {
-            Double val = ((Number) value).doubleValue();
-            if(val < 0){
-                return new BigDecimal(val).setScale(0, BigDecimal.ROUND_CEILING).intValue();
-            }else{
-                return new BigDecimal(val).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+        if (value instanceof BigDecimal) {
+            Double val = ((BigDecimal)value).doubleValue();
+            if (val < 0){
+                return ((BigDecimal)value).setScale(0, BigDecimal.ROUND_CEILING).intValue();
+            }
+            else {
+                return ((BigDecimal)value).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
             }
         }
 

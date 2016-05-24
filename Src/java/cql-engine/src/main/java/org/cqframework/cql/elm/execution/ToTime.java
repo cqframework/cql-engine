@@ -8,6 +8,7 @@
 
 package org.cqframework.cql.elm.execution;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.execution.Context;
 import org.jvnet.jaxb2_commons.lang.*;
 import org.jvnet.jaxb2_commons.lang.ToString;
@@ -133,8 +134,6 @@ public class ToTime
 
     @Override
     public Object evaluate(Context context) {
-        Object left = getOperand().evaluate(context);
-
-        return "";
+        throw new NotImplementedException("Evaluate not implemented");
     }
 }

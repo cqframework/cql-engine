@@ -136,8 +136,8 @@ public class Xor
 
     @Override
     public Object evaluate(Context context) {
-        Boolean left = (Boolean) getOperand().get(0).evaluate(context);
-        Boolean right = (Boolean) getOperand().get(1).evaluate(context);
+        Boolean left = (Boolean)getOperand().get(0).evaluate(context);
+        Boolean right = (Boolean)getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;

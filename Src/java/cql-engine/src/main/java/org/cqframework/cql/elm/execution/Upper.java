@@ -127,17 +127,14 @@ public class Upper
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value == null) {
             return null;
         }
 
         if (value instanceof String) {
-            return ((String) value).toUpperCase();
+            return ((String)value).toUpperCase();
         }
 
         throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.", this.getClass().getSimpleName(), value.getClass().getName()));

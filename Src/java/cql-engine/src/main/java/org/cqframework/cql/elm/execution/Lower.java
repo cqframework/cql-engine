@@ -126,10 +126,7 @@ public class Lower
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value == null) {
             return null;

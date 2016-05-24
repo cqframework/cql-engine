@@ -133,9 +133,4 @@ public class Variance
         super.appendFields(locator, buffer, strategy);
         return buffer;
     }
-
-    @Override
-    public Object evaluate(Context context) {
-        return false;
-    }
 }

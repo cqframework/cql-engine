@@ -269,38 +269,35 @@ public class Substring
 
     @Override
     public Object evaluate(Context context) {
-        Object stringObj = this.getStringToSub();
-        Object startIndexObj = this.getStartIndex();
-        Object lengthObj = this.getLength();
+        Object stringValue = getStringToSub().evaluate(context);
+        Object startIndexValue = getStartIndex().evaluate(context);
+        Object lengthValue = getLength() == null ? null : getLength().evaluate(context);
 
-        if (stringObj == null || startIndexObj == null) {
+        if (stringValue == null || startIndexValue == null) {
             return null;
         }
 
-        Object stringVal = ((Expression) stringObj).evaluate(context);
-        Object startIndexVal = ((Expression) startIndexObj).evaluate(context);
-        Object lengthVal = lengthObj == null ? null : ((Expression) lengthObj).evaluate(context);
+        String string = (String)stringValue;
+        Integer startIndex = (Integer)startIndexValue;
 
-        if (stringVal == null || startIndexVal == null || (startIndexVal instanceof Integer) == false) {
+        if (startIndex < 0 || startIndex >= string.length()) {
             return null;
         }
 
-        if (stringVal instanceof String) {
-            if ((int) startIndexVal < 0 || (int) startIndexVal >= ((String) stringVal).length()) {
+        if (lengthValue == null) {
+            return string.substring(startIndex);
+        }
+        else {
+            int endIndex = startIndex + (Integer)lengthValue;
+            if (endIndex >= string.length()) {
+                endIndex = string.length() - 1;
+            }
+
+            if (endIndex < startIndex) {
                 return null;
             }
 
-            if(lengthVal != null && lengthVal instanceof Integer && (int) startIndexVal + (int) lengthVal >= ((String) stringVal).length()){
-                lengthVal = 0;
-            }
-
-            if(lengthVal != null && lengthVal instanceof Integer && (int)lengthVal > 0){
-                return ((String) stringVal).substring((int) startIndexVal, (int) startIndexVal + (int) lengthVal);
-            }else{
-                return ((String) stringVal).substring((int) startIndexVal);
-            }
+            return string.substring(startIndex, endIndex);
         }
-
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), stringObj.getClass().getName()));
     }
 }

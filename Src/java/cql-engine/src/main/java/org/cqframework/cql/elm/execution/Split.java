@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -221,28 +222,22 @@ public class Split
 
     @Override
     public Object evaluate(Context context) {
-        Object stringObj = this.getStringToSplit();
-        Object separatorObj = this.getSeparator();
+        Object stringToSplit = getStringToSplit().evaluate(context);
+        Object separator = getSeparator().evaluate(context);
 
-        if (stringObj == null) {
+        if (stringToSplit == null) {
             return null;
         }
 
-        Object stringVal = ((Expression) stringObj).evaluate(context);
-        Object separatorVal = separatorObj == null ? null : ((Expression) separatorObj).evaluate(context);
-
-        if ( stringVal == null) {
-            return null;
+        ArrayList<Object> result = new ArrayList<Object>();
+        if (separator == null) {
+            result.add(stringToSplit);
         }
-
-        if (stringVal instanceof String) {
-            if(separatorVal == null){
-                return new String[]{(String)stringVal};
-            }else {
-                return ((String) stringVal).split((String)separatorVal);
+        else {
+            for (String string : ((String)stringToSplit).split((String)separator)) {
+                result.add(string);
             }
         }
-
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), stringObj.getClass().getName()));
+        return result;
     }
 }

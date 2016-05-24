@@ -141,34 +141,19 @@ public class TruncatedDivide
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof Integer) {
-            if (right instanceof Integer) {
-                int val = (Integer) left / (Integer) right;
-                if(val < 0){
-                    return new BigDecimal(val).setScale(0, BigDecimal.ROUND_CEILING).intValue();
-                }else{
-                    return new BigDecimal(val).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
-                }
-            }
+            return (Integer)left / (Integer)right;
         }
 
-        if (left instanceof Number) {
-            Double val = ((Number) left).doubleValue() / ((Number) right).doubleValue();
-            if(val < 0){
-                return new BigDecimal(val).setScale(0, BigDecimal.ROUND_CEILING).doubleValue();
-            }else{
-                return new BigDecimal(val).setScale(0, BigDecimal.ROUND_FLOOR).doubleValue();
-            }
+        if (left instanceof BigDecimal) {
+            return ((BigDecimal)left).divideAndRemainder((BigDecimal)right)[0];
         }
 
         throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));

@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -130,10 +131,7 @@ public class Abs
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if(expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value == null) {
             return null;
@@ -143,16 +141,8 @@ public class Abs
             return Math.abs((Integer)value);
         }
 
-        if (value instanceof Long) {
-            return Math.abs((Long)value);
-        }
-
-        if (value instanceof Float) {
-            return Math.abs((Float)value);
-        }
-
-        if(value instanceof Number){
-            return Math.abs(((Number)value).doubleValue());
+        if (value instanceof BigDecimal) {
+            return ((BigDecimal)value).abs();
         }
 
         // TODO: Finish implementation

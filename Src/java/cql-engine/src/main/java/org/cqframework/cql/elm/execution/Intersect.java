@@ -16,8 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 
 /**
@@ -147,38 +146,20 @@ public class Intersect
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
+        Iterable<Object> left = (Iterable<Object>)getOperand().get(0).evaluate(context);
+        Iterable<Object> right = (Iterable<Object>)getOperand().get(1).evaluate(context);
 
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
-
-        if (left == null || right == null || left instanceof Iterable == false || right instanceof Iterable == false) {
+        if (left == null || right == null) {
             return null;
         }
 
-        ArrayList leftList = null;
-        if (left instanceof java.util.List) {
-            leftList = new ArrayList((java.util.List)left);
-        } else {
-            leftList = new ArrayList();
-            ((Iterable) left).forEach(leftList::add);
+        java.util.List<Object> result = new ArrayList<Object>();
+        for (Object leftItem : left) {
+            if (In.in(leftItem, right)) {
+                result.add(leftItem);
+            }
         }
 
-        if (leftList.size() == 0) {
-            return leftList;
-        }
-
-        ArrayList rightList = null;
-        if (right instanceof java.util.List) {
-            rightList = new ArrayList((java.util.List)right);
-        } else {
-            rightList = new ArrayList();
-            ((Iterable) right).forEach(rightList::add);
-        }
-
-        leftList.retainAll(rightList);
-
-        return leftList;
+        return result;
     }
 }

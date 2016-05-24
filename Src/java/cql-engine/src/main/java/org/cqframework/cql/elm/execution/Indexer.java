@@ -139,11 +139,8 @@ public class Indexer
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;
@@ -161,19 +158,19 @@ public class Indexer
 
         if (left instanceof Iterable) {
             if (right instanceof Integer) {
-                ArrayList leftList = null;
-                if(left instanceof java.util.List){
-                    leftList = new ArrayList((java.util.List)left);
-                }else  {
-                    leftList = new ArrayList();
-                    ((Iterable) left).forEach(leftList::add);
+                int index = -1;
+                for (Object element : (Iterable)left) {
+                    index++;
+                    if ((Integer)right == index) {
+                        return element;
+                    }
+
+                    if ((Integer)right > index) {
+                        return null;
+                    }
                 }
 
-                if((int)right < 0 || (int)right >=  leftList.size()){
-                    return null;
-                }
-
-                return leftList.get((int)right);
+                return null;
             }
         }
 

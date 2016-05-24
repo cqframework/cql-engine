@@ -8,6 +8,7 @@
 
 package org.cqframework.cql.elm.execution;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.execution.Context;
 import org.jvnet.jaxb2_commons.lang.*;
 import org.jvnet.jaxb2_commons.lang.ToString;
@@ -132,10 +133,5 @@ public class Avg
     public StringBuilder appendFields(ObjectLocator locator, StringBuilder buffer, ToStringStrategy strategy) {
         super.appendFields(locator, buffer, strategy);
         return buffer;
-    }
-
-    @Override
-    public Object evaluate(Context context) {
-        return false;
     }
 }

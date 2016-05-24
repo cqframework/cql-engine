@@ -8,6 +8,7 @@
 
 package org.cqframework.cql.elm.execution;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.execution.Context;
 import org.jvnet.jaxb2_commons.lang.*;
 import org.jvnet.jaxb2_commons.lang.ToString;
@@ -136,6 +137,6 @@ public class Count
 
     @Override
     public Object evaluate(Context context) {
-        return false;
+        throw new NotImplementedException("Evaluate not implemented");
     }
 }

@@ -18,6 +18,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -221,17 +222,21 @@ public class Round
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
+        Object precisionValue = getPrecision() == null ? null : getPrecision().evaluate(context);
+        BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
 
         if (value == null) {
             return null;
         }
 
-        if(value instanceof Number){
-            return new Double(Math.round(((Number)value).doubleValue()));
+        if (value instanceof BigDecimal){
+            if (precisionValue == null || ((Integer)precisionValue == 0)) {
+                return new BigDecimal(Math.round(((BigDecimal)value).doubleValue()));
+            }
+            else {
+                return new BigDecimal(Math.round(((BigDecimal)value).multiply(precision).doubleValue())).divide(precision);
+            }
         }
 
         throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.", this.getClass().getSimpleName(), value.getClass().getName()));

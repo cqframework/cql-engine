@@ -3,8 +3,7 @@ library ArithmeticFunctions version '1'
 context Population
 
 //Abs
-define AbsEmpty: Abs()
-define AbsNull: Abs(null)
+define AbsNull: Abs(null as Integer)
 define Abs0: Abs(0)
 define AbsNeg1: Abs(-1)
 define AbsNeg1Dec: Abs(-1.0)
@@ -12,16 +11,13 @@ define Abs0Dec: Abs(0.0)
 define Abs1cm: Abs(-1.0'cm')
 
 //Add
-define AddEmpty: Add()
-define AddNull: Add(null)
+define AddNull: 1 + null
 define Add11: 1 + 1
 define Add1D1D: 1.0 + 1.0
 define Add1Q1Q: 1'g/cm3' + 1'g/cm3'
 
 //Ceiling
-define CeilingEmpty: Ceiling()
-define CeilingNull: Ceiling(null)
-define Ceiling1: Ceiling(1)
+define CeilingNull: Ceiling(null as Decimal)
 define Ceiling1D: Ceiling(1.0)
 define Ceiling1D1: Ceiling(1.1)
 define CeilingNegD1: Ceiling(-0.1)
@@ -29,8 +25,7 @@ define CeilingNeg1: Ceiling(-1.0)
 define CeilingNeg1D1: Ceiling(-1.1)
 
 //Divide
-define DivideEmpty: Divide()
-define DivideNull: Divide(null)
+define DivideNull: 1 / null
 define Divide10: 1 / 0
 define Divide01: 0 / 1
 define Divide11: 1 / 1
@@ -40,8 +35,7 @@ define Divide1Q1: 1'g/cm3' / 1.0
 define Divide1Q1Q: 1'g/cm3' / 1'g/cm3'
 
 //Floor
-define FloorEmpty: Floor()
-define FloorNull: Floor(null)
+define FloorNull: Floor(null as Decimal)
 define Floor1: Floor(1)
 define Floor1D: Floor(1.0)
 define Floor1D1: Floor(1.1)
@@ -50,8 +44,7 @@ define FloorNeg1: Floor(-1.0)
 define FloorNeg1D1: Floor(-1.1)
 
 //Exp
-define ExpEmpty  : Exp()
-define ExpNull  : Exp(null)
+define ExpNull  : Exp(null as Decimal)
 define Exp0  : Exp(0)
 define ExpNeg0  : Exp(-0)
 define Exp1  : Exp(1)
@@ -60,7 +53,6 @@ define Exp1000  : Exp(1000)
 define Exp1000D  : Exp(1000.0)
 
 //Log
-define LogEmpty  : Log()
 define LogNullNull  : Log(null, null)
 define Log1BaseNull  : Log(1, null)
 define Log1Base1  : Log(1, 1)
@@ -69,9 +61,7 @@ define Log1Base100  : Log(1, 100)
 define Log16Base2  : Log(16, 2)
 define LogD125Base2  : Log(0.125, 2)
 
-
 //Ln
-define LnEmpty  : Ln()
 define LnNull  : Ln(null)
 define Ln0  : Ln(0)
 define LnNeg0  : Ln(-0)
@@ -85,46 +75,42 @@ define Ln1000D  : Ln(1000.0)
 //Minimum
 
 //Modulo
-define ModuloEmpty  : Modulo()
-define ModuloNull  : Modulo(null)
-define Modulo0By0  : Modulo(0, 0)
-define Modulo4By2  : Modulo(4, 2)
-define Modulo4DBy2D  : Modulo(4.0, 2.0)
-define Modulo10By3  : Modulo(10, 3)
-define Modulo10DBy3D  : Modulo(10.0, 3.0)
-define Modulo4CMBy2CM  : Modulo(4'cm', 2'cm')
+define ModuloNull  : 1 mod null
+define Modulo0By0  : 0 mod 0
+define Modulo4By2  : 4 mod 2
+define Modulo4DBy2D  : 4.0 mod 2.0
+define Modulo10By3  : 10 mod 3
+define Modulo10DBy3D  : 10.0 mod 3.0
 
 //Multiply
-define MultiplyEmpty: Multiply()
-define MultiplyNull: Multiply(null)
+define MultiplyNull: 1 * null
 define Multiply1By1 : 1 * 1
+define Multiply1DBy2D : 1.0 * 2.0
+define Multiply1CMBy2CM : 1.0 'cm' * 2.0 'cm'
 
 //Negate
-define NegateEmpty: Negate()
-define NegateNull: Negate(null)
-define Negate0 : Negate(0)
-define NegateNeg0 : Negate(-0)
-define Negate1 : Negate(1)
-define NegateNeg1 : Negate(-1)
-define Negate0D : Negate(0.0)
-define NegateNeg0D : Negate(-0.0)
-define Negate1D : Negate(1.0)
-define NegateNeg1D : Negate(-1.0)
-define Negate1CM : Negate(1'cm')
+define NegateNull: -(null as Integer)
+define Negate0 : -0
+define NegateNeg0 : -(-0)
+define Negate1 : -1
+define NegateNeg1 : -(-1)
+define Negate0D : -(0.0)
+define NegateNeg0D : -(-0.0)
+define Negate1D : -(1.0)
+define NegateNeg1D : -(-1.0)
+define Negate1CM : -(1'cm')
 
 //Predecessor
-define PredecessorEmpty: Predecessor()
-define PredecessorNull: Predecessor(null)
-define PredecessorOf0: Predecessor(0)
-define PredecessorOf1: Predecessor(1)
-define PredecessorOf1D: Predecessor(1.0)
-define PredecessorOf101D: Predecessor(1.01)
-define PredecessorOfJan12000: Predecessor(DateTime(2000,1,1))
-define PredecessorOfNoon: Predecessor(Time(12,0,0))
+define PredecessorNull: predecessor of (null as Integer)
+define PredecessorOf0: predecessor of 0
+define PredecessorOf1: predecessor of 1
+define PredecessorOf1D: predecessor of 1.0
+define PredecessorOf101D: predecessor of 1.01
+define PredecessorOfJan12000: predecessor of DateTime(2000,1,1)
+define PredecessorOfNoon: predecessor of Time(12,0,0)
 
 //Power
-define PowerEmpty: Power()
-define PowerNullToNull: Power(null, null)
+define PowerNullToNull: Power(null as Integer, null as Integer)
 define Power0To0: Power(0, 0)
 define Power2To2: Power(2, 2)
 define PowerNeg2To2: Power(-2, 2)
@@ -136,11 +122,11 @@ define Power2DTo2: Power(2.0, 2)
 define Power2To2D: Power(2, 2.0)
 
 //Round
-define RoundEmpty: Round()
-define RoundNull: Round(null)
+define RoundNull: Round(null as Decimal)
 define Round1: Round(1)
 define Round0D5: Round(0.5)
 define Round0D4: Round(0.4)
+define Round3D14159: Round(3.14159, 2)
 define RoundNeg0D5: Round(-0.5)
 define RoundNeg0D4: Round(-0.4)
 define RoundNeg0D6: Round(-0.6)
@@ -150,23 +136,22 @@ define RoundNeg1D6: Round(-1.6)
 
 
 //Subtract
-define SubtractEmpty: Subtract()
-define SubtractNull: Subtract(null)
+define SubtractNull: 1 - null
 define Subtract1And1 : 1 - 1
+define Subtract1DAnd2D : 1.0 - 2.0
+define Subtract1CMAnd2CM : 1.0 'cm' - 2.0 'cm'
 
 //Successor
-define SuccessorEmpty: Successor()
-define SuccessorNull: Successor(null)
-define SuccessorOf0: Successor(0)
-define SuccessorOf1: Successor(1)
-define SuccessorOf1D: Successor(1.0)
-define SuccessorOf101D: Successor(1.01)
-define SuccessorOfJan12000: Successor(DateTime(2000,1,1))
-define SuccessorOfNoon: Successor(Time(12,0,0))
+define SuccessorNull: successor of (null as Integer)
+define SuccessorOf0: successor of 0
+define SuccessorOf1: successor of 1
+define SuccessorOf1D: successor of 1.0
+define SuccessorOf101D: successor of 1.01
+define SuccessorOfJan12000: successor of DateTime(2000,1,1)
+define SuccessorOfNoon: successor of Time(12,0,0)
 
 //Truncate
-define TruncateEmpty: Truncate()
-define TruncateNull: Truncate(null)
+define TruncateNull: Truncate(null as Decimal)
 define Truncate0: Truncate(0)
 define Truncate0D0: Truncate(0.0)
 define Truncate0D1: Truncate(0.1)
@@ -180,17 +165,16 @@ define TruncateNeg1D1: Truncate(-1.1)
 define TruncateNeg1D9: Truncate(-1.9)
 
 //Truncated Divide
-define TruncatedDivideEmpty: TruncatedDivide()
-define TruncatedDivideNull: TruncatedDivide(null)
-define TruncatedDivide2By1: TruncatedDivide(2, 1)
-define TruncatedDivide10By3: TruncatedDivide(10, 3)
-define TruncatedDivide10d1By3D1: TruncatedDivide(10.1, 3.1)
-define TruncatedDivideNeg2ByNeg1: TruncatedDivide(-2, -1)
-define TruncatedDivideNeg10ByNeg3: TruncatedDivide(-10, -3)
-define TruncatedDivideNeg10d1ByNeg3D1: TruncatedDivide(-10.1, -3.1)
-define TruncatedDivideNeg2By1: TruncatedDivide(-2, 1)
-define TruncatedDivideNeg10By3: TruncatedDivide(-10, 3)
-define TruncatedDivideNeg10d1By3D1: TruncatedDivide(-10.1, 3.1)
-define TruncatedDivide2ByNeg1: TruncatedDivide(2, -1)
-define TruncatedDivide10ByNeg3: TruncatedDivide(10, -3)
-define TruncatedDivide10d1ByNeg3D1: TruncatedDivide(10.1, -3.1)
+define TruncatedDivideNull: (null as Integer) div (null as Integer)
+define TruncatedDivide2By1: 2 div 1
+define TruncatedDivide10By3: 10 div 3
+define TruncatedDivide10d1By3D1: 10.1 div 3.1
+define TruncatedDivideNeg2ByNeg1: -2 div -1
+define TruncatedDivideNeg10ByNeg3: -10 div -3
+define TruncatedDivideNeg10d1ByNeg3D1: -10.1 div -3.1
+define TruncatedDivideNeg2By1: -2 div 1
+define TruncatedDivideNeg10By3: -10 div 3
+define TruncatedDivideNeg10d1By3D1: -10.1 div 3.1
+define TruncatedDivide2ByNeg1: 2 div -1
+define TruncatedDivide10ByNeg3: 10 div -3
+define TruncatedDivide10d1ByNeg3D1: 10.1 div -3.1

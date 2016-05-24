@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -135,30 +136,23 @@ public class Log
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;
         }
 
-        if (left instanceof Number) {
-            Double base = Math.log(((Number) right).doubleValue());
-            Double value = Math.log(((Number) left).doubleValue());
+        if (left instanceof BigDecimal) {
+            Double base = Math.log(((BigDecimal)right).doubleValue());
+            Double value = Math.log(((BigDecimal)left).doubleValue());
 
             if (base == 0) {
-                return value;
+                return new BigDecimal(value);
             }
 
-            return value / base;
+            return new BigDecimal(value / base);
         }
-
-        // TODO: Finish implementation of Divide
-        // /(Quantity, Decimal)
-        // /(Quantity, Quantity)
 
         throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
     }

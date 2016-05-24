@@ -1,5 +1,6 @@
 package org.cqframework.cql.runtime;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -34,6 +35,12 @@ public class Value {
             }
 
             return true;
+        }
+
+        // Decimal equal
+        // Have to use this because 10.0 != 10.00
+        if (left instanceof BigDecimal) {
+            return ((BigDecimal)left).compareTo((BigDecimal)right) == 0;
         }
 
         return left.equals(right);
@@ -72,7 +79,7 @@ public class Value {
             return true;
         }
 
-        return left.equals(right);
+        return equals(left, right);
     }
 
     public static Iterable<Object> ensureIterable(Object source) {

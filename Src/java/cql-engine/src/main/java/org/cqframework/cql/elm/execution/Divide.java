@@ -143,11 +143,8 @@ public class Divide
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if(expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;
@@ -156,10 +153,6 @@ public class Divide
         // /(Decimal, Decimal)
         if (left instanceof BigDecimal) {
             return ((BigDecimal)left).divide((BigDecimal)right);
-        }
-
-        if (left instanceof Number) {
-            return ((Number)left).doubleValue() / ((Number)right).doubleValue();
         }
 
         // TODO: Finish implementation of Divide

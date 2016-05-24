@@ -173,6 +173,6 @@ public class Null
 
     @Override
     public Object evaluate(Context context) {
-        return null; //TODO: This makes test pass, but what should we really do here?
+        return null;
     }
 }

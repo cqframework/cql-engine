@@ -301,7 +301,7 @@ public class As
                 return operand;
             }
             else if (this.isStrict()) {
-                throw new IllegalArgumentException(String.format("Cannot cast an value of type %s as %s.", operand.getClass().getName(), clazz.getName()));
+                throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as %s.", operand.getClass().getName(), clazz.getName()));
             }
             else {
                 return null;

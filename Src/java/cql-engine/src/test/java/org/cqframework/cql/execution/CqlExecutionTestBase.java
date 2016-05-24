@@ -1,8 +1,10 @@
 package org.cqframework.cql.execution;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
+import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.tracking.TrackBack;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 
@@ -14,6 +16,9 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public abstract class CqlExecutionTestBase<T> {
     static Map<String, Library> libraries = new HashMap<String, Library>();
@@ -32,6 +37,18 @@ public abstract class CqlExecutionTestBase<T> {
                 ArrayList<CqlTranslator.Options> options = new ArrayList<>();
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
                 CqlTranslator translator = CqlTranslator.fromFile(cqlFile, libraryManager, options.toArray(new CqlTranslator.Options[options.size()]));
+
+                if (translator.getErrors().size() > 0) {
+                    System.err.println("Translation failed due to errors:");
+                    for (CqlTranslatorException error : translator.getErrors()) {
+                        TrackBack tb = error.getLocator();
+                        String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
+                                tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
+                        System.err.printf("%s %s%n", lines, error.getMessage());
+                    }
+                }
+
+                assertThat(translator.getErrors().size(), is(0));
 
                 xmlFile = new File(cqlFile.getParent(), fileName + ".xml");
                 xmlFile.createNewFile();

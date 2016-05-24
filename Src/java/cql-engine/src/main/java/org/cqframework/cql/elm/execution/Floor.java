@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -126,21 +127,15 @@ public class Floor
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if(expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value == null) {
             return null;
         }
 
-        if(value instanceof Number){
-            return Math.floor(((Number)value).doubleValue());
+        if(value instanceof BigDecimal){
+            return new BigDecimal(Math.floor(((BigDecimal)value).doubleValue()));
         }
-
-        // TODO: Finish implementation
-        // +(Quantity, Quantity)
 
         throw new IllegalArgumentException(String.format("Cannot do an Abs with argument of type '%s'.", value.getClass().getName()));
     }

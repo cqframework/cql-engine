@@ -214,11 +214,8 @@ public class In
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if(expressions.size() == 0) return null;
-
-        Object testElement = expressions.get(0).evaluate(context);
-        Iterable<Object> list = (Iterable<Object>)expressions.get(1).evaluate(context);
+        Object testElement = getOperand().get(0).evaluate(context);
+        Iterable<Object> list = (Iterable<Object>)getOperand().get(1).evaluate(context);
         return in(testElement, list);
     }
 }

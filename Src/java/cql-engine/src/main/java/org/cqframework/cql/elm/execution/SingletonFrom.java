@@ -121,32 +121,24 @@ public class SingletonFrom
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
+        Object value = getOperand().evaluate(context);
 
-        Object value = expression.evaluate(context);
-
-        if (value == null || value instanceof Iterable == false) {
+        if (value == null) {
             return null;
         }
 
-        if (value instanceof java.util.List) {
-            if (((java.util.List) value).size() > 1) {
-                throw new IllegalArgumentException("The list must contain at least one element in order to use SingletonFrom");
+        Object result = null;
+        boolean first = true;
+        for (Object element : (Iterable)value) {
+            if (first) {
+                result = element;
+                first = false;
             }
-
-            return ((java.util.List) value).size() == 0 ? null : ((java.util.List) value).get(0);
-        } else {
-            Object result = null;
-            for (Object element : (Iterable) value) {
-                if (result == null) {
-                    result = element;
-                } else {
-                    throw new IllegalArgumentException("The list must contain at least one element in order to use SingletonFrom");
-                }
+            else {
+                throw new IllegalArgumentException("Expected a list with at most one element, but found a list with multiple elements.");
             }
-
-            return result;
         }
+
+        return result;
     }
 }

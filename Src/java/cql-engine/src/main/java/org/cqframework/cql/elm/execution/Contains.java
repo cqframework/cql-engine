@@ -200,22 +200,8 @@ public class Contains
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if(expressions.size() == 0) return null;
-
-        Object list = expressions.get(0).evaluate(context);
-        if (list == null || (list instanceof Iterable) == false) {
-            return null;
-        }
-
-        Object toFind = expressions.get(1).evaluate(context);
-        Iterable<Object> tmpList = (Iterable<Object>)list;
-        for (Object element : tmpList) {
-            if (org.cqframework.cql.runtime.Value.equivalent(element, toFind)) {
-                return true;
-            }
-        }
-
-        return false;
+        Iterable<Object> list = (Iterable<Object>)this.getOperand().get(0).evaluate(context);
+        Object testElement = this.getOperand().get(1).evaluate(context);
+        return In.in(testElement, list);
     }
 }

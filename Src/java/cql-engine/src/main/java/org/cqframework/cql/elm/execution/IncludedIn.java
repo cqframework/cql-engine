@@ -202,32 +202,19 @@ public class IncludedIn
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
-
-        if (left == null || right == null || left instanceof Iterable == false || right instanceof Iterable == false) {
+        if (left == null || right == null) {
             return null;
         }
 
-        ArrayList leftList = null;
-        if(left instanceof java.util.List){
-            leftList = new ArrayList((java.util.List)left);
-        }else  {
-            leftList = new ArrayList();
-            ((Iterable) left).forEach(leftList::add);
+        for (Object element : (Iterable)left) {
+            if (!In.in(element, (Iterable)right)) {
+                return false;
+            }
         }
 
-        ArrayList rightList = null;
-        if(right instanceof java.util.List){
-            rightList = new ArrayList((java.util.List)right);
-        }else  {
-            rightList = new ArrayList();
-            ((Iterable) right).forEach(rightList::add);
-        }
-
-        return rightList.containsAll(leftList);
+        return true;
     }
 }

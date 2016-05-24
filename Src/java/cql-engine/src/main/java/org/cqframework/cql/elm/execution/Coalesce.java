@@ -140,15 +140,11 @@ public class Coalesce
             Expression expression = expressions.next();
             Object tmpVal = expression.evaluate(context);
             if (tmpVal != null) {
-                if (tmpVal instanceof java.util.List && operands.size() == 1) {
-                    Iterator<Object> elemsItr = ((java.util.List) tmpVal).iterator();
+                if (tmpVal instanceof Iterable && operands.size() == 1) {
+                    Iterator<Object> elemsItr = ((Iterable) tmpVal).iterator();
                     while (elemsItr.hasNext()) {
                         Object obj = elemsItr.next();
                         if (obj != null) {
-                            if (obj instanceof Expression) {
-                                return ((Expression) obj).evaluate(context);
-                            }
-
                             return obj;
                         }
                     }

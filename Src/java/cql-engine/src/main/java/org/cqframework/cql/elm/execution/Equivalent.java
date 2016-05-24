@@ -151,27 +151,6 @@ public class Equivalent
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) return null;
-
-        if (left instanceof Number && right instanceof Number) {
-            return Double.compare(((Number) left).doubleValue(), ((Number) right).doubleValue()) == 0;
-        }
-
-        if (left instanceof Comparable) {
-            int res = ((Comparable) left).compareTo(right);
-            return res == 0;
-        }
-
-        if (left instanceof java.util.List && right instanceof java.util.List) {
-            java.util.List tmpL = (java.util.List) left;
-            java.util.List tmpR = (java.util.List) right;
-            if (tmpL.size() == tmpR.size()) {
-                ArrayList remList = new ArrayList(tmpL);
-                remList.removeAll(tmpR);
-                return remList.size() == 0;
-            }
-        }
-
-        return left.equals(right);
+        return org.cqframework.cql.runtime.Value.equivalent(left, right);
     }
 }

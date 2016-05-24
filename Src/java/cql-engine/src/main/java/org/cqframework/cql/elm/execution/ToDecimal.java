@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -134,16 +135,11 @@ public class ToDecimal
 
     @Override
     public Object evaluate(Context context) {
-        Object oper = getOperand().evaluate(context);
-
-        if (oper == null) {
+        Object operand = getOperand().evaluate(context);
+        if (operand == null) {
             return null;
         }
 
-        if(oper instanceof Number){
-            return ((Number)oper).doubleValue();
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot do an Abs with argument of type '%s'.", oper.getClass().getName()));
+        return new BigDecimal((String)operand);
     }
 }

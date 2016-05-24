@@ -226,22 +226,14 @@ public class First
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getSource();
-        if (expression == null) return null;
+        Object value = getSource().evaluate(context);
 
-        Object value = expression.evaluate(context);
-
-        if (value == null || value instanceof Iterable ==  false) {
+        if (value == null) {
             return null;
         }
 
-        if(value instanceof java.util.List){
-            return ((java.util.List)value).size() > 0 ? ((java.util.List)value).get(0) : null;
-        }
-        else {
-            for (Object element : (Iterable)value) {
-                return element;
-            }
+        for (Object element : (Iterable)value) {
+            return element;
         }
 
         return null;

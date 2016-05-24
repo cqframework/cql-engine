@@ -134,49 +134,12 @@ public class Predecessor
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if(expression == null) return null;
-
-        Object value = expression.evaluate(context);
+        Object value = getOperand().evaluate(context);
 
         if (value == null) {
             return null;
         }
 
         return org.cqframework.cql.runtime.Interval.predecessor(value);
-
-//        //Integer, Decimal, DateTime, and Time
-//        if(value instanceof Integer){
-//            Integer val =(Integer)value;
-//            if(val == Integer.MIN_VALUE) {
-//                throw new IllegalArgumentException("Value must be larger than the MIN_VALUE");
-//            }
-//
-//            return Math.decrementExact(val);
-//        }
-//
-//        if(value instanceof Long){
-//            Long val =(Long)value;
-//            if(val == Long.MIN_VALUE) {
-//                throw new IllegalArgumentException("Value must be larger than the MIN_VALUE");
-//            }
-//
-//            return Math.decrementExact(val);
-//        }
-//
-//        if(value instanceof Number){
-//            Double val =((Number)value).doubleValue();
-//
-//            if(val == Double.MIN_VALUE) {
-//                throw new IllegalArgumentException("Value must be larger than the MIN_VALUE");
-//            }
-//
-//            return Math.nextDown(val);
-//        }
-//
-//
-//        //TODO: Implement DateTime and Time
-//
-//        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.",this.getClass().getSimpleName(), value.getClass().getName()));
     }
 }

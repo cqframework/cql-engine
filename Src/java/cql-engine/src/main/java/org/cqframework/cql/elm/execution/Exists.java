@@ -123,21 +123,10 @@ public class Exists
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getOperand();
-        if (expression == null) return null;
-
-        Object value = expression.evaluate(context);
-
-        if (value == null || value instanceof Iterable == false) {
-            return null;
-        }
-
-        if (value instanceof java.util.List) {
-            return ((java.util.List) value).size() > 0;
-        } else {
-            for (Object element : (Iterable) value) {
-                return true;
-            }
+        Iterable<Object> value = (Iterable<Object>)getOperand().evaluate(context);
+        java.util.Iterator<Object> iterator = value.iterator();
+        if (iterator.hasNext()) {
+            return true;
         }
 
         return false;

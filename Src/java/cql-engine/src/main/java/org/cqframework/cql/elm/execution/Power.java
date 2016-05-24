@@ -136,24 +136,19 @@ public class Power
 
     @Override
     public Object evaluate(Context context) {
-        java.util.List<Expression> expressions = getOperand();
-        if (expressions.size() == 0) return null;
-
-        Object left = expressions.get(0).evaluate(context);
-        Object right = expressions.get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof Integer) {
-            if (right instanceof Integer && (Integer) right >= 0) {
-                return new BigDecimal((Integer) left).pow((Integer) right).intValue();
-            }
+            return new BigDecimal((Integer)left).pow((Integer)right).intValue();
         }
 
-        if (left instanceof Number) {
-            return Math.pow((((Number) left).doubleValue()), ((Number) right).doubleValue());
+        if (left instanceof BigDecimal) {
+            return new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue()));
         }
 
         throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));

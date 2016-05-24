@@ -215,24 +215,16 @@ public class Last
 
     @Override
     public Object evaluate(Context context) {
-        Expression expression = getSource();
-        if (expression == null) return null;
+        Object value = getSource().evaluate(context);
 
-        Object value = expression.evaluate(context);
-
-        if (value == null || value instanceof Iterable == false) {
+        if (value == null) {
             return null;
         }
 
         Object result = null;
-        if (value instanceof java.util.List) {
-            result = ((java.util.List) value).size() > 0 ? ((java.util.List) value).get(((java.util.List) value).size() - 1) : null;
-        } else {
-            for (Object element : (Iterable) value) {
-                result = element;
-            }
+        for (Object element : (Iterable)value) {
+            result = element;
         }
-
 
         return result;
     }

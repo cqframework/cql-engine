@@ -16,6 +16,7 @@ import org.jvnet.jaxb2_commons.locator.ObjectLocator;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
+import java.math.BigDecimal;
 import java.util.Collection;
 
 
@@ -145,16 +146,26 @@ public class GreaterOrEqual
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) return null;
-
-        if (left instanceof Number && right instanceof Number) {
-            return Double.compare(((Number) left).doubleValue(), ((Number) right).doubleValue()) >= 0;
+        if (left == null || right == null) {
+            return null;
         }
 
-        if(left instanceof Comparable){
-            int res =  ((Comparable) left).compareTo(right);
-            return res >= 0;
+        if (left instanceof Integer) {
+            return Integer.compare((Integer)left, (Integer)right) >= 0;
         }
+
+        if (left instanceof BigDecimal) {
+            return ((BigDecimal)left).compareTo((BigDecimal)right) >= 0;
+        }
+
+        if (left instanceof String) {
+            return ((String)left).compareTo((String)right) >= 0;
+        }
+
+        // TODO: Finish implementation
+        // >(Quantity, Quantity)
+        // >(DateTime, DateTime)
+        // >(Time, Time)
 
         return false;
     }

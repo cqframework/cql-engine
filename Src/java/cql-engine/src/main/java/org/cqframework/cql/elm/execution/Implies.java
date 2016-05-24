@@ -137,6 +137,17 @@ public class Implies
 
     @Override
     public Object evaluate(Context context) {
-        throw new NotImplementedException("Evaluate not implemented.");
+        Boolean left = (Boolean)getOperand().get(0).evaluate(context);
+        Boolean right = (Boolean)getOperand().get(1).evaluate(context);
+
+        if (left == null) {
+            return right == null || !right ? null : true;
+        }
+        else if (left) {
+            return right;
+        }
+        else {
+            return true;
+        }
     }
 }

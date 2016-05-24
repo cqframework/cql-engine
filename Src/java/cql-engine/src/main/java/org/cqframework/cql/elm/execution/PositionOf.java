@@ -232,24 +232,17 @@ public class PositionOf
 
     @Override
     public Object evaluate(Context context) {
-        Object patternObj = this.getPattern();
-        Object stringObj = this.getString();
+        Object pattern = getPattern().evaluate(context);
+        Object string = getString().evaluate(context);
 
-        if(patternObj == null || stringObj == null){
+        if (pattern == null || string == null) {
             return null;
         }
 
-        Object patternVal = ((Expression)patternObj).evaluate(context);
-        Object stringVal = ((Expression)stringObj).evaluate(context);
-
-        if(patternVal == null || stringVal == null){
-            return null;
+        if (pattern instanceof String) {
+            return ((String)string).indexOf((String)pattern);
         }
 
-        if(patternVal instanceof String && stringVal instanceof String){
-            return ((String)stringVal).indexOf((String) patternVal);
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), patternObj.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), pattern.getClass().getName()));
     }
 }
