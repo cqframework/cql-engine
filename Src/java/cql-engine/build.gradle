@@ -15,13 +15,13 @@ dependencies {
 //}
 
 // This was only used to generate the initial sources, the classes are maintained from there.
-//generateSources {
-//    inputs.dir "${projectDir}/../../cql-lm/schema"
-//
-//    doLast {
-//        ant.xjc(destdir: xjc.destDir, schema: "${projectDir}/../../cql-lm/schema/elm/library.xsd") {
-//            arg(line: "${xjc.args} -npa -XautoInheritance -XautoInheritance-xmlTypesExtend=org.cqframework.cql.elm.execution.Executable")
-//        }
-//    }
-//}
+generateSources {
+    inputs.dir "${projectDir}/../../cql-lm/schema"
+
+    doLast {
+        ant.xjc(destdir: xjc.destDir, package: 'org.cqframework.cql.elm.execution', schema: "${projectDir}/../../cql-lm/schema/elm/library.xsd") {
+            arg(line: "${xjc.args} -npa -XautoInheritance -XautoInheritance-xmlTypesExtend=org.cqframework.cql.elm.execution.Executable")
+        }
+    }
+}
 

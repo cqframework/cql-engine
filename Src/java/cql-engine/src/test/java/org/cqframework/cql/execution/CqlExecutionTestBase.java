@@ -4,11 +4,13 @@ import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.ObjectFactory;
+import org.cqframework.cql.elm.execution.ObjectFactoryEx;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
 
-import javax.xml.bind.JAXB;
+import javax.xml.bind.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -26,7 +28,7 @@ public abstract class CqlExecutionTestBase<T> {
     private File xmlFile = null;
 
     @BeforeMethod
-    public void beforeEachTestMethod() {
+    public void beforeEachTestMethod() throws JAXBException {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
         if (library == null) {
@@ -61,7 +63,20 @@ public abstract class CqlExecutionTestBase<T> {
                 e.printStackTrace();
             }
 
-            library = JAXB.unmarshal(xmlFile, Library.class);
+            // Simple unmarshal
+            //library = JAXB.unmarshal(xmlFile, Library.class);
+
+            // TODO: Wrap this code up in a library deserializer... perhaps in CqlEngine
+            // This is supposed to work based on this link:
+            // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
+            // Override the unmarshal to use the XXXEvaluator classes
+            // This doesn't work exactly how it's described in the link above, but this is functional
+            JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+            Unmarshaller u = context.createUnmarshaller();
+            u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+            Object result = u.unmarshal(xmlFile);
+            library = ((JAXBElement<Library>)result).getValue();
+
             libraries.put(fileName, library);
         }
     }

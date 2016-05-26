@@ -1,6 +1,7 @@
 package org.cqframework.cql.runtime;
 
 import org.cqframework.cql.elm.execution.In;
+import org.cqframework.cql.elm.execution.InEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class Concept {
         if (other instanceof Concept) {
             Concept otherConcept = (Concept)other;
             for (Code code : this.getCodes()) {
-                if (In.in(code, otherConcept.getCodes())) {
+                if (InEvaluator.in(code, otherConcept.getCodes())) {
                     return true;
                 }
             }
