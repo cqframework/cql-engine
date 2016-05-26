@@ -16,6 +16,14 @@ public class ToDecimalEvaluator extends ToDecimal {
             return null;
         }
 
-        return new BigDecimal((String)operand);
+        if (operand instanceof Integer) {
+            return new BigDecimal((Integer)operand);
+        }
+
+        if (operand instanceof String) {
+            return new BigDecimal((String)operand);
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot call %s argument of type '%s'.", this.getClass().getSimpleName(), operand.getClass().getName()));
     }
 }
