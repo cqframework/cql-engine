@@ -3543,16 +3543,39 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
             return convertIntervalExpression(expression, conversion);
         }
         else {
-            Convert convertedOperand = (Convert)of.createConvert()
-                    .withOperand(expression)
-                    .withResultType(conversion.getToType());
-
-            convertedOperand.setToTypeSpecifier(dataTypeToTypeSpecifier(convertedOperand.getResultType()));
-            if (convertedOperand.getResultType() instanceof NamedType) {
-                convertedOperand.setToType(dataTypeToQName(convertedOperand.getResultType()));
+            if (conversion.getToType().equals(resolveTypeName("System", "Boolean"))) {
+                return (Expression)of.createToBoolean().withOperand(expression).withResultType(conversion.getToType());
             }
+            else if (conversion.getToType().equals(resolveTypeName("System", "Integer"))) {
+                return (Expression)of.createToInteger().withOperand(expression).withResultType(conversion.getToType());
+            }
+            else if (conversion.getToType().equals(resolveTypeName("System", "Decimal"))) {
+                return (Expression)of.createToDecimal().withOperand(expression).withResultType(conversion.getToType());
+            }
+            else if (conversion.getToType().equals(resolveTypeName("System", "String"))) {
+                return (Expression)of.createToString().withOperand(expression).withResultType(conversion.getToType());
+            }
+            else if (conversion.getToType().equals(resolveTypeName("System", "DateTime"))) {
+                return (Expression)of.createToDateTime().withOperand(expression).withResultType(conversion.getToType());
+            }
+            else if (conversion.getToType().equals(resolveTypeName("System", "Time"))) {
+                return (Expression)of.createToTime().withOperand(expression).withResultType(conversion.getToType());
+            }
+            else if (conversion.getToType().equals(resolveTypeName("System", "Quantity"))) {
+                return (Expression)of.createToQuantity().withOperand(expression).withResultType(conversion.getToType());
+            }
+            else {
+                Convert convertedOperand = (Convert)of.createConvert()
+                        .withOperand(expression)
+                        .withResultType(conversion.getToType());
 
-            return convertedOperand;
+                convertedOperand.setToTypeSpecifier(dataTypeToTypeSpecifier(convertedOperand.getResultType()));
+                if (convertedOperand.getResultType() instanceof NamedType) {
+                    convertedOperand.setToType(dataTypeToQName(convertedOperand.getResultType()));
+                }
+
+                return convertedOperand;
+            }
         }
     }
 
