@@ -1659,10 +1659,6 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
                 return result;
             }
 
-            IdentifierRef identifier = new IdentifierRef();
-            identifier.setLibraryName(libraryName);
-            identifier.setName(memberIdentifier);
-            return identifier;
             throw new IllegalArgumentException(String.format("Could not resolve identifier %s in library %s.",
                     memberIdentifier, referencedLibrary.getIdentifier().getId()));
         }
@@ -1693,9 +1689,7 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
         // 7: The name of a code
         // 8: The name of a concept
         // 9: The name of a library
-        // 10: An unresolved identifier that must be resolved later (by a method or accessor)
-        // 7: The name of a library
-        // 8: An unresolved identifier error is thrown
+        // 10: An unresolved identifier error is thrown
 
         AliasedQuerySource alias = resolveAlias(identifier);
         if (alias != null) {
