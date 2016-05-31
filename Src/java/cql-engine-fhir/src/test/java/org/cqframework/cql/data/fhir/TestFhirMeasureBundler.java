@@ -2,12 +2,15 @@ package org.cqframework.cql.data.fhir;
 
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.execution.Context;
+import org.cqframework.cql.execution.CqlLibraryReader;
 import org.hamcrest.Matchers;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -21,9 +24,9 @@ import static org.hamcrest.Matchers.is;
  */
 public class TestFhirMeasureBundler {
     @Test
-    public void TestCBP() throws UnsupportedEncodingException {
+    public void TestCBP() throws IOException, JAXBException {
         File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-cbp.elm.xml").getFile(), "UTF-8"));
-        Library library = JAXB.unmarshal(xmlFile, Library.class);
+        Library library = CqlLibraryReader.read(xmlFile);
 
         Context context = new Context(library);
 

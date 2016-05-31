@@ -28,7 +28,7 @@ public abstract class CqlExecutionTestBase<T> {
     private File xmlFile = null;
 
     @BeforeMethod
-    public void beforeEachTestMethod() throws JAXBException {
+    public void beforeEachTestMethod() throws JAXBException, IOException {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
         if (library == null) {
@@ -63,20 +63,7 @@ public abstract class CqlExecutionTestBase<T> {
                 e.printStackTrace();
             }
 
-            // Simple unmarshal
-            //library = JAXB.unmarshal(xmlFile, Library.class);
-
-            // TODO: Wrap this code up in a library deserializer... perhaps in CqlEngine
-            // This is supposed to work based on this link:
-            // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
-            // Override the unmarshal to use the XXXEvaluator classes
-            // This doesn't work exactly how it's described in the link above, but this is functional
-            JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-            Unmarshaller u = context.createUnmarshaller();
-            u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
-            Object result = u.unmarshal(xmlFile);
-            library = ((JAXBElement<Library>)result).getValue();
-
+            library = CqlLibraryReader.read(xmlFile);
             libraries.put(fileName, library);
         }
     }

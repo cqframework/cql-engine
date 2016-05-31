@@ -2,11 +2,13 @@ package org.cqframework.cql.data.fhir;
 
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.execution.Context;
+import org.cqframework.cql.execution.CqlLibraryReader;
 import org.hl7.fhir.dstu3.model.Measure;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.net.URLDecoder;
 
@@ -19,9 +21,9 @@ import static org.hamcrest.Matchers.notNullValue;
  */
 public class TestFhirMeasureEvaluator {
     @Test
-    public void TestCBP() throws UnsupportedEncodingException, FileNotFoundException {
+    public void TestCBP() throws IOException, JAXBException {
         File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-cbp.elm.xml").getFile(), "UTF-8"));
-        Library library = JAXB.unmarshal(xmlFile, Library.class);
+        Library library = CqlLibraryReader.read(xmlFile);
 
         Context context = new Context(library);
 

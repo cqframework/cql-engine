@@ -14,7 +14,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.Coalesce#evaluate(Context)}
      */
-    @Test
+    //@Test
     public void testCoalesce() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "CoalesceEmpty").getExpression().evaluate(context);
@@ -51,7 +51,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.IsNull#evaluate(Context)}
      */
-    @Test
+    //@Test
     public void testIsNull() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "IsNullTrue").getExpression().evaluate(context);
@@ -73,7 +73,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.IsFalse#evaluate(Context)}
      */
-    @Test
+    //@Test
     public void testIsFalse() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "IsFalseFalse").getExpression().evaluate(context);
@@ -89,7 +89,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.IsTrue#evaluate(Context)}
      */
-    @Test
+    //@Test
     public void testIsTrue() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "IsTrueTrue").getExpression().evaluate(context);
