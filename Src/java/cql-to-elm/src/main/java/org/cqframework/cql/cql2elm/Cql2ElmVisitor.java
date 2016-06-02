@@ -1691,6 +1691,12 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
         // 9: The name of a library
         // 10: An unresolved identifier error is thrown
 
+        // In the sort clause of a plural query, names may be resolved based on the result type of the query
+        IdentifierRef resultElement = resolveQueryResultElement(identifier);
+        if (resultElement != null) {
+            return resultElement;
+        }
+
         AliasedQuerySource alias = resolveAlias(identifier);
         if (alias != null) {
             AliasRef result = of.createAliasRef().withName(identifier);
@@ -2742,7 +2748,18 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
                     ret.setResultType(returnExpression.getResultType());
                 }
 
-                SortClause sort = ctx.sortClause() != null ? (SortClause) visit(ctx.sortClause()) : null;
+                DataType queryResultType = ret == null ? sources.get(0).getResultType() : ret.getResultType();
+                queryContext.setResultElementType(queryContext.isSingular() ? null : ((ListType)queryResultType).getElementType());
+                SortClause sort = null;
+                if (ctx.sortClause() != null) {
+                    queryContext.enterSortClause();
+                    try {
+                        sort = (SortClause)visit(ctx.sortClause());
+                    }
+                    finally {
+                        queryContext.exitSortClause();
+                    }
+                }
 
                 Query query = of.createQuery()
                         .withSource(sources)
@@ -3077,8 +3094,15 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
 
     @Override
     public SortByItem visitSortByItem(@NotNull cqlParser.SortByItemContext ctx) {
+        Expression sortExpression = parseExpression(ctx.expressionTerm());
+        if (sortExpression instanceof IdentifierRef) {
+            return of.createByColumn()
+                    .withPath(((IdentifierRef)sortExpression).getName())
+                    .withDirection(parseSortDirection(ctx.sortDirection()));
+        }
+
         return of.createByExpression()
-                .withExpression(parseExpression(ctx.expressionTerm()))
+                .withExpression(sortExpression)
                 .withDirection(parseSortDirection(ctx.sortDirection()));
     }
 
@@ -3474,6 +3498,10 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
     }
 
     protected DataType resolveProperty(DataType sourceType, String identifier) {
+        return resolveProperty(sourceType, identifier, true);
+    }
+
+    protected DataType resolveProperty(DataType sourceType, String identifier, boolean mustResolve) {
         DataType currentType = sourceType;
         while (currentType != null) {
             if (currentType instanceof ClassType) {
@@ -3518,7 +3546,11 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Member %s not found for type %s.", identifier, sourceType));
+        if (mustResolve) {
+            throw new IllegalArgumentException(String.format("Member %s not found for type %s.", identifier, sourceType));
+        }
+
+        return null;
     }
 
     protected Expression resolveCall(String libraryName, String operatorName, Invocation invocation) {
@@ -3845,6 +3877,22 @@ public class Cql2ElmVisitor extends cqlBaseVisitor {
             AliasedQuerySource source = query.resolveAlias(identifier);
             if (source != null) {
                 return source;
+            }
+        }
+
+        return null;
+    }
+
+    private IdentifierRef resolveQueryResultElement(String identifier) {
+        if (queries.size() > 0) {
+            QueryContext query = queries.peek();
+            if (query.inSortClause() && !query.isSingular()) {
+                DataType sortColumnType = resolveProperty(query.getResultElementType(), identifier, false);
+                if (sortColumnType != null) {
+                    IdentifierRef result = new IdentifierRef().withName(identifier);
+                    result.setResultType(sortColumnType);
+                    return result;
+                }
             }
         }
 
