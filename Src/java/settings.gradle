@@ -1,0 +1,3 @@
+include 'cql', 'elm', 'qdm', 'quick', 'cql-to-elm', 'tools:cql-parsetree', 'cql-execution', 'cql-engine', 'cql-engine-fhir', 'tools:xsd-to-modelinfo'
+
+rootProject.name = 'cql-all'

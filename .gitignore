@@ -1,3 +1,6 @@
+.DS_Store
+
+/Src/java/.nb-gradle/
 *.class
 
 # Mobile Tools for Java (J2ME)
