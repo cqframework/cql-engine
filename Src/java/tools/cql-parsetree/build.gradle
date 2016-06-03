@@ -1,7 +1,0 @@
-apply plugin: 'application'
-
-mainClassName = 'org.cqframework.cql.tools.parsetree.Main'
-
-dependencies {
-    compile project(':cql')
-}
