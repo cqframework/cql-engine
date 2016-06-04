@@ -1,0 +1,3 @@
+include 'cql-engine', 'cql-engine-fhir'
+
+rootProject.name = 'cql-all'
