@@ -23,10 +23,10 @@ public class LnEvaluator extends Ln {
             retVal = new BigDecimal(Math.log(((BigDecimal)value).doubleValue()));
           } catch (NumberFormatException nfe){
             if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) {
-              return Double.NaN;
+              return null;
             }
             else if (((BigDecimal)value).compareTo(new BigDecimal(0)) == 0) {
-              return Double.NEGATIVE_INFINITY;
+              throw new ArithmeticException("Results in negative infinity");
             }
             else { throw new NumberFormatException(); }
           }

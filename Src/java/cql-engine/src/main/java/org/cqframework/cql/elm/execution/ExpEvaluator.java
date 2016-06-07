@@ -22,10 +22,10 @@ public class ExpEvaluator extends Exp {
             retVal = new BigDecimal(Math.exp(((BigDecimal)value).doubleValue()));
           } catch (NumberFormatException nfe) {
             if (((BigDecimal)value).compareTo(new BigDecimal(0)) > 0) {
-              return Double.POSITIVE_INFINITY;
+              throw new ArithmeticException("Results in positive infinity");
             }
             else if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) {
-              return Double.NEGATIVE_INFINITY;
+              throw new ArithmeticException("Results in negative infinity");
             }
             else { throw new NumberFormatException(); }
           }

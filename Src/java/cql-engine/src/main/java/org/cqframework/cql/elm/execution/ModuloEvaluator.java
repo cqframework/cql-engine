@@ -19,12 +19,12 @@ public class ModuloEvaluator extends Modulo {
         }
 
         if (left instanceof Integer) {
-            if ((Integer)right == 0) { return Double.NaN; }
+            if ((Integer)right == 0) { return null; }
             return (Integer)left % (Integer)right;
         }
 
         if (left instanceof BigDecimal) {
-            if ((BigDecimal)right == new BigDecimal(0)) { return Double.NaN; }
+            if ((BigDecimal)right == new BigDecimal(0)) { return null; }
             return ((BigDecimal)left).remainder((BigDecimal)right);
         }
 

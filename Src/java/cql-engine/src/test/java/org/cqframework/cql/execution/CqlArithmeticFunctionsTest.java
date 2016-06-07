@@ -10,6 +10,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.instanceOf;
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**
@@ -101,7 +102,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Divide10").getExpression().evaluate(context);
-        assertThat(result, is(Double.POSITIVE_INFINITY));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Divide01").getExpression().evaluate(context);
         assertThat(result, is(0d));
@@ -176,11 +177,17 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "ExpNeg1").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp((double) -1))));
 
-        result = context.resolveExpressionRef(library, "Exp1000").getExpression().evaluate(context);
-        assertThat(result, is(Double.POSITIVE_INFINITY));
+        try {
+          result = context.resolveExpressionRef(library, "Exp1000").getExpression().evaluate(context);
+        } catch (ArithmeticException ae) {
+          assertThat(ae.getMessage(), is("Results in positive infinity"));
+        }
 
-        result = context.resolveExpressionRef(library, "Exp1000D").getExpression().evaluate(context);
-        assertThat(result, is(Double.POSITIVE_INFINITY));
+        try {
+          result = context.resolveExpressionRef(library, "Exp1000D").getExpression().evaluate(context);
+        } catch (ArithmeticException ae) {
+          assertThat(ae.getMessage(), is("Results in positive infinity"));
+        }
     }
 
     /**
@@ -224,17 +231,23 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
       result = context.resolveExpressionRef(library, "LnNull").getExpression().evaluate(context);
       assertThat(result, is(nullValue()));
 
-      result = context.resolveExpressionRef(library, "Ln0").getExpression().evaluate(context);
-      assertThat(result, is(Double.NEGATIVE_INFINITY));
+      try {
+        result = context.resolveExpressionRef(library, "Ln0").getExpression().evaluate(context);
+      } catch (ArithmeticException ae) {
+        assertThat(ae.getMessage(), is("Results in negative infinity"));
+      }
 
-      result = context.resolveExpressionRef(library, "LnNeg0").getExpression().evaluate(context);
-      assertThat(result, is(Double.NEGATIVE_INFINITY));
+      try {
+        result = context.resolveExpressionRef(library, "LnNeg0").getExpression().evaluate(context);
+      } catch (ArithmeticException ae) {
+        assertThat(ae.getMessage(), is("Results in negative infinity"));
+      }
 
       result = context.resolveExpressionRef(library, "Ln1").getExpression().evaluate(context);
       assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1d))));
 
       result = context.resolveExpressionRef(library, "LnNeg1").getExpression().evaluate(context);
-      assertThat(result, is(Math.log((double) -1)));
+      assertThat(result, is(nullValue()));
 
       result = context.resolveExpressionRef(library, "Ln1000").getExpression().evaluate(context);
       assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000))));
@@ -273,7 +286,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
        result = context.resolveExpressionRef(library, "Modulo0By0").getExpression().evaluate(context);
-       assertThat(result, is(Double.NaN));
+       assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Modulo4By2").getExpression().evaluate(context);
         assertThat(result, is(0));

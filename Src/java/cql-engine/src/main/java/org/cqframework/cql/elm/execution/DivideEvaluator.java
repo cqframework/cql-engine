@@ -14,7 +14,7 @@ public class DivideEvaluator extends Divide {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) {
+        if (left == null || right == null || (Integer)right == 0) {
             return null;
         }
 
