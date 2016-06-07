@@ -17,7 +17,19 @@ public class ExpEvaluator extends Exp {
         }
 
         if (value instanceof BigDecimal){
-            return new BigDecimal(Math.exp(((BigDecimal)value).doubleValue()));
+          BigDecimal retVal = new BigDecimal(0);
+          try {
+            retVal = new BigDecimal(Math.exp(((BigDecimal)value).doubleValue()));
+          } catch (NumberFormatException nfe) {
+            if (((BigDecimal)value).compareTo(new BigDecimal(0)) > 0) {
+              return Double.POSITIVE_INFINITY;
+            }
+            else if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) {
+              return Double.NEGATIVE_INFINITY;
+            }
+            else { throw new NumberFormatException(); }
+          }
+          return retVal;
         }
 
         throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.",this.getClass().getSimpleName(), value.getClass().getName()));

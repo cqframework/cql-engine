@@ -19,6 +19,9 @@ public class PowerEvaluator extends Power {
         }
 
         if (left instanceof Integer) {
+            if ((Integer)right < 0) {
+              return new BigDecimal(1).divide(new BigDecimal((Integer)left).pow(Math.abs((Integer)right)));
+            }
             return new BigDecimal((Integer)left).pow((Integer)right).intValue();
         }
 

@@ -29,8 +29,8 @@ public class SubstringEvaluator extends Substring {
         }
         else {
             int endIndex = startIndex + (Integer)lengthValue;
-            if (endIndex >= string.length()) {
-                endIndex = string.length() - 1;
+            if (endIndex > string.length()) {
+                endIndex = string.length();
             }
 
             if (endIndex < startIndex) {

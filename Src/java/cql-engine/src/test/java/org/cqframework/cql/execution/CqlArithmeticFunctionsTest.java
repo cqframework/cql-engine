@@ -176,12 +176,11 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "ExpNeg1").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp((double) -1))));
 
-        // TODO: Fix these
-//        result = context.resolveExpressionRef(library, "Exp1000").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.POSITIVE_INFINITY)));
-//
-//        result = context.resolveExpressionRef(library, "Exp1000D").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.POSITIVE_INFINITY)));
+        result = context.resolveExpressionRef(library, "Exp1000").getExpression().evaluate(context);
+        assertThat(result, is(Double.POSITIVE_INFINITY));
+
+        result = context.resolveExpressionRef(library, "Exp1000D").getExpression().evaluate(context);
+        assertThat(result, is(Double.POSITIVE_INFINITY));
     }
 
     /**
@@ -219,30 +218,29 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testLn() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result;
 
-        result = context.resolveExpressionRef(library, "LnNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+      result = context.resolveExpressionRef(library, "LnNull").getExpression().evaluate(context);
+      assertThat(result, is(nullValue()));
 
-        // TODO: Fix these
-//        result = context.resolveExpressionRef(library, "Ln0").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.NEGATIVE_INFINITY)));
-//
-//        result = context.resolveExpressionRef(library, "LnNeg0").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Double.NEGATIVE_INFINITY)));
+      result = context.resolveExpressionRef(library, "Ln0").getExpression().evaluate(context);
+      assertThat(result, is(Double.NEGATIVE_INFINITY));
 
-        result = context.resolveExpressionRef(library, "Ln1").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1d))));
+      result = context.resolveExpressionRef(library, "LnNeg0").getExpression().evaluate(context);
+      assertThat(result, is(Double.NEGATIVE_INFINITY));
 
-//        result = context.resolveExpressionRef(library, "LnNeg1").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log((double) -1))));
+      result = context.resolveExpressionRef(library, "Ln1").getExpression().evaluate(context);
+      assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1d))));
 
-        result = context.resolveExpressionRef(library, "Ln1000").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000))));
+      result = context.resolveExpressionRef(library, "LnNeg1").getExpression().evaluate(context);
+      assertThat(result, is(Math.log((double) -1)));
 
-        result = context.resolveExpressionRef(library, "Ln1000D").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000d))));
+      result = context.resolveExpressionRef(library, "Ln1000").getExpression().evaluate(context);
+      assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000))));
+
+      result = context.resolveExpressionRef(library, "Ln1000D").getExpression().evaluate(context);
+      assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.log(1000d))));
     }
 
     /**
@@ -274,9 +272,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "ModuloNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        // TODO: Decide what to do with divide by 0
-//        result = context.resolveExpressionRef(library, "Modulo0By0").getExpression().evaluate(context);
-//        assertThat(result, is(Double.NaN));
+       result = context.resolveExpressionRef(library, "Modulo0By0").getExpression().evaluate(context);
+       assertThat(result, is(Double.NaN));
 
         result = context.resolveExpressionRef(library, "Modulo4By2").getExpression().evaluate(context);
         assertThat(result, is(0));
@@ -376,9 +373,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "PredecessorOf1D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Interval.predecessor(new BigDecimal(1.0))));
 
-        //TODO: Come back to this...
-//        result = context.resolveExpressionRef(library, "PredecessorOf101D").getExpression().evaluate(context);
-//        assertThat(result, is(Interval.predecessor(new BigDecimal(1.01))));
+       result = context.resolveExpressionRef(library, "PredecessorOf101D").getExpression().evaluate(context);
+       assertThat(result, is(Interval.predecessor(new BigDecimal("1.01"))));
 
         //TODO: Uncomment once DateTime and Time evaluate has been implemented
 //        result = context.resolveExpressionRef(library, "PredecessorOfJan12000").getExpression().evaluate(context);
@@ -408,9 +404,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "PowerNeg2To2").getExpression().evaluate(context);
         assertThat(result, is(4));
 
-        // TODO: Fix this
-//        result = context.resolveExpressionRef(library, "Power2ToNeg2").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.25)));
+       result = context.resolveExpressionRef(library, "Power2ToNeg2").getExpression().evaluate(context);
+       assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("0.25")));
 
         result = context.resolveExpressionRef(library, "Power2DTo2D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
@@ -448,9 +443,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "Round0D4").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
-        // TODO: Fix
-//        result = context.resolveExpressionRef(library, "Round3D14159").getExpression().evaluate(context);
-//        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(3.14)));
+       result = context.resolveExpressionRef(library, "Round3D14159").getExpression().evaluate(context);
+       assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("3.14")));
 
         result = context.resolveExpressionRef(library, "RoundNeg0D5").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
@@ -513,9 +507,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "SuccessorOf1D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Interval.successor(new BigDecimal(1.0))));
 
-        //TODO: Come back to this...
-//        result = context.resolveExpressionRef(library, "SuccessorOf101D").getExpression().evaluate(context);
-//        assertThat(result, is(Interval.successor(new BigDecimal(1.01))));
+       result = context.resolveExpressionRef(library, "SuccessorOf101D").getExpression().evaluate(context);
+       assertThat(result, is(Interval.successor(new BigDecimal("1.01"))));
 
         //TODO: Uncomment once DateTime and Time evaluate has been implemented
 //        result = context.resolveExpressionRef(library, "SuccessorOfJan12000").getExpression().evaluate(context);

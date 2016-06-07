@@ -2,7 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 
-import java.math.BigDecimal;
+import java.math.*;
 
 /**
  * Created by Bryn on 5/25/2016.
@@ -13,18 +13,19 @@ public class RoundEvaluator extends Round {
     public Object evaluate(Context context) {
         Object value = getOperand().evaluate(context);
         Object precisionValue = getPrecision() == null ? null : getPrecision().evaluate(context);
-        BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
+        //BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
+        RoundingMode rm = RoundingMode.HALF_UP;
 
-        if (value == null) {
-            return null;
-        }
+        if (value == null) { return null; }
+
+        if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) { rm = RoundingMode.HALF_DOWN; }
 
         if (value instanceof BigDecimal){
             if (precisionValue == null || ((Integer)precisionValue == 0)) {
-                return new BigDecimal(Math.round(((BigDecimal)value).doubleValue()));
+                return ((BigDecimal)value).setScale(0, rm);
             }
             else {
-                return new BigDecimal(Math.round(((BigDecimal)value).multiply(precision).doubleValue())).divide(precision);
+                return ((BigDecimal)value).setScale((Integer)precisionValue, rm);
             }
         }
 

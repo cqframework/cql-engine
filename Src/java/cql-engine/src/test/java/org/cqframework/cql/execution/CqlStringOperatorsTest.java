@@ -4,6 +4,8 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 
+import java.util.*;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -168,17 +170,14 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "SplitNullComma").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        // TODO: Fix this
-        //result = context.resolveExpressionRef(library, "SplitABNull").getExpression().evaluate(context);
-        //assertThat(result, is(new String[]{"a,b"}));
+        result = context.resolveExpressionRef(library, "SplitABNull").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Arrays.asList("a,b"))));
 
-        // TODO: Fix this
-        //result = context.resolveExpressionRef(library, "SplitABDash").getExpression().evaluate(context);
-        //assertThat(result, is(new String[]{"a,b"}));
+        result = context.resolveExpressionRef(library, "SplitABDash").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Arrays.asList("a,b"))));
 
-        // TODO: Fix this
-        //result = context.resolveExpressionRef(library, "SplitABComma").getExpression().evaluate(context);
-        //assertThat(result, is(new String[]{"a", "b"}));
+        result = context.resolveExpressionRef(library, "SplitABComma").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Arrays.asList("a", "b"))));
     }
 
     /**
@@ -216,9 +215,8 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "SubstringABC1To1").getExpression().evaluate(context);
         assertThat(result, is("b"));
 
-        // TODO: Fix this
-        //result = context.resolveExpressionRef(library, "SubstringAB0To3").getExpression().evaluate(context);
-        //assertThat(result, is("ab"));
+        result = context.resolveExpressionRef(library, "SubstringAB0To3").getExpression().evaluate(context);
+        assertThat(result, is("ab"));
     }
 
     /**

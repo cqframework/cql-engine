@@ -18,7 +18,19 @@ public class LnEvaluator extends Ln {
         }
 
         if (value instanceof BigDecimal){
-            return new BigDecimal(Math.log(((BigDecimal)value).doubleValue()));
+          BigDecimal retVal = new BigDecimal(0);
+          try {
+            retVal = new BigDecimal(Math.log(((BigDecimal)value).doubleValue()));
+          } catch (NumberFormatException nfe){
+            if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) {
+              return Double.NaN;
+            }
+            else if (((BigDecimal)value).compareTo(new BigDecimal(0)) == 0) {
+              return Double.NEGATIVE_INFINITY;
+            }
+            else { throw new NumberFormatException(); }
+          }
+            return retVal;
         }
 
         // TODO: Finish implementation
