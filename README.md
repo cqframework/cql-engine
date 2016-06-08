@@ -1,22 +1,14 @@
-# Clinical Quality Language
+# CQL Evaluation Engine
 
-The Clinical Quality Language (CQL) specification defines a representation for the
-expression of clinical knowledge that can be used within both the Clinical
-Decision Support (CDS) and Clinical Quality Measurement (CQM) domains.
+The HL7 Clinical Quality Language specification is designed to enable accurate authoring and automated sharing of computable knowledge artifacts including quality measures, decision support rules, orders sets and documentation templates. The specification is constructed using a layered approach informed by modern programming language and compiler design which facilitates the development of language processing applications including static analysis, translation, and evaluation.
 
-This repository contains the CQL grammar file, ELM UML / schemas, examples, and
-proof-of-concept code for working with CQL.
+The specification includes informative open source tooling that can be used to verify the semantics of CQL libraries; to produce the sharable format, Expression Logical Model (ELM), of those libraries; and to evaluate the resulting libraries using a prototypical JavaScript-based ELM interpreter. 
 
-Additional Documentation:
-
-* [Java Tools for CQL](Src/java/README.md)
-* [CQL Execution Framework](Src/coffeescript/cql-execution/README.md)
-* [CQL-to-ELM Translator](Src/java/cql-to-elm/OVERVIEW.md)
-* [Java Quickstart](Src/java-quickstart/README.md)
+This project builds on that tooling to provide an open source Java-based evaluation engine capable of evaluating the result of any CQL expression.
 
 # License
 
-Copyright 2014 The MITRE Corporation
+Copyright 2016 University of Utah
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
