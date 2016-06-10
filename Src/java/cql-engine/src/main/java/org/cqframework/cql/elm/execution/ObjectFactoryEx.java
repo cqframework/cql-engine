@@ -4,16 +4,18 @@ import javax.xml.bind.annotation.XmlRegistry;
 
 /**
  * Created by Bryn on 5/24/2016.
+ * Edited by Chris Schuler on 6/8/2016 - added interval operator evaluators
  */
 @XmlRegistry
 public class ObjectFactoryEx extends ObjectFactory {
     @Override
-    public Abs createAbs() {
-        return new AbsEvaluator();
-    }
-    
+    public Abs createAbs() { return new AbsEvaluator(); }
+
     @Override
     public Add createAdd() { return new AddEvaluator(); }
+
+    @Override
+    public After createAfter() { return new AfterEvaluator(); }
 
     @Override
     public AllTrue createAllTrue() { return new AllTrueEvaluator(); }
@@ -28,6 +30,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public As createAs() { return new AsEvaluator(); }
 
     @Override
+    public Before createBefore() { return new BeforeEvaluator(); }
+
+    @Override
     public Ceiling createCeiling() { return new CeilingEvaluator(); }
 
     @Override
@@ -35,6 +40,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Code createCode() { return new CodeEvaluator(); }
+
+    @Override
+    public Collapse createCollapse() { return new CollapseEvaluator(); }
 
     @Override
     public Combine createCombine() { return new CombineEvaluator(); }
@@ -59,6 +67,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public End createEnd() { return new EndEvaluator(); }
+
+    @Override
+    public Ends createEnds() { return new EndsEvaluator(); }
 
     @Override
     public Equal createEqual() { return new EqualEvaluator(); }
@@ -166,6 +177,15 @@ public class ObjectFactoryEx extends ObjectFactory {
     public MaxValue createMaxValue() { return new MaxValueEvaluator(); }
 
     @Override
+    public Meets createMeets() { return new MeetsEvaluator(); }
+
+    @Override
+    public MeetsAfter createMeetsAfter() { return new MeetsAfterEvaluator(); }
+
+    @Override
+    public MeetsBefore createMeetsBefore() { return new MeetsBeforeEvaluator(); }
+
+    @Override
     public MinValue createMinValue() { return new MinValueEvaluator(); }
 
     @Override
@@ -193,6 +213,15 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Or createOr() { return new OrEvaluator(); }
 
     @Override
+    public Overlaps createOverlaps() { return new OverlapsEvaluator(); }
+
+    @Override
+    public OverlapsBefore createOverlapsBefore() { return new OverlapsBeforeEvaluator(); }
+
+    @Override
+    public OverlapsAfter createOverlapsAfter() { return new OverlapsAfterEvaluator(); }
+
+    @Override
     public ParameterRef createParameterRef() { return new ParameterRefEvaluator(); }
 
     @Override
@@ -203,6 +232,12 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Predecessor createPredecessor() { return new PredecessorEvaluator(); }
+
+    @Override
+    public ProperIncludes createProperIncludes() { return new ProperlyIncludesEvaluator(); }
+
+    @Override
+    public ProperIncludedIn createProperIncludedIn() { return new ProperlyIncludedInEvaluator(); }
 
     @Override
     public Property createProperty() { return new PropertyEvaluator(); }
@@ -227,6 +262,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Start createStart() { return new StartEvaluator(); }
+
+    @Override
+    public Starts createStarts() { return new StartsEvaluator(); }
 
     @Override
     public Substring createSubstring() { return new SubstringEvaluator(); }
@@ -254,6 +292,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Upper createUpper() { return new UpperEvaluator(); }
+
+    @Override
+    public Width createWidth() { return new WidthEvaluator(); }
 
     @Override
     public Xor createXor() { return new XorEvaluator(); }
