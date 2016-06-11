@@ -1,12 +1,13 @@
 package org.cqframework.cql.runtime;
 
 import org.apache.commons.lang3.NotImplementedException;
-
+import org.cqframework.cql.runtime.Quantity;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
 /**
  * Created by Bryn on 4/15/2016.
+ * Edited by Chris Schuler on 6/10/2016 - added getSize() method
  */
 public class Interval {
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {
@@ -30,6 +31,16 @@ public class Interval {
             || (this.high != null && this.high.getClass() != pointType)) {
             throw new IllegalArgumentException("Low and high boundary values of an interval must be of the same type.");
         }
+    }
+
+    public static Object getSize(Object start, Object end) {
+      if (start == null || end == null) { return null; }
+      if (start instanceof Integer) { return (Integer)end - (Integer)start; }
+      else if (start instanceof BigDecimal) { return ((BigDecimal)end).subtract((BigDecimal)start); }
+      else if (start instanceof Quantity) { return new Quantity().withValue((((Quantity)end).getValue()).subtract((((Quantity)start).getValue()))).withUnit(((Quantity)start).getUnit()); }
+      else {
+        throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));
+      }
     }
 
     private Object low;
@@ -178,4 +189,3 @@ public class Interval {
         }
     }
 }
-

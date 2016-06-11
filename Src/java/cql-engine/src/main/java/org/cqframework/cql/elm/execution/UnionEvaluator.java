@@ -3,6 +3,7 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.Value;
 import java.math.BigDecimal;
 import java.lang.Math.*;
 
@@ -10,7 +11,7 @@ import java.util.ArrayList;
 
 /**
  * Created by Bryn on 5/25/2016.
- * Edited by Chris Schuler on 6/8/2016 - added Interval Logic
+ * Edited by Chris Schuler on 6/8/2016 - added Interval Logic and union() method
  */
 public class UnionEvaluator extends Union {
 
@@ -22,22 +23,17 @@ public class UnionEvaluator extends Union {
     Object rightStart = rightInterval.getStart();
     Object rightEnd = rightInterval.getEnd();
 
+    if (Value.compareTo(leftEnd, rightStart, "<") || Value.compareTo(rightEnd, leftStart, "<")) { return null; }
+
     if (leftStart instanceof Integer) {
-      if ((Integer)leftEnd < (Integer)rightStart || (Integer)rightEnd < (Integer)leftStart) { return null; }
       return new Interval(Math.min((Integer)leftStart, (Integer)rightStart), true, Math.max((Integer)leftEnd, (Integer)rightEnd), true);
     }
 
     else if (leftStart instanceof BigDecimal) {
-      if (((BigDecimal)leftEnd).compareTo((BigDecimal)rightStart) < 0 || ((BigDecimal)rightEnd).compareTo((BigDecimal)leftStart) < 0) {
-        return null;
-      }
       return new Interval(((BigDecimal)leftStart).min((BigDecimal)rightStart), true, ((BigDecimal)leftEnd).max((BigDecimal)rightEnd), true);
     }
 
     else if (leftStart instanceof Quantity) {
-      if ((((Quantity)leftEnd).getValue()).compareTo(((Quantity)rightStart).getValue()) < 0 || (((Quantity)rightEnd).getValue()).compareTo(((Quantity)leftStart).getValue()) < 0) {
-        return null;
-      }
       String unit = ((Quantity)leftStart).getUnit();
       return new Interval(new Quantity().withValue((((Quantity)leftStart).getValue()).min(((Quantity)rightStart).getValue())).withUnit(unit), true, new Quantity().withValue((((Quantity)leftEnd).getValue()).max(((Quantity)rightEnd).getValue())).withUnit(unit), true);
     }

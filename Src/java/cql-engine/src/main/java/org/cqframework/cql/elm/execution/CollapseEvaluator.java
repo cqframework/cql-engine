@@ -3,13 +3,13 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.Value;
 import java.math.BigDecimal;
 import java.util.*;
 
-/*
+/**
 * Created by Chris Schuler on 6/8/2016
 */
-
 public class CollapseEvaluator extends Collapse {
 
   public static Object collapse(ArrayList intervals) {
@@ -17,9 +17,9 @@ public class CollapseEvaluator extends Collapse {
       @Override
       public int compare(Interval o1, Interval o2) {
         if (o1.getStart() instanceof Integer) {
-          if ((Integer)o1.getStart() < (Integer)o2.getStart()) { return -1; }
-          else if ((Integer)o1.getStart() == (Integer)o2.getStart()) { return 0; }
-          else if ((Integer)o1.getStart() > (Integer)o2.getStart()) { return 1; }
+          if (Value.compareTo(o1.getStart(), o2.getStart(), "<")) { return -1; }
+          else if (Value.compareTo(o1.getStart(), o2.getStart(), "==")) { return 0; }
+          else if (Value.compareTo(o1.getStart(), o2.getStart(), ">")) { return 1; }
         }
         else if (o1.getStart() instanceof BigDecimal) {
           return ((BigDecimal)o1.getStart()).compareTo((BigDecimal)o2.getStart());

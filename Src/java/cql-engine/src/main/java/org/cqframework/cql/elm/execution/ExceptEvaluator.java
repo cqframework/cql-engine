@@ -4,6 +4,7 @@ import org.cqframework.cql.execution.Context;
 
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.Value;
 import java.util.*;
 import java.lang.Math.*;
 import java.math.BigDecimal;
@@ -26,53 +27,34 @@ public class ExceptEvaluator extends Except {
         Object leftEnd = leftInterval.getEnd();
         Object rightStart = rightInterval.getStart();
         Object rightEnd = rightInterval.getEnd();
-        if (leftStart instanceof Integer) {
-          if ((Integer)rightStart > (Integer)leftEnd) { return leftInterval; }
-          else if ((Integer)leftStart < (Integer)rightStart && (Integer)leftEnd > (Integer)rightEnd) { return null; }
-          else if ((Integer)leftStart < (Integer)rightStart && (Integer)leftEnd <= (Integer)rightEnd) {
+
+        if (Value.compareTo(rightStart, leftEnd, ">")) { return leftInterval; }
+        else if (Value.compareTo(leftStart, rightStart, "<") && Value.compareTo(leftEnd, rightEnd, ">")) { return null; }
+
+        Boolean leftFirst = (Value.compareTo(leftStart, rightStart, "<") && Value.compareTo(leftEnd, rightEnd, "<="));
+        Boolean rightFirst = (Value.compareTo(leftStart, rightStart, ">=") && Value.compareTo(leftEnd, rightEnd, ">"));
+
+        if (leftStart instanceof Integer && leftFirst) {
             return new Interval((Integer)leftStart, true, (Object)Math.min((Integer)rightStart - 1, (Integer)leftEnd), true);
-          }
-          else if ((Integer)leftStart >= (Integer)rightStart && (Integer)leftEnd > (Integer)rightEnd) {
-            return new Interval((Object)Math.max((Integer)rightEnd + 1, (Integer)leftStart), true, (Integer)leftEnd, true);
-          }
-          else { return null; }
+        }
+        else if (leftStart instanceof Integer && rightFirst) {
+          return new Interval((Object)Math.max((Integer)rightEnd + 1, (Integer)leftStart), true, (Integer)leftEnd, true);
         }
 
-        else if (leftStart instanceof BigDecimal) {
-          BigDecimal b1 = (BigDecimal)leftStart;
-          BigDecimal e1 = (BigDecimal)leftEnd;
-          BigDecimal b2 = (BigDecimal)rightStart;
-          BigDecimal e2 = (BigDecimal)rightEnd;
-          if (b2.compareTo(e1) > 0) { return leftInterval; }
-          else if (b1.compareTo(b2) < 0 && e1.compareTo(e2) > 0) {
-            return null;
-          }
-          else if ((b1.compareTo(b2) < 0) && (e1.compareTo(e2) <= 0)) {
-            return new Interval(b1, true, e1.min(b2.subtract(new BigDecimal("1.0"))), true);
-          }
-          else if ((b1.compareTo(b2) >= 0) && (e1.compareTo(e2) > 0)) {
-            return new Interval(b1.max(e2.add(new BigDecimal("1.0"))), true, e1, true);
-          }
-          else { return null; }
+        else if (leftStart instanceof BigDecimal && leftFirst) {
+          return new Interval((BigDecimal)leftStart, true, ((BigDecimal)leftEnd).min(((BigDecimal)rightStart).subtract(new BigDecimal("1.0"))), true);
+        }
+        else if (leftStart instanceof BigDecimal && rightFirst) {
+          return new Interval(((BigDecimal)leftStart).max(((BigDecimal)leftEnd).add(new BigDecimal("1.0"))), true, (BigDecimal)leftEnd, true);
         }
 
-        else if (leftStart instanceof Quantity) {
-          BigDecimal b1 = ((Quantity)leftStart).getValue();
-          BigDecimal e1 = ((Quantity)leftEnd).getValue();
-          BigDecimal b2 = ((Quantity)rightStart).getValue();
-          BigDecimal e2 = ((Quantity)rightEnd).getValue();
+        else if (leftStart instanceof Quantity && leftFirst) {
           String unit = ((Quantity)leftStart).getUnit();
-          if (b2.compareTo(e1) > 0) { return leftInterval; }
-          else if (b1.compareTo(b2) < 0 && e1.compareTo(e2) > 0) {
-            return null;
-          }
-          else if ((b1.compareTo(b2) < 0) && (e1.compareTo(e2) <= 0)) {
-            return new Interval(new Quantity().withValue(b1).withUnit(unit), true, new Quantity().withValue(e1.min(b2.subtract(new BigDecimal("1.0")))).withUnit(unit), true);
-          }
-          else if ((b1.compareTo(b2) >= 0) && (e1.compareTo(e2) > 0)) {
-            return new Interval(new Quantity().withValue(b1.max(e2.add(new BigDecimal("1.0")))).withUnit(unit), true, new Quantity().withValue(e1).withUnit(unit), true);
-          }
-          else { return null; }
+          return new Interval(new Quantity().withValue(((Quantity)leftStart).getValue()).withUnit(unit), true, new Quantity().withValue((((Quantity)leftEnd).getValue()).min((((Quantity)rightStart).getValue()).subtract(new BigDecimal("1.0")))).withUnit(unit), true);
+        }
+        else if (leftStart instanceof Quantity && rightFirst) {
+          String unit = ((Quantity)leftStart).getUnit();
+          return new Interval(new Quantity().withValue((((Quantity)leftStart).getValue()).max((((Quantity)rightEnd).getValue()).add(new BigDecimal("1.0")))).withUnit(unit), true, new Quantity().withValue(((Quantity)leftEnd).getValue()).withUnit(unit), true);
         }
       }
       return null;

@@ -1,13 +1,61 @@
 package org.cqframework.cql.runtime;
 
 import java.math.BigDecimal;
+import org.cqframework.cql.runtime.Quantity;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * Created by Bryn on 5/2/2016.
+ * Edited by Chris Schuler on 6/10/2016 - Added compareTo(), compare(), and plusOne() methods
  */
 public class Value {
+
+    public static Object plusOne(Object operand) {
+      if (operand instanceof Integer) { return (Integer)operand + 1; }
+      else if (operand instanceof BigDecimal) { return ((BigDecimal)operand).add(new BigDecimal(1)); }
+      else if (operand instanceof Quantity) { return new Quantity().withValue((((Quantity)operand).getValue()).add(new BigDecimal(1))).withUnit(((Quantity)operand).getUnit()); }
+      else {
+        throw new IllegalArgumentException(String.format("Cannot plusOne argument of type '%s'.", operand.getClass().getName()));
+      }
+    }
+
+    public static Boolean compare(double left, double right, String op) {
+      if (op.equals("==")) { return left == right; }
+      else if (op.equals("!=")) { return left != right; }
+      else if (op.equals("<")) { return left < right; }
+      else if (op.equals(">")) { return left > right; }
+      else if (op.equals("<=")) {return left <= right; }
+      else if (op.equals(">=")) { return left >= right; }
+      else { return null; }
+    }
+
+    public static Boolean compareTo(Object left, Object right, String op) {
+      if (left == null || right == null) { return null; }
+
+      if (left instanceof Integer) {
+        BigDecimal leftOp = new BigDecimal((Integer)left);
+        BigDecimal rightOp = new BigDecimal((Integer)right);
+        if (leftOp == null || rightOp == null) { return null; }
+        return compare(leftOp.doubleValue(), rightOp.doubleValue(), op);
+      }
+
+      else if (left instanceof BigDecimal) {
+        return compare(((BigDecimal)left).doubleValue(), ((BigDecimal)right).doubleValue(), op);
+      }
+
+      else if (left instanceof Quantity) {
+        BigDecimal leftOp = ((Quantity)left).getValue();
+        BigDecimal rightOp = ((Quantity)right).getValue();
+        if (leftOp == null || rightOp == null) { return null; }
+        return compare(leftOp.doubleValue(), rightOp.doubleValue(), op);
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Cannot Compare arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+      }
+    }
+
     public static Boolean equals(Object left, Object right) {
         if ((left == null) || (right == null)) {
             return null;

@@ -2,13 +2,11 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
-import org.cqframework.cql.runtime.Quantity;
-import java.math.BigDecimal;
+import org.cqframework.cql.runtime.Value;
 
-/*
+/**
 * Created by Chris Schuler on 6/8/2016
 */
-
 public class MeetsAfterEvaluator extends MeetsAfter {
 
   public Object evaluate(Context context) {
@@ -21,21 +19,7 @@ public class MeetsAfterEvaluator extends MeetsAfter {
       Object rightStart = right.getStart();
       Object rightEnd = right.getEnd();
 
-      if (leftStart instanceof Integer) {
-        return ((Integer)leftStart == (Integer)rightEnd + 1);
-      }
-
-      else if (leftStart instanceof BigDecimal) {
-        return (((BigDecimal)leftStart).compareTo(((BigDecimal)rightEnd).add(new BigDecimal(1))) == 0);
-      }
-
-      else if (leftStart instanceof Quantity) {
-        return ((((Quantity)leftStart).getValue()).compareTo((((Quantity)rightEnd).getValue()).add(new BigDecimal(1))) == 0);
-      }
-
-      else {
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
-      }
+      return Value.compareTo(leftStart, Value.plusOne(rightEnd), "==");
     }
     return null;
   }

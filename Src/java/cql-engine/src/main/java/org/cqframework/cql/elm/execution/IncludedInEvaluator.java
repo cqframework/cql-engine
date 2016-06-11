@@ -2,8 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
-import org.cqframework.cql.runtime.Quantity;
-import java.math.BigDecimal;
+import org.cqframework.cql.runtime.Value;
 
 /**
  * Created by Bryn on 5/25/2016.
@@ -23,21 +22,7 @@ public class IncludedInEvaluator extends IncludedIn {
         Object rightStart = ((Interval)right).getStart();
         Object rightEnd = ((Interval)right).getEnd();
 
-        if (leftStart instanceof Integer) {
-          return ((Integer)rightStart <= (Integer)leftStart && (Integer)rightEnd >= (Integer)leftEnd);
-        }
-
-        else if (leftStart instanceof BigDecimal) {
-          return (((BigDecimal)rightStart).compareTo((BigDecimal)leftStart) <= 0 && ((BigDecimal)rightEnd).compareTo((BigDecimal)leftEnd) >= 0);
-        }
-
-        else if (leftStart instanceof Quantity) {
-          return ((((Quantity)rightStart).getValue()).compareTo(((Quantity)leftStart).getValue()) <= 0 && (((Quantity)rightEnd).getValue()).compareTo(((Quantity)leftEnd).getValue()) >= 0);
-        }
-
-        else {
-          throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
-        }
+        return (Value.compareTo(rightStart, leftStart, "<=") && Value.compareTo(rightEnd, leftEnd, ">="));
       }
 
       else {
