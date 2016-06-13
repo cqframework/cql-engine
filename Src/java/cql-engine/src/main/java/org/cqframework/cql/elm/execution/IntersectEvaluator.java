@@ -29,6 +29,8 @@ public class IntersectEvaluator extends Intersect {
         Object rightStart = rightInterval.getStart();
         Object rightEnd = rightInterval.getEnd();
 
+        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
         if (leftStart instanceof Integer) {
           return (new Interval(Math.max((Integer)leftStart, (Integer)rightStart), true, Math.min((Integer)leftEnd, (Integer)rightEnd), true));
         }

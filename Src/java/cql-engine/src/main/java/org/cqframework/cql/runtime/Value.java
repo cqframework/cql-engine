@@ -7,18 +7,9 @@ import java.util.Iterator;
 
 /**
  * Created by Bryn on 5/2/2016.
- * Edited by Chris Schuler on 6/10/2016 - Added compareTo(), compare(), and plusOne() methods
+ * Edited by Chris Schuler on 6/10/2016 - Added compareTo(), compare(), and Interval logic in equals()
  */
 public class Value {
-
-    public static Object plusOne(Object operand) {
-      if (operand instanceof Integer) { return (Integer)operand + 1; }
-      else if (operand instanceof BigDecimal) { return ((BigDecimal)operand).add(new BigDecimal(1)); }
-      else if (operand instanceof Quantity) { return new Quantity().withValue((((Quantity)operand).getValue()).add(new BigDecimal(1))).withUnit(((Quantity)operand).getUnit()); }
-      else {
-        throw new IllegalArgumentException(String.format("Cannot plusOne argument of type '%s'.", operand.getClass().getName()));
-      }
-    }
 
     public static Boolean compare(double left, double right, String op) {
       if (op.equals("==")) { return left == right; }
@@ -59,6 +50,17 @@ public class Value {
     public static Boolean equals(Object left, Object right) {
         if ((left == null) || (right == null)) {
             return null;
+        }
+
+        if (left instanceof Interval) {
+          Object leftStart = ((Interval)left).getStart();
+          Object leftEnd = ((Interval)left).getEnd();
+          Object rightStart = ((Interval)right).getStart();
+          Object rightEnd = ((Interval)right).getEnd();
+
+          if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
+          return (compareTo(leftStart, rightStart, "==") && compareTo(leftEnd, rightEnd, "=="));
         }
 
         // list equal

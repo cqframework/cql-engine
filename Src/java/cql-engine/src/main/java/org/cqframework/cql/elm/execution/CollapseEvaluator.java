@@ -53,6 +53,7 @@ public class CollapseEvaluator extends Collapse {
       if (interval != null) { intervals.add(interval); }
     }
     if (intervals.size() == 1) { return intervals; }
+    else if (intervals.size() == 0) { return null; }
 
     return collapse(intervals);
   }

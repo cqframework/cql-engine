@@ -23,6 +23,8 @@ public class UnionEvaluator extends Union {
     Object rightStart = rightInterval.getStart();
     Object rightEnd = rightInterval.getEnd();
 
+    if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
     if (Value.compareTo(leftEnd, rightStart, "<") || Value.compareTo(rightEnd, leftStart, "<")) { return null; }
 
     if (leftStart instanceof Integer) {

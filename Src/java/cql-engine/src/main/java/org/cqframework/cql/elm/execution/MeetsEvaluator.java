@@ -20,7 +20,9 @@ public class MeetsEvaluator extends Meets {
       Object rightStart = right.getStart();
       Object rightEnd = right.getEnd();
 
-      return (Value.compareTo(rightStart, Value.plusOne(leftEnd), "==") || Value.compareTo(leftStart, Value.plusOne(rightEnd), "=="));
+      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
+      return (Value.compareTo(rightStart, leftEnd, ">")) ? Value.compareTo(rightStart, Interval.successor(leftEnd), "==") : Value.compareTo(leftStart, Interval.successor(rightEnd), "==");
     }
     return null;
   }

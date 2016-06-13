@@ -20,6 +20,8 @@ public class StartsEvaluator extends Starts {
       Object rightStart = right.getStart();
       Object rightEnd = right.getEnd();
 
+      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
       return (Value.compareTo(leftStart, rightStart, "==") && Value.compareTo(leftEnd, rightEnd, "<="));
     }
     return null;

@@ -20,6 +20,8 @@ public class EndsEvaluator extends Ends {
       Object rightStart = rightInterval.getStart();
       Object rightEnd = rightInterval.getEnd();
 
+      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
       return (Value.compareTo(leftStart, rightStart, ">=") && Value.compareTo(leftEnd, rightEnd, "=="));
     }
     return null;

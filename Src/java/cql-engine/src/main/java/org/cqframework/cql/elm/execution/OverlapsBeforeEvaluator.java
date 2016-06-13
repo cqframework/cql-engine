@@ -9,6 +9,7 @@ import org.cqframework.cql.runtime.Value;
 */
 public class OverlapsBeforeEvaluator extends OverlapsBefore {
 
+  @Override
   public Object evaluate(Context context) {
     Interval left = (Interval)getOperand().get(0).evaluate(context);
     Interval right = (Interval)getOperand().get(1).evaluate(context);

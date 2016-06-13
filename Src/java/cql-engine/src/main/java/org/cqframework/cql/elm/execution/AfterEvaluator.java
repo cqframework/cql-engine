@@ -22,6 +22,8 @@ public class AfterEvaluator extends After {
       Object left = leftInterval.getStart();
       Object right = rightInterval.getEnd();
 
+      // if (Value.isNull(left, right)) { return null; }
+
       return Value.compareTo(left, right, ">");
     }
 

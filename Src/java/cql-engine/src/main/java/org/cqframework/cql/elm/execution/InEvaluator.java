@@ -35,6 +35,8 @@ public class InEvaluator extends In {
         Object rightStart = right.getStart();
         Object rightEnd = right.getEnd();
 
+        if (rightStart == null || rightEnd == null) { return null; }
+
         return (Value.compareTo(left, rightStart, ">=") && Value.compareTo(left, rightEnd, "<="));
       }
       return null;

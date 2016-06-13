@@ -22,6 +22,8 @@ public class IncludesEvaluator extends Includes {
         Object rightStart = ((Interval)right).getStart();
         Object rightEnd = ((Interval)right).getEnd();
 
+        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
         return (Value.compareTo(leftStart, rightStart, "<=") && Value.compareTo(leftEnd, rightEnd, ">="));
       }
 

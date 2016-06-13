@@ -28,6 +28,8 @@ public class ExceptEvaluator extends Except {
         Object rightStart = rightInterval.getStart();
         Object rightEnd = rightInterval.getEnd();
 
+        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
         if (Value.compareTo(rightStart, leftEnd, ">")) { return leftInterval; }
         else if (Value.compareTo(leftStart, rightStart, "<") && Value.compareTo(leftEnd, rightEnd, ">")) { return null; }
 

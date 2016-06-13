@@ -15,6 +15,8 @@ public class OverlapsEvaluator extends Overlaps {
     Object rightStart = right.getStart();
     Object rightEnd = right.getEnd();
 
+    if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
     return (Value.compareTo(leftStart, rightEnd, "<=") && Value.compareTo(rightStart, leftEnd, "<="));
   }
 

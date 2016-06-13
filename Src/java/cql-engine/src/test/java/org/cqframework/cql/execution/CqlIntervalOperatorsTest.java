@@ -181,11 +181,15 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         Collapse:
+        define TestCollapseNull: collapse {Interval(null, null)}
         define IntegerIntervalCollapse: collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }
         define IntegerIntervalCollapse2: collapse { Interval[1,2], Interval[3,7], Interval[10,19], Interval[7,10] }
         define DecimalIntervalCollapse: collapse { Interval[1.0,5.0], Interval[3.0,7.0], Interval[12.0,19.0], Interval[7.0,10.0] }
         define QuantityIntervalCollapse: collapse { Interval[1.0 'g',5.0 'g'], Interval[3.0 'g',7.0 'g'], Interval[12.0 'g',19.0 'g'], Interval[7.0 'g',10.0 'g'] }
         */
+        result = context.resolveExpressionRef(library, "TestCollapseNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
         result = context.resolveExpressionRef(library, "IntegerIntervalCollapse").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(new Interval(1, true, 10, true), new Interval(12, true, 19, true))));
 
@@ -231,7 +235,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         Ends
-        define TestEndsNull: IntegerIntervalTest ends null
+        define TestEndsNull: IntegerIntervalTest ends Interval(null, null)
         define IntegerIntervalEndsTrue: IntegerIntervalTest4 ends IntegerIntervalTest
         define IntegerIntervalEndsFalse: IntegerIntervalTest3 ends IntegerIntervalTest
         define DecimalIntervalEndsTrue: DecimalIntervalTest3 ends DecimalIntervalTest
@@ -239,9 +243,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalEndsTrue: QuantityIntervalTest3 ends QuantityIntervalTest
         define QuantityIntervalEndsFalse: QuantityIntervalTest2 ends QuantityIntervalTest
         */
-        // TODO: Problem with null test - AssertionError beforeEachTestMethod()
-        // result = context.resolveExpressionRef(library, "TestEndsNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestEndsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalEndsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -263,7 +266,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         Equal
-        define TestEqualNull: IntegerIntervalTest = null
+        define TestEqualNull: IntegerIntervalTest = Interval(null, null)
         define IntegerIntervalEqualTrue: IntegerIntervalTest = IntegerIntervalTest
         define IntegerIntervalEqualFalse: IntegerIntervalTest = IntegerIntervalTest2
         define DecimalIntervalEqualTrue: DecimalIntervalTest = DecimalIntervalTest
@@ -271,9 +274,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalEqualTrue: QuantityIntervalTest = QuantityIntervalTest
         define QuantityIntervalEqualFalse: QuantityIntervalTest = QuantityIntervalTest2
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestEqualNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestEqualNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -295,16 +297,15 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         Except:
-        define TestExceptNull: null except IntegerIntervalTest
+        define TestExceptNull: NullInterval except NullInterval
         define IntegerIntervalExcept1to3: IntegerIntervalTest except IntegerIntervalTest4
         define IntegerIntervalExceptNull: Interval[1, 10] except Interval[3,7]
         define DecimalIntervalExcept1to3: DecimalIntervalTest except DecimalIntervalTest3
         define DecimalIntervalExceptNull: Interval[1.0, 10.0] except Interval[3.0,7.0]
         define QuantityIntervalExcept1to4: QuantityIntervalTest except QuantityIntervalTest3
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestExceptNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestExceptNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalExcept1to3").getExpression().evaluate(context);
         assertThat((Interval)result, is(new Interval(1, true, 3, true)));
@@ -323,7 +324,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         In
-        define TestInNull: null in IntegerIntervalTest
+        define TestInNull: 5 in NullInterval
         define IntegerIntervalInTrue: 5 in IntegerIntervalTest;
         define IntegerIntervalInFalse: 500 in IntegerIntervalTest;
         define DecimalIntervalInTrue: 9.0 in DecimalIntervalTest;
@@ -331,9 +332,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalInTrue: 1.0 'g' in QuantityIntervalTest;
         define QuantityIntervalInFalse: 55.0 'g' in QuantityIntervalTest;
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestInNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestInNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -363,9 +363,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalIncludesTrue: QuantityIntervalTest includes QuantityIntervalTest3
         define QuantityIntervalIncludesFalse: QuantityIntervalTest includes QuantityIntervalTest2
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestIncludesNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestIncludesNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -387,7 +386,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         Included In
-        define TestIncludedInNull: IntegerIntervalTest included in null
+        define TestIncludedInNull: null included in IntegerIntervalTest
         define IntegerIntervalIncludedInTrue: IntegerIntervalTest4 included in IntegerIntervalTest
         define IntegerIntervalIncludedInFalse: IntegerIntervalTest3 included in IntegerIntervalTest
         define DecimalIntervalIncludedInTrue: DecimalIntervalTest3 included in DecimalIntervalTest
@@ -395,9 +394,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalIncludedInTrue: QuantityIntervalTest3 included in QuantityIntervalTest
         define QuantityIntervalIncludedInFalse: QuantityIntervalTest2 included in QuantityIntervalTest
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestIncludedInNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestIncludedInNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -427,7 +425,6 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalIntersectTest5to10: QuantityIntervalTest intersect QuantityIntervalTest3
         define QuantityIntervalIntersectTestNull: QuantityIntervalTest intersect QuantityIntervalTest2
         */
-        // TODO: Problem with null test
         // result = context.resolveExpressionRef(library, "TestIntersectNull").getExpression().evaluate(context);
         // assertThat(result, is(nullValue()));
 
@@ -479,17 +476,16 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         Meets
-        define TestMeetsNull: IntegerIntervalTest meets null
+        define TestMeetsNull: Interval(null, 5] meets Interval[11, null)
         define IntegerIntervalMeetsTrue: IntegerIntervalTest meets IntegerIntervalTest2
         define IntegerIntervalMeetsFalse: IntegerIntervalTest meets IntegerIntervalTest3
-        define DecimalIntervalMeetsTrue: DecimalIntervalTest meets DecimalIntervalTest2
-        define DecimalIntervalMeetsFalse: DecimalIntervalTest meets DecimalIntervalTest
-        define QuantityIntervalMeetsTrue: QuantityIntervalTest meets QuantityIntervalTest2
-        define QuantityIntervalMeetsFalse: QuantityIntervalTest meets QuantityIntervalTest3
+        define DecimalIntervalMeetsTrue: Interval[3.01, 5.00000001] meets Interval[5.00000002, 8.50]
+        define DecimalIntervalMeetsFalse: Interval[3.01, 5.00000001] meets Interval[5.5, 8.50]
+        define QuantityIntervalMeetsTrue: Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.00000002 'g', 8.50 'g']
+        define QuantityIntervalMeetsFalse: Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.5 'g', 8.50 'g']
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestMeetsNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestMeetsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalMeetsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -511,17 +507,16 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         MeetsBefore
-        define TestMeetsBeforeNull: IntegerIntervalTest meets before null
+        define TestMeetsBeforeNull: Interval(null, 5] meets before Interval[11, null)
         define IntegerIntervalMeetsBeforeTrue: IntegerIntervalTest meets before IntegerIntervalTest2
         define IntegerIntervalMeetsBeforeFalse: IntegerIntervalTest meets before IntegerIntervalTest3
-        define DecimalIntervalMeetsBeforeTrue: DecimalIntervalTest meets before DecimalIntervalTest2
-        define DecimalIntervalMeetsBeforeFalse: DecimalIntervalTest meets before DecimalIntervalTest
-        define QuantityIntervalMeetsBeforeTrue: QuantityIntervalTest meets before QuantityIntervalTest2
-        define QuantityIntervalMeetsBeforeFalse: QuantityIntervalTest meets before QuantityIntervalTest3
+        define DecimalIntervalMeetsBeforeTrue: Interval[3.50000001, 5.00000011] meets before Interval[5.00000012, 8.50]
+        define DecimalIntervalMeetsBeforeFalse: Interval[8.01, 15.00000001] meets before Interval[15.00000000, 18.50]
+        define QuantityIntervalMeetsBeforeTrue: Interval[3.50000001 'g', 5.00000011 'g'] meets before Interval[5.00000012 'g', 8.50 'g']
+        define QuantityIntervalMeetsBeforeFalse: Interval[8.01 'g', 15.00000001 'g'] meets before Interval[15.00000000 'g', 18.50 'g']
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestMeetsBeforeNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestMeetsBeforeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalMeetsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -543,17 +538,16 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         MeetsAfter
-        define TestMeetsAfterNull: IntegerIntervalTest meets after null
-        define IntegerIntervalMeetsAfterTrue: IntegerIntervalTest2 meets IntegerIntervalTest
-        define IntegerIntervalMeetsAfterFalse: IntegerIntervalTest3 meets IntegerIntervalTest
-        define DecimalIntervalMeetsAfterTrue: DecimalIntervalTest2 meets DecimalIntervalTest
-        define DecimalIntervalMeetsAfterFalse: DecimalIntervalTest meets DecimalIntervalTest
-        define QuantityIntervalMeetsAfterTrue: QuantityIntervalTest2 meets QuantityIntervalTest
-        define QuantityIntervalMeetsAfterFalse: QuantityIntervalTest3 meets QuantityIntervalTest
+        define TestMeetsAfterNull: Interval(null, 5] meets after Interval[11, null)
+        define IntegerIntervalMeetsAfterTrue: IntegerIntervalTest2 meets after IntegerIntervalTest
+        define IntegerIntervalMeetsAfterFalse: IntegerIntervalTest3 meets after IntegerIntervalTest
+        define DecimalIntervalMeetsAfterTrue: Interval[55.00000123, 128.032156] meets after Interval[12.00258, 55.00000122]
+        define DecimalIntervalMeetsAfterFalse: Interval[55.00000124, 150.222222] meets after Interval[12.00258, 55.00000122]
+        define QuantityIntervalMeetsAfterTrue: Interval[55.00000123 'g', 128.032156 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']
+        define QuantityIntervalMeetsAfterFalse: Interval[55.00000124 'g', 150.222222 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestMeetsAfterNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestMeetsAfterNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalMeetsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -610,9 +604,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalOverlapsTrue: QuantityIntervalTest overlaps QuantityIntervalTest3
         define QuantityIntervalOverlapsFalse: QuantityIntervalTest overlaps QuantityIntervalTest2
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestOverlapsNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestOverlapsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -634,7 +627,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         OverlapsBefore
-        define TestOverlapsBeforeNull: IntegerIntervalTest overlaps before null
+        define TestOverlapsBeforeNull: NullInterval overlaps before IntegerIntervalTest
         define IntegerIntervalOverlapsBeforeTrue: IntegerIntervalTest overlaps before IntegerIntervalTest4
         define IntegerIntervalOverlapsBeforeFalse: IntegerIntervalTest4 overlaps before IntegerIntervalTest
         define DecimalIntervalOverlapsBeforeTrue: DecimalIntervalTest overlaps before DecimalIntervalTest3
@@ -642,9 +635,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalOverlapsBeforeTrue: QuantityIntervalTest overlaps before QuantityIntervalTest3
         define QuantityIntervalOverlapsBeforeFalse: QuantityIntervalTest3 overlaps before QuantityIntervalTest
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestOverlapsBeforeNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestOverlapsBeforeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -666,7 +658,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         OverlapsAfter
-        define TestOverlapsAfterNull: IntegerIntervalTest overlaps after null
+        define TestOverlapsAfterNull: NullInterval overlaps after IntegerIntervalTest
         define IntegerIntervalOverlapsAfterTrue: IntegerIntervalTest5 overlaps after IntegerIntervalTest
         define IntegerIntervalOverlapsAfterFalse: IntegerIntervalTest4 overlaps after IntegerIntervalTest
         define DecimalIntervalOverlapsAfterTrue: DecimalIntervalTest4 overlaps after DecimalIntervalTest
@@ -674,9 +666,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalOverlapsAfterTrue: QuantityIntervalTest4 overlaps after QuantityIntervalTest
         define QuantityIntervalOverlapsAfterFalse: QuantityIntervalTest3 overlaps after QuantityIntervalTest
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestOverlapsAfterNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestOverlapsAfterNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -698,7 +689,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         ProperlyIncludes
-        define TestProperlyIncludesNull: IntegerIntervalTest properly includes null
+        define TestProperlyIncludesNull: NullInterval properly includes IntegerIntervalTest
         define IntegerIntervalProperlyIncludesTrue: IntegerIntervalTest properly includes IntegerIntervalTest4
         define IntegerIntervalProperlyIncludesFalse: IntegerIntervalTest properly includes IntegerIntervalTest5
         define DecimalIntervalProperlyIncludesTrue: DecimalIntervalTest properly includes DecimalIntervalTest3
@@ -706,9 +697,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalProperlyIncludesTrue: QuantityIntervalTest properly includes QuantityIntervalTest
         define QuantityIntervalProperlyIncludesFalse: QuantityIntervalTest properly includes QuantityIntervalTest4
         */
-        // TODO: Problem with null test - NotImplementedException
-        // result = context.resolveExpressionRef(library, "TestProperlyIncludesNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestProperlyIncludesNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -730,7 +720,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         /*
         ProperlyIncludedIn
-        define TestProperlyIncludedInNull: IntegerIntervalTest properly included in null
+        define TestProperlyIncludedInNull: IntegerIntervalTest properly included in NullInterval
         define IntegerIntervalProperlyIncludedInTrue: IntegerIntervalTest4 properly included in IntegerIntervalTest
         define IntegerIntervalProperlyIncludedInFalse: IntegerIntervalTest5 properly included in IntegerIntervalTest
         define DecimalIntervalProperlyIncludedInTrue: DecimalIntervalTest3 properly included in DecimalIntervalTest
@@ -738,9 +728,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalProperlyIncludedInTrue: QuantityIntervalTest3 properly included in QuantityIntervalTest
         define QuantityIntervalProperlyIncludedInFalse: QuantityIntervalTest properly included in QuantityIntervalTest4
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestProperlyIncludedInNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestProperlyIncludedInNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -899,7 +888,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         //assertThat(result, is(new PartialTime("T00:00:00Z")));
 
         /*Starts
-        define TestStartsNull: IntegerIntervalTest starts null
+        define TestStartsNull: NullInterval starts IntegerIntervalTest
         define IntegerIntervalStartsTrue: IntegerIntervalTest4 starts IntegerIntervalTest5
         define IntegerIntervalStartsFalse: IntegerIntervalTest starts IntegerIntervalTest4
         define DecimalIntervalStartsTrue: DecimalIntervalTest3 starts DecimalIntervalTest4
@@ -907,9 +896,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalStartsTrue: QuantityIntervalTest3 starts QuantityIntervalTest4
         define QuantityIntervalStartsFalse: QuantityIntervalTest starts QuantityIntervalTest3
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestStartsNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestStartsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -930,7 +918,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         /*Union
-        define TestUnionNull: IntegerIntervalTest union null
+        define TestUnionNull: NullInterval union IntegerIntervalTest
         define IntegerIntervalUnion1To15: IntegerIntervalTest union IntegerIntervalTest5
         define IntegerIntervalUnionNull: IntegerIntervalTest union IntegerIntervalTest2
         define DecimalIntervalUnion1To15: DecimalIntervalTest union DecimalIntervalTest4
@@ -938,9 +926,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         define QuantityIntervalUnion1To15: QuantityIntervalTest union QuantityIntervalTest4
         define QuantityIntervalUnionNull: QuantityIntervalTest union QuantityIntervalTest2
         */
-        // TODO: Problem with null test
-        // result = context.resolveExpressionRef(library, "TestUnionNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef(library, "TestUnionNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "IntegerIntervalUnion1To15").getExpression().evaluate(context);
         assertThat(result, is(new Interval(1, true, 15, true)));

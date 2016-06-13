@@ -9,17 +9,18 @@ import org.cqframework.cql.runtime.Value;
 */
 public class MeetsAfterEvaluator extends MeetsAfter {
 
+  @Override
   public Object evaluate(Context context) {
     Interval left = (Interval)getOperand().get(0).evaluate(context);
     Interval right = (Interval)getOperand().get(1).evaluate(context);
 
     if (left != null && right != null) {
       Object leftStart = left.getStart();
-      Object leftEnd = left.getEnd();
-      Object rightStart = right.getStart();
       Object rightEnd = right.getEnd();
 
-      return Value.compareTo(leftStart, Value.plusOne(rightEnd), "==");
+      if (leftStart == null || rightEnd == null) { return null; }
+
+      return Value.compareTo(leftStart, Interval.successor(rightEnd), "==");
     }
     return null;
   }
