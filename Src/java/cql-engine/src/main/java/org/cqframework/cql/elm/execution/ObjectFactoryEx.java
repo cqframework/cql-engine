@@ -30,6 +30,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public As createAs() { return new AsEvaluator(); }
 
     @Override
+    public Avg createAvg() { return new AvgEvaluator(); }
+
+    @Override
     public Before createBefore() { return new BeforeEvaluator(); }
 
     @Override
@@ -50,11 +53,17 @@ public class ObjectFactoryEx extends ObjectFactory {
     @Override
     public Concatenate createConcatenate() { return new ConcatenateEvaluator(); }
 
+    // @Override
+    // public Concept createConcept() { return new ConceptEvaluator(); }
+
     @Override
     public Contains createContains() { return new ContainsEvaluator(); }
 
     @Override
     public Convert createConvert() { return new ConvertEvaluator(); }
+
+    @Override
+    public Count createCount() { return new CountEvaluator(); }
 
     @Override
     public DateTime createDateTime() { return new DateTimeEvaluator(); }
@@ -177,6 +186,12 @@ public class ObjectFactoryEx extends ObjectFactory {
     public MaxValue createMaxValue() { return new MaxValueEvaluator(); }
 
     @Override
+    public Max createMax() { return new MaxEvaluator(); }
+
+    @Override
+    public Median createMedian() { return new MedianEvaluator(); }
+
+    @Override
     public Meets createMeets() { return new MeetsEvaluator(); }
 
     @Override
@@ -187,6 +202,12 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public MinValue createMinValue() { return new MinValueEvaluator(); }
+
+    @Override
+    public Min createMin() { return new MinEvaluator(); }
+
+    @Override
+    public Mode createMode() { return new ModeEvaluator(); }
 
     @Override
     public Modulo createModulo() { return new ModuloEvaluator(); }
@@ -223,6 +244,12 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public ParameterRef createParameterRef() { return new ParameterRefEvaluator(); }
+
+    @Override
+    public PopulationStdDev createPopulationStdDev() { return new PopulationStdDevEvaluator(); }
+
+    @Override
+    public PopulationVariance createPopulationVariance() { return new PopulationVarianceEvaluator(); }
 
     @Override
     public PositionOf createPositionOf() { return new PositionOfEvaluator(); }
@@ -267,6 +294,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Starts createStarts() { return new StartsEvaluator(); }
 
     @Override
+    public StdDev createStdDev() { return new StdDevEvaluator(); }
+
+    @Override
     public Substring createSubstring() { return new SubstringEvaluator(); }
 
     @Override
@@ -274,6 +304,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Successor createSuccessor() { return new SuccessorEvaluator(); }
+
+    @Override
+    public Sum createSum() { return new SumEvaluator(); }
 
     @Override
     public ToConcept createToConcept() { return new ToConceptEvaluator(); }
@@ -292,6 +325,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Upper createUpper() { return new UpperEvaluator(); }
+
+    @Override
+    public Variance createVariance() { return new VarianceEvaluator(); }
 
     @Override
     public Width createWidth() { return new WidthEvaluator(); }

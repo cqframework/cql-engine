@@ -6,19 +6,23 @@ import java.util.Iterator;
 
 /**
  * Created by Bryn on 5/25/2016.
+ * Edited by Chris Schuler on 6/13/2016
  */
 public class AnyTrueEvaluator extends AnyTrue {
     @Override
     public Object evaluate(Context context) {
-        // TODO: Fix this
-        Object src = getSource();
 
-        if(src instanceof List) {
-            java.util.List<Expression> element = ((List)src).getElement();
-            Iterator<Expression> elemsItr = element.iterator();
+        Object source = getSource().evaluate(context);
+        if (source == null) { return null; }
+
+        if(source instanceof Iterable) {
+            Iterable<Object> element = (Iterable<Object>)source;
+            Iterator<Object> elemsItr = element.iterator();
+            if (!elemsItr.hasNext()) { return null; } // empty list
             while (elemsItr.hasNext()) {
-                Expression exp = elemsItr.next();
-                Boolean boolVal = (Boolean) exp.evaluate(context);
+                Object exp = elemsItr.next();
+                if (exp == null) { continue; } // skip null
+                Boolean boolVal = (Boolean) exp;
 
                 if (Boolean.TRUE == boolVal) return true;
             }
@@ -26,6 +30,6 @@ public class AnyTrueEvaluator extends AnyTrue {
             return null;
         }
 
-        return false;
+        return false; // all null or all false
     }
 }

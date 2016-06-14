@@ -8,6 +8,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import java.math.BigDecimal;
+
 @Test(groups = {"a"})
 public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
@@ -79,7 +81,8 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testAvg() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "AvgTest1").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal("3.0")));
     }
 
     /**
@@ -88,7 +91,8 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testCount() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "CountTest1").getExpression().evaluate(context);
+        assertThat(result, is(4));
     }
 
     /**
@@ -97,7 +101,11 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testMax() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "MaxTest1").getExpression().evaluate(context);
+        assertThat(result, is(90));
+
+        result = context.resolveExpressionRef(library, "MaxTest2").getExpression().evaluate(context);
+        assertThat(result, is("zebra"));
     }
 
     /**
@@ -105,8 +113,12 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMedian() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      // Object result = context.resolveExpressionRef(library, "MedianTest1").getExpression().evaluate(context);
+      // assertThat(result, is(3));
+      //
+      // result = context.resolveExpressionRef(library, "MedianTest2").getExpression().evaluate(context);
+      // assertThat(result, is(new BigDecimal("3.5")));
     }
 
     /**
@@ -114,8 +126,12 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMin() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "MinTest1").getExpression().evaluate(context);
+      assertThat(result, is(0));
+
+      result = context.resolveExpressionRef(library, "MinTest2").getExpression().evaluate(context);
+      assertThat(result, is("bye"));
     }
 
     /**
@@ -123,8 +139,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMode() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "ModeTest1").getExpression().evaluate(context);
+      assertThat(result, is(9));
     }
 
     /**
@@ -132,8 +149,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testPopulationStdDev() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "PopStdDevTest1").getExpression().evaluate(context);
+      assertThat(result, is(new BigDecimal("1.4142135623730951454746218587388284504413604736328125")));
     }
 
     /**
@@ -141,8 +159,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testPopulationVariance() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "PopVarianceTest1").getExpression().evaluate(context);
+      assertThat(result, is(new BigDecimal("2")));
     }
 
     /**
@@ -150,8 +169,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testStdDev() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "StdDevTest1").getExpression().evaluate(context);
+      assertThat(result, is(new BigDecimal("1.5811388300841897613935316257993690669536590576171875")));
     }
 
     /**
@@ -159,8 +179,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testSum() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "SumTest1").getExpression().evaluate(context);
+      assertThat(result, is(new BigDecimal("20.0")));
     }
 
     /**
@@ -168,7 +189,8 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testVariance() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "VarianceTest1").getExpression().evaluate(context);
+      assertThat(result, is(new BigDecimal("2.5")));
     }
 }

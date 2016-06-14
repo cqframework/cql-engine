@@ -6,22 +6,25 @@ import java.util.Iterator;
 
 /**
  * Created by Bryn on 5/25/2016.
+ * Edited by Chris Schuler on 6/13/2016
  */
 public class AllTrueEvaluator extends AllTrue {
     @Override
     public Object evaluate(Context context) {
-        // TODO: Fix this
-        Object src = getSource();
 
-        if(src instanceof List) {
-            java.util.List<Expression> element = ((List)src).getElement();
-            Iterator<Expression> elemsItr = element.iterator();
-            while (elemsItr.hasNext()) {
-                Expression exp = elemsItr.next();
-                Boolean boolVal = (Boolean) exp.evaluate(context);
+        Object src = getSource().evaluate(context);
+        if (src == null) { return null; }
 
-                if (boolVal == null || Boolean.FALSE == boolVal) return false;
-            }
+        if(src instanceof Iterable) {
+          Iterable<Object> element = (Iterable<Object>)src;
+          Iterator<Object> elemsItr = element.iterator();
+          if (!elemsItr.hasNext()) { return null; } // empty list
+          while (elemsItr.hasNext()) {
+              Object exp = elemsItr.next();
+              Boolean boolVal = (Boolean) exp;
+
+              if (boolVal == null || Boolean.FALSE == boolVal) return false;
+          }
         }else{
             return null;
         }

@@ -2,6 +2,9 @@ package org.cqframework.cql.execution;
 
 import org.testng.annotations.Test;
 
+import org.cqframework.cql.runtime.Code;
+import org.cqframework.cql.runtime.Concept;
+
 import javax.xml.bind.JAXBException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -27,7 +30,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     public void testCode() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "CodeLiteral").getExpression().evaluate(context);
-        assertThat(result, is(new org.cqframework.cql.runtime.Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure")));
+        assertThat(result, is(new Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure")));
     }
 
     /**
@@ -35,8 +38,9 @@ public class CqlTypesTest extends CqlExecutionTestBase {
      */
     @Test
     public void testConcept() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      // Object result = context.resolveExpressionRef(library, "CodeLiteral").getExpression().evaluate(context);
+      // assertThat(result, is(new Concept().withCodes(new ArrayList<Code>(Arrays.asList("8480-6", "8462-4"))).withDisplay("Blood pressure codes")));
     }
 
     /**

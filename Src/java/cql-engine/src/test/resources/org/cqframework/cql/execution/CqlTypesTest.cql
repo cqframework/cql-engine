@@ -12,6 +12,8 @@ context Population
 define "CodeLiteral": Code '8480-6' from "LOINC" display 'Systolic blood pressure'
 
 //Concept
+/*define CodeList: {Code '8480-6', Code '8462-4'}
+define ConceptTest: Concept(Code CodeList display 'Blood pressure codes')*/
 
 //DateTime
 
