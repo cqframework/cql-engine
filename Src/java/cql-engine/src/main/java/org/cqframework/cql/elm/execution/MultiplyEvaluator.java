@@ -1,11 +1,13 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
+import org.cqframework.cql.runtime.Quantity;
 
 import java.math.BigDecimal;
 
 /**
  * Created by Bryn on 5/25/2016.
+ * Edited by Chris Schuler on 6/14/2016
  */
 public class MultiplyEvaluator extends Multiply {
 
@@ -24,14 +26,24 @@ public class MultiplyEvaluator extends Multiply {
         }
 
         // *(Decimal, Decimal)
-        if (left instanceof BigDecimal) {
+        else if (left instanceof BigDecimal && right instanceof BigDecimal) {
             return ((BigDecimal)left).multiply((BigDecimal)right);
         }
 
-        // TODO: Finish implementation of Multiply
-        // *(Decimal, Quantity)
-        // *(Quantity, Decimal)
         // *(Quantity, Quantity)
+        else if (left instanceof Quantity && right instanceof Quantity) {
+          return (((Quantity)left).getValue()).multiply(((Quantity)right).getValue());
+        }
+
+        // *(Decimal, Quantity)
+        else if (left instanceof BigDecimal && right instanceof Quantity) {
+          return ((BigDecimal)left).multiply(((Quantity)right).getValue());
+        }
+
+        // *(Quantity, Decimal)
+        else if (left instanceof Quantity && right instanceof BigDecimal) {
+          return (((Quantity)left).getValue()).multiply((BigDecimal)right);
+        }
 
         throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
     }

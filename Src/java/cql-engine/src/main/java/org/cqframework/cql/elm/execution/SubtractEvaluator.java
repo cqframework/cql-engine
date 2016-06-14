@@ -1,11 +1,13 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
+import org.cqframework.cql.runtime.Quantity;
 
 import java.math.BigDecimal;
 
 /**
  * Created by Bryn on 5/25/2016.
+ * Edited by Chris Schuler on 6/14/2016
  */
 public class SubtractEvaluator extends Subtract {
 
@@ -24,12 +26,16 @@ public class SubtractEvaluator extends Subtract {
         }
 
         // -(Decimal, Decimal)
-        if (left instanceof BigDecimal) {
+        else if (left instanceof BigDecimal) {
             return ((BigDecimal)left).subtract((BigDecimal)right);
         }
 
-        // TODO: Finish implementation of Subtract
         // -(Quantity, Quantity)
+        else if (left instanceof Quantity) {
+          return (((Quantity)left).getValue()).subtract(((Quantity)right).getValue());
+        }
+
+        // TODO: Finish implementation of Subtract
         // -(DateTime, Quantity)
         // -(Time, Quantity)
 

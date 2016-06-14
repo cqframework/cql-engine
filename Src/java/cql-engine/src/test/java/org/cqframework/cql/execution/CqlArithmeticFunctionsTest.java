@@ -36,9 +36,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "Abs0Dec").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
-        //TODO: Un-comment this once Quantity can be added.
-//        result = context.resolveExpressionRef(library, "Add1D1D").getExpression().evaluate(context);
-//        assertThat(result, is(new BigDecimal("2.0")));
+        result = context.resolveExpressionRef(library, "Abs1cm").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal("1.0")));
     }
 
     /**
@@ -58,9 +57,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "Add1D1D").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("2.0")));
 
-        //TODO: Un-comment this once Quantity can be added.
-//        result = context.resolveExpressionRef(library, "Add1Q1Q").getExpression().evaluate(context);
-//        assertThat(result, is(new BigDecimal("2")));
+        result = context.resolveExpressionRef(library, "Add1Q1Q").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal("2")));
     }
 
     /**
@@ -116,12 +114,11 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "Divide103").getExpression().evaluate(context);
         assertThat(result, is(10d / 3d));
 
-        //TODO: Un-comment this once Quantity can be added.
-//        result = context.resolveExpressionRef(library, "Divide1Q1").getExpression().evaluate(context);
-//        assertThat(result, is(new Double(1)));
-//
-//        result = context.resolveExpressionRef(library, "Divide1Q1Q").getExpression().evaluate(context);
-//        assertThat(result, is(new Double(1)));
+        result = context.resolveExpressionRef(library, "Divide1Q1").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal(1)));
+
+        result = context.resolveExpressionRef(library, "Divide1Q1Q").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal(1)));
     }
 
     /**
@@ -299,10 +296,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Modulo10DBy3D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
-
-        //TODO: Un-comment this once Quantity can be added.
-//        result = context.resolveExpressionRef(library, "Mode4CMBy2CM").getExpression().evaluate(context);
-//        assertThat(result, is(new Double(0)));
     }
 
     /**
@@ -322,9 +315,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "Multiply1DBy2D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
 
-        // TODO: Un-comment this once Quantity can be multiplied
-        //result = context.resolveExpressionRef(library, "Multiply1CMBy2CM").getExpression().evaluate(context);
-        //assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
+        // TODO: should return units i.e. cm2
+        result = context.resolveExpressionRef(library, "Multiply1CMBy2CM").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
     }
 
     /**
@@ -495,9 +488,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "Subtract1DAnd2D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
 
-        // TODO: Un-comment once we have support for quantity
-        //result = context.resolveExpressionRef(library, "Subtract1CMAnd2CM").getExpression().evaluate(context);
-        //assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
+        result = context.resolveExpressionRef(library, "Subtract1CMAnd2CM").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
     }
 
     /**
