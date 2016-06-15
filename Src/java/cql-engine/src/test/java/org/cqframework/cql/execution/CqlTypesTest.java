@@ -11,10 +11,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public class CqlTypesTest extends CqlExecutionTestBase {
+
     @Test
     public void testAny() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        // Object result = context.resolveExpressionRef(library, "AnyTestInteger").getExpression().evaluate(context);
+        // assertThat(result, is(5));
     }
 
     @Test

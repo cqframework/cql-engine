@@ -268,31 +268,3 @@ define QuantityIntervalTest4: Interval[5.0 'g', 15.0 'g']
 //define DateTimeIntervalTest: Interval[@2016-05-01T00:00:00Z, @2016-05-02T00:00:00Z)
 //define TimeIntervalTest: Interval[@T00:00:00Z, @T23:59:59Z]
 define CollapseIntervalTestInteger: {IntegerIntervalTest, IntegerIntervalTest2, IntegerIntervalTest3}
-
-//MinValue
-define IntegerMinValue: minimum Integer
-define DecimalMinValue: minimum Decimal
-define QuantityMinValue: minimum Quantity
-//define DateTimeMinValue: minimum DateTime
-//define TimeMinValue: minimum Time
-
-//MaxValue
-define IntegerMaxValue: maximum Integer
-define DecimalMaxValue: maximum Decimal
-define QuantityMaxValue: maximum Quantity
-//define DateTimeMaxValue: maximum DateTime
-//define TimeMaxValue: maximum Time
-
-//Successor
-define IntegerSuccessor: successor of 1
-define DecimalSuccessor: successor of 1.0
-define QuantitySuccessor: successor of 1.0 'g'
-//define DateTimeSuccessor: successor of @2016-05-01T00:00:00Z
-//define TimeSuccessor: successor of @T00:00:00Z
-
-//Predecessor
-define IntegerPredecessor: predecessor of 1
-define DecimalPredecessor: predecessor of 1.0
-define QuantityPredecessor: predecessor of 1.0 'g'
-//define DateTimePredecessor: predecessor of @2016-05-01T00:00:00Z
-//define TimePredecessor: predecessor of @T00:00:00Z

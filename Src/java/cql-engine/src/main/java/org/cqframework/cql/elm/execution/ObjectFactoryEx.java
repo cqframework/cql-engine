@@ -23,6 +23,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     @Override
     public And createAnd() { return new AndEvaluator(); }
 
+    // @Override
+    // public Any createAny() { return new AnyEvaluator(); }
+
     @Override
     public AnyTrue createAnyTrue() { return new AnyTrueEvaluator(); }
 
@@ -145,6 +148,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Interval createInterval() { return new IntervalEvaluator(); }
+
+    @Override
+    public Is createIs() { return new IsEvaluator(); }
 
     @Override
     public IsFalse createIsFalse() { return new IsFalseEvaluator(); }
@@ -309,10 +315,22 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Sum createSum() { return new SumEvaluator(); }
 
     @Override
+    public ToBoolean createToBoolean() { return new ToBooleanEvaluator(); }
+
+    @Override
     public ToConcept createToConcept() { return new ToConceptEvaluator(); }
 
     @Override
     public ToDecimal createToDecimal() { return new ToDecimalEvaluator(); }
+
+    @Override
+    public ToInteger createToInteger() { return new ToIntegerEvaluator(); }
+
+    @Override
+    public ToQuantity createToQuantity() { return new ToQuantityEvaluator(); }
+
+    @Override
+    public ToString createToString() { return new ToStringEvaluator(); }
 
     @Override
     public TruncatedDivide createTruncatedDivide() { return new TruncatedDivideEvaluator(); }

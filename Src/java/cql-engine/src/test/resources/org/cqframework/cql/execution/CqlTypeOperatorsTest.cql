@@ -1,29 +1,42 @@
 library TypeOperator version '1'
 
+codesystem "LOINC": 'http://loinc.org'
+
 context Population
 
-//AS
+//As
 define Int1ToString : as<String>(1)
 
 //Convert
-
+define DecimalToInteger: convert 5.0 to Integer
+define IntegerToString: convert 5 to String
 
 //Is
+define IntegerIsInteger: 5 is Integer
+define StringIsInteger: '5' is Integer
 
 //ToBoolean
+define StringNoToBoolean: ToBoolean('NO')
 
 //ToConcept
+define CodeToConcept1: ToConcept(Code '8480-6' from "LOINC" display 'Systolic blood pressure')
 
 //ToDateTime
 
 //ToDecimal
+define String25D5ToDecimal: ToDecimal('+25.5')
 
 //ToInteger
+define StringNeg25ToInteger: ToInteger('-25')
 
 //ToQuantity
+define String5D5CMToQuantity: ToQuantity('5.5 cm')
 
 //ToString
+define IntegerNeg5ToString: ToString(-5)
+define Decimal18D55ToString: ToString(18.55)
+define Quantity5D5CMToString: ToString(5.5 'cm')
+define BooleanTrueToString: ToString(true)
 
 //ToTime
 define StringToTime  : ToTime('T14:30:00.0Z')
-

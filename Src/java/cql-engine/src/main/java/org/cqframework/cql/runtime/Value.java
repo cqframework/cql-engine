@@ -47,6 +47,10 @@ public class Value {
       }
     }
 
+    public static Boolean equalUnit(Object left, Object right) {
+      return equals(left, right);
+    }
+
     public static Boolean equals(Object left, Object right) {
         if ((left == null) || (right == null)) {
             return null;

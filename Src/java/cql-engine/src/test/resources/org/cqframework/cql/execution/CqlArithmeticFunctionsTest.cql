@@ -70,9 +70,19 @@ define LnNeg1  : Ln(-1)
 define Ln1000  : Ln(1000)
 define Ln1000D  : Ln(1000.0)
 
-//Maximum
+//MinValue
+define IntegerMinValue: minimum Integer
+define DecimalMinValue: minimum Decimal
+define QuantityMinValue: minimum Quantity
+//define DateTimeMinValue: minimum DateTime
+//define TimeMinValue: minimum Time
 
-//Minimum
+//MaxValue
+define IntegerMaxValue: maximum Integer
+define DecimalMaxValue: maximum Decimal
+define QuantityMaxValue: maximum Quantity
+//define DateTimeMaxValue: maximum DateTime
+//define TimeMaxValue: maximum Time
 
 //Modulo
 define ModuloNull  : 1 mod null

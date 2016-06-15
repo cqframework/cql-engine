@@ -1,6 +1,7 @@
 package org.cqframework.cql.execution;
 
 import org.cqframework.cql.runtime.Interval;
+import org.cqframework.cql.runtime.Quantity;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
@@ -258,8 +259,21 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMaximum() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "IntegerMaxValue").getExpression().evaluate(context);
+      assertThat(result, is(Integer.MAX_VALUE));
+
+      result = context.resolveExpressionRef(library, "DecimalMaxValue").getExpression().evaluate(context);
+      assertThat(result, is(Interval.maxValue(BigDecimal.class)));
+
+      result = context.resolveExpressionRef(library, "QuantityMaxValue").getExpression().evaluate(context);
+      assertThat(result, is(Interval.maxValue(Quantity.class)));
+
+      //result = context.resolveExpressionRef(library, "DateTimeMaxValue").getExpression().evaluate(context);
+      //assertThat(result, is(Interval.maxValue(Partial.class)));
+
+      //result = context.resolveExpressionRef(library, "TimeMaxValue").getExpression().evaluate(context);
+      //assertThat(result, is(Interval.maxValue(PartialTime.class)));
     }
 
     /**
@@ -267,8 +281,21 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMinimum() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "IntegerMinValue").getExpression().evaluate(context);
+      assertThat(result, is(Integer.MIN_VALUE));
+
+      result = context.resolveExpressionRef(library, "DecimalMinValue").getExpression().evaluate(context);
+      assertThat(result, is(Interval.minValue(BigDecimal.class)));
+
+      result = context.resolveExpressionRef(library, "QuantityMinValue").getExpression().evaluate(context);
+      assertThat(result, is(Interval.minValue(Quantity.class)));
+
+      //result = context.resolveExpressionRef(library, "DateTimeMinValue").getExpression().evaluate(context);
+      //assertThat(result, is(Interval.minValue(Partial.class)));
+
+      //result = context.resolveExpressionRef(library, "TimeMinValue").getExpression().evaluate(context);
+      //assertThat(result, is(Interval.minValue(PartialTime.class)));
     }
 
     /**
