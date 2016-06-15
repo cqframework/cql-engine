@@ -5,11 +5,14 @@ codesystem "LOINC": 'http://loinc.org'
 context Population
 
 //As
-define Int1ToString : as<String>(1)
+define AsQuantity: 45.5 'g' as Quantity
+
+// define Int1ToString : as<String>(1)
 
 //Convert
-define DecimalToInteger: convert 5.0 to Integer
+define IntegerToDecimal: convert 5 to Decimal
 define IntegerToString: convert 5 to String
+define StringToIntegerError: convert 'foo' to Integer
 
 //Is
 define IntegerIsInteger: 5 is Integer
@@ -39,4 +42,4 @@ define Quantity5D5CMToString: ToString(5.5 'cm')
 define BooleanTrueToString: ToString(true)
 
 //ToTime
-define StringToTime  : ToTime('T14:30:00.0Z')
+//define StringToTime  : ToTime('T14:30:00.0Z')

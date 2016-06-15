@@ -23,7 +23,11 @@ public class ToIntegerEvaluator extends ToInteger {
     if (value == null) { return null; }
 
     if (value instanceof String) {
-      return (Integer)value;
+      try {
+        return Integer.parseInt((String)value);
+      } catch (NumberFormatException nfe) {
+        throw new NumberFormatException("Unable to convert given string to Integer");
+      }
     }
     throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Boolean - use String values.", value.getClass().getName()));
   }
