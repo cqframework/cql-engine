@@ -339,6 +339,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Truncate createTruncate() { return new TruncateEvaluator(); }
 
     @Override
+    public Tuple createTuple() { return new TupleEvaluator(); }
+
+    @Override
     public Union createUnion() { return new UnionEvaluator(); }
 
     @Override

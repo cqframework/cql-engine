@@ -2,6 +2,7 @@ package org.cqframework.cql.runtime;
 
 import java.math.BigDecimal;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.Tuple;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -52,7 +53,7 @@ public class Value {
     }
 
     public static Boolean equals(Object left, Object right) {
-        if ((left == null) || (right == null)) {
+        if ((left == null) || (right == null) || !left.getClass().equals(right.getClass())) {
             return null;
         }
 
@@ -68,7 +69,7 @@ public class Value {
         }
 
         // list equal
-        if (left instanceof Iterable) {
+        else if (left instanceof Iterable) {
             Iterable<Object> leftList = (Iterable<Object>)left;
             Iterable<Object> rightList = (Iterable<Object>)right;
             Iterator<Object> leftIterator = leftList.iterator();
@@ -93,8 +94,12 @@ public class Value {
 
         // Decimal equal
         // Have to use this because 10.0 != 10.00
-        if (left instanceof BigDecimal) {
+        else if (left instanceof BigDecimal) {
             return ((BigDecimal)left).compareTo((BigDecimal)right) == 0;
+        }
+
+        else if (left instanceof Tuple) {
+          return ((Tuple)left).equals((Tuple)right);
         }
 
         return left.equals(right);
@@ -106,11 +111,11 @@ public class Value {
         }
 
         if ((left == null) || (right == null)) {
-            return false;
+            return null;
         }
 
         // list equal
-        if (left instanceof Iterable) {
+        else if (left instanceof Iterable) {
             Iterable<Object> leftList = (Iterable<Object>)left;
             Iterable<Object> rightList = (Iterable<Object>)right;
             Iterator<Object> leftIterator = leftList.iterator();
@@ -131,6 +136,10 @@ public class Value {
             }
 
             return true;
+        }
+
+        else if (left instanceof Tuple) {
+          return ((Tuple)left).equals((Tuple)right);
         }
 
         return equals(left, right);
