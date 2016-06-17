@@ -56,7 +56,7 @@ public class PopulationStdDevEvaluator extends PopulationStdDev {
 
       throw new IllegalArgumentException(String.format("Cannot PopulationStdDev arguments of type '%s'.", value.getClass().getName()));
     }
-    else { return null; }
+    return null; 
   }
 
   @Override

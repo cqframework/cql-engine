@@ -182,6 +182,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef(library, "SumTest1").getExpression().evaluate(context);
       assertThat(result, is(new BigDecimal("20.0")));
+
+      result = context.resolveExpressionRef(library, "SumTestNull").getExpression().evaluate(context);
+      assertThat(result, is(1));
     }
 
     /**

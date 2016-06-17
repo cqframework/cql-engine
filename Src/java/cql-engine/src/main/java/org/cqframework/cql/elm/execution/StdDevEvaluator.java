@@ -53,7 +53,7 @@ public class StdDevEvaluator extends StdDev {
 
       throw new IllegalArgumentException(String.format("Cannot StdDev arguments of type '%s'.", value.getClass().getName()));
     }
-    else { return null; }
+    return null; 
   }
 
   @Override

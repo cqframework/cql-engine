@@ -54,6 +54,7 @@ define StdDevTest1: StdDev({1.0, 2.0, 3.0, 4.0, 5.0})
 
 //Sum
 define SumTest1: Sum({6.0, 2.0, 3.0, 4.0, 5.0})
+define SumTestNull: Sum({null, 1, null})
 
 //Variance
 define VarianceTest1: Variance({1.0, 2.0, 3.0, 4.0, 5.0})

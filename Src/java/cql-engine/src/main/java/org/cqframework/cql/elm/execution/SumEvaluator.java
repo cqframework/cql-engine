@@ -49,7 +49,7 @@ public class SumEvaluator extends Sum {
       }
       throw new IllegalArgumentException(String.format("Cannot Sum arguments of type '%s'.", sum.getClass().getName()));
     }
-    else { return null; }
+    return null; 
   }
 
   @Override

@@ -52,7 +52,7 @@ public class PopulationVarianceEvaluator extends PopulationVariance {
 
       throw new IllegalArgumentException(String.format("Cannot PopulationVariance arguments of type '%s'.", value.getClass().getName()));
     }
-    else { return null; }
+    return null; 
   }
 
   @Override
