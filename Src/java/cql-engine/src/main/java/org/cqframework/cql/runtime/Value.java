@@ -3,12 +3,14 @@ package org.cqframework.cql.runtime;
 import java.math.BigDecimal;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Tuple;
+import org.cqframework.cql.runtime.Time;
+import org.cqframework.cql.runtime.DateTime;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
  * Created by Bryn on 5/2/2016.
- * Edited by Chris Schuler on 6/10/2016 - Added compareTo(), compare(), and Interval logic in equals()
+ * Edited by Chris Schuler
  */
 public class Value {
 
@@ -42,6 +44,15 @@ public class Value {
         if (leftOp == null || rightOp == null) { return null; }
         return compare(leftOp.doubleValue(), rightOp.doubleValue(), op);
       }
+
+      // TODO: implement for Time and DateTime
+      // else if (left instanceof DateTime) {
+      //
+      // }
+      //
+      // else if (left instanceof Time) {
+      //
+      // }
 
       else {
         throw new IllegalArgumentException(String.format("Cannot Compare arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -102,6 +113,14 @@ public class Value {
           return ((Tuple)left).equals((Tuple)right);
         }
 
+        else if (left instanceof Time) {
+          return ((Time)left).equals((Time)right);
+        }
+
+        else if (left instanceof DateTime) {
+          return ((DateTime)left).equals((DateTime)right);
+        }
+
         return left.equals(right);
     }
 
@@ -140,6 +159,14 @@ public class Value {
 
         else if (left instanceof Tuple) {
           return ((Tuple)left).equals((Tuple)right);
+        }
+
+        else if (left instanceof Time) {
+          return ((Time)left).equals((Time)right);
+        }
+
+        else if (left instanceof DateTime) {
+          return ((DateTime)left).equals((DateTime)right);
         }
 
         return equals(left, right);

@@ -21,6 +21,7 @@ public class AllTrueEvaluator extends AllTrue {
           if (!elemsItr.hasNext()) { return null; } // empty list
           while (elemsItr.hasNext()) {
               Object exp = elemsItr.next();
+              if (exp == null) { continue; } // skip null
               Boolean boolVal = (Boolean) exp;
 
               if (boolVal == null || Boolean.FALSE == boolVal) return false;

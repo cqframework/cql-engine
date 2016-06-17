@@ -35,7 +35,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef(library, "AllTrueNullFirst").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef(library, "AllTrueEmptyList").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -151,7 +151,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testPopulationStdDev() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef(library, "PopStdDevTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("1.4142135623730951454746218587388284504413604736328125")));
+      assertThat(result, is(new BigDecimal("1.41421356"))); //23730951454746218587388284504413604736328125
     }
 
     /**
@@ -171,7 +171,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testStdDev() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef(library, "StdDevTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("1.5811388300841897613935316257993690669536590576171875")));
+      assertThat(result, is(new BigDecimal("1.58113883"))); //00841897613935316257993690669536590576171875
     }
 
     /**

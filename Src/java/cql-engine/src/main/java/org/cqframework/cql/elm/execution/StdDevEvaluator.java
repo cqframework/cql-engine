@@ -8,6 +8,7 @@ import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Value;
 import java.util.*;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /*
 * The StdDev operator returns the statistical standard deviation of the elements in source.
@@ -30,21 +31,24 @@ public class StdDevEvaluator extends StdDev {
 
       DescriptiveStatistics stats = new DescriptiveStatistics();
       Object value = itr.next();
+      while (value == null) { value = itr.next(); }
 
       if (value instanceof BigDecimal) {
         stats.addValue(((BigDecimal)value).doubleValue());
         while (itr.hasNext()) {
-          stats.addValue(((BigDecimal)itr.next()).doubleValue());
+          BigDecimal next = (BigDecimal)itr.next();
+          if (next != null) { stats.addValue(next.doubleValue()); }
         }
-        return new BigDecimal(stats.getStandardDeviation());
+        return new BigDecimal(stats.getStandardDeviation()).setScale(8, RoundingMode.FLOOR);
       }
 
       else if (value instanceof Quantity) {
         stats.addValue((((Quantity)value).getValue()).doubleValue());
         while (itr.hasNext()) {
-          stats.addValue((((Quantity)itr.next()).getValue()).doubleValue());
+          BigDecimal next = ((Quantity)itr.next()).getValue();
+          if (next != null) { stats.addValue(next.doubleValue()); }
         }
-        return new Quantity().withValue(new BigDecimal(stats.getStandardDeviation())).withUnit(((Quantity)value).getUnit());
+        return new Quantity().withValue(new BigDecimal(stats.getStandardDeviation()).setScale(8, RoundingMode.FLOOR)).withUnit(((Quantity)value).getUnit());
       }
 
       throw new IllegalArgumentException(String.format("Cannot StdDev arguments of type '%s'.", value.getClass().getName()));

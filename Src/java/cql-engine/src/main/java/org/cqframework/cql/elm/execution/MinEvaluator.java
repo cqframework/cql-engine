@@ -29,6 +29,8 @@ public class MinEvaluator extends Min {
       while (itr.hasNext()) {
         Object value = itr.next();
 
+        if (value == null) { continue; } // skip null
+
         if (value instanceof Integer || value instanceof BigDecimal || value instanceof Quantity) {
           if (Value.compareTo(min, value, ">")) { min = value; }
         }

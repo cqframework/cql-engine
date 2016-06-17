@@ -315,6 +315,12 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Sum createSum() { return new SumEvaluator(); }
 
     @Override
+    public Time createTime() { return new TimeEvaluator(); }
+
+    @Override
+    public Today createToday() { return new TodayEvaluator(); }
+
+    @Override
     public ToBoolean createToBoolean() { return new ToBooleanEvaluator(); }
 
     @Override

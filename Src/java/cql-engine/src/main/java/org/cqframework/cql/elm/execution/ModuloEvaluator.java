@@ -24,7 +24,7 @@ public class ModuloEvaluator extends Modulo {
         }
 
         if (left instanceof BigDecimal) {
-            if ((BigDecimal)right == new BigDecimal(0)) { return null; }
+            if ((BigDecimal)right == new BigDecimal("0.0")) { return null; }
             return ((BigDecimal)left).remainder((BigDecimal)right);
         }
 

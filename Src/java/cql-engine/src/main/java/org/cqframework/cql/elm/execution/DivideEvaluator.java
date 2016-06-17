@@ -2,6 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.Value;
 
 import java.math.BigDecimal;
 
@@ -12,13 +13,19 @@ import java.math.BigDecimal;
 public class DivideEvaluator extends Divide {
 
   public static Object divide(Object left, Object right) {
+
     if (left instanceof BigDecimal) {
-        return ((BigDecimal)left).divide((BigDecimal)right);
+      if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
+      return ((BigDecimal)left).divide((BigDecimal)right);
     }
+
     else if (left instanceof Quantity && right instanceof Quantity) {
+      if (Value.compareTo(((Quantity)right).getValue(), new BigDecimal(0), "==")) { return null; }
       return new Quantity().withValue((((Quantity)left).getValue()).divide(((Quantity)right).getValue())).withUnit(((Quantity)left).getUnit());
     }
+
     else if (left instanceof Quantity && right instanceof BigDecimal) {
+      if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
       return new Quantity().withValue((((Quantity)left).getValue()).divide((BigDecimal)right)).withUnit(((Quantity)left).getUnit());
     }
 
@@ -31,7 +38,7 @@ public class DivideEvaluator extends Divide {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null || (Integer)right == 0) {
+        if (left == null || right == null) {
             return null;
         }
         return divide(left, right);

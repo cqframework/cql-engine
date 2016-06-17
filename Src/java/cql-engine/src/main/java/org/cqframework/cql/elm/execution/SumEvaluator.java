@@ -24,22 +24,26 @@ public class SumEvaluator extends Sum {
 
       if (!itr.hasNext()) { return null; } // empty list
       Object sum = itr.next();
+      while (sum == null) { sum = itr.next(); }
 
       if (sum instanceof Integer) {
         while (itr.hasNext()) {
-          sum = (Integer)sum + (Integer)itr.next();
+          Integer next = (Integer)itr.next();
+          if (next != null) { sum = (Integer)sum + next; }
         }
         return (Integer)sum;
       }
       else if (sum instanceof BigDecimal) {
         while (itr.hasNext()) {
-          sum = ((BigDecimal)sum).add((BigDecimal)itr.next());
+          BigDecimal next = (BigDecimal)itr.next();
+          if (next != null) { sum = ((BigDecimal)sum).add(next); }
         }
         return (BigDecimal)sum;
       }
       else if (sum instanceof Quantity) {
         while (itr.hasNext()) {
-          sum = (((Quantity)sum).getValue()).add((BigDecimal)itr.next());
+          BigDecimal next = ((Quantity)itr.next()).getValue();
+          if (next != null) { sum = (((Quantity)sum).getValue()).add(next); }
         }
         return new Quantity().withValue(((Quantity)sum).getValue()).withUnit(((Quantity)sum).getUnit());
       }

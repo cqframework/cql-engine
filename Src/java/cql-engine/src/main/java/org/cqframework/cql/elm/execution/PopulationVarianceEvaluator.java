@@ -30,11 +30,13 @@ public class PopulationVarianceEvaluator extends PopulationVariance {
 
       DescriptiveStatistics stats = new DescriptiveStatistics();
       Object value = itr.next();
+      while (value == null) { value = itr.next(); }
 
       if (value instanceof BigDecimal) {
         stats.addValue(((BigDecimal)value).doubleValue());
         while (itr.hasNext()) {
-          stats.addValue(((BigDecimal)itr.next()).doubleValue());
+          BigDecimal next = (BigDecimal)itr.next();
+          if (next != null) { stats.addValue(next.doubleValue()); }
         }
         return new BigDecimal(stats.getPopulationVariance());
       }
@@ -42,7 +44,8 @@ public class PopulationVarianceEvaluator extends PopulationVariance {
       else if (value instanceof Quantity) {
         stats.addValue((((Quantity)value).getValue()).doubleValue());
         while (itr.hasNext()) {
-          stats.addValue((((Quantity)itr.next()).getValue()).doubleValue());
+          BigDecimal next = ((Quantity)itr.next()).getValue();
+          if (next != null) { stats.addValue(next.doubleValue()); }
         }
         return new Quantity().withValue(new BigDecimal(stats.getPopulationVariance())).withUnit(((Quantity)value).getUnit());
       }

@@ -1,6 +1,6 @@
 package org.cqframework.cql.runtime;
 
-import java.util.*;
+import java.util.HashMap;
 
 /**
 * Created by Chris Schuler on 6/15/2016
@@ -31,7 +31,7 @@ public class Tuple {
         if (elements.containsKey(key)) {
           if (!Value.equals(compareMap.get(key), elements.get(key))) { return false; }
         }
-        else {return false; }
+        else { return false; }
       }
       return true;
       //return compareMap.keySet().equals(elements.keySet()) && compareMap.values().equals(elements.values());

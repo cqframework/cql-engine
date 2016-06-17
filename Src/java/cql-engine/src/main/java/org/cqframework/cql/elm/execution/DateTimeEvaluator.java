@@ -1,13 +1,28 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+// import org.joda.time.format.DateTimeFormat;
+// import org.joda.time.format.DateTimeFormatter;
+import java.math.BigDecimal;
 
 /**
  * Created by Bryn on 5/25/2016.
  */
 public class DateTimeEvaluator extends DateTime {
+
+  @Override
+  public Object evaluate(Context context) {
+    Integer year = (Integer)this.getYear().evaluate(context);
+    Integer month = (Integer)this.getMonth().evaluate(context);
+    Integer day = (Integer)this.getDay().evaluate(context);
+    Integer hour = (Integer)this.getHour().evaluate(context);
+    Integer minute = (Integer)this.getMinute().evaluate(context);
+    Integer second = (Integer)this.getSecond().evaluate(context);
+    Integer millisecond = (Integer)this.getMillisecond().evaluate(context);
+    BigDecimal timezoneOffset = (BigDecimal)this.getTimezoneOffset().evaluate(context);
+    return new org.cqframework.cql.runtime.DateTime().withYear(year).withMonth(month).withDay(day).withHour(hour).withMinute(minute).withSecond(second).withMillisecond(millisecond).withTimezoneOffset(timezoneOffset);
+  }
+
     // TODO: Fix this, it should be using a Partial, not a DateTime
 //    @Override
 //    public Object evaluate(Context context) {

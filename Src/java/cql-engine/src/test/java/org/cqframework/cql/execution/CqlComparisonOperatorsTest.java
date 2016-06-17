@@ -105,19 +105,19 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "IntervalEq1To101To5").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        // result = context.resolveExpressionRef(library, "DateTimeEqTodayToday").getExpression().evaluate(context);
-        // assertThat(result, is(true));
+        result = context.resolveExpressionRef(library, "DateTimeEqTodayToday").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
         //TODO: Won't pass because date arithmatic not completed.
 //        result = context.resolveExpressionRef(library, "DateTimeEqTodayYesterday").getExpression().evaluate(context);
 //        assertThat(result, is(false));
 
         //TODO: Won't pass because of FunctionRef evaluate not implemented
-//        result = context.resolveExpressionRef(library, "TimeEq10A10A").getExpression().evaluate(context);
-//        assertThat(result, is(true));
-//
-//        result = context.resolveExpressionRef(library, "TimeEq10A10P").getExpression().evaluate(context);
-//        assertThat(result, is(false));
+        // result = context.resolveExpressionRef(library, "TimeEq10A10A").getExpression().evaluate(context);
+        // assertThat(result, is(true));
+        //
+        // result = context.resolveExpressionRef(library, "TimeEq10A10P").getExpression().evaluate(context);
+        // assertThat(result, is(false));
     }
 
     /**
@@ -452,8 +452,8 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "EquivInterval1To101To5").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        // result = context.resolveExpressionRef(library, "EquivDateTimeTodayToday").getExpression().evaluate(context);
-        // assertThat(result, is(true));
+        result = context.resolveExpressionRef(library, "EquivDateTimeTodayToday").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
         //TODO: Won't pass because date arithmatic not completed.
 //        result = context.resolveExpressionRef(library, "EquivDateTimeTodayYesterday").getExpression().evaluate(context);
@@ -558,8 +558,8 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "IntervalNotEq1To101To5").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        // result = context.resolveExpressionRef(library, "DateTimeNotEqTodayToday").getExpression().evaluate(context);
-        // assertThat(result, is(false));
+        result = context.resolveExpressionRef(library, "DateTimeNotEqTodayToday").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         //TODO: Won't pass because date arithmatic not completed.
 //        result = context.resolveExpressionRef(library, "DateTimeNotEqTodayYesterday").getExpression().evaluate(context);

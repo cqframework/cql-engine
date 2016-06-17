@@ -29,6 +29,8 @@ public class MaxEvaluator extends Max {
       while (itr.hasNext()) {
         Object value = itr.next();
 
+        if (value == null) { continue; } // skip null
+
         if (value instanceof Integer || value instanceof BigDecimal || value instanceof Quantity) {
           if (Value.compareTo(max, value, "<")) { max = value; }
         }
