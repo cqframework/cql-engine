@@ -82,10 +82,10 @@ public class Context {
       String str = "";
       String str2 = "";
         for (ExpressionDef expressionDef : library.getStatements().getDef()) {
-            str += expressionDef.getName() + " ";
+            //str += expressionDef.getName() + " ";
             if (expressionDef instanceof FunctionDef) {
                 FunctionDef functionDef = (FunctionDef)expressionDef;
-                str2 += functionDef.getName() + " ";
+                //str2 += functionDef.getName() + " ";
                 if (functionDef.getName().equals(name)) {
                     java.util.Iterator<OperandDef> operandIterator = functionDef.getOperand().iterator();
                     java.util.Iterator<Object> argumentIterator = arguments.iterator();
@@ -110,7 +110,8 @@ public class Context {
                 }
             }
         }
-        throw new IllegalArgumentException(String.format("Name: %s,\nExpDef: %s,\nFunDef: %s.", name, str, str2));
+        throw new IllegalArgumentException(String.format("Could not resolve call to operator %s.", name));
+        //throw new IllegalArgumentException(String.format("Name: %s,\nExpDef: %s,\nFunDef: %s.", name, str, str2));
     }
 
     public FunctionDef resolveFunctionRef(String libraryName, String name, Iterable<Object> arguments) {
