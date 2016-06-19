@@ -35,6 +35,8 @@ define IntervalEq1To101To10: Interval[1, 10] = Interval[1, 10]
 define IntervalEq1To101To5: Interval[1, 10] = Interval[1, 5]
 define DateTimeEqTodayToday: Today() = Today()
 define DateTimeEqTodayYesterday: Today() = Today() - 1 day
+define DateTimeEqJanJan: DateTime(2014, 1, 5, 5) = DateTime(2014, 1, 5, 5)
+define DateTimeEqJanJuly: DateTime(2014, 1, 5, 5) = DateTime(2014, 7, 5, 5)
 define TimeEq10A10A: Time(10, 0, 0) = Time(10, 0, 0)
 define TimeEq10A10P: Time(10, 0, 0) = Time(22, 0, 0)
 

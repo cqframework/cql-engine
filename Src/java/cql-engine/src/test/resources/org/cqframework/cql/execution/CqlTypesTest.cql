@@ -5,7 +5,7 @@ codesystem "LOINC": 'http://loinc.org'
 context Population
 
 //Any
-//define AnyTestInteger: Any 5
+//define AnyTestInteger: Any(5)
 
 //Boolean
 

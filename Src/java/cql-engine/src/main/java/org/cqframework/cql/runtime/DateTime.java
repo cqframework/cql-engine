@@ -3,6 +3,7 @@ package org.cqframework.cql.runtime;
 import java.math.BigDecimal;
 import java.text.*;
 import java.util.Date;
+import java.util.ArrayList;
 
 
 /**
@@ -13,11 +14,17 @@ public class DateTime extends Time {
   private Integer year;
   private Integer month;
   private Integer day;
-  // private Integer hour;
-  // private Integer minute;
-  // private Integer second;
-  // private Integer millisecond;
-  // private BigDecimal timezoneOffset;
+
+  public static Boolean formatCheck(ArrayList<Object> timeElements) {
+    boolean prevNull = false;
+    for (Object element : timeElements) {
+      if (element == null) { prevNull = true; }
+      else if (element != null && prevNull) {
+        return false;
+      }
+    }
+    return true;
+  }
 
   public Integer getYear() {
     return year;
@@ -66,14 +73,26 @@ public class DateTime extends Time {
     return new DateTime().withYear(Integer.parseInt(todayArray[0])).withMonth(Integer.parseInt(todayArray[1])).withDay(Integer.parseInt(todayArray[2]));
   }
 
+  public static Boolean nullCheck(Boolean result, DateTime otherDT) {
+    if (result != null) { return result; }
+    else if (result == null && otherDT.getHour() == null) { return true; }
+
+    return false;
+  }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof DateTime) {
       DateTime otherDT = (DateTime)other;
       boolean timeEqual = true;
       if (this.getHour() != null && otherDT.getHour() != null) { timeEqual = super.equals(other); }
-      return year.equals(otherDT.getYear()) && (month.equals(otherDT.getMonth()) || (month == null && otherDT.getMonth() == null))
-             && (day.equals(otherDT.getDay()) || (day == null && otherDT.getDay() == null)) && timeEqual;
+
+      Boolean yearEq = nullCheck(Value.equals(year, otherDT.getYear()), otherDT);
+      Boolean monthEq = nullCheck(Value.equals(month, otherDT.getMonth()), otherDT);
+      Boolean dayEq = nullCheck(Value.equals(day, otherDT.getDay()), otherDT);
+
+      return yearEq && (monthEq || (month == null && otherDT.getMonth() == null))
+             && (dayEq || (day == null && otherDT.getDay() == null)) && timeEqual;
     }
     return false;
   }

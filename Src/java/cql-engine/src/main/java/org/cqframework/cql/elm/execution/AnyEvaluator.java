@@ -9,8 +9,8 @@ import java.util.*;
 /*
 * The Any type is the maximal supertype in the CQL type system, meaning that all types derive from Any, including list, interval, and structured types.
 * In addition, the type of a null result is Any.
+* Missing from elm.execution
 */
-
 /**
 * Created by Chris Schuler on 6/13/2016
 */

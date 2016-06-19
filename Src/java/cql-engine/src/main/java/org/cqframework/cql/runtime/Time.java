@@ -77,17 +77,27 @@ public class Time {
     return this;
   }
 
+  public static Boolean nullCheck(Boolean result, Time otherTime) {
+    if (result != null) { return result; }
+    else if (result == null && otherTime.getHour() == null) { return true; }
+    return false;
+  }
+
   @Override
   public boolean equals(Object other) {
     if (other instanceof Time) {
       Time otherTime = (Time)other;
-      // only hour is required - others may be empty
-      // However, will use in child DateTime where hour is not required... May need to revisit
-      return (hour.equals(otherTime.getHour()) || hour == null && otherTime.getHour() == null)
-              && (minute.equals(otherTime.getMinute()) || minute == null && otherTime.getMinute() == null)
-              && (second.equals(otherTime.getSecond()) || second == null && otherTime.getSecond() == null)
-              && (millisecond.equals(otherTime.getMillisecond()) || millisecond == null && otherTime.getMillisecond() == null)
-              && (timezoneOffset.compareTo(otherTime.getTimezoneOffset()) == 0 || timezoneOffset == null && otherTime.getTimezoneOffset() == null);
+
+      Boolean hourEq = nullCheck(Value.equals(hour, otherTime.getHour()), otherTime);
+      Boolean minEq = nullCheck(Value.equals(minute, otherTime.getMinute()), otherTime);
+      Boolean secEq = nullCheck(Value.equals(second, otherTime.getSecond()), otherTime);
+      Boolean msEq = nullCheck(Value.equals(millisecond, otherTime.getMillisecond()), otherTime);
+      Boolean tzEq = nullCheck(Value.equals(timezoneOffset, otherTime.getTimezoneOffset()), otherTime);
+
+      return (hourEq || hour == null && otherTime.getHour() == null) && (minEq || minute == null && otherTime.getMinute() == null)
+              && (secEq || second == null && otherTime.getSecond() == null)
+              && (msEq || millisecond == null && otherTime.getMillisecond() == null)
+              && (tzEq || timezoneOffset == null && otherTime.getTimezoneOffset() == null);
     }
     return false;
   }
