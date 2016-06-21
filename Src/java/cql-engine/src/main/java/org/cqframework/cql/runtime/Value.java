@@ -6,8 +6,10 @@ import org.cqframework.cql.runtime.Tuple;
 import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.DateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
+import org.joda.time.DateTimeFieldType;
 /**
  * Created by Bryn on 5/2/2016.
  * Edited by Chris Schuler
@@ -117,8 +119,9 @@ public class Value {
           return ((Time)left).equals((Time)right);
         }
 
-        else if (left instanceof DateTime) {
-          return ((DateTime)left).equals((DateTime)right);
+        else if (left instanceof DateTime && right instanceof DateTime) {
+          return Arrays.equals(((DateTime)left).dateTime.getValues(), ((DateTime)right).dateTime.getValues())
+                 && ((DateTime)left).getTimezoneOffset().compareTo(((DateTime)right).getTimezoneOffset()) == 0;
         }
 
         return left.equals(right);

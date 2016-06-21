@@ -2,7 +2,8 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
-
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import java.math.BigDecimal;
 
 /**
@@ -24,7 +25,13 @@ public class AddEvaluator extends Add {
     }
     // TODO: Finish implementation
     // +(DateTime, Quantity)
+    else if (left instanceof DateTime && right instanceof Quantity) {
+      
+    }
     // +(Time, Quantity)
+    else if (left instanceof Time && right instanceof Quantity) {
+
+    }
 
     throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }

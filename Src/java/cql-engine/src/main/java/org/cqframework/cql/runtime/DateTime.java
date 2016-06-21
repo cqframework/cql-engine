@@ -1,19 +1,77 @@
 package org.cqframework.cql.runtime;
 
-import java.math.BigDecimal;
-import java.text.*;
-import java.util.Date;
-import java.util.ArrayList;
+import org.joda.time.Partial;
+import org.joda.time.DateTimeFieldType;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.text.*;
 
 /**
-* Created by Chris Schuler on 6/16/2016
+* Created by Chris Schuler on 6/20/2016
 */
-public class DateTime extends Time {
+public class DateTime {
 
-  private Integer year;
-  private Integer month;
-  private Integer day;
+  protected Partial dateTime;
+  protected BigDecimal timezoneOffset;
+
+  protected static DateTimeFieldType[] fields = new DateTimeFieldType[] {
+    DateTimeFieldType.year(),
+    DateTimeFieldType.monthOfYear(),
+    DateTimeFieldType.dayOfMonth(),
+    DateTimeFieldType.hourOfDay(),
+    DateTimeFieldType.minuteOfHour(),
+    DateTimeFieldType.secondOfMinute(),
+    DateTimeFieldType.millisOfSecond(),
+  };
+
+  public DateTime (int[] values, DateTimeFieldType[] fields, BigDecimal timezoneOffset) {
+    dateTime = new Partial(fields, values);
+    this.timezoneOffset = timezoneOffset == null ? new BigDecimal(0) : timezoneOffset;
+  }
+
+  public static int[] getValues(Integer... values) {
+    int count = 0;
+    int[] temp = new int[7];
+    for (Integer value : values) {
+      if (value != null) {
+        temp[count] = value;
+        ++count;
+      }
+    }
+    int[] ret = Arrays.copyOf(temp, count);
+    return ret;
+  }
+
+  public static DateTimeFieldType[] getFields(int numFields) {
+    DateTimeFieldType[] ret = new DateTimeFieldType[numFields];
+    for (int i = 0; i < numFields; ++i) {
+      ret[i] = fields[i];
+    }
+    return ret;
+  }
+
+  public Partial getPartial() {
+    return dateTime;
+  }
+
+  public BigDecimal getTimezoneOffset() {
+    return timezoneOffset;
+  }
+
+  public static DateTime getToday() {
+    DateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
+    Date date = new Date();
+    String todayString = dateFormat.format(date);
+    String [] todayArray = todayString.split(" ");
+    int [] values = new int[todayArray.length];
+    for (int i = 0; i < todayArray.length; ++i)  {
+      values[i] = Integer.parseInt(todayArray[i]);
+    }
+    return new DateTime(values, Arrays.copyOf(fields, 3), null);
+  }
 
   public static Boolean formatCheck(ArrayList<Object> timeElements) {
     boolean prevNull = false;
@@ -24,76 +82,5 @@ public class DateTime extends Time {
       }
     }
     return true;
-  }
-
-  public Integer getYear() {
-    return year;
-  }
-
-  public void setYear(Integer year) {
-    this.year = year;
-  }
-
-  public DateTime withYear(Integer year) {
-    setYear(year);
-    return this;
-  }
-
-  public Integer getMonth() {
-    return month;
-  }
-
-  public void setMonth(Integer month) {
-    this.month = month;
-  }
-
-  public DateTime withMonth(Integer month) {
-    setMonth(month);
-    return this;
-  }
-
-  public Integer getDay() {
-    return day;
-  }
-
-  public void setDay(Integer day) {
-    this.day = day;
-  }
-
-  public DateTime withDay(Integer day) {
-    setDay(day);
-    return this;
-  }
-
-  public DateTime getToday() {
-    DateFormat dateFormat = new SimpleDateFormat("yyyy MM dd");
-    Date date = new Date();
-    String todayString = dateFormat.format(date);
-    String [] todayArray = todayString.split(" ");
-    return new DateTime().withYear(Integer.parseInt(todayArray[0])).withMonth(Integer.parseInt(todayArray[1])).withDay(Integer.parseInt(todayArray[2]));
-  }
-
-  public static Boolean nullCheck(Boolean result, DateTime otherDT) {
-    if (result != null) { return result; }
-    else if (result == null && otherDT.getHour() == null) { return true; }
-
-    return false;
-  }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other instanceof DateTime) {
-      DateTime otherDT = (DateTime)other;
-      boolean timeEqual = true;
-      if (this.getHour() != null && otherDT.getHour() != null) { timeEqual = super.equals(other); }
-
-      Boolean yearEq = nullCheck(Value.equals(year, otherDT.getYear()), otherDT);
-      Boolean monthEq = nullCheck(Value.equals(month, otherDT.getMonth()), otherDT);
-      Boolean dayEq = nullCheck(Value.equals(day, otherDT.getDay()), otherDT);
-
-      return yearEq && (monthEq || (month == null && otherDT.getMonth() == null))
-             && (dayEq || (day == null && otherDT.getDay() == null)) && timeEqual;
-    }
-    return false;
   }
 }

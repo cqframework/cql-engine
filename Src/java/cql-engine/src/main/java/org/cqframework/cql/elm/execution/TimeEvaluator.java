@@ -16,8 +16,10 @@ public class TimeEvaluator extends Time {
     Integer second = (Integer)this.getSecond().evaluate(context);
     Integer millisecond = (Integer)this.getMillisecond().evaluate(context);
     BigDecimal timezoneOffset = (BigDecimal)this.getTimezoneOffset().evaluate(context);
+
     if (DateTime.formatCheck(new ArrayList<Object>(Arrays.asList(hour, minute, second, millisecond, timezoneOffset)))) {
-      return new org.cqframework.cql.runtime.Time().withHour(hour).withMinute(minute).withSecond(second).withMillisecond(millisecond).withTimezoneOffset(timezoneOffset);
+      int [] values = org.cqframework.cql.runtime.DateTime.getValues(hour, minute, second, millisecond);
+      return new org.cqframework.cql.runtime.Time(values, org.cqframework.cql.runtime.Time.getFields(values.length), timezoneOffset);
     }
     throw new IllegalArgumentException("Time format is invalid");
   }

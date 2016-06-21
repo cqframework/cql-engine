@@ -37,6 +37,9 @@ define DateTimeEqTodayToday: Today() = Today()
 define DateTimeEqTodayYesterday: Today() = Today() - 1 day
 define DateTimeEqJanJan: DateTime(2014, 1, 5, 5) = DateTime(2014, 1, 5, 5)
 define DateTimeEqJanJuly: DateTime(2014, 1, 5, 5) = DateTime(2014, 7, 5, 5)
+define DateTimeEqNull: DateTime(null) = DateTime(null)
+define DateTimeEqNull2: DateTime(2001, 1, 1, null) = DateTime(2001, 1, 1, null, null)
+define DateTimeUTC: @2014-01-25T14:30:14.559+01:00 = @2014-01-25T14:30:14.559+01:00
 define TimeEq10A10A: Time(10, 0, 0) = Time(10, 0, 0)
 define TimeEq10A10P: Time(10, 0, 0) = Time(22, 0, 0)
 

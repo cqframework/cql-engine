@@ -6,6 +6,6 @@ public class TodayEvaluator extends Today {
 
   @Override
   public Object evaluate(Context context) {
-    return new org.cqframework.cql.runtime.DateTime().getToday();
+    return org.cqframework.cql.runtime.DateTime.getToday();
   }
 }
