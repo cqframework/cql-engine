@@ -5,9 +5,6 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 import org.cqframework.cql.runtime.DateTime;
 
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.Partial;
-
 import java.util.Arrays;
 import java.util.ArrayList;
 

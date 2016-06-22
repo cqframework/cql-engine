@@ -72,10 +72,22 @@ public class ObjectFactoryEx extends ObjectFactory {
     public DateTime createDateTime() { return new DateTimeEvaluator(); }
 
     @Override
+    public DateFrom createDateFrom() { return new DateFromEvaluator(); }
+
+    @Override
+    public DateTimeComponentFrom createDateTimeComponentFrom() { return new DateTimeComponentFromEvaluator(); }
+
+    @Override
+    public DifferenceBetween createDifferenceBetween() { return new DifferenceBetweenEvaluator(); }
+
+    @Override
     public Distinct createDistinct() { return new DistinctEvaluator(); }
 
     @Override
     public Divide createDivide() { return new DivideEvaluator(); }
+
+    @Override
+    public DurationBetween createDurationBetween() { return new DurationBetweenEvaluator(); }
 
     @Override
     public End createEnd() { return new EndEvaluator(); }
@@ -316,6 +328,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Time createTime() { return new TimeEvaluator(); }
+
+    @Override
+    public TimezoneFrom createTimezoneFrom() { return new TimezoneFromEvaluator(); }
 
     @Override
     public Today createToday() { return new TodayEvaluator(); }

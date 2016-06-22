@@ -1,6 +1,7 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
+import org.cqframework.cql.runtime.Interval;
 
 import java.math.BigDecimal;
 
@@ -18,16 +19,26 @@ public class GreaterEvaluator extends Greater {
             return null;
         }
 
-        if (left instanceof Integer) {
+        else if (left instanceof Integer) {
             return Integer.compare((Integer)left, (Integer)right) > 0;
         }
 
-        if (left instanceof BigDecimal) {
+        else if (left instanceof BigDecimal) {
             return ((BigDecimal)left).compareTo((BigDecimal)right) > 0;
         }
 
-        if (left instanceof String) {
+        else if (left instanceof String) {
             return ((String)left).compareTo((String)right) > 0;
+        }
+
+        // Uncertainty comparison
+        else if (left instanceof Interval && right instanceof Integer) {
+          Integer leftStart = (Integer)((Interval)left).getStart();
+          Integer leftEnd = (Integer)((Interval)left).getEnd();
+
+          if (leftStart > (Integer)right) { return true; }
+          else if ((Integer)right >= leftStart && (Integer)right <= leftEnd) { return null; }
+          else { return false; }
         }
 
         // TODO: Finish implementation

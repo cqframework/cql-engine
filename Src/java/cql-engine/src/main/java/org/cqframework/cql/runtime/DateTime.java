@@ -82,6 +82,10 @@ public class DateTime {
     return ret;
   }
 
+  public static DateTimeFieldType getField(int idx) {
+    return fields[idx];
+  }
+
   public Partial getPartial() {
     return dateTime;
   }
