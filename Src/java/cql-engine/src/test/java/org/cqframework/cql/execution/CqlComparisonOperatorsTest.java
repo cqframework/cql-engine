@@ -114,11 +114,14 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "DateTimeEqJanJuly").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef(library, "DateTimeEqMissingArg").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
         result = context.resolveExpressionRef(library, "DateTimeEqNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        // result = context.resolveExpressionRef(library, "DateTimeEqNull2").getExpression().evaluate(context);
-        // assertThat(result, is(false));
+        result = context.resolveExpressionRef(library, "DateTimeEqNull2").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "DateTimeUTC").getExpression().evaluate(context);
         assertThat(result, is(true));

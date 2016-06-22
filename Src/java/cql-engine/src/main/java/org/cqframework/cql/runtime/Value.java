@@ -120,6 +120,9 @@ public class Value {
         }
 
         else if (left instanceof DateTime && right instanceof DateTime) {
+          if (((DateTime)left).dateTime.getValues().length < 7 || ((DateTime)right).dateTime.getValues().length < 7) {
+            return null;
+          }
           return Arrays.equals(((DateTime)left).dateTime.getValues(), ((DateTime)right).dateTime.getValues())
                  && ((DateTime)left).getTimezoneOffset().compareTo(((DateTime)right).getTimezoneOffset()) == 0;
         }

@@ -14,7 +14,8 @@ public class DateTimeEvaluator extends DateTime {
   public Object evaluate(Context context) {
     Integer year = (Integer)this.getYear().evaluate(context);
     if (year == null) { return null; }
-    else if (((year - 1000) < 0)) {
+
+    else if (year.toString().length() < 4) {
       throw new IllegalArgumentException("Must use 4 digits for year.");
     }
 

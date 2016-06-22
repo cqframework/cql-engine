@@ -9,6 +9,36 @@ import java.util.Arrays;
 import java.util.Date;
 import java.text.*;
 
+/*
+  Notes on uncertainty comparisons:
+    Equality:
+      A = B
+      if Alow <= Bhigh and Ahigh >= Blow
+        then if Alow = Ahigh and Blow = Bhigh
+          then true
+          else null
+      else false
+
+    Relative Comparison w/out Equality
+      A < B
+      if Ahigh < Blow
+        then true
+      else if Alow >= Bhigh
+        then false
+      else null
+
+    Relative Comparison with Equality
+      A <= B
+      if Ahigh <= Blow
+        then true
+      else if Alow > Bhigh
+        then false
+      else null
+
+    ** Note carefully that these semantics introduce some asymmetries into the comparison operators.
+       In particular, A = B or A < B is not equivalent to A <= B because of the uncertainty.
+*/
+
 /**
 * Created by Chris Schuler on 6/20/2016
 */
@@ -41,8 +71,7 @@ public class DateTime {
         ++count;
       }
     }
-    int[] ret = Arrays.copyOf(temp, count);
-    return ret;
+    return Arrays.copyOf(temp, count);
   }
 
   public static DateTimeFieldType[] getFields(int numFields) {
@@ -66,11 +95,11 @@ public class DateTime {
     Date date = new Date();
     String todayString = dateFormat.format(date);
     String [] todayArray = todayString.split(" ");
-    int [] values = new int[todayArray.length];
+    int [] values = new int[7];
     for (int i = 0; i < todayArray.length; ++i)  {
       values[i] = Integer.parseInt(todayArray[i]);
     }
-    return new DateTime(values, Arrays.copyOf(fields, 3), null);
+    return new DateTime(values, fields, null);
   }
 
   public static Boolean formatCheck(ArrayList<Object> timeElements) {
