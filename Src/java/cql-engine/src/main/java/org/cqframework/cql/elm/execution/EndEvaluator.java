@@ -2,6 +2,10 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 
+/*
+Notes for this class operation are in the Interval class - getEnd() method
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */

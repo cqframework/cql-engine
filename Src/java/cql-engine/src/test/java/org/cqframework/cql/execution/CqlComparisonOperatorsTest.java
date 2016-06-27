@@ -171,7 +171,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef(library, "GreaterCM0NegCM1").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef(library, "GreaterM1CM1").getExpression().evaluate(context);
         assertThat(result, is(false));

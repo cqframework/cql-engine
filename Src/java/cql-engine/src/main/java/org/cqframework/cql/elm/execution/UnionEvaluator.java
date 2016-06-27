@@ -9,6 +9,16 @@ import java.lang.Math.*;
 
 import java.util.ArrayList;
 
+/*
+*** NOTES FOR INTERVAL ***
+The union operator for intervals returns the union of the intervals.
+  More precisely, the operator returns the interval that starts at the earliest starting point in either argument,
+    and ends at the latest starting point in either argument.
+If the arguments do not overlap or meet, this operator returns null. 
+If either argument is null, the result is null.
+
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  * Edited by Chris Schuler on 6/8/2016 - added Interval Logic and union() method

@@ -9,6 +9,15 @@ import java.util.*;
 import java.lang.Math.*;
 import java.math.BigDecimal;
 
+/*
+The except operator for intervals returns the set difference of two intervals.
+  More precisely, this operator returns the portion of the first interval that does not overlap with the second.
+Note that to avoid returning an improper interval, if the second argument is properly contained within the first and
+  does not start or end it, this operator returns null.
+If either argument is null, the result is null.
+
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  * Edited by Chris Schuler on 6/8/2016 - added Interval Logic

@@ -4,6 +4,14 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
+/*
+The meets operator returns true if the first interval ends immediately before the second interval starts,
+  or if the first interval starts immediately after the second interval ends.
+In other words, if the ending point of the first interval is equal to the predecessor of the starting point of the second,
+  or if the starting point of the first interval is equal to the successor of the ending point of the second.
+If either argument is null, the result is null.
+*/
+
 /**
 * Created by Chris Schuler on 6/8/2016
 */

@@ -8,6 +8,14 @@ import java.lang.Math;
 
 import java.util.ArrayList;
 
+/*
+The intersect operator for intervals returns the intersection of two intervals.
+  More precisely, the operator returns the interval that defines the overlapping portion of both arguments.
+If the arguments do not overlap, this operator returns null.
+If either argument is null, the result is null.
+
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  * Edited by Chris Schuler on 6/8/2016 - added Interval Logic

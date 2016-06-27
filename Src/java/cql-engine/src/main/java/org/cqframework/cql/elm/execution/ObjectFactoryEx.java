@@ -243,6 +243,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Not createNot() { return new NotEvaluator(); }
 
     @Override
+    public Now createNow() { return new NowEvaluator(); }
+
+    @Override
     public Null createNull() { return new NullEvaluator(); }
 
     @Override
@@ -298,6 +301,15 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Round createRound() { return new RoundEvaluator(); }
+
+    @Override
+    public SameAs createSameAs() { return new SameAsEvaluator(); }
+
+    @Override
+    public SameOrAfter createSameOrAfter() { return new SameOrAfterEvaluator(); }
+
+    @Override
+    public SameOrBefore createSameOrBefore() { return new SameOrBeforeEvaluator(); }
 
     @Override
     public SingletonFrom createSingletonFrom() { return new SingletonFromEvaluator(); }

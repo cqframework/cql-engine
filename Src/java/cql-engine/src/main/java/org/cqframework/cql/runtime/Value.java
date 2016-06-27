@@ -61,16 +61,12 @@ public class Value {
       }
     }
 
-    public static Boolean equalUnit(Object left, Object right) {
-      return equals(left, right);
-    }
-
     public static Boolean equals(Object left, Object right) {
         if ((left == null) || (right == null) || !left.getClass().equals(right.getClass())) {
             return null;
         }
 
-        if (left instanceof Interval) {
+        if (left instanceof Interval && right instanceof Interval) {
           Object leftStart = ((Interval)left).getStart();
           Object leftEnd = ((Interval)left).getEnd();
           Object rightStart = ((Interval)right).getStart();
@@ -125,6 +121,15 @@ public class Value {
           }
           return Arrays.equals(((DateTime)left).dateTime.getValues(), ((DateTime)right).dateTime.getValues())
                  && ((DateTime)left).getTimezoneOffset().compareTo(((DateTime)right).getTimezoneOffset()) == 0;
+        }
+
+        // Uncertainty
+        else if (left instanceof Interval && right instanceof DateTime) {
+          
+        }
+
+        else if (left instanceof DateTime && right instanceof Interval) {
+
         }
 
         return left.equals(right);

@@ -4,6 +4,15 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
+/*
+*** NOTES FOR INTERVAL ***
+The in operator for intervals returns true if the given point is greater than or equal to the starting point of the interval,
+  and less than or equal to the ending point of the interval.
+For open interval boundaries, exclusive comparison operators are used.
+For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true.
+If either argument is null, the result is null. 
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  * Edited by Chris Schuler on 6/8/2016 - added Interval Logic
@@ -27,6 +36,7 @@ public class InEvaluator extends In {
   @Override
   public Object evaluate(Context context) {
     Object test = getOperand().get(1).evaluate(context);
+
     if (test instanceof Interval) {
       Object left = getOperand().get(0).evaluate(context);
       Interval right = (Interval)test;

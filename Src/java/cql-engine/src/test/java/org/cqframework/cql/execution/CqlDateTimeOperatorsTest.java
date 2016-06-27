@@ -4,12 +4,15 @@ import org.joda.time.Partial;
 import org.joda.time.DateTimeFieldType;
 
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Interval;
+import org.cqframework.cql.runtime.Uncertainty;
 
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.comparesEqualTo;
 
 import java.math.BigDecimal;
 
@@ -24,7 +27,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testAdd() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef(library, "DateTimeAdd5Years").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2010, 10, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2010, 10, 10})));
 
       try {
         result = context.resolveExpressionRef(library, "DateTimeAddInvalidYears").getExpression().evaluate(context);
@@ -33,43 +36,52 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
       }
 
       result = context.resolveExpressionRef(library, "DateTimeAdd5Months").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2005, 10, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 10, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddMonthsOverflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2006, 3, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2006, 3, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeAdd5Days").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 15})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 15})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddDaysOverflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2016, 7, 1})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 7, 1})));
 
       result = context.resolveExpressionRef(library, "DateTimeAdd5Hours").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddHoursOverflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 11, 0})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 11, 0})));
 
       result = context.resolveExpressionRef(library, "DateTimeAdd5Minutes").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddMinutesOverflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 6, 0})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 6, 0})));
 
       result = context.resolveExpressionRef(library, "DateTimeAdd5Seconds").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddSecondsOverflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 6, 0})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 6, 0})));
 
       result = context.resolveExpressionRef(library, "DateTimeAdd5Milliseconds").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddMillisecondsOverflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 6, 0})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 6, 0})));
 
       result = context.resolveExpressionRef(library, "DateTimeAddLeapYear").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2013, 2, 28})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2013, 2, 28})));
+
+      result = context.resolveExpressionRef(library, "DateTimeAdd2YearsByMonths").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+
+      result = context.resolveExpressionRef(library, "DateTimeAdd2YearsByDays").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+
+      result = context.resolveExpressionRef(library, "DateTimeAdd2YearsByDaysRem5Days").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 1, 6})));
     }
 
     /**
@@ -119,6 +131,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
       result = context.resolveExpressionRef(library, "DateTimeAfterMillisecondFalse").getExpression().evaluate(context);
       assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeAfterUncertain").getExpression().evaluate(context);
+      assertThat(result, is(true));
   }
 
     /**
@@ -226,7 +241,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal(1)));
 
         result = context.resolveExpressionRef(library, "DateTimeComponentFromDate").getExpression().evaluate(context);
-        assertThat(result, is(new Partial(DateTime.getFields(7), new int[] {2003, 10, 29, 20, 50, 33, 955})));
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2003, 10, 29, 20, 50, 33, 955})));
     }
 
     @Test
@@ -255,6 +270,10 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeDifferenceNegative").getExpression().evaluate(context);
         assertThat(result, is(-18));
+
+        result = context.resolveExpressionRef(library, "DateTimeDifferenceUncertain").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
     }
 
     @Test
@@ -268,6 +287,15 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonth").getExpression().evaluate(context);
         assertThat(result, is(0));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenDaysDiffYears").getExpression().evaluate(context);
+        assertThat(result, is(-788));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainInterval").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(17, true, 44, true)));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainAdd").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(34, true, 88, true)));
 
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -285,7 +313,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testNow() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+
+        // Object result = context.resolveExpressionRef(library, "DateTimeNow").getExpression().evaluate(context);
+        // assertThat(result, is(true));
     }
 
     /**
@@ -294,7 +324,50 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testSameAs() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "DateTimeSameAsYearTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsMonthTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsMonthFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsDayTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsDayFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsHourTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsHourFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsMinuteTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsMinuteFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsSecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsSecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsMillisecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsMillisecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameAsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
     }
 
     /**
@@ -302,8 +375,72 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testSameOrAfter() throws JAXBException {
-        Context context = new Context(library);
-        Object result;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "DateTimeSameOrAfterYearTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterYearTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterYearFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMonthTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMonthTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMonthFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterDayTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterDayTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterDayFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterHourTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterHourTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterHourFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMinuteTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMinuteTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMinuteFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterSecondTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterSecondTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterSecondFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMillisecondTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMillisecondTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterMillisecondFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "DateTimeSameOrAfterNull1").getExpression().evaluate(context);
+      assertThat(result, is(nullValue()));
     }
 
     /**
@@ -312,7 +449,71 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testSameOrBefore() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMonthTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMonthTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMonthFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeDayTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeDayTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeDayFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeHourTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeHourTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeHourFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMinuteTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMinuteTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMinuteFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeSecondTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeSecondTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeSecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMillisecondTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMillisecondTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeMillisecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeNull1").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
     }
 
     /**
@@ -322,7 +523,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testSubtract() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef(library, "DateTimeSubtract5Years").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2000, 10, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2000, 10, 10})));
 
       try {
         result = context.resolveExpressionRef(library, "DateTimeSubtractInvalidYears").getExpression().evaluate(context);
@@ -331,40 +532,43 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
       }
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract5Months").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2005, 1, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 1, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtractMonthsUnderflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2004, 11, 10})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2004, 11, 10})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract5Days").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 5})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 5})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtractDaysUnderflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(3), new int[] {2016, 5, 30})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 5, 30})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract5Hours").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 5})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 5})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtractHoursUnderflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 9, 23})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 9, 23})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract5Minutes").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 5})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 5})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtractMinutesUnderflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 4, 59})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 4, 59})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract5Seconds").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 5})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 5})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtractSecondsUnderflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 4, 59})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 4, 59})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract5Milliseconds").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 5})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 5})));
 
       result = context.resolveExpressionRef(library, "DateTimeSubtractMillisecondsUnderflow").getExpression().evaluate(context);
-      assertThat(result, is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999})));
+
+      result = context.resolveExpressionRef(library, "DateTimeSubtract2YearsAsMonths").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2012})));
     }
 
     /**
@@ -391,7 +595,17 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testToday() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeTodayTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeTodayTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeTodayFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeAddTodayTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
 }

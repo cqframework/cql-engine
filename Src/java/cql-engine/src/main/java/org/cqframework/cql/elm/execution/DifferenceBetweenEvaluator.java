@@ -3,13 +3,63 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
 
+// for Uncertainty
+import org.cqframework.cql.runtime.Interval;
+import org.cqframework.cql.runtime.Uncertainty;
+
 import java.util.Arrays;
 import java.util.ArrayList;
+
+import org.joda.time.*;
+
+/*
+The difference-between operator returns the number of boundaries crossed for the specified precision between the
+first and second arguments.
+If the first argument is after the second argument, the result is negative.
+The result of this operation is always an integer; any fractional boundaries are dropped.
+For DateTime values, precision must be one of: years, months, days, hours, minutes, seconds, or milliseconds.
+For Time values, precision must be one of: hours, minutes, seconds, or milliseconds.
+If either argument is null, the result is null.
+
+Additional Complexity: precison elements above the specified precision must also be accounted for (handled by Joda Time).
+For example:
+days between DateTime(2012, 5, 5) and DateTime(2011, 5, 0) = 365 + 5 = 370 days
+
+NOTE: This is the same operation as DurationBetween, but the precision after the specified precision is truncated
+to get the number of boundaries crossed instead of whole calendar periods.
+For Example:
+difference in days between DateTime(2014, 5, 12, 12, 10) and DateTime(2014, 5, 25, 15, 55)
+will truncate the DateTimes to:
+DateTime(2014, 5, 12) and DateTime(2014, 5, 25) respectively
+*/
 
 /**
 * Created by Chris Schuler on 6/22/2016
 */
 public class DifferenceBetweenEvaluator extends DifferenceBetween {
+
+  public static Integer between(Partial leftTrunc, Partial rightTrunc, int idx) {
+    Integer ret = 0;
+    switch(idx) {
+      case 0: ret = Years.yearsBetween(leftTrunc, rightTrunc).getYears();
+              break;
+      case 1: ret = Months.monthsBetween(leftTrunc, rightTrunc).getMonths();
+              break;
+      case 2: ret = Days.daysBetween(leftTrunc, rightTrunc).getDays();
+              break;
+      case 3: ret = Hours.hoursBetween(leftTrunc, rightTrunc).getHours();
+              break;
+      case 4: ret = Minutes.minutesBetween(leftTrunc, rightTrunc).getMinutes();
+              break;
+      case 5: ret = Seconds.secondsBetween(leftTrunc, rightTrunc).getSeconds();
+              break;
+      case 6: ret = Seconds.secondsBetween(leftTrunc, rightTrunc).getSeconds() * 1000;
+              // now do the actual millisecond DifferenceBetween - add to ret
+              ret += rightTrunc.getValue(idx) - leftTrunc.getValue(idx);
+              break;
+    }
+    return ret;
+  }
 
   @Override
   public Object evaluate(Context context) {
@@ -27,22 +77,43 @@ public class DifferenceBetweenEvaluator extends DifferenceBetween {
       DateTime leftDT = (DateTime)left;
       DateTime rightDT = (DateTime)right;
 
-      ArrayList<String> indexes = new ArrayList<>(Arrays.asList("Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"));
-      int idx = indexes.indexOf(precision);
+      int idx = DateTime.getFieldIndex(precision);
 
       if (idx != -1) {
-        // check level of precision
-        if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
-          return null;
+
+        // Uncertainty
+        if (Uncertainty.isUncertain(leftDT, precision)) {
+          ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1).getPartial(), rightDT.getPartial(), idx), true, between(highLow.get(0).getPartial(), rightDT.getPartial(), idx), true));
         }
 
-        return rightDT.getPartial().getValue(idx) - leftDT.getPartial().getValue(idx);
+        else if (Uncertainty.isUncertain(rightDT, precision)) {
+          ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(leftDT.getPartial(), highLow.get(0).getPartial(), idx), true, between(leftDT.getPartial(), highLow.get(1).getPartial(), idx), true));
+        }
+
+        // truncate Partial
+        int [] a = new int[idx + 1];
+        int [] b = new int[idx + 1];
+
+        for (int i = 0; i < idx + 1; ++i) {
+          a[i] = leftDT.getPartial().getValue(i);
+          b[i] = rightDT.getPartial().getValue(i);
+        }
+
+        Partial leftTrunc = new Partial(DateTime.getFields(idx + 1), a);
+        Partial rightTrunc = new Partial(DateTime.getFields(idx + 1), b);
+
+        return between(leftTrunc, rightTrunc, idx);
       }
 
       else {
         throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
       }
     }
+
+    // TODO: Implement for Time
+
     throw new IllegalArgumentException(String.format("Cannot DifferenceBetween arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }
 }

@@ -2,6 +2,11 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 
+/*
+The ~ operator for intervals returns true if and only if the intervals are over the same point type,
+  and the starting and ending points of the intervals as determined by the Start and End operators are equivalent.
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */

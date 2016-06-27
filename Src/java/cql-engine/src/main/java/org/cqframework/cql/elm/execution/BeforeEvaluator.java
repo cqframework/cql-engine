@@ -5,11 +5,26 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 import org.cqframework.cql.runtime.DateTime;
 
-import java.util.Arrays;
-import java.util.ArrayList;
+/*
+*** NOTES FOR INTERVAL ***
+The before operator for intervals returns true if the first interval ends before the second one starts.
+  In other words, if the ending point of the first interval is less than the starting point of the second interval.
+For the point-interval overload, the operator returns true if the given point is less than the start of the interval.
+For the interval-point overload, the operator returns true if the given interval ends before the given point.
+This operator uses the semantics described in the Start and End operators to determine interval boundaries.
+If either argument is null, the result is null.
+
+
+*** NOTES FOR DATETIME ***
+The before-precision-of operator compares two date/time values to the specified precision to determine whether the
+  first argument is the before the second argument. Precision must be one of: year, month, day, hour, minute, second, or millisecond.
+For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
+  depending on whether the values involved are specified to the level of precision used for the comparison.
+If either or both arguments are null, the result is null.
+*/
 
 /**
-* Created by Chris Schuler on 6/7/2016
+* Created by Chris Schuler on 6/7/2016 (v1), 6/26/2016 (v2)
 */
 public class BeforeEvaluator extends Before {
 
@@ -56,13 +71,14 @@ public class BeforeEvaluator extends Before {
         throw new IllegalArgumentException("Precision must be specified.");
       }
 
-      // DateTimePrecision Enum represents precision as Titlecase Strings
-      ArrayList<String> indexes = new ArrayList<>(Arrays.asList("Year", "Month", "Day", "Hour", "Minute", "Second", "Millisecond"));
-      int idx = indexes.indexOf(precision);
+      int idx = DateTime.getFieldIndex(precision);
 
       if (idx != -1) {
         // check level of precision
         if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
+
+          // TODO: implement uncertainty
+
           return null;
         }
 
@@ -70,10 +86,7 @@ public class BeforeEvaluator extends Before {
 
         // for (int i = 0; i < idx + 1; ++i) {
         //   if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i) && i != idx) {
-        //     return false;
-        //   }
-        //   else if (i == idx) {
-        //     return leftDT.getPartial().getValue(i) < rightDT.getPartial().getValue(i);
+        //     return true;
         //   }
         // }
       }
@@ -82,6 +95,8 @@ public class BeforeEvaluator extends Before {
         throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
       }
     }
+
+    // Implement for Time
 
     throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", testLeft.getClass().getName(), testRight.getClass().getName()));
   }

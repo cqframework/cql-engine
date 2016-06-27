@@ -88,13 +88,13 @@ define QuantityIntervalEqualFalse: QuantityIntervalTest = QuantityIntervalTest2
 
 //Except
 define NullInterval: Interval(null, null)
-
 define TestExceptNull: NullInterval except NullInterval
 define IntegerIntervalExcept1to3: IntegerIntervalTest except IntegerIntervalTest4
 define IntegerIntervalExceptNull: Interval[1, 10] except Interval[3,7]
 define DecimalIntervalExcept1to3: DecimalIntervalTest except DecimalIntervalTest3
 define DecimalIntervalExceptNull: Interval[1.0, 10.0] except Interval[3.0,7.0]
 define QuantityIntervalExcept1to4: QuantityIntervalTest except QuantityIntervalTest3
+define Except12: Interval[1, 4] except Interval[3, 6]
 
 //In
 define TestInNull: 5 in NullInterval

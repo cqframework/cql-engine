@@ -4,6 +4,11 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
+/*
+The meets after operator returns true if the first interval starts immediately after the second interval ends.
+If either argument is null, the result is null.
+*/
+
 /**
 * Created by Chris Schuler on 6/8/2016
 */
