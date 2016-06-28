@@ -3,9 +3,8 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.DateTime;
-
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.Partial;
+import org.cqframework.cql.runtime.Uncertainty;
+import org.cqframework.cql.runtime.Interval;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -33,72 +32,82 @@ public class SubtractEvaluator extends Subtract {
 
   private static final int YEAR_RANGE_MIN = 0001;
 
+  public static Object subtract(Object left, Object right) {
+    if (left == null || right == null) {
+        return null;
+    }
+
+    // -(Integer, Integer)
+    if (left instanceof Integer) {
+        return (Integer)left - (Integer)right;
+    }
+
+    // -(Decimal, Decimal)
+    else if (left instanceof BigDecimal) {
+        return ((BigDecimal)left).subtract((BigDecimal)right);
+    }
+
+    // -(Quantity, Quantity)
+    else if (left instanceof Quantity) {
+      return (((Quantity)left).getValue()).subtract(((Quantity)right).getValue());
+    }
+
+    // -(DateTime, Quantity)
+    else if (left instanceof DateTime && right instanceof Quantity) {
+      DateTime dt = (DateTime)left;
+      String unit = ((Quantity)right).getUnit();
+      int value = ((Quantity)right).getValue().intValue();
+
+      int idx = DateTime.getFieldIndex2(unit);
+
+      if (idx != -1) {
+        int startSize = dt.getPartial().size();
+        // check that the Partial has the precision specified
+        if (startSize < idx + 1) {
+          // expand the Partial to the proper precision
+          for (int i = startSize; i < idx + 1; ++i) {
+            dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+          }
+        }
+
+        // do the subtraction
+        dt.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
+        // truncate until non-minimum value is found
+        for (int i = idx; i >= startSize; --i) {
+          if (dt.getPartial().getValue(i) > DateTime.getField(i).getField(null).getMinimumValue()) {
+            break;
+          }
+          dt.setPartial(dt.getPartial().without(DateTime.getField(i)));
+        }
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
+      }
+      if (dt.getPartial().getValue(0) < YEAR_RANGE_MIN) {
+        throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
+      }
+
+      return dt;
+    }
+
+    else if (left instanceof Uncertainty && right instanceof Uncertainty) {
+      Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
+      Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
+      return new Uncertainty().withUncertaintyInterval(new Interval(subtract(leftInterval.getStart(), rightInterval.getStart()), true, subtract(leftInterval.getEnd(), rightInterval.getEnd()), true));
+    }
+
+    // TODO: Finish implementation of Subtract
+    // -(Time, Quantity)
+
+    throw new IllegalArgumentException(String.format("Cannot Subtract arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+  }
+
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) {
-            return null;
-        }
-
-        // -(Integer, Integer)
-        if (left instanceof Integer) {
-            return (Integer)left - (Integer)right;
-        }
-
-        // -(Decimal, Decimal)
-        else if (left instanceof BigDecimal) {
-            return ((BigDecimal)left).subtract((BigDecimal)right);
-        }
-
-        // -(Quantity, Quantity)
-        else if (left instanceof Quantity) {
-          return (((Quantity)left).getValue()).subtract(((Quantity)right).getValue());
-        }
-
-        // -(DateTime, Quantity)
-        else if (left instanceof DateTime && right instanceof Quantity) {
-          DateTime dt = (DateTime)left;
-          String unit = ((Quantity)right).getUnit();
-          int value = ((Quantity)right).getValue().intValue();
-
-          int idx = DateTime.getFieldIndex2(unit);
-
-          if (idx != -1) {
-            int startSize = dt.getPartial().size();
-            // check that the Partial has the precision specified
-            if (startSize < idx + 1) {
-              // expand the Partial to the proper precision
-              for (int i = startSize; i < idx + 1; ++i) {
-                dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
-              }
-            }
-
-            // do the subtraction
-            dt.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
-            // truncate until non-minimum value is found
-            for (int i = idx; i >= startSize; --i) {
-              if (dt.getPartial().getValue(i) > DateTime.getField(i).getField(null).getMinimumValue()) {
-                break;
-              }
-              dt.setPartial(dt.getPartial().without(DateTime.getField(i)));
-            }
-          }
-
-          else {
-            throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
-          }
-          if (dt.getPartial().getValue(0) < YEAR_RANGE_MIN) {
-            throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
-          }
-
-          return dt;
-        }
-
-        // TODO: Finish implementation of Subtract
-        // -(Time, Quantity)
-
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
+        return subtract(left, right);
     }
 }

@@ -9,6 +9,8 @@ import org.cqframework.cql.runtime.Value;
 
 import java.math.BigDecimal;
 
+import java.util.ArrayList;
+
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -47,7 +49,7 @@ public class GreaterEvaluator extends Greater {
       if (leftDT.getPartial().size() != rightDT.getPartial().size()) {
         size = leftDT.getPartial().size() > rightDT.getPartial().size() ? rightDT.getPartial().size() : leftDT.getPartial().size();
       }
-      else { size =leftDT.getPartial().size(); }
+      else { size = leftDT.getPartial().size(); }
 
       for (int i = 0; i < size; ++i) {
         if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i)) {
@@ -62,31 +64,16 @@ public class GreaterEvaluator extends Greater {
       return false;
     }
 
-    else if (left instanceof Uncertainty && right instanceof Uncertainty) {
-
-    }
-
     else if (left instanceof Uncertainty || right instanceof Uncertainty) {
-      Interval leftU = new Interval(0, true, 0, true);
-      Interval rightU = new Interval(0, true, 0, true);
-
-      if (left instanceof Uncertainty && right instanceof Uncertainty) {
-        leftU = ((Uncertainty)left).getUncertaintyInterval();
-        rightU = ((Uncertainty)right).getUncertaintyInterval();
-      }
-      else if (left instanceof Uncertainty) {
-        leftU = ((Uncertainty)left).getUncertaintyInterval();
-        rightU = Uncertainty.toUncertainty(right);
-      }
-      else {
-        leftU = Uncertainty.toUncertainty(left);
-        rightU = ((Uncertainty)right).getUncertaintyInterval();
-      }
+      ArrayList<Interval> intervals = Uncertainty.getLeftRightIntervals(left, right);
+      Interval leftU = intervals.get(0);
+      Interval rightU = intervals.get(1);
 
       if (Value.compareTo(leftU.getStart(), rightU.getEnd(), ">")) { return true; }
-      if (Value.compareTo(leftU.getEnd(), rightU.getStart(), "<")) { return false; }
+      if (Value.compareTo(leftU.getEnd(), rightU.getStart(), "<=")) { return false; }
       return null;
     }
+
     // TODO: Finish implementation
     // >(Time, Time)
 

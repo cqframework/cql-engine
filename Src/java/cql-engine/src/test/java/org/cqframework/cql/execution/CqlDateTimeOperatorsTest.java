@@ -294,8 +294,20 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainInterval").getExpression().evaluate(context);
         assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(17, true, 44, true)));
 
+        // result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainInterval2").getExpression().evaluate(context);
+        // assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(5, true, 17, true)));
+
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainAdd").getExpression().evaluate(context);
         assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(34, true, 88, true)));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainSubtract").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(12, true, 28, true)));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainMultiply").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(289, true, 1936, true)));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenUncertainDiv").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(3, true, 2, true)));
 
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -305,6 +317,18 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain3").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain4").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain5").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain6").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain7").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**

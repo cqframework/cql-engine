@@ -10,9 +10,6 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ArrayList;
 
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.Partial;
-
 /*
 *** NOTES FOR DATETIME ***
 The add (+) operator returns the value of the given date/time, incremented by the time-valued quantity,

@@ -14,6 +14,10 @@ public class DivideEvaluator extends Divide {
 
   public static Object divide(Object left, Object right) {
 
+    if (left == null || right == null) {
+        return null;
+    }
+
     if (left instanceof BigDecimal) {
       if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
       return ((BigDecimal)left).divide((BigDecimal)right);
@@ -38,9 +42,6 @@ public class DivideEvaluator extends Divide {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) {
-            return null;
-        }
         return divide(left, right);
     }
 }

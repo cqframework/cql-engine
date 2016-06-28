@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Tuple;
 import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Uncertainty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -62,43 +64,58 @@ public class Value {
     }
 
     public static Boolean equals(Object left, Object right) {
-        if ((left == null) || (right == null) || !left.getClass().equals(right.getClass())) {
+        if ((left == null) || (right == null)) {
             return null;
         }
 
-        if (left instanceof Interval && right instanceof Interval) {
-          Object leftStart = ((Interval)left).getStart();
-          Object leftEnd = ((Interval)left).getEnd();
-          Object rightStart = ((Interval)right).getStart();
-          Object rightEnd = ((Interval)right).getEnd();
+        // Uncertainty - may have mismatched types - this is allowed
+        // must never return true -- only false or null
+      if (left instanceof Uncertainty || right instanceof Uncertainty) {
+        ArrayList<Interval> intervals = Uncertainty.getLeftRightIntervals(left, right);
+        Interval leftU = intervals.get(0);
+        Interval rightU = intervals.get(1);
 
-          if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+        if (Value.compareTo(leftU.getEnd(), rightU.getStart(), "<")) { return false; }
+        if (Value.compareTo(leftU.getStart(), rightU.getEnd(), ">")) { return false; }
+        return null;
+      }
 
-          return (compareTo(leftStart, rightStart, "==") && compareTo(leftEnd, rightEnd, "=="));
-        }
+      // mismatched types not allowed
+      if (!left.getClass().equals(right.getClass())) { return null; }
 
-        // list equal
-        else if (left instanceof Iterable) {
-            Iterable<Object> leftList = (Iterable<Object>)left;
-            Iterable<Object> rightList = (Iterable<Object>)right;
-            Iterator<Object> leftIterator = leftList.iterator();
-            Iterator<Object> rightIterator = rightList.iterator();
+      if (left instanceof Interval && right instanceof Interval) {
+        Object leftStart = ((Interval)left).getStart();
+        Object leftEnd = ((Interval)left).getEnd();
+        Object rightStart = ((Interval)right).getStart();
+        Object rightEnd = ((Interval)right).getEnd();
 
-            while (leftIterator.hasNext()) {
-                Object leftObject = leftIterator.next();
-                if (rightIterator.hasNext()) {
-                    Object rightObject = rightIterator.next();
-                    Boolean elementEquals = equals(leftObject, rightObject);
-                    if (elementEquals == null || elementEquals == false) {
-                        return elementEquals;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
+        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-            return true;
+        return (compareTo(leftStart, rightStart, "==") && compareTo(leftEnd, rightEnd, "=="));
+      }
+
+      // list equal
+      else if (left instanceof Iterable) {
+          Iterable<Object> leftList = (Iterable<Object>)left;
+          Iterable<Object> rightList = (Iterable<Object>)right;
+          Iterator<Object> leftIterator = leftList.iterator();
+          Iterator<Object> rightIterator = rightList.iterator();
+
+          while (leftIterator.hasNext()) {
+              Object leftObject = leftIterator.next();
+              if (rightIterator.hasNext()) {
+                  Object rightObject = rightIterator.next();
+                  Boolean elementEquals = equals(leftObject, rightObject);
+                  if (elementEquals == null || elementEquals == false) {
+                      return elementEquals;
+                  }
+              }
+              else {
+                  return false;
+              }
+          }
+
+          return true;
         }
 
         // Decimal equal
@@ -121,15 +138,6 @@ public class Value {
           }
           return Arrays.equals(((DateTime)left).dateTime.getValues(), ((DateTime)right).dateTime.getValues())
                  && ((DateTime)left).getTimezoneOffset().compareTo(((DateTime)right).getTimezoneOffset()) == 0;
-        }
-
-        // Uncertainty
-        else if (left instanceof Interval && right instanceof DateTime) {
-          
-        }
-
-        else if (left instanceof DateTime && right instanceof Interval) {
-
         }
 
         return left.equals(right);

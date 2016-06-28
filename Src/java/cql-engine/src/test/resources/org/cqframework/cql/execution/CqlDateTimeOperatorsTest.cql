@@ -93,12 +93,20 @@ define DateTimeDurationBetweenYear: years between DateTime(2005) and DateTime(20
 define DateTimeDurationBetweenYearOffset: years between DateTime(2005, 5) and DateTime(2010, 4)
 define DateTimeDurationBetweenMonth: months between @2014-01-31 and @2014-02-01
 define DateTimeDurationBetweenDaysDiffYears: days between DateTime(2010, 10, 12, 12, 5) and DateTime(2008, 8, 15, 8, 8)
+// Uncertainty tests
 define DateTimeDurationBetweenUncertainInterval: days between DateTime(2014, 1, 15) and DateTime(2014, 2)
+define DateTimeDurationBetweenUncertainInterval2: months between DateTime(2005) and DateTime(2006, 5)
 define DateTimeDurationBetweenUncertainAdd: DateTimeDurationBetweenUncertainInterval + DateTimeDurationBetweenUncertainInterval
+define DateTimeDurationBetweenUncertainSubtract: DateTimeDurationBetweenUncertainInterval - DateTimeDurationBetweenUncertainInterval2
+define DateTimeDurationBetweenUncertainMultiply: DateTimeDurationBetweenUncertainInterval * DateTimeDurationBetweenUncertainInterval
+define DateTimeDurationBetweenUncertainDiv: DateTimeDurationBetweenUncertainInterval div DateTimeDurationBetweenUncertainInterval2
 define DateTimeDurationBetweenMonthUncertain: months between DateTime(2005) and DateTime(2006, 7) > 5
 define DateTimeDurationBetweenMonthUncertain2: months between DateTime(2005) and DateTime(2006, 2) > 5
 define DateTimeDurationBetweenMonthUncertain3: months between DateTime(2005) and DateTime(2006, 7) > 25
-
+define DateTimeDurationBetweenMonthUncertain4: months between DateTime(2005) and DateTime(2006, 7) < 24
+define DateTimeDurationBetweenMonthUncertain5: months between DateTime(2005) and DateTime(2006, 7) = 24
+define DateTimeDurationBetweenMonthUncertain6: months between DateTime(2005) and DateTime(2006, 7) >= 5
+define DateTimeDurationBetweenMonthUncertain7: months between DateTime(2005) and DateTime(2006, 7) <= 24
 
 //Now
 define DateTimeNow: Now() = Now()

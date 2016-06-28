@@ -1,6 +1,10 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
+import org.cqframework.cql.runtime.Uncertainty;
+import org.cqframework.cql.runtime.Interval;
+import org.cqframework.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /**
@@ -10,11 +14,25 @@ import java.math.BigDecimal;
 public class TruncatedDivideEvaluator extends TruncatedDivide {
 
   public static Object div(Object left, Object right) {
+    if (left == null || right == null) {
+        return null;
+    }
+
     if (left instanceof Integer) {
+      if ((Integer)right == 0) { return null; }
       return (Integer)left / (Integer)right;
     }
+
     else if (left instanceof BigDecimal) {
-        return ((BigDecimal)left).divideAndRemainder((BigDecimal)right)[0];
+      if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
+      return ((BigDecimal)left).divideAndRemainder((BigDecimal)right)[0];
+    }
+
+    else if (left instanceof Uncertainty && right instanceof Uncertainty) {
+      Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
+      Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
+      if (Value.compareTo(rightInterval.getStart(), 0, "==") || Value.compareTo(rightInterval.getEnd(), 0, "==")) { return null; }
+      return new Uncertainty().withUncertaintyInterval(new Interval(div(leftInterval.getStart(), rightInterval.getStart()), true, div(leftInterval.getEnd(), rightInterval.getEnd()), true));
     }
 
     throw new IllegalArgumentException(String.format("Cannot Div arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -25,9 +43,6 @@ public class TruncatedDivideEvaluator extends TruncatedDivide {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) {
-            return null;
-        }
         return div(left, right);
     }
 }

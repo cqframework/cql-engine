@@ -4,6 +4,9 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Uncertainty;
+
+import java.util.ArrayList;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -77,7 +80,15 @@ public class BeforeEvaluator extends Before {
         // check level of precision
         if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
 
-          // TODO: implement uncertainty
+          if (Uncertainty.isUncertain(leftDT, precision)) {
+            ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
+            return LessEvaluator.less(highLow.get(0), rightDT);
+          }
+
+          else if (Uncertainty.isUncertain(rightDT, precision)) {
+            ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
+            return LessEvaluator.less(leftDT, highLow.get(1));
+          }
 
           return null;
         }

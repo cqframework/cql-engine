@@ -28,6 +28,7 @@ public class Uncertainty {
     return this;
   }
 
+  // Implicit conversion
   public static Interval toUncertainty(Object point) {
     return new Interval(point, true, point, true);
   }
@@ -94,6 +95,26 @@ public class Uncertainty {
     }
 
     throw new IllegalArgumentException("Specified DateTime is not uncertain.");
+  }
+
+  public static ArrayList<Interval> getLeftRightIntervals(Object left, Object right) {
+
+    Interval leftU = new Interval(0, true, 0, true);
+    Interval rightU = new Interval(0, true, 0, true);
+
+    if (left instanceof Uncertainty && right instanceof Uncertainty) {
+      leftU = ((Uncertainty)left).getUncertaintyInterval();
+      rightU = ((Uncertainty)right).getUncertaintyInterval();
+    }
+    else if (left instanceof Uncertainty) {
+      leftU = ((Uncertainty)left).getUncertaintyInterval();
+      rightU = Uncertainty.toUncertainty(right);
+    }
+    else {
+      leftU = Uncertainty.toUncertainty(left);
+      rightU = ((Uncertainty)right).getUncertaintyInterval();
+    }
+    return new ArrayList<Interval>(Arrays.asList(leftU, rightU));
   }
 
 }
