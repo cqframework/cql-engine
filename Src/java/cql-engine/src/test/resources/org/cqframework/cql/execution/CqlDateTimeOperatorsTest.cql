@@ -23,6 +23,12 @@ define DateTimeAddLeapYear: DateTime(2012, 2, 29) + 1 years
 define DateTimeAdd2YearsByMonths: DateTime(2014) + 24 months
 define DateTimeAdd2YearsByDays: DateTime(2014) + 730 days
 define DateTimeAdd2YearsByDaysRem5Days: DateTime(2014) + 735 days
+define TimeAdd5Hours: @T15:59:59.999 + 5 hours
+define TimeAdd1Minute: @T15:59:59.999 + 1 minutes
+define TimeAdd1Second: @T15:59:59.999 + 1 seconds
+define TimeAdd1Millisecond: @T15:59:59.999 + 1 milliseconds
+define TimeAdd5Hours1Minute: @T15:59:59.999 + 5 hours + 1 minutes
+define TimeAdd5hoursByMinute: @T15:59:59.999 + 300 minutes
 
 //After
 define DateTimeAfterYearTrue: DateTime(2005, 10, 10) after year of DateTime(2004, 10, 10)
@@ -40,6 +46,15 @@ define DateTimeAfterSecondFalse: DateTime(2004, 10, 10, 20, 30, 15) after second
 define DateTimeAfterMillisecondTrue: DateTime(2004, 10, 10, 20, 30, 15, 512) after millisecond of DateTime(2004, 10, 10, 20, 30, 15, 510)
 define DateTimeAfterMillisecondFalse: DateTime(2004, 10, 10, 20, 30, 15, 512) after millisecond of DateTime(2004, 10, 10, 20, 30, 15, 513)
 define DateTimeAfterUncertain: DateTime(2005, 10, 10) after day of DateTime(2005, 9)
+define TimeAfterHourTrue: @T15:59:59.999 after hour of @T14:59:59.999
+define TimeAfterHourFalse: @T15:59:59.999 after hour of @T16:59:59.999
+define TimeAfterMinuteTrue: @T15:59:59.999 after minute of @T15:58:59.999
+define TimeAfterMinuteFalse: @T15:58:59.999 after minute of @T15:59:59.999
+define TimeAfterSecondTrue: @T15:59:59.999 after second of @T15:59:58.999
+define TimeAfterSecondFalse: @T15:59:58.999 after second of @T15:59:59.999
+define TimeAfterMillisecondTrue: @T15:59:59.999 after millisecond of @T15:59:59.998
+define TimeAfterMillisecondFalse: @T15:59:59.998 after millisecond of @T15:59:59.999
+// TODO: do uncertainty tests for Time once the Time(x,x,x,x,x) format has been implemented
 
 //Before
 define DateTimeBeforeYearTrue: DateTime(2003) before year of DateTime(2004, 10, 10)
@@ -56,6 +71,15 @@ define DateTimeBeforeSecondTrue: DateTime(2004, 10, 10, 20, 30, 12) before secon
 define DateTimeBeforeSecondFalse: DateTime(2004, 10, 10, 20, 30, 55) before second of DateTime(2004, 10, 10, 20, 30, 16)
 define DateTimeBeforeMillisecondTrue: DateTime(2004, 10, 10, 20, 30, 15, 508) before millisecond of DateTime(2004, 10, 10, 20, 30, 15, 510)
 define DateTimeBeforeMillisecondFalse: DateTime(2004, 10, 10, 20, 30, 15, 599) before millisecond of DateTime(2004, 10, 10, 20, 30, 15, 513)
+define TimeBeforeHourTrue: @T13:59:59.999 before hour of @T14:59:59.999
+define TimeBeforeHourFalse: @T17:59:59.999 before hour of @T16:59:59.999
+define TimeBeforeMinuteTrue: @T15:57:59.999 before minute of @T15:58:59.999
+define TimeBeforeMinuteFalse: @T15:59:59.999 before minute of @T15:59:59.999
+define TimeBeforeSecondTrue: @T15:59:57.999 before second of @T15:59:58.999
+define TimeBeforeSecondFalse: @T15:59:56.999 before second of @T15:59:55.999
+define TimeBeforeMillisecondTrue: @T15:59:59.997 before millisecond of @T15:59:59.998
+define TimeBeforeMillisecondFalse: @T15:59:59.998 before millisecond of @T15:59:59.997
+// TODO: do uncertainty tests for Time once the Time(x,x,x,x,x) format has been implemented
 
 //DateTime
 define DateTimeYear: DateTime(2003)
@@ -76,6 +100,10 @@ define DateTimeComponentFromSecond: second from DateTime(2003, 10, 29, 20, 50, 3
 define DateTimeComponentFromMillisecond: millisecond from DateTime(2003, 10, 29, 20, 50, 33, 955)
 define DateTimeComponentFromTimezone: timezone from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)
 define DateTimeComponentFromDate: date from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)
+define TimeComponentFromHour: hour from @T23:20:15.555
+define TimeComponentFromMinute: minute from @T23:20:15.555
+define TimeComponentFromSecond: second from @T23:20:15.555
+define TimeComponentFromMilli: millisecond from @T23:20:15.555
 
 //Difference
 define DateTimeDifferenceYear: difference in years between DateTime(2000) and DateTime(2005)
@@ -87,6 +115,11 @@ define DateTimeDifferenceSecond: difference in seconds between DateTime(2000, 10
 define DateTimeDifferenceMillisecond: difference in milliseconds between DateTime(2000, 10, 10, 10, 5, 45, 500) and DateTime(2000, 10, 10, 10, 5, 45, 900)
 define DateTimeDifferenceNegative: difference in years between DateTime(2016) and DateTime(1998)
 define DateTimeDifferenceUncertain: difference in months between DateTime(2005) and DateTime(2006, 7) > 5
+define TimeDifferenceHour: difference in hours between @T20:20:15.555 and @T23:25:15.555
+define TimeDifferenceMinute: difference in minutes between @T20:20:15.555 and @T20:25:15.555
+define TimeDifferenceSecond: difference in seconds between @T20:20:15.555 and @T20:20:20.555
+define TimeDifferenceMillis: difference in milliseconds between @T20:20:15.555 and @T20:20:15.550
+// TODO: Time uncertainty tests
 
 //Duration
 define DateTimeDurationBetweenYear: years between DateTime(2005) and DateTime(2010)
@@ -107,6 +140,11 @@ define DateTimeDurationBetweenMonthUncertain4: months between DateTime(2005) and
 define DateTimeDurationBetweenMonthUncertain5: months between DateTime(2005) and DateTime(2006, 7) = 24
 define DateTimeDurationBetweenMonthUncertain6: months between DateTime(2005) and DateTime(2006, 7) >= 5
 define DateTimeDurationBetweenMonthUncertain7: months between DateTime(2005) and DateTime(2006, 7) <= 24
+define TimeDurationBetweenHour: hours between @T20:26:15.555 and @T23:25:15.555
+define TimeDurationBetweenMinute: minutes between @T23:20:16.555 and @T23:25:15.555
+define TimeDurationBetweenSecond: seconds between @T23:25:10.556 and @T23:25:15.555
+define TimeDurationBetweenMillis: milliseconds between @T23:25:25.555 and @T23:25:25.560
+// TODO: Time uncertainty tests
 
 //Now
 define DateTimeNow: Now() = Now()
@@ -127,6 +165,15 @@ define DateTimeSameAsSecondFalse: DateTime(2014, 10, 10, 20, 55, 45) same second
 define DateTimeSameAsMillisecondTrue: DateTime(2014, 12, 10, 20, 55, 45, 500) same millisecond as DateTime(2014, 12, 10, 20, 55, 45, 500)
 define DateTimeSameAsMillisecondFalse: DateTime(2014, 10, 10, 20, 55, 45, 500) same millisecond as DateTime(2014, 10, 10, 21, 55, 45, 501)
 define DateTimeSameAsNull: DateTime(2014, 10) same day as DateTime(2014, 10, 12)
+define TimeSameAsHourTrue: @T23:25:25.555 same hour as @T23:55:25.900
+define TimeSameAsHourFalse: @T22:25:25.555 same hour as @T23:25:25.555
+define TimeSameAsMinuteTrue: @T23:55:22.555 same minute as @T23:55:25.900
+define TimeSameAsMinuteFalse: @T23:26:25.555 same minute as @T23:25:25.555
+define TimeSameAsSecondTrue: @T23:55:25.555 same second as @T23:55:25.900
+define TimeSameAsSecondFalse: @T23:25:35.555 same second as @T23:25:25.555
+define TimeSameAsMillisTrue: @T23:55:25.555 same millisecond as @T23:55:25.555
+define TimeSameAsMillisFalse: @T23:25:25.555 same millisecond as @T23:25:25.554
+
 
 //SameOrAfter
 define DateTimeSameOrAfterYearTrue1: DateTime(2014) same year or after DateTime(2014)
@@ -151,6 +198,18 @@ define DateTimeSameOrAfterMillisecondTrue1: DateTime(2014, 12, 20, 12, 30, 15, 2
 define DateTimeSameOrAfterMillisecondTrue2: DateTime(2014, 10, 25, 10, 25, 20, 500) same millisecond or after DateTime(2014, 10, 25, 10, 25, 20, 499)
 define DateTimeSameOrAfterMillisecondFalse: DateTime(2014, 10, 25, 15, 45, 20, 500) same millisecond or after DateTime(2014, 10, 25, 15, 45, 20, 501)
 define DateTimeSameOrAfterNull1: DateTime(2014, 12, 20) same day or after DateTime(2014, 12)
+define TimeSameOrAfterHourTrue1: @T23:25:25.555 same hour or after @T23:55:25.900
+define TimeSameOrAfterHourTrue2: @T23:25:25.555 same hour or after @T22:55:25.900
+define TimeSameOrAfterHourFalse: @T22:25:25.555 same hour or after @T23:55:25.900
+define TimeSameOrAfterMinuteTrue1: @T23:25:25.555 same minute or after @T23:25:25.900
+define TimeSameOrAfterMinuteTrue2: @T23:25:25.555 same minute or after @T22:15:25.900
+define TimeSameOrAfterMinuteFalse: @T23:25:25.555 same minute or after @T23:55:25.900
+define TimeSameOrAfterSecondTrue1: @T23:25:25.555 same second or after @T23:25:25.900
+define TimeSameOrAfterSecondTrue2: @T23:25:35.555 same second or after @T22:25:25.900
+define TimeSameOrAfterSecondFalse: @T23:55:25.555 same second or after @T23:55:35.900
+define TimeSameOrAfterMillisTrue1: @T23:25:25.555 same millisecond or after @T23:25:25.555
+define TimeSameOrAfterMillisTrue2: @T23:25:25.555 same millisecond or after @T22:25:25.550
+define TimeSameOrAfterMillisFalse: @T23:55:25.555 same millisecond or after @T23:55:25.900
 
 //SameOrBefore
 define DateTimeSameOrBeforeYearTrue1: DateTime(2014) same year or before DateTime(2014)
@@ -175,6 +234,18 @@ define DateTimeSameOrBeforeMillisecondTrue1: DateTime(2014, 12, 20, 12, 30, 15, 
 define DateTimeSameOrBeforeMillisecondTrue2: DateTime(2014, 10, 25, 10, 25, 20, 450) same millisecond or before DateTime(2014, 10, 25, 10, 25, 20, 499)
 define DateTimeSameOrBeforeMillisecondFalse: DateTime(2014, 10, 25, 15, 45, 20, 505) same millisecond or before DateTime(2014, 10, 25, 15, 45, 20, 501)
 define DateTimeSameOrBeforeNull1: DateTime(2014, 12, 20) same minute or before DateTime(2014, 12, 20, 15)
+define TimeSameOrBeforeHourTrue1: @T23:25:25.555 same hour or before @T23:55:25.900
+define TimeSameOrBeforeHourTrue2: @T21:25:25.555 same hour or before @T22:55:25.900
+define TimeSameOrBeforeHourFalse: @T22:25:25.555 same hour or before @T21:55:25.900
+define TimeSameOrBeforeMinuteTrue1: @T23:25:25.555 same minute or before @T23:25:25.900
+define TimeSameOrBeforeMinuteTrue2: @T23:10:25.555 same minute or before @T22:15:25.900
+define TimeSameOrBeforeMinuteFalse: @T23:56:25.555 same minute or before @T23:55:25.900
+define TimeSameOrBeforeSecondTrue1: @T23:25:25.555 same second or before @T23:25:25.900
+define TimeSameOrBeforeSecondTrue2: @T23:25:35.555 same second or before @T22:25:45.900
+define TimeSameOrBeforeSecondFalse: @T23:55:45.555 same second or before @T23:55:35.900
+define TimeSameOrBeforeMillisTrue1: @T23:25:25.555 same millisecond or before @T23:25:25.555
+define TimeSameOrBeforeMillisTrue2: @T23:25:25.200 same millisecond or before @T22:25:25.550
+define TimeSameOrBeforeMillisFalse: @T23:55:25.966 same millisecond or before @T23:55:25.900
 
 //Subtract
 define DateTimeSubtract5Years: DateTime(2005, 10, 10) - 5 years
@@ -192,10 +263,18 @@ define DateTimeSubtractSecondsUnderflow: DateTime(2016, 6, 10, 5, 5, 5) - 6 seco
 define DateTimeSubtract5Milliseconds: DateTime(2005, 5, 10, 5, 5, 5, 10) - 5 milliseconds
 define DateTimeSubtractMillisecondsUnderflow: DateTime(2016, 6, 10, 5, 5, 5, 5) - 6 milliseconds
 define DateTimeSubtract2YearsAsMonths: DateTime(2014) - 24 months
+define TimeSubtract5Hours: @T15:59:59.999 - 5 hours
+define TimeSubtract1Minute: @T15:59:59.999 - 1 minutes
+define TimeSubtract1Second: @T15:59:59.999 - 1 seconds
+define TimeSubtract1Millisecond: @T15:59:59.0 - 1 milliseconds
+define TimeSubtract5Hours1Minute: @T15:59:59.999 - 5 hours - 1 minutes
+define TimeSubtract5hoursByMinute: @T15:59:59.999 - 300 minutes
 
 //Time
+define TimeTest2: @T23:59:59.999
 
 //TimeOfDay
+define TimeOfDayTest: TimeOfDay()
 
 //Today
 define DateTimeSameOrBeforeTodayTrue1: Today() same day or before Today()

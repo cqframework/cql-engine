@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
 /*
+meets before(left Interval<T>, right Interval<T>) Boolean
+
 The meets before operator returns true if the first interval ends immediately before the second interval starts.
 If either argument is null, the result is null.
 */

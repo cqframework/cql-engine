@@ -49,147 +49,267 @@ public class Value {
         return compare(leftOp.doubleValue(), rightOp.doubleValue(), op);
       }
 
-      // TODO: implement for Time and DateTime
-      // else if (left instanceof DateTime) {
-      //
-      // }
-      //
-      // else if (left instanceof Time) {
-      //
-      // }
-
-      else {
-        throw new IllegalArgumentException(String.format("Cannot Compare arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+      else if (left instanceof String) {
+        String leftStr = (String)left;
+        String rightStr = (String)right;
+        if (op.equals(">")) { return leftStr.compareTo(rightStr) > 0; }
+        else if (op.equals(">=")) { return leftStr.compareTo(rightStr) >= 0; }
+        else if (op.equals("<")) { return leftStr.compareTo(rightStr) < 0; }
+        else if (op.equals("<=")) { return leftStr.compareTo(rightStr) <= 0; }
+        else if (op.equals("==")) { return leftStr.compareTo(rightStr) == 0; }
       }
-    }
 
-    public static Boolean equals(Object left, Object right) {
-        if ((left == null) || (right == null)) {
-            return null;
-        }
-
-        // Uncertainty - may have mismatched types - this is allowed
-        // must never return true -- only false or null
-      if (left instanceof Uncertainty || right instanceof Uncertainty) {
+      else if (left instanceof Uncertainty || right instanceof Uncertainty) {
         ArrayList<Interval> intervals = Uncertainty.getLeftRightIntervals(left, right);
         Interval leftU = intervals.get(0);
         Interval rightU = intervals.get(1);
+        String op1 = "";
+        String op2 = "";
 
-        if (Value.compareTo(leftU.getEnd(), rightU.getStart(), "<")) { return false; }
-        if (Value.compareTo(leftU.getStart(), rightU.getEnd(), ">")) { return false; }
+        if (op.equals(">")) { op1 = ">"; op2 = "<="; }
+        else if (op.equals(">=")) { op1 = ">="; op2 = "<"; }
+        else if (op.equals("<")) { op1 = "<"; op2 = ">="; }
+        else if (op.equals("<=")) { op1 = "<="; op2 = ">"; }
+
+        if (compareTo(leftU.getStart(), rightU.getEnd(), op1)) { return true; }
+        if (compareTo(leftU.getEnd(), rightU.getStart(), op2)) { return false; }
         return null;
       }
 
-      // mismatched types not allowed
-      if (!left.getClass().equals(right.getClass())) { return null; }
+      else if (left instanceof DateTime) {
+        DateTime leftDT = (DateTime)left;
+        DateTime rightDT = (DateTime)right;
 
-      if (left instanceof Interval && right instanceof Interval) {
-        Object leftStart = ((Interval)left).getStart();
-        Object leftEnd = ((Interval)left).getEnd();
-        Object rightStart = ((Interval)right).getStart();
-        Object rightEnd = ((Interval)right).getEnd();
+        int size = 0;
 
-        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+        // Uncertainty detection
+        if (leftDT.getPartial().size() != rightDT.getPartial().size()) {
+          size = leftDT.getPartial().size() > rightDT.getPartial().size() ? rightDT.getPartial().size() : leftDT.getPartial().size();
+        }
+        else { size = leftDT.getPartial().size(); }
 
-        return (compareTo(leftStart, rightStart, "==") && compareTo(leftEnd, rightEnd, "=="));
+        if (op.equals(">") || op.equals(">=")) {
+          for (int i = 0; i < size; ++i) {
+            if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i)) {
+              return true;
+            }
+            else if (leftDT.getPartial().getValue(i) < rightDT.getPartial().getValue(i)) {
+              return false;
+            }
+          }
+        }
+
+        else if (op.equals("<") || op.equals("<=")) {
+          for (int i = 0; i < size; ++i) {
+            if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i)) {
+              return false;
+            }
+            else if (leftDT.getPartial().getValue(i) < rightDT.getPartial().getValue(i)) {
+              return true;
+            }
+          }
+        }
+
+        else if (op.equals("==")) { return equivalent(leftDT, rightDT); }
+        // Uncertainty wrinkle
+        if (leftDT.getPartial().size() != rightDT.getPartial().size()) { return null; }
+        return compare(new BigDecimal(leftDT.getPartial().getValue(size-1)).doubleValue(),
+                       new BigDecimal(rightDT.getPartial().getValue(size-1)).doubleValue(), op);
       }
 
-      // list equal
-      else if (left instanceof Iterable) {
-          Iterable<Object> leftList = (Iterable<Object>)left;
-          Iterable<Object> rightList = (Iterable<Object>)right;
-          Iterator<Object> leftIterator = leftList.iterator();
-          Iterator<Object> rightIterator = rightList.iterator();
+      else if (left instanceof Time) {
+        Time leftT = (Time)left;
+        Time rightT = (Time)right;
 
-          while (leftIterator.hasNext()) {
-              Object leftObject = leftIterator.next();
-              if (rightIterator.hasNext()) {
-                  Object rightObject = rightIterator.next();
-                  Boolean elementEquals = equals(leftObject, rightObject);
-                  if (elementEquals == null || elementEquals == false) {
-                      return elementEquals;
-                  }
-              }
-              else {
-                  return false;
-              }
+        int size = 0;
+
+        // Uncertainty detection
+        if (leftT.getPartial().size() != rightT.getPartial().size()) {
+          size = leftT.getPartial().size() > rightT.getPartial().size() ? rightT.getPartial().size() : leftT.getPartial().size();
+        }
+        else { size = leftT.getPartial().size(); }
+
+        if (op.equals(">") || op.equals(">=")) {
+          for (int i = 0; i < size; ++i) {
+            if (leftT.getPartial().getValue(i) > rightT.getPartial().getValue(i)) {
+              return true;
+            }
+            else if (leftT.getPartial().getValue(i) < rightT.getPartial().getValue(i)) {
+              return false;
+            }
           }
-
-          return true;
         }
 
-        // Decimal equal
-        // Have to use this because 10.0 != 10.00
-        else if (left instanceof BigDecimal) {
-            return ((BigDecimal)left).compareTo((BigDecimal)right) == 0;
-        }
-
-        else if (left instanceof Tuple) {
-          return ((Tuple)left).equals((Tuple)right);
-        }
-
-        else if (left instanceof Time) {
-          return ((Time)left).equals((Time)right);
-        }
-
-        else if (left instanceof DateTime && right instanceof DateTime) {
-          if (((DateTime)left).dateTime.getValues().length < 7 || ((DateTime)right).dateTime.getValues().length < 7) {
-            return null;
+        else if (op.equals("<") || op.equals("<=")) {
+          for (int i = 0; i < size; ++i) {
+            if (leftT.getPartial().getValue(i) > rightT.getPartial().getValue(i)) {
+              return false;
+            }
+            else if (leftT.getPartial().getValue(i) < rightT.getPartial().getValue(i)) {
+              return true;
+            }
           }
-          return Arrays.equals(((DateTime)left).dateTime.getValues(), ((DateTime)right).dateTime.getValues())
-                 && ((DateTime)left).getTimezoneOffset().compareTo(((DateTime)right).getTimezoneOffset()) == 0;
         }
 
-        return left.equals(right);
+        else if (op.equals("==")) { return equivalent(leftT, rightT); }
+        // Uncertainty wrinkle
+        if (leftT.getPartial().size() != rightT.getPartial().size()) { return null; }
+        return compare(new BigDecimal(leftT.getPartial().getValue(size-1)).doubleValue(),
+                       new BigDecimal(rightT.getPartial().getValue(size-1)).doubleValue(), op);
+      }
+
+    throw new IllegalArgumentException(String.format("Cannot Compare arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+  }
+
+  public static Boolean equals(Object left, Object right) {
+    if ((left == null) || (right == null)) {
+        return null;
     }
 
-    public static Boolean equivalent(Object left, Object right) {
-        if ((left == null) && (right == null)) {
-            return true;
-        }
+    // Uncertainty - may have mismatched types - this is allowed
+    // must never return true -- only false or null
+    if (left instanceof Uncertainty || right instanceof Uncertainty) {
+      ArrayList<Interval> intervals = Uncertainty.getLeftRightIntervals(left, right);
+      Interval leftU = intervals.get(0);
+      Interval rightU = intervals.get(1);
 
-        if ((left == null) || (right == null)) {
-            return null;
-        }
+      if (Value.compareTo(leftU.getEnd(), rightU.getStart(), "<")) { return false; }
+      if (Value.compareTo(leftU.getStart(), rightU.getEnd(), ">")) { return false; }
+      return null;
+    }
 
-        // list equal
-        else if (left instanceof Iterable) {
-            Iterable<Object> leftList = (Iterable<Object>)left;
-            Iterable<Object> rightList = (Iterable<Object>)right;
-            Iterator<Object> leftIterator = leftList.iterator();
-            Iterator<Object> rightIterator = rightList.iterator();
+    // mismatched types not allowed
+    if (!left.getClass().equals(right.getClass())) { return null; }
 
-            while (leftIterator.hasNext()) {
-                Object leftObject = leftIterator.next();
-                if (rightIterator.hasNext()) {
-                    Object rightObject = rightIterator.next();
-                    Boolean elementEquivalent = equivalent(leftObject, rightObject);
-                    if (elementEquivalent == null || elementEquivalent == false) {
-                        return elementEquivalent;
-                    }
-                }
-                else {
-                    return false;
+    if (left instanceof Interval && right instanceof Interval) {
+      Object leftStart = ((Interval)left).getStart();
+      Object leftEnd = ((Interval)left).getEnd();
+      Object rightStart = ((Interval)right).getStart();
+      Object rightEnd = ((Interval)right).getEnd();
+
+      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
+      return (compareTo(leftStart, rightStart, "==") && compareTo(leftEnd, rightEnd, "=="));
+    }
+
+    // list equal
+    else if (left instanceof Iterable) {
+        Iterator<Object> leftIterator = ((Iterable<Object>)left).iterator();
+        Iterator<Object> rightIterator = ((Iterable<Object>)right).iterator();
+
+        while (leftIterator.hasNext()) {
+            Object leftObject = leftIterator.next();
+            if (rightIterator.hasNext()) {
+                Object rightObject = rightIterator.next();
+                Boolean elementEquals = equals(leftObject, rightObject);
+                if (elementEquals == null || elementEquals == false) {
+                    return elementEquals;
                 }
             }
-
-            return true;
+            else {
+                return false;
+            }
         }
 
-        else if (left instanceof Tuple) {
-          return ((Tuple)left).equals((Tuple)right);
-        }
+        if (rightIterator.hasNext()) { return rightIterator.next() == null ? null : false; }
 
-        else if (left instanceof Time) {
-          return ((Time)left).equals((Time)right);
-        }
+        return true;
+      }
 
-        else if (left instanceof DateTime) {
-          return ((DateTime)left).equals((DateTime)right);
-        }
+      // Decimal equal
+      // Have to use this because 10.0 != 10.00
+      else if (left instanceof BigDecimal) {
+          return ((BigDecimal)left).compareTo((BigDecimal)right) == 0;
+      }
 
-        return equals(left, right);
+      else if (left instanceof Tuple) {
+        return ((Tuple)left).equals((Tuple)right);
+      }
+
+      else if (left instanceof Time) {
+        if (((Time)left).time.getValues().length < 4 || ((Time)right).time.getValues().length < 4) {
+          return null;
+        }
+        return Arrays.equals(((Time)left).time.getValues(), ((Time)right).time.getValues())
+               && ((Time)left).getTimezoneOffset().compareTo(((Time)right).getTimezoneOffset()) == 0;
+      }
+
+      else if (left instanceof DateTime && right instanceof DateTime) {
+        // for DateTime equals, all the DateTime elements must be present -- any null values result in null return
+        if (((DateTime)left).dateTime.getValues().length < 7 || ((DateTime)right).dateTime.getValues().length < 7) {
+          return null;
+        }
+        return Arrays.equals(((DateTime)left).dateTime.getValues(), ((DateTime)right).dateTime.getValues())
+               && ((DateTime)left).getTimezoneOffset().compareTo(((DateTime)right).getTimezoneOffset()) == 0;
+      }
+
+      return left.equals(right);
+  }
+
+  public static Boolean equivalent(Object left, Object right) {
+    if ((left == null) && (right == null)) {
+        return true;
     }
+
+    if ((left == null) || (right == null)) {
+        return null;
+    }
+
+    // list equivalent
+    else if (left instanceof Iterable) {
+      Iterator<Object> leftIterator = ((Iterable<Object>)left).iterator();
+      Iterator<Object> rightIterator = ((Iterable<Object>)right).iterator();
+
+      while (leftIterator.hasNext()) {
+        Object leftObject = leftIterator.next();
+        if (rightIterator.hasNext()) {
+          Object rightObject = rightIterator.next();
+          Boolean elementEquivalent = equivalent(leftObject, rightObject);
+          if (elementEquivalent == null || elementEquivalent == false) {
+              return elementEquivalent;
+          }
+        }
+        else { return false; }
+      }
+
+      if (rightIterator.hasNext()) { return rightIterator.next() == null ? null : false; }
+
+      return true;
+    }
+
+    else if (left instanceof Tuple) {
+      return ((Tuple)left).equals((Tuple)right);
+    }
+
+    // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
+    else if (left instanceof DateTime && right instanceof DateTime) {
+      DateTime leftDT = (DateTime)left;
+      DateTime rightDT = (DateTime)right;
+      if (leftDT.getPartial().size() != rightDT.getPartial().size()) { return false; }
+
+      for (int i = 0; i < leftDT.getPartial().size(); ++i) {
+        if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    else if (left instanceof Time && right instanceof Time) {
+      Time leftT = (Time)left;
+      Time rightT = (Time)right;
+      if (leftT.getPartial().size() != rightT.getPartial().size()) { return false; }
+
+      for (int i = 0; i < leftT.getPartial().size(); ++i) {
+        if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    return equals(left, right);
+  }
 
     public static Iterable<Object> ensureIterable(Object source) {
         if (source instanceof Iterable) {

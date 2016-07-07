@@ -32,13 +32,16 @@ public class ContainsEvaluator extends Contains {
 
         return (Value.compareTo(right, leftStart, ">=") && Value.compareTo(right, leftEnd, "<="));
       }
+      return null;
     }
 
-    else {
+    else if (test instanceof Iterable) {
       Iterable<Object> list = (Iterable<Object>)test;
-      Object testElement = this.getOperand().get(1).evaluate(context);
+      Object testElement = getOperand().get(1).evaluate(context);
+
       return InEvaluator.in(testElement, list);
     }
-    return null;
+
+    throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", test.getClass().getName()));
   }
 }

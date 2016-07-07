@@ -37,7 +37,10 @@ public class ModeEvaluator extends Mode {
       int max = 0;
       for (int i = 0; i < values.size(); ++i) {
         int count = (values.lastIndexOf(values.get(i)) - i) + 1;
-        if (count > max) { mode = values.get(i); }
+        if (count > max) {
+          mode = values.get(i);
+          max = count;
+        }
       }
       return mode;
     }

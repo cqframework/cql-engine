@@ -23,38 +23,45 @@ define AnyTrueNullFirstThenFalse    : AnyTrue({null,false})
 define AnyTrueEmptyList             : AnyTrue({})
 
 //Avg
-define AvgTest1: Avg({1.0, 2.0, 3.0, 6.0})
+define AvgTest1: Avg({ 1.0, 2.0, 3.0, 6.0 })
 
 //Count
-define CountTest1: Count({15, 5, 99, null, 1})
+define CountTest1: Count({ 15, 5, 99, null, 1 })
+define CountTestDateTime: Count({ DateTime(2014), DateTime(2001), DateTime(2010) })
+define CountTestTime: Count({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })
 
 //Max
-define MaxTest1: Max({5, 12, 1, 15, 0, 4, 90, 44})
-define MaxTest2: Max({'hi', 'bye', 'zebra'})
+define MaxTestInteger: Max({ 5, 12, 1, 15, 0, 4, 90, 44 })
+define MaxTestString: Max({ 'hi', 'bye', 'zebra' })
+define MaxTestDateTime: Max({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6) })
+define MaxTestTime: Max({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })
 
 //Median
-define MedianTest1: Median({5, 4, 3, 2, 1})
-define MedianTest2: Median({6.0, 5.0, 4.0, 3.0, 2.0, 1.0})
+define MedianTestDecimal: Median({6.0, 5.0, 4.0, 3.0, 2.0, 1.0})
 
 //Min
-define MinTest1: Min({5, 12, 1, 15, 0, 4, 90, 44})
-define MinTest2: Min({'hi', 'bye', 'zebra'})
+define MinTestInteger: Min({5, 12, 1, 15, 0, 4, 90, 44})
+define MinTestString: Min({'hi', 'bye', 'zebra'})
+define MinTestDateTime: Min({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6) })
+define MinTestTime: Min({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })
 
 //Mode
-define ModeTest1: Mode({2, 1, 8, 2, 9, 1, 9, 9})
+define ModeTestInteger: Mode({ 2, 1, 8, 2, 9, 1, 9, 9 })
+define ModeTestDateTime: Mode({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6), DateTime(2012, 9, 5) })
+define ModeTestTime: Mode({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999, @T05:59:59.999 })
 
 //PopulationStdDev
-define PopStdDevTest1: PopulationStdDev({1.0, 2.0, 3.0, 4.0, 5.0})
+define PopStdDevTest1: PopulationStdDev({ 1.0, 2.0, 3.0, 4.0, 5.0 })
 
 //PopulationVariance
-define PopVarianceTest1: PopulationVariance({1.0, 2.0, 3.0, 4.0, 5.0})
+define PopVarianceTest1: PopulationVariance({ 1.0, 2.0, 3.0, 4.0, 5.0 })
 
 //StdDev
-define StdDevTest1: StdDev({1.0, 2.0, 3.0, 4.0, 5.0})
+define StdDevTest1: StdDev({ 1.0, 2.0, 3.0, 4.0, 5.0 })
 
 //Sum
-define SumTest1: Sum({6.0, 2.0, 3.0, 4.0, 5.0})
-define SumTestNull: Sum({null, 1, null})
+define SumTest1: Sum({ 6.0, 2.0, 3.0, 4.0, 5.0 })
+define SumTestNull: Sum({ null, 1, null })
 
 //Variance
-define VarianceTest1: Variance({1.0, 2.0, 3.0, 4.0, 5.0})
+define VarianceTest1: Variance({ 1.0, 2.0, 3.0, 4.0, 5.0 })

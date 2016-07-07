@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
 /*
+starts(left Interval<T>, right Interval<T>) Boolean
+
 The starts operator returns true if the first interval starts the second.
   More precisely, if the starting point of the first is equal to the starting point of the second interval and the
     ending point of the first interval is less than or equal to the ending point of the second interval.

@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
 /*
+overlaps(left Interval<T>, right Interval<T>) Boolean
+
 The overlaps operator returns true if the first interval overlaps the second.
   More precisely, if the ending point of the first interval is greater than or equal to the starting point of the second interval,
     and the starting point of the first interval is less than or equal to the ending point of the second interval.
@@ -17,6 +19,8 @@ If either argument is null, the result is null.
 public class OverlapsEvaluator extends Overlaps {
 
   public static Boolean overlaps(Interval left, Interval right) {
+    if (left == null || right == null) { return null; }
+
     Object leftStart = left.getStart();
     Object leftEnd = left.getEnd();
     Object rightStart = right.getStart();
@@ -32,9 +36,6 @@ public class OverlapsEvaluator extends Overlaps {
     Interval left = (Interval)getOperand().get(0).evaluate(context);
     Interval right = (Interval)getOperand().get(1).evaluate(context);
 
-    if (left != null && right != null) {
-      return overlaps(left, right);
-    }
-    return null;
+    return overlaps(left, right);
   }
 }

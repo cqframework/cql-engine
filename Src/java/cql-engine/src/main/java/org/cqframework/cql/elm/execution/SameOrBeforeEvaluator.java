@@ -2,6 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 /*
 The same-precision-or before operator compares two date/time values to the specified precision to determine
@@ -30,6 +31,10 @@ public class SameOrBeforeEvaluator extends SameOrBefore {
       DateTime rightDT = (DateTime)right;
       String precision = getPrecision().value();
 
+      if (precision == null) {
+        throw new IllegalArgumentException("Precision must be specified.");
+      }
+
       int idx = DateTime.getFieldIndex(precision);
 
       if (idx != -1) {
@@ -38,7 +43,7 @@ public class SameOrBeforeEvaluator extends SameOrBefore {
           return null;
         }
 
-        for (int i = 0; i < leftDT.getPartial().size(); ++i) {
+        for (int i = 0; i < idx + 1; ++i) {
           if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i)) {
             return false;
           }
@@ -50,12 +55,45 @@ public class SameOrBeforeEvaluator extends SameOrBefore {
         return leftDT.getPartial().getValue(idx) <= rightDT.getPartial().getValue(idx);
       }
 
-      // TODO: Implement for Time
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
+
+    if (left instanceof Time && right instanceof Time) {
+      Time leftT = (Time)left;
+      Time rightT = (Time)right;
+      String precision = getPrecision().value();
+
+      if (precision == null) {
+        throw new IllegalArgumentException("Precision must be specified.");
+      }
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+        // check level of precision
+        if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
+          return null;
+        }
+
+        for (int i = 0; i < idx + 1; ++i) {
+          if (leftT.getPartial().getValue(i) > rightT.getPartial().getValue(i)) {
+            return false;
+          }
+          else if (leftT.getPartial().getValue(i) < rightT.getPartial().getValue(i)) {
+            return true;
+          }
+        }
+
+        return leftT.getPartial().getValue(idx) <= rightT.getPartial().getValue(idx);
+      }
 
       else {
         throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
       }
     }
+
     throw new IllegalArgumentException(String.format("Cannot SameOrBefore arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }
 }

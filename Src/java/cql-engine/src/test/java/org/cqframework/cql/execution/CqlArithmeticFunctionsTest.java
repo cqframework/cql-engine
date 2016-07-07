@@ -2,6 +2,7 @@ package org.cqframework.cql.execution;
 
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.DateTime;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
@@ -12,6 +13,8 @@ import static org.hamcrest.Matchers.comparesEqualTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.instanceOf;
+
+import org.joda.time.Partial;
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**
@@ -269,8 +272,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
       result = context.resolveExpressionRef(library, "QuantityMaxValue").getExpression().evaluate(context);
       assertThat(result, is(Interval.maxValue(Quantity.class)));
 
-      //result = context.resolveExpressionRef(library, "DateTimeMaxValue").getExpression().evaluate(context);
-      //assertThat(result, is(Interval.maxValue(Partial.class)));
+      result = context.resolveExpressionRef(library, "DateTimeMaxValue").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
 
       //result = context.resolveExpressionRef(library, "TimeMaxValue").getExpression().evaluate(context);
       //assertThat(result, is(Interval.maxValue(PartialTime.class)));
@@ -291,8 +294,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
       result = context.resolveExpressionRef(library, "QuantityMinValue").getExpression().evaluate(context);
       assertThat(result, is(Interval.minValue(Quantity.class)));
 
-      //result = context.resolveExpressionRef(library, "DateTimeMinValue").getExpression().evaluate(context);
-      //assertThat(result, is(Interval.minValue(Partial.class)));
+      result = context.resolveExpressionRef(library, "DateTimeMinValue").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
 
       //result = context.resolveExpressionRef(library, "TimeMinValue").getExpression().evaluate(context);
       //assertThat(result, is(Interval.minValue(PartialTime.class)));
@@ -410,8 +413,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
        assertThat(result, is(Interval.predecessor(new BigDecimal("1.01"))));
 
         //TODO: Uncomment once DateTime and Time evaluate has been implemented
-//        result = context.resolveExpressionRef(library, "PredecessorOfJan12000").getExpression().evaluate(context);
-//        assertThat(result, is(""));
+        result = context.resolveExpressionRef(library, "PredecessorOfJan12000").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial().getValue(2), is(31));
 //
 //        result = context.resolveExpressionRef(library, "PredecessorOfNoon").getExpression().evaluate(context);
 //        assertThat(result, is(new Double(1)));
@@ -542,9 +545,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
        result = context.resolveExpressionRef(library, "SuccessorOf101D").getExpression().evaluate(context);
        assertThat(result, is(Interval.successor(new BigDecimal("1.01"))));
 
-        //TODO: Uncomment once DateTime and Time evaluate has been implemented
-//        result = context.resolveExpressionRef(library, "SuccessorOfJan12000").getExpression().evaluate(context);
-//        assertThat(result, is(new Integer(0)));
+       //TODO: Uncomment once DateTime and Time evaluate has been implemented
+       result = context.resolveExpressionRef(library, "SuccessorOfJan12000").getExpression().evaluate(context);
+       assertThat(((DateTime)result).getPartial().getValue(2), is(2));
 //
 //        result = context.resolveExpressionRef(library, "SuccessorOfNoon").getExpression().evaluate(context);
 //        assertThat(result, is(new Integer(0)));

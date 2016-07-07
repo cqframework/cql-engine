@@ -7,19 +7,23 @@ import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ArrayList;
 
+import org.joda.time.Partial;
+
 public class TimeEvaluator extends Time {
 
   @Override
   public Object evaluate(Context context) {
-    Integer hour = (Integer)this.getHour().evaluate(context);
-    Integer minute = (Integer)this.getMinute().evaluate(context);
-    Integer second = (Integer)this.getSecond().evaluate(context);
-    Integer millisecond = (Integer)this.getMillisecond().evaluate(context);
-    BigDecimal timezoneOffset = (BigDecimal)this.getTimezoneOffset().evaluate(context);
+    Integer hour = (this.getHour() == null) ? null : (Integer)this.getHour().evaluate(context);
+    Integer minute = (this.getMinute() == null) ? null : (Integer)this.getMinute().evaluate(context);
+    Integer second = (this.getSecond() == null) ? null : (Integer)this.getSecond().evaluate(context);
+    Integer millis = (this.getMillisecond() == null) ? null : (Integer)this.getMillisecond().evaluate(context);
+    BigDecimal offset = (this.getTimezoneOffset() == null) ? new BigDecimal(0) : (BigDecimal)this.getTimezoneOffset().evaluate(context);
 
-    if (DateTime.formatCheck(new ArrayList<Object>(Arrays.asList(hour, minute, second, millisecond, timezoneOffset)))) {
-      int [] values = org.cqframework.cql.runtime.DateTime.getValues(hour, minute, second, millisecond);
-      return new org.cqframework.cql.runtime.Time(values, org.cqframework.cql.runtime.Time.getFields(values.length), timezoneOffset);
+    org.cqframework.cql.runtime.Time time = new org.cqframework.cql.runtime.Time();
+
+    if (DateTime.formatCheck(new ArrayList<Object>(Arrays.asList(hour, minute, second, millis)))) {
+      int [] values = DateTime.getValues(hour, minute, second, millis);
+      return time.withPartial(new Partial(time.getFields(values.length), values)).withTimezoneOffset(offset);
     }
     throw new IllegalArgumentException("Time format is invalid");
   }

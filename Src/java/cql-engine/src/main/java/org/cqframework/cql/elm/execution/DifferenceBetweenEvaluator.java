@@ -2,6 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 // for Uncertainty
 import org.cqframework.cql.runtime.Interval;
@@ -38,7 +39,7 @@ DateTime(2014, 5, 12) and DateTime(2014, 5, 25) respectively
 */
 public class DifferenceBetweenEvaluator extends DifferenceBetween {
 
-  public static Integer between(Partial leftTrunc, Partial rightTrunc, int idx) {
+  public static Integer between(Partial leftTrunc, Partial rightTrunc, int idx, boolean dt) {
     Integer ret = 0;
     switch(idx) {
       case 0: ret = Years.yearsBetween(leftTrunc, rightTrunc).getYears();
@@ -55,7 +56,8 @@ public class DifferenceBetweenEvaluator extends DifferenceBetween {
               break;
       case 6: ret = Seconds.secondsBetween(leftTrunc, rightTrunc).getSeconds() * 1000;
               // now do the actual millisecond DifferenceBetween - add to ret
-              ret += rightTrunc.getValue(idx) - leftTrunc.getValue(idx);
+              if (dt) { ret += rightTrunc.getValue(idx) - leftTrunc.getValue(idx); }
+              else { ret += rightTrunc.getValue(idx - 3) - leftTrunc.getValue(idx - 3); }
               break;
     }
     return ret;
@@ -84,12 +86,12 @@ public class DifferenceBetweenEvaluator extends DifferenceBetween {
         // Uncertainty
         if (Uncertainty.isUncertain(leftDT, precision)) {
           ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
-          return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1).getPartial(), rightDT.getPartial(), idx), true, between(highLow.get(0).getPartial(), rightDT.getPartial(), idx), true));
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1).getPartial(), rightDT.getPartial(), idx, true), true, between(highLow.get(0).getPartial(), rightDT.getPartial(), idx , true), true));
         }
 
         else if (Uncertainty.isUncertain(rightDT, precision)) {
           ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
-          return new Uncertainty().withUncertaintyInterval(new Interval(between(leftDT.getPartial(), highLow.get(0).getPartial(), idx), true, between(leftDT.getPartial(), highLow.get(1).getPartial(), idx), true));
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(leftDT.getPartial(), highLow.get(0).getPartial(), idx, true), true, between(leftDT.getPartial(), highLow.get(1).getPartial(), idx, true), true));
         }
 
         // truncate Partial
@@ -104,7 +106,7 @@ public class DifferenceBetweenEvaluator extends DifferenceBetween {
         Partial leftTrunc = new Partial(DateTime.getFields(idx + 1), a);
         Partial rightTrunc = new Partial(DateTime.getFields(idx + 1), b);
 
-        return between(leftTrunc, rightTrunc, idx);
+        return between(leftTrunc, rightTrunc, idx, true);
       }
 
       else {
@@ -112,7 +114,44 @@ public class DifferenceBetweenEvaluator extends DifferenceBetween {
       }
     }
 
-    // TODO: Implement for Time
+    if (left instanceof Time && right instanceof Time) {
+      Time leftT = (Time)left;
+      Time rightT = (Time)right;
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+
+        // Uncertainty
+        if (Uncertainty.isUncertain(leftT, precision)) {
+          ArrayList<Time> highLow = Uncertainty.getHighLowList(leftT, precision);
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1).getPartial(), rightT.getPartial(), idx, false), true, between(highLow.get(0).getPartial(), rightT.getPartial(), idx, false), true));
+        }
+
+        else if (Uncertainty.isUncertain(rightT, precision)) {
+          ArrayList<Time> highLow = Uncertainty.getHighLowList(rightT, precision);
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(leftT.getPartial(), highLow.get(0).getPartial(), idx, false), true, between(leftT.getPartial(), highLow.get(1).getPartial(), idx, false), true));
+        }
+
+        // truncate Partial
+        int [] a = new int[idx + 1];
+        int [] b = new int[idx + 1];
+
+        for (int i = 0; i < idx + 1; ++i) {
+          a[i] = leftT.getPartial().getValue(i);
+          b[i] = rightT.getPartial().getValue(i);
+        }
+
+        Partial leftTrunc = new Partial(Time.getFields(idx + 1), a);
+        Partial rightTrunc = new Partial(Time.getFields(idx + 1), b);
+
+        return between(leftTrunc, rightTrunc, idx + 3, false);
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
 
     throw new IllegalArgumentException(String.format("Cannot DifferenceBetween arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }

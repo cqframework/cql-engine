@@ -74,14 +74,14 @@ define Ln1000D  : Ln(1000.0)
 define IntegerMinValue: minimum Integer
 define DecimalMinValue: minimum Decimal
 define QuantityMinValue: minimum Quantity
-//define DateTimeMinValue: minimum DateTime
+define DateTimeMinValue: minimum DateTime
 //define TimeMinValue: minimum Time
 
 //MaxValue
 define IntegerMaxValue: maximum Integer
 define DecimalMaxValue: maximum Decimal
 define QuantityMaxValue: maximum Quantity
-//define DateTimeMaxValue: maximum DateTime
+define DateTimeMaxValue: maximum DateTime
 //define TimeMaxValue: maximum Time
 
 //Modulo

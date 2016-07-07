@@ -34,10 +34,6 @@ public class IndexerEvaluator extends Indexer {
                     if ((Integer)right == index) {
                         return element;
                     }
-
-                    if ((Integer)right > index) {
-                        return null;
-                    }
                 }
 
                 return null;

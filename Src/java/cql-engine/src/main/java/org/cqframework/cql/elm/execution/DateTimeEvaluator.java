@@ -34,8 +34,6 @@ public class DateTimeEvaluator extends DateTime {
     if (dt.formatCheck(new ArrayList<Object>(Arrays.asList(year, month, day, hour, minute, second, millis)))) {
       int [] values = dt.getValues(year, month, day, hour, minute, second, millis);
       return dt.withPartial(new Partial(dt.getFields(values.length), values)).withTimezoneOffset(offset);
-      // int [] values = org.cqframework.cql.runtime.DateTime.getValues(year, month, day, hour, minute, second, millis);
-      // return new org.cqframework.cql.runtime.DateTime(values, org.cqframework.cql.runtime.DateTime.getFields(values.length), offset);
     }
     else {
       throw new IllegalArgumentException("DateTime format is invalid");

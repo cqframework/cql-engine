@@ -4,6 +4,7 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.Uncertainty;
 
 import java.util.ArrayList;
@@ -39,29 +40,15 @@ public class BeforeEvaluator extends Before {
     if (testLeft == null || testRight == null) { return null; }
 
     if (testLeft instanceof Interval && testRight instanceof Interval) {
-      Interval leftInterval = (Interval)getOperand().get(0).evaluate(context);
-      Interval rightInterval = (Interval)getOperand().get(1).evaluate(context);
-
-      if (leftInterval != null && rightInterval != null) {
-        Object left = leftInterval.getStart();
-        Object right = rightInterval.getEnd();
-
-        return Value.compareTo(left, right, "<");
-      }
+      return Value.compareTo(((Interval)testLeft).getStart(), ((Interval)testRight).getEnd(), "<");
     }
 
     else if (testLeft instanceof Interval && !(testRight instanceof Interval)) {
-      Interval leftInterval = (Interval)testLeft;
-      Object right = testRight;
-
-      return Value.compareTo(leftInterval.getEnd(), right, "<");
+      return Value.compareTo(((Interval)testLeft).getEnd(), testRight, "<");
     }
 
     else if (!(testLeft instanceof Interval) && testRight instanceof Interval) {
-      Object left = testLeft;
-      Interval rightInterval = (Interval)testRight;
-
-      return Value.compareTo(left, rightInterval.getStart(), "<");
+      return Value.compareTo(testLeft, ((Interval)testRight).getStart(), "<");
     }
 
     // (DateTime, DateTime)
@@ -81,25 +68,17 @@ public class BeforeEvaluator extends Before {
         if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
 
           if (Uncertainty.isUncertain(leftDT, precision)) {
-            ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
-            return LessEvaluator.less(highLow.get(0), rightDT);
+            return LessEvaluator.less(Uncertainty.getHighLowList(leftDT, precision).get(0), rightDT);
           }
 
           else if (Uncertainty.isUncertain(rightDT, precision)) {
-            ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
-            return LessEvaluator.less(leftDT, highLow.get(1));
+            return LessEvaluator.less(leftDT, Uncertainty.getHighLowList(rightDT, precision).get(1));
           }
 
           return null;
         }
 
         return leftDT.getPartial().getValue(idx) < rightDT.getPartial().getValue(idx);
-
-        // for (int i = 0; i < idx + 1; ++i) {
-        //   if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i) && i != idx) {
-        //     return true;
-        //   }
-        // }
       }
 
       else {
@@ -107,7 +86,39 @@ public class BeforeEvaluator extends Before {
       }
     }
 
-    // Implement for Time
+    else if (testLeft instanceof Time && testRight instanceof Time) {
+      Time leftT = (Time)testLeft;
+      Time rightT = (Time)testRight;
+      String precision = getPrecision() == null ? null : getPrecision().value();
+
+      if (precision == null) {
+        throw new IllegalArgumentException("Precision must be specified.");
+      }
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+        // check level of precision
+        if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
+
+          if (Uncertainty.isUncertain(leftT, precision)) {
+            return LessEvaluator.less(Uncertainty.getHighLowList(leftT, precision).get(0), rightT);
+          }
+
+          else if (Uncertainty.isUncertain(rightT, precision)) {
+            return LessEvaluator.less(leftT, Uncertainty.getHighLowList(rightT, precision).get(1));
+          }
+
+          return null;
+        }
+
+        return leftT.getPartial().getValue(idx) < rightT.getPartial().getValue(idx);
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
 
     throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", testLeft.getClass().getName(), testRight.getClass().getName()));
   }

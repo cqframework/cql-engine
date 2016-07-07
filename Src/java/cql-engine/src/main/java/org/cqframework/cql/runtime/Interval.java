@@ -2,6 +2,12 @@ package org.cqframework.cql.runtime;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
+import org.cqframework.cql.elm.execution.DurationBetweenEvaluator;
+
+import org.joda.time.Partial;
+
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
@@ -38,9 +44,15 @@ public class Interval {
       if (start instanceof Integer) { return (Integer)end - (Integer)start; }
       else if (start instanceof BigDecimal) { return ((BigDecimal)end).subtract((BigDecimal)start); }
       else if (start instanceof Quantity) { return new Quantity().withValue((((Quantity)end).getValue()).subtract((((Quantity)start).getValue()))).withUnit(((Quantity)start).getUnit()); }
-      else {
-        throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));
+      else if (start instanceof DateTime) {
+        return new Quantity().withValue(new BigDecimal(DurationBetweenEvaluator.between((DateTime)start, (DateTime)end, ((DateTime)start).getPartial().size() - 1))).withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
       }
+      else if (start instanceof Time) {
+        return new Quantity().withValue(new BigDecimal(DurationBetweenEvaluator.between((Time)start, (Time)end, ((Time)start).getPartial().size() - 1))).withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
+      }
+
+      throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));
+
     }
 
     private Object low;
@@ -131,10 +143,16 @@ public class Interval {
             Quantity quantity = (Quantity)value;
             return new Quantity().withValue((BigDecimal)successor(quantity.getValue())).withUnit(quantity.getUnit());
         }
-        else {
-            // TODO: Implemented successor for DateTime and Time
-            throw new NotImplementedException(String.format("Successor is not implemented for type %s", value.getClass().getName()));
+        else if (value instanceof DateTime) {
+          DateTime dt = (DateTime)value;
+          return new DateTime().withPartial(dt.getPartial().property(DateTime.getField(dt.getPartial().size() - 1)).addToCopy(1));
         }
+        else if (value instanceof Time) {
+          Time t = (Time)value;
+          return new Time().withPartial(t.getPartial().property(Time.getField(t.getPartial().size() - 1)).addToCopy(1));
+        }
+
+        throw new NotImplementedException(String.format("Successor is not implemented for type %s", value.getClass().getName()));
     }
 
     public static Object predecessor(Object value) {
@@ -151,10 +169,16 @@ public class Interval {
             Quantity quantity = (Quantity)value;
             return new Quantity().withValue((BigDecimal)predecessor(quantity.getValue())).withUnit(quantity.getUnit());
         }
-        else {
-            // TODO: Implement predecessor for DateTime and Time
-            throw new NotImplementedException(String.format("Predecessor is not implemented for type %s", value.getClass().getName()));
+        else if (value instanceof DateTime) {
+          DateTime dt = (DateTime)value;
+          return new DateTime().withPartial(dt.getPartial().property(DateTime.getField(dt.getPartial().size() - 1)).addToCopy(-1));
         }
+        else if (value instanceof Time) {
+          Time t = (Time)value;
+          return new Time().withPartial(t.getPartial().property(Time.getField(t.getPartial().size() - 1)).addToCopy(-1));
+        }
+
+        throw new NotImplementedException(String.format("Predecessor is not implemented for type %s", value.getClass().getName()));
     }
 
     public static Object minValue(Type type) {
@@ -167,10 +191,13 @@ public class Interval {
         else if (type == Quantity.class) {
             return new Quantity().withValue((BigDecimal)minValue(BigDecimal.class));
         }
-        else {
-            // TODO: Implement minValue for DateTime and Time
-            throw new NotImplementedException(String.format("MinValue is not implemented for type %s.", type.getTypeName()));
+        else if (type == DateTime.class) {
+          return new DateTime().withPartial(new Partial(DateTime.fields, new int[] {0001, 1, 1, 0, 0, 0, 0}));
         }
+
+        // TODO: Implement minValue for Time
+
+        throw new NotImplementedException(String.format("MinValue is not implemented for type %s.", type.getTypeName()));
     }
 
     public static Object maxValue(Type type) {
@@ -183,9 +210,12 @@ public class Interval {
         else if (type == Quantity.class) {
             return new Quantity().withValue((BigDecimal)maxValue(BigDecimal.class));
         }
-        else {
-            // TODO: Implement maxValue for DateTime and Time
-            throw new NotImplementedException(String.format("MaxValue is not implemented for type %s.", type.getTypeName()));
+        else if (type == DateTime.class) {
+          return new DateTime().withPartial(new Partial(DateTime.fields, new int[] {9999, 12, 31, 23, 59, 59, 999}));
         }
+
+        // TODO: Implement maxValue for Time
+
+        throw new NotImplementedException(String.format("MaxValue is not implemented for type %s.", type.getTypeName()));
     }
 }

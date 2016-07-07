@@ -3,6 +3,10 @@ package org.cqframework.cql.execution;
 import org.eclipse.persistence.jpa.jpql.Assert;
 import org.testng.annotations.Test;
 
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
+import org.joda.time.Partial;
+
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,22 +19,34 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.Contains#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testContains() throws JAXBException {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ContainsEmptyListHasNull").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        // result = context.resolveExpressionRef(library, "ContainsABNullHasNull").getExpression().evaluate(context);
+        // assertThat(result, is(false));
 
         result = context.resolveExpressionRef(library, "ContainsABCHasA").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ContainsJan2012True").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ContainsJan2012False").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ContainsTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ContainsTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Distinct#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testDistinct() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -38,13 +54,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "DistinctEmptyList").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        result = context.resolveExpressionRef(library, "DistinctNullNullNull").getExpression().evaluate(context);
-        assertThat(result, is(new ArrayList<Object>() {{
-            add(null);
-        }}));
-
-        result = context.resolveExpressionRef(library, "DistinctANullANull").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList("a", null)));
+        // result = context.resolveExpressionRef(library, "DistinctNullNullNull").getExpression().evaluate(context);
+        // assertThat(result, is(new ArrayList<Object>() {{
+        //     add(null);
+        // }}));
+        //
+        // result = context.resolveExpressionRef(library, "DistinctANullANull").getExpression().evaluate(context);
+        // assertThat(result, is(Arrays.asList("a", null)));
 
         result = context.resolveExpressionRef(library, "Distinct112233").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
@@ -57,12 +73,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DistinctABCABC").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("a", "b", "c")));
+
+        result = context.resolveExpressionRef(library, "DistinctDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 10, 5})));
+        assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1})));
+        assertThat(((ArrayList<Object>)result).size(), is(2));
+
+        result = context.resolveExpressionRef(library, "DistinctTime").getExpression().evaluate(context);
+        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        assertThat(((ArrayList<Object>)result).size(), is(2));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Equal#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testEqual() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -87,12 +113,27 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Equal123And123").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "EqualDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "EqualDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "EqualDateTimeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "EqualTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "EqualTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Except#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testExcept() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -105,12 +146,20 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Except23And1234").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
+
+        result = context.resolveExpressionRef(library, "ExceptDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        assertThat(((ArrayList<Object>)result).size(), is(1));
+
+        result = context.resolveExpressionRef(library, "ExceptTime").getExpression().evaluate(context);
+        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((ArrayList<Object>)result).size(), is(1));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Exists#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testExists() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -126,12 +175,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Exists12").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ExistsDateTime").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ExistsTime").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Flatten#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testFlatten() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -144,12 +199,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "FlattenList12And34").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
+
+        result = context.resolveExpressionRef(library, "FlattenDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        assertThat(((ArrayList<Object>)result).size(), is(2));
+
+        result = context.resolveExpressionRef(library, "FlattenTime").getExpression().evaluate(context);
+        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        assertThat(((ArrayList<Object>)result).size(), is(2));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.First#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testFirst() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -165,12 +230,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "First12").getExpression().evaluate(context);
         assertThat(result, is(1));
+
+        result = context.resolveExpressionRef(library, "FirstDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+
+        result = context.resolveExpressionRef(library, "FirstTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.In#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testIn() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -189,12 +260,24 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "In3And12").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "InDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "InDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "InTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "InTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Includes#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testIncludes() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -213,12 +296,24 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Includes123And4").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "IncludesDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "IncludesDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "IncludesTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "IncludesTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.IncludedIn#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testIncludedIn() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -237,12 +332,24 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "IncludedIn4And123").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "IncludedInDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "IncludedInDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "IncludedInTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "IncludedInTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Indexer#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testIndexer() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -261,13 +368,19 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "IndexerNeg1Of12").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "IndexerDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+
+        result = context.resolveExpressionRef(library, "IndexerTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
     }
 
 
     /**
      * {@link org.cqframework.cql.elm.execution.IndexOf#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testIndexOf() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -289,12 +402,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "IndexOf3In12").getExpression().evaluate(context);
         assertThat(result, is(-1));
+
+        result = context.resolveExpressionRef(library, "IndexOfDateTime").getExpression().evaluate(context);
+        assertThat(result, is(2));
+
+        result = context.resolveExpressionRef(library, "IndexOfTime").getExpression().evaluate(context);
+        assertThat(result, is(1));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Intersect#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testIntersect() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -307,12 +426,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Intersect23And1234").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(2, 3)));
+
+        result = context.resolveExpressionRef(library, "IntersectDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        assertThat(((ArrayList<Object>)result).size(), is(2));
+
+        result = context.resolveExpressionRef(library, "IntersectTime").getExpression().evaluate(context);
+        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        assertThat(((ArrayList<Object>)result).size(), is(2));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Last#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testLast() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -328,12 +457,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Last12").getExpression().evaluate(context);
         assertThat(result, is(2));
+
+        result = context.resolveExpressionRef(library, "LastDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+
+        result = context.resolveExpressionRef(library, "LastTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Length#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testLength() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -349,12 +484,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Length12").getExpression().evaluate(context);
         assertThat(result, is(2));
+
+        result = context.resolveExpressionRef(library, "LengthDateTime").getExpression().evaluate(context);
+        assertThat(result, is(3));
+
+        result = context.resolveExpressionRef(library, "LengthTime").getExpression().evaluate(context);
+        assertThat(result, is(6));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Equivalent#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testEquivalent() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -369,19 +510,37 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef(library, "EquivalentABCAnd123").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Equivalent123AndABC").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "Equivalent123AndString123").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "EquivalentDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "EquivalentDateTimeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "EquivalentDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "EquivalentTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "EquivalentTimeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "EquivalentTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.NotEqual#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testNotEqual() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -396,20 +555,32 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef(library, "NotEqualABCAnd123").getExpression().evaluate(context);
-        assertThat(result, is(true));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "NotEqual123AndABC").getExpression().evaluate(context);
-        assertThat(result, is(true));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef(library, "NotEqual123AndString123").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "NotEqualDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "NotEqualDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "NotEqualTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "NotEqualTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.ProperIncludes#evaluate(Context)}
      */
-    //@Test
-    public void testProperlyInclues() throws JAXBException {
+    @Test
+    public void testProperlyIncludes() throws JAXBException {
         Context context = new Context(library);
         Object result;
 
@@ -427,12 +598,24 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "ProperIncludes123And4").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ProperIncludesDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ProperIncludesDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ProperIncludesTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ProperIncludesTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.ProperIncludedIn#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testProperlyIncludedIn() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -451,12 +634,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "ProperIncludedIn4And123").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ProperIncludedInDateTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ProperIncludedInDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.SingletonFrom#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testSingletonFrom() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -476,12 +665,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         } catch (IllegalArgumentException ex) {
             assertThat(ex, isA(IllegalArgumentException.class));
         }
+
+        result = context.resolveExpressionRef(library, "SingletonFromDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+
+        result = context.resolveExpressionRef(library, "SingletonFromTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
     }
 
     /**
      * {@link org.cqframework.cql.elm.execution.Union#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testUnion() throws JAXBException {
         Context context = new Context(library);
         Object result;
@@ -500,5 +695,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "Union123And4").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
+
+        result = context.resolveExpressionRef(library, "UnionDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2001, 9, 11})));
+        assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        assertThat(((DateTime)((ArrayList<Object>)result).get(2)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        assertThat(((ArrayList<Object>)result).size(), is(3));
+
+        result = context.resolveExpressionRef(library, "UnionTime").getExpression().evaluate(context);
+        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        assertThat(((Time)((ArrayList<Object>)result).get(2)).getPartial(), is(new Partial(Time.getFields(4), new int[] {12, 59, 59, 999})));
+        assertThat(((Time)((ArrayList<Object>)result).get(3)).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
+        assertThat(((ArrayList<Object>)result).size(), is(4));
     }
 }

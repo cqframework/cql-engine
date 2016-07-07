@@ -3,6 +3,8 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 
 /*
+end of(argument Interval<T>) T
+
 Notes for this class operation are in the Interval class - getEnd() method
 */
 

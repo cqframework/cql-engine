@@ -4,6 +4,10 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
+import org.joda.time.Partial;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -93,6 +97,12 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "CountTest1").getExpression().evaluate(context);
         assertThat(result, is(4));
+
+        result = context.resolveExpressionRef(library, "CountTestDateTime").getExpression().evaluate(context);
+        assertThat(result, is(3));
+
+        result = context.resolveExpressionRef(library, "CountTestTime").getExpression().evaluate(context);
+        assertThat(result, is(3));
     }
 
     /**
@@ -101,11 +111,17 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testMax() throws JAXBException {
         Context context = new Context(library);
-        Object result = context.resolveExpressionRef(library, "MaxTest1").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef(library, "MaxTestInteger").getExpression().evaluate(context);
         assertThat(result, is(90));
 
-        result = context.resolveExpressionRef(library, "MaxTest2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "MaxTestString").getExpression().evaluate(context);
         assertThat(result, is("zebra"));
+
+        result = context.resolveExpressionRef(library, "MaxTestDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 10, 6})));
+
+        result = context.resolveExpressionRef(library, "MaxTestTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
     }
 
     /**
@@ -114,11 +130,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testMedian() throws JAXBException {
       Context context = new Context(library);
-      // Object result = context.resolveExpressionRef(library, "MedianTest1").getExpression().evaluate(context);
-      // assertThat(result, is(3));
-      //
-      // result = context.resolveExpressionRef(library, "MedianTest2").getExpression().evaluate(context);
-      // assertThat(result, is(new BigDecimal("3.5")));
+
+      Object result = context.resolveExpressionRef(library, "MedianTestDecimal").getExpression().evaluate(context);
+      assertThat(result, is(new BigDecimal("3.5")));
     }
 
     /**
@@ -127,11 +141,17 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testMin() throws JAXBException {
       Context context = new Context(library);
-      Object result = context.resolveExpressionRef(library, "MinTest1").getExpression().evaluate(context);
+      Object result = context.resolveExpressionRef(library, "MinTestInteger").getExpression().evaluate(context);
       assertThat(result, is(0));
 
-      result = context.resolveExpressionRef(library, "MinTest2").getExpression().evaluate(context);
+      result = context.resolveExpressionRef(library, "MinTestString").getExpression().evaluate(context);
       assertThat(result, is("bye"));
+
+      result = context.resolveExpressionRef(library, "MinTestDateTime").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
+
+      result = context.resolveExpressionRef(library, "MinTestTime").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
     }
 
     /**
@@ -140,8 +160,14 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testMode() throws JAXBException {
       Context context = new Context(library);
-      Object result = context.resolveExpressionRef(library, "ModeTest1").getExpression().evaluate(context);
+      Object result = context.resolveExpressionRef(library, "ModeTestInteger").getExpression().evaluate(context);
       assertThat(result, is(9));
+
+      result = context.resolveExpressionRef(library, "ModeTestDateTime").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
+
+      result = context.resolveExpressionRef(library, "ModeTestTime").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
     }
 
     /**

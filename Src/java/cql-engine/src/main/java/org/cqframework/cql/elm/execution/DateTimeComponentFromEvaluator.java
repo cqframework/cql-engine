@@ -2,12 +2,13 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 /*
 The component-from operator returns the specified component of the argument.
 For DateTime values, precision must be one of: year, month, day, hour, minute, second, or millisecond.
 For Time values, precision must be one of: hour, minute, second, or millisecond.
-If the argument is null, or is not specified to the level of precision being extracted, the result is null. 
+If the argument is null, or is not specified to the level of precision being extracted, the result is null.
 */
 
 /**
@@ -43,7 +44,22 @@ public class DateTimeComponentFromEvaluator extends DateTimeComponentFrom {
       }
     }
 
-    // TODO: Implement for Time
+    else if (operand instanceof Time) {
+      Time time = (Time)operand;
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+        // check level of precision
+        if (idx + 1 > time.getPartial().size()) {
+          return null;
+        }
+        return time.getPartial().getValue(idx);
+      }
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
 
     throw new IllegalArgumentException(String.format("Cannot DateTimeComponentFrom arguments of type '%s'.", operand.getClass().getName()));
   }

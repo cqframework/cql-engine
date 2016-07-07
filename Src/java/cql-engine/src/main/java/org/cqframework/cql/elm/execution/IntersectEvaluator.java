@@ -2,18 +2,26 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
-import org.cqframework.cql.runtime.Quantity;
-import java.math.BigDecimal;
-import java.lang.Math;
+import org.cqframework.cql.runtime.Value;
 
 import java.util.ArrayList;
 
 /*
+*** NOTES FOR INTERVAL ***
+intersect(left Interval<T>, right Interval<T>) Interval<T>
+
 The intersect operator for intervals returns the intersection of two intervals.
   More precisely, the operator returns the interval that defines the overlapping portion of both arguments.
 If the arguments do not overlap, this operator returns null.
 If either argument is null, the result is null.
 
+*** NOTES FOR LIST ***
+intersect(left List<T>, right List<T>) List<T>
+
+The intersect operator for lists returns the intersection of two lists.
+  More precisely, the operator returns a list containing only the elements that appear in both lists.
+This operator uses the notion of equivalence to determine whether or not two elements are the same.
+If either argument is null, the result is null.
 */
 
 /**
@@ -24,57 +32,48 @@ public class IntersectEvaluator extends Intersect {
 
   @Override
   public Object evaluate(Context context) {
-    Object test = getOperand().get(0).evaluate(context);
-    if (test instanceof Interval) {
-      Interval leftInterval = (Interval)test;
-      Interval rightInterval = (Interval)getOperand().get(1).evaluate(context);
+    Object left = getOperand().get(0).evaluate(context);
+    Object right = getOperand().get(1).evaluate(context);
+
+    if (left == null || right == null) { return null; }
+
+    if (left instanceof Interval) {
+      Interval leftInterval = (Interval)left;
+      Interval rightInterval = (Interval)right;
+
+      if (leftInterval == null || rightInterval == null) { return null; }
 
       if (!OverlapsEvaluator.overlaps(leftInterval, rightInterval)) { return null; }
 
-      if (leftInterval != null && rightInterval != null) {
-        Object leftStart = leftInterval.getStart();
-        Object leftEnd = leftInterval.getEnd();
-        Object rightStart = rightInterval.getStart();
-        Object rightEnd = rightInterval.getEnd();
+      Object leftStart = leftInterval.getStart();
+      Object leftEnd = leftInterval.getEnd();
+      Object rightStart = rightInterval.getStart();
+      Object rightEnd = rightInterval.getEnd();
 
-        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-        if (leftStart instanceof Integer) {
-          return (new Interval(Math.max((Integer)leftStart, (Integer)rightStart), true, Math.min((Integer)leftEnd, (Integer)rightEnd), true));
-        }
+      Object max = Value.compareTo(leftStart, rightStart, ">") ? leftStart : rightStart;
+      Object min = Value.compareTo(leftEnd, rightEnd, "<") ? leftEnd : rightEnd;
 
-        else if (leftStart instanceof BigDecimal) {
-          return (new Interval(((BigDecimal)leftStart).max((BigDecimal)rightStart), true, ((BigDecimal)leftEnd).min((BigDecimal)rightEnd), true));
-        }
-
-        else if (leftStart instanceof Quantity) {
-          String unit = ((Quantity)leftStart).getUnit();
-          return (new Interval(new Quantity().withValue((((Quantity)leftStart).getValue()).max(((Quantity)rightStart).getValue())).withUnit(unit), true, new Quantity().withValue((((Quantity)leftEnd).getValue()).min(((Quantity)rightEnd).getValue())).withUnit(unit), true));
-        }
-
-        else {
-          throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), leftStart.getClass().getName(), rightStart.getClass().getName()));
-        }
-      }
-      return null;
+      return new Interval(max, true, min, true);
     }
 
-    else {
-      Iterable<Object> left = (Iterable<Object>)getOperand().get(0).evaluate(context);
-      Iterable<Object> right = (Iterable<Object>)getOperand().get(1).evaluate(context);
+    else if (left instanceof Iterable) {
+      Iterable<Object> leftArr = (Iterable<Object>)left;
+      Iterable<Object> rightArr = (Iterable<Object>)right;
 
-      if (left == null || right == null) {
+      if (leftArr == null || rightArr == null) {
           return null;
       }
 
       java.util.List<Object> result = new ArrayList<Object>();
-      for (Object leftItem : left) {
-          if (InEvaluator.in(leftItem, right)) {
+      for (Object leftItem : leftArr) {
+          if (InEvaluator.in(leftItem, rightArr)) {
               result.add(leftItem);
           }
       }
-
       return result;
     }
+    throw new IllegalArgumentException(String.format("Cannot Intersect arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }
 }

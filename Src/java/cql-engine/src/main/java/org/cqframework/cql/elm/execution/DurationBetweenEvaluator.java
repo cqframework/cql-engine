@@ -2,6 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 // for Uncertainty
 import org.cqframework.cql.runtime.Interval;
@@ -54,6 +55,23 @@ public class DurationBetweenEvaluator extends DurationBetween {
     return ret;
   }
 
+  public static Integer between(Time leftT, Time rightT, int idx) {
+    Integer ret = 0;
+    switch(idx) {
+      case 0: ret = Hours.hoursBetween(leftT.getPartial(), rightT.getPartial()).getHours();
+              break;
+      case 1: ret = Minutes.minutesBetween(leftT.getPartial(), rightT.getPartial()).getMinutes();
+              break;
+      case 2: ret = Seconds.secondsBetween(leftT.getPartial(), rightT.getPartial()).getSeconds();
+              break;
+      case 3: ret = Seconds.secondsBetween(leftT.getPartial(), rightT.getPartial()).getSeconds() * 1000;
+              // now do the actual millisecond DurationBetween - add to ret
+              ret += rightT.getPartial().getValue(idx) - leftT.getPartial().getValue(idx);
+              break;
+    }
+    return ret;
+  }
+
   @Override
   public Object evaluate(Context context) {
     Object left = getOperand().get(0).evaluate(context);
@@ -93,7 +111,32 @@ public class DurationBetweenEvaluator extends DurationBetween {
       }
     }
 
-      // TODO: Implement for Time
+    if (left instanceof Time && right instanceof Time) {
+      Time leftT = (Time)left;
+      Time rightT = (Time)right;
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+
+        // Uncertainty
+        if (Uncertainty.isUncertain(leftT, precision)) {
+          ArrayList<Time> highLow = Uncertainty.getHighLowList(leftT, precision);
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1), rightT, idx), true, between(highLow.get(0), rightT, idx), true));
+        }
+
+        else if (Uncertainty.isUncertain(rightT, precision)) {
+          ArrayList<Time> highLow = Uncertainty.getHighLowList(rightT, precision);
+          return new Uncertainty().withUncertaintyInterval(new Interval(between(leftT, highLow.get(0), idx), true, between(leftT, highLow.get(1), idx), true));
+        }
+
+        return between(leftT, rightT, idx);
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
 
     throw new IllegalArgumentException(String.format("Cannot DifferenceBetween arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }

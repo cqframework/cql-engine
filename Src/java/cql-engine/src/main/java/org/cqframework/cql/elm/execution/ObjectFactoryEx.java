@@ -342,6 +342,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Time createTime() { return new TimeEvaluator(); }
 
     @Override
+    public TimeOfDay createTimeOfDay() { return new TimeOfDayEvaluator(); }
+
+    @Override
     public TimezoneFrom createTimezoneFrom() { return new TimezoneFromEvaluator(); }
 
     @Override

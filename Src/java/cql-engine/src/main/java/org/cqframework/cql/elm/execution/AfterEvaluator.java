@@ -4,6 +4,7 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.Uncertainty;
 
 import java.util.ArrayList;
@@ -40,28 +41,17 @@ public class AfterEvaluator extends After {
 
     // (Interval, Interval)
     if (testLeft instanceof Interval && testRight instanceof Interval) {
-      Interval leftInterval = (Interval)testLeft;
-      Interval rightInterval = (Interval)testRight;
-      Object left = leftInterval.getStart();
-      Object right = rightInterval.getEnd();
-
-      return Value.compareTo(left, right, ">");
+      return Value.compareTo(((Interval)testLeft).getStart(), ((Interval)testRight).getEnd(), ">");
     }
 
     // (Interval, Point)
     else if (testLeft instanceof Interval && !(testRight instanceof Interval)) {
-      Interval leftInterval = (Interval)testLeft;
-      Object right = testRight;
-
-      return Value.compareTo(leftInterval.getStart(), right, ">");
+      return Value.compareTo(((Interval)testLeft).getStart(), testRight, ">");
     }
 
     // (Point, Interval)
     else if (!(testLeft instanceof Interval) && testRight instanceof Interval) {
-      Object left = testLeft;
-      Interval rightInterval = (Interval)testRight;
-
-      return Value.compareTo(left, rightInterval.getEnd(), ">");
+      return Value.compareTo(testLeft, ((Interval)testRight).getEnd(), ">");
     }
 
     // (DateTime, DateTime)
@@ -82,13 +72,11 @@ public class AfterEvaluator extends After {
 
           // Uncertainty
           if (Uncertainty.isUncertain(leftDT, precision)) {
-            ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
-            return GreaterEvaluator.greater(highLow.get(0), rightDT);
+            return GreaterEvaluator.greater(Uncertainty.getHighLowList(leftDT, precision).get(0), rightDT);
           }
 
           else if (Uncertainty.isUncertain(rightDT, precision)) {
-            ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
-            return GreaterEvaluator.greater(leftDT, highLow.get(1));
+            return GreaterEvaluator.greater(leftDT, Uncertainty.getHighLowList(rightDT, precision).get(1));
           }
 
           return null;
@@ -102,7 +90,41 @@ public class AfterEvaluator extends After {
       }
     }
 
-    // Implement for Time
+    // (Time, Time)
+    else if (testLeft instanceof Time && testRight instanceof Time) {
+      Time leftT = (Time)testLeft;
+      Time rightT = (Time)testRight;
+      String precision = getPrecision() == null ? null : getPrecision().value();
+
+      if (precision == null) {
+        throw new IllegalArgumentException("Precision must be specified.");
+      }
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+        // check level of precision
+        if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
+
+          // Uncertainty
+          if (Uncertainty.isUncertain(leftT, precision)) {
+            return GreaterEvaluator.greater(Uncertainty.getHighLowList(leftT, precision).get(0), rightT);
+          }
+
+          else if (Uncertainty.isUncertain(rightT, precision)) {
+            return GreaterEvaluator.greater(leftT, Uncertainty.getHighLowList(rightT, precision).get(1));
+          }
+
+          return null;
+        }
+
+        return leftT.getPartial().getValue(idx) > rightT.getPartial().getValue(idx);
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
 
     throw new IllegalArgumentException(String.format("Cannot After arguments of type '%s' and '%s'.", testLeft.getClass().getName(), testRight.getClass().getName()));
   }

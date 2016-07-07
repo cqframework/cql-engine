@@ -4,6 +4,8 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Value;
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -20,11 +22,11 @@ If the argument is null, the result is null.
 */
 public class CollapseEvaluator extends Collapse {
 
-  public static Object collapse(ArrayList intervals) {
+  public static Object collapse(ArrayList<Interval> intervals) {
     Collections.sort(intervals, new Comparator<Interval>() {
       @Override
       public int compare(Interval o1, Interval o2) {
-        if (o1.getStart() instanceof Integer) {
+        if (o1.getStart() instanceof Integer || o1.getStart() instanceof DateTime || o1.getStart() instanceof Time) {
           if (Value.compareTo(o1.getStart(), o2.getStart(), "<")) { return -1; }
           else if (Value.compareTo(o1.getStart(), o2.getStart(), "==")) { return 0; }
           else if (Value.compareTo(o1.getStart(), o2.getStart(), ">")) { return 1; }
@@ -35,8 +37,7 @@ public class CollapseEvaluator extends Collapse {
         else if (o1.getStart() instanceof Quantity) {
           return (((Quantity)o1.getStart()).getValue().compareTo(((Quantity)o2.getStart()).getValue()));
         }
-
-        throw new IllegalArgumentException(String.format("Cannot CollapseEvaluator arguments of type '%s' and '%s'.", o1.getClass().getName(), o1.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Collapse arguments of type '%s' and '%s'.", o1.getClass().getName(), o1.getClass().getName()));
       }
     });
 

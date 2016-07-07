@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
 /*
+meets after(left Interval<T>, right Interval<T>) Boolean
+
 The meets after operator returns true if the first interval starts immediately after the second interval ends.
 If either argument is null, the result is null.
 */

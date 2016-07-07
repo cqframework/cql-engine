@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
 /*
+overlaps before(left Interval<T>, right Interval<T>) Boolean
+
 The operator overlaps before returns true if the first interval overlaps the second and starts before it
 If either argument is null, the result is null.
 */

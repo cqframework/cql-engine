@@ -2,20 +2,28 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Interval;
-import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Value;
-import java.math.BigDecimal;
-import java.lang.Math.*;
 
 import java.util.ArrayList;
 
 /*
 *** NOTES FOR INTERVAL ***
+union(left Interval<T>, right Interval<T>) Interval<T>
+
 The union operator for intervals returns the union of the intervals.
   More precisely, the operator returns the interval that starts at the earliest starting point in either argument,
     and ends at the latest starting point in either argument.
-If the arguments do not overlap or meet, this operator returns null. 
+If the arguments do not overlap or meet, this operator returns null.
 If either argument is null, the result is null.
+
+*** NOTES FOR LIST ***
+union(left List<T>, right List<T>) List<T>
+
+The union operator for lists returns a list with all elements from both arguments.
+Note that duplicates are not eliminated during this process, if an element appears once in both sources,
+  that element will be present twice in the resulting list.
+If either argument is null, the result is null.
+Note that the union operator can also be invoked with the symbolic operator (|).
 
 */
 
@@ -26,33 +34,23 @@ If either argument is null, the result is null.
 public class UnionEvaluator extends Union {
 
   public static Interval union(Object left, Object right) {
-    Interval leftInterval = (Interval)left;
-    Interval rightInterval = (Interval)right;
-    Object leftStart = leftInterval.getStart();
-    Object leftEnd = leftInterval.getEnd();
-    Object rightStart = rightInterval.getStart();
-    Object rightEnd = rightInterval.getEnd();
+    if (left == null || right == null) { return null; }
+
+    Object leftStart = ((Interval)left).getStart();
+    Object leftEnd = ((Interval)left).getEnd();
+    Object rightStart = ((Interval)right).getStart();
+    Object rightEnd = ((Interval)right).getEnd();
 
     if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-    if (Value.compareTo(leftEnd, rightStart, "<") || Value.compareTo(rightEnd, leftStart, "<")) { return null; }
+    if (!OverlapsEvaluator.overlaps((Interval)left, (Interval)right) && !MeetsEvaluator.meets((Interval)left, (Interval)right)) { return null; }
 
-    if (leftStart instanceof Integer) {
-      return new Interval(Math.min((Integer)leftStart, (Integer)rightStart), true, Math.max((Integer)leftEnd, (Integer)rightEnd), true);
-    }
+    // if (Value.compareTo(leftEnd, rightStart, "<") || Value.compareTo(rightEnd, leftStart, "<")) { return null; }
 
-    else if (leftStart instanceof BigDecimal) {
-      return new Interval(((BigDecimal)leftStart).min((BigDecimal)rightStart), true, ((BigDecimal)leftEnd).max((BigDecimal)rightEnd), true);
-    }
+    Object min = Value.compareTo(leftStart, rightStart, "<") ? leftStart : rightStart;
+    Object max = Value.compareTo(leftEnd, rightEnd, ">") ? leftEnd : rightEnd;
 
-    else if (leftStart instanceof Quantity) {
-      String unit = ((Quantity)leftStart).getUnit();
-      return new Interval(new Quantity().withValue((((Quantity)leftStart).getValue()).min(((Quantity)rightStart).getValue())).withUnit(unit), true, new Quantity().withValue((((Quantity)leftEnd).getValue()).max(((Quantity)rightEnd).getValue())).withUnit(unit), true);
-    }
-
-    else {
-      throw new IllegalArgumentException(String.format("Cannot UnionEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-    }
+    return new Interval(min, true, max, true);
   }
 
   @Override
@@ -68,7 +66,7 @@ public class UnionEvaluator extends Union {
       return union(left, right);
     }
 
-    else {
+    else if (left instanceof Iterable) {
       // List Logic
       ArrayList result = new ArrayList();
       for (Object leftElement : (Iterable)left) {
@@ -81,5 +79,6 @@ public class UnionEvaluator extends Union {
 
       return result;
     }
+    throw new IllegalArgumentException(String.format("Cannot Union arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
   }
 }

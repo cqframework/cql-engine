@@ -4,7 +4,15 @@ import org.cqframework.cql.execution.Context;
 
 /*
 *** NOTES FOR INTERVAL ***
+!=(left Interval<T>, right Interval<T>) Boolean
+
 The not equal (!=) operator for intervals returns true if its arguments are not the same value.
+The not equal operator is a shorthand for invocation of logical negation (not) of the equal operator.
+
+*** NOTES FOR LIST ***
+!=(left List<T>, right List<T>) Boolean
+
+The not equal (!=) operator for lists returns true if its arguments are not the same value.
 The not equal operator is a shorthand for invocation of logical negation (not) of the equal operator.
 */
 

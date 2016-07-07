@@ -42,6 +42,15 @@ public class Uncertainty {
     return false;
   }
 
+  public static boolean isUncertain(Time t, String precision) {
+    try {
+      int test = t.getPartial().getValue(t.getFieldIndex(precision));
+    } catch (IndexOutOfBoundsException e) {
+      return true;
+    }
+    return false;
+  }
+
   /**
   This method's purpose is to return a list of DateTimes with max and min values
   For example:
@@ -95,6 +104,45 @@ public class Uncertainty {
     }
 
     throw new IllegalArgumentException("Specified DateTime is not uncertain.");
+  }
+
+  public static ArrayList<Time> getHighLowList(Time uncertain, String precision) {
+    if (isUncertain(uncertain, precision)) {
+      Time low = new Time().withPartial(uncertain.getPartial());
+      Time high = new Time().withPartial(uncertain.getPartial());
+
+      int idx = Time.getFieldIndex(precision);
+      if (idx == -1) { idx = Time.getFieldIndex2(precision); }
+      if (idx != -1) {
+        // expand the high and low date times with respective max and min values
+        for (int i = uncertain.getPartial().size(); i < idx + 1; ++i) {
+          low.setPartial(low.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+
+          if (i == 2) {
+            // the method used here to determine the max number of days in a given month is pretty hacky
+            int days = 28;
+            try {
+              while (true) {
+                high.setPartial(high.getPartial().with(Time.getField(i), days++));
+              }
+            } catch (IllegalFieldValueException e) {
+              high.setPartial(high.getPartial().with(Time.getField(i), days - 2));
+            }
+          }
+
+          else {
+            high.setPartial(high.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMaximumValue()));
+          }
+        }
+        return new ArrayList<Time>(Arrays.asList(low, high));
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration unit: %s", precision));
+      }
+    }
+
+    throw new IllegalArgumentException("Specified Time is not uncertain.");
   }
 
   public static ArrayList<Interval> getLeftRightIntervals(Object left, Object right) {

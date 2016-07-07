@@ -8,36 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.text.*;
 
-/*
-  Notes on uncertainty comparisons:
-    Equality:
-      A = B
-      if Alow <= Bhigh and Ahigh >= Blow
-        then if Alow = Ahigh and Blow = Bhigh
-          then true
-          else null
-      else false
-
-    Relative Comparison w/out Equality
-      A < B
-      if Ahigh < Blow
-        then true
-      else if Alow >= Bhigh
-        then false
-      else null
-
-    Relative Comparison with Equality
-      A <= B
-      if Ahigh <= Blow
-        then true
-      else if Alow > Bhigh
-        then false
-      else null
-
-    ** Note carefully that these semantics introduce some asymmetries into the comparison operators.
-       In particular, A = B or A < B is not equivalent to A <= B because of the uncertainty.
-*/
-
 /**
 * Created by Chris Schuler on 6/20/2016
 */
@@ -89,6 +59,19 @@ public class DateTime {
   public static int getFieldIndex2(String dateTimeElement) {
     ArrayList<String> indexes = new ArrayList<>(Arrays.asList("years", "months", "days", "hours", "minutes", "seconds", "milliseconds"));
     return indexes.indexOf(dateTimeElement.toLowerCase());
+  }
+
+  public static String getUnit(int idx) {
+    switch (idx) {
+      case 0: return "years";
+      case 1: return "months";
+      case 2: return "days";
+      case 3: return "hours";
+      case 4: return "minutes";
+      case 5: return "seconds";
+      case 6: return "milliseconds";
+    }
+    throw new IllegalArgumentException("Invalid index for DateTime unit request.");
   }
 
   public Partial getPartial() {

@@ -4,6 +4,7 @@ import org.joda.time.Partial;
 import org.joda.time.DateTimeFieldType;
 
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Uncertainty;
 
@@ -82,6 +83,24 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
       result = context.resolveExpressionRef(library, "DateTimeAdd2YearsByDaysRem5Days").getExpression().evaluate(context);
       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 1, 6})));
+
+      result = context.resolveExpressionRef(library, "TimeAdd5Hours").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeAdd1Minute").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 59, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeAdd1Second").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeAdd1Millisecond").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 0})));
+
+      result = context.resolveExpressionRef(library, "TimeAdd5Hours1Minute").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {21, 0, 59, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeAdd5hoursByMinute").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
     }
 
     /**
@@ -134,6 +153,31 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
       result = context.resolveExpressionRef(library, "DateTimeAfterUncertain").getExpression().evaluate(context);
       assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeAfterHourTrue").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeAfterHourFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "TimeAfterMinuteTrue").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeAfterMinuteFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "TimeAfterSecondTrue").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeAfterSecondFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "TimeAfterMillisecondTrue").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeAfterMillisecondFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
   }
 
     /**
@@ -182,6 +226,30 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef(library, "DateTimeBeforeMillisecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeHourTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeHourFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeMinuteTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeMinuteFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeSecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeSecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeMillisecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeBeforeMillisecondFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -242,6 +310,18 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeComponentFromDate").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2003, 10, 29, 20, 50, 33, 955})));
+
+        result = context.resolveExpressionRef(library, "TimeComponentFromHour").getExpression().evaluate(context);
+        assertThat(result, is(23));
+
+        result = context.resolveExpressionRef(library, "TimeComponentFromMinute").getExpression().evaluate(context);
+        assertThat(result, is(20));
+
+        result = context.resolveExpressionRef(library, "TimeComponentFromSecond").getExpression().evaluate(context);
+        assertThat(result, is(15));
+
+        result = context.resolveExpressionRef(library, "TimeComponentFromMilli").getExpression().evaluate(context);
+        assertThat(result, is(555));
     }
 
     @Test
@@ -274,6 +354,17 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "DateTimeDifferenceUncertain").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef(library, "TimeDifferenceHour").getExpression().evaluate(context);
+        assertThat(result, is(3));
+
+        result = context.resolveExpressionRef(library, "TimeDifferenceMinute").getExpression().evaluate(context);
+        assertThat(result, is(5));
+
+        result = context.resolveExpressionRef(library, "TimeDifferenceSecond").getExpression().evaluate(context);
+        assertThat(result, is(5));
+
+        result = context.resolveExpressionRef(library, "TimeDifferenceMillis").getExpression().evaluate(context);
+        assertThat(result, is(-5));
     }
 
     @Test
@@ -329,6 +420,18 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeDurationBetweenMonthUncertain7").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeDurationBetweenHour").getExpression().evaluate(context);
+        assertThat(result, is(2));
+
+        result = context.resolveExpressionRef(library, "TimeDurationBetweenMinute").getExpression().evaluate(context);
+        assertThat(result, is(4));
+
+        result = context.resolveExpressionRef(library, "TimeDurationBetweenSecond").getExpression().evaluate(context);
+        assertThat(result, is(4));
+
+        result = context.resolveExpressionRef(library, "TimeDurationBetweenMillis").getExpression().evaluate(context);
+        assertThat(result, is(5));
     }
 
     /**
@@ -338,6 +441,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testNow() throws JAXBException {
         Context context = new Context(library);
 
+        // TODO: the result is inconsistent -- sometimes true, sometimes not -- fix evaluator
         // Object result = context.resolveExpressionRef(library, "DateTimeNow").getExpression().evaluate(context);
         // assertThat(result, is(true));
     }
@@ -392,6 +496,30 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeSameAsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsHourTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsHourFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsMinuteTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsMinuteFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsSecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsSecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsMillisTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeSameAsMillisFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -465,6 +593,42 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
       result = context.resolveExpressionRef(library, "DateTimeSameOrAfterNull1").getExpression().evaluate(context);
       assertThat(result, is(nullValue()));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterHourTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterHourTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterHourFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterMinuteTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterMinuteTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterMinuteFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterSecondTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterSecondTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterSecondFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterMillisTrue1").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterMillisTrue2").getExpression().evaluate(context);
+      assertThat(result, is(true));
+
+      result = context.resolveExpressionRef(library, "TimeSameOrAfterMillisFalse").getExpression().evaluate(context);
+      assertThat(result, is(false));
     }
 
     /**
@@ -538,6 +702,42 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeNull1").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeSameOrBeforeYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -593,6 +793,24 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
       result = context.resolveExpressionRef(library, "DateTimeSubtract2YearsAsMonths").getExpression().evaluate(context);
       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2012})));
+
+      result = context.resolveExpressionRef(library, "TimeSubtract5Hours").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeSubtract1Minute").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 58, 59, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeSubtract1Second").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 58, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeSubtract1Millisecond").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 58, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeSubtract5Hours1Minute").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 58, 59, 999})));
+
+      result = context.resolveExpressionRef(library, "TimeSubtract5hoursByMinute").getExpression().evaluate(context);
+      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
     }
 
     /**
@@ -601,7 +819,8 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testTime() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "TimeTest2").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 999})));
     }
 
     /**
@@ -610,7 +829,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testTimeOfDay() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        // TODO: uncomment once Time(x,x,x,x,x) format is fixed 
+        // Object result = context.resolveExpressionRef(library, "TimeOfDayTest").getExpression().evaluate(context);
+        // assertThat(((Time)result).getPartial().getValue(0), is(10));
     }
 
     /**

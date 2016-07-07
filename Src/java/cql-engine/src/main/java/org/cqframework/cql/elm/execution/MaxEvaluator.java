@@ -1,9 +1,7 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
-import org.cqframework.cql.runtime.Quantity;
-import org.cqframework.cql.runtime.Value;
-import java.math.BigDecimal;
+
 import java.util.Iterator;
 
 /*
@@ -31,16 +29,7 @@ public class MaxEvaluator extends Max {
 
         if (value == null) { continue; } // skip null
 
-        if (value instanceof Integer || value instanceof BigDecimal || value instanceof Quantity) {
-          if (Value.compareTo(max, value, "<")) { max = value; }
-        }
-        else if (value instanceof String) {
-          if (((String)max).compareTo((String)value) < 0) { max = value; }
-        }
-        // TODO: implement DateTime and Time
-        else {
-          throw new IllegalArgumentException(String.format("Cannot MaxEvaluator arguments of type '%s'.", value.getClass().getName()));
-        }
+        if ((Boolean)GreaterEvaluator.greater(value, max)) { max = value; }
       }
       return max;
     }

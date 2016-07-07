@@ -1,16 +1,13 @@
 package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
-import org.cqframework.cql.runtime.Quantity;
-import org.cqframework.cql.runtime.Value;
-import java.math.BigDecimal;
+
 import java.util.Iterator;
 
 /*
-* The Max operator returns the maximum element in the source.
-* If the source contains no non-null elements, null is returned.
-* If the source is null, the result is null.
-* Possible return types include: Integer, BigDecimal, Quantity, DateTime, Time, String
+The Min operator returns the minimum element in the source.
+If the source contains no non-null elements, null is returned.
+If the source is null, the result is null.
 */
 
 /**
@@ -31,16 +28,8 @@ public class MinEvaluator extends Min {
 
         if (value == null) { continue; } // skip null
 
-        if (value instanceof Integer || value instanceof BigDecimal || value instanceof Quantity) {
-          if (Value.compareTo(min, value, ">")) { min = value; }
-        }
-        else if (value instanceof String) {
-          if (((String)min).compareTo((String)value) > 0) { min = value; }
-        }
-        // TODO: implement DateTime and Time
-        else {
-          throw new IllegalArgumentException(String.format("Cannot Min arguments of type '%s'.", value.getClass().getName()));
-        }
+        if ((Boolean)LessEvaluator.less(value, min)) { min = value; }
+
       }
       return min;
     }

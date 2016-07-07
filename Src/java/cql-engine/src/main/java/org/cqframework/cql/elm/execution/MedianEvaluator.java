@@ -3,6 +3,8 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Value;
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -23,14 +25,19 @@ public class MedianEvaluator extends Median {
       public int compare(Object o1, Object o2) {
         if (o1 instanceof Integer) {
           if (Value.compareTo(o1, o2, "<")) { return -1; }
-          else if (Value.compareTo(o1, o2, "==")) { return 0; }
           else if (Value.compareTo(o1, o2, ">")) { return 1; }
+          else { return 0; }
         }
         else if (o1 instanceof BigDecimal) {
           return ((BigDecimal)o1).compareTo((BigDecimal)o2);
         }
         else if (o1 instanceof Quantity) {
           return (((Quantity)o1).getValue().compareTo(((Quantity)o2).getValue()));
+        }
+        else if (o1 instanceof DateTime || o1 instanceof Time) {
+          if ((Boolean)LessEvaluator.less(o1, o2)) { return -1; }
+          else if ((Boolean)GreaterEvaluator.greater(o1, o2)) { return 1; }
+          else { return 0; }
         }
 
         throw new IllegalArgumentException(String.format("Cannot Median arguments of type '%s' and '%s'.", o1.getClass().getName(), o1.getClass().getName()));

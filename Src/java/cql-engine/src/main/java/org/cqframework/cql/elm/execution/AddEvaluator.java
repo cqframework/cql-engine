@@ -3,6 +3,7 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.Uncertainty;
 import org.cqframework.cql.runtime.Interval;
 
@@ -97,10 +98,39 @@ public class AddEvaluator extends Add {
       return new Uncertainty().withUncertaintyInterval(new Interval(add(leftInterval.getStart(), rightInterval.getStart()), true, add(leftInterval.getEnd(), rightInterval.getEnd()), true));
     }
 
-    // TODO: Finish implementation
     // +(Time, Quantity)
     else if (left instanceof Time && right instanceof Quantity) {
+      Time time = (Time)left;
+      String unit = ((Quantity)right).getUnit();
+      int value = ((Quantity)right).getValue().intValue();
 
+      int idx = Time.getFieldIndex2(unit);
+
+      if (idx != -1) {
+        int startSize = time.getPartial().size();
+        // check that the Partial has the precision specified
+        if (startSize < idx + 1) {
+          // expand the Partial to the proper precision
+          for (int i = startSize; i < idx + 1; ++i) {
+            time.setPartial(time.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+          }
+        }
+
+        // do the addition
+        time.setPartial(time.getPartial().property(Time.getField(idx)).addToCopy(value));
+        // truncate until non-minimum value is found
+        for (int i = idx; i >= startSize; --i) {
+          if (time.getPartial().getValue(i) > Time.getField(i).getField(null).getMinimumValue()) {
+            break;
+          }
+          time.setPartial(time.getPartial().without(Time.getField(i)));
+        }
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
+      }
+      return time;
     }
 
     throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));

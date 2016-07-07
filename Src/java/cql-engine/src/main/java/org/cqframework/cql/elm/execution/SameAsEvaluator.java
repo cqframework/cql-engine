@@ -2,6 +2,7 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 /*
 The same-precision-as operator compares two date/time values to the specified precision for equality.
@@ -13,7 +14,7 @@ For DateTime values, precision must be one of: year, month, day, hour, minute, s
 For Time values, precision must be one of: hour, minute, second, or millisecond.
 For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
   depending on whether the values involved are specified to the level of precision used for the comparison.
-If either or both arguments are null, the result is null. 
+If either or both arguments are null, the result is null.
 */
 
 /**
@@ -33,6 +34,10 @@ public class SameAsEvaluator extends SameAs {
       DateTime rightDT = (DateTime)right;
       String precision = getPrecision().value();
 
+      if (precision == null) {
+        throw new IllegalArgumentException("Precision must be specified.");
+      }
+
       int idx = DateTime.getFieldIndex(precision);
 
       if (idx != -1) {
@@ -41,7 +46,7 @@ public class SameAsEvaluator extends SameAs {
           return null;
         }
 
-        for (int i = 0; i < leftDT.getPartial().size(); ++i) {
+        for (int i = 0; i < idx + 1; ++i) {
           if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
             return false;
           }
@@ -55,7 +60,36 @@ public class SameAsEvaluator extends SameAs {
       }
     }
 
-    // TODO: Implement for Time
+    if (left instanceof Time && right instanceof Time) {
+      Time leftT = (Time)left;
+      Time rightT = (Time)right;
+      String precision = getPrecision().value();
+
+      if (precision == null) {
+        throw new IllegalArgumentException("Precision must be specified.");
+      }
+
+      int idx = Time.getFieldIndex(precision);
+
+      if (idx != -1) {
+        // check level of precision
+        if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
+          return null;
+        }
+
+        for (int i = 0; i < idx + 1; ++i) {
+          if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {
+            return false;
+          }
+        }
+
+        return true;
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+      }
+    }
 
     throw new IllegalArgumentException(String.format("Cannot SameAs arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }

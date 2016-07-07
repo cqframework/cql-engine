@@ -3,6 +3,7 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 import org.cqframework.cql.runtime.Uncertainty;
 import org.cqframework.cql.runtime.Interval;
 
@@ -97,8 +98,44 @@ public class SubtractEvaluator extends Subtract {
       return new Uncertainty().withUncertaintyInterval(new Interval(subtract(leftInterval.getStart(), rightInterval.getStart()), true, subtract(leftInterval.getEnd(), rightInterval.getEnd()), true));
     }
 
-    // TODO: Finish implementation of Subtract
     // -(Time, Quantity)
+    else if (left instanceof Time && right instanceof Quantity) {
+      Time t = (Time)left;
+      String unit = ((Quantity)right).getUnit();
+      int value = ((Quantity)right).getValue().intValue();
+
+      int idx = Time.getFieldIndex2(unit);
+
+      if (idx != -1) {
+        int startSize = t.getPartial().size();
+        // check that the Partial has the precision specified
+        if (startSize < idx + 1) {
+          // expand the Partial to the proper precision
+          for (int i = startSize; i < idx + 1; ++i) {
+            t.setPartial(t.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+          }
+        }
+
+        // do the subtraction
+        t.setPartial(t.getPartial().property(Time.getField(idx)).addToCopy(-value));
+        // truncate until non-minimum value is found
+        for (int i = idx; i >= startSize; --i) {
+          if (t.getPartial().getValue(i) > Time.getField(i).getField(null).getMinimumValue()) {
+            break;
+          }
+          t.setPartial(t.getPartial().without(Time.getField(i)));
+        }
+      }
+
+      else {
+        throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
+      }
+      if (t.getPartial().getValue(0) < YEAR_RANGE_MIN) {
+        throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
+      }
+
+      return t;
+    }
 
     throw new IllegalArgumentException(String.format("Cannot Subtract arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }

@@ -34,7 +34,7 @@ define ListEq123String123:  { 1, 2, 3 } = { '1', '2', '3' }
 define IntervalEq1To101To10: Interval[1, 10] = Interval[1, 10]
 define IntervalEq1To101To5: Interval[1, 10] = Interval[1, 5]
 define DateTimeEqTodayToday: Today() = Today()
-define DateTimeEqTodayYesterday: Today() = Today() - 1 day
+define DateTimeEqTodayYesterday: Today() = Today() - 1 days
 define DateTimeEqJanJan: DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 1, 5, 5, 0, 0, 0, 0)
 define DateTimeEqJanJuly: DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 7, 5, 5, 0, 0, 0, 0)
 define DateTimeEqMissingArg: DateTime(2015, 1, 5, 5, 0, 0) = DateTime(2015, 1, 5, 5, 0, 0)
@@ -150,7 +150,7 @@ define EquivList123String123        : { 1, 2, 3 } ~  { '1', '2', '3' }
 define EquivInterval1To101To10      : Interval[1, 10] ~ Interval[1, 10]
 define EquivInterval1To101To5       : Interval[1, 10] ~ Interval[1, 5]
 define EquivDateTimeTodayToday      : Today() ~ Today()
-define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 day
+define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 days
 define EquivTime10A10A              : Time(10, 0, 0) ~ Time(10, 0, 0)
 define EquivTime10A10P              : Time(10, 0, 0) ~ Time(22, 0, 0)
 
@@ -184,6 +184,6 @@ define ListNotEq123String123:  { 1, 2, 3 } != { '1', '2', '3' }
 define IntervalNotEq1To101To10: Interval[1, 10] != Interval[1, 10]
 define IntervalNotEq1To101To5: Interval[1, 10] != Interval[1, 5]
 define DateTimeNotEqTodayToday: Today() != Today()
-define DateTimeNotEqTodayYesterday: Today() != Today() - 1 day
+define DateTimeNotEqTodayYesterday: Today() != Today() - 1 days
 define TimeNotEq10A10A: Time(10, 0, 0) != Time(10, 0, 0)
 define TimeNotEq10A10P: Time(10, 0, 0) != Time(22, 0, 0)

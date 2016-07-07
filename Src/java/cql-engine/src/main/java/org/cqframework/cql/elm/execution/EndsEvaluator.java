@@ -5,6 +5,8 @@ import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Value;
 
 /*
+ends(left Interval<T>, right Interval<T>) Boolean
+
 The ends operator returns true if the first interval ends the second.
   More precisely, if the starting point of the first interval is greater than or equal to the starting point of the second,
     and the ending point of the first interval is equal to the ending point of the second.
