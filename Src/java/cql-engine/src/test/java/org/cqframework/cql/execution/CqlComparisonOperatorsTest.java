@@ -130,12 +130,11 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "DateTimeEqTodayYesterday").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        //TODO: Won't pass because of FunctionRef evaluate not implemented
-        // result = context.resolveExpressionRef(library, "TimeEq10A10A").getExpression().evaluate(context);
-        // assertThat(result, is(true));
-        //
-        // result = context.resolveExpressionRef(library, "TimeEq10A10P").getExpression().evaluate(context);
-        // assertThat(result, is(false));
+        result = context.resolveExpressionRef(library, "TimeEq10A10A").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeEq10A10P").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -195,6 +194,18 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef(library, "GreaterJackJill").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeGreaterTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeGreaterFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeGreaterTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeGreaterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -257,6 +268,24 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "GreaterOrEqualJackJill").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "DateTimeGreaterEqTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeGreaterEqTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeGreaterEqFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeGreaterEqTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeGreaterEqTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeGreaterEqFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -318,6 +347,18 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "LessJackJill").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeLessTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeLessFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeLessTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeLessFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -379,6 +420,24 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "LessOrEqualJackJill").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeLessEqTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeLessEqTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "DateTimeLessEqFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeLessEqTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeLessEqTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "TimeLessEqFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -479,12 +538,11 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "EquivDateTimeTodayYesterday").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        //TODO: Won't pass because of FunctionRef evaluate not implemented
-//        result = context.resolveExpressionRef(library, "EquivTime10A10A").getExpression().evaluate(context);
-//        assertThat(result, is(true));
-//
-//        result = context.resolveExpressionRef(library, "EquivTime10A10P").getExpression().evaluate(context);
-//        assertThat(result, is(false));
+        result = context.resolveExpressionRef(library, "EquivTime10A10A").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "EquivTime10A10P").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -584,11 +642,10 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "DateTimeNotEqTodayYesterday").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        //TODO: Won't pass because of FunctionRef evaluate not implemented
-//        result = context.resolveExpressionRef(library, "TimeNotEq10A10A").getExpression().evaluate(context);
-//        assertThat(result, is(false));
-//
-//        result = context.resolveExpressionRef(library, "TimeNotEq10A10P").getExpression().evaluate(context);
-//        assertThat(result, is(true));
+        result = context.resolveExpressionRef(library, "TimeNotEq10A10A").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "TimeNotEq10A10P").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 }

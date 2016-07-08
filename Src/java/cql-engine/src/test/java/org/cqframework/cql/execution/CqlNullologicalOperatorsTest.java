@@ -2,8 +2,13 @@ package org.cqframework.cql.execution;
 
 import org.testng.annotations.Test;
 
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
+import org.joda.time.Partial;
+
 import javax.xml.bind.JAXBException;
 import java.util.Arrays;
+import java.util.ArrayList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -46,6 +51,18 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef(library, "CoalesceLastList").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("a")));
+
+        result = context.resolveExpressionRef(library, "DateTimeCoalesce").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 18})));
+
+        result = context.resolveExpressionRef(library, "DateTimeListCoalesce").getExpression().evaluate(context);
+        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 18})));
+
+        result = context.resolveExpressionRef(library, "TimeCoalesce").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 15, 33, 556})));
+
+        result = context.resolveExpressionRef(library, "TimeListCoalesce").getExpression().evaluate(context);
+        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 15, 33, 556})));
     }
 
     /**

@@ -16,7 +16,7 @@ public class DateTime {
   protected Partial dateTime;
   protected BigDecimal timezoneOffset;
 
-  protected static DateTimeFieldType[] fields = new DateTimeFieldType[] {
+  protected static final DateTimeFieldType[] fields = new DateTimeFieldType[] {
     DateTimeFieldType.year(),
     DateTimeFieldType.monthOfYear(),
     DateTimeFieldType.dayOfMonth(),

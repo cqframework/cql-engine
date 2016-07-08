@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 import org.joda.time.Partial;
 
+/*
+The DateTime type represents date and time values with potential uncertainty within CQL.
+CQL supports date and time values in the range @0001-01-01T00:00:00.0 to @9999-12-31T23:59:59.999 with a 1 millisecond step size.
+*/
+
 /**
  * Created by Chris Schuler on 6/20/2016
  */
@@ -16,6 +21,14 @@ public class DateTimeEvaluator extends DateTime {
   public Object evaluate(Context context) {
     Integer year = (Integer)this.getYear().evaluate(context);
     if (year == null) { return null; }
+
+    else if (year < 0001) {
+      throw new IllegalArgumentException(String.format("The year: %d falls below the accepted bounds of 0001-9999.", year));
+    }
+
+    else if (year > 9999) {
+      throw new IllegalArgumentException(String.format("The year: %d falls above the accepted bounds of 0001-9999.", year));
+    }
 
     else if (year.toString().length() < 4) {
       throw new IllegalArgumentException("Must use 4 digits for year.");

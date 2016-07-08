@@ -174,7 +174,6 @@ define TimeSameAsSecondFalse: @T23:25:35.555 same second as @T23:25:25.555
 define TimeSameAsMillisTrue: @T23:55:25.555 same millisecond as @T23:55:25.555
 define TimeSameAsMillisFalse: @T23:25:25.555 same millisecond as @T23:25:25.554
 
-
 //SameOrAfter
 define DateTimeSameOrAfterYearTrue1: DateTime(2014) same year or after DateTime(2014)
 define DateTimeSameOrAfterYearTrue2: DateTime(2016) same year or after DateTime(2014)

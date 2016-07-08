@@ -13,8 +13,12 @@ define CoalesceListFirstA : Coalesce({'a', null, null})
 define CoalesceListLastA : Coalesce({null, null, 'a'})
 define CoalesceFirstList : Coalesce({'a'},null, null)
 define CoalesceLastList : Coalesce(null, null, {'a'})
+define DateTimeCoalesce: Coalesce(null, null, DateTime(2012, 5, 18))
+define DateTimeListCoalesce: Coalesce({ null, null, DateTime(2012, 5, 18) })
+define TimeCoalesce: Coalesce(null, null, @T05:15:33.556)
+define TimeListCoalesce: Coalesce({ null, null, @T05:15:33.556 })
 
-//IsNUll
+//IsNull
 define IsNullTrue                   : IsNull(null)
 define IsNullFalseEmptyString       : IsNull('')
 define IsNullAlsoFalseAbcString     : IsNull('abc')

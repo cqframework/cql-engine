@@ -194,8 +194,9 @@ public class Interval {
         else if (type == DateTime.class) {
           return new DateTime().withPartial(new Partial(DateTime.fields, new int[] {0001, 1, 1, 0, 0, 0, 0}));
         }
-
-        // TODO: Implement minValue for Time
+        else if (type == Time.class) {
+          return new Time().withPartial(new Partial(Time.fields, new int[] {0, 0, 0, 0}));
+        }
 
         throw new NotImplementedException(String.format("MinValue is not implemented for type %s.", type.getTypeName()));
     }
@@ -213,8 +214,9 @@ public class Interval {
         else if (type == DateTime.class) {
           return new DateTime().withPartial(new Partial(DateTime.fields, new int[] {9999, 12, 31, 23, 59, 59, 999}));
         }
-
-        // TODO: Implement maxValue for Time
+        else if (type == Time.class) {
+          return new Time().withPartial(new Partial(Time.fields, new int[] {23, 59, 59, 999}));
+        }
 
         throw new NotImplementedException(String.format("MaxValue is not implemented for type %s.", type.getTypeName()));
     }

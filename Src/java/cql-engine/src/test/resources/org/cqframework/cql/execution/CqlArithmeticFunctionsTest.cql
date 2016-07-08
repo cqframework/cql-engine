@@ -75,14 +75,14 @@ define IntegerMinValue: minimum Integer
 define DecimalMinValue: minimum Decimal
 define QuantityMinValue: minimum Quantity
 define DateTimeMinValue: minimum DateTime
-//define TimeMinValue: minimum Time
+define TimeMinValue: minimum Time
 
 //MaxValue
 define IntegerMaxValue: maximum Integer
 define DecimalMaxValue: maximum Decimal
 define QuantityMaxValue: maximum Quantity
 define DateTimeMaxValue: maximum DateTime
-//define TimeMaxValue: maximum Time
+define TimeMaxValue: maximum Time
 
 //Modulo
 define ModuloNull  : 1 mod null
@@ -117,7 +117,7 @@ define PredecessorOf1: predecessor of 1
 define PredecessorOf1D: predecessor of 1.0
 define PredecessorOf101D: predecessor of 1.01
 define PredecessorOfJan12000: predecessor of DateTime(2000,1,1)
-define PredecessorOfNoon: predecessor of Time(12,0,0)
+define PredecessorOfNoon: predecessor of @T12:00:00.000
 
 //Power
 define PowerNullToNull: Power(null as Integer, null as Integer)
@@ -158,7 +158,7 @@ define SuccessorOf1: successor of 1
 define SuccessorOf1D: successor of 1.0
 define SuccessorOf101D: successor of 1.01
 define SuccessorOfJan12000: successor of DateTime(2000,1,1)
-define SuccessorOfNoon: successor of Time(12,0,0)
+define SuccessorOfNoon: successor of @T12:00:00.000
 
 //Truncate
 define TruncateNull: Truncate(null as Decimal)

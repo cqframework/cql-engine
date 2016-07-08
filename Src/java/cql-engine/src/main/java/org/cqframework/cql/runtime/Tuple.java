@@ -34,7 +34,6 @@ public class Tuple {
         else { return false; }
       }
       return true;
-      //return compareMap.keySet().equals(elements.keySet()) && compareMap.values().equals(elements.values());
     }
     else { return false; }
   }

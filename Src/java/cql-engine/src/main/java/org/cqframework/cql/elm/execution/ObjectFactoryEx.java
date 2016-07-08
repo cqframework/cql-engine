@@ -39,6 +39,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Before createBefore() { return new BeforeEvaluator(); }
 
     @Override
+    public CalculateAge createCalculateAge() { return new CalculateAgeEvaluator(); }
+
+    @Override
     public Ceiling createCeiling() { return new CeilingEvaluator(); }
 
     @Override
@@ -56,8 +59,8 @@ public class ObjectFactoryEx extends ObjectFactory {
     @Override
     public Concatenate createConcatenate() { return new ConcatenateEvaluator(); }
 
-    // @Override
-    // public Concept createConcept() { return new ConceptEvaluator(); }
+    @Override
+    public Concept createConcept() { return new ConceptEvaluator(); }
 
     @Override
     public Contains createContains() { return new ContainsEvaluator(); }

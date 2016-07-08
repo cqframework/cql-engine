@@ -3,6 +3,7 @@ package org.cqframework.cql.elm.execution;
 import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 import java.math.BigDecimal;
 
@@ -18,7 +19,7 @@ public class MinValueEvaluator extends MinValue {
             case "Decimal": return org.cqframework.cql.runtime.Interval.minValue(BigDecimal.class);
             case "Quantity": return org.cqframework.cql.runtime.Interval.minValue(org.cqframework.cql.runtime.Quantity.class);
             case "DateTime": return org.cqframework.cql.runtime.Interval.minValue(DateTime.class);
-            //case "Time": return org.cqframework.cql.runtime.Interval.minValue(PartialTime.class);
+            case "Time": return org.cqframework.cql.runtime.Interval.minValue(Time.class);
             default: throw new NotImplementedException(String.format("minValue not implemented for type %s", valueType.getLocalPart()));
         }
     }

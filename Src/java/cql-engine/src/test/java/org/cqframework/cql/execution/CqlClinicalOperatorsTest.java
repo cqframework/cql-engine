@@ -4,6 +4,10 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
 public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
     @Test
@@ -22,7 +26,8 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testCalculateAge() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        // Object result = context.resolveExpressionRef(library, "CalculateAgeYears").getExpression().evaluate(context);
+        // assertThat(result, is(16));
     }
 
     /**

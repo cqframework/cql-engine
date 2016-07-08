@@ -29,9 +29,9 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open/");
-        //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef(library, "BP: Systolic").evaluate(context);

@@ -14,7 +14,7 @@ public class TupleEvaluator extends Tuple {
   public Object evaluate(Context context) {
     HashMap<String, Object> ret = new HashMap<>();
     for (TupleElement element : this.getElement()) {
-      ret.put(element.getName(), element.getValue());
+      ret.put(element.getName(), element.getValue().evaluate(context));
     }
     return new org.cqframework.cql.runtime.Tuple().withElements(ret);
   }

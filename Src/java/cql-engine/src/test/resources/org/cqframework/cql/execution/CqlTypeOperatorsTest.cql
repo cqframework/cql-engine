@@ -26,6 +26,7 @@ define CodeToConcept1: ToConcept(Code '8480-6' from "LOINC" display 'Systolic bl
 
 //ToDateTime
 
+
 //ToDecimal
 define String25D5ToDecimal: ToDecimal('+25.5')
 

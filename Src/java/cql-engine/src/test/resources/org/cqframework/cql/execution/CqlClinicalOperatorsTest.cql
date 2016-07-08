@@ -7,8 +7,10 @@ context Population
 //AgeAt
 
 //CalculateAge
+//define CalculateAgeYears: CalculateAgeInYears(DateTime(2000, 1, 1, 0, 0, 0, 0), Today())
 
 //CalculateAgeAt
+
 
 //Equal
 

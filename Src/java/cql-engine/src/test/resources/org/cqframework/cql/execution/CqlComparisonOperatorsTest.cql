@@ -41,8 +41,8 @@ define DateTimeEqMissingArg: DateTime(2015, 1, 5, 5, 0, 0) = DateTime(2015, 1, 5
 define DateTimeEqNull: DateTime(null) = DateTime(null)
 define DateTimeEqNull2: DateTime(2001, 1, 1, null) = DateTime(2001, 1, 1, null, null)
 define DateTimeUTC: @2014-01-25T14:30:14.559+01:00 = @2014-01-25T14:30:14.559+01:00
-define TimeEq10A10A: Time(10, 0, 0) = Time(10, 0, 0)
-define TimeEq10A10P: Time(10, 0, 0) = Time(22, 0, 0)
+define TimeEq10A10A: @T10:00:00.000 = @T10:00:00.000
+define TimeEq10A10P: @T10:00:00.000 = @T22:00:00.000
 
 //Greater
 define GreaterZZ        : 0 > 0
@@ -62,6 +62,10 @@ define GreaterBA        : 'b' > 'a'
 define GreaterAThanAA   : 'a' > 'aa'
 define GreaterAAThanA   : 'aa' > 'a'
 define GreaterJackJill   : 'Jack' > 'Jill'
+define DateTimeGreaterTrue: DateTime(2012, 2, 12) > DateTime(2012, 2, 10)
+define DateTimeGreaterFalse: DateTime(2012, 2, 12) > DateTime(2012, 2, 13)
+define TimeGreaterTrue: @T10:00:00.001 > @T10:00:00.000
+define TimeGreaterFalse: @T10:00:00.000 > @T10:00:00.001
 
 //Greater Or Equal
 define GreaterOrEqualZZ        : 0 >= 0
@@ -81,6 +85,12 @@ define GreaterOrEqualBA        : 'b' >= 'a'
 define GreaterOrEqualAThanAA   : 'a' >= 'aa'
 define GreaterOrEqualAAThanA   : 'aa' >= 'a'
 define GreaterOrEqualJackJill  : 'Jack' >= 'Jill'
+define DateTimeGreaterEqTrue: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 10, 0, 0, 0, 0)
+define DateTimeGreaterEqTrue2: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 12, 0, 0, 0, 0)
+define DateTimeGreaterEqFalse: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 13, 0, 0, 0, 0)
+define TimeGreaterEqTrue: @T10:00:00.001 >= @T10:00:00.000
+define TimeGreaterEqTrue2: @T10:00:00.000 >= @T10:00:00.000
+define TimeGreaterEqFalse: @T10:00:00.000 >= @T10:00:00.001
 
 //Less
 define LessZZ        : 0 < 0
@@ -100,6 +110,10 @@ define LessBA        : 'b' < 'a'
 define LessAThanAA   : 'a' < 'aa'
 define LessAAThanA   : 'aa' < 'a'
 define LessJackJill  : 'Jack' < 'Jill'
+define DateTimeLessTrue: DateTime(2012, 2, 9) < DateTime(2012, 2, 10)
+define DateTimeLessFalse: DateTime(2012, 2, 14) < DateTime(2012, 2, 13)
+define TimeLessTrue: @T10:00:00.001 < @T10:00:00.002
+define TimeLessFalse: @T10:10:00.000 < @T10:00:00.001
 
 //Less Or Equal
 define LessOrEqualZZ        : 0 <= 0
@@ -119,6 +133,12 @@ define LessOrEqualBA        : 'b' <= 'a'
 define LessOrEqualAThanAA   : 'a' <= 'aa'
 define LessOrEqualAAThanA   : 'aa' <= 'a'
 define LessOrEqualJackJill  : 'Jack' <= 'Jill'
+define DateTimeLessEqTrue: DateTime(2012, 2, 9, 0, 0, 0, 0) <= DateTime(2012, 2, 10, 0, 0, 0, 0)
+define DateTimeLessEqTrue2: DateTime(2012, 2, 12, 0, 0, 0, 0) <= DateTime(2012, 2, 12, 0, 0, 0, 0)
+define DateTimeLessEqFalse: DateTime(2012, 2, 12, 1, 0, 0, 0) <= DateTime(2012, 2, 12, 0, 0, 0, 0)
+define TimeLessEqTrue: @T10:00:00.001 <= @T10:00:00.002
+define TimeLessEqTrue2: @T10:00:00.000 <= @T10:00:00.000
+define TimeLessEqFalse: @T10:00:00.002 <= @T10:00:00.001
 
 //Equivalent
 define EquivTrueTrue                : true ~ true
@@ -151,8 +171,8 @@ define EquivInterval1To101To10      : Interval[1, 10] ~ Interval[1, 10]
 define EquivInterval1To101To5       : Interval[1, 10] ~ Interval[1, 5]
 define EquivDateTimeTodayToday      : Today() ~ Today()
 define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 days
-define EquivTime10A10A              : Time(10, 0, 0) ~ Time(10, 0, 0)
-define EquivTime10A10P              : Time(10, 0, 0) ~ Time(22, 0, 0)
+define EquivTime10A10A              : @T10:00:00.000 ~ @T10:00:00.000
+define EquivTime10A10P              : @T10:00:00.000 ~ @T22:00:00.000
 
 //Not Equal
 define SimpleNotEqTrueTrue : true != true
@@ -185,5 +205,5 @@ define IntervalNotEq1To101To10: Interval[1, 10] != Interval[1, 10]
 define IntervalNotEq1To101To5: Interval[1, 10] != Interval[1, 5]
 define DateTimeNotEqTodayToday: Today() != Today()
 define DateTimeNotEqTodayYesterday: Today() != Today() - 1 days
-define TimeNotEq10A10A: Time(10, 0, 0) != Time(10, 0, 0)
-define TimeNotEq10A10P: Time(10, 0, 0) != Time(22, 0, 0)
+define TimeNotEq10A10A: @T10:00:00.000 != @T10:00:00.000
+define TimeNotEq10A10P: @T10:00:00.000 != @T22:00:00.000
