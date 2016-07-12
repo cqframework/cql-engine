@@ -375,6 +375,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public ToString createToString() { return new ToStringEvaluator(); }
 
     @Override
+    public ToTime createToTime() { return new ToTimeEvaluator(); }
+
+    @Override
     public TruncatedDivide createTruncatedDivide() { return new TruncatedDivideEvaluator(); }
 
     @Override

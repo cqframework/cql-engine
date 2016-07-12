@@ -36,7 +36,8 @@ public class DateTimeEvaluator extends DateTime {
     Integer minute = (this.getMinute() == null) ? null : (Integer)this.getMinute().evaluate(context);
     Integer second = (this.getSecond() == null) ? null : (Integer)this.getSecond().evaluate(context);
     Integer millis = (this.getMillisecond() == null) ? null : (Integer)this.getMillisecond().evaluate(context);
-    BigDecimal offset = (this.getTimezoneOffset() == null) ? new BigDecimal(0) : (BigDecimal)this.getTimezoneOffset().evaluate(context);
+    // if no timezone default to system timezone
+    BigDecimal offset = (this.getTimezoneOffset() == null) ? new BigDecimal(new org.joda.time.DateTime().getZone().getOffset(0) / 3600000.0) : (BigDecimal)this.getTimezoneOffset().evaluate(context);
 
     org.cqframework.cql.runtime.DateTime dt = new org.cqframework.cql.runtime.DateTime();
 

@@ -31,6 +31,7 @@ define ToDateTime3: ToDateTime('2014-01-01T12:05:05.955')
 define ToDateTime4: ToDateTime('2014-01-01T12:05:05.955+01:30')
 define ToDateTime5: ToDateTime('2014-01-01T12:05:05.955-01:15')
 define ToDateTime6: ToDateTime('2014-01-01T12:05:05.955Z')
+define ToDateTimeMalformed: ToDateTime('2014/01/01T12:05:05.955Z')
 
 //ToDecimal
 define String25D5ToDecimal: ToDecimal('+25.5')
@@ -48,4 +49,8 @@ define Quantity5D5CMToString: ToString(5.5 'cm')
 define BooleanTrueToString: ToString(true)
 
 //ToTime
-//define StringToTime  : ToTime('T14:30:00.0Z')
+define ToTime1: ToTime('T14:30:00.0')
+define ToTime2: ToTime('T14:30:00.0+05:30')
+define ToTime3: ToTime('T14:30:00.0-05:45')
+define ToTime4: ToTime('T14:30:00.0Z')
+define ToTimeMalformed: ToTime('T14-30-00.0')

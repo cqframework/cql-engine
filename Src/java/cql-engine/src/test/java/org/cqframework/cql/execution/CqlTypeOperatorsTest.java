@@ -5,6 +5,7 @@ import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Code;
 import org.cqframework.cql.runtime.Concept;
 import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
 
 import org.joda.time.Partial;
 
@@ -112,6 +113,13 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "ToDateTime6").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
         assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+
+        try {
+          result = context.resolveExpressionRef(library, "ToDateTimeMalformed").getExpression().evaluate(context);
+        } catch (IllegalArgumentException iae) {
+          assertThat(iae.getMessage(), is("Invalid format: \"2014/01/01T12:05:05.955\" is malformed at \"/01/01T12:05:05.955\""));
+        }
+
     }
 
     /**
@@ -167,9 +175,29 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.ToTime#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testToTime() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "ToTime1").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+
+        result = context.resolveExpressionRef(library, "ToTime2").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("5.5")));
+
+        result = context.resolveExpressionRef(library, "ToTime3").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-5.75")));
+
+        result = context.resolveExpressionRef(library, "ToTime4").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+
+        try {
+          result = context.resolveExpressionRef(library, "ToTimeMalformed").getExpression().evaluate(context);
+        } catch (IllegalArgumentException iae) {
+          assertThat(iae.getMessage(), is("Invalid format: \"T14-30-00.0\" is malformed at \"-30-00.0\""));
+        }
     }
 }

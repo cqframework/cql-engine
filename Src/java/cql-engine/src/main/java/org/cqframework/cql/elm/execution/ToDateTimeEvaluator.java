@@ -66,18 +66,18 @@ public class ToDateTimeEvaluator extends ToDateTime {
     return tz;
   }
 
-  public static int[] getValues(org.joda.time.DateTime ldt, int numElements) {
+  public static int[] getValues(org.joda.time.DateTime dt, int numElements) {
     List<Integer> values = new ArrayList<Integer>();
     for (int i = 0; i < numElements; ++i) {
-      values.add(ldt.property(DateTime.getField(i)).get());
+      values.add(dt.property(DateTime.getField(i)).get());
     }
     return values.stream().mapToInt(i -> i).toArray();
   }
 
   /**
-  * This method is necessary because the cstor for LocalDateTime(isoDateString) will autofill missing elements.
+  * This method is necessary because the cstor for DateTime(isoDateString) will autofill missing elements.
   * For example:
-  * LocalDateTime("2014-01-01") returns "2014-01-01T00:00:00.0-7:00(GMT-7:00)"
+  * DateTime("2014-01-01") returns "2014-01-01T00:00:00.0-7:00(GMT-7:00)"
   * This unwanted functionality results in a Partial that has more elements than what was specified.
   * As a way around this, I have developed a simple divide and conquer algorithm to determine the number of elements
   * from the original string retrieved from the evaluate call for the operand.
