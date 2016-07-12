@@ -4,6 +4,9 @@ import org.cqframework.cql.execution.Context;
 import org.cqframework.cql.runtime.Quantity;
 import org.cqframework.cql.runtime.Code;
 import org.cqframework.cql.runtime.Concept;
+import org.cqframework.cql.runtime.DateTime;
+
+import org.joda.time.Partial;
 
 import org.testng.annotations.Test;
 
@@ -83,11 +86,32 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.cqframework.cql.elm.execution.ToDateTime#evaluate(Context)}
      */
-    //@Test
+    @Test
     public void testToDateTime() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "ToDateTime1").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 1, 1})));
+        assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
+        result = context.resolveExpressionRef(library, "ToDateTime2").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2014, 1, 1, 12, 5})));
+        assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+
+        result = context.resolveExpressionRef(library, "ToDateTime3").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+
+        result = context.resolveExpressionRef(library, "ToDateTime4").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("1.5")));
+
+        result = context.resolveExpressionRef(library, "ToDateTime5").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-1.25")));
+
+        result = context.resolveExpressionRef(library, "ToDateTime6").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
     }
 
     /**

@@ -132,7 +132,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
       Context context = new Context(library);
 
       Object result = context.resolveExpressionRef(library, "MedianTestDecimal").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("3.5")));
+      assertThat(result, is(new BigDecimal("3.50000000")));
     }
 
     /**

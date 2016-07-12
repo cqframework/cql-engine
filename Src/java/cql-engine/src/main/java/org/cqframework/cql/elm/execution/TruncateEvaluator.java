@@ -4,6 +4,14 @@ import org.cqframework.cql.execution.Context;
 
 import java.math.BigDecimal;
 
+/*
+Truncate(argument Decimal) Integer
+
+The Truncate operator returns the integer component of its argument.
+When invoked with an Integer argument, the argument will be implicitly converted to Decimal.
+If the argument is null, the result is null.
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -27,6 +35,6 @@ public class TruncateEvaluator extends Truncate {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.", this.getClass().getSimpleName(), value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Truncate with argument of type '%s'.", value.getClass().getName()));
     }
 }

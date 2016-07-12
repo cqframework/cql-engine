@@ -25,7 +25,12 @@ define StringNoToBoolean: ToBoolean('NO')
 define CodeToConcept1: ToConcept(Code '8480-6' from "LOINC" display 'Systolic blood pressure')
 
 //ToDateTime
-
+define ToDateTime1: ToDateTime('2014-01-01')
+define ToDateTime2: ToDateTime('2014-01-01T12:05')
+define ToDateTime3: ToDateTime('2014-01-01T12:05:05.955')
+define ToDateTime4: ToDateTime('2014-01-01T12:05:05.955+01:30')
+define ToDateTime5: ToDateTime('2014-01-01T12:05:05.955-01:15')
+define ToDateTime6: ToDateTime('2014-01-01T12:05:05.955Z')
 
 //ToDecimal
 define String25D5ToDecimal: ToDecimal('+25.5')

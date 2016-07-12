@@ -4,6 +4,14 @@ import org.cqframework.cql.execution.Context;
 
 import java.math.BigDecimal;
 
+/*
+Exp(argument Decimal) Decimal
+
+The Exp operator raises e to the power of its argument.
+When invoked with an Integer argument, the argument will be implicitly converted to Decimal.
+If the argument is null, the result is null.
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -12,6 +20,7 @@ public class ExpEvaluator extends Exp {
     @Override
     public Object evaluate(Context context) {
         Object value = getOperand().evaluate(context);
+        
         if (value == null) {
             return null;
         }

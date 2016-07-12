@@ -19,19 +19,15 @@ public class DateTimeEvaluator extends DateTime {
 
   @Override
   public Object evaluate(Context context) {
-    Integer year = (Integer)this.getYear().evaluate(context);
+    Integer year = (this.getYear() == null) ? null : (Integer)this.getYear().evaluate(context);
     if (year == null) { return null; }
 
-    else if (year < 0001) {
+    if (year < 1) {
       throw new IllegalArgumentException(String.format("The year: %d falls below the accepted bounds of 0001-9999.", year));
     }
 
     else if (year > 9999) {
       throw new IllegalArgumentException(String.format("The year: %d falls above the accepted bounds of 0001-9999.", year));
-    }
-
-    else if (year.toString().length() < 4) {
-      throw new IllegalArgumentException("Must use 4 digits for year.");
     }
 
     Integer month = (this.getMonth() == null) ? null : (Integer)this.getMonth().evaluate(context);

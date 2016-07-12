@@ -3,6 +3,16 @@ package org.cqframework.cql.elm.execution;
 import org.cqframework.cql.execution.Context;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
+
+/*
+mod(left Integer, right Integer) Integer
+mod(left Decimal, right Decimal) Decimal
+
+The mod operator computes the remainder of the division of its arguments.
+When invoked with mixed Integer and Decimal arguments, the Integer argument will be implicitly converted to Decimal.
+If either argument is null, the result is null.
+*/
 
 /**
  * Created by Bryn on 5/25/2016.
@@ -25,7 +35,7 @@ public class ModuloEvaluator extends Modulo {
 
         if (left instanceof BigDecimal) {
             if ((BigDecimal)right == new BigDecimal("0.0")) { return null; }
-            return ((BigDecimal)left).remainder((BigDecimal)right);
+            return ((BigDecimal)left).remainder((BigDecimal)right).setScale(8, RoundingMode.FLOOR);
         }
 
         throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));

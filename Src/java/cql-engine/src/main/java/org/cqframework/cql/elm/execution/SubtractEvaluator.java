@@ -12,6 +12,18 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 /*
+*** NOTES FOR ARITHMETIC OPERATOR ***
+-(left Integer, right Integer) Integer
+-(left Decimal, right Decimal) Decimal
+-(left Quantity, right Quantity) Quantity
+
+The subtract (-) operator performs numeric subtraction of its arguments.
+When invoked with mixed Integer and Decimal arguments, the Integer argument will be implicitly converted to Decimal.
+When subtracting quantities, the dimensions of each quantity must be the same, but not necessarily the unit.
+  For example, units of 'cm' and 'm' can be subtracted, but units of 'cm2' and  'cm' cannot.
+    The unit of the result will be the most granular unit of either input.
+If either argument is null, the result is null.
+
 *** NOTES FOR DATETIME ***
 The subtract (-) operator returns the value of the given date/time, decremented by the time-valued quantity,
   respecting variable length periods for calendar years and months.
@@ -50,7 +62,7 @@ public class SubtractEvaluator extends Subtract {
 
     // -(Quantity, Quantity)
     else if (left instanceof Quantity) {
-      return (((Quantity)left).getValue()).subtract(((Quantity)right).getValue());
+      return new Quantity().withValue((((Quantity)left).getValue()).subtract(((Quantity)right).getValue())).withUnit(((Quantity)left).getUnit());
     }
 
     // -(DateTime, Quantity)
@@ -129,9 +141,6 @@ public class SubtractEvaluator extends Subtract {
 
       else {
         throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
-      }
-      if (t.getPartial().getValue(0) < YEAR_RANGE_MIN) {
-        throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
       }
 
       return t;

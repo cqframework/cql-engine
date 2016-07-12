@@ -23,6 +23,7 @@ import javax.xml.bind.JAXBException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.comparesEqualTo;
 
 public class CqlTypesTest extends CqlExecutionTestBase {
 
@@ -51,7 +52,10 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         assertThat(result, is(Arrays.asList(1, 2, 3)));
 
         result = context.resolveExpressionRef(library, "AnyTuple").getExpression().evaluate(context);
-        assertThat(result, is(new Tuple().withElements(new HashMap<String, Object>() {{ put("id", 5); put("name", "Chris"); }})));
+        assertThat(((Tuple)result).getElements(), is(new HashMap<String, Object>() {{put("id", 5); put("name", "Chris");}}));
+
+        result = context.resolveExpressionRef(library, "AnyString").getExpression().evaluate(context);
+        assertThat(result, is("Chris"));
     }
 
     @Test
@@ -115,6 +119,12 @@ public class CqlTypesTest extends CqlExecutionTestBase {
 
       result = context.resolveExpressionRef(library, "DateTimeUncertain").getExpression().evaluate(context);
       assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(19, true, 49, true)));
+
+      result = context.resolveExpressionRef(library, "DateTimeMin").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
+
+      result = context.resolveExpressionRef(library, "DateTimeMax").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
     }
 
     @Test

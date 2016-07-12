@@ -363,6 +363,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public ToDecimal createToDecimal() { return new ToDecimalEvaluator(); }
 
     @Override
+    public ToDateTime createToDateTime() { return new ToDateTimeEvaluator(); }
+
+    @Override
     public ToInteger createToInteger() { return new ToIntegerEvaluator(); }
 
     @Override

@@ -4,6 +4,14 @@ import org.cqframework.cql.execution.Context;
 
 import java.math.BigDecimal;
 
+/*
+Log(argument Decimal, base Decimal) Decimal
+
+The Log operator computes the logarithm of its first argument, using the second argument as the base.
+When invoked with Integer arguments, the arguments will be implicitly converted to Decimal.
+If either argument is null, the result is null.
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -29,6 +37,6 @@ public class LogEvaluator extends Log {
             return new BigDecimal(value / base);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Log arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 }

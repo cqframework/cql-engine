@@ -22,19 +22,4 @@ public class Tuple {
     setElements(elements);
     return this;
   }
-
-  @Override
-  public boolean equals(Object other) {
-    if (other instanceof Tuple) {
-      HashMap<String, Object> compareMap = ((Tuple)other).getElements();
-      for (String key : compareMap.keySet()) {
-        if (elements.containsKey(key)) {
-          if (!Value.equals(compareMap.get(key), elements.get(key))) { return false; }
-        }
-        else { return false; }
-      }
-      return true;
-    }
-    else { return false; }
-  }
 }

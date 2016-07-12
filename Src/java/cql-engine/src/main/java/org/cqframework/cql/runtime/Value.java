@@ -10,6 +10,7 @@ import org.cqframework.cql.runtime.Uncertainty;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.HashMap;
 
 import org.joda.time.DateTimeFieldType;
 /**
@@ -223,7 +224,16 @@ public class Value {
       }
 
       else if (left instanceof Tuple) {
-        return ((Tuple)left).equals((Tuple)right);
+        HashMap<String, Object> leftMap = ((Tuple)left).getElements();
+        HashMap<String, Object> rightMap = ((Tuple)right).getElements();
+        for (String key : rightMap.keySet()) {
+          if (leftMap.containsKey(key)) {
+            if (equals(rightMap.get(key), leftMap.get(key)) == null) { return null; }
+            else if (!equals(rightMap.get(key), leftMap.get(key))) { return false; }
+          }
+          else { return false; }
+        }
+        return true;
       }
 
       else if (left instanceof Time) {
@@ -278,7 +288,16 @@ public class Value {
     }
 
     else if (left instanceof Tuple) {
-      return ((Tuple)left).equals((Tuple)right);
+      HashMap<String, Object> leftMap = ((Tuple)left).getElements();
+      HashMap<String, Object> rightMap = ((Tuple)right).getElements();
+      for (String key : rightMap.keySet()) {
+        if (leftMap.containsKey(key)) {
+          if (equivalent(rightMap.get(key), leftMap.get(key)) == null) { return null; }
+          else if (!equivalent(rightMap.get(key), leftMap.get(key))) { return false; }
+        }
+        else { return false; }
+      }
+      return true;
     }
 
     // Do not want to call the equals method for DateTime or Time - returns null if missing elements...

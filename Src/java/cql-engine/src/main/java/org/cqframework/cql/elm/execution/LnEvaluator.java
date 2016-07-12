@@ -4,6 +4,14 @@ import org.cqframework.cql.execution.Context;
 
 import java.math.BigDecimal;
 
+/*
+Ln(argument Decimal) Decimal
+
+The Ln operator computes the natural logarithm of its argument.
+When invoked with an Integer argument, the argument will be implicitly converted to Decimal.
+If the argument is null, the result is null. 
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -33,9 +41,6 @@ public class LnEvaluator extends Ln {
             return retVal;
         }
 
-        // TODO: Finish implementation
-        // +(Quantity, Quantity)
-
-        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.",this.getClass().getSimpleName(), value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Natural Log with argument of type '%s'.", value.getClass().getName()));
     }
 }

@@ -12,6 +12,19 @@ import java.util.Arrays;
 import java.util.ArrayList;
 
 /*
+*** NOTES FOR ARITHMETIC OPERATORS ***
++(left Integer, right Integer) Integer
++(left Decimal, right Decimal) Decimal
++(left Quantity, right Quantity) Quantity
+
+The add (+) operator performs numeric addition of its arguments.
+When invoked with mixed Integer and Decimal arguments, the Integer argument will be implicitly converted to Decimal.
+TODO: When adding quantities, the dimensions of each quantity must be the same, but not necessarily the unit.
+  For example, units of 'cm' and 'm' can be added, but units of 'cm2' and  'cm' cannot.
+    The unit of the result will be the most granular unit of either input.
+If either argument is null, the result is null.
+
+
 *** NOTES FOR DATETIME ***
 The add (+) operator returns the value of the given date/time, incremented by the time-valued quantity,
   respecting variable length periods for calendar years and months.
@@ -42,14 +55,20 @@ public class AddEvaluator extends Add {
 
   public static Object add(Object left, Object right) {
 
-    if (left instanceof Integer) {
+    if (left == null || right == null) {
+        return null;
+    }
+
+    if (left instanceof Integer && right instanceof Integer) {
       return (Integer)left + (Integer)right;
     }
-    else if (left instanceof BigDecimal) {
+
+    else if (left instanceof BigDecimal && right instanceof BigDecimal) {
       return ((BigDecimal)left).add((BigDecimal)right);
     }
-    else if (left instanceof Quantity) {
-      return (((Quantity)left).getValue()).add(((Quantity)right).getValue());
+
+    else if (left instanceof Quantity && right instanceof Quantity) {
+      return new Quantity().withValue((((Quantity)left).getValue()).add(((Quantity)right).getValue())).withUnit(((Quantity)left).getUnit());
     }
 
     // +(DateTime, Quantity)
@@ -92,6 +111,7 @@ public class AddEvaluator extends Add {
       return dt;
     }
 
+    // +(Uncertainty, Uncertainty)
     else if (left instanceof Uncertainty && right instanceof Uncertainty) {
       Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
       Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
@@ -138,13 +158,9 @@ public class AddEvaluator extends Add {
 
     @Override
     public Object evaluate(Context context) {
-        Object left = getOperand().get(0).evaluate(context);
-        Object right = getOperand().get(1).evaluate(context);
+      Object left = getOperand().get(0).evaluate(context);
+      Object right = getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) {
-            return null;
-        }
-
-        return add(left, right);
+      return add(left, right);
     }
 }

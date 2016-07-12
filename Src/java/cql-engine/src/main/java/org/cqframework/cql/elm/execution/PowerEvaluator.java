@@ -4,6 +4,15 @@ import org.cqframework.cql.execution.Context;
 
 import java.math.BigDecimal;
 
+/*
+^(argument Integer, exponent Integer) Integer
+^(argument Decimal, exponent Decimal) Decimal
+
+The power (^) operator raises the first argument to the power given by the second argument.
+When invoked with mixed Integer and Decimal arguments, the Integer argument will be implicitly converted to Decimal.
+If either argument is null, the result is null. 
+*/
+
 /**
  * Created by Bryn on 5/25/2016.
  */
