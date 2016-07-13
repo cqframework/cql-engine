@@ -82,7 +82,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
 
       result = context.resolveExpressionRef(library, "DateTimeAdd2YearsByDaysRem5Days").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 1, 6})));
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
 
       result = context.resolveExpressionRef(library, "TimeAdd5Hours").getExpression().evaluate(context);
       assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
@@ -794,6 +794,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
       result = context.resolveExpressionRef(library, "DateTimeSubtract2YearsAsMonths").getExpression().evaluate(context);
       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2012})));
 
+      result = context.resolveExpressionRef(library, "DateTimeSubtract2YearsAsMonthsRem1").getExpression().evaluate(context);
+      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2011})));
+
       result = context.resolveExpressionRef(library, "TimeSubtract5Hours").getExpression().evaluate(context);
       assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
 
@@ -829,7 +832,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testTimeOfDay() throws JAXBException {
         Context context = new Context(library);
-        // TODO: uncomment once Time(x,x,x,x,x) format is fixed 
+        // TODO: uncomment once Time(x,x,x,x,x) format is fixed
         // Object result = context.resolveExpressionRef(library, "TimeOfDayTest").getExpression().evaluate(context);
         // assertThat(((Time)result).getPartial().getValue(0), is(10));
     }

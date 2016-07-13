@@ -2,8 +2,6 @@ library DateTimeOperator version '1'
 
 context Population
 
-// TODO: need Time tests
-
 //Add
 define DateTimeAdd5Years: DateTime(2005, 10, 10) + 5 years
 define DateTimeAddInvalidYears: DateTime(2005, 10, 10) + 8000 years
@@ -262,6 +260,7 @@ define DateTimeSubtractSecondsUnderflow: DateTime(2016, 6, 10, 5, 5, 5) - 6 seco
 define DateTimeSubtract5Milliseconds: DateTime(2005, 5, 10, 5, 5, 5, 10) - 5 milliseconds
 define DateTimeSubtractMillisecondsUnderflow: DateTime(2016, 6, 10, 5, 5, 5, 5) - 6 milliseconds
 define DateTimeSubtract2YearsAsMonths: DateTime(2014) - 24 months
+define DateTimeSubtract2YearsAsMonthsRem1: DateTime(2014) - 25 months
 define TimeSubtract5Hours: @T15:59:59.999 - 5 hours
 define TimeSubtract1Minute: @T15:59:59.999 - 1 minutes
 define TimeSubtract1Second: @T15:59:59.999 - 1 seconds

@@ -32,6 +32,13 @@ define ConceptEquivalentTrue: Concept1 ~ Concept1
 define ConceptEquivalentFalse: Concept1 ~ Concept2
 define CodeEquivalentNull: Code1 ~ null
 define ConceptEquivalentNull: Concept1 ~ null
+// TODO: These throw translator errors
+/*define Code3: Code null from "LOINC" display 'Systolic blood pressure'
+define Concept3: Concept { Code '66071003' from "LOINC", Code null from "LOINC" } display 'Type B viral hepatitis'
+define CodeEquivalentNullTrue: Code3 ~ Code3
+define CodeEquivalentNullFalse: Code2 ~ Code3
+define ConceptEquivalentNullTrue: Concept3 ~ Concept3
+define ConceptEquivalentNullFalse: Concept2 ~ Concept3*/
 
 //In (Codesystem)
 

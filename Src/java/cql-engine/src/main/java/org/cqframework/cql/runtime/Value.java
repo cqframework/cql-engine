@@ -262,7 +262,11 @@ public class Value {
     }
 
     if ((left == null) || (right == null)) {
-        return null;
+      // Code and Concept equivalence never returns null
+      if (left instanceof Code || right instanceof Code || left instanceof Concept || right instanceof Concept) {
+        return false;
+      }
+      return null;
     }
 
     // list equivalent

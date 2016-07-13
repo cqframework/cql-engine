@@ -36,6 +36,7 @@ define DateTimeMin: DateTime(0001, 1, 1, 0, 0, 0, 0)
 define DateTimeMax: DateTime(9999, 12, 31, 23, 59, 59, 999)
 
 //Decimal
+// problem with size of decimal and size of fractional part
 define DecimalUpperBoundExcept: 10000000000000000000000000000000000.00000000
 define DecimalLowerBoundExcept: -10000000000000000000000000000000000.00000000
 define DecimalFractionalTooBig: 5.999999999
@@ -58,7 +59,7 @@ define StringTestEscapeQuotes: '\'I start with a single quote and end with a dou
 define StringUnicodeTest: '\u0048\u0069'
 
 //Time
-// these all correctly reult in assertion errors
+// these all correctly result in translation errors
 /*define TimeUpperBoundHours: @T24:59:59.999
 define TimeUpperBoundMinutes: @T23:60:59.999
 define TimeUpperBoundSeconds: @T23:59:60.999

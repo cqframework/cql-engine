@@ -85,11 +85,8 @@ public class SubtractEvaluator extends Subtract {
 
         // do the subtraction
         dt.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
-        // truncate until non-minimum value is found
+        // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          if (dt.getPartial().getValue(i) > DateTime.getField(i).getField(null).getMinimumValue()) {
-            break;
-          }
           dt.setPartial(dt.getPartial().without(DateTime.getField(i)));
         }
       }
@@ -130,11 +127,8 @@ public class SubtractEvaluator extends Subtract {
 
         // do the subtraction
         t.setPartial(t.getPartial().property(Time.getField(idx)).addToCopy(-value));
-        // truncate until non-minimum value is found
+        // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          if (t.getPartial().getValue(i) > Time.getField(i).getField(null).getMinimumValue()) {
-            break;
-          }
           t.setPartial(t.getPartial().without(Time.getField(i)));
         }
       }

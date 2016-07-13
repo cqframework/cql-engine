@@ -35,13 +35,10 @@ The operation is performed by attempting to derive the highest granularity preci
     DateTime(2014) + 24 months
     This example results in the value DateTime(2016) even though the date/time value is not specified to the level
       of precision of the time-valued quantity.
-    NOTE: this implementation (v3) returns a DateTime which truncates minimum element values until a non-minimum element is found
-    or until the original DateTime's precision is reached.
+    NOTE: this implementation (v3) returns a DateTime which truncates minimum element values until the original DateTime's precision is reached.
     For Example:
       DateTime(2014) + 735 days
-        returns DateTime(2016, 1, 6)
-        TODO: Should the above example return an uncertainty?
-        Something like: [2016, 2017]
+        returns DateTime(2016)
 If either argument is null, the result is null.
 */
 
@@ -88,14 +85,10 @@ public class AddEvaluator extends Add {
             dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
           }
         }
-
         // do the addition
         dt.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(value));
-        // truncate until non-minimum value is found
+        // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          if (dt.getPartial().getValue(i) > DateTime.getField(i).getField(null).getMinimumValue()) {
-            break;
-          }
           dt.setPartial(dt.getPartial().without(DateTime.getField(i)));
         }
       }
@@ -135,14 +128,10 @@ public class AddEvaluator extends Add {
             time.setPartial(time.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
           }
         }
-
         // do the addition
         time.setPartial(time.getPartial().property(Time.getField(idx)).addToCopy(value));
-        // truncate until non-minimum value is found
+        // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          if (time.getPartial().getValue(i) > Time.getField(i).getField(null).getMinimumValue()) {
-            break;
-          }
           time.setPartial(time.getPartial().without(Time.getField(i)));
         }
       }

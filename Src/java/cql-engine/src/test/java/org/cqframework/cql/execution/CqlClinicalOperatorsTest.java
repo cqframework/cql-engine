@@ -82,11 +82,23 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef(library, "ConceptEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        // TODO: Fix the equivalent operation for Code and Concept
-        // result = context.resolveExpressionRef(library, "CodeEquivalentNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef(library, "CodeEquivalentNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ConceptEquivalentNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        // TODO: Fix these -- figure out if Codes are allowed null components
+        // result = context.resolveExpressionRef(library, "CodeEquivalentNullTrue").getExpression().evaluate(context);
+        // assertThat(result, is(true));
+        //
+        // result = context.resolveExpressionRef(library, "CodeEquivalentNullFalse").getExpression().evaluate(context);
         // assertThat(result, is(false));
         //
-        // result = context.resolveExpressionRef(library, "ConceptEquivalentNull").getExpression().evaluate(context);
+        // result = context.resolveExpressionRef(library, "ConceptEquivalentNullTrue").getExpression().evaluate(context);
+        // assertThat(result, is(true));
+        //
+        // result = context.resolveExpressionRef(library, "ConceptEquivalentNullFalse").getExpression().evaluate(context);
         // assertThat(result, is(false));
     }
 
