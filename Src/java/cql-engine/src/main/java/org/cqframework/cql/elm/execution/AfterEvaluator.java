@@ -78,10 +78,8 @@ public class AfterEvaluator extends After {
           else if (Uncertainty.isUncertain(rightDT, precision)) {
             return GreaterEvaluator.greater(leftDT, Uncertainty.getHighLowList(rightDT, precision).get(1));
           }
-
           return null;
         }
-
         return leftDT.getPartial().getValue(idx) > rightDT.getPartial().getValue(idx);
       }
 

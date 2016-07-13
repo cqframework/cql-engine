@@ -4,9 +4,33 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.execution.Context;
 
 /*
-* The convert operator converts a value to a specific type.
-* The result of the operator is the value of the argument converted to the target type, if possible.
-* Note that use of this operator may result in a run-time exception being thrown if there is no valid conversion from the actual value to the target type.
+convert to<T>(argument Any) T
+
+The convert operator converts a value to a specific type.
+The result of the operator is the value of the argument converted to the target type, if possible.
+  Note that use of this operator may result in a run-time exception being thrown if there is no valid
+    conversion from the actual value to the target type.
+The following table lists the conversions supported in CQL:
+From\To	  Boolean	  Integer	  Decimal	  Quantity	String	Datetime	Time	Code	Concept
+Boolean	    N/A	      -	        -	          -	   Explicit	   -	      -	    -	     -
+Integer	     -	     N/A	   Implicit	      -	   Explicit	   -	      -	    -	     -
+Decimal	     -	      -	       N/A	        -	   Explicit	   - 	      -	    -	     -
+Quantity	   -	      -	        -	         N/A	 Explicit	   -	      -	    -	     -
+String	  Explicit Explicit	 Explicit	  Explicit	 N/A	  Explicit Explicit	-	     -
+Datetime	   -	      -	        -	          -	   Explicit	  N/A	      -	    -	     -
+Time	       -	      -	        -	          -	   Explicit	   -	     N/A	  -	     -
+Code	       -	      -	        -	          -	      -	       -	      -	   N/A	Implicit
+Concept	     -	      -	        -	          -	      -	       -	      -	    -	    N/A
+
+For conversions between date/time and string values, ISO-8601 standard format is used:
+yyyy-MM-ddThh:mm:ss.fff(Z | +/- hh:mm)
+For example, the following are valid string representations for date/time values:
+'2014-01-01T14:30:00.0Z'      // January 1st, 2014, 2:30PM UTC
+'2014-01-01T14:30:00.0-07:00' // January 1st, 2014, 2:30PM Mountain Standard (GMT-7:00)
+'T14:30:00.0Z'                // 2:30PM UTC
+'T14:30:00.0-07:00'           // 2:30PM Mountain Standard (GMT-7:00)
+For specific semantics for each conversion, refer to the explicit conversion operator documentation.
+
 */
 
 /**
@@ -42,26 +66,5 @@ public class ConvertEvaluator extends Convert {
       e.printStackTrace();
     }
     throw new IllegalArgumentException(String.format("Cannot Convert a value of type %s as %s.", operand.getClass().getName(), type.getName()));
-
-    // TODO: Fix this
-    //  String packageName = Convert.class.getPackage().getName();
-    //  try {
-    //      Class toClass = Class.forName(String.format("%s.To%s", packageName, getToType().getLocalPart()));
-    //      Expression expresion = (Expression)toClass.newInstance();
-    //      Method setOperand = expresion.getClass().getMethod("setOperand",Expression.class);
-    //      setOperand.invoke(expresion, getOperand());
-    //
-    //      return expresion.evaluate(context);
-    //  } catch (ClassNotFoundException e) {
-    //      e.printStackTrace();
-    //  } catch (InstantiationException e) {
-    //      e.printStackTrace();
-    //  } catch (IllegalAccessException e) {
-    //      e.printStackTrace();
-    //  } catch (NoSuchMethodException e) {
-    //      e.printStackTrace();
-    //  } catch (InvocationTargetException e) {
-    //      e.printStackTrace();
-    //  }
   }
 }

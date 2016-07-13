@@ -28,6 +28,12 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef(library, "AsQuantity").getExpression().evaluate(context);
         assertThat(result, is(new Quantity().withValue(new BigDecimal("45.5")).withUnit("g")));
+
+        result = context.resolveExpressionRef(library, "CastAsQuantity").getExpression().evaluate(context);
+        assertThat(result, is(new Quantity().withValue(new BigDecimal("45.5")).withUnit("g")));
+
+        result = context.resolveExpressionRef(library, "AsDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 1, 1})));
     }
 
     /**
@@ -46,6 +52,18 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
           result = context.resolveExpressionRef(library, "StringToIntegerError").getExpression().evaluate(context);
         } catch (NumberFormatException nfe) {
           assertThat(nfe.getMessage(), is("Unable to convert given string to Integer"));
+        }
+
+        result = context.resolveExpressionRef(library, "StringToDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 1, 1})));
+
+        result = context.resolveExpressionRef(library, "StringToTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+
+        try {
+          result = context.resolveExpressionRef(library, "StringToDateTimeMalformed").getExpression().evaluate(context);
+        } catch (IllegalArgumentException iae) {
+          assertThat(iae.getMessage(), is("Invalid format: \"2014/01/01\" is malformed at \"/01/01\""));
         }
     }
 

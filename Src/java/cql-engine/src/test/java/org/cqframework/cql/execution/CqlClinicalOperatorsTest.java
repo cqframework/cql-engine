@@ -45,7 +45,23 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testEqual() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "CodeEqualTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "CodeEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ConceptEqualTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ConceptEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "CodeEqualNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef(library, "ConceptEqualNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
     }
 
     /**
@@ -54,7 +70,24 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testEquivalent() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "CodeEquivalentTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "CodeEquivalentFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "ConceptEquivalentTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef(library, "ConceptEquivalentFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        // TODO: Fix the equivalent operation for Code and Concept
+        // result = context.resolveExpressionRef(library, "CodeEquivalentNull").getExpression().evaluate(context);
+        // assertThat(result, is(false));
+        //
+        // result = context.resolveExpressionRef(library, "ConceptEquivalentNull").getExpression().evaluate(context);
+        // assertThat(result, is(false));
     }
 
     /**

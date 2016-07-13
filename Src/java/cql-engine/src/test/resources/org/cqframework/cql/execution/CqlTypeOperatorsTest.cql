@@ -6,13 +6,16 @@ context Population
 
 //As
 define AsQuantity: 45.5 'g' as Quantity
-
-// define Int1ToString : as<String>(1)
+define CastAsQuantity: cast 45.5 'g' as Quantity
+define AsDateTime: DateTime(2014, 01, 01) as DateTime
 
 //Convert
 define IntegerToDecimal: convert 5 to Decimal
 define IntegerToString: convert 5 to String
 define StringToIntegerError: convert 'foo' to Integer
+define StringToDateTime: convert '2014-01-01' to DateTime
+define StringToTime: convert 'T14:30:00.0' to Time
+define StringToDateTimeMalformed: convert '2014/01/01' to DateTime
 
 //Is
 define IntegerIsInteger: 5 is Integer

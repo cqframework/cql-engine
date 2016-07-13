@@ -47,12 +47,12 @@ public class Concept {
         if (other instanceof Concept) {
             Concept otherConcept = (Concept)other;
             for (Code code : this.getCodes()) {
-                if (InEvaluator.in(code, otherConcept.getCodes())) {
-                    return true;
+                if (!InEvaluator.in(code, otherConcept.getCodes())) {
+                    return false;
                 }
             }
         }
 
-        return false;
+        return true;
     }
 }
