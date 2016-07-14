@@ -42,6 +42,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public CalculateAge createCalculateAge() { return new CalculateAgeEvaluator(); }
 
     @Override
+    public CalculateAgeAt createCalculateAgeAt() { return new CalculateAgeAtEvaluator(); }
+
+    @Override
     public Ceiling createCeiling() { return new CeilingEvaluator(); }
 
     @Override
@@ -154,6 +157,12 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public In createIn() { return new InEvaluator(); }
+
+    @Override
+    public InCodeSystem createInCodeSystem() { return new InCodeSystemEvaluator(); }
+
+    @Override
+    public InValueSet createInValueSet() { return new InValueSetEvaluator(); }
 
     @Override
     public Instance createInstance() { return new InstanceEvaluator(); }

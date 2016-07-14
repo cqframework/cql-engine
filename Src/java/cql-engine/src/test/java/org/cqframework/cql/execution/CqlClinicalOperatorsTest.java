@@ -2,6 +2,9 @@ package org.cqframework.cql.execution;
 
 import org.testng.annotations.Test;
 
+import org.cqframework.cql.runtime.Interval;
+import org.cqframework.cql.runtime.Uncertainty;
+
 import javax.xml.bind.JAXBException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -12,12 +15,15 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
     @Test
     public void testAge() throws JAXBException {
-        //TODO: Does this have a corresponding elm execution?
+      Context context = new Context(library);
+      // Object result = context.resolveExpressionRef(library, "AgeYears").getExpression().evaluate(context);
+      // assertThat(result, is(17));
     }
 
     @Test
     public void testAgeAt() throws JAXBException {
-        //TODO: Does this have a corresponding elm execution?
+      Context context = new Context(library);
+      Object result;
     }
 
     /**
@@ -26,8 +32,27 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testCalculateAge() throws JAXBException {
         Context context = new Context(library);
+        // TODO: fix this -- translation error
         // Object result = context.resolveExpressionRef(library, "CalculateAgeYears").getExpression().evaluate(context);
         // assertThat(result, is(16));
+
+        Object result = context.resolveExpressionRef(library, "CalculateAgeMonths").getExpression().evaluate(context);
+        assertThat(result, is(198));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeDays").getExpression().evaluate(context);
+        assertThat(result, is(6039));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeHours").getExpression().evaluate(context);
+        assertThat(result, is(144936));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeMinutes").getExpression().evaluate(context);
+        assertThat(result, is(8696160));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeSeconds").getExpression().evaluate(context);
+        assertThat(result, is(521769600));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeUncertain").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(186, true, 198, true)));
     }
 
     /**
@@ -36,7 +61,26 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testCalculateAgeAt() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "CalculateAgeAtYears").getExpression().evaluate(context);
+        assertThat(result, is(17));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeAtMonths").getExpression().evaluate(context);
+        assertThat(result, is(197));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeAtDays").getExpression().evaluate(context);
+        assertThat(result, is(6038));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeAtHours").getExpression().evaluate(context);
+        assertThat(result, is(144912));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeAtMinutes").getExpression().evaluate(context);
+        assertThat(result, is(8694720));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeAtSeconds").getExpression().evaluate(context);
+        assertThat(result, is(521683200));
+
+        result = context.resolveExpressionRef(library, "CalculateAgeAtUncertain").getExpression().evaluate(context);
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(186, true, 198, true)));
     }
 
     /**
@@ -108,7 +152,8 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testInCodesystem() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        // Object result = context.resolveExpressionRef(library, "InCodeSystemStringTrue").getExpression().evaluate(context);
+        // assertThat(result, is(true));
     }
 
     /**

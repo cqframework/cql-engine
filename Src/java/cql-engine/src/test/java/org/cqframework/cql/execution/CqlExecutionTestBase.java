@@ -42,12 +42,15 @@ public abstract class CqlExecutionTestBase<T> {
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");
+                    ArrayList<String> errors = new ArrayList<>();
                     for (CqlTranslatorException error : translator.getErrors()) {
                         TrackBack tb = error.getLocator();
                         String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
                                 tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
                         System.err.printf("%s %s%n", lines, error.getMessage());
+                        errors.add(lines + error.getMessage());
                     }
+                    throw new IllegalArgumentException(errors.toString());
                 }
 
                 assertThat(translator.getErrors().size(), is(0));

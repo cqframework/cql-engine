@@ -28,23 +28,8 @@ public class CalculateAgeEvaluator extends CalculateAge {
     Object operand = getOperand().evaluate(context);
     String precision = getPrecision().value();
 
-    if (precision == null) {
-      throw new IllegalArgumentException("Precision must be specified.");
-    }
-
     if (operand == null) { return null; }
 
-    int idx = DateTime.getFieldIndex(precision);
-
-    if (idx != -1) {
-      DateTime dt = (DateTime)operand;
-      // Uncertainty
-      if (Uncertainty.isUncertain(dt, precision)) {
-        ArrayList<DateTime> highLow = Uncertainty.getHighLowList(dt, precision);
-        return new Uncertainty().withUncertaintyInterval(new Interval(DurationBetweenEvaluator.between(highLow.get(1), dt, idx), true, DurationBetweenEvaluator.between(highLow.get(0), dt, idx), true));
-      }
-      return DurationBetweenEvaluator.between(dt, DateTime.getToday(), idx);
-    }
-    throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+    return CalculateAgeAtEvaluator.calculateAgeAt((DateTime)operand, DateTime.getToday(), precision);
   }
 }

@@ -5,13 +5,28 @@ codesystem "LOINC": 'http://loinc.org'
 context Population
 
 //Age
+/*define PatientExpression: Patient { Name: 'Patrick', DOB: @2014-01-01 }
+define AgeYears: PatientExpression.AgeInYears()*/
 
 //AgeAt
 
 //CalculateAge
-//define CalculateAgeYears: CalculateAgeInYears(DateTime(2000, 1, 1, 0, 0, 0, 0), Today())
+// define CalculateAgeYears: CalculateAgeInYears(DateTime(2000, 1, 1))
+define CalculateAgeMonths: CalculateAgeInMonths(DateTime(2000, 1, 1))
+define CalculateAgeDays: CalculateAgeInDays(DateTime(2000, 1, 1))
+define CalculateAgeHours: CalculateAgeInHours(DateTime(2000, 1, 1, 0))
+define CalculateAgeMinutes: CalculateAgeInMinutes(DateTime(2000, 1, 1, 0, 0))
+define CalculateAgeSeconds: CalculateAgeInSeconds(DateTime(2000, 1, 1, 0, 0, 0))
+define CalculateAgeUncertain: CalculateAgeInMonths(DateTime(2000))
 
 //CalculateAgeAt
+define CalculateAgeAtYears: CalculateAgeInYearsAt(DateTime(2000, 1, 1), DateTime(2017, 1, 1))
+define CalculateAgeAtMonths: CalculateAgeInMonthsAt(DateTime(2000, 1, 1), DateTime(2016, 6, 14))
+define CalculateAgeAtDays: CalculateAgeInDaysAt(DateTime(2000, 1, 1), DateTime(2016, 7, 13))
+define CalculateAgeAtHours: CalculateAgeInHoursAt(DateTime(2000, 1, 1, 0), DateTime(2016, 7, 13, 0))
+define CalculateAgeAtMinutes: CalculateAgeInMinutesAt(DateTime(2000, 1, 1, 0, 0), DateTime(2016, 7, 13, 0, 0))
+define CalculateAgeAtSeconds: CalculateAgeInSecondsAt(DateTime(2000, 1, 1, 0, 0, 0), DateTime(2016, 7, 13, 0, 0, 0))
+define CalculateAgeAtUncertain: CalculateAgeInMonthsAt(DateTime(2000), DateTime(2016, 7, 14))
 
 //Equal
 define Code1: Code '8480-6' from "LOINC" display 'Systolic blood pressure'
@@ -41,5 +56,6 @@ define ConceptEquivalentNullTrue: Concept3 ~ Concept3
 define ConceptEquivalentNullFalse: Concept2 ~ Concept3*/
 
 //In (Codesystem)
+define InCodeSystemStringTrue: '66071002' in "LOINC"
 
 //In (Valueset)

@@ -72,16 +72,7 @@ public class DurationBetweenEvaluator extends DurationBetween {
     return ret;
   }
 
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
-    String precision = getPrecision().value();
-
-    if (precision == null) {
-      throw new IllegalArgumentException("Precision must be specified.");
-    }
-
+  public static Object durationBetween(Object left, Object right, String precision) {
     if (left == null || right == null) { return null; }
 
     if (left instanceof DateTime && right instanceof DateTime) {
@@ -94,13 +85,25 @@ public class DurationBetweenEvaluator extends DurationBetween {
 
         // Uncertainty
         if (Uncertainty.isUncertain(leftDT, precision)) {
+          precision = DateTime.getUnit(rightDT.getPartial().size() - 1);
           ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
           return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1), rightDT, idx), true, between(highLow.get(0), rightDT, idx), true));
         }
 
         else if (Uncertainty.isUncertain(rightDT, precision)) {
+          precision = DateTime.getUnit(leftDT.getPartial().size() - 1);
           ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
           return new Uncertainty().withUncertaintyInterval(new Interval(between(leftDT, highLow.get(0), idx), true, between(leftDT, highLow.get(1), idx), true));
+        }
+
+        else if (leftDT.getPartial().size() > rightDT.getPartial().size()) {
+          // each partial must have same number of fields - expand rightDT
+          rightDT = DateTime.expandPartialMin(rightDT, leftDT.getPartial().size());
+        }
+
+        else if (rightDT.getPartial().size() > leftDT.getPartial().size()) {
+          // each partial must have same number of fields - expand leftDT
+          leftDT = DateTime.expandPartialMin(leftDT, rightDT.getPartial().size());
         }
 
         return between(leftDT, rightDT, idx);
@@ -121,11 +124,13 @@ public class DurationBetweenEvaluator extends DurationBetween {
 
         // Uncertainty
         if (Uncertainty.isUncertain(leftT, precision)) {
+          precision = Time.getUnit(rightT.getPartial().size() - 1);
           ArrayList<Time> highLow = Uncertainty.getHighLowList(leftT, precision);
           return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1), rightT, idx), true, between(highLow.get(0), rightT, idx), true));
         }
 
         else if (Uncertainty.isUncertain(rightT, precision)) {
+          precision = Time.getUnit(leftT.getPartial().size() - 1);
           ArrayList<Time> highLow = Uncertainty.getHighLowList(rightT, precision);
           return new Uncertainty().withUncertaintyInterval(new Interval(between(leftT, highLow.get(0), idx), true, between(leftT, highLow.get(1), idx), true));
         }
@@ -138,6 +143,19 @@ public class DurationBetweenEvaluator extends DurationBetween {
       }
     }
 
-    throw new IllegalArgumentException(String.format("Cannot DifferenceBetween arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    throw new IllegalArgumentException(String.format("Cannot DurationBetween arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+  }
+
+  @Override
+  public Object evaluate(Context context) {
+    Object left = getOperand().get(0).evaluate(context);
+    Object right = getOperand().get(1).evaluate(context);
+    String precision = getPrecision().value();
+
+    if (precision == null) {
+      throw new IllegalArgumentException("Precision must be specified.");
+    }
+
+    return durationBetween(left, right, precision);
   }
 }

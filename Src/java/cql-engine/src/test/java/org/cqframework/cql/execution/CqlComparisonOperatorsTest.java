@@ -10,9 +10,11 @@ import static org.hamcrest.Matchers.nullValue;
 
 public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
-    //@Test
+    @Test
     public void testBetween() throws JAXBException {
-        //TODO: This seems to be missing from org.cqframework.cql.elm.execution;
+      Context context = new Context(library);
+      Object result = context.resolveExpressionRef(library, "BetweenIntTrue").getExpression().evaluate(context);
+      assertThat(result, is(true));
     }
 
     /**

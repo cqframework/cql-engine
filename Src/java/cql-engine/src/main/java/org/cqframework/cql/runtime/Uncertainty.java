@@ -76,17 +76,7 @@ public class Uncertainty {
       if (idx == -1) { idx = DateTime.getFieldIndex2(precision); }
       if (idx != -1) {
         // expand the high and low date times with respective max and min values
-        for (int i = uncertain.getPartial().size(); i < idx + 1; ++i) {
-          low.setPartial(low.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
-
-          if (i == 2) {
-            high.setPartial(high.getPartial().with(DateTime.getField(i), high.getPartial().getChronology().dayOfMonth().getMaximumValue(high.getPartial())));
-          }
-          else {
-            high.setPartial(high.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMaximumValue()));
-          }
-        }
-        return new ArrayList<DateTime>(Arrays.asList(low, high));
+        return new ArrayList<DateTime>(Arrays.asList(DateTime.expandPartialMin(low, idx + 1), DateTime.expandPartialMax(high, idx + 1)));
       }
 
       else {

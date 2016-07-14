@@ -113,6 +113,25 @@ public class DateTime {
     return new DateTime().withPartial(new Partial(fields, values)).withTimezoneOffset(new BigDecimal(0));
   }
 
+  public static DateTime expandPartialMin(DateTime dt, int size) {
+    for (int i = dt.getPartial().size(); i < size; ++i) {
+      dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+    }
+    return dt;
+  }
+
+  public static DateTime expandPartialMax(DateTime dt, int size) {
+    for (int i = dt.getPartial().size(); i < size; ++i) {
+      if (i == 2) {
+        dt.setPartial(dt.getPartial().with(getField(i), dt.getPartial().getChronology().dayOfMonth().getMaximumValue(dt.getPartial())));
+      }
+      else {
+        dt.setPartial(dt.getPartial().with(getField(i), DateTime.getField(i).getField(null).getMaximumValue()));
+      }
+    }
+    return dt;
+  }
+
   public static Boolean formatCheck(ArrayList<Object> timeElements) {
     boolean prevNull = false;
     for (Object element : timeElements) {
