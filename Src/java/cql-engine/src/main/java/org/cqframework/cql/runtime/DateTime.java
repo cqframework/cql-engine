@@ -120,9 +120,13 @@ public class DateTime {
     return dt;
   }
 
-  public static DateTime expandPartialMax(DateTime dt, int size) {
+  public static DateTime expandPartialMax(DateTime dt, int size, int maxPrecision) {
     for (int i = dt.getPartial().size(); i < size; ++i) {
-      if (i == 2) {
+      // only want to max values up to the missing precision 
+      if (i > maxPrecision) {
+        dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+      }
+      else if (i == 2) {
         dt.setPartial(dt.getPartial().with(getField(i), dt.getPartial().getChronology().dayOfMonth().getMaximumValue(dt.getPartial())));
       }
       else {

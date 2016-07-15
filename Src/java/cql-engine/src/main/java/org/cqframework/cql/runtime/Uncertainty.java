@@ -76,7 +76,7 @@ public class Uncertainty {
       if (idx == -1) { idx = DateTime.getFieldIndex2(precision); }
       if (idx != -1) {
         // expand the high and low date times with respective max and min values
-        return new ArrayList<DateTime>(Arrays.asList(DateTime.expandPartialMin(low, idx + 1), DateTime.expandPartialMax(high, idx + 1)));
+        return new ArrayList<DateTime>(Arrays.asList(DateTime.expandPartialMin(low, idx + 1), DateTime.expandPartialMax(high, idx + 1, high.getPartial().size())));
       }
 
       else {

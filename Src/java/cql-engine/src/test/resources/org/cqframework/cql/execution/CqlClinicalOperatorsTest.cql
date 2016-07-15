@@ -6,7 +6,8 @@ context Population
 
 //Age
 /*define PatientExpression: Patient { Name: 'Patrick', DOB: @2014-01-01 }
-define AgeYears: PatientExpression.AgeInYears()*/
+context Patient
+define AgeYears: Patient.AgeInYears()*/
 
 //AgeAt
 

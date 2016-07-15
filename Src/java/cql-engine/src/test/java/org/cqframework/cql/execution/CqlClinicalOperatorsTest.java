@@ -2,8 +2,13 @@ package org.cqframework.cql.execution;
 
 import org.testng.annotations.Test;
 
+import org.cqframework.cql.elm.execution.CalculateAgeAtEvaluator;
+
+import org.cqframework.cql.runtime.DateTime;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Uncertainty;
+
+import org.joda.time.Partial;
 
 import javax.xml.bind.JAXBException;
 
@@ -17,7 +22,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     public void testAge() throws JAXBException {
       Context context = new Context(library);
       // Object result = context.resolveExpressionRef(library, "AgeYears").getExpression().evaluate(context);
-      // assertThat(result, is(17));
+      // assertThat(result, is(2));
     }
 
     @Test
@@ -37,22 +42,24 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         // assertThat(result, is(16));
 
         Object result = context.resolveExpressionRef(library, "CalculateAgeMonths").getExpression().evaluate(context);
-        assertThat(result, is(198));
+        assertThat(result, is((Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), DateTime.getToday(), "month")));
 
         result = context.resolveExpressionRef(library, "CalculateAgeDays").getExpression().evaluate(context);
-        assertThat(result, is(6039));
+        assertThat(result, is((Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), DateTime.getToday(), "day")));
 
         result = context.resolveExpressionRef(library, "CalculateAgeHours").getExpression().evaluate(context);
-        assertThat(result, is(144936));
+        assertThat(result, is((Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(4), new int[] {2000, 1, 1, 0})), DateTime.getToday(), "hour")));
 
         result = context.resolveExpressionRef(library, "CalculateAgeMinutes").getExpression().evaluate(context);
-        assertThat(result, is(8696160));
+        assertThat(result, is((Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(5), new int[] {2000, 1, 1, 0, 0})), DateTime.getToday(), "minute")));
 
         result = context.resolveExpressionRef(library, "CalculateAgeSeconds").getExpression().evaluate(context);
-        assertThat(result, is(521769600));
+        assertThat(result, is((Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(6), new int[] {2000, 1, 1, 0, 0, 0})), DateTime.getToday(), "second")));
 
         result = context.resolveExpressionRef(library, "CalculateAgeUncertain").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(186, true, 198, true)));
+        Integer low = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(2), new int[] {2000, 12})), DateTime.getToday(), "month");
+        Integer high = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(2), new int[] {2000, 1})), DateTime.getToday(), "month");
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(low, true, high, true)));
     }
 
     /**
@@ -80,7 +87,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(521683200));
 
         result = context.resolveExpressionRef(library, "CalculateAgeAtUncertain").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(186, true, 198, true)));
+        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(187, true, 198, true)));
     }
 
     /**
