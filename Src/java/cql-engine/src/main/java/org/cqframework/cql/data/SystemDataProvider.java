@@ -3,6 +3,10 @@ package org.cqframework.cql.data;
 import org.cqframework.cql.runtime.Code;
 import org.cqframework.cql.runtime.Interval;
 import org.cqframework.cql.runtime.Quantity;
+import org.cqframework.cql.runtime.Tuple;
+import org.cqframework.cql.runtime.DateTime;
+import org.cqframework.cql.runtime.Time;
+import org.cqframework.cql.runtime.Uncertainty;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -110,7 +114,10 @@ public class SystemDataProvider implements DataProvider {
             case "String": return String.class;
             case "Quantity": return Quantity.class;
             case "Interval": return Interval.class;
-            //case "Tuple": return Tuple.class;
+            case "Tuple": return Tuple.class;
+            case "DateTime": return DateTime.class;
+            case "Time": return Time.class;
+            case "Uncertainty": return Uncertainty.class;
             default:
                 try {
                     return Class.forName(String.format("%s.%s", getPackageName(), typeName));

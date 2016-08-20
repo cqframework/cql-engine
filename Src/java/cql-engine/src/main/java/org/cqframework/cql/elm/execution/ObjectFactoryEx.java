@@ -54,6 +54,9 @@ public class ObjectFactoryEx extends ObjectFactory {
     public Code createCode() { return new CodeEvaluator(); }
 
     @Override
+    public CodeSystemRef createCodeSystemRef() { return new CodeSystemRefEvaluator(); }
+
+    @Override
     public Collapse createCollapse() { return new CollapseEvaluator(); }
 
     @Override
@@ -403,6 +406,9 @@ public class ObjectFactoryEx extends ObjectFactory {
 
     @Override
     public Variance createVariance() { return new VarianceEvaluator(); }
+
+    @Override
+    public ValueSetRef createValueSetRef() { return new ValueSetRefEvaluator(); }
 
     @Override
     public Width createWidth() { return new WidthEvaluator(); }

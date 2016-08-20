@@ -3,6 +3,7 @@ package org.cqframework.cql.execution;
 import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.data.DataProvider;
 import org.cqframework.cql.data.SystemDataProvider;
+import org.cqframework.cql.terminology.TerminologyProvider;
 import org.cqframework.cql.elm.execution.*;
 
 import javax.xml.namespace.QName;
@@ -210,6 +211,15 @@ public class Context {
         }
 
         return dataProvider;
+    }
+
+    private TerminologyProvider terminologyProvider;
+    public void registerTerminologyProvider(TerminologyProvider tp) {
+      terminologyProvider = tp;
+    }
+
+    public TerminologyProvider resolveTerminologyProvider() {
+      return terminologyProvider;
     }
 
     public void enterContext(String context) {

@@ -2,6 +2,22 @@ package org.cqframework.cql.elm.execution;
 
 import org.cqframework.cql.execution.Context;
 
+import org.cqframework.cql.elm.execution.ValueSetRef;
+import org.cqframework.cql.elm.execution.ValueSetDef;
+import org.cqframework.cql.elm.execution.CodeSystemRef;
+import org.cqframework.cql.elm.execution.CodeSystemDef;
+
+import org.cqframework.cql.runtime.Code;
+import org.cqframework.cql.runtime.Concept;
+
+import org.cqframework.cql.terminology.CodeSystemInfo;
+import org.cqframework.cql.terminology.TerminologyProvider;
+import org.cqframework.cql.terminology.SystemTerminologyProvider;
+import org.cqframework.cql.terminology.ValueSetInfo;
+
+import java.util.List;
+import java.util.ArrayList;
+
 /*
 in(code String, valueset ValueSetRef) Boolean
 in(code Code, valueset ValueSetRef) Boolean
@@ -20,12 +36,75 @@ If the code argument is null, the result is null.
 */
 public class InValueSetEvaluator extends InValueSet {
 
+  public Object inValueSet(Context context, Object code, Object valueset) {
+    if (code == null) { return null; }
+
+    // Resolve ValueSetRef & CodeSystemRef -- Account for multiple codesystems represented within a valueset
+    ValueSetDef vsd = resolveVSR(context, (ValueSetRef)valueset);
+    List<CodeSystemDef> codeSystemDefs = new ArrayList<>();
+    for (CodeSystemRef csr : vsd.getCodeSystem()) {
+      codeSystemDefs.add(resolveCSR(context, csr));
+    }
+
+    List<CodeSystemInfo> codeSystemInfos = new ArrayList<>();
+    if (codeSystemDefs.size() > 0) {
+      for (CodeSystemDef csd : codeSystemDefs) {
+        codeSystemInfos.add(new CodeSystemInfo().withId(csd.getId()).withVersion(csd.getVersion()));
+      }
+    }
+    // TODO: find better solution than this -- temporary solution
+    else {
+      codeSystemInfos.add(new CodeSystemInfo().withId(null).withVersion(null));
+    }
+
+    List<ValueSetInfo> valueSetInfos = new ArrayList<>();
+    for (CodeSystemInfo csi : codeSystemInfos) {
+      valueSetInfos.add(new ValueSetInfo().withId(vsd.getId()).withVersion(vsd.getVersion()).withCodeSystem(csi));
+    }
+
+    context.registerTerminologyProvider(new SystemTerminologyProvider());
+    TerminologyProvider provider = context.resolveTerminologyProvider();
+
+    // perform operation
+    if (code instanceof String) {
+      for (ValueSetInfo vsi : valueSetInfos) {
+        if (provider.in(new Code().withCode((String)code), vsi)) { return true; }
+      }
+      return false;
+    }
+    else if (code instanceof Code) {
+      for (ValueSetInfo vsi : valueSetInfos) {
+        if (provider.in((Code)code, vsi)) { return true; }
+      }
+      return false;
+    }
+    else if (code instanceof Concept) {
+      for (ValueSetInfo vsi : valueSetInfos) {
+        for (Code codes : ((Concept)code).getCodes()) {
+          if (provider.in(codes, vsi)) { return true; }
+        }
+        return false;
+      }
+    }
+
+    throw new IllegalArgumentException(String.format("Cannot InValueSet Code arguments of type '%s'.", code.getClass().getName()));
+  }
+
   @Override
   public Object evaluate(Context context) {
     Object code = getCode().evaluate(context);
-    if (code == null) { return null; }
     Object valueset = getValueset();
 
-    throw new IllegalArgumentException(code.toString() + " " + valueset.toString());
+    return inValueSet(context, code, valueset);
+  }
+
+  public ValueSetDef resolveVSR(Context context, ValueSetRef valueset) {
+    // TODO: replace null with valueset.getLibraryName()) when library resolution is implemented
+    return context.resolveValueSetRef((String)null, valueset.getName());
+  }
+
+  public CodeSystemDef resolveCSR(Context context, CodeSystemRef codesystem) {
+    // TODO: replace null with codesystem.getLibraryName() when library resolution is implemented
+    return context.resolveCodeSystemRef((String)null, codesystem.getName());
   }
 }

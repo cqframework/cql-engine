@@ -159,8 +159,14 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testInCodesystem() throws JAXBException {
         Context context = new Context(library);
-        // Object result = context.resolveExpressionRef(library, "InCodeSystemStringTrue").getExpression().evaluate(context);
-        // assertThat(result, is(true));
+        Object result = context.resolveExpressionRef(library, "InCodeSystemStringNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "InCodeSystemCodeNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "InCodeSystemConceptNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -169,6 +175,13 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testInValueset() throws JAXBException {
         Context context = new Context(library);
-        Object result;
+        Object result = context.resolveExpressionRef(library, "InValueSetFalseString").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "InValueSetFalseCode").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef(library, "InValueSetFalseConcept").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 }
