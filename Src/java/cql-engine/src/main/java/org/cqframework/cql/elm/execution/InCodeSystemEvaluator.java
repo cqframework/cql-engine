@@ -12,6 +12,8 @@ import org.cqframework.cql.terminology.CodeSystemInfo;
 import org.cqframework.cql.terminology.TerminologyProvider;
 import org.cqframework.cql.terminology.SystemTerminologyProvider;
 
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
+
 /*
 in(code String, codesystem CodeSystemRef) Boolean
 in(code Code, codesystem CodeSystemRef) Boolean
@@ -39,19 +41,23 @@ public class InCodeSystemEvaluator extends InCodeSystem {
     context.registerTerminologyProvider(new SystemTerminologyProvider());
     TerminologyProvider provider = context.resolveTerminologyProvider();
 
-    if (code instanceof String) {
-      // TODO: is null the right matcher or will there be an error message?
-      return provider.lookup(new Code().withCode((String)code), csi) != null ? true : false;
-    }
-    else if (code instanceof Code) {
-      return provider.lookup((Code)code, csi) != null ? true : false;
-    }
-    else if (code instanceof Concept) {
-      for (Code codes : ((Concept)code).getCodes()) {
-        if (provider.lookup(codes, csi) != null) { return true; }
+    try {
+      if (code instanceof String) {
+        // TODO: is null the right matcher or will there be an error message?
+        return provider.lookup(new Code().withCode((String)code), csi) != null ? true : false;
       }
-      return false;
-    }
+      else if (code instanceof Code) {
+        return provider.lookup((Code)code, csi) != null ? true : false;
+      }
+      else if (code instanceof Concept) {
+        for (Code codes : ((Concept)code).getCodes()) {
+          if (provider.lookup(codes, csi) != null) { return true; }
+        }
+        return false;
+      }
+    } catch (ResourceNotFoundException e) {
+        return false;
+      }
     throw new IllegalArgumentException(String.format("Cannot InCodeSystem Code arguments of type '%s'.", code.getClass().getName()));
   }
 

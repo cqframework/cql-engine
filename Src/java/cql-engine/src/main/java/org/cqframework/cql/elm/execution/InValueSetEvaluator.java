@@ -15,6 +15,8 @@ import org.cqframework.cql.terminology.TerminologyProvider;
 import org.cqframework.cql.terminology.SystemTerminologyProvider;
 import org.cqframework.cql.terminology.ValueSetInfo;
 
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -66,27 +68,31 @@ public class InValueSetEvaluator extends InValueSet {
     TerminologyProvider provider = context.resolveTerminologyProvider();
 
     // perform operation
-    if (code instanceof String) {
-      for (ValueSetInfo vsi : valueSetInfos) {
-        if (provider.in(new Code().withCode((String)code), vsi)) { return true; }
-      }
-      return false;
-    }
-    else if (code instanceof Code) {
-      for (ValueSetInfo vsi : valueSetInfos) {
-        if (provider.in((Code)code, vsi)) { return true; }
-      }
-      return false;
-    }
-    else if (code instanceof Concept) {
-      for (ValueSetInfo vsi : valueSetInfos) {
-        for (Code codes : ((Concept)code).getCodes()) {
-          if (provider.in(codes, vsi)) { return true; }
+    try {
+      if (code instanceof String) {
+        for (ValueSetInfo vsi : valueSetInfos) {
+          if (provider.in(new Code().withCode((String)code), vsi)) { return true; }
         }
         return false;
       }
-    }
-
+      else if (code instanceof Code) {
+        for (ValueSetInfo vsi : valueSetInfos) {
+          if (provider.in((Code)code, vsi)) { return true; }
+        }
+        return false;
+      }
+      else if (code instanceof Concept) {
+        for (ValueSetInfo vsi : valueSetInfos) {
+          for (Code codes : ((Concept)code).getCodes()) {
+            if (provider.in(codes, vsi)) { return true; }
+          }
+          return false;
+        }
+      }
+    } catch (ResourceNotFoundException e) {
+        // TODO: Should false be returned here or the error message?
+        return false;
+      }
     throw new IllegalArgumentException(String.format("Cannot InValueSet Code arguments of type '%s'.", code.getClass().getName()));
   }
 
