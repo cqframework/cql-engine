@@ -12,7 +12,7 @@ generateSources {
 
     doLast {
         ant.xjc(destdir: xjc.destDir, package: 'org.cqframework.cql.elm.execution', schema: "${projectDir}/../cql-lm/schema/elm/library.xsd") {
-            arg(line: "${xjc.args} -npa -XautoInheritance -XautoInheritance-xmlTypesExtend=edu.utah.cql.elm.execution.Executable")
+            arg(line: "${xjc.args} -npa -XautoInheritance -XautoInheritance-xmlTypesExtend=org.opencds.cqf.cql.elm.execution.Executable")
         }
     }
 }
