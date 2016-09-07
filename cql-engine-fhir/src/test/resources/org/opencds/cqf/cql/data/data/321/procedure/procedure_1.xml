@@ -1,0 +1,60 @@
+<Procedure xmlns="http://hl7.org/fhir">
+  <id value="f001"/>
+    <text><status value="generated"/><div xmlns="http://www.w3.org/1999/xhtml"><p><b>Generated Narrative with Details</b></p><p><b>id</b>: f001</p><p><b>subject</b>: <a>P. van de Heuvel</a></p><p><b>status</b>: completed</p><p><b>code</b>: Heart valve replacement <span>(Details : {SNOMED CT code '34068001' = 'Heart valve replacement (procedure)', given as
+           'Heart valve replacement'})</span></p><p><b>bodySite</b>: Heart valve structure <span>(Details : {SNOMED CT code '17401000' = 'Cardiac valve structure (body structure)', given
+           as 'Heart valve structure'})</span></p><p><b>reasonCode</b>: Heart valve disorder <span>(Details )</span></p><h3>Performers</h3><table><tr><td>-</td><td><b>Actor</b></td><td><b>Role</b></td></tr><tr><td>*</td><td><a>P. Voigt</a></td><td>Care role <span>(Details : {urn:oid:2.16.840.1.113883.2.4.15.111 code '01.000' = '01.000', given as 'Arts'})</span></td></tr></table><p><b>performed</b>: Jun 26, 2011 --&gt; Jun 27, 2011</p><p><b>encounter</b>: <a>Encounter/f001</a></p><p><b>outcome</b>: improved blood circulation <span>(Details )</span></p><p><b>report</b>: <a>Lab results blood test</a></p><p><b>followUp</b>: described in care plan <span>(Details )</span></p></div>
+    </text>
+    <subject>
+        <reference value="Patient/f001"/>
+        <display value="P. van de Heuvel"/>
+    </subject>
+    <status value="completed"/>
+    <code>
+        <coding>
+            <system value="http://snomed.info/sct"/>
+            <code value="34068001"/>
+            <display value="Heart valve replacement"/>
+        </coding>
+    </code>
+    <bodySite>
+            <coding>
+                <system value="http://snomed.info/sct"/>
+                <code value="17401000"/>
+                <display value="Heart valve structure"/>
+            </coding>
+    </bodySite>
+    <reasonCode>
+      <text value="Heart valve disorder"/>
+    </reasonCode>
+    <performer>
+        <actor>
+            <reference value="Practitioner/f002"/>
+            <display value="P. Voigt"/>
+        </actor>
+        <role>
+            <coding>
+                <system value="urn:oid:2.16.840.1.113883.2.4.15.111"/> <!--    "AssignedRoleType" coding system    -->
+                <code value="01.000"/>
+                <display value="Arts"/>
+            </coding>
+            <text value="Care role"/>
+        </role>
+    </performer>
+    <performedPeriod>
+        <start value="2011-06-26"/>
+        <end value="2011-06-27"/>
+    </performedPeriod>
+    <encounter>
+        <reference value="Encounter/f001"/>
+    </encounter>
+    <outcome>
+      <text value="improved blood circulation"/>
+    </outcome>
+    <report>
+        <reference value="DiagnosticReport/f001"/>
+        <display value="Lab results blood test"/>
+    </report>
+    <followUp>
+      <text value="described in care plan"/>
+    </followUp>
+</Procedure>

@@ -14,7 +14,7 @@ define NullAndFalse : null and false
 define NullAndNull : null and null
 
 //Implies
-define TrueImpliesTrue : true implies true
+/*define TrueImpliesTrue : true implies true
 define TrueImpliesFalse : true implies false
 define TrueImpliesNull : true implies null
 define FalseImpliesTrue : false implies true
@@ -22,7 +22,7 @@ define FalseImpliesFalse : false implies false
 define FalseImpliesNull : false implies null
 define NullImpliesTrue : null implies true
 define NullImpliesFalse : null implies false
-define NullImpliesNull : null implies null
+define NullImpliesNull : null implies null*/
 
 //Not
 define NotTrue : not true

@@ -215,27 +215,27 @@ public class FhirDataProvider implements DataProvider {
 
         if (dateRange != null) {
             if (dateRange.getLow() != null) {
-                String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
-                if (lowDatePath == null || lowDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
-                }
+              String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
+              if (lowDatePath == null || lowDatePath.equals("")) {
+                throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
+              }
 
-                params.append(String.format("%s=%s%s",
-                        lowDatePath,
-                        dateRange.getLowClosed() ? "ge" : "gt",
-                        dateRange.getLow().toString()));
+              params.append(String.format("%s=%s%s",
+                      lowDatePath,
+                      dateRange.getLowClosed() ? "ge" : "gt",
+                      dateRange.getLow().toString()));
             }
 
             if (dateRange.getHigh() != null) {
-                String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
-                if (highDatePath == null || highDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
-                }
+              String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
+              if (highDatePath == null || highDatePath.equals("")) {
+                throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
+              }
 
-                params.append(String.format("%s=%s%s",
-                        highDatePath,
-                        dateRange.getHighClosed() ? "le" : "lt",
-                        dateRange.getHigh().toString()));
+              params.append(String.format("%s=%s%s",
+                      highDatePath,
+                      dateRange.getHighClosed() ? "le" : "lt",
+                      dateRange.getHigh().toString()));
             }
         }
 

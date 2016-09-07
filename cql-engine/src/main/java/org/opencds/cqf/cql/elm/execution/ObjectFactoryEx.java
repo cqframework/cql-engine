@@ -144,8 +144,8 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     @Override
     public GreaterOrEqual createGreaterOrEqual() { return new GreaterOrEqualEvaluator(); }
 
-    @Override
-    public Implies createImplies() { return new ImpliesEvaluator(); }
+    // @Override
+    // public Implies createImplies() { return new ImpliesEvaluator(); }
 
     @Override
     public IncludedIn createIncludedIn() { return new IncludedInEvaluator(); }

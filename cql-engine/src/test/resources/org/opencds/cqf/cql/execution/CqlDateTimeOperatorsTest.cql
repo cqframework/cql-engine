@@ -52,6 +52,7 @@ define TimeAfterSecondTrue: @T15:59:59.999 after second of @T15:59:58.999
 define TimeAfterSecondFalse: @T15:59:58.999 after second of @T15:59:59.999
 define TimeAfterMillisecondTrue: @T15:59:59.999 after millisecond of @T15:59:59.998
 define TimeAfterMillisecondFalse: @T15:59:59.998 after millisecond of @T15:59:59.999
+// define TimeAfterTimeCstor: Time(12, 30) after hour of Time(11, 55)
 // TODO: do uncertainty tests for Time once the Time(x,x,x,x,x) format has been implemented
 
 //Before

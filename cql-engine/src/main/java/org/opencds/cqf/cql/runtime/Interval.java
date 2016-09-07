@@ -5,6 +5,7 @@ import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
+import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
 import org.joda.time.Partial;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -39,14 +40,19 @@ public class Interval {
 
     public static Object getSize(Object start, Object end) {
       if (start == null || end == null) { return null; }
-      if (start instanceof Integer) { return (Integer)end - (Integer)start; }
-      else if (start instanceof BigDecimal) { return ((BigDecimal)end).subtract((BigDecimal)start); }
-      else if (start instanceof Quantity) { return new Quantity().withValue((((Quantity)end).getValue()).subtract((((Quantity)start).getValue()))).withUnit(((Quantity)start).getUnit()); }
+
+      if (start instanceof Integer || start instanceof BigDecimal || start instanceof Quantity) {
+        return SubtractEvaluator.subtract(end, start);
+      }
       else if (start instanceof DateTime) {
-        return new Quantity().withValue(new BigDecimal(DurationBetweenEvaluator.between((DateTime)start, (DateTime)end, ((DateTime)start).getPartial().size() - 1))).withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
+        return new Quantity()
+          .withValue(new BigDecimal(DurationBetweenEvaluator.between((DateTime)start, (DateTime)end, ((DateTime)start).getPartial().size() - 1)))
+          .withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
       }
       else if (start instanceof Time) {
-        return new Quantity().withValue(new BigDecimal(DurationBetweenEvaluator.between((Time)start, (Time)end, ((Time)start).getPartial().size() - 1))).withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
+        return new Quantity()
+          .withValue(new BigDecimal(DurationBetweenEvaluator.between((Time)start, (Time)end, ((Time)start).getPartial().size() - 1)))
+          .withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
       }
 
       throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));

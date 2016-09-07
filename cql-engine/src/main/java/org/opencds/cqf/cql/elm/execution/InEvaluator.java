@@ -48,6 +48,18 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
     return false;
   }
 
+  public static Boolean in(Object testElement, Interval interval) {
+    if (testElement == null) { return null; }
+    Object rightStart = ((Interval)interval).getStart();
+    Object rightEnd = ((Interval)interval).getEnd();
+
+    if (rightStart == null && ((Interval)interval).getLowClosed()) { return true; }
+    else if (rightEnd == null && ((Interval)interval).getHighClosed()) { return true; }
+    else if (rightStart == null || rightEnd == null) { return null; }
+
+    return (Value.compareTo(testElement, rightStart, ">=") && Value.compareTo(testElement, rightEnd, "<="));
+  }
+
   @Override
   public Object evaluate(Context context) {
     Object left = getOperand().get(0).evaluate(context);
@@ -56,15 +68,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
     if (right == null) { return null; }
 
     if (right instanceof Interval) {
-      if (left == null) { return null; }
-      Object rightStart = ((Interval)right).getStart();
-      Object rightEnd = ((Interval)right).getEnd();
-
-      if (rightStart == null && ((Interval)right).getLowClosed()) { return true; }
-      else if (rightEnd == null && ((Interval)right).getHighClosed()) { return true; }
-      else if (rightStart == null || rightEnd == null) { return null; }
-
-      return (Value.compareTo(left, rightStart, ">=") && Value.compareTo(left, rightEnd, "<="));
+      return in(left, (Interval)right);
     }
 
     else if (right instanceof Iterable) {
