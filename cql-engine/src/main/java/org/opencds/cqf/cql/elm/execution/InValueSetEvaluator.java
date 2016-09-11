@@ -10,7 +10,6 @@ import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -61,31 +60,27 @@ public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InVal
     TerminologyProvider provider = context.resolveTerminologyProvider();
 
     // perform operation
-    try {
-      if (code instanceof String) {
-        for (ValueSetInfo vsi : valueSetInfos) {
-          if (provider.in(new Code().withCode((String)code), vsi)) { return true; }
+    if (code instanceof String) {
+      for (ValueSetInfo vsi : valueSetInfos) {
+        if (provider.in(new Code().withCode((String)code), vsi)) { return true; }
+      }
+      return false;
+    }
+    else if (code instanceof Code) {
+      for (ValueSetInfo vsi : valueSetInfos) {
+        if (provider.in((Code)code, vsi)) { return true; }
+      }
+      return false;
+    }
+    else if (code instanceof Concept) {
+      for (ValueSetInfo vsi : valueSetInfos) {
+        for (Code codes : ((Concept)code).getCodes()) {
+          if (provider.in(codes, vsi)) { return true; }
         }
         return false;
       }
-      else if (code instanceof Code) {
-        for (ValueSetInfo vsi : valueSetInfos) {
-          if (provider.in((Code)code, vsi)) { return true; }
-        }
-        return false;
-      }
-      else if (code instanceof Concept) {
-        for (ValueSetInfo vsi : valueSetInfos) {
-          for (Code codes : ((Concept)code).getCodes()) {
-            if (provider.in(codes, vsi)) { return true; }
-          }
-          return false;
-        }
-      }
-    } catch (ResourceNotFoundException e) {
-        // TODO: Should false be returned here or the error message?
-        return false;
-      }
+    }
+
     throw new IllegalArgumentException(String.format("Cannot InValueSet Code arguments of type '%s'.", code.getClass().getName()));
   }
 

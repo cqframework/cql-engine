@@ -7,7 +7,6 @@ import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
-import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 /*
 in(code String, codesystem CodeSystemRef) Boolean
@@ -35,22 +34,19 @@ public class InCodeSystemEvaluator extends org.cqframework.cql.elm.execution.InC
 
     TerminologyProvider provider = context.resolveTerminologyProvider();
 
-    try {
-      if (code instanceof String) {
-        return provider.lookup(new Code().withCode((String)code), csi) != null ? true : false;
+    if (code instanceof String) {
+      return provider.lookup(new Code().withCode((String)code), csi) != null ? true : false;
+    }
+    else if (code instanceof Code) {
+      return provider.lookup((Code)code, csi) != null ? true : false;
+    }
+    else if (code instanceof Concept) {
+      for (Code codes : ((Concept)code).getCodes()) {
+        if (provider.lookup(codes, csi) != null) { return true; }
       }
-      else if (code instanceof Code) {
-        return provider.lookup((Code)code, csi) != null ? true : false;
-      }
-      else if (code instanceof Concept) {
-        for (Code codes : ((Concept)code).getCodes()) {
-          if (provider.lookup(codes, csi) != null) { return true; }
-        }
-        return false;
-      }
-    } catch (ResourceNotFoundException e) {
-        return false;
-      }
+      return false;
+    }
+
     throw new IllegalArgumentException(String.format("Cannot InCodeSystem Code arguments of type '%s'.", code.getClass().getName()));
   }
 
