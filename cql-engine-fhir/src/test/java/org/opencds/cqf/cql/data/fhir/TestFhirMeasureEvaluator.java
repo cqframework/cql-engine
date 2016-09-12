@@ -6,13 +6,13 @@ import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.hl7.fhir.dstu3.model.Measure;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.testng.annotations.Test;
-import javax.xml.bind.JAXB;
+// import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
 import java.io.*;
 import java.net.URLDecoder;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.notNullValue;
+// import static org.hamcrest.MatcherAssert.assertThat;
+// import static org.hamcrest.Matchers.greaterThan;
+// import static org.hamcrest.Matchers.notNullValue;
 
 /**
  * Created by Bryn on 5/7/2016.
