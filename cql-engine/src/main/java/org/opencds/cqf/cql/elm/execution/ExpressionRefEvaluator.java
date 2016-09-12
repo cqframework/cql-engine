@@ -9,6 +9,12 @@ public class ExpressionRefEvaluator extends org.cqframework.cql.elm.execution.Ex
 
     @Override
     public Object evaluate(Context context) {
-        return context.resolveExpressionRef(this.getLibraryName(), this.getName()).evaluate(context);
+        boolean enteredLibrary = context.enterLibrary(this.getLibraryName());
+        try {
+            return context.resolveExpressionRef(this.getName()).evaluate(context);
+        }
+        finally {
+            context.exitLibrary(enteredLibrary);
+        }
     }
 }

@@ -32,7 +32,7 @@ public class TestFhirLibrary {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
-        Object result = context.resolveExpressionRef(library, "BP: Systolic").evaluate(context);
+        Object result = context.resolveExpressionRef("BP: Systolic").evaluate(context);
         assertThat(result, instanceOf(Iterable.class));
         for (Object element : (Iterable)result) {
             assertThat(element, instanceOf(Observation.class));
@@ -40,7 +40,7 @@ public class TestFhirLibrary {
             assertThat(observation.getCode().getCoding().get(0).getCode(), is("8480-6"));
         }
 
-        result = context.resolveExpressionRef(library, "BP: Diastolic").evaluate(context);
+        result = context.resolveExpressionRef("BP: Diastolic").evaluate(context);
         assertThat(result, instanceOf(Iterable.class));
         for (Object element : (Iterable)result) {
             assertThat(element, instanceOf(Observation.class));
@@ -62,7 +62,7 @@ public class TestFhirLibrary {
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
-        Object result = context.resolveExpressionRef(library, "Breastfeeding Intention Assessment").evaluate(context);
+        Object result = context.resolveExpressionRef("Breastfeeding Intention Assessment").evaluate(context);
         assertThat(result, instanceOf(Iterable.class));
         for (Object element : (Iterable)result) {
             assertThat(element, instanceOf(RiskAssessment.class));

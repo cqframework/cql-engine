@@ -8,9 +8,7 @@ import org.cqframework.cql.elm.execution.*;
 import javax.xml.namespace.QName;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -22,6 +20,9 @@ public class Context {
     private Stack<String> currentContext = new Stack<>();
     private Map<String, Object> contextValues = new HashMap<>();
     private Stack<Stack<Variable>> windows = new Stack<Stack<Variable>>();
+    private Map<String, Library> libraries = new HashMap<>();
+    private Stack<Library> currentLibrary = new Stack<>();
+    private LibraryLoader libraryLoader;
 
     private Library library;
 
@@ -29,25 +30,75 @@ public class Context {
         this.library = library;
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", new SystemDataProvider());
+        libraryLoader = new DefaultLibraryLoader();
+        libraries.put(library.getIdentifier().getId(), library);
+        currentLibrary.push(library);
     }
 
-    public ExpressionDef resolveExpressionRef(Library library, String name) {
-        for (ExpressionDef expressionDef : library.getStatements().getDef()) {
+    public void registerLibraryLoader(LibraryLoader libraryLoader) {
+        if (libraryLoader == null) {
+            throw new IllegalArgumentException("Library loader implementation must not be null.");
+        }
+
+        this.libraryLoader = libraryLoader;
+    }
+
+    private Library getCurrentLibrary() {
+        return currentLibrary.peek();
+    }
+
+    private Library resolveIncludeDef(IncludeDef includeDef) {
+        VersionedIdentifier libraryIdentifier = new VersionedIdentifier().withId(includeDef.getPath()).withVersion(includeDef.getVersion());
+        Library library = libraries.get(libraryIdentifier.getId());
+        if (library == null) {
+            library = libraryLoader.load(libraryIdentifier);
+            libraries.put(libraryIdentifier.getId(), library);
+        }
+
+        if (libraryIdentifier.getVersion() != null && !libraryIdentifier.getVersion().equals(library.getIdentifier().getVersion())) {
+            throw new IllegalArgumentException(String.format("Could not load library '%s' version '%s' because version '%s' is already loaded.",
+                    libraryIdentifier.getId(), libraryIdentifier.getVersion(), library.getIdentifier().getVersion()));
+        }
+
+        return library;
+    }
+
+    public boolean enterLibrary(String libraryName) {
+        if (libraryName != null) {
+            IncludeDef includeDef = resolveLibraryRef(libraryName);
+            Library library = resolveIncludeDef(includeDef);
+            currentLibrary.push(library);
+            return true;
+        }
+
+        return false;
+    }
+
+    public void exitLibrary(boolean enteredLibrary) {
+        if (enteredLibrary) {
+            currentLibrary.pop();
+        }
+    }
+
+    private IncludeDef resolveLibraryRef(String libraryName) {
+        for (IncludeDef includeDef : getCurrentLibrary().getIncludes().getDef()) {
+            if (includeDef.getLocalIdentifier().equals(libraryName)) {
+                return includeDef;
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("Could not resolve library reference '%s'.", libraryName));
+    }
+
+    public ExpressionDef resolveExpressionRef(String name) {
+        for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
             if (expressionDef.getName().equals(name)) {
                 return expressionDef;
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve expression reference '%s'.", name));
-    }
-
-    public ExpressionDef resolveExpressionRef(String libraryName, String name) {
-        // TODO: Library resolution of expression refs
-        if (libraryName != null) {
-            throw new NotImplementedException("Library resolution of expression refs is not yet supported.");
-        }
-
-        return resolveExpressionRef(this.library, name);
+        throw new IllegalArgumentException(String.format("Could not resolve expression reference '%s' in library '%s'.",
+                name, getCurrentLibrary().getIdentifier().getId()));
     }
 
     public Class resolveType(QName typeName) {
@@ -60,7 +111,8 @@ public class Context {
             return resolveType(((NamedTypeSpecifier)typeSpecifier).getName());
         }
         else {
-            throw new IllegalArgumentException(String.format("Resolution for %s type specifiers not implemented yet.", typeSpecifier.getClass().getName()));
+            throw new IllegalArgumentException(String.format("Resolution for %s type specifiers not implemented yet.",
+                    typeSpecifier.getClass().getName()));
         }
     }
 
@@ -78,10 +130,10 @@ public class Context {
     }
 
     // TODO: Could use some caching here, and potentially some better type resolution structures
-    public FunctionDef resolveFunctionRef(Library library, String name, Iterable<Object> arguments) {
+    public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
       String str = "";
       String str2 = "";
-        for (ExpressionDef expressionDef : library.getStatements().getDef()) {
+        for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
             //str += expressionDef.getName() + " ";
             if (expressionDef instanceof FunctionDef) {
                 FunctionDef functionDef = (FunctionDef)expressionDef;
@@ -110,80 +162,80 @@ public class Context {
                 }
             }
         }
-        throw new IllegalArgumentException(String.format("Could not resolve call to operator %s.", name));
+        throw new IllegalArgumentException(String.format("Could not resolve call to operator '%s' in library '%s'.",
+                name, getCurrentLibrary().getIdentifier().getId()));
         //throw new IllegalArgumentException(String.format("Name: %s,\nExpDef: %s,\nFunDef: %s.", name, str, str2));
     }
 
-    public FunctionDef resolveFunctionRef(String libraryName, String name, Iterable<Object> arguments) {
-        // TODO: Library resolution of function refs
-        if (libraryName != null) {
-            throw new NotImplementedException("Library resolution of function refs is not yet supported.");
-        }
-
-        return resolveFunctionRef(this.library, name, arguments);
-    }
-
-    public ParameterDef resolveParameterRef(Library library, String name) {
-        for (ParameterDef parameterDef : library.getParameters().getDef()) {
+    private ParameterDef resolveParameterRef(String name) {
+        for (ParameterDef parameterDef : getCurrentLibrary().getParameters().getDef()) {
             if (parameterDef.getName().equals(name)) {
                 return parameterDef;
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve parameter reference '%s'.", name));
+        throw new IllegalArgumentException(String.format("Could not resolve parameter reference '%s' in library '%s'.",
+                name, getCurrentLibrary().getIdentifier().getId()));
     }
 
-    public ValueSetDef resolveValueSetRef(Library library, String name) {
-        for (ValueSetDef valueSetDef : library.getValueSets().getDef()) {
+    public Object resolveParameterRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            String fullName = String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name);
+            if (parameters.containsKey(fullName)) {
+                return parameters.get(fullName);
+            }
+
+            ParameterDef parameterDef = resolveParameterRef(name);
+            Object result = parameterDef.getDefault() != null ? parameterDef.getDefault().evaluate(this) : null;
+            parameters.put(fullName, result);
+            return result;
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
+    }
+
+    public ValueSetDef resolveValueSetRef(String name) {
+        for (ValueSetDef valueSetDef : getCurrentLibrary().getValueSets().getDef()) {
             if (valueSetDef.getName().equals(name)) {
                 return valueSetDef;
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve value set reference '%s'.", name));
+        throw new IllegalArgumentException(String.format("Could not resolve value set reference '%s' in library '%s'.",
+                name, getCurrentLibrary().getIdentifier().getId()));
     }
 
-    public CodeSystemDef resolveCodeSystemRef(Library library, String name) {
-        for (CodeSystemDef codeSystemDef : library.getCodeSystems().getDef()) {
+    public ValueSetDef resolveValueSetRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            return resolveValueSetRef(name);
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
+    }
+
+    public CodeSystemDef resolveCodeSystemRef(String name) {
+        for (CodeSystemDef codeSystemDef : getCurrentLibrary().getCodeSystems().getDef()) {
             if (codeSystemDef.getName().equals(name)) {
                 return codeSystemDef;
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve code system reference '%s'.", name));
+        throw new IllegalArgumentException(String.format("Could not resolve code system reference '%s' in library '%s'.",
+                name, getCurrentLibrary().getIdentifier().getId()));
     }
 
-    public CodeSystemDef resolveCodeSystemRef(String library, String name) {
-        if (library != null) {
-            throw new NotImplementedException("Library resolution of code system references is not yet supported.");
+    public CodeSystemDef resolveCodeSystemRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            return resolveCodeSystemRef(name);
         }
-
-        return resolveCodeSystemRef(this.library, name);
-    }
-
-    public Object resolveParameterRef(String library, String name) {
-        // TODO: Library parameter resolution
-        if (library != null) {
-            throw new NotImplementedException("Library resolution of parameters is not yet supported.");
+        finally {
+            exitLibrary(enteredLibrary);
         }
-
-        if (parameters.containsKey(name)) {
-            return parameters.get(name);
-        }
-
-        ParameterDef parameterDef = resolveParameterRef(this.library, name);
-        Object result = parameterDef.getDefault() != null ? parameterDef.getDefault().evaluate(this) : null;
-        parameters.put(name, result);
-        return result;
-    }
-
-    public ValueSetDef resolveValueSetRef(String library, String name) {
-        // TODO: Library resolution
-        if (library != null) {
-            throw new NotImplementedException("Library resolutuion of value sets is not yet supported.");
-        }
-
-        return resolveValueSetRef(this.library, name);
     }
 
     private Map<String, DataProvider> dataProviders = new HashMap<>();

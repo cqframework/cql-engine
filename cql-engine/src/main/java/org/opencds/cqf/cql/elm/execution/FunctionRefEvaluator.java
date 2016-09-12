@@ -17,16 +17,22 @@ public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.Func
             arguments.add(operand.evaluate(context));
         }
 
-        org.cqframework.cql.elm.execution.FunctionDef functionDef = context.resolveFunctionRef(this.getLibraryName(), this.getName(), arguments);
-        context.pushWindow();
+        boolean enteredLibrary = context.enterLibrary(this.getLibraryName());
         try {
-            for (int i = 0; i < arguments.size(); i++) {
-                context.push(new Variable().withName(functionDef.getOperand().get(i).getName()).withValue(arguments.get(i)));
+            org.cqframework.cql.elm.execution.FunctionDef functionDef = context.resolveFunctionRef(this.getName(), arguments);
+            context.pushWindow();
+            try {
+                for (int i = 0; i < arguments.size(); i++) {
+                    context.push(new Variable().withName(functionDef.getOperand().get(i).getName()).withValue(arguments.get(i)));
+                }
+                return functionDef.getExpression().evaluate(context);
             }
-            return functionDef.getExpression().evaluate(context);
+            finally {
+                context.popWindow();
+            }
         }
         finally {
-            context.popWindow();
+            context.exitLibrary(enteredLibrary);
         }
     }
 }

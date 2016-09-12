@@ -23,9 +23,15 @@ public class CodeEvaluator extends org.cqframework.cql.elm.execution.Code {
         org.opencds.cqf.cql.runtime.Code code = new org.opencds.cqf.cql.runtime.Code().withCode(this.getCode()).withDisplay(this.getDisplay());
         org.cqframework.cql.elm.execution.CodeSystemRef codeSystemRef = this.getSystem();
         if (codeSystemRef != null) {
-            org.cqframework.cql.elm.execution.CodeSystemDef codeSystemDef = context.resolveCodeSystemRef(codeSystemRef.getLibraryName(), codeSystemRef.getName());
-            code.setSystem(codeSystemDef.getId());
-            code.setVersion(codeSystemDef.getVersion());
+            boolean enteredLibrary = context.enterLibrary(codeSystemRef.getLibraryName());
+            try {
+                org.cqframework.cql.elm.execution.CodeSystemDef codeSystemDef = context.resolveCodeSystemRef(codeSystemRef.getName());
+                code.setSystem(codeSystemDef.getId());
+                code.setVersion(codeSystemDef.getVersion());
+            }
+            finally {
+                context.exitLibrary(enteredLibrary);
+            }
         }
 
         return code;

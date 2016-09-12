@@ -21,22 +21,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        // result = context.resolveExpressionRef(library, "ContainsABNullHasNull").getExpression().evaluate(context);
+        // result = context.resolveExpressionRef("ContainsABNullHasNull").getExpression().evaluate(context);
         // assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ContainsABCHasA").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ContainsABCHasA").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ContainsJan2012True").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ContainsJan2012True").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ContainsJan2012False").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ContainsJan2012False").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ContainsTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ContainsTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ContainsTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ContainsTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -48,35 +48,35 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "DistinctEmptyList").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DistinctEmptyList").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        // result = context.resolveExpressionRef(library, "DistinctNullNullNull").getExpression().evaluate(context);
+        // result = context.resolveExpressionRef("DistinctNullNullNull").getExpression().evaluate(context);
         // assertThat(result, is(new ArrayList<Object>() {{
         //     add(null);
         // }}));
         //
-        // result = context.resolveExpressionRef(library, "DistinctANullANull").getExpression().evaluate(context);
+        // result = context.resolveExpressionRef("DistinctANullANull").getExpression().evaluate(context);
         // assertThat(result, is(Arrays.asList("a", null)));
 
-        result = context.resolveExpressionRef(library, "Distinct112233").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Distinct112233").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
 
-        result = context.resolveExpressionRef(library, "Distinct123123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Distinct123123").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
 
-        result = context.resolveExpressionRef(library, "DistinctAABBCC").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DistinctAABBCC").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("a", "b", "c")));
 
-        result = context.resolveExpressionRef(library, "DistinctABCABC").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DistinctABCABC").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("a", "b", "c")));
 
-        result = context.resolveExpressionRef(library, "DistinctDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DistinctDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 10, 5})));
         assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
 
-        result = context.resolveExpressionRef(library, "DistinctTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DistinctTime").getExpression().evaluate(context);
         assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
@@ -90,40 +90,40 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "EqualNullNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualNullNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EqualEmptyListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualEmptyListNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EqualNullEmptyList").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualNullEmptyList").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EqualEmptyListAndEmptyList").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualEmptyListAndEmptyList").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "Equal12And123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Equal12And123").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "Equal123And12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Equal123And12").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "Equal123And123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Equal123And123").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EqualDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EqualDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "EqualDateTimeNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualDateTimeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EqualTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EqualTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EqualTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -135,20 +135,20 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ExceptEmptyListAndEmptyList").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptEmptyListAndEmptyList").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        result = context.resolveExpressionRef(library, "Except1234And23").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Except1234And23").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 4)));
 
-        result = context.resolveExpressionRef(library, "Except23And1234").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Except23And1234").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        result = context.resolveExpressionRef(library, "ExceptDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
         assertThat(((ArrayList<Object>)result).size(), is(1));
 
-        result = context.resolveExpressionRef(library, "ExceptTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptTime").getExpression().evaluate(context);
         assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((ArrayList<Object>)result).size(), is(1));
     }
@@ -161,22 +161,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ExistsEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExistsEmpty").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ExistsListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExistsListNull").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "Exists1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Exists1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "Exists12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Exists12").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ExistsDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExistsDateTime").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ExistsTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExistsTime").getExpression().evaluate(context);
         assertThat(result, is(true));
     }
 
@@ -188,21 +188,21 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "FlattenEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FlattenEmpty").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        result = context.resolveExpressionRef(library, "FlattenListNullAndNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FlattenListNullAndNull").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(null, null)));
 
-        result = context.resolveExpressionRef(library, "FlattenList12And34").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FlattenList12And34").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
-        result = context.resolveExpressionRef(library, "FlattenDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FlattenDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
         assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
 
-        result = context.resolveExpressionRef(library, "FlattenTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FlattenTime").getExpression().evaluate(context);
         assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
@@ -216,22 +216,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "FirstEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FirstEmpty").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "FirstNull1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FirstNull1").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "First1Null").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("First1Null").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "First12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("First12").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "FirstDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FirstDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
 
-        result = context.resolveExpressionRef(library, "FirstTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("FirstTime").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
     }
 
@@ -243,31 +243,31 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "InNullEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "InNullAnd1Null").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "In1Null").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "In1And12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("In1And12").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "In3And12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("In3And12").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "InDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("InDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "InDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("InDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "InTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("InTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "InTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("InTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -279,31 +279,31 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "IncludesEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludesEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludesListNullAndListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludesListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "Includes123AndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Includes123AndEmpty").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "Includes123And2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Includes123And2").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "Includes123And4").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Includes123And4").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IncludesDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludesDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludesDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludesDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IncludesTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludesTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludesTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludesTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -315,31 +315,31 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "IncludedInEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludedInListNullAndListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludedInEmptyAnd123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInEmptyAnd123").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludedIn2And123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedIn2And123").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludedIn4And123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedIn4And123").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IncludedInDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludedInDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IncludedInTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IncludedInTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IncludedInTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -351,25 +351,25 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "IndexerNull1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexerNull1").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "Indexer0Of12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Indexer0Of12").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "Indexer1Of12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Indexer1Of12").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        result = context.resolveExpressionRef(library, "Indexer2Of12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Indexer2Of12").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IndexerNeg1Of12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexerNeg1Of12").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IndexerDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexerDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
 
-        result = context.resolveExpressionRef(library, "IndexerTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexerTime").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
     }
 
@@ -382,28 +382,28 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "IndexOfEmptyNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOfEmptyNull").getExpression().evaluate(context);
         assertThat(result, is(-1));
 
-        result = context.resolveExpressionRef(library, "IndexOfNullEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOfNullEmpty").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IndexOfNullIn1Null").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOfNullIn1Null").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "IndexOf1In12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOf1In12").getExpression().evaluate(context);
         assertThat(result, is(0));
 
-        result = context.resolveExpressionRef(library, "IndexOf2In12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOf2In12").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "IndexOf3In12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOf3In12").getExpression().evaluate(context);
         assertThat(result, is(-1));
 
-        result = context.resolveExpressionRef(library, "IndexOfDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOfDateTime").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        result = context.resolveExpressionRef(library, "IndexOfTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexOfTime").getExpression().evaluate(context);
         assertThat(result, is(1));
     }
 
@@ -415,21 +415,21 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "IntersectEmptyListAndEmptyList").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntersectEmptyListAndEmptyList").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        result = context.resolveExpressionRef(library, "Intersect1234And23").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Intersect1234And23").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(2, 3)));
 
-        result = context.resolveExpressionRef(library, "Intersect23And1234").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Intersect23And1234").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(2, 3)));
 
-        result = context.resolveExpressionRef(library, "IntersectDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntersectDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
         assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
 
-        result = context.resolveExpressionRef(library, "IntersectTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntersectTime").getExpression().evaluate(context);
         assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
@@ -443,22 +443,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "LastEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LastEmpty").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "LastNull1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LastNull1").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "Last1Null").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Last1Null").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "Last12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Last12").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        result = context.resolveExpressionRef(library, "LastDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LastDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
 
-        result = context.resolveExpressionRef(library, "LastTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LastTime").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
     }
 
@@ -470,22 +470,22 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "LengthEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LengthEmpty").getExpression().evaluate(context);
         assertThat(result, is(0));
 
-        result = context.resolveExpressionRef(library, "LengthNull1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LengthNull1").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        result = context.resolveExpressionRef(library, "Length1Null").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Length1Null").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        result = context.resolveExpressionRef(library, "Length12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Length12").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        result = context.resolveExpressionRef(library, "LengthDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LengthDateTime").getExpression().evaluate(context);
         assertThat(result, is(3));
 
-        result = context.resolveExpressionRef(library, "LengthTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LengthTime").getExpression().evaluate(context);
         assertThat(result, is(6));
     }
 
@@ -497,40 +497,40 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "EquivalentEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EquivalentABCAndABC").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentABCAndABC").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EquivalentABCAndAB").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentABCAndAB").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "EquivalentABCAnd123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentABCAnd123").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "Equivalent123AndABC").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Equivalent123AndABC").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "Equivalent123AndString123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Equivalent123AndString123").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EquivalentDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EquivalentDateTimeNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentDateTimeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EquivalentDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "EquivalentTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "EquivalentTimeNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentTimeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "EquivalentTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("EquivalentTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -542,34 +542,34 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "NotEqualEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "NotEqualABCAndABC").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualABCAndABC").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "NotEqualABCAndAB").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualABCAndAB").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "NotEqualABCAnd123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualABCAnd123").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "NotEqual123AndABC").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqual123AndABC").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "NotEqual123AndString123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqual123AndString123").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "NotEqualDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "NotEqualDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "NotEqualTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "NotEqualTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("NotEqualTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -581,31 +581,31 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ProperIncludesEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludesEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludesListNullAndListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludesListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludes123AndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludes123AndEmpty").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludes123And2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludes123And2").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludes123And4").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludes123And4").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludesDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludesDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludesDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludesDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludesTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludesTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludesTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludesTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -617,25 +617,25 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "ProperIncludedInEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedInEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludedInListNullAndListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedInListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludedInEmptyAnd123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedInEmptyAnd123").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludedIn2And123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedIn2And123").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludedIn4And123").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedIn4And123").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "ProperIncludedInDateTimeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedInDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "ProperIncludedInDateTimeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperIncludedInDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -647,26 +647,26 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "SingletonFromEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("SingletonFromEmpty").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "SingletonFromListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("SingletonFromListNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "SingletonFrom1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("SingletonFrom1").getExpression().evaluate(context);
         assertThat(result, is(1));
 
         try {
-            result = context.resolveExpressionRef(library, "SingletonFrom12").getExpression().evaluate(context);
+            result = context.resolveExpressionRef("SingletonFrom12").getExpression().evaluate(context);
             Assert.fail("List with more than one element should throw an exception");
         } catch (IllegalArgumentException ex) {
             assertThat(ex, isA(IllegalArgumentException.class));
         }
 
-        result = context.resolveExpressionRef(library, "SingletonFromDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("SingletonFromDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
 
-        result = context.resolveExpressionRef(library, "SingletonFromTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("SingletonFromTime").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
     }
 
@@ -678,28 +678,28 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        result = context.resolveExpressionRef(library, "UnionEmptyAndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("UnionEmptyAndEmpty").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList()));
 
-        result = context.resolveExpressionRef(library, "UnionListNullAndListNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("UnionListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(null, null)));
 
-        result = context.resolveExpressionRef(library, "Union123AndEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Union123AndEmpty").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
 
-        result = context.resolveExpressionRef(library, "Union123And2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Union123And2").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 2)));
 
-        result = context.resolveExpressionRef(library, "Union123And4").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Union123And4").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
-        result = context.resolveExpressionRef(library, "UnionDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("UnionDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2001, 9, 11})));
         assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
         assertThat(((DateTime)((ArrayList<Object>)result).get(2)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
         assertThat(((ArrayList<Object>)result).size(), is(3));
 
-        result = context.resolveExpressionRef(library, "UnionTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("UnionTime").getExpression().evaluate(context);
         assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
         assertThat(((Time)((ArrayList<Object>)result).get(2)).getPartial(), is(new Partial(Time.getFields(4), new int[] {12, 59, 59, 999})));

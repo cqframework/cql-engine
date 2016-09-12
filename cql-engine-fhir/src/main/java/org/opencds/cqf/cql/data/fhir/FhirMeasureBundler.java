@@ -13,7 +13,7 @@ public class FhirMeasureBundler {
         Bundle bundle = new Bundle();
         bundle.setType(Bundle.BundleType.COLLECTION);
         for (String expressionName : expressionNames) {
-            Object result = context.resolveExpressionRef((String)null, expressionName).evaluate(context);
+            Object result = context.resolveExpressionRef(expressionName).evaluate(context);
             for (Object element : (Iterable)result) {
                 Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
                 entry.setResource((Resource)element);

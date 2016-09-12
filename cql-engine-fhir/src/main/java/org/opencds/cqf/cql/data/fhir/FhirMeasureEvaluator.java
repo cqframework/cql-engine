@@ -26,7 +26,7 @@ public class FhirMeasureEvaluator {
             report.getGroup().add(reportGroup);
             for (Measure.MeasureGroupPopulationComponent population : group.getPopulation()) {
                 // evaluate the criteria expression, should return true/false, translate to 0/1 for report
-                Boolean result = (Boolean)context.resolveExpressionRef((String)null, population.getCriteria()).evaluate(context);
+                Boolean result = (Boolean)context.resolveExpressionRef(population.getCriteria()).evaluate(context);
                 MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
                 populationReport.setCount(result != null && result ? 1 : 0);
                 populationReport.setType(population.getType().toCode()); // TODO: It's not clear why these properties are represented differently in the HAPI client, they're the same type in the FHIR spec...

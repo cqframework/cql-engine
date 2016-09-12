@@ -25,173 +25,173 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         /*
         After:
         */
-        Object result = context.resolveExpressionRef(library, "TestAfterNull").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("TestAfterNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalPointAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalPointAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalPointAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalPointAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalAfterPointTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalAfterPointTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalAfterPointFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalAfterPointFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalPointAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalPointAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalPointAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalPointAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalAfterPointTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalAfterPointTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalAfterPointFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalAfterPointFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalPointAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalPointAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalPointAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalPointAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalAfterPointTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalAfterPointTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalAfterPointFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalAfterPointFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Before:
         */
-        result = context.resolveExpressionRef(library, "TestBeforeNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestBeforeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalPointBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalPointBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalPointBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalPointBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalBeforePointTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalBeforePointTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalBeforePointFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalBeforePointFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalPointBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalPointBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalPointBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalPointBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalBeforePointTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalBeforePointTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalBeforePointFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalBeforePointFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalPointBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalPointBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalPointBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalPointBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalBeforePointTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalBeforePointTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalBeforePointFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalBeforePointFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Collapse:
         */
-        result = context.resolveExpressionRef(library, "TestCollapseNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestCollapseNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalCollapse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalCollapse").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(new Interval(1, true, 10, true), new Interval(12, true, 19, true))));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalCollapse2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalCollapse2").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(new Interval(1, true, 2, true), new Interval(3, true, 19, true))));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalCollapse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalCollapse").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true), new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true))));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalCollapse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalCollapse").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true), new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true))));
 
-        result = context.resolveExpressionRef(library, "DateTimeCollapse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeCollapse").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)((ArrayList<Object>)result).get(0)).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1})));
         assertThat(((DateTime)((Interval)((ArrayList<Object>)result).get(0)).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 25})));
         assertThat(((DateTime)((Interval)((ArrayList<Object>)result).get(1)).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
         assertThat(((DateTime)((Interval)((ArrayList<Object>)result).get(1)).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 30})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
 
-        result = context.resolveExpressionRef(library, "TimeCollapse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeCollapse").getExpression().evaluate(context);
         assertThat(((Time)((Interval)((ArrayList<Object>)result).get(0)).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {1, 59, 59, 999})));
         assertThat(((Time)((Interval)((ArrayList<Object>)result).get(0)).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((Time)((Interval)((ArrayList<Object>)result).get(1)).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {17, 59, 59, 999})));
@@ -201,227 +201,227 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         /*
         Contains:
         */
-        result = context.resolveExpressionRef(library, "TestContainsNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestContainsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalContainsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalContainsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalContainsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalContainsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalContainsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalContainsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalContainsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalContainsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalContainsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeContainsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeContainsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeContainsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeContainsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeContainsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeContainsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Ends
         */
-        result = context.resolveExpressionRef(library, "TestEndsNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestEndsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalEndsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEndsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalEndsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEndsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEndsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEndsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEndsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEndsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEndsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEndsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEndsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEndsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeEndsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeEndsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeEndsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeEndsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeEndsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeEndsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeEndsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeEndsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Equal
         */
-        result = context.resolveExpressionRef(library, "TestEqualNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestEqualNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Except:
         */
-        result = context.resolveExpressionRef(library, "TestExceptNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalExcept1to3").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalExcept1to3").getExpression().evaluate(context);
         assertThat((Interval)result, is(new Interval(1, true, 3, true)));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalExceptNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalExcept1to3").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalExcept1to3").getExpression().evaluate(context);
         assertThat((Interval)result, is(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.99999999"), true)));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalExceptNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalExcept1to4").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalExcept1to4").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.99999999")).withUnit("g"), true)));
 
-        result = context.resolveExpressionRef(library, "Except12").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Except12").getExpression().evaluate(context);
         assertThat((Interval)result, is(new Interval(1, true, 2, true)));
 
-        result = context.resolveExpressionRef(library, "ExceptDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 5})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 6})));
 
-        result = context.resolveExpressionRef(library, "ExceptDateTime2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptDateTime2").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 13})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 16})));
 
-        result = context.resolveExpressionRef(library, "ExceptTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptTime").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {8, 59, 59, 998})));
 
-        result = context.resolveExpressionRef(library, "ExceptTime2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptTime2").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 0, 0, 0})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 59, 59, 999})));
 
         /*
         In
         */
-        result = context.resolveExpressionRef(library, "TestInNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeInNullTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeInNullTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeInNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         /*
         Includes
         */
-        result = context.resolveExpressionRef(library, "TestIncludesNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestIncludesNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
@@ -429,69 +429,69 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         */
 
         // This is going to the InEvaluator for some reason
-        // result = context.resolveExpressionRef(library, "TestIncludedInNull").getExpression().evaluate(context);
+        // result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
         // assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Intersect
         */
 
-        // result = context.resolveExpressionRef(library, "TestIntersectNull").getExpression().evaluate(context);
+        // result = context.resolveExpressionRef("TestIntersectNull").getExpression().evaluate(context);
         // assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
         assertThat(result, is(new Interval(4, true, 10, true)));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalIntersectTest4to10").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalIntersectTest4to10").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new BigDecimal("4.0"), true, new BigDecimal("10.0"), true)));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalIntersectTest5to10").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalIntersectTest5to10").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalIntersectTestNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalIntersectTestNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "DateTimeIntersect").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIntersect").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 7})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 10})));
 
-        result = context.resolveExpressionRef(library, "TimeIntersect").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIntersect").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {4, 59, 59, 999})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {6, 59, 59, 999})));
 
@@ -499,506 +499,506 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Equivalent
         */
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalEquivalentTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalEquivalentFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEquivalentTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEquivalentFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEquivalentTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEquivalentFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeEquivalentTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeEquivalentFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeEquivalentTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeEquivalentFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Meets
         */
-        result = context.resolveExpressionRef(library, "TestMeetsNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestMeetsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalMeetsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalMeetsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalMeetsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalMeetsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalMeetsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalMeetsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalMeetsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalMeetsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalMeetsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeMeetsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeMeetsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeMeetsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeMeetsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeMeetsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeMeetsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         MeetsBefore
         */
-        result = context.resolveExpressionRef(library, "TestMeetsBeforeNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestMeetsBeforeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalMeetsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalMeetsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalMeetsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalMeetsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalMeetsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalMeetsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalMeetsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalMeetsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalMeetsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeMeetsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeMeetsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeMeetsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeMeetsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeMeetsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeMeetsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         MeetsAfter
         */
-        result = context.resolveExpressionRef(library, "TestMeetsAfterNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestMeetsAfterNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalMeetsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalMeetsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalMeetsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalMeetsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalMeetsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalMeetsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalMeetsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalMeetsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalMeetsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeMeetsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeMeetsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeMeetsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeMeetsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeMeetsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeMeetsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         NotEqual
         */
-        result = context.resolveExpressionRef(library, "IntegerIntervalNotEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalNotEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalNotEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalNotEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalNotEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalNotEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalNotEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalNotEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalNotEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalNotEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalNotEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalNotEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeNotEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeNotEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeNotEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeNotEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeNotEqualTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeNotEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeNotEqualFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeNotEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Overlaps
         */
-        result = context.resolveExpressionRef(library, "TestOverlapsNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestOverlapsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalOverlapsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalOverlapsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalOverlapsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalOverlapsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeOverlapsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeOverlapsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeOverlapsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeOverlapsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         OverlapsBefore
         */
-        result = context.resolveExpressionRef(library, "TestOverlapsBeforeNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestOverlapsBeforeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalOverlapsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalOverlapsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeOverlapsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeOverlapsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeOverlapsBeforeTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeOverlapsBeforeFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         OverlapsAfter
         */
-        result = context.resolveExpressionRef(library, "TestOverlapsAfterNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestOverlapsAfterNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalOverlapsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalOverlapsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalOverlapsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalOverlapsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalOverlapsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeOverlapsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeOverlapsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeOverlapsAfterTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeOverlapsAfterFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         ProperlyIncludes
         */
-        result = context.resolveExpressionRef(library, "TestProperlyIncludesNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestProperlyIncludesNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalProperlyIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalProperlyIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalProperlyIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalProperlyIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalProperlyIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalProperlyIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalProperlyIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalProperlyIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalProperlyIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeProperlyIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeProperlyIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeProperlyIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeProperlyIncludesTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeProperlyIncludesFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeProperlyIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         ProperlyIncludedIn
         */
-        result = context.resolveExpressionRef(library, "TestProperlyIncludedInNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestProperlyIncludedInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalProperlyIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalProperlyIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalProperlyIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalProperlyIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalProperlyIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalProperlyIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeProperlyIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeProperlyIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeProperlyIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeProperlyIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeProperlyIncludedInFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeProperlyIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Interval
         */
-        result = context.resolveExpressionRef(library, "IntegerIntervalTest").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalTest").getExpression().evaluate(context);
         assertThat(result, is(new Interval(1, true, 10, true)));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalTest").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalTest").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalTest").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalTest").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
 
-        result = context.resolveExpressionRef(library, "DateTimeIntervalTest").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIntervalTest").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 1, 0, 0, 0, 0})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 2, 0, 0, 0, 0})));
 
-        result = context.resolveExpressionRef(library, "TimeIntervalTest").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIntervalTest").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 599})));
 
         /*
         Start
         */
-        result = context.resolveExpressionRef(library, "IntegerIntervalStart").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalStart").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalStart").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalStart").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("1.0")));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalStart").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalStart").getExpression().evaluate(context);
         assertThat(result, is(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g")));
 
-        result = context.resolveExpressionRef(library, "DateTimeIntervalStart").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIntervalStart").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 1, 0, 0, 0, 0})));
 
-        result = context.resolveExpressionRef(library, "TimeIntervalStart").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIntervalStart").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
 
         /*
         Starts
         */
-        result = context.resolveExpressionRef(library, "TestStartsNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestStartsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalStartsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalStartsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalStartsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalStartsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalStartsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalStartsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "DateTimeStartsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "DateTimeStartsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef(library, "TimeStartsTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef(library, "TimeStartsFalse").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         /*
         Union
         */
-        result = context.resolveExpressionRef(library, "TestUnionNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalUnion1To15").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalUnion1To15").getExpression().evaluate(context);
         assertThat(result, is(new Interval(1, true, 15, true)));
 
-        result = context.resolveExpressionRef(library, "IntegerIntervalUnionNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalUnion1To15").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalUnion1To15").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new BigDecimal("1.0"), true, new BigDecimal("15.0"), true)));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalUnionNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalUnion1To15").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalUnion1To15").getExpression().evaluate(context);
         assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("15.0")).withUnit("g"), true)));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalUnionNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "DateTimeUnion").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeUnion").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 5})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 28})));
 
-        result = context.resolveExpressionRef(library, "DateTimeUnionNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "TimeUnion").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeUnion").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
 
-        result = context.resolveExpressionRef(library, "TimeUnionNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         /*
         Width
         */
-        result = context.resolveExpressionRef(library, "IntegerIntervalTestWidth9").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalTestWidth9").getExpression().evaluate(context);
         assertThat(result, is(9));
 
-        result = context.resolveExpressionRef(library, "IntervalTestWidthNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntervalTestWidthNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalTestWidth11").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalTestWidth11").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("11.0")));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalTestWidth5").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalTestWidth5").getExpression().evaluate(context);
         assertThat(result, is(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
 
-        result = context.resolveExpressionRef(library, "DateTimeWidth").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeWidth").getExpression().evaluate(context);
         assertThat(result, is(new Quantity().withValue(new BigDecimal("20")).withUnit("days")));
 
-        result = context.resolveExpressionRef(library, "TimeWidth").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeWidth").getExpression().evaluate(context);
         assertThat(result, is(new Quantity().withValue(new BigDecimal("36000000")).withUnit("milliseconds")));
 
         /*
         End
         */
-        result = context.resolveExpressionRef(library, "IntegerIntervalEnd").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalEnd").getExpression().evaluate(context);
         assertThat(result, is(10));
 
-        result = context.resolveExpressionRef(library, "DecimalIntervalEnd").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DecimalIntervalEnd").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("10.0")));
 
-        result = context.resolveExpressionRef(library, "QuantityIntervalEnd").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("QuantityIntervalEnd").getExpression().evaluate(context);
         assertThat(result, is(new Quantity().withValue(new BigDecimal("10.0")).withUnit("g")));
 
-        result = context.resolveExpressionRef(library, "DateTimeIntervalEnd").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("DateTimeIntervalEnd").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 2, 0, 0, 0, 0})));
 
-        result = context.resolveExpressionRef(library, "TimeIntervalEnd").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TimeIntervalEnd").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 599})));
     }
 }
