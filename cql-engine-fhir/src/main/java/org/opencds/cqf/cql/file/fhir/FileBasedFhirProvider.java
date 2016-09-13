@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.file.fhir;
 
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.data.DataProvider;
@@ -60,18 +61,7 @@ How do I use it?
       - etc...
 */
 
-public class FileBasedFhirProvider implements DataProvider {
-
-  FhirContext fhirContext;
-  public FileBasedFhirProvider() {
-    fhirContext = FhirContext.forDstu3();
-    this.packageName = "org.hl7.fhir.dstu3.model";
-  }
-
-  private String packageName;
-  public String getPackageName() {
-    return packageName;
-  }
+public class FileBasedFhirProvider extends BaseFhirDataProvider {
 
   private Path path;
   public Path getPath() {
@@ -88,80 +78,6 @@ public class FileBasedFhirProvider implements DataProvider {
   public FileBasedFhirProvider withPath(String path) {
     setPath(path);
     return this;
-  }
-
-  public Object resolvePath(Object target, String path) {
-    if (target == null) {
-      return null;
-    }
-
-    if (target instanceof Enumeration && path.equals("value")) {
-      return ((Enumeration)target).getValueAsString();
-    }
-
-    Class<? extends Object> clazz = target.getClass();
-    try {
-      String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
-      String elementAccessorMethodName = String.format("%sElement", accessorMethodName);
-      Method accessor = null;
-      try {
-        accessor = clazz.getMethod(elementAccessorMethodName);
-      }
-      catch (NoSuchMethodException e) {
-        accessor = clazz.getMethod(accessorMethodName);
-      }
-      return accessor.invoke(target);
-    }
-    catch (NoSuchMethodException e) {
-      throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
-    }
-    catch (InvocationTargetException e) {
-      throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-    }
-    catch (IllegalAccessException e) {
-      throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-    }
-  }
-
-  public void setValue(Object target, String path, Object value) {
-    if (target == null) {
-      return;
-    }
-
-    Class<? extends Object> clazz = target.getClass();
-    try {
-      String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
-      Method accessor = clazz.getMethod(accessorMethodName);
-      accessor.invoke(target, value);
-    }
-    catch (NoSuchMethodException e) {
-      throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
-    }
-    catch (InvocationTargetException e) {
-      throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-    }
-    catch (IllegalAccessException e) {
-      throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-    }
-  }
-
-  public Class resolveType(String typeName) {
-    try {
-      return Class.forName(String.format("%s.%s", packageName, typeName));
-    }
-    catch (ClassNotFoundException e) {
-      throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", packageName, typeName));
-    }
-  }
-
-  private Field getProperty(Class clazz, String path) {
-    try {
-      Field field = clazz.getDeclaredField(path);
-      return field;
-    }
-    catch (NoSuchFieldException e) {
-      throw new IllegalArgumentException(String.format("Could not determine field for path %s of type %s", path, clazz.getSimpleName()));
-    }
   }
 
   // TODO: This method is getting exceedingly long -- decompose
@@ -183,8 +99,7 @@ public class FileBasedFhirProvider implements DataProvider {
         throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
     }
 
-    // I am treating the contextValue as the patientId in this context -- Not sure if this is correct....
-    if (context == "Patient" && contextValue != null) {
+    if (context != null && context.equals("Patient") && contextValue != null) {
       toResults = toResults.resolve((String)contextValue);
     }
 
@@ -226,16 +141,16 @@ public class FileBasedFhirProvider implements DataProvider {
                                   DateTime.expandPartialMin((DateTime)dateRange.getHigh(), 7), true
                                   );
         if (datePath != null) {
-          if (dateHighPath != null || dateLowPath != null)
+          if (dateHighPath != null || dateLowPath != null) {
             throw new IllegalArgumentException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
+          }
 
-          outcome = datePath.indexOf(".") != -1 ? resolveDatePath(datePath, res) : resolvePath(res, datePath);
-          // now we need to convert the outcome into DateTime
-          if (outcome instanceof DateTimeType) {
-            DateTime date = toDateTime(outcome);
-            if (date != null && InEvaluator.in(date, expanded))
-              results.add(res);
-            else includeRes = false;
+          DateTime date = (DateTime)resolvePath(res, datePath);
+          if (date != null && InEvaluator.in(date, expanded)) {
+            results.add(res);
+          }
+          else {
+            includeRes = false;
           }
         }
         else {
@@ -244,36 +159,35 @@ public class FileBasedFhirProvider implements DataProvider {
           }
           // What we want here is to build a new Interval using corresponding high and low dates
           // Then use the IncludesEvaluator to check membership
-          Object low = null;
-          Object high = null;
           DateTime lowDt = null;
           DateTime highDt = null;
 
           // get the high and low dates if present
           // if not present, set to corresponding value in the expanded Interval
-          if (dateHighPath != null)
-            high = resolveDatePath(dateHighPath, res);
-          else
-            highDt = (DateTime)expanded.getHigh();
-          if (dateLowPath != null)
-            low = resolveDatePath(dateLowPath, res);
-          else
-            lowDt = (DateTime)expanded.getLow();
-
-          if (low instanceof DateTimeType) {
-            lowDt = toDateTime(low);
+          if (dateHighPath != null) {
+              highDt = (DateTime)resolvePath(res, dateHighPath);
           }
-          if (high instanceof DateTimeType) {
-            highDt = toDateTime(high);
+          else {
+              highDt = (DateTime)expanded.getHigh();
+          }
+
+          if (dateLowPath != null) {
+              lowDt = (DateTime)resolvePath(res, dateLowPath);
+          }
+          else {
+              lowDt = (DateTime)expanded.getLow();
           }
 
           // the low and high dates are resolved -- create the Interval
           Interval highLowDtInterval = new Interval(lowDt, true, highDt, true);
 
           // Now the Includes operation
-          if ((Boolean)IncludesEvaluator.includes(expanded, highLowDtInterval))
-            results.add(res);
-          else includeRes = false;
+          if ((Boolean)IncludesEvaluator.includes(expanded, highLowDtInterval)) {
+              results.add(res);
+          }
+          else {
+              includeRes = false;
+          }
         }
       }
 
@@ -385,36 +299,6 @@ public class FileBasedFhirProvider implements DataProvider {
       throw new IllegalArgumentException("File not found at path " + f.getPath());
     }
     return fileContent.toString();
-  }
-
-  public Object resolveDatePath(String datePath, Object resource) {
-    // Here's what I am trying to do here:
-    // Consider the path period.end.value
-    // I need to chain the following calls together:
-    // getPeriod().getEnd() for the Type (Encounter in this case)
-    Object predecessor = null;
-    for (String s : datePath.split("\\.")) {
-      if (s.equals("value")) break;
-      if (predecessor == null)
-        predecessor = resolvePath(resource, s);
-      else {
-        predecessor = resolvePath(predecessor, s);
-      }
-    }
-    return predecessor;
-  }
-
-  public DateTime toDateTime(Object hapiDt) {
-    // TODO: do we want 0 to be the default value if null?
-    int year = ((DateTimeType)hapiDt).getYear() == null ? 0 : ((DateTimeType)hapiDt).getYear();
-    // months in HAPI are zero-indexed -- don't want that
-    int month = ((DateTimeType)hapiDt).getMonth() == null ? 0 : ((DateTimeType)hapiDt).getMonth() + 1;
-    int day = ((DateTimeType)hapiDt).getDay() == null ? 0 : ((DateTimeType)hapiDt).getDay();
-    int hour = ((DateTimeType)hapiDt).getHour() == null ? 0 : ((DateTimeType)hapiDt).getHour();
-    int minute = ((DateTimeType)hapiDt).getMinute() == null ? 0 : ((DateTimeType)hapiDt).getMinute();
-    int sec = ((DateTimeType)hapiDt).getSecond() == null ? 0 : ((DateTimeType)hapiDt).getSecond();
-    int millis = ((DateTimeType)hapiDt).getMillis() == null ? 0 : ((DateTimeType)hapiDt).getMillis();
-    return new DateTime().withPartial(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
   }
 
   public boolean checkCodeMembership(Object codeObj, String vsId) {

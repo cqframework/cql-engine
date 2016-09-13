@@ -20,7 +20,7 @@ import java.net.URLDecoder;
 public class TestFhirMeasureEvaluator {
     @Test
     public void TestCBP() throws IOException, JAXBException {
-        File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-cbp.elm.xml").getFile(), "UTF-8"));
+        File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-col.elm.xml").getFile(), "UTF-8"));
         Library library = CqlLibraryReader.read(xmlFile);
 
         Context context = new Context(library);
@@ -39,7 +39,7 @@ public class TestFhirMeasureEvaluator {
             throw new RuntimeException("Patient is null");
         }
 
-        context.setContextValue("Patient", patient.getId());
+        context.setContextValue("Patient", "pat001");
 
         FhirMeasureEvaluator evaluator = new FhirMeasureEvaluator();
         org.hl7.fhir.dstu3.model.MeasureReport report = evaluator.evaluate(provider.getFhirClient(), context, measure, patient);

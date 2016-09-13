@@ -18,11 +18,7 @@ import java.net.URLEncoder;
 /**
  * Created by Bryn on 4/16/2016.
  */
-public class FhirDataProvider implements DataProvider {
-
-    public FhirDataProvider() {
-        this.packageName = "org.hl7.fhir.dstu3.model";
-    }
+public class FhirDataProvider extends BaseFhirDataProvider {
 
     private String endpoint;
     public String getEndpoint() {
@@ -30,7 +26,6 @@ public class FhirDataProvider implements DataProvider {
     }
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
-        fhirContext = FhirContext.forDstu3();
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
     }
     public FhirDataProvider withEndpoint(String endpoint) {
@@ -38,102 +33,6 @@ public class FhirDataProvider implements DataProvider {
         return this;
     }
 
-    private String packageName;
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public Class resolveType(String typeName) {
-        try {
-            return Class.forName(String.format("%s.%s", packageName, typeName));
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", packageName, typeName));
-        }
-    }
-
-    private Field getProperty(Class clazz, String path) {
-        try {
-            Field field = clazz.getDeclaredField(path);
-            return field;
-        } catch (NoSuchFieldException e) {
-            throw new IllegalArgumentException(String.format("Could not determine field for path %s of type %s", path, clazz.getSimpleName()));
-        }
-    }
-
-    private Method getReadAccessor(Class clazz, String path) {
-        Field field = getProperty(clazz, path);
-        String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
-        Method accessor = null;
-        try {
-            accessor = clazz.getMethod(accessorMethodName);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        }
-        return accessor;
-    }
-
-    private Method getWriteAccessor(Class clazz, String path) {
-        Field field = getProperty(clazz, path);
-        String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
-        Method accessor = null;
-        try {
-            accessor = clazz.getMethod(accessorMethodName, field.getType());
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        }
-        return accessor;
-    }
-
-    public Object resolvePath(Object target, String path) {
-        if (target == null) {
-            return null;
-        }
-
-        if (target instanceof Enumeration && path.equals("value")) {
-            return ((Enumeration)target).getValueAsString();
-        }
-
-        Class<? extends Object> clazz = target.getClass();
-        try {
-            String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
-            String elementAccessorMethodName = String.format("%sElement", accessorMethodName);
-            Method accessor = null;
-            try {
-                accessor = clazz.getMethod(elementAccessorMethodName);
-            }
-            catch (NoSuchMethodException e) {
-                accessor = clazz.getMethod(accessorMethodName);
-            }
-            return accessor.invoke(target);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        }
-    }
-
-    public void setValue(Object target, String path, Object value) {
-        if (target == null) {
-            return;
-        }
-
-        Class<? extends Object> clazz = target.getClass();
-        try {
-            String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
-            Method accessor = clazz.getMethod(accessorMethodName);
-            accessor.invoke(target, value);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
-        }
-    }
-
-    private FhirContext fhirContext;
     private IGenericClient fhirClient;
 
     // TODO: It would be nice not to have to expose this, but I needed it in the MeasureEvaluator....
@@ -180,7 +79,7 @@ public class FhirDataProvider implements DataProvider {
             throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
         }
 
-        if (context == "Patient" && contextValue != null) {
+        if (context != null && context.equals("Patient") && contextValue != null) {
             if (params.length() > 0) {
                 params.append("&");
             }
@@ -253,6 +152,8 @@ public class FhirDataProvider implements DataProvider {
 
     private String getPatientSearchParam(String dataType) {
         switch (dataType) {
+            case "Patient":
+                return "_id";
             case "Observation":
             case "RiskAssessment":
                 return "subject";

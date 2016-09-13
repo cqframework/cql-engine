@@ -102,7 +102,7 @@ public class TestFhirDataProvider {
 
       // valueset test with datePath
       // false
-      results = provider.retrieve("Population", null, "Condition", null, "code", null, "procedure-outcome", "onsetDateTimeType", null, null, new Interval(dtLow, true, dtHigh, true));
+      results = provider.retrieve("Population", null, "Condition", null, "code", null, "procedure-outcome", "onset.value", null, null, new Interval(dtLow, true, dtHigh, true));
       size = 0;
       for (Object o : results)
         size++;
@@ -111,7 +111,7 @@ public class TestFhirDataProvider {
       // true
       DateTime dtLow2 = new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2010, 1, 1}));
       DateTime dtHigh2 = new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2011, 12, 31}));
-      results = provider.retrieve("Population", null, "Condition", null, "code", null, "procedure-outcome", "onsetDateTimeType", null, null, new Interval(dtLow2, true, dtHigh2, true));
+      results = provider.retrieve("Population", null, "Condition", null, "code", null, "procedure-outcome", "onset.value", null, null, new Interval(dtLow2, true, dtHigh2, true));
       size = 0;
       for (Object o : results)
         size++;

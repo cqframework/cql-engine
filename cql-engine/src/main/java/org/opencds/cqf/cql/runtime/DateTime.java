@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.text.*;
+import java.util.Date;
 
 /**
 * Created by Chris Schuler on 6/20/2016
@@ -97,6 +98,19 @@ public class DateTime {
   public DateTime withTimezoneOffset(BigDecimal newTimezoneOffset) {
     setTimezoneOffset(newTimezoneOffset);
     return this;
+  }
+
+  public static DateTime fromJavaDate(Date date) {
+    if (date == null) {
+      return null;
+    }
+    return fromJodaDateTime(new org.joda.time.DateTime(date));
+  }
+
+  public static DateTime fromJodaDateTime(org.joda.time.DateTime dt) {
+    int [] values = { dt.year().get(), dt.monthOfYear().get(), dt.dayOfMonth().get(), dt.hourOfDay().get(),
+            dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
+    return new DateTime().withPartial(new Partial(fields, values)).withTimezoneOffset(new BigDecimal(0));
   }
 
   public static DateTime getToday() {
