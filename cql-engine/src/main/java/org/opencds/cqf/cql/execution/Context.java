@@ -178,6 +178,17 @@ public class Context {
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
+    public void setParameter(String libraryName, String name, Object value) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            String fullName = String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name);
+            parameters.put(fullName, value);
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
+    }
+
     public Object resolveParameterRef(String libraryName, String name) {
         boolean enteredLibrary = enterLibrary(libraryName);
         try {

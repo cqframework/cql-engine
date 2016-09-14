@@ -2,22 +2,30 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.rest.api.PreferReturnEnum;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import org.hl7.fhir.dstu3.model.*;
 import org.opencds.cqf.cql.execution.Context;
-import org.hl7.fhir.dstu3.model.Measure;
-import org.hl7.fhir.dstu3.model.MeasureReport;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Reference;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Bryn on 5/7/2016.
  */
 public class FhirMeasureEvaluator {
-    public MeasureReport evaluate(IGenericClient fhirClient, Context context, Measure measure, Patient patient) {
+    public MeasureReport evaluate(IGenericClient fhirClient, Context context, Measure measure, Patient patient, Date periodStart, Date periodEnd) {
         MeasureReport report = new MeasureReport();
         report.setMeasure(new Reference(measure));
         report.setPatient(new Reference(patient));
+        Period reportPeriod = new Period();
+        reportPeriod.setStart(periodStart);
+        reportPeriod.setEnd(periodEnd);
+        report.setPeriod(reportPeriod);
         report.setType(MeasureReport.MeasureReportType.INDIVIDUAL);
+
+        Interval measurementPeriod = new Interval(DateTime.fromJavaDate(periodStart), true, DateTime.fromJavaDate(periodEnd), true);
+        context.setParameter(null, "MeasurementPeriod", measurementPeriod);
 
         // for each measure group
         for (Measure.MeasureGroupComponent group : measure.getGroup()) {
