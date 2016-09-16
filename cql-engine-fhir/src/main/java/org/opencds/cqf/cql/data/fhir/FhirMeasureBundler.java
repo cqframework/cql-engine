@@ -9,7 +9,7 @@ import org.hl7.fhir.dstu3.model.Resource;
  */
 public class FhirMeasureBundler {
     // Adds the resources returned from the given expressions to a bundle
-    public Bundle Bundle(Context context, String... expressionNames) {
+    public Bundle bundle(Context context, String... expressionNames) {
         Bundle bundle = new Bundle();
         bundle.setType(Bundle.BundleType.COLLECTION);
         for (String expressionName : expressionNames) {
@@ -20,6 +20,19 @@ public class FhirMeasureBundler {
                 entry.setFullUrl(((Resource)element).getId());
                 bundle.getEntry().add(entry);
             }
+        }
+
+        return bundle;
+    }
+
+    public Bundle bundle(Iterable<Resource> resources) {
+        Bundle bundle = new Bundle();
+        bundle.setType(Bundle.BundleType.COLLECTION);
+        for (Resource resource : resources) {
+            Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
+            entry.setResource(resource);
+            entry.setFullUrl(resource.getId());
+            bundle.getEntry().add(entry);
         }
 
         return bundle;

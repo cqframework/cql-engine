@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.data.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Enumeration;
+import org.hl7.fhir.dstu3.model.Period;
 import org.hl7.fhir.dstu3.model.TimeType;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.DataProvider;
@@ -78,6 +79,48 @@ public abstract class BaseFhirDataProvider implements DataProvider
         return result;
     }
 
+    protected boolean pathIsChoice(String path) {
+        // TODO: Better support for choice types, needs to be more generic, quick fix for now...
+        return path.endsWith("DateTime") || path.endsWith("Period");
+    }
+
+    protected Object resolveChoiceProperty(Object target, String path, String typeName) {
+        String rootPath = path.substring(0, path.indexOf(typeName));
+        return resolveProperty(target, rootPath);
+    }
+
+    protected Object resolveChoiceProperty(Object target, String path) {
+        if (path.endsWith("DateTime")) {
+            Object result = resolveChoiceProperty(target, path, "DateTime");
+            if (!(result instanceof DateTime)) {
+                return null;
+            }
+//            if (result != null && !(result instanceof DateTime)) {
+//                throw new IllegalArgumentException(String.format(
+//                        "Choice property %s of resource %s was accessed as a DateTime, but is present as a %s.",
+//                        path, target.getClass().getSimpleName(), result.getClass().getSimpleName()));
+//            }
+
+            return result;
+        }
+
+        if (path.endsWith("Period")) {
+            Object result = resolveChoiceProperty(target, path, "Period");
+            if (!(result instanceof Period)) {
+                return null;
+            }
+//            if (result != null && !(result instanceof Period)) {
+//                throw new IllegalArgumentException(String.format(
+//                        "Choice property %s of resource %s was accessed as a Period, but is present as a %s.",
+//                        path, target.getClass().getSimpleName(), result.getClass().getSimpleName()));
+//            }
+
+            return result;
+        }
+
+        throw new IllegalArgumentException(String.format("Unknown choice type for choice path %s", path));
+    }
+
     protected Object resolveProperty(Object target, String path) {
         if (target == null) {
             return null;
@@ -103,7 +146,12 @@ public abstract class BaseFhirDataProvider implements DataProvider
             result = mapPrimitive(result);
             return result;
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            if (pathIsChoice(path)) {
+                return resolveChoiceProperty(target, path);
+            }
+            else {
+                throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            }
         } catch (InvocationTargetException e) {
             throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (IllegalAccessException e) {

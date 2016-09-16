@@ -13,17 +13,56 @@
          </parameterTypeSpecifier>
       </def>
    </parameters>
-   <valueSets>
-      <def name="Malignant Neoplasm of Colon" id="2.16.840.1.113883.3.464.1004.1064" accessLevel="Public"/>
-      <def name="Total Colectomy" id="2.16.840.1.113883.3.464.1003.198.12.1019" accessLevel="Public"/>
-      <def name="Colonoscopy" id="2.16.840.1.113883.3.464.1004.1064" accessLevel="Public"/>
-      <def name="Flexible Sigmoidoscopy" id="2.16.840.1.113883.3.464.1004.1102" accessLevel="Public"/>
-      <def name="Fecal Occult Blood Test (FOBT)" id="2.16.840.1.113883.3.464.1003.198.12.1011" accessLevel="Public"/>
-   </valueSets>
+   <codeSystems>
+      <def name="CPT" id="urn:oid:2.16.840.1.113883.6.12" accessLevel="Public"/>
+      <def name="SNOMED-CT" id="urn:oid:2.16.840.1.113883.6.96" accessLevel="Public"/>
+      <def name="LOINC" id="http://loinc.org" accessLevel="Public"/>
+   </codeSystems>
    <statements>
       <def name="Patient" context="Patient">
          <expression xsi:type="SingletonFrom">
             <operand dataType="fhir:Patient" xsi:type="Retrieve"/>
+         </expression>
+      </def>
+      <def name="Malignant Neoplasm of Colon" context="Patient" accessLevel="Public">
+         <expression xsi:type="List">
+            <element code="363414004" xsi:type="Code">
+               <system name="SNOMED-CT"/>
+            </element>
+            <element code="285312008" xsi:type="Code">
+               <system name="SNOMED-CT"/>
+            </element>
+         </expression>
+      </def>
+      <def name="Total Colectomy" context="Patient" accessLevel="Public">
+         <expression xsi:type="List">
+            <element code="36192008" xsi:type="Code">
+               <system name="SNOMED-CT"/>
+            </element>
+         </expression>
+      </def>
+      <def name="Colonoscopy" context="Patient" accessLevel="Public">
+         <expression xsi:type="List">
+            <element code="174158000" xsi:type="Code">
+               <system name="SNOMED-CT"/>
+            </element>
+         </expression>
+      </def>
+      <def name="Flexible Sigmoidoscopy" context="Patient" accessLevel="Public">
+         <expression xsi:type="List">
+            <element code="396226005" xsi:type="Code">
+               <system name="SNOMED-CT"/>
+            </element>
+         </expression>
+      </def>
+      <def name="Fecal Occult Blood Test (FOBT)" context="Patient" accessLevel="Public">
+         <expression xsi:type="List">
+            <element code="27396-1" xsi:type="Code">
+               <system name="LOINC"/>
+            </element>
+            <element code="58453-2" xsi:type="Code">
+               <system name="LOINC"/>
+            </element>
          </expression>
       </def>
       <def name="Lookback Interval One Year" context="Patient" accessLevel="Public">
@@ -82,7 +121,7 @@
          <expression xsi:type="Query">
             <source alias="C">
                <expression dataType="fhir:Condition" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Malignant Neoplasm of Colon" xsi:type="ValueSetRef"/>
+                  <codes name="Malignant Neoplasm of Colon" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -105,7 +144,7 @@
          <expression xsi:type="Query">
             <source alias="T">
                <expression dataType="fhir:Procedure" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Total Colectomy" xsi:type="ValueSetRef"/>
+                  <codes name="Total Colectomy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="Equal">
@@ -120,7 +159,7 @@
          <expression xsi:type="Query">
             <source alias="C">
                <expression dataType="fhir:Procedure" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Colonoscopy" xsi:type="ValueSetRef"/>
+                  <codes name="Colonoscopy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -132,7 +171,9 @@
                </operand>
                <operand xsi:type="In">
                   <operand path="value" xsi:type="Property">
-                     <source path="performedDateTime" scope="C" xsi:type="Property"/>
+                     <source path="end" xsi:type="Property">
+                        <source path="performedPeriod" scope="C" xsi:type="Property"/>
+                     </source>
                   </operand>
                   <operand name="Lookback Interval Ten Years" xsi:type="ExpressionRef"/>
                </operand>
@@ -143,7 +184,7 @@
          <expression xsi:type="Query">
             <source alias="C">
                <expression dataType="fhir:Observation" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Colonoscopy" xsi:type="ValueSetRef"/>
+                  <codes name="Colonoscopy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -166,7 +207,7 @@
          <expression xsi:type="Query">
             <source alias="S">
                <expression dataType="fhir:Procedure" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Flexible Sigmoidoscopy" xsi:type="ValueSetRef"/>
+                  <codes name="Flexible Sigmoidoscopy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -178,7 +219,9 @@
                </operand>
                <operand xsi:type="In">
                   <operand path="value" xsi:type="Property">
-                     <source path="performedDateTime" scope="S" xsi:type="Property"/>
+                     <source path="end" xsi:type="Property">
+                        <source path="performedPeriod" scope="S" xsi:type="Property"/>
+                     </source>
                   </operand>
                   <operand name="Lookback Interval Five Years" xsi:type="ExpressionRef"/>
                </operand>
@@ -189,7 +232,7 @@
          <expression xsi:type="Query">
             <source alias="O">
                <expression dataType="fhir:Observation" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Flexible Sigmoidoscopy" xsi:type="ValueSetRef"/>
+                  <codes name="Flexible Sigmoidoscopy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -212,7 +255,7 @@
          <expression xsi:type="Query">
             <source alias="F">
                <expression dataType="fhir:Procedure" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Fecal Occult Blood Test (FOBT)" xsi:type="ValueSetRef"/>
+                  <codes name="Fecal Occult Blood Test (FOBT)" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -224,7 +267,9 @@
                </operand>
                <operand xsi:type="In">
                   <operand path="value" xsi:type="Property">
-                     <source path="performedDateTime" scope="F" xsi:type="Property"/>
+                     <source path="end" xsi:type="Property">
+                        <source path="performedPeriod" scope="F" xsi:type="Property"/>
+                     </source>
                   </operand>
                   <operand name="Lookback Interval One Year" xsi:type="ExpressionRef"/>
                </operand>
@@ -235,7 +280,7 @@
          <expression xsi:type="Query">
             <source alias="O">
                <expression dataType="fhir:Observation" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Fecal Occult Blood Test (FOBT)" xsi:type="ValueSetRef"/>
+                  <codes name="Fecal Occult Blood Test (FOBT)" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -258,7 +303,7 @@
          <expression xsi:type="Query">
             <source alias="C">
                <expression dataType="fhir:Procedure" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Colonoscopy" xsi:type="ValueSetRef"/>
+                  <codes name="Colonoscopy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">
@@ -270,7 +315,9 @@
                </operand>
                <operand xsi:type="In">
                   <operand path="value" xsi:type="Property">
-                     <source path="performedDateTime" scope="C" xsi:type="Property"/>
+                     <source path="end" xsi:type="Property">
+                        <source path="performedPeriod" scope="C" xsi:type="Property"/>
+                     </source>
                   </operand>
                   <operand name="Lookback Interval Ten Years" xsi:type="ExpressionRef"/>
                </operand>
@@ -281,7 +328,7 @@
          <expression xsi:type="Query">
             <source alias="O">
                <expression dataType="fhir:Observation" codeProperty="code" xsi:type="Retrieve">
-                  <codes name="Colonoscopy" xsi:type="ValueSetRef"/>
+                  <codes name="Colonoscopy" xsi:type="ExpressionRef"/>
                </expression>
             </source>
             <where xsi:type="And">

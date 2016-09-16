@@ -34,7 +34,7 @@ public class TestFhirMeasureBundler {
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         FhirMeasureBundler bundler = new FhirMeasureBundler();
-        org.hl7.fhir.dstu3.model.Bundle bundle = bundler.Bundle(context, "BP: Systolic", "BP: Diastolic");
+        org.hl7.fhir.dstu3.model.Bundle bundle = bundler.bundle(context, "BP: Systolic", "BP: Diastolic");
 
         assertThat(bundle.getEntry().size(), greaterThan(0));
     }

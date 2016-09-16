@@ -40,15 +40,34 @@ Non-Recommended Colorectal Cancer Screening in Older Adults	FOBT	2.16.840.1.1138
 
 */
 
-valueset "Malignant Neoplasm of Colon": '2.16.840.1.113883.3.464.1004.1064' // Colorectal Cancer
-valueset "Total Colectomy": '2.16.840.1.113883.3.464.1003.198.12.1019'
-valueset "Colonoscopy":	'2.16.840.1.113883.3.464.1004.1064'
-valueset "Flexible Sigmoidoscopy": '2.16.840.1.113883.3.464.1004.1102'
-valueset "Fecal Occult Blood Test (FOBT)": '2.16.840.1.113883.3.464.1003.198.12.1011'
+codesystem "CPT": 'urn:oid:2.16.840.1.113883.6.12'
+codesystem "SNOMED-CT": 'urn:oid:2.16.840.1.113883.6.96'
+codesystem "LOINC": 'http://loinc.org'
+
+//valueset "Malignant Neoplasm of Colon": '2.16.840.1.113883.3.464.1004.1064' // Colorectal Cancer
+//valueset "Total Colectomy": '2.16.840.1.113883.3.464.1003.198.12.1019'
+//valueset "Colonoscopy":	'2.16.840.1.113883.3.464.1004.1064'
+//valueset "Flexible Sigmoidoscopy": '2.16.840.1.113883.3.464.1004.1102'
+//valueset "Fecal Occult Blood Test (FOBT)": '2.16.840.1.113883.3.464.1003.198.12.1011'
 
 parameter MeasurementPeriod Interval<DateTime>
 
 context Patient
+
+define "Malignant Neoplasm of Colon":
+    { Code '363414004' from "SNOMED-CT", Code '285312008' from "SNOMED-CT" }
+
+define "Total Colectomy":
+    { Code '36192008' from "SNOMED-CT" }
+
+define "Colonoscopy":
+    { Code '174158000' from "SNOMED-CT" }
+
+define "Flexible Sigmoidoscopy":
+    { Code '396226005' from "SNOMED-CT" }
+
+define "Fecal Occult Blood Test (FOBT)":
+    { Code '27396-1' from "LOINC", Code '58453-2' from "LOINC" }
 
 define "Lookback Interval One Year":
   Interval[start of MeasurementPeriod - 1 years, end of MeasurementPeriod]
@@ -81,7 +100,7 @@ define "Hx Total Colectomy":
 define "Colonoscopy Performed":
   [Procedure: "Colonoscopy"] C
     where C.status.value = 'completed'
-      and C.performedDateTime.value during "Lookback Interval Ten Years"
+      and C.performedPeriod."end".value during "Lookback Interval Ten Years"
 
 define "Colonoscopy Results":
   [Observation: "Colonoscopy"] C
@@ -93,7 +112,7 @@ define "Colonoscopy Results":
 define "Sigmoidoscopy Procedure":
   [Procedure: "Flexible Sigmoidoscopy"] S
     where S.status.value = 'completed'
-      and S.performedDateTime.value during "Lookback Interval Five Years"
+      and S.performedPeriod."end".value during "Lookback Interval Five Years"
 
 define "Sigmoidoscopy Observation":
   [Observation: "Flexible Sigmoidoscopy"] O
@@ -106,7 +125,7 @@ define "Sigmoidoscopy Observation":
 //define "iFOBT Procedure":
 //  [Procedure: "iFOBT"] F
 //    where F.status.value = 'completed'
-//      and F.performedDateTime.value during "Lookback Interval One Year"
+//      and F.performedPeriod."end".value during "Lookback Interval One Year"
 
 // gFOBT - Indicates completion of a GUAIAC fecal occult blood test (gFOBT) as part of screening for colorectal cancer.
 
@@ -114,7 +133,7 @@ define "Sigmoidoscopy Observation":
 //define "gFOBT Procedure":
 //  [Procedure: "gFOBT"] F
 //    where F.status.value = 'completed'
-//      and F.performedDateTime.value during "Lookback Interval One Year"
+//      and F.performedPeriod."end".value during "Lookback Interval One Year"
 
 // Using the grouping value set to include both iFOBT and gFOBT
 // If these two tests need to be reported separately, we need value sets to distinguish them
@@ -122,7 +141,7 @@ define "Sigmoidoscopy Observation":
 define "FOBT Procedure":
   [Procedure: "Fecal Occult Blood Test (FOBT)"] F
     where F.status.value = 'completed'
-      and F.performedDateTime.value during "Lookback Interval One Year"
+      and F.performedPeriod."end".value during "Lookback Interval One Year"
 
 define "FOBT Observation":
   [Observation: "Fecal Occult Blood Test (FOBT)"] O
@@ -134,7 +153,7 @@ define "FOBT Observation":
 define "Colonoscopy Procedure":
   [Procedure: "Colonoscopy"] C
     where C.status.value = 'completed'
-      and C.performedDateTime.value during "Lookback Interval Ten Years"
+      and C.performedPeriod."end".value during "Lookback Interval Ten Years"
 
 define "Colonoscopy Observation":
   [Observation: "Colonoscopy"] O

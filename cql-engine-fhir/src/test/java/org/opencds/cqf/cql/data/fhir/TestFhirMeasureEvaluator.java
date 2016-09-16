@@ -1,11 +1,13 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import org.cqframework.cql.elm.execution.Library;
+import org.hl7.fhir.dstu3.model.Procedure;
 import org.joda.time.DateTime;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.hl7.fhir.dstu3.model.Measure;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 import org.testng.annotations.Test;
 // import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
@@ -32,12 +34,17 @@ public class TestFhirMeasureEvaluator {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open/");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
+
+        //FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
+        //provider.setTerminologyProvider(terminologyProvider);
+        //provider.setExpandValueSets(true);
+
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("measure-col.xml").getFile(), "UTF-8"));
         Measure measure = provider.getFhirClient().getFhirContext().newXmlParser().parseResource(Measure.class, new FileReader(xmlFile));
 
-        String patientId = "Patient-12214";
+        String patientId = "Patient-12236";
         Patient patient = provider.getFhirClient().read().resource(Patient.class).withId(patientId).execute();
         // TODO: Couldn't figure out what matcher to use here, gave up.
         if (patient == null) {

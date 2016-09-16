@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.terminology.fhir;
 
+import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
@@ -30,6 +31,11 @@ public class FhirTerminologyProvider implements TerminologyProvider {
         this.endpoint = endpoint;
         fhirContext = FhirContext.forDstu3();
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
+
+        if (userName != null && password != null) {
+            BasicAuthInterceptor basicAuth = new BasicAuthInterceptor(userName, password);
+            fhirClient.registerInterceptor(basicAuth);
+        }
     }
     public FhirTerminologyProvider withEndpoint(String endpoint) {
         setEndpoint(endpoint);
@@ -38,6 +44,29 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
     private FhirContext fhirContext;
     private IGenericClient fhirClient;
+
+    // TODO: Obviously don't want to do this, just a quick-fix for now
+    private String userName;
+    public String getUserName() {
+        return userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    private String password;
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public FhirTerminologyProvider withBasicAuth(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+        return this;
+    }
 
     @Override
     public boolean in(Code code, ValueSetInfo valueSet) throws ResourceNotFoundException {

@@ -9,6 +9,9 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.terminology.TerminologyProvider;
+import org.opencds.cqf.cql.terminology.ValueSetInfo;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -31,6 +34,22 @@ public class FhirDataProvider extends BaseFhirDataProvider {
     public FhirDataProvider withEndpoint(String endpoint) {
         setEndpoint(endpoint);
         return this;
+    }
+
+    private TerminologyProvider terminologyProvider;
+    public TerminologyProvider getTerminologyProvider() {
+        return terminologyProvider;
+    }
+    public void setTerminologyProvider(TerminologyProvider terminologyProvider) {
+        this.terminologyProvider = terminologyProvider;
+    }
+
+    private boolean expandValueSets;
+    public boolean getExpandValueSets() {
+        return expandValueSets;
+    }
+    public void setExpandValueSets(boolean expandValueSets) {
+        this.expandValueSets = expandValueSets;
     }
 
     private IGenericClient fhirClient;
@@ -92,9 +111,16 @@ public class FhirDataProvider extends BaseFhirDataProvider {
                 params.append("&");
             }
             if (valueSet != null && !valueSet.equals("")) {
-                params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), URLEncode(valueSet)));
+                if (terminologyProvider != null && expandValueSets) {
+                    ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
+                    codes = terminologyProvider.expand(valueSetInfo);
+                }
+                else {
+                    params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), URLEncode(valueSet)));
+                }
             }
-            else if (codes != null) {
+
+            if (codes != null) {
                 StringBuilder codeList = new StringBuilder();
                 for (Code code : codes) {
                     if (codeList.length() > 0) {
