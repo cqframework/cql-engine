@@ -40,34 +40,37 @@ Non-Recommended Colorectal Cancer Screening in Older Adults	FOBT	2.16.840.1.1138
 
 */
 
-codesystem "CPT": 'urn:oid:2.16.840.1.113883.6.12'
-codesystem "SNOMED-CT": 'urn:oid:2.16.840.1.113883.6.96'
+//codesystem "CPT": 'urn:oid:2.16.840.1.113883.6.12'
+codesystem "CPT": 'http://www.ama-assn.org/go/cpt'
+//codesystem "SNOMED-CT": 'urn:oid:2.16.840.1.113883.6.96'
+codesystem "SNOMED-CT": 'http://snomed.info/sct'
+//codesystem "LOINC": 'urn:oid:2.16.840.1.113883.6.1'
 codesystem "LOINC": 'http://loinc.org'
 
-//valueset "Malignant Neoplasm of Colon": '2.16.840.1.113883.3.464.1004.1064' // Colorectal Cancer
-//valueset "Total Colectomy": '2.16.840.1.113883.3.464.1003.198.12.1019'
-//valueset "Colonoscopy":	'2.16.840.1.113883.3.464.1004.1064'
-//valueset "Flexible Sigmoidoscopy": '2.16.840.1.113883.3.464.1004.1102'
-//valueset "Fecal Occult Blood Test (FOBT)": '2.16.840.1.113883.3.464.1003.198.12.1011'
+valueset "Malignant Neoplasm of Colon": '2.16.840.1.113883.3.464.1003.108.12.1001' // Colorectal Cancer
+valueset "Total Colectomy": '2.16.840.1.113883.3.464.1003.198.12.1019'
+valueset "Colonoscopy":	'2.16.840.1.113883.3.464.1003.108.12.1020'
+valueset "Flexible Sigmoidoscopy": '2.16.840.1.113883.3.464.1003.198.12.1010'
+valueset "Fecal Occult Blood Test (FOBT)": '2.16.840.1.113883.3.464.1003.198.12.1011'
 
 parameter MeasurementPeriod Interval<DateTime>
 
 context Patient
 
-define "Malignant Neoplasm of Colon":
-    { Code '363414004' from "SNOMED-CT", Code '285312008' from "SNOMED-CT" }
+//define "Malignant Neoplasm of Colon":
+//    { Code '363414004' from "SNOMED-CT", Code '285312008' from "SNOMED-CT" }
 
-define "Total Colectomy":
-    { Code '36192008' from "SNOMED-CT" }
+//define "Total Colectomy":
+//    { Code '36192008' from "SNOMED-CT" }
 
-define "Colonoscopy":
-    { Code '174158000' from "SNOMED-CT" }
+//define "Colonoscopy":
+//    { Code '174158000' from "SNOMED-CT" }
 
-define "Flexible Sigmoidoscopy":
-    { Code '396226005' from "SNOMED-CT" }
+//define "Flexible Sigmoidoscopy":
+//    { Code '396226005' from "SNOMED-CT" }
 
-define "Fecal Occult Blood Test (FOBT)":
-    { Code '27396-1' from "LOINC", Code '58453-2' from "LOINC" }
+//define "Fecal Occult Blood Test (FOBT)":
+//    { Code '27396-1' from "LOINC", Code '58453-2' from "LOINC" }
 
 define "Lookback Interval One Year":
   Interval[start of MeasurementPeriod - 1 years, end of MeasurementPeriod]

@@ -31,20 +31,21 @@ public class TestFhirMeasureEvaluator {
 
         Context context = new Context(library);
 
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open/");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://open-api2.hspconsortium.org/payerextract/data");
 
-        //FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
-        //provider.setTerminologyProvider(terminologyProvider);
-        //provider.setExpandValueSets(true);
+        FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
+        provider.setTerminologyProvider(terminologyProvider);
+        provider.setExpandValueSets(true);
 
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("measure-col.xml").getFile(), "UTF-8"));
         Measure measure = provider.getFhirClient().getFhirContext().newXmlParser().parseResource(Measure.class, new FileReader(xmlFile));
 
-        String patientId = "Patient-12236";
+        String patientId = "Patient-12216";
         Patient patient = provider.getFhirClient().read().resource(Patient.class).withId(patientId).execute();
         // TODO: Couldn't figure out what matcher to use here, gave up.
         if (patient == null) {
