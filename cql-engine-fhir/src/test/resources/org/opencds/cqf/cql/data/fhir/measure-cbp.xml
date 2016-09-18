@@ -34,9 +34,33 @@
 		<population>
 			<type value="initial-population"/>
 			<identifier>
-				<value value="initial-population-identifier"/>
+				<value value="cbp-cohort"/>
 			</identifier>
 			<criteria value="In Demographic"/>
+		</population>
+	</group>
+	<group>
+		<identifier>
+			<value value="BP-systolic"/>
+		</identifier>
+		<population>
+			<type value="initial-population"/>
+			<identifier>
+				<value value="bp-systolic"/>
+			</identifier>
+			<criteria value="BP: Systolic"/>
+		</population>
+	</group>
+	<group>
+		<identifier>
+			<value value="BP-diastolic"/>
+		</identifier>
+		<population>
+			<type value="initial-population"/>
+			<identifier>
+				<value value="bp-diastolic"/>
+			</identifier>
+			<criteria value="BP: Diastolic"/>
 		</population>
 	</group>
 </Measure>
