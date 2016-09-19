@@ -92,7 +92,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
     protected Object resolveChoiceProperty(Object target, String path) {
         if (path.endsWith("DateTime")) {
             Object result = resolveChoiceProperty(target, path, "DateTime");
-            if (!(result instanceof DateTime)) {
+            if (!(result instanceof DateTimeType)) {
                 return null;
             }
 //            if (result != null && !(result instanceof DateTime)) {
