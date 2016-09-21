@@ -146,7 +146,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
             throw new IllegalArgumentException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
           }
 
-          DateTime date = (DateTime)resolvePath(res, datePath);
+          DateTime date = toDateTime(resolvePath(res, datePath));
           if (date != null && InEvaluator.in(date, expanded)) {
             results.add(res);
           }
