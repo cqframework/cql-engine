@@ -42,7 +42,6 @@ What the heck does this thing do?
 How do I use it?
   Point the provider to the directory of patients:
     FileBasedFhirProvider provider = new FileBasedFhirProvider().withPath("...");
-    -- NOTE: the path parameter must be an absolute path
     Each subfolder name in the patients directory should be an id for a specific patients
       In each patient folder there should be subfolders contatining clinical information
         (e.g. Condition, Procedure, etc...) for that patient
@@ -118,6 +117,8 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       return results;
     }
 
+    if (context == null)
+      context = "Population";
     patientFiles = getPatientFiles(toResults, context);
 
     // filtering
