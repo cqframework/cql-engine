@@ -194,11 +194,11 @@
     <orderEntry type="module-library" scope="TEST">
       <library name="Gradle: info.cqframework:cql-to-elm:1.1.0-SNAPSHOT">
         <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/cql-to-elm/1.1.0-SNAPSHOT/e92bb4336bfcd56cc2bdf867a3a139e12fa7b327/cql-to-elm-1.1.0-SNAPSHOT.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/cql-to-elm/1.1.0-SNAPSHOT/9f581217be678bcc5ffafca64723a9544590d12e/cql-to-elm-1.1.0-SNAPSHOT.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/cql-to-elm/1.1.0-SNAPSHOT/eb81a82b0c9e514f9ff0da46362313c0b5e9c9f3/cql-to-elm-1.1.0-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/cql-to-elm/1.1.0-SNAPSHOT/9c09b490b32eaccbf860e24707525ce0d61f5c81/cql-to-elm-1.1.0-SNAPSHOT-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -258,28 +258,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library" scope="TEST">
-      <library name="Gradle: info.cqframework:quick:1.1.0-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/quick/1.1.0-SNAPSHOT/7eae7eea3392db68eb91371518d512996c7df008/quick-1.1.0-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/quick/1.1.0-SNAPSHOT/420924a5c0ca775c775a9c6b73086a07cee9a961/quick-1.1.0-SNAPSHOT-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library name="Gradle: info.cqframework:qdm:1.1.0-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/qdm/1.1.0-SNAPSHOT/89ee768fe993d024e927b7e0309ba0fab5229628/qdm-1.1.0-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/qdm/1.1.0-SNAPSHOT/7f365ba2bef1ebe1aa4da94b8ec39382e36ce955/qdm-1.1.0-SNAPSHOT-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
       <library name="Gradle: com.fasterxml.jackson.core:jackson-core:2.4.1">
         <CLASSES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.4.1/b130bcfb5a9c410c3cbd2e0adec9437e69a39e2c/jackson-core-2.4.1.jar!/" />
@@ -309,6 +287,28 @@
         <JAVADOC />
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/elm/1.1.0-SNAPSHOT/dde8c8635124751276007c91a9198c0475f7ef70/elm-1.1.0-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="Gradle: info.cqframework:quick:1.1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/quick/1.1.0-SNAPSHOT/7eae7eea3392db68eb91371518d512996c7df008/quick-1.1.0-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/quick/1.1.0-SNAPSHOT/420924a5c0ca775c775a9c6b73086a07cee9a961/quick-1.1.0-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library name="Gradle: info.cqframework:qdm:1.1.0-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/qdm/1.1.0-SNAPSHOT/f7ee0211c56a9c113b24fb1fadbaf306f8bfc32f/qdm-1.1.0-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/info.cqframework/qdm/1.1.0-SNAPSHOT/c4746468e6fb37706fa0c794c0acd0b81e46fdc8/qdm-1.1.0-SNAPSHOT-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

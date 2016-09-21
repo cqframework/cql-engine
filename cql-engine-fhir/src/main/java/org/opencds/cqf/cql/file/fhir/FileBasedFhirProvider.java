@@ -1,37 +1,27 @@
 package org.opencds.cqf.cql.file.fhir;
 
-import org.joda.time.Partial;
-import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
-import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import org.opencds.cqf.cql.data.DataProvider;
-import org.opencds.cqf.cql.runtime.Code;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.elm.execution.InEvaluator;
-import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.InvalidPathException;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.File;
-import java.net.URI;
-import org.hl7.fhir.dstu3.model.Enumeration;
-import org.hl7.fhir.dstu3.model.Enumerations;
-import org.hl7.fhir.dstu3.model.EnumFactory;
-import org.hl7.fhir.dstu3.model.ResourceType;
-import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
-import ca.uhn.fhir.parser.IParser;
-import ca.uhn.fhir.context.FhirContext;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import org.hl7.fhir.dstu3.model.DateTimeType;
+import org.joda.time.Partial;
+import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
+import org.opencds.cqf.cql.elm.execution.InEvaluator;
+import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.terminology.ValueSetInfo;
+import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.InvalidPathException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 What the heck does this thing do?
@@ -146,7 +136,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
             throw new IllegalArgumentException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
           }
 
-          DateTime date = toDateTime(resolvePath(res, datePath));
+          DateTime date = (DateTime)resolvePath(res, datePath);
           if (date != null && InEvaluator.in(date, expanded)) {
             results.add(res);
           }
@@ -319,5 +309,18 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       }
     }
     return false;
+  }
+
+  public DateTime toDateTime(DateTimeType hapiDt) {
+    // TODO: do we want 0 to be the default value if null?
+    int year = hapiDt.getYear() == null ? 0 : hapiDt.getYear();
+    // months in HAPI are zero-indexed -- don't want that
+    int month = hapiDt.getMonth() == null ? 0 : hapiDt.getMonth() + 1;
+    int day = hapiDt.getDay() == null ? 0 : hapiDt.getDay();
+    int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
+    int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
+    int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
+    int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
+    return new DateTime().withPartial(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
   }
 }

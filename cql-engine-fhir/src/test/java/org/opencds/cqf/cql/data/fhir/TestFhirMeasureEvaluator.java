@@ -1,20 +1,21 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import org.cqframework.cql.elm.execution.Library;
-import org.hl7.fhir.dstu3.model.Procedure;
-import org.joda.time.DateTime;
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.hl7.fhir.dstu3.model.Measure;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
-import org.testng.annotations.Test;
-// import javax.xml.bind.JAXB;
+
 import javax.xml.bind.JAXBException;
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.Date;
+
+// import javax.xml.bind.JAXB;
 
 // import static org.hamcrest.MatcherAssert.assertThat;
 // import static org.hamcrest.Matchers.greaterThan;
@@ -24,7 +25,7 @@ import java.util.Date;
  * Created by Bryn on 5/7/2016.
  */
 public class TestFhirMeasureEvaluator {
-    @Test
+    //@Test
     public void TestCBP() throws IOException, JAXBException {
         File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-col.elm.xml").getFile(), "UTF-8"));
         Library library = CqlLibraryReader.read(xmlFile);

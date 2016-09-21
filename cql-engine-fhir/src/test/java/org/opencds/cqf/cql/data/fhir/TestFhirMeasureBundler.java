@@ -3,25 +3,20 @@ package org.opencds.cqf.cql.data.fhir;
 import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
-import org.hamcrest.Matchers;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.testng.annotations.Test;
-import javax.xml.bind.JAXB;
+
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 /**
  * Created by Bryn on 5/7/2016.
  */
 public class TestFhirMeasureBundler {
-    @Test
+    //@Test
     public void TestCBP() throws IOException, JAXBException {
         File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-cbp.elm.xml").getFile(), "UTF-8"));
         Library library = CqlLibraryReader.read(xmlFile);

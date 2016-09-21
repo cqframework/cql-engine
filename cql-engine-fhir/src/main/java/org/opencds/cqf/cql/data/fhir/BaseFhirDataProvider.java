@@ -4,13 +4,10 @@ import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhir.dstu3.model.Period;
-import org.hl7.fhir.dstu3.model.TimeType;
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -38,19 +35,6 @@ public abstract class BaseFhirDataProvider implements DataProvider
     @Override
     public String getPackageName() {
         return this.packageName;
-    }
-
-    public DateTime toDateTime(DateTimeType hapiDt) {
-      // TODO: do we want 0 to be the default value if null?
-      int year = hapiDt.getYear() == null ? 0 : hapiDt.getYear();
-      // months in HAPI are zero-indexed -- don't want that
-      int month = hapiDt.getMonth() == null ? 0 : hapiDt.getMonth() + 1;
-      int day = hapiDt.getDay() == null ? 0 : hapiDt.getDay();
-      int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
-      int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
-      int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
-      int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
-      return new DateTime().withPartial(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
     }
 
     // TODO: Time support? HAPI seems to be missing some of this?
