@@ -45,6 +45,19 @@ public abstract class BaseFhirDataProvider implements DataProvider
 //        int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
 //    }
 
+    // public DateTime toDateTime(DateTimeType hapiDt) {
+    //   // TODO: do we want 0 to be the default value if null?
+    //   int year = hapiDt.getYear() == null ? 0 : hapiDt.getYear();
+    //   // months in HAPI are zero-indexed -- don't want that
+    //   int month = hapiDt.getMonth() == null ? 0 : hapiDt.getMonth() + 1;
+    //   int day = hapiDt.getDay() == null ? 0 : hapiDt.getDay();
+    //   int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
+    //   int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
+    //   int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
+    //   int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
+    //   return new DateTime().withPartial(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
+    // }
+
     protected DateTime toDateTime(Date result) {
         // NOTE: By going through the Java primitive here, we are losing the precision support of the HAPI-DateTimeType
         // We need a solution that preserves the partial precision...
