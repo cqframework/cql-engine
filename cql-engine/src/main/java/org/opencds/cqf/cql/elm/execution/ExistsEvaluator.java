@@ -18,6 +18,9 @@ public class ExistsEvaluator extends org.cqframework.cql.elm.execution.Exists {
     @Override
     public Object evaluate(Context context) {
         Iterable<Object> value = (Iterable<Object>)getOperand().evaluate(context);
+
+        if (value == null) { return null; }
+        
         Iterator<Object> iterator = value.iterator();
         if (iterator.hasNext()) {
             return true;
