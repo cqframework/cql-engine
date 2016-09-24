@@ -77,19 +77,34 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     List<Object> results = new ArrayList<>();
     List<String> patientFiles = new ArrayList<>();
     Path toResults = path;
-    Path toValueset = null;
-    Path toCode = null;
+
+    // default context is Patient
+    if (context == null) {
+      context = "Patient";
+    }
 
     if (templateId != null && !templateId.equals("")) {
-      // do something?
+      // TODO: do something?
     }
 
     if (codePath == null && (codes != null || valueSet != null)) {
         throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
     }
 
+    // TODO: Not sure if this will ever get called -- How to get Patient ID?
+    // Typically see something like the following in the library:
+    //  <def name="Patient" context="Patient">
+    //    <expression xsi:type="SingletonFrom">
+    //       <operand dataType="fhir:Patient" xsi:type="Retrieve"/>
+    //    </expression>
+    // </def>
     if (context != null && context.equals("Patient") && contextValue != null) {
       toResults = toResults.resolve((String)contextValue);
+    }
+
+    // Need the context value (patient id) to resolve the toResults path correctly
+    else if (context.equals("Patient") && contextValue == null) {
+      toResults = toResults.resolve(getDefaultPatient(toResults));
     }
 
     if (dataType != null) {
@@ -107,8 +122,6 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       return results;
     }
 
-    if (context == null)
-      context = "Population";
     patientFiles = getPatientFiles(toResults, context);
 
     // filtering
@@ -242,6 +255,22 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     } // end of filtering for each loop
 
     return results;
+  }
+
+  // If Patient context without patient id, get the first patient
+  public String getDefaultPatient(Path evalPath) {
+    File file = new File(evalPath.toString());
+    String patientId = null;
+    if (!file.exists()) {
+      throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
+    }
+    try {
+      patientId = file.listFiles()[0].getName();
+    }
+    catch(NullPointerException npe) {
+      throw new IllegalArgumentException("The target directory is empty!");
+    }
+    return patientId;
   }
 
   // evalPath examples -- NOTE: this occurs before filtering
