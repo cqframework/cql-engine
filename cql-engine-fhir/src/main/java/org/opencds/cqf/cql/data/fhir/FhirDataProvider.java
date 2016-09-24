@@ -103,7 +103,7 @@ public class FhirDataProvider extends BaseFhirDataProvider {
                 params.append("&");
             }
 
-            params.append(String.format("%s=%s", getPatientSearchParam(dataType), URLEncode((String)contextValue)));
+            params.append(String.format("%s=Patient/%s", getPatientSearchParam(dataType), URLEncode((String)contextValue)));
         }
 
         if (codePath != null && !codePath.equals("")) {
