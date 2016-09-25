@@ -114,11 +114,14 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       throw new IllegalArgumentException("A data type (i.e. Procedure, Valueset, etc...) must be specified for clinical data retrieval");
     }
 
-    // list of json files as String
+    // list of json files as Resources
     // TODO: xml files as well?
     if (dateRange == null && codePath == null) {
       patientFiles = getPatientFiles(toResults, context);
-      results.addAll(patientFiles);
+      for (String resource : patientFiles) {
+        Object res = fhirContext.newJsonParser().parseResource(resource);
+        results.add(res);
+      }      
       return results;
     }
 
