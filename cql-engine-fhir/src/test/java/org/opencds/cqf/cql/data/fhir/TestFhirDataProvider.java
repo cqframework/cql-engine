@@ -18,7 +18,7 @@ import static org.testng.Assert.*;
  * Created by Bryn on 4/16/2016.
  */
 public class TestFhirDataProvider {
-    @Test
+    //@Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
         IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
@@ -27,7 +27,7 @@ public class TestFhirDataProvider {
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    @Test
+    //@Test
     public void testPatientRetrieve() {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
@@ -46,7 +46,7 @@ public class TestFhirDataProvider {
     public void testFileDataProvider() {
       // non-filtering tests
       // Patient context
-      FileBasedFhirProvider provider = new FileBasedFhirProvider().withPath(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data");
+      FileBasedFhirProvider provider = new FileBasedFhirProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null);
       Iterable<Object> results = provider.retrieve("Patient", "123", "Procedure", null, null, null, null, null, null, null, null);
       int size = 0;
       for (Object o : results)

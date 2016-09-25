@@ -31,10 +31,10 @@ What the heck does this thing do?
 
 How do I use it?
   Point the provider to the directory of patients:
-    FileBasedFhirProvider provider = new FileBasedFhirProvider().withPath("...");
+    FileBasedFhirProvider provider = new FileBasedFhirProvider(path to root data dir, terminology service endpoint(optional));
     Each subfolder name in the patients directory should be an id for a specific patients
       In each patient folder there should be subfolders contatining clinical information
-        (e.g. Condition, Procedure, etc...) for that patient
+        (e.g. Condition, Procedure, etc...) for that patient in JSON format (XML support pending)
     Here is a mock directory structure:
     - patients
       - 123
@@ -53,23 +53,17 @@ How do I use it?
 public class FileBasedFhirProvider extends BaseFhirDataProvider {
 
   private Path path;
-  public Path getPath() {
-    return path;
-  }
+  private FhirTerminologyProvider terminologyProvider;
 
-  public void setPath(String path) {
+  public FileBasedFhirProvider (String path, String endpoint) {
     if (path.isEmpty() || path == null) {
       throw new InvalidPathException(path, "Invalid path!");
     }
     this.path = Paths.get(path);
+    this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
+                                                : new FhirTerminologyProvider().withEndpoint(endpoint);
   }
 
-  public FileBasedFhirProvider withPath(String path) {
-    setPath(path);
-    return this;
-  }
-
-  // TODO: This method is getting exceedingly long -- decompose
   public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
                                    String codePath, Iterable<Code> codes, String valueSet, String datePath,
                                    String dateLowPath, String dateHighPath, Interval dateRange) {
@@ -115,13 +109,13 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     }
 
     // list of json files as Resources
-    // TODO: xml files as well?
+    // No filtering
     if (dateRange == null && codePath == null) {
       patientFiles = getPatientFiles(toResults, context);
       for (String resource : patientFiles) {
         Object res = fhirContext.newJsonParser().parseResource(resource);
         results.add(res);
-      }      
+      }
       return results;
     }
 
@@ -152,13 +146,14 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
             throw new IllegalArgumentException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
           }
 
-
           DateTime date = null;
           Object temp = resolvePath(res, datePath);
-          if (temp instanceof DateTime)
+          if (temp instanceof DateTime) {
             date = (DateTime)temp;
-          else if (temp instanceof DateTimeType)
+          }
+          else if (temp instanceof DateTimeType) {
             date = toDateTime((DateTimeType)temp);
+          }
 
           if (date != null && InEvaluator.in(date, expanded)) {
             results.add(res);
@@ -167,30 +162,16 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
             includeRes = false;
           }
         }
+
         else {
           if (dateHighPath == null && dateLowPath == null) {
             throw new IllegalArgumentException("If the datePath is not given, either the lowDatePath or highDatePath must be provided.");
           }
-          // What we want here is to build a new Interval using corresponding high and low dates
-          // Then use the IncludesEvaluator to check membership
-          DateTime lowDt = null;
-          DateTime highDt = null;
 
           // get the high and low dates if present
           // if not present, set to corresponding value in the expanded Interval
-          if (dateHighPath != null) {
-              highDt = (DateTime)resolvePath(res, dateHighPath);
-          }
-          else {
-              highDt = (DateTime)expanded.getHigh();
-          }
-
-          if (dateLowPath != null) {
-              lowDt = (DateTime)resolvePath(res, dateLowPath);
-          }
-          else {
-              lowDt = (DateTime)expanded.getLow();
-          }
+          DateTime highDt = dateHighPath != null ? (DateTime)resolvePath(res, dateHighPath) : (DateTime)expanded.getHigh();
+          DateTime lowDt = dateLowPath != null ? (DateTime)resolvePath(res, dateLowPath) : (DateTime)expanded.getLow();
 
           // the low and high dates are resolved -- create the Interval
           Interval highLowDtInterval = new Interval(lowDt, true, highDt, true);
@@ -285,12 +266,12 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       File file = new File(evalPath.toString());
 
       if (!file.exists()) {
-        throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
+        return fileContents;
       }
 
       try {
         for (File f : file.listFiles()) {
-          if (f.getName().indexOf(".xml") != -1 || f.getName().indexOf(".json") != -1)
+          if (f.getName().contains(".json"))
             fileContents.add(readFile(f));
         }
       }
@@ -306,7 +287,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
           // find the data type directory (condition, encounter, etc...)
           if (patientSubFolder.getName().equals(evalPath.getName(evalPath.getNameCount() - 1).toString())) {
             for (File dataTypeFile : patientSubFolder.listFiles()) {
-              if (dataTypeFile.getName().indexOf(".xml") != -1 || dataTypeFile.getName().indexOf(".json") != -1)
+              if (dataTypeFile.getName().contains(".json"))
                 fileContents.add(readFile(dataTypeFile));
             }
           }
@@ -332,14 +313,9 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   }
 
   public boolean checkCodeMembership(Object codeObj, String vsId) {
-    // TODO: endpoint hardcoded for now -- may want to enable user to choose...
-    // This endpoint is causing error:
-    // ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException: Failed to retrieve the server metadata statement during client initialization. URL used was https://ontoserver.csiro.au/stu3/metadata
-    // FhirTerminologyProvider provider = new FhirTerminologyProvider().withEndpoint("https://ontoserver.csiro.au/stu3");
-    FhirTerminologyProvider provider = new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
     Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
     for (Coding code : conceptCodes) {
-      if (provider.in(new Code()
+      if (terminologyProvider.in(new Code()
                   .withCode(code.getCodeElement().getValue())
                   .withSystem(code.getSystem()),
                   new ValueSetInfo().withId(vsId)))
@@ -353,7 +329,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   public DateTime toDateTime(DateTimeType hapiDt) {
     // TODO: do we want 0 to be the default value if null?
     int year = hapiDt.getYear() == null ? 0 : hapiDt.getYear();
-    // months in HAPI are zero-indexed -- don't want that
+    // months in HAPI are zero-indexed -- don't want that, hence the plus one
     int month = hapiDt.getMonth() == null ? 0 : hapiDt.getMonth() + 1;
     int day = hapiDt.getDay() == null ? 0 : hapiDt.getDay();
     int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
