@@ -46,6 +46,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public CalculateAgeAt createCalculateAgeAt() { return new CalculateAgeAtEvaluator(); }
 
     @Override
+    public Case createCase() { return new CaseEvaluator(); }
+
+    @Override
     public Ceiling createCeiling() { return new CeilingEvaluator(); }
 
     @Override
@@ -143,6 +146,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public GreaterOrEqual createGreaterOrEqual() { return new GreaterOrEqualEvaluator(); }
+
+    @Override
+    public If createIf() { return new IfEvaluator(); }
 
     // @Override
     // public Implies createImplies() { return new ImpliesEvaluator(); }
