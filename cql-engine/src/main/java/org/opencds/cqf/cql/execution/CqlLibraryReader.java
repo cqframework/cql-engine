@@ -66,7 +66,6 @@ public class CqlLibraryReader {
             throw new IllegalArgumentException("no XML is given");
 
         if (xml instanceof String) {
-            // What if the library comes in as text?
             try {
                 xml = new URI((String)xml);
             } catch (URISyntaxException e) {
