@@ -85,13 +85,6 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
         throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
     }
 
-    // TODO: Not sure if this will ever get called -- How to get Patient ID?
-    // Typically see something like the following in the library:
-    //  <def name="Patient" context="Patient">
-    //    <expression xsi:type="SingletonFrom">
-    //       <operand dataType="fhir:Patient" xsi:type="Retrieve"/>
-    //    </expression>
-    // </def>
     if (context != null && context.equals("Patient") && contextValue != null) {
       toResults = toResults.resolve((String)contextValue);
     }

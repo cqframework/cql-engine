@@ -37,6 +37,29 @@ public abstract class BaseFhirDataProvider implements DataProvider
         return this.packageName;
     }
 
+    public void setPackageName(String packageName) {
+      this.packageName = packageName;
+    }
+
+    public BaseFhirDataProvider withPackageName(String packageName) {
+      setPackageName(packageName);
+      return this;
+    }
+
+    private Class externalModelAccess;
+    public Class getExternalModelAccess() {
+      return externalModelAccess;
+    }
+
+    public void setExternalModelAccess(Class externalModelAccess) {
+      this.externalModelAccess = externalModelAccess;
+    }
+
+    public BaseFhirDataProvider withExternalModelAccess(Class externalModelAccess) {
+      setExternalModelAccess(externalModelAccess);
+      return this;
+    }
+
     // TODO: Time support? HAPI seems to be missing some of this?
 //    public Time toTime(TimeType hapiDt) {
 //        int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
