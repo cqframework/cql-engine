@@ -94,8 +94,9 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       toResults = toResults.resolve(getDefaultPatient(toResults));
     }
 
-    if (dataType != null && !dataType.equals("Patient")) {
-      toResults = toResults.resolve(dataType.toLowerCase());
+    if (dataType != null) {
+      if (!dataType.equals("Patient"))
+        toResults = toResults.resolve(dataType.toLowerCase());
     }
     else { // Just in case -- probably redundant error checking...
       throw new IllegalArgumentException("A data type (i.e. Procedure, Valueset, etc...) must be specified for clinical data retrieval");
