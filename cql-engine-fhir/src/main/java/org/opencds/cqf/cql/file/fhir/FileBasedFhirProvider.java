@@ -94,7 +94,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
       toResults = toResults.resolve(getDefaultPatient(toResults));
     }
 
-    if (dataType != null) {
+    if (dataType != null && !dataType.equals("Patient")) {
       toResults = toResults.resolve(dataType.toLowerCase());
     }
     else { // Just in case -- probably redundant error checking...
