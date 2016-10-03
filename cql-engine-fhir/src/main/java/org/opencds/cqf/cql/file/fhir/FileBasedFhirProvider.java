@@ -14,7 +14,6 @@ import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.motivemi.cds2.model.FHIRStatement;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,6 +64,20 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     this.path = Paths.get(path);
     this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                                                 : new FhirTerminologyProvider().withEndpoint(endpoint);
+  }
+
+  private Path pathToModelJar;
+  public Path getpathToModelJar() {
+    return pathToModelJar;
+  }
+
+  public void setPathToModelJar(Path pathToModelJar) {
+    this.pathToModelJar = pathToModelJar;
+  }
+
+  public FileBasedFhirProvider withPathToModelJar(Path pathToModelJar) {
+    setPathToModelJar(pathToModelJar);
+    return this;
   }
 
   public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
@@ -256,14 +269,15 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   }
 
   public Object mFhirDeserialize(String resource) {
-    ObjectMapper objectMapper = new ObjectMapper();
-    try {
-      return objectMapper.readValue(resource, FHIRStatement.class);
-    }
-    catch (IOException e) {
-      // TODO: quick fix here - do something more substantial
-      return null;
-    }
+    // ObjectMapper objectMapper = new ObjectMapper();
+    // try {
+    //   return objectMapper.readValue(resource, FHIRStatement.class);
+    // }
+    // catch (IOException e) {
+    //   // TODO: quick fix here - do something more substantial
+    //   return null;
+    // }
+    return null;
   }
 
   // If Patient context without patient id, get the first patient
