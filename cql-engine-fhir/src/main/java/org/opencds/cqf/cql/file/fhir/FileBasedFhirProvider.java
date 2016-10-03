@@ -274,7 +274,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
     Class<?> clazz = null;
     try {
-      clazz = loader.loadClass(getPackageName() + ".FHIRStatement");
+      clazz = loader.loadClass(getPackageName() + ".Condition");
     }
     catch (ClassNotFoundException e) {
       // TODO: quick fix here - report something more substantial
