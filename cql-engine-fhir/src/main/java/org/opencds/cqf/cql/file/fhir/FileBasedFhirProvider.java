@@ -259,7 +259,8 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     ObjectMapper objectMapper = new ObjectMapper();
     try {
       return objectMapper.readValue(resource, FHIRStatement.class);
-    } catch (IOException e) {
+    }
+    catch (IOException e) {
       // TODO: quick fix here - do something more substantial
       return null;
     }
