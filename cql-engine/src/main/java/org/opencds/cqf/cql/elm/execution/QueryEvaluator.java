@@ -3,8 +3,10 @@ package org.opencds.cqf.cql.elm.execution;
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
+import org.opencds.cqf.cql.runtime.Value;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import static org.opencds.cqf.cql.runtime.Value.ensureIterable;
 
 /**
@@ -23,9 +25,9 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
             throw new NotImplementedException("Let clauses within queries are not currently implemented.");
         }
 
-        if (this.getSort() != null) {
-            throw new NotImplementedException("Sort clause within a query is not currently implemented.");
-        }
+        // if (this.getSort() != null) {
+        //     throw new NotImplementedException("Sort clause within a query is not currently implemented.");
+        // }
 
         org.cqframework.cql.elm.execution.AliasedQuerySource source = this.getSource().get(0);
         Object sourceObject = source.getExpression().evaluate(context);
@@ -89,6 +91,20 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
         if (this.getReturn() != null && this.getReturn().isDistinct()) {
             result = DistinctEvaluator.distinct(result);
+        }
+
+        org.cqframework.cql.elm.execution.SortClause sortClause = this.getSort();
+        if (sortClause != null && sourceIsList) {
+          for (org.cqframework.cql.elm.execution.SortByItem byItem : sortClause.getBy()) {
+            String direction = byItem.getDirection().value();
+            if (direction == null || direction.equals("asc") || direction.equals("ascending")) {
+              java.util.Collections.sort(result, Value.valueSort);
+            }
+            else if (direction.equals("desc") || direction.equals("descending")) {
+              java.util.Collections.sort(result, Value.valueSort);
+              java.util.Collections.reverse(result);
+            }
+          }
         }
 
         if (sourceIsList) {

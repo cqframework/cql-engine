@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.HashMap;
+import java.util.Comparator;
 
 import org.joda.time.DateTimeFieldType;
 /**
@@ -13,6 +14,33 @@ import org.joda.time.DateTimeFieldType;
  * Edited by Chris Schuler
  */
 public class Value {
+
+  public static Comparator<Object> valueSort = new Comparator<Object>() {
+
+    public int compare(Object comparandOne, Object comparandTwo) {
+      if (comparandOne instanceof Integer) {
+        return (Integer)comparandOne - (Integer)comparandTwo;
+      }
+
+      else if (comparandOne instanceof BigDecimal) {
+        return ((BigDecimal)comparandOne).compareTo((BigDecimal)comparandOne);
+      }
+
+      else if (comparandOne instanceof Quantity) {
+        return ((Quantity)comparandOne).getValue().compareTo(((Quantity)comparandTwo).getValue());
+      }
+
+      else if (comparandOne instanceof DateTime) {
+        return ((DateTime)comparandOne).getPartial().compareTo(((DateTime)comparandTwo).getPartial());
+      }
+
+      else if (comparandOne instanceof Time) {
+        return ((Time)comparandOne).getPartial().compareTo(((Time)comparandTwo).getPartial());
+      }
+
+      throw new IllegalArgumentException("Type is not comparable");
+    }
+  };
 
     public static Boolean compare(double left, double right, String op) {
       if (op.equals("==")) { return left == right; }

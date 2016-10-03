@@ -14,11 +14,25 @@ subprojects {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
         }
         maven {
             url "https://oss.sonatype.org/content/groups/public/"
+        }
+        maven {
+          url "http://maven-repo.ebmxonline.com:8081/artifactory/libs-release-local"
+        }
+        maven {
+          url "http://maven-repo.ebmxonline.com:8081/artifactory/ext-release-local"
+        }
+        maven {
+          credentials {
+            username 'mmi'
+            password 'motive123'
+        }
+          url "http://maven-repo.ebmxonline.com:8081/artifactory/northstar"
         }
     }
 

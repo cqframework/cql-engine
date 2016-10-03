@@ -13,6 +13,9 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.motivemi.cds2.model.FHIRStatement;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -95,6 +98,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     }
 
     if (dataType != null) {
+      // TODO: this isn't right - Patient is a valid fhir resource.
       if (!dataType.equals("Patient"))
         toResults = toResults.resolve(dataType.toLowerCase());
     }
@@ -106,7 +110,13 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     if (dateRange == null && codePath == null) {
       patientFiles = getPatientFiles(toResults, context);
       for (String resource : patientFiles) {
-        Object res = fhirContext.newJsonParser().parseResource(resource);
+        Object res = null;
+        if (getPackageName().equals("com.motivemi.cds2.model")) {
+          res = mFhirDeserialize(resource);
+        }
+        else {
+          res = fhirContext.newJsonParser().parseResource(resource);
+        }
         results.add(res);
       }
       return results;
@@ -120,16 +130,25 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     // that record may be excluded later during the code filtering stage
     for (String resource : patientFiles) {
       Object outcome = null;
-      Object res = fhirContext.newJsonParser().parseResource(resource);
+      Object res = null;
+      if (getPackageName().equals("com.motivemi.cds2.model")) {
+        res = mFhirDeserialize(resource);
+      }
+      else {
+        res = fhirContext.newJsonParser().parseResource(resource);
+      }
+
       // since retrieves can include both date and code filtering, I need this flag
       // to determine inclusion of codes -- if date is no good -- don't test code
       boolean includeRes = true;
+
       // dateRange element optionally allows a date range to be provided.
       // The clinical statements returned would be only those clinical statements whose date
       // fell within the range specified.
       if (dateRange != null) {
+
         // Expand Interval DateTimes to avoid InEvalutor returning null
-        // TODO: account for possible null for high or low?
+        // TODO: account for possible null for high or low? - No issues with this yet...
         Interval expanded = new Interval(
                                   DateTime.expandPartialMin((DateTime)dateRange.getLow(), 7), true,
                                   DateTime.expandPartialMin((DateTime)dateRange.getHigh(), 7), true
@@ -141,6 +160,8 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
 
           DateTime date = null;
           Object temp = resolvePath(res, datePath);
+
+          // Hmm... May not need this.
           if (temp instanceof DateTime) {
             date = (DateTime)temp;
           }
@@ -234,6 +255,16 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     return results;
   }
 
+  public Object mFhirDeserialize(String resource) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.readValue(resource, FHIRStatement.class);
+    } catch (IOException e) {
+      // TODO: quick fix here - do something more substantial
+      return null;
+    }
+  }
+
   // If Patient context without patient id, get the first patient
   public String getDefaultPatient(Path evalPath) {
     File file = new File(evalPath.toString());
@@ -241,13 +272,11 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     if (!file.exists()) {
       throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
     }
-    try {
-      patientId = file.listFiles()[0].getName();
-    }
-    catch(NullPointerException npe) {
+    else if (file.listFiles().length == 0) {
       throw new IllegalArgumentException("The target directory is empty!");
     }
-    return patientId;
+
+    return file.listFiles()[0].getName();
   }
 
   // evalPath examples -- NOTE: this occurs before filtering

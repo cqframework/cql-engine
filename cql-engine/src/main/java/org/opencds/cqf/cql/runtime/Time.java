@@ -33,7 +33,6 @@ public class Time {
   }
 
   public static int getFieldIndex(String dateTimeElement) {
-    // DateTimePrecision Enum represents precision as Titlecase Strings
     ArrayList<String> indexes = new ArrayList<>(Arrays.asList("hour", "minute", "second", "millisecond"));
     return indexes.indexOf(dateTimeElement.toLowerCase());
   }
