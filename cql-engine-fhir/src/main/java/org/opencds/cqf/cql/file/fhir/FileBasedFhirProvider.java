@@ -14,6 +14,8 @@ import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -66,16 +68,16 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
                                                 : new FhirTerminologyProvider().withEndpoint(endpoint);
   }
 
-  private Path pathToModelJar;
-  public Path getpathToModelJar() {
+  private URL pathToModelJar;
+  public URL getpathToModelJar() {
     return pathToModelJar;
   }
 
-  public void setPathToModelJar(Path pathToModelJar) {
+  public void setPathToModelJar(URL pathToModelJar) {
     this.pathToModelJar = pathToModelJar;
   }
 
-  public FileBasedFhirProvider withPathToModelJar(Path pathToModelJar) {
+  public FileBasedFhirProvider withPathToModelJar(URL pathToModelJar) {
     setPathToModelJar(pathToModelJar);
     return this;
   }
@@ -269,15 +271,24 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   }
 
   public Object mFhirDeserialize(String resource) {
-    // ObjectMapper objectMapper = new ObjectMapper();
-    // try {
-    //   return objectMapper.readValue(resource, FHIRStatement.class);
-    // }
-    // catch (IOException e) {
-    //   // TODO: quick fix here - do something more substantial
-    //   return null;
-    // }
-    return null;
+    URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
+    Class<?> clazz = null;
+    try {
+      clazz = loader.loadClass(getPackageName() + ".FHIRStatement");
+    }
+    catch (ClassNotFoundException e) {
+      // TODO: quick fix here - report something more substantial
+      return null;
+    }
+
+    ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      return objectMapper.readValue(resource, clazz);
+    }
+    catch (IOException e) {
+      // TODO: quick fix here - report something more substantial
+      return null;
+    }
   }
 
   // If Patient context without patient id, get the first patient
