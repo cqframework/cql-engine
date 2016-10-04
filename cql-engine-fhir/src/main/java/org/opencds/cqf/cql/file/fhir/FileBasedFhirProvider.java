@@ -26,6 +26,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
 What the heck does this thing do?
@@ -271,23 +273,29 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   }
 
   public Object mFhirDeserialize(String resource) {
+    // get the resource type
+    String resourceType = null;
+    Matcher m = Pattern.compile("\"resourceType\": \"(.*?)\",").matcher(resource);
+		if (m.find())
+			resourceType = m.group(1);
+
+    // load the model class from the given url
     URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
     Class<?> clazz = null;
     try {
-      clazz = loader.loadClass(getPackageName() + ".Condition");
+      clazz = loader.loadClass(getPackageName() + "." + resourceType);
     }
     catch (ClassNotFoundException e) {
-      // TODO: quick fix here - report something more substantial
-      return null;
+      throw new RuntimeException("The resource is not a valid mFHIR model type!");
     }
 
+    // de-serialize into mFHIR resource
     ObjectMapper objectMapper = new ObjectMapper();
     try {
       return objectMapper.readValue(resource, clazz);
     }
     catch (IOException e) {
-      // TODO: quick fix here - report something more substantial
-      return null;
+      throw new RuntimeException("Unable to parse resource with specified mFHIR model class!");
     }
   }
 
