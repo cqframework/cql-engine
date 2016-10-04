@@ -7,6 +7,7 @@ import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import org.hl7.fhir.dstu3.model.BooleanType;
 import org.hl7.fhir.dstu3.model.Parameters;
@@ -30,6 +31,8 @@ public class FhirTerminologyProvider implements TerminologyProvider {
     public void setEndpoint(String endpoint) {
         this.endpoint = endpoint;
         fhirContext = FhirContext.forDstu3();
+        // TODO: remove this disabling of validation once mFHIR DTS server is active -- 10/4/2016
+        fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
 
         if (userName != null && password != null) {
