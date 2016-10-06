@@ -308,7 +308,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                 JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
                 JSONArray jsonArray =  (JSONArray) jsonObject.get("entry");
                 for (int i = 0; i < jsonArray.size(); ++i) {
-                    if (((JSONObject)jsonArray.get(i)).get("resourceType").equals(dataType)) {
+                    if (((JSONObject)((JSONObject)jsonArray.get(i)).get("resource")).get("resourceType").equals(dataType)) {
                         resources.add(jsonArray.get(i));
                     }
                 }
