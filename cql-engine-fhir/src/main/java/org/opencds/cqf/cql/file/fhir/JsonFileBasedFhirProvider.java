@@ -251,6 +251,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         try {
             JSONParser jsonParser = new JSONParser();
             JSONArray jsonArray = (JSONArray) jsonParser.parse(resource);
+            resource = (String) ((JSONObject)jsonArray.get(0)).get("resource");
             resourceType = (String) ((JSONObject)((JSONObject)jsonArray.get(0)).get("resource")).get("resourceType");
         } catch (ParseException e) {
             throw new RuntimeException("Unable to parse resource...");
