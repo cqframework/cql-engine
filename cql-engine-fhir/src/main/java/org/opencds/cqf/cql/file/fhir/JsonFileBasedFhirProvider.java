@@ -28,8 +28,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Created by Christopher on 10/5/2016.
@@ -249,10 +247,14 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
     private Object deserialize(String resource) {
         // get the resource type
-        String resourceType = null;
-        Matcher m = Pattern.compile("\"resourceType\": \"(.*?)\",").matcher(resource);
-        if (m.find())
-            resourceType = m.group(1);
+        String resourceType;
+        try {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) jsonParser.parse(resource);
+            resourceType = (String) ((JSONObject)jsonObject.get("resource")).get("resourceType");
+        } catch (ParseException e) {
+            throw new RuntimeException("Unable to parse resource...");
+        }
 
         // load the model class from the given url
         URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
