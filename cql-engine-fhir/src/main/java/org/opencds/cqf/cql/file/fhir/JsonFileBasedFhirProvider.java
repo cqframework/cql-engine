@@ -261,7 +261,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
         Class<?> clazz;
         try {
-            clazz = loader.loadClass(getPackageName() + "." + resourceType);
+            String classPath = getPackageName() + "." + resourceType;
+            clazz = loader.loadClass(classPath);
         }
         catch (ClassNotFoundException e) {
             throw new RuntimeException("The resource is not a valid model type...");
