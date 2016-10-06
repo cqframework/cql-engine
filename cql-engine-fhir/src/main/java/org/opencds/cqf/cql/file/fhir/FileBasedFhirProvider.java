@@ -89,7 +89,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
                                    String dateLowPath, String dateHighPath, Interval dateRange) {
 
     List<Object> results = new ArrayList<>();
-    List<String> patientFiles = new ArrayList<>();
+    List<String> patientFiles;
     Path toResults = path;
 
     // default context is Patient
@@ -127,7 +127,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     if (dateRange == null && codePath == null) {
       patientFiles = getPatientFiles(toResults, context);
       for (String resource : patientFiles) {
-        Object res = null;
+        Object res;
         if (getPackageName().equals("com.motivemi.cds2.model")) {
           res = mFhirDeserialize(resource);
         }
@@ -146,8 +146,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     // so even though I may include a record if it is within the date range,
     // that record may be excluded later during the code filtering stage
     for (String resource : patientFiles) {
-      Object outcome = null;
-      Object res = null;
+      Object res;
       if (getPackageName().equals("com.motivemi.cds2.model")) {
         res = mFhirDeserialize(resource);
       }
@@ -281,7 +280,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
 
     // load the model class from the given url
     URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
-    Class<?> clazz = null;
+    Class<?> clazz;
     try {
       clazz = loader.loadClass(getPackageName() + "." + resourceType);
     }
@@ -302,7 +301,6 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   // If Patient context without patient id, get the first patient
   public String getDefaultPatient(Path evalPath) {
     File file = new File(evalPath.toString());
-    String patientId = null;
     if (!file.exists()) {
       throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
     }
