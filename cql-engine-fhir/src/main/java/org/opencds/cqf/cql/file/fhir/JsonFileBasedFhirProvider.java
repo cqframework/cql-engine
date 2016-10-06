@@ -286,12 +286,16 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             if (context.equals("Patient")) {
                 // fetch the json file (assuming single file) within directory
                 File temp = file.listFiles()[0];
-                resources.add(getRelevantResources(temp, evalPath, dataType));
+                JSONArray arr = getRelevantResources(temp, evalPath, dataType);
+                if (!arr.isEmpty())
+                  resources.add(arr);
             }
             else { // Population
                 try {
                     for (File temp : file.listFiles()) {
-                        resources.add(getRelevantResources(temp, evalPath, dataType));
+                      JSONArray arr = getRelevantResources(temp, evalPath, dataType);
+                      if (!arr.isEmpty())
+                        resources.add(arr);
                     }
                 } catch (NullPointerException e) {
                     throw new IllegalArgumentException("Patient directory empty...");
