@@ -1,18 +1,23 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import org.joda.time.Partial;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Code;
-import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.joda.time.Partial;
+import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
+import org.opencds.cqf.cql.file.fhir.JsonFileBasedFhirProvider;
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
 import org.testng.annotations.Test;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import static org.testng.Assert.*;
+
+import static org.testng.Assert.assertTrue;
 
 /**
  * Created by Bryn on 4/16/2016.
@@ -149,5 +154,17 @@ public class TestFhirDataProvider {
       for (Object o : results)
         size++;
       assertTrue(size == 0);
+    }
+
+    //@Test
+    public void testJsonFileDataProvider() throws MalformedURLException {
+        JsonFileBasedFhirProvider provider = (JsonFileBasedFhirProvider) new JsonFileBasedFhirProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null)
+                                                    .withPathToModelJar(new URL("file:///C:/Users/Christopher/Desktop/Motive/cql_engine_test/src/test/resources/GEFHIRModel-0.1.0.jar"))
+                                                    .withPackageName("com.ge.ns.fhir.model");
+        Iterable<Object> results = provider.retrieve("Patient", "987", "ProcedureRequest", null, null, null, null, null, null, null, null);
+        int size = 0;
+        for (Object o : results)
+            size++;
+        assertTrue(size == 1);
     }
 }

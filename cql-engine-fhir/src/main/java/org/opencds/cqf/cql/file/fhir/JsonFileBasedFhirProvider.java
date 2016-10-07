@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.file.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
@@ -44,6 +45,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         this.path = Paths.get(path);
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
+
+        // replace fhirversion.properties file
     }
 
     private URL pathToModelJar;
@@ -100,10 +103,12 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             patientResources = getPatientResources(toResults, context, dataType);
             for (JSONArray patientResource : patientResources) {
                 Object res;
-                if (getPackageName().equals("com.motivemi.cds2.model") || getPackageName().equals("com.ge.ns.fhir.model")) {
+                if (getPackageName().equals("com.motivemi.cds2.model")) {
                     res = deserialize(patientResource.toString());
                 }
                 else {
+                    if (getPackageName().equals("com.ge.ns.fhir.model"))
+                        setFhirContext(FhirContext.forDstu2());
                     res = fhirContext.newJsonParser().parseResource(patientResource.toString());
                 }
                 results.add(res);
@@ -119,10 +124,12 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         // that record may be excluded later during the code filtering stage
         for (JSONArray resource : patientResources) {
             Object res;
-            if (getPackageName().equals("com.motivemi.cds2.model") || getPackageName().equals("com.ge.ns.fhir.model")) {
+            if (getPackageName().equals("com.motivemi.cds2.model")) {
                 res = deserialize(resource.toString());
             }
             else {
+                if (getPackageName().equals("com.ge.ns.fhir.model"))
+                    setFhirContext(FhirContext.forDstu2());
                 res = fhirContext.newJsonParser().parseResource(resource.toString());
             }
 

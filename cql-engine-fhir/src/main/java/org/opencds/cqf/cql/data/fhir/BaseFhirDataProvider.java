@@ -26,6 +26,11 @@ public abstract class BaseFhirDataProvider implements DataProvider
         this.fhirContext = FhirContext.forDstu3();
     }
 
+    // for DSTU2 and earlier support
+    public void setFhirContext(FhirContext fhirContext) {
+        this.fhirContext = fhirContext;
+    }
+
     @Override
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath, String dateLowPath, String dateHighPath, Interval dateRange) {
         return null;
