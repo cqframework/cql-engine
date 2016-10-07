@@ -101,12 +101,10 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             patientResources = getPatientResources(toResults, context, dataType);
             for (JSONArray patientResource : patientResources) {
                 Object res;
-                if (getPackageName().equals("com.motivemi.cds2.model")) {
+                if (getPackageName().equals("com.motivemi.cds2.model") || getPackageName().equals("com.ge.ns.fhir.model")) {
                     res = deserialize(patientResource.toString());
                 }
                 else {
-                    if (getPackageName().equals("com.ge.ns.fhir.model"))
-                        setFhirContext(FhirContext.forDstu2());
                     res = fhirContext.newJsonParser().parseResource(patientResource.toString());
                 }
                 results.add(res);
@@ -122,12 +120,10 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         // that record may be excluded later during the code filtering stage
         for (JSONArray resource : patientResources) {
             Object res;
-            if (getPackageName().equals("com.motivemi.cds2.model")) {
+            if (getPackageName().equals("com.motivemi.cds2.model") || getPackageName().equals("com.ge.ns.fhir.model")) {
                 res = deserialize(resource.toString());
             }
             else {
-                if (getPackageName().equals("com.ge.ns.fhir.model"))
-                    setFhirContext(FhirContext.forDstu2());
                 res = fhirContext.newJsonParser().parseResource(resource.toString());
             }
 
@@ -260,6 +256,11 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             resourceType = ((JSONObject)((JSONObject)jsonArray.get(0)).get("resource")).get("resourceType").toString();
         } catch (ParseException e) {
             throw new RuntimeException("Unable to parse resource...");
+        }
+
+        if (getPackageName().equals("com.ge.ns.fhir.model")) {
+            setFhirContext(FhirContext.forDstu2());
+            return fhirContext.newJsonParser().parseResource(resource);
         }
 
         // load the model class from the given url
