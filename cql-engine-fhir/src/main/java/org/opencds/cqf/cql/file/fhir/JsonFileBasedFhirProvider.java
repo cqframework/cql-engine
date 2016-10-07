@@ -45,8 +45,6 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         this.path = Paths.get(path);
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
-
-        // replace fhirversion.properties file
     }
 
     private URL pathToModelJar;
