@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.file.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -101,11 +101,11 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             patientResources = getPatientResources(toResults, context, dataType);
             for (JSONArray patientResource : patientResources) {
                 Object res;
-                if (getPackageName().equals("com.motivemi.cds2.model") || getPackageName().equals("com.ge.ns.fhir.model")) {
-                    res = deserialize(patientResource.toString());
+                if (getPackageName().equals("org.hl7.fhir.dstu3.model")) {
+                    res = fhirContext.newJsonParser().parseResource(patientResource.toString());
                 }
                 else {
-                    res = fhirContext.newJsonParser().parseResource(patientResource.toString());
+                    res = deserialize(patientResource.toString());
                 }
                 results.add(res);
             }
@@ -120,11 +120,11 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         // that record may be excluded later during the code filtering stage
         for (JSONArray resource : patientResources) {
             Object res;
-            if (getPackageName().equals("com.motivemi.cds2.model") || getPackageName().equals("com.ge.ns.fhir.model")) {
-                res = deserialize(resource.toString());
+            if (getPackageName().equals("org.hl7.fhir.dstu3.model")) {
+                res = fhirContext.newJsonParser().parseResource(resource.toString());
             }
             else {
-                res = fhirContext.newJsonParser().parseResource(resource.toString());
+                res = deserialize(resource.toString());
             }
 
             // since retrieves can include both date and code filtering, I need this flag
@@ -205,7 +205,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                                 results.remove(res);
                         }
                     }
-                    else if (resCodes instanceof CodeableConcept) {
+                    else if (resCodes instanceof CodeableConceptDt) {
                         if (checkCodeMembership(resCodes, valueSet) && results.indexOf(res) == -1)
                             results.add(res);
                     }
@@ -215,8 +215,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                         Object resCodes = resolvePath(res, codePath);
                         if (resCodes instanceof Iterable) {
                             for (Object codeObj : (Iterable)resCodes) {
-                                Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
-                                for (Coding c : conceptCodes) {
+                                List<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
+                                for (CodingDt c : conceptCodes) {
                                     if (c.getCodeElement().getValue().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
                                     {
                                         if (results.indexOf(res) == -1)
@@ -227,8 +227,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                                 }
                             }
                         }
-                        else if (resCodes instanceof CodeableConcept) {
-                            for (Coding c : ((CodeableConcept)resCodes).getCoding()) {
+                        else if (resCodes instanceof CodeableConceptDt) {
+                            for (CodingDt c : ((CodeableConceptDt)resCodes).getCoding()) {
                                 if (c.getCodeElement().getValue().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
                                 {
                                     if (results.indexOf(res) == -1)
@@ -258,7 +258,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             throw new RuntimeException("Unable to parse resource...");
         }
 
-        if (getPackageName().equals("com.ge.ns.fhir.model")) {
+        if (getPackageName().equals("com.ge.ns.fhir.model") || getPackageName().equals("ca.uhn.fhir.model.dstu2.resource")) {
             setFhirContext(FhirContext.forDstu2());
             return fhirContext.newJsonParser().parseResource(resource);
         }
@@ -353,8 +353,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
     }
 
     public boolean checkCodeMembership(Object codeObj, String vsId) {
-        Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
-        for (Coding code : conceptCodes) {
+        Iterable<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
+        for (CodingDt code : conceptCodes) {
             if (terminologyProvider.in(new Code()
                             .withCode(code.getCodeElement().getValue())
                             .withSystem(code.getSystem()),
