@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.file.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.composite.CodingDt;
+import ca.uhn.fhir.model.primitive.DateTimeDt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -152,11 +153,11 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
                     // May not need this - currently useful for testing
                     // TODO: alter tests to operate on java.util.Date dates
-                    if (temp instanceof DateTime) {
-                        date = (DateTime)temp;
-                    }
-                    else if (temp instanceof Date) {
+                    if (temp instanceof Date) { // for  dstu3
                         date = DateTime.fromJavaDate((Date)temp);
+                    }
+                    else if (temp instanceof DateTimeDt) { // for dstu2
+                        date = DateTime.fromJavaDate(((DateTimeDt)temp).getValue());
                     }
 
                     if (date != null && InEvaluator.in(date, expanded)) {
