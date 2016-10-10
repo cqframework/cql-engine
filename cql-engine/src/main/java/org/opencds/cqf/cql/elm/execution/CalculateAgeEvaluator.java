@@ -2,11 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
-// for Uncertainty
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 
-import java.util.ArrayList;
+// for Uncertainty
 /*
 CalculateAgeInYears(birthDate DateTime) Integer
 CalculateAgeInMonths(birthDate DateTime) Integer
@@ -34,6 +31,6 @@ public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.Cal
 
     if (operand == null) { return null; }
 
-    return CalculateAgeAtEvaluator.calculateAgeAt((DateTime)operand, DateTime.getToday(), precision);
+    return CalculateAgeAtEvaluator.calculateAgeAt(operand, DateTime.getToday(), precision);
   }
 }
