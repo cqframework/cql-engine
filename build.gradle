@@ -22,10 +22,7 @@ subprojects {
         }
     }
 
-    dependencies {
-        // need this jar instead of standard Maven repo jar -- altered fhirversion.properties
-        compile files("resources/hapi-fhir-structures-dstu2-1.6.jar")
-        compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '1.6'
+    dependencies {        
         testCompile group: 'info.cqframework', name: 'cql-to-elm', version: '1.1.0-SNAPSHOT'
         testCompile group: 'org.testng', name: 'testng', version: '6.8.8'
         testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
