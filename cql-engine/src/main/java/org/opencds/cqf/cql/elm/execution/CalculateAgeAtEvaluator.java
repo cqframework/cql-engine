@@ -1,6 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import ca.uhn.fhir.model.primitive.DateTimeDt;
+import ca.uhn.fhir.model.primitive.DateDt;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 
@@ -26,8 +26,8 @@ public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.C
 
   public static Object calculateAgeAt(Object birthDate, Object asOf, String precision) {
     if (birthDate == null || asOf == null) { return null; }
-    if (birthDate instanceof DateTimeDt) {
-      return DurationBetweenEvaluator.durationBetween(DateTime.fromJavaDate(((DateTimeDt)birthDate).getValue()), asOf, precision);
+    if (birthDate instanceof DateDt) {
+      return DurationBetweenEvaluator.durationBetween(DateTime.fromJavaDate(((DateDt)birthDate).getValue()), asOf, precision);
     }
     return DurationBetweenEvaluator.durationBetween(birthDate, asOf, precision);
   }
