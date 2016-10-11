@@ -73,6 +73,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
     // +(DateTime, Quantity)
     else if (left instanceof DateTime && right instanceof Quantity) {
       DateTime dt = (DateTime)left;
+      DateTime ret = dt;
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
@@ -84,14 +85,14 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         if (startSize < idx + 1) {
           // expand the Partial to the proper precision
           for (int i = startSize; i < idx + 1; ++i) {
-            dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+            ret.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
           }
         }
         // do the addition
-        dt.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(value));
+        ret.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(value));
         // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          dt.setPartial(dt.getPartial().without(DateTime.getField(i)));
+          ret.setPartial(dt.getPartial().without(DateTime.getField(i)));
         }
       }
 
@@ -103,7 +104,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         throw new ArithmeticException("The date time addition results in a year greater than the accepted range.");
       }
 
-      return dt;
+      return ret;
     }
 
     // +(Uncertainty, Uncertainty)
@@ -116,6 +117,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
     // +(Time, Quantity)
     else if (left instanceof Time && right instanceof Quantity) {
       Time time = (Time)left;
+      Time ret = time;
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
@@ -127,21 +129,21 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         if (startSize < idx + 1) {
           // expand the Partial to the proper precision
           for (int i = startSize; i < idx + 1; ++i) {
-            time.setPartial(time.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+            ret.setPartial(time.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
           }
         }
         // do the addition
-        time.setPartial(time.getPartial().property(Time.getField(idx)).addToCopy(value));
+        ret.setPartial(time.getPartial().property(Time.getField(idx)).addToCopy(value));
         // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          time.setPartial(time.getPartial().without(Time.getField(i)));
+          ret.setPartial(time.getPartial().without(Time.getField(i)));
         }
       }
 
       else {
         throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
       }
-      return time;
+      return ret;
     }
 
     throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));

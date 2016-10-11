@@ -66,6 +66,7 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
     // -(DateTime, Quantity)
     else if (left instanceof DateTime && right instanceof Quantity) {
       DateTime dt = (DateTime)left;
+      DateTime ret = dt;
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
@@ -77,15 +78,15 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         if (startSize < idx + 1) {
           // expand the Partial to the proper precision
           for (int i = startSize; i < idx + 1; ++i) {
-            dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+            ret.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
           }
         }
 
         // do the subtraction
-        dt.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
+        ret.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
         // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          dt.setPartial(dt.getPartial().without(DateTime.getField(i)));
+          ret.setPartial(dt.getPartial().without(DateTime.getField(i)));
         }
       }
 
@@ -96,7 +97,7 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
       }
 
-      return dt;
+      return ret;
     }
 
     else if (left instanceof Uncertainty && right instanceof Uncertainty) {
@@ -108,6 +109,7 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
     // -(Time, Quantity)
     else if (left instanceof Time && right instanceof Quantity) {
       Time t = (Time)left;
+      Time ret = t;
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
@@ -119,15 +121,15 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         if (startSize < idx + 1) {
           // expand the Partial to the proper precision
           for (int i = startSize; i < idx + 1; ++i) {
-            t.setPartial(t.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+            ret.setPartial(t.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
           }
         }
 
         // do the subtraction
-        t.setPartial(t.getPartial().property(Time.getField(idx)).addToCopy(-value));
+        ret.setPartial(t.getPartial().property(Time.getField(idx)).addToCopy(-value));
         // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          t.setPartial(t.getPartial().without(Time.getField(i)));
+          ret.setPartial(t.getPartial().without(Time.getField(i)));
         }
       }
 
@@ -135,7 +137,7 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
       }
 
-      return t;
+      return ret;
     }
 
     throw new IllegalArgumentException(String.format("Cannot Subtract arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
