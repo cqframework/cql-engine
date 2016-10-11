@@ -2,9 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
+
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.ArrayList;
 
 /*
 *** NOTES FOR ARITHMETIC OPERATOR ***
@@ -66,34 +65,34 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
     // -(DateTime, Quantity)
     else if (left instanceof DateTime && right instanceof Quantity) {
       DateTime dt = (DateTime)left;
-      DateTime ret = dt;
+      DateTime ret = new DateTime().withPartial(dt.getPartial());
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
       int idx = DateTime.getFieldIndex2(unit);
 
       if (idx != -1) {
-        int startSize = dt.getPartial().size();
+        int startSize = ret.getPartial().size();
         // check that the Partial has the precision specified
         if (startSize < idx + 1) {
           // expand the Partial to the proper precision
           for (int i = startSize; i < idx + 1; ++i) {
-            ret.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+            ret.setPartial(ret.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
           }
         }
 
         // do the subtraction
-        ret.setPartial(dt.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
+        ret.setPartial(ret.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
         // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          ret.setPartial(dt.getPartial().without(DateTime.getField(i)));
+          ret.setPartial(ret.getPartial().without(DateTime.getField(i)));
         }
       }
 
       else {
         throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
       }
-      if (dt.getPartial().getValue(0) < YEAR_RANGE_MIN) {
+      if (ret.getPartial().getValue(0) < YEAR_RANGE_MIN) {
         throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
       }
 
@@ -109,27 +108,27 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
     // -(Time, Quantity)
     else if (left instanceof Time && right instanceof Quantity) {
       Time t = (Time)left;
-      Time ret = t;
+      Time ret = new Time().withPartial(t.getPartial());
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
       int idx = Time.getFieldIndex2(unit);
 
       if (idx != -1) {
-        int startSize = t.getPartial().size();
+        int startSize = ret.getPartial().size();
         // check that the Partial has the precision specified
         if (startSize < idx + 1) {
           // expand the Partial to the proper precision
           for (int i = startSize; i < idx + 1; ++i) {
-            ret.setPartial(t.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+            ret.setPartial(ret.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
           }
         }
 
         // do the subtraction
-        ret.setPartial(t.getPartial().property(Time.getField(idx)).addToCopy(-value));
+        ret.setPartial(ret.getPartial().property(Time.getField(idx)).addToCopy(-value));
         // truncate to original precision
         for (int i = idx; i >= startSize; --i) {
-          ret.setPartial(t.getPartial().without(Time.getField(i)));
+          ret.setPartial(ret.getPartial().without(Time.getField(i)));
         }
       }
 
