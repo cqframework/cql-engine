@@ -288,7 +288,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
     private List<JSONArray> getPatientResources(Path evalPath, String context, String dataType) {
         List<JSONArray> resources = new ArrayList<>();
         // fetch patient directory
-        File file = new File(evalPath.toString() + ".json");
+        File file = new File(evalPath.toString());
 
         if (file.exists()) {
             if (context.equals("Patient")) {
