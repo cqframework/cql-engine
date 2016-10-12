@@ -247,7 +247,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         return results;
     }
 
-    private Object deserialize(String resource) {
+    public Object deserialize(String resource) {
         // get the resource type
         String resourceType;
         try {
@@ -285,7 +285,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         }
     }
 
-    private List<JSONArray> getPatientResources(Path evalPath, String context, String dataType) {
+    public List<JSONArray> getPatientResources(Path evalPath, String context, String dataType) {
         List<JSONArray> resources = new ArrayList<>();
         // fetch patient directory
         File file = new File(evalPath.toString());
@@ -313,7 +313,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         return resources;
     }
 
-    private JSONArray getRelevantResources(File temp, Path evalPath, String dataType) {
+    public JSONArray getRelevantResources(File temp, Path evalPath, String dataType) {
         JSONArray resources = new JSONArray();
         try {
             // Account for possible .js json

@@ -23,7 +23,7 @@ import static org.testng.Assert.assertTrue;
  * Created by Bryn on 4/16/2016.
  */
 public class TestFhirDataProvider {
-    //@Test
+    @Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
         IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
@@ -32,7 +32,7 @@ public class TestFhirDataProvider {
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    //@Test
+    @Test
     public void testPatientRetrieve() {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
