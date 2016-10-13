@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.primitive.BoundCodeDt;
+import ca.uhn.fhir.model.primitive.DateDt;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhir.dstu3.model.Period;
@@ -30,6 +32,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
     public void setFhirContext(FhirContext fhirContext) {
         this.fhirContext = fhirContext;
     }
+    public FhirContext getFhirContext() { return fhirContext; }
 
     @Override
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath, String dateLowPath, String dateHighPath, Interval dateRange) {
@@ -81,6 +84,14 @@ public abstract class BaseFhirDataProvider implements DataProvider
     protected Object mapPrimitive(Object result) {
         if (result instanceof Date) {
             return toDateTime((Date)result);
+        }
+
+        if (result instanceof BoundCodeDt) {
+            return ((BoundCodeDt)result).getValue();
+        }
+
+        if (result instanceof DateDt) {
+            return DateTime.fromJavaDate(((DateDt)result).getValue());
         }
 
 //        if (result instanceof TimeType) {

@@ -30,6 +30,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Created by Christopher on 10/5/2016.
@@ -261,6 +262,12 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
         if (getPackageName().equals("com.ge.ns.fhir.model") || getPackageName().equals("ca.uhn.fhir.model.dstu2.resource")) {
             setFhirContext(FhirContext.forDstu2());
+            Properties p = new Properties();
+            try {
+                p.load(getFhirContext().getVersion().getFhirVersionPropertiesFile());
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to load properties...");
+            }
             return fhirContext.newJsonParser().parseResource(resource);
         }
 
