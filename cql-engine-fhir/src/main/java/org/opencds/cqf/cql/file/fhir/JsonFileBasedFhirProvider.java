@@ -49,6 +49,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
     }
 	
+	// pulling in a custom properties file
 	private Properties prop;
 	public void loadProperties() {
 		prop = new Properties();
