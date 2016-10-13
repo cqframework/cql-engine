@@ -48,6 +48,16 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
     }
+	
+	private Properties prop;
+	public void loadProperties() {
+		prop = new Properties();
+		try {
+            prop.load(getFhirContext().getVersion().getFhirVersionPropertiesFile());
+		} catch (IOException e) {
+			throw new RuntimeException("Unable to load properties...");
+		}
+	}
 
     private URL pathToModelJar;
     public URL getpathToModelJar() {
@@ -109,7 +119,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                 else {
                     res = deserialize(patientResource.toString());
                 }
-                results.add(res);
+				if (res != null)
+					results.add(res);
             }
             return results;
         }
@@ -128,6 +139,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             else {
                 res = deserialize(resource.toString());
             }
+			if (res == null) { continue; }
 
             // since retrieves can include both date and code filtering, I need this flag
             // to determine inclusion of codes -- if date is no good -- don't test code
@@ -261,14 +273,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         }
 
         if (getPackageName().equals("com.ge.ns.fhir.model") || getPackageName().equals("ca.uhn.fhir.model.dstu2.resource")) {
-            setFhirContext(FhirContext.forDstu2());
-            Properties p = new Properties();
-            try {
-                p.load(getFhirContext().getVersion().getFhirVersionPropertiesFile());
-            } catch (IOException e) {
-                throw new RuntimeException("Unable to load properties...");
-            }
-            return fhirContext.newJsonParser().parseResource(resource);
+			return fhirContext.newJsonParser().parseResource(resource);
         }
 
         // load the model class from the given url
