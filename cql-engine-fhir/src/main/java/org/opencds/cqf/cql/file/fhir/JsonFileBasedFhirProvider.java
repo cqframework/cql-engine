@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.file.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
@@ -36,6 +35,7 @@ import java.util.Properties;
  * Created by Christopher on 10/5/2016.
  */
 public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
+    private com.ge.ns.fhir.model.extension.Patient patient;
 
     private Path path;
     private FhirTerminologyProvider terminologyProvider;
