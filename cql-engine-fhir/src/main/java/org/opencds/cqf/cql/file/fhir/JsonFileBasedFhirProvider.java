@@ -30,7 +30,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Created by Christopher on 10/5/2016.
@@ -40,7 +39,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
     private Path path;
     protected FhirTerminologyProvider terminologyProvider;
-	// for cusotm terminology provider
+	// for custom terminology provider
 	protected TerminologyProvider genericProvider;
 	
 	public JsonFileBasedFhirProvider (TerminologyProvider genericProvider, String path) {
@@ -59,17 +58,6 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
     }
-	
-	// pulling in a custom properties file 
-	private Properties prop;
-	public void loadProperties() {
-		prop = new Properties();
-		try {
-            prop.load(getFhirContext().getVersion().getFhirVersionPropertiesFile());
-		} catch (IOException e) {
-			throw new RuntimeException("Unable to load properties...");
-		}
-	}
 
     private URL pathToModelJar;
     public URL getpathToModelJar() {

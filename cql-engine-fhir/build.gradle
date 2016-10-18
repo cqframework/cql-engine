@@ -2,7 +2,7 @@ dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu3', version: '2.0'
-    compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu2', version: '1.6'
+    compile name: 'hapi-fhir-structures-dstu2-1.6'
 	compile name: 'ge-fhir-extension-0.0.1-SNAPSHOT'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-base', version: '2.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.8.3'
