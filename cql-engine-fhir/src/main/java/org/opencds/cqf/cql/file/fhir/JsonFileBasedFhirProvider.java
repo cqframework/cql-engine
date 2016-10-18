@@ -40,6 +40,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
     private Path path;
     protected FhirTerminologyProvider terminologyProvider;
+	// for cusotm terminology provider
 	protected TerminologyProvider genericProvider;
 	
 	public JsonFileBasedFhirProvider (TerminologyProvider genericProvider, String path) {
