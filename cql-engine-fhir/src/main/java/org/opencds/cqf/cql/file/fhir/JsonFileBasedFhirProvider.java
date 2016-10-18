@@ -38,7 +38,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
     private com.ge.ns.fhir.model.extension.Patient patient;
 
     private Path path;
-    private FhirTerminologyProvider terminologyProvider;
+    protected FhirTerminologyProvider terminologyProvider;
 
     public JsonFileBasedFhirProvider (String path, String endpoint) {
         if (path.isEmpty()) {
