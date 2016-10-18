@@ -16,6 +16,7 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
+import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -39,6 +40,15 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
     private Path path;
     protected FhirTerminologyProvider terminologyProvider;
+	protected TerminologyProvider genericProvider;
+	
+	public JsonFileBasedFhirProvider (TerminologyProvider genericProvider, String path) {
+		if (path.isEmpty()) {
+            throw new InvalidPathException(path, "Invalid path!");
+        }
+        this.path = Paths.get(path);
+		this.genericProvider = genericProvider;
+	}
 
     public JsonFileBasedFhirProvider (String path, String endpoint) {
         if (path.isEmpty()) {
@@ -213,7 +223,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                     Object resCodes = resolvePath(res, codePath);
                     if (resCodes instanceof Iterable) {
                         for (Object codeObj : (Iterable)resCodes) {
-                            boolean inValSet = checkCodeMembership(codeObj, valueSet);
+                            boolean inValSet = terminologyProvider != null ? checkCodeMembershipWithEndpoint(codeObj, valueSet)
+																		   : checkCodeMembershipWithGeneric(codeObj, valueSet);
                             if (inValSet && results.indexOf(res) == -1)
                                 results.add(res);
                             else if (!inValSet)
@@ -221,7 +232,9 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                         }
                     }
                     else if (resCodes instanceof CodeableConceptDt) {
-                        if (checkCodeMembership(resCodes, valueSet) && results.indexOf(res) == -1)
+                        if (terminologyProvider != null ? checkCodeMembershipWithEndpoint(resCodes, valueSet) 
+														: checkCodeMembershipWithGeneric(resCodes, valueSet) 
+														&& results.indexOf(res) == -1)
                             results.add(res);
                     }
                 }
@@ -366,10 +379,24 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         }
     }
 
-    public boolean checkCodeMembership(Object codeObj, String vsId) {
+    public boolean checkCodeMembershipWithEndpoint(Object codeObj, String vsId) {
         Iterable<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
         for (CodingDt code : conceptCodes) {
             if (terminologyProvider.in(new Code()
+                            .withCode(code.getCodeElement().getValue())
+                            .withSystem(code.getSystem()),
+                    new ValueSetInfo().withId(vsId)))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+	
+	public boolean checkCodeMembershipWithGeneric(Object codeObj, String vsId) {
+        Iterable<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
+        for (CodingDt code : conceptCodes) {
+            if (genericProvider.in(new Code()
                             .withCode(code.getCodeElement().getValue())
                             .withSystem(code.getSystem()),
                     new ValueSetInfo().withId(vsId)))
