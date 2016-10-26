@@ -1,8 +1,5 @@
 package org.opencds.cqf.cql.file.fhir;
 
-import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
-import ca.uhn.fhir.model.dstu2.composite.CodingDt;
-import ca.uhn.fhir.model.primitive.DateTimeDt;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,12 +13,10 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.InvalidPathException;
@@ -32,44 +27,69 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Christopher on 10/5/2016.
+ * Created by Christopher Schuler on 10/25/2016.
  */
-public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
+public class MFHIRDataProvider extends BaseFhirDataProvider {
 
     private Path path;
-    protected FhirTerminologyProvider terminologyProvider;
-	// for custom terminology provider
-	protected TerminologyProvider genericProvider;
+    private URL urlToModelJar;
+    private String typePackageName = "com.motivemi.cds2.types";
+    protected TerminologyProvider terminologyProvider;
 
-	public JsonFileBasedFhirProvider (TerminologyProvider genericProvider, String path) {
-		if (path.isEmpty()) {
-            throw new InvalidPathException(path, "Invalid path!");
-        }
-        this.path = Paths.get(path);
-		this.genericProvider = genericProvider;
-	}
-
-    public JsonFileBasedFhirProvider (String path, String endpoint) {
+    public MFHIRDataProvider (String path, TerminologyProvider terminologyProvider, URL urlToModelJar) {
         if (path.isEmpty()) {
             throw new InvalidPathException(path, "Invalid path!");
         }
         this.path = Paths.get(path);
-        this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
-                : new FhirTerminologyProvider().withEndpoint(endpoint);
+        this.terminologyProvider = terminologyProvider;
+        this.urlToModelJar = urlToModelJar;
     }
 
-    private URL pathToModelJar;
-    public URL getpathToModelJar() {
-        return pathToModelJar;
+    @Override
+    protected Object resolveProperty(Object target, String path) {
+        /*
+        * This method is complex for mFHIR
+        * May be accessing 2 different packages: com.motivemi.cds2.model or com.motivemi.cds2.types
+        * Neither of these is on the class path
+        * */
+        if (target == null) {
+            return null;
+        }
+
+        URLClassLoader loader = new URLClassLoader(new URL[] {urlToModelJar});
+        Class<?> clazz;
+        try {
+            String classPath = target.getClass().getCanonicalName();
+            clazz = loader.loadClass(classPath);
+        }
+        catch (ClassNotFoundException e) {
+            throw new RuntimeException("The resource is not a valid model type...");
+        }
+        try {
+            String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
+            Method accessor;
+            accessor = clazz.getMethod(accessorMethodName);
+
+            Object result = accessor.invoke(target);
+            result = mapPrimitive(result);
+            return result;
+        } catch (NoSuchMethodException e) {
+            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+        }
     }
 
-    public void setPathToModelJar(URL pathToModelJar) {
-        this.pathToModelJar = pathToModelJar;
-    }
+    @Override
+    public Object resolvePath(Object target, String path) {
+        String[] identifiers = path.split("\\.");
+        for (int i = 0; i < identifiers.length; i++) {
+            target = resolveProperty(target, identifiers[i]);
+        }
 
-    public JsonFileBasedFhirProvider withPathToModelJar(URL pathToModelJar) {
-        setPathToModelJar(pathToModelJar);
-        return this;
+        return target;
     }
 
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
@@ -94,12 +114,12 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         }
 
         if (context.equals("Patient") && contextValue != null) {
-            toResults = toResults.resolve((String)contextValue);
+            toResults = toResults.resolve((String) contextValue);
         }
 
         // Need the context value (patient id) to resolve the toResults path correctly
         else if (context.equals("Patient") && contextValue == null) {
-            toResults = toResults.resolve(getDefaultPatient(toResults));
+            toResults = toResults.resolve(JsonFileProcessing.getDefaultPatient(toResults));
         }
 
         if (dataType == null) {
@@ -109,38 +129,24 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         // No filtering
         if (dateRange == null && codePath == null) {
 
-            patientResources = getPatientResources(toResults, context, dataType);
+            patientResources = JsonFileProcessing.getPatientResources(toResults, context, dataType);
             for (JSONArray patientResource : patientResources) {
-                Object res;
-                // TODO: remove -- will never hit this
-                if (getPackageName().equals("org.hl7.fhir.dstu3.model")) {
-                    res = fhirContext.newJsonParser().parseResource(patientResource.toString());
-                }
-                else {
-                    res = deserialize(patientResource.toString());
-                }
-				if (res != null)
-					results.add(res);
+                Object res = deserialize(patientResource.toString());
+                if (res != null)
+                    results.add(res);
             }
             return results;
         }
 
-        patientResources = getPatientResources(toResults, context, dataType);
+        patientResources = JsonFileProcessing.getPatientResources(toResults, context, dataType);
 
         // filtering
         // NOTE: retrieves can include both date and code filtering,
         // so even though I may include a record if it is within the date range,
         // that record may be excluded later during the code filtering stage
         for (JSONArray resource : patientResources) {
-            Object res;
-            // TODO: remove -- will never hit this
-            if (getPackageName().equals("org.hl7.fhir.dstu3.model")) {
-                res = fhirContext.newJsonParser().parseResource(resource.toString());
-            }
-            else {
-                res = deserialize(resource.toString());
-            }
-			if (res == null) { continue; }
+            Object res = deserialize(resource.toString());
+            if (res == null) { continue; }
 
             // since retrieves can include both date and code filtering, I need this flag
             // to determine inclusion of codes -- if date is no good -- don't test code
@@ -162,16 +168,12 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                         throw new IllegalArgumentException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
                     }
 
-                    DateTime date = null;
                     Object temp = resolvePath(res, datePath);
+                    // TODO: making an assumption here that a java.util.Date will be returned
+                    // Looking at the mFHIR model classes, I believe this is a safe assumption
+                    DateTime date = DateTime.fromJavaDate((Date)temp);
 
-                    if (temp instanceof Date) { // for  dstu3
-                        date = DateTime.fromJavaDate((Date)temp);
-                    }
-                    else if (temp instanceof DateTimeDt) { // for dstu2
-                        date = DateTime.fromJavaDate(((DateTimeDt)temp).getValue());
-                    }
-
+                    // TODO: what if the datePath returns a range instead of a point?
                     if (date != null && InEvaluator.in(date, expanded)) {
                         results.add(res);
                     }
@@ -211,18 +213,13 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                     Object resCodes = resolvePath(res, codePath);
                     if (resCodes instanceof Iterable) {
                         for (Object codeObj : (Iterable)resCodes) {
-                            boolean inValSet = terminologyProvider != null ? checkCodeMembershipWithEndpoint(codeObj, valueSet)
-																		   : checkCodeMembershipWithGeneric(codeObj, valueSet);
+                            boolean inValSet = checkCodeMembership(codeObj, valueSet);
                             if (inValSet && results.indexOf(res) == -1)
                                 results.add(res);
-                            else if (!inValSet)
-                                results.remove(res);
                         }
                     }
-                    else if (resCodes instanceof CodeableConceptDt) {
-                        if (terminologyProvider != null ? checkCodeMembershipWithEndpoint(resCodes, valueSet)
-														: checkCodeMembershipWithGeneric(resCodes, valueSet)
-														&& results.indexOf(res) == -1)
+                    else {
+                        if (checkCodeMembership(resCodes, valueSet) && results.indexOf(res) == -1)
                             results.add(res);
                     }
                 }
@@ -231,27 +228,26 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                         Object resCodes = resolvePath(res, codePath);
                         if (resCodes instanceof Iterable) {
                             for (Object codeObj : (Iterable)resCodes) {
-                                List<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
-                                for (CodingDt c : conceptCodes) {
-                                    if (c.getCodeElement().getValue().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
+                                Object conceptCodes = resolveProperty(codeObj, "coding");
+                                for (Object o : (Iterable)conceptCodes) {
+                                    if (resolveProperty(o, "code").equals(code.getCode())
+                                            && resolveProperty(o, "system").equals(code.getSystem()))
                                     {
                                         if (results.indexOf(res) == -1)
                                             results.add(res);
                                     }
-                                    else if (results.indexOf(res) != -1)
-                                        results.remove(res);
                                 }
                             }
                         }
-                        else if (resCodes instanceof CodeableConceptDt) {
-                            for (CodingDt c : ((CodeableConceptDt)resCodes).getCoding()) {
-                                if (c.getCodeElement().getValue().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
+                        else {
+                            Object conceptCodes = resolveProperty(resCodes, "coding");
+                            for (Object o : (Iterable)conceptCodes) {
+                                if (resolveProperty(o, "code").equals(code.getCode())
+                                        && resolveProperty(o, "system").equals(code.getSystem()))
                                 {
                                     if (results.indexOf(res) == -1)
                                         results.add(res);
                                 }
-                                else if (results.indexOf(res) != -1)
-                                    results.remove(res);
                             }
                         }
                     }
@@ -274,12 +270,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             throw new RuntimeException("Unable to parse resource...");
         }
 
-        if (getPackageName().equals("com.ge.ns.fhir.model") || getPackageName().equals("ca.uhn.fhir.model.dstu2.resource")) {
-			return fhirContext.newJsonParser().parseResource(resource);
-        }
-
         // load the model class from the given url
-        URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
+        URLClassLoader loader = new URLClassLoader(new URL[] {urlToModelJar});
         Class<?> clazz;
         try {
             String classPath = getPackageName() + "." + resourceType;
@@ -299,94 +291,12 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
         }
     }
 
-    public List<JSONArray> getPatientResources(Path evalPath, String context, String dataType) {
-        List<JSONArray> resources = new ArrayList<>();
-        // fetch patient directory
-        File file = new File(evalPath.toString());
-
-        if (file.exists()) {
-            if (context.equals("Patient")) {
-                // fetch the json file (assuming single file) within directory
-                File temp = file.listFiles()[0];
-                JSONArray arr = getRelevantResources(temp, evalPath, dataType);
-                if (!arr.isEmpty())
-                  resources.add(arr);
-            }
-            else { // Population
-                try {
-                    for (File temp : file.listFiles()) {
-                      JSONArray arr = getRelevantResources(temp, evalPath, dataType);
-                      if (!arr.isEmpty())
-                        resources.add(arr);
-                    }
-                } catch (NullPointerException e) {
-                    throw new IllegalArgumentException("Patient directory empty...");
-                }
-            }
-        }
-        return resources;
-    }
-
-    public JSONArray getRelevantResources(File temp, Path evalPath, String dataType) {
-        JSONArray resources = new JSONArray();
-        try {
-            // Account for possible .js json
-            if (temp.getName().contains(".json") || temp.getName().contains(".js")) {
-                FileReader reader = new FileReader(evalPath.resolve(temp.getName()).toString());
-                JSONParser jsonParser = new JSONParser();
-                JSONObject jsonObject = (JSONObject) jsonParser.parse(reader);
-                JSONArray jsonArray =  (JSONArray) jsonObject.get("entry");
-                for (int i = 0; i < jsonArray.size(); ++i) {
-                    if (((JSONObject)((JSONObject)jsonArray.get(i)).get("resource")).get("resourceType").equals(dataType)) {
-                        resources.add(jsonArray.get(i));
-                    }
-                }
-            } else {
-                throw new RuntimeException("The patient files must contain .json or .js extensions");
-            }
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("The target directory is empty!");
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Error reading file path...");
-        } catch (IOException | ParseException e) {
-            throw new RuntimeException("Error reading json file...");
-        }
-        return resources;
-    }
-
-    // If Patient context without patient id, get the first patient
-    public String getDefaultPatient(Path evalPath) {
-        File file = new File(evalPath.toString());
-        if (!file.exists()) {
-            throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
-        }
-        try {
-            return file.listFiles()[0].getName();
-        } catch (NullPointerException e) {
-            throw new IllegalArgumentException("The target directory is empty.");
-        }
-    }
-
-    public boolean checkCodeMembershipWithEndpoint(Object codeObj, String vsId) {
-        Iterable<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
-        for (CodingDt code : conceptCodes) {
+    public boolean checkCodeMembership(Object codeObj, String vsId) {
+        Object conceptCodes = resolveProperty(codeObj, "coding");
+        for (Object code : (Iterable)conceptCodes) {
             if (terminologyProvider.in(new Code()
-                            .withCode(code.getCodeElement().getValue())
-                            .withSystem(code.getSystem()),
-                    new ValueSetInfo().withId(vsId)))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
-	public boolean checkCodeMembershipWithGeneric(Object codeObj, String vsId) {
-        Iterable<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
-        for (CodingDt code : conceptCodes) {
-            if (genericProvider.in(new Code()
-                            .withCode(code.getCodeElement().getValue())
-                            .withSystem(code.getSystem()),
+                            .withCode((String) resolveProperty(code, "code"))
+                            .withSystem((String) resolveProperty(code, "system")),
                     new ValueSetInfo().withId(vsId)))
             {
                 return true;
