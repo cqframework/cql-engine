@@ -169,9 +169,14 @@ public class MFHIRDataProvider extends BaseFhirDataProvider {
                     }
 
                     Object temp = resolvePath(res, datePath);
-                    // TODO: making an assumption here that a java.util.Date will be returned
-                    // Looking at the mFHIR model classes, I believe this is a safe assumption
-                    DateTime date = DateTime.fromJavaDate((Date)temp);
+                    DateTime date = null;
+                    if (temp instanceof String) {
+                        // TODO: not an ideal solution (deprecated) okay for now...
+                        date = DateTime.fromJavaDate(new Date((String)temp));
+                    }
+                    else if (temp instanceof Date) {
+                      date = DateTime.fromJavaDate((Date)temp);
+                    }
 
                     // TODO: what if the datePath returns a range instead of a point?
                     if (date != null && InEvaluator.in(date, expanded)) {
