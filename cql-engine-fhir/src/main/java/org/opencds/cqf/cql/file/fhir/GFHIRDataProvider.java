@@ -116,8 +116,8 @@ public class GFHIRDataProvider extends BaseFhirDataProvider {
                     }
 
                     Object temp = resolvePath(res, datePath);
-                    // TODO: verify that gfhir always returns a DateTimeDT
-                    DateTime date = DateTime.fromJavaDate(((DateTimeDt)temp).getValue());
+                    // TODO: verify that gfhir always returns a DateTime -- should be mapped in super
+                    DateTime date = (DateTime) temp;
 
                     // TODO: what if the datePath returns a range instead of a point?
                     if (date != null && InEvaluator.in(date, expanded)) {
