@@ -171,8 +171,7 @@ public class MFHIRDataProvider extends BaseFhirDataProvider {
                     Object temp = resolvePath(res, datePath);
                     DateTime date = null;
                     if (temp instanceof String) {
-                        // TODO: not an ideal solution (deprecated) okay for now...
-                        date = DateTime.fromJavaDate(new Date((String)temp));
+                        date = DateTime.fromJodaDateTime(new org.joda.time.DateTime(temp));
                     }
                     else if (temp instanceof Date) {
                       date = DateTime.fromJavaDate((Date)temp);
