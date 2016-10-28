@@ -18,6 +18,8 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,6 +42,44 @@ public class GFHIRDataProvider extends BaseFhirDataProvider {
         this.path = Paths.get(path);
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
+    }
+
+    @Override
+    protected Object resolveProperty(Object target, String path) {
+        if (target == null) {
+            return null;
+        }
+
+        Class<? extends Object> clazz = target.getClass();
+        try {
+            String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
+            Method accessor = clazz.getMethod(accessorMethodName);
+
+            Object result = accessor.invoke(target);
+            result = mapPrimitive(result);
+            return result;
+        } catch (NoSuchMethodException e) {
+            if (pathIsChoice(path)) {
+                return resolveChoiceProperty(target, path);
+            }
+            else {
+                throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            }
+        } catch (InvocationTargetException e) {
+            throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+        }
+    }
+
+    @Override
+    public Object resolvePath(Object target, String path) {
+        String[] identifiers = path.split("\\.");
+        for (int i = 0; i < identifiers.length; i++) {
+            target = resolveProperty(target, identifiers[i]);
+        }
+
+        return target;
     }
 
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
