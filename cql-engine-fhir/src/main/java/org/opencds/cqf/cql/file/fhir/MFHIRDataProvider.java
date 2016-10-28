@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.file.fhir;
 
+import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
+import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -298,12 +300,18 @@ public class MFHIRDataProvider extends BaseFhirDataProvider {
     public boolean checkCodeMembership(Object codeObj, String vsId) {
         Object conceptCodes = resolveProperty(codeObj, "coding");
         for (Object code : (Iterable)conceptCodes) {
-            if (terminologyProvider.in(new Code()
-                            .withCode((String) resolveProperty(code, "code"))
-                            .withSystem((String) resolveProperty(code, "system")),
-                    new ValueSetInfo().withId(vsId)))
-            {
-                return true;
+            try {
+                if (terminologyProvider.in(new Code()
+                                .withCode((String) resolveProperty(code, "code"))
+                                .withSystem((String) resolveProperty(code, "system")),
+                        new ValueSetInfo().withId(vsId))) {
+                    return true;
+                }
+            } catch (InvalidRequestException e) {
+                throw new IllegalArgumentException("Some value sets (with id: " + vsId + ") are not available in the terminology service. Please fix these errors to proceed with evaluation.");
+            }
+            catch (FhirClientConnectionException e) {
+                throw new IllegalArgumentException("ERROR: The terminology service is down.");
             }
         }
         return false;
