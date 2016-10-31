@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.file.fhir;
 
 import ca.uhn.fhir.rest.client.exceptions.FhirClientConnectionException;
 import ca.uhn.fhir.rest.server.exceptions.InvalidRequestException;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,6 +15,7 @@ import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
+import org.opencds.cqf.cql.terminology.TerminologyValidation;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.io.IOException;
@@ -308,6 +310,13 @@ public class MFHIRDataProvider extends BaseFhirDataProvider {
                     return true;
                 }
             } catch (InvalidRequestException e) {
+                if (!TerminologyValidation.hasSystem((String) resolveProperty(code, "system"))) {
+                    throw new IllegalArgumentException("The codesystem name: " + resolveProperty(code, "system") + " is invalid");
+                }
+                else
+                    throw new IllegalArgumentException("Unknown error: " + e.getMessage());
+            }
+            catch (ResourceNotFoundException e) {
                 throw new IllegalArgumentException("Some value sets (with id: " + vsId + ") are not available in the terminology service. Please fix these errors to proceed with evaluation.");
             }
             catch (FhirClientConnectionException e) {
