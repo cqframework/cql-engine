@@ -77,8 +77,14 @@ public class GFHIRDataProvider extends BaseFhirDataProvider {
     @Override
     public Object resolvePath(Object target, String path) {
         String[] identifiers = path.split("\\.");
-        for (int i = 0; i < identifiers.length; i++) {
-            target = resolveProperty(target, identifiers[i]);
+        for (String identifier : identifiers) {
+            // handling indexes: item[0].code
+            if (identifier.contains("[")) {
+                int j = Character.getNumericValue(identifier.charAt(identifier.indexOf("[") + 1));
+                target = resolveProperty(target, identifier.replaceAll("\\[\\d\\]", ""));
+                target = ((ArrayList) target).get(j);
+            } else
+                target = resolveProperty(target, identifier);
         }
 
         return target;
