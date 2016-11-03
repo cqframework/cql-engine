@@ -14,6 +14,7 @@ import org.opencds.cqf.cql.runtime.Interval;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -184,8 +185,14 @@ public abstract class BaseFhirDataProvider implements DataProvider
     @Override
     public Object resolvePath(Object target, String path) {
         String[] identifiers = path.split("\\.");
-        for (int i = 0; i < identifiers.length; i++) {
-            target = resolveProperty(target, identifiers[i]);
+        for (String identifier : identifiers) {
+            // handling indexes: item[0].code
+            if (identifier.contains("[")) {
+                int j = Character.getNumericValue(identifier.charAt(identifier.indexOf("[") + 1));
+                target = resolveProperty(target, identifier.replaceAll("\\[\\d\\]", ""));
+                target = ((ArrayList) target).get(j);
+            } else
+                target = resolveProperty(target, identifier);
         }
 
         return target;
