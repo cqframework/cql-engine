@@ -72,6 +72,10 @@ public class SystemDataProvider implements DataProvider {
             return null;
         }
 
+        if (target instanceof Tuple) {
+            return ((Tuple)target).getElement(path);
+        }
+
         Class<? extends Object> clazz = target.getClass();
         Method accessor = getReadAccessor(clazz, path);
         try {

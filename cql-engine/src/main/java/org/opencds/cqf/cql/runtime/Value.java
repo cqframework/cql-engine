@@ -1,14 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
 import java.math.BigDecimal;
-import org.opencds.cqf.cql.runtime.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.Comparator;
-
-import org.joda.time.DateTimeFieldType;
+import java.util.*;
 /**
  * Created by Bryn on 5/2/2016.
  * Edited by Chris Schuler
@@ -226,7 +219,7 @@ public class Value {
             if (rightIterator.hasNext()) {
                 Object rightObject = rightIterator.next();
                 Boolean elementEquals = equals(leftObject, rightObject);
-                if (elementEquals == null || elementEquals == false) {
+                if (elementEquals == null || !elementEquals) {
                     return elementEquals;
                 }
             }
@@ -302,7 +295,7 @@ public class Value {
         if (rightIterator.hasNext()) {
           Object rightObject = rightIterator.next();
           Boolean elementEquivalent = equivalent(leftObject, rightObject);
-          if (elementEquivalent == null || elementEquivalent == false) {
+          if (elementEquivalent == null || !elementEquivalent) {
               return elementEquivalent;
           }
         }

@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.joda.time.Partial;
 import org.joda.time.DateTimeFieldType;
+import org.joda.time.Partial;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.text.*;
 import java.util.Date;
 
 /**
@@ -40,9 +40,7 @@ public class DateTime {
 
   public static DateTimeFieldType[] getFields(int numFields) {
     DateTimeFieldType[] ret = new DateTimeFieldType[numFields];
-    for (int i = 0; i < numFields; ++i) {
-      ret[i] = fields[i];
-    }
+    System.arraycopy(fields, 0, ret, 0, numFields);
     return ret;
   }
 

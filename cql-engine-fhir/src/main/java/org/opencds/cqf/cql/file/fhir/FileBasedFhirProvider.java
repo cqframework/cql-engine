@@ -62,7 +62,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   private FhirTerminologyProvider terminologyProvider;
 
   public FileBasedFhirProvider (String path, String endpoint) {
-    if (path.isEmpty() || path == null) {
+    if (path.isEmpty()) {
       throw new InvalidPathException(path, "Invalid path!");
     }
     this.path = Paths.get(path);
@@ -71,10 +71,6 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
   }
 
   private URL pathToModelJar;
-  public URL getpathToModelJar() {
-    return pathToModelJar;
-  }
-
   public void setPathToModelJar(URL pathToModelJar) {
     this.pathToModelJar = pathToModelJar;
   }

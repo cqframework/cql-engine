@@ -1,7 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import javax.xml.bind.annotation.XmlRegistry;
 import org.cqframework.cql.elm.execution.*;
+
+import javax.xml.bind.annotation.XmlRegistry;
 
 /**
  * Created by Bryn on 5/24/2016.
@@ -17,6 +18,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public After createAfter() { return new AfterEvaluator(); }
+
+    @Override
+    public AliasRef createAliasRef() { return new AliasRefEvaluator(); }
 
     @Override
     public AllTrue createAllTrue() { return new AllTrueEvaluator(); }
@@ -137,6 +141,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Floor createFloor() { return new FloorEvaluator(); }
+
+    @Override
+    public ForEach createForEach() { return new ForEachEvaluator(); }
 
     @Override
     public FunctionRef createFunctionRef() { return new FunctionRefEvaluator(); }
@@ -317,6 +324,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Query createQuery() { return new QueryEvaluator(); }
+
+    @Override
+    public QueryLetRef createQueryLetRef() { return new QueryLetRefEvaluator(); }
 
     @Override
     public Retrieve createRetrieve() { return new RetrieveEvaluator(); }

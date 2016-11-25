@@ -5,14 +5,12 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.joda.time.Partial;
+import org.testng.annotations.Test;
 import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
-import org.opencds.cqf.cql.file.fhir.JsonFileBasedFhirProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +20,7 @@ import static org.testng.Assert.assertTrue;
  * Created by Bryn on 4/16/2016.
  */
 public class TestFhirDataProvider {
-    //@Test
+    @Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
         IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
@@ -31,7 +29,7 @@ public class TestFhirDataProvider {
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    //@Test
+    @Test
     public void testPatientRetrieve() {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
@@ -155,15 +153,5 @@ public class TestFhirDataProvider {
       assertTrue(size == 0);
     }
 
-    //@Test
-    public void testJsonFileDataProvider() throws MalformedURLException {
-        JsonFileBasedFhirProvider provider = (JsonFileBasedFhirProvider) new JsonFileBasedFhirProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null)
-                                                    .withPathToModelJar(new URL("file:///C:/Users/Christopher/Desktop/Motive/cql_engine_test/src/test/resources/GEFHIRModel-0.1.0.jar"))
-                                                    .withPackageName("com.ge.ns.fhir.model");
-        Iterable<Object> results = provider.retrieve("Patient", "987", "ProcedureRequest", null, null, null, null, null, null, null, null);
-        int size = 0;
-        for (Object o : results)
-            size++;
-        assertTrue(size == 1);
-    }
+
 }

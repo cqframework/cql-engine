@@ -4,6 +4,8 @@ import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.model.primitive.DateTimeDt;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -32,11 +34,14 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Christopher on 10/5/2016.
+ * Created by Christopher Schuler on 10/5/2016.
  */
 public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
 
     private Path path;
+    public Path getPath () {
+        return path;
+    }
     protected FhirTerminologyProvider terminologyProvider;
 	// for custom terminology provider
 	protected TerminologyProvider genericProvider;
@@ -112,9 +117,17 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             patientResources = getPatientResources(toResults, context, dataType);
             for (JSONArray patientResource : patientResources) {
                 Object res;
+                String resource = patientResource.toString();
                 // TODO: remove -- will never hit this
                 if (getPackageName().equals("org.hl7.fhir.dstu3.model")) {
-                    res = fhirContext.newJsonParser().parseResource(patientResource.toString());
+                    try {
+                        JSONParser jsonParser = new JSONParser();
+                        JSONArray jsonArray = (JSONArray) jsonParser.parse(resource);
+                        resource = ((JSONObject) jsonArray.get(0)).get("resource").toString();
+                    } catch (ParseException e) {
+                        throw new RuntimeException("Unable to parse resource...");
+                    }
+                    res = fhirContext.newJsonParser().parseResource(resource);
                 }
                 else {
                     res = deserialize(patientResource.toString());
@@ -135,7 +148,15 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
             Object res;
             // TODO: remove -- will never hit this
             if (getPackageName().equals("org.hl7.fhir.dstu3.model")) {
-                res = fhirContext.newJsonParser().parseResource(resource.toString());
+                String theResource = resource.toString();
+                try {
+                    JSONParser jsonParser = new JSONParser();
+                    JSONArray jsonArray = (JSONArray) jsonParser.parse(theResource);
+                    theResource = ((JSONObject) jsonArray.get(0)).get("resource").toString();
+                } catch (ParseException e) {
+                    throw new RuntimeException("Unable to parse resource...");
+                }
+                res = fhirContext.newJsonParser().parseResource(theResource);
             }
             else {
                 res = deserialize(resource.toString());
@@ -219,7 +240,7 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
                                 results.remove(res);
                         }
                     }
-                    else if (resCodes instanceof CodeableConceptDt) {
+                    else if (resCodes instanceof CodeableConcept) {
                         if (terminologyProvider != null ? checkCodeMembershipWithEndpoint(resCodes, valueSet)
 														: checkCodeMembershipWithGeneric(resCodes, valueSet)
 														&& results.indexOf(res) == -1)
@@ -368,8 +389,8 @@ public class JsonFileBasedFhirProvider extends BaseFhirDataProvider {
     }
 
     public boolean checkCodeMembershipWithEndpoint(Object codeObj, String vsId) {
-        Iterable<CodingDt> conceptCodes = ((CodeableConceptDt)codeObj).getCoding();
-        for (CodingDt code : conceptCodes) {
+        Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
+        for (Coding code : conceptCodes) {
             if (terminologyProvider.in(new Code()
                             .withCode(code.getCodeElement().getValue())
                             .withSystem(code.getSystem()),

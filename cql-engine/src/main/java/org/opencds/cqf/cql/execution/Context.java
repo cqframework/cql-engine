@@ -1,15 +1,14 @@
 package org.opencds.cqf.cql.execution;
 
-import org.apache.commons.lang3.NotImplementedException;
+import org.cqframework.cql.elm.execution.*;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.data.SystemDataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
-import org.cqframework.cql.elm.execution.*;
+
 import javax.xml.namespace.QName;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Stack;
 
 /**
  * Created by Bryn on 4/12/2016.
@@ -19,7 +18,7 @@ public class Context {
     private Map<String, Object> parameters = new HashMap<>();
     private Stack<String> currentContext = new Stack<>();
     private Map<String, Object> contextValues = new HashMap<>();
-    private Stack<Stack<Variable>> windows = new Stack<Stack<Variable>>();
+    private Stack<Stack<Variable> > windows = new Stack<>();
     private Map<String, Library> libraries = new HashMap<>();
     private Stack<Library> currentLibrary = new Stack<>();
     private LibraryLoader libraryLoader;
@@ -110,6 +109,9 @@ public class Context {
     public Class resolveType(TypeSpecifier typeSpecifier) {
         if (typeSpecifier instanceof NamedTypeSpecifier) {
             return resolveType(((NamedTypeSpecifier)typeSpecifier).getName());
+        }
+        else if (typeSpecifier instanceof ListTypeSpecifier) {
+            return resolveType(((ListTypeSpecifier)typeSpecifier).getElementType());
         }
         else {
             throw new IllegalArgumentException(String.format("Resolution for %s type specifiers not implemented yet.",
@@ -319,9 +321,12 @@ public class Context {
     }
 
     public Variable resolveVariable(String name) {
-        for (Variable variable : getStack()) {
-            if (variable.getName().equals(name)) {
-                return variable;
+        for (Stack<Variable> stack : windows) {
+            for (Variable v : stack) {
+                if (v.getName().equals(name)) {
+                    return v;
+                }
+
             }
         }
 
@@ -338,11 +343,18 @@ public class Context {
     }
 
     public void pop() {
-        getStack().pop();
+        if (!windows.peek().empty())
+            getStack().pop();
+    }
+
+    public void clearWindows() {
+        while (windows.size() > 0) {
+            popWindow();
+        }
     }
 
     public void pushWindow() {
-        windows.push(new Stack<Variable>());
+        windows.push(new Stack<>());
     }
 
     public void popWindow() {
