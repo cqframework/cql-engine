@@ -28,6 +28,10 @@ public class PropertyEvaluator extends org.cqframework.cql.elm.execution.Propert
             return null;
         }
 
+        if (target instanceof Iterable) {
+
+        }
+
         return context.resolvePath(target, this.getPath());
     }
 }

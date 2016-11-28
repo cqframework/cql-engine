@@ -326,7 +326,6 @@ public class Context {
                 if (v.getName().equals(name)) {
                     return v;
                 }
-
             }
         }
 
