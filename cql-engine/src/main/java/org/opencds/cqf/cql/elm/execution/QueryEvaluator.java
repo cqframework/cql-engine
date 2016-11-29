@@ -81,20 +81,26 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
     public Object multisourceQuery(Context context) {
         // pushing variables
-        for (AliasedQuerySource source : this.getSource()) {
-            Object sourceObject = source.getExpression().evaluate(context);
-            Iterable<Object> sourceData = ensureIterable(sourceObject);
-
-            for (Object element : sourceData) {
-                context.push(new Variable().withName(source.getAlias()).withValue(element));
-            }
-        }
-
-        List<Object> result = new ArrayList<>();
         boolean sourceIsList = false;
         for (AliasedQuerySource source : this.getSource()) {
             Object sourceObject = source.getExpression().evaluate(context);
             sourceIsList = sourceObject instanceof Iterable;
+            Iterable<Object> sourceData = ensureIterable(sourceObject);
+
+            for (Object element : sourceData) {
+                if (sourceIsList) {
+                    Variable v = new Variable().withName(source.getAlias()).withValue(element);
+                    v.setIsList(true);
+                    context.push(v);
+                }
+                else
+                    context.push(new Variable().withName(source.getAlias()).withValue(element));
+            }
+        }
+
+        List<Object> result = new ArrayList<>();
+        for (AliasedQuerySource source : this.getSource()) {
+            Object sourceObject = source.getExpression().evaluate(context);
             Iterable<Object> sourceData = ensureIterable(sourceObject);
 
             for (Object element : sourceData) {
@@ -111,6 +117,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         sortResult(result);
 
         context.pop();
+        // TODO: not sure if this is right --> sourceIsList logic...
         return sourceIsList ? result : result.get(0);
     }
 

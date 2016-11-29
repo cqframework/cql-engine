@@ -2,6 +2,8 @@ library XResourceSearch version '1'
 
 using FHIR
 
+include FHIRHelpers version '1.6' called FHIRHelpers
+
 valueset "Diabetes": '2.16.840.1.113883.3.464.1003.103.12.1001'
 
 context Patient

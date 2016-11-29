@@ -9,6 +9,6 @@ public class AliasRefEvaluator extends org.cqframework.cql.elm.execution.AliasRe
 
     @Override
     public Object evaluate(Context context) {
-        return context.resolveVariable(this.getName()).getValue();
+        return context.resolveAlias(this.getName());
     }
 }

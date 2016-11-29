@@ -6,6 +6,16 @@ package org.opencds.cqf.cql.execution;
 public class Variable {
     private String name;
     private Object value;
+    // for AliasEvaluator
+    private boolean isList;
+
+    public void setIsList (boolean isList) {
+        this.isList = isList;
+    }
+
+    public boolean isList () {
+        return this.isList;
+    }
 
     public String getName() {
         return name;

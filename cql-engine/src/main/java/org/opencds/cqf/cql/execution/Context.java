@@ -6,6 +6,7 @@ import org.opencds.cqf.cql.data.SystemDataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import javax.xml.namespace.QName;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
@@ -341,15 +342,23 @@ public class Context {
         return result;
     }
 
+    public Object resolveAlias(String name) {
+        // This method needs to account for multiple variables on the stack with the same name
+        ArrayList<Object> ret = new ArrayList<>();
+        boolean isList = false;
+        for (Variable v : getStack()) {
+            if (v.getName().equals(name)) {
+                if (v.isList())
+                    isList = true;
+                ret.add(v.getValue());
+            }
+        }
+        return isList ? ret : ret.get(0);
+    }
+
     public void pop() {
         if (!windows.peek().empty())
             getStack().pop();
-    }
-
-    public void clearWindows() {
-        while (windows.size() > 0) {
-            popWindow();
-        }
     }
 
     public void pushWindow() {

@@ -5,11 +5,11 @@ allprojects {
     group = 'org.opencds.cqf'
     version = '1.0-SNAPSHOT'
 	
-	repositories {
-		flatDir {
-            dirs "$rootProject.projectDir/libs"
-        }
-	}
+//	repositories {
+//		flatDir {
+//            dirs "$rootProject.projectDir/libs"
+//        }
+//	}
 }
 
 subprojects {
