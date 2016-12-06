@@ -57,10 +57,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
     }
 
     public Object resolveResult(Context context, Object element) {
-        if (shouldInclude) {
-            return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : element;
-        }
-        return element;
+        return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : element;
     }
 
     public void sortResult(List<Object> result) {
@@ -107,9 +104,8 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 shouldInclude = true;
                 resolveRelationship(context);
                 resolveWhere(context);
-				Object o = resolveResult(context, element);
-				if (o != null)
-					result.add(o);
+				if (shouldInclude)
+					result.add(resolveResult(context, element));
             }
         }
 
@@ -147,7 +143,9 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 shouldInclude = true;
                 resolveRelationship(context);
                 resolveWhere(context);
-                result.add(resolveResult(context, element));
+                Object o = resolveResult(context, element);
+				if (shouldInclude)
+					result.add(resolveResult(context, element));
             }
             finally {
                 context.pop();
