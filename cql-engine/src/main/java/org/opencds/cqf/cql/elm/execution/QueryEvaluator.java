@@ -58,9 +58,10 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
     public Object resolveResult(Context context, Object element) {
         if (shouldInclude) {
-            return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : element;
+            if (this.getReturn() != null)
+                return this.getReturn().getExpression().evaluate(context);
         }
-        return new Object();
+        return element;
     }
 
     public void sortResult(List<Object> result) {
