@@ -35,7 +35,6 @@ For specific semantics for each conversion, refer to the explicit conversion ope
 
 /**
  * Created by Bryn on 5/25/2016.
- * Edited by Chris Schuler in 6/15/2016
  */
 public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert {
 

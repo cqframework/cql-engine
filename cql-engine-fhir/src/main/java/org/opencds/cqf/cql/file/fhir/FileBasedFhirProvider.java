@@ -123,14 +123,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     if (dateRange == null && codePath == null) {
       patientFiles = getPatientFiles(toResults, context);
       for (String resource : patientFiles) {
-        Object res;
-        if (getPackageName().equals("com.motivemi.cds2.model")) {
-          res = mFhirDeserialize(resource);
-        }
-        else {
-          res = fhirContext.newJsonParser().parseResource(resource);
-        }
-        results.add(res);
+        results.add(fhirContext.newJsonParser().parseResource(resource));
       }
       return results;
     }
@@ -142,13 +135,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     // so even though I may include a record if it is within the date range,
     // that record may be excluded later during the code filtering stage
     for (String resource : patientFiles) {
-      Object res;
-      if (getPackageName().equals("com.motivemi.cds2.model")) {
-        res = mFhirDeserialize(resource);
-      }
-      else {
-        res = fhirContext.newJsonParser().parseResource(resource);
-      }
+      Object res = fhirContext.newJsonParser().parseResource(resource);
 
       // since retrieves can include both date and code filtering, I need this flag
       // to determine inclusion of codes -- if date is no good -- don't test code
@@ -265,33 +252,6 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
     } // end of filtering for each loop
 
     return results;
-  }
-
-  public Object mFhirDeserialize(String resource) {
-    // get the resource type
-    String resourceType = null;
-    Matcher m = Pattern.compile("\"resourceType\": \"(.*?)\",").matcher(resource);
-		if (m.find())
-			resourceType = m.group(1);
-
-    // load the model class from the given url
-    URLClassLoader loader = new URLClassLoader(new URL[] {pathToModelJar});
-    Class<?> clazz;
-    try {
-      clazz = loader.loadClass(getPackageName() + "." + resourceType);
-    }
-    catch (ClassNotFoundException e) {
-      throw new RuntimeException("The resource is not a valid mFHIR model type!");
-    }
-
-    // de-serialize into mFHIR resource
-    ObjectMapper objectMapper = new ObjectMapper();
-    try {
-      return objectMapper.readValue(resource, clazz);
-    }
-    catch (IOException e) {
-      throw new RuntimeException("Unable to parse resource with specified mFHIR model class!");
-    }
   }
 
   // If Patient context without patient id, get the first patient

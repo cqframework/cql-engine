@@ -28,7 +28,6 @@ If either argument is null, the result is null.
 
 /**
  * Created by Bryn on 5/25/2016.
- * Edited by Chris Schuler on 6/8/2016 - added Interval Logic
  */
 public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 

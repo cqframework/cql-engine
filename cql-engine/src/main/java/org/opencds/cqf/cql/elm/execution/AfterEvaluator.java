@@ -34,7 +34,7 @@ If either or both arguments are null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/7/2016 (v1), 6/26/2016 (v2)
+* Created by Chris Schuler on 6/7/2016
 */
 public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
 

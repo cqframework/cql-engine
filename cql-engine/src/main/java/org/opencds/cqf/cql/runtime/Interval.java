@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 
 /**
  * Created by Bryn on 4/15/2016.
- * Edited by Chris Schuler on 6/10/2016 - added getSize() method
  */
 public class Interval {
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {

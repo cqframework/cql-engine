@@ -28,7 +28,6 @@ Note that the union operator can also be invoked with the symbolic operator (|).
 
 /**
  * Created by Bryn on 5/25/2016.
- * Edited by Chris Schuler on 6/8/2016 - Interval Logic
  */
 public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
 

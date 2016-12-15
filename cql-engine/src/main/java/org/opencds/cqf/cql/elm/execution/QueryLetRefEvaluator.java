@@ -3,7 +3,7 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 
 /**
- * Created by Christopher on 11/22/2016.
+ * Created by Chris Schuler on 11/22/2016.
  */
 public class QueryLetRefEvaluator  extends org.cqframework.cql.elm.execution.QueryLetRef {
 

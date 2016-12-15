@@ -35,8 +35,7 @@ NOTE: see note in AddEvaluator
 */
 
 /**
- * Created by Bryn on 5/25/2016 (v1)
- * Edited by Chris Schuler on 6/14/2016 (v2), 6/25/2016 (v3)
+ * Created by Bryn on 5/25/2016 
  */
 public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtract {
 

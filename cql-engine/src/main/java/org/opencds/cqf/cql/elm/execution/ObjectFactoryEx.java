@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlRegistry;
 
 /**
  * Created by Bryn on 5/24/2016.
- * Edited by Chris Schuler on 6/8/2016 - added interval operator evaluators
  */
 @XmlRegistry
 public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFactory {

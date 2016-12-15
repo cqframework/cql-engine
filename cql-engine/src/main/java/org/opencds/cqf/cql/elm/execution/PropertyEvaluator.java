@@ -4,7 +4,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Tuple;
 
 /**
- * Created by Bryn on 5/25/2016. Edited by Chris Schuler on 7/11/2016 - Tuple
+ * Created by Bryn on 5/25/2016. 
  */
 public class PropertyEvaluator extends org.cqframework.cql.elm.execution.Property {
 

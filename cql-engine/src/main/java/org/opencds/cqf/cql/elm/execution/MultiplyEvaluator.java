@@ -25,7 +25,6 @@ If either argument is null, the result is null.
 
 /**
  * Created by Bryn on 5/25/2016.
- * Edited by Chris Schuler on 6/14/2016
  */
 public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multiply {
 

@@ -40,8 +40,7 @@ If either argument is null, the result is null.
 */
 
 /**
- * Created by Bryn on 5/25/2016 (v1)
- * Edited by Chris Schuler on 6/13/2016 (v2), 6/25/2016 (v3)
+ * Created by Bryn on 5/25/2016 
  */
 public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
 
