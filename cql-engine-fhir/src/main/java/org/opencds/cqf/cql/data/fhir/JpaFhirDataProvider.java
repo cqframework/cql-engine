@@ -81,7 +81,8 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
         }
 
         if (context != null && context.equals("Patient") && contextValue != null) {
-            map.add(getPatientSearchParam(dataType), (ReferenceAndListParam)contextValue);
+            ReferenceParam patientParam = new ReferenceParam(contextValue.toString());
+            map.add(getPatientSearchParam(dataType), patientParam);
         }
 
         if (codePath != null && !codePath.equals("")) {
