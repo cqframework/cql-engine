@@ -128,9 +128,8 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
     }
 
     public JpaResourceProviderDstu3<? extends IAnyResource> resolveResourceProvider(String datatype) {
-        String className = datatype + "ResourceProvider";
         for (IResourceProvider resProvider : providers) {
-            if (resProvider.getResourceType().getSimpleName().equals(className))
+            if (resProvider.getResourceType().getSimpleName().equals(datatype))
                 return (JpaResourceProviderDstu3<? extends IAnyResource>) resProvider;
         }
         throw new IllegalArgumentException("Unable to resolve resource provider for :" + datatype);
