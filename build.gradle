@@ -20,6 +20,7 @@ subprojects {
 
     repositories {
         mavenCentral()
+        jcenter() // for hapi jpa server dependency
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots"
         }
