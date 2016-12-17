@@ -157,9 +157,15 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
             case "Patient":
                 return "_id";
             case "Observation":
+                return "subject";
+            case "Procedure":
+                return "subject";
+            case "Condition":
+                return "subject";
             case "RiskAssessment":
                 return "subject";
-            default: return "patient";
+            default:
+                return "patient";
         }
     }
 
