@@ -4,14 +4,18 @@ import ca.uhn.fhir.jpa.dao.SearchParameterMap;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaResourceProviderDstu3;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.param.*;
+import ca.uhn.fhir.rest.server.IBundleProvider;
 import ca.uhn.fhir.rest.server.IResourceProvider;
 import org.hl7.fhir.instance.model.api.IAnyResource;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Chris Schuler on 12/15/2016.
@@ -124,7 +128,20 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
             map.add(convertPathToSearchParam(dataType, datePath), rangeParam);
         }
 
-        return (Iterable<Object>) resolveResourceProvider(dataType).getDao().search(map);
+        JpaResourceProviderDstu3<? extends IAnyResource> jpaResProvider = resolveResourceProvider(dataType);
+        IBundleProvider bundleProvider = jpaResProvider.getDao().search(map);
+        List<IBaseResource> resourceList = bundleProvider.getResources(0, 50);
+        return resolveResourceList(resourceList);
+    }
+
+    public Iterable<Object> resolveResourceList(List<IBaseResource> resourceList) {
+        List<Object> ret = new ArrayList<>();
+        for (IBaseResource res : resourceList) {
+            Class clazz = res.getClass();
+            ret.add(clazz.cast(res));
+        }
+        // ret.addAll(resourceList);
+        return ret;
     }
 
     public JpaResourceProviderDstu3<? extends IAnyResource> resolveResourceProvider(String datatype) {
