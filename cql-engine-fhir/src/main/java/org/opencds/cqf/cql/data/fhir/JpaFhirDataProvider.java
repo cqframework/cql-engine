@@ -99,10 +99,11 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
 //                map.add(convertPathToSearchParam(dataType, codePath), );
 //            }
             if (codes != null) {
+                TokenOrListParam codeParams = new TokenOrListParam();
                 for (Code code : codes) {
-                    TokenParam codeParam = new TokenParam(code.getSystem(), code.getCode());
-                    map.add(convertPathToSearchParam(dataType, codePath), codeParam);
+                    codeParams.add(code.getSystem(), code.getCode());
                 }
+                map.add(convertPathToSearchParam(dataType, codePath), codeParams);
             }
         }
 
