@@ -71,8 +71,7 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
     {
 
         SearchParameterMap map = new SearchParameterMap();
-        if (dataType.equals("Patient"))
-            map.setEverythingMode(SearchParameterMap.EverythingModeEnum.PATIENT_INSTANCE);
+        map.setLastUpdated(new DateRangeParam());
 
         if (templateId != null && !templateId.equals("")) {
             // do something?
