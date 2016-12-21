@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.terminology.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.IGenericClient;
-import ca.uhn.fhir.rest.client.ServerValidationModeEnum;
-import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
+import ca.uhn.fhir.jpa.provider.dstu3.JpaResourceProviderDstu3;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
-import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.CodeSystem;
+import org.hl7.fhir.dstu3.model.IdType;
+import org.hl7.fhir.dstu3.model.ValueSet;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
@@ -19,109 +18,40 @@ import java.util.List;
  */
 public class JpaFhirTerminologyProvider implements TerminologyProvider {
 
-    private String endpoint;
-    public String getEndpoint() {
-        return endpoint;
-    }
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-        fhirContext = FhirContext.forDstu3();
-        // TODO: remove this disabling of validation once mFHIR DTS server is active -- 10/4/2016
-        fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-        fhirClient = fhirContext.newRestfulGenericClient(endpoint);
+    private JpaResourceProviderDstu3<ValueSet> valueSetProvider;
+    private JpaResourceProviderDstu3<CodeSystem> codeSystemProvider;
 
-        if (userName != null && password != null) {
-            BasicAuthInterceptor basicAuth = new BasicAuthInterceptor(userName, password);
-            fhirClient.registerInterceptor(basicAuth);
-        }
-    }
-    public JpaFhirTerminologyProvider withEndpoint(String endpoint) {
-        setEndpoint(endpoint);
-        return this;
-    }
-
-    private FhirContext fhirContext;
-    private IGenericClient fhirClient;
-
-    // TODO: Obviously don't want to do this, just a quick-fix for now
-    private String userName;
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    private String password;
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public JpaFhirTerminologyProvider withBasicAuth(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-        return this;
+    public JpaFhirTerminologyProvider(JpaResourceProviderDstu3<ValueSet> valueSetProvider, JpaResourceProviderDstu3<CodeSystem> codeSystemProvider) {
+        this.valueSetProvider = valueSetProvider;
+        this.codeSystemProvider = codeSystemProvider;
     }
 
     @Override
     public boolean in(Code code, ValueSetInfo valueSet) throws ResourceNotFoundException {
-        // Implement as ValueSet/$validate-code
-        // http://hl7.org/fhir/2016Sep/valueset-operations.html#validate-code
-
-        // Potential problems:
-        // ValueSetInfo void of id --> want .ontype() instead
-        Parameters respParam = fhirClient
-                .operation()
-                .onInstance(new IdType("ValueSet", valueSet.getId()))
-                // .onType(ValueSet.class)
-                .named("validate-code")
-                .withParameter(Parameters.class, "code", new StringType(code.getCode()))
-                .andParameter("system", new StringType(code.getSystem()))
-                .useHttpGet()
-                .execute();
-        return ((BooleanType)respParam.getParameter().get(0).getValue()).booleanValue();
+        for (Code c : expand(valueSet)) {
+            if (c.getCode().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
+                return true;
+        }
+        return false;
     }
 
     @Override
     public Iterable<Code> expand(ValueSetInfo valueSet) throws ResourceNotFoundException {
-        // TODO: Implement as ValueSet/$expand
-        // http://hl7.org/fhir/2016Sep/valueset-operations.html#expand
-        Parameters respParam = fhirClient
-                .operation()
-                .onInstance(new IdType("ValueSet", valueSet.getId()))
-                .named("expand")
-                .withNoParameters(Parameters.class)
-                .execute();
-
-        ValueSet expanded = (ValueSet) respParam.getParameter().get(0).getResource();
+        ValueSet vs = valueSetProvider.getDao().read(new IdType(valueSet.getId()));
         List<Code> codes = new ArrayList<>();
-        for (ValueSet.ConceptReferenceComponent codeInfo : expanded.getCompose().getInclude().get(0).getConcept()) {
-            Code nextCode = new Code()
-                    .withCode(codeInfo.getCode())
-                    .withSystem(expanded.getCompose().getInclude().get(0).getSystem())
-                    .withVersion(expanded.getCompose().getInclude().get(0).getVersion())
-                    .withDisplay(codeInfo.getDisplay());
-            codes.add(nextCode);
+        for (ValueSet.ValueSetExpansionContainsComponent expansion : vs.getExpansion().getContains()) {
+            codes.add(new Code().withCode(expansion.getCode()).withSystem(expansion.getSystem()));
         }
         return codes;
     }
 
     @Override
     public Code lookup(Code code, CodeSystemInfo codeSystem) throws ResourceNotFoundException {
-        // TODO: Implement as CodeSystem/$lookup
-        // http://hl7.org/fhir/2016Sep/codesystem-operations.html#lookup
-        Parameters respParam = fhirClient
-                .operation()
-                .onType(CodeSystem.class)
-                .named("lookup")
-                .withParameter(Parameters.class, "code", new CodeType(code.getCode()))
-                .andParameter("system", new UriType(codeSystem.getId()))
-                .execute();
-
-        return code.withSystem(codeSystem.getId())
-                .withDisplay(((StringType)respParam.getParameter().get(1).getValue()).getValue());
+        CodeSystem cs = codeSystemProvider.getDao().read(new IdType(codeSystem.getId()));
+        for (CodeSystem.ConceptDefinitionComponent concept : cs.getConcept()) {
+            if (concept.getCode().equals(code.getCode()))
+                return code.withSystem(codeSystem.getId()).withDisplay(concept.getDisplay());
+        }
+        return code;
     }
 }
