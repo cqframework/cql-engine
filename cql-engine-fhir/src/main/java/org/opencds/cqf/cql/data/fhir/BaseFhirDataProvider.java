@@ -1,8 +1,10 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.model.primitive.BaseDateTimeDt;
 import ca.uhn.fhir.model.primitive.BoundCodeDt;
 import ca.uhn.fhir.model.primitive.DateDt;
+import org.hl7.fhir.dstu3.model.BaseDateTimeType;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhir.dstu3.model.Period;
@@ -91,8 +93,12 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return ((BoundCodeDt)result).getValue();
         }
 
-        if (result instanceof DateDt) {
-            return DateTime.fromJavaDate(((DateDt)result).getValue());
+        if (result instanceof BaseDateTimeDt) {
+            return DateTime.fromJavaDate(((BaseDateTimeDt)result).getValue());
+        }
+
+        if (result instanceof BaseDateTimeType) {
+            return DateTime.fromJavaDate(((BaseDateTimeType)result).getValue());
         }
 
 //        if (result instanceof TimeType) {
