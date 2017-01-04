@@ -56,17 +56,19 @@
 		<!-- test(observation(), "Observation.value.unit", 1, "string"); -->
 		<test name="testPolymorphismA" inputfile="observation-example.xml">
 			<expression>Observation.value.unit</expression>
-			<output type="string"/>
+			<output type="string">lbs</output>
 		</test>
 		<!-- testWrong(observation(), "Observation.valueQuantity.unit"); -->
 		<test name="testPolymorphismB" inputfile="observation-example.xml">
 			<expression invalid="true">Observation.valueQuantity.unit</expression>
 		</test>
 		<!-- testBoolean(observation(), "Observation.value.is(Quantity)", true); -->
-		<test name="testPolymorphismIsA" inputfile="observation-example.xml">
+		<!-- BTR: .is and .as were removed as methods and introduced in the grammar only
+		so that we can tell we are resolving a type name, not an expression -->
+		<!-- test name="testPolymorphismIsA" inputfile="observation-example.xml">
 			<expression>Observation.value.is(Quantity)</expression>
 			<output type="boolean">true</output>
-		</test>
+		</test-->
 		<!-- testBoolean(observation(), "Observation.value is Quantity", true); -->
 		<test name="testPolymorphismIsA" inputfile="observation-example.xml">
 			<expression>Observation.value is Quantity</expression>
@@ -74,12 +76,12 @@
 		</test>
 		<!-- testBoolean(observation(), "Observation.value.is(Period).not()", true); -->
 		<test name="testPolymorphismIsB" inputfile="observation-example.xml">
-			<expression>Observation.value.is(Period).not()</expression>
+			<expression>(Observation.value is Period).not()</expression>
 			<output type="boolean">true</output>
 		</test>
 		<!-- testBoolean(observation(), "Observation.value.as(Quantity).unit", true); -->
 		<test name="testPolymorphismAsA" inputfile="observation-example.xml">
-			<expression>Observation.value.as(Quantity).unit</expression>
+			<expression>(Observation.value as Quantity).unit</expression>
 			<output type="string">lbs</output>
 		</test>
 		<!-- testBoolean(observation(), "(Observation.value as Quantity).unit", true); -->
@@ -93,7 +95,10 @@
 		</test>
 		<!-- test(observation(), "Observation.value.as(Period).start", 0); -->
 		<test name="testPolymorphismAsC" inputfile="observation-example.xml">
-			<expression>Observation.value.as(Period).start</expression>
+			<!-- NOTE: "start" is a reserved word in CQL, so to get this to pass in CQL, you have to use quotes...
+				we could make it just a keyword, but it would require a change to the grammar.
+				Submitting a ballot comment for this. -->
+			<expression>(Observation.value as Period)."start"</expression>
 		</test>
 	</group>
 	<group name="Dollar">

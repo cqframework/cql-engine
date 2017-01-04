@@ -71,6 +71,73 @@ public class DateTime {
     throw new IllegalArgumentException("Invalid index for DateTime unit request.");
   }
 
+  public DateTime() {
+
+  }
+
+  public DateTime(int year) {
+    setPartial(new Partial(DateTimeFieldType.year(), year));
+  }
+
+  public DateTime(int year, BigDecimal timezoneOffset) {
+    setPartial(new Partial(DateTimeFieldType.year(), year));
+    setTimezoneOffset(timezoneOffset);
+  }
+
+  public DateTime(int year, int month) {
+    setPartial(new Partial(getFields(2), getValues(year, month)));
+  }
+
+  public DateTime(int year, int month, BigDecimal timezoneOffset) {
+    setPartial(new Partial(getFields(2), getValues(year, month)));
+    setTimezoneOffset(timezoneOffset);
+  }
+
+  public DateTime(int year, int month, int day) {
+    setPartial(new Partial(getFields(3), getValues(year, month, day)));
+  }
+
+  public DateTime(int year, int month, int day, BigDecimal timezoneOffset) {
+    setPartial(new Partial(getFields(3), getValues(year, month, day)));
+    setTimezoneOffset(timezoneOffset);
+  }
+
+  public DateTime(int year, int month, int day, int hour) {
+    setPartial(new Partial(getFields(4), getValues(year, month, day, hour)));
+  }
+
+  public DateTime(int year, int month, int day, int hour, BigDecimal timezoneOffset) {
+    setPartial(new Partial(getFields(4), getValues(year, month, day, hour)));
+    setTimezoneOffset(timezoneOffset);
+  }
+
+  public DateTime(int year, int month, int day, int hour, int minute) {
+    setPartial(new Partial(getFields(5), getValues(year, month, day, hour, minute)));
+  }
+
+  public DateTime(int year, int month, int day, int hour, int minute, BigDecimal timezoneOffset) {
+    setPartial(new Partial(getFields(5), getValues(year, month, day, hour, minute)));
+    setTimezoneOffset(timezoneOffset);
+  }
+
+  public DateTime(int year, int month, int day, int hour, int minute, int second) {
+    setPartial(new Partial(getFields(6), getValues(year, month, day, hour, minute, second)));
+  }
+
+  public DateTime(int year, int month, int day, int hour, int minute, int second, BigDecimal timezoneOffset) {
+    setPartial(new Partial(getFields(6), getValues(year, month, day, hour, minute, second)));
+    setTimezoneOffset(timezoneOffset);
+  }
+
+  public DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond) {
+    setPartial(new Partial(getFields(7), getValues(year, month, day, hour, minute, second, millisecond)));
+  }
+
+  public DateTime(int year, int month, int day, int hour, int minute, int second, int millisecond, BigDecimal timezoneOffset) {
+    setPartial(new Partial(getFields(7), getValues(year, month, day, hour, minute, second, millisecond)));
+    setTimezoneOffset(timezoneOffset);
+  }
+
   public Partial getPartial() {
     return dateTime;
   }

@@ -4,18 +4,18 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.primitive.BaseDateTimeDt;
 import ca.uhn.fhir.model.primitive.BoundCodeDt;
 import ca.uhn.fhir.model.primitive.DateDt;
-import org.hl7.fhir.dstu3.model.BaseDateTimeType;
-import org.hl7.fhir.dstu3.model.DateTimeType;
-import org.hl7.fhir.dstu3.model.Enumeration;
-import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.codesystems.DaysOfWeek;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Time;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -57,55 +57,79 @@ public abstract class BaseFhirDataProvider implements DataProvider
       return this;
     }
 
-    // TODO: Time support? HAPI seems to be missing some of this?
-//    public Time toTime(TimeType hapiDt) {
-//        int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
-//        int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
-//        int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
-//        int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
-//    }
-
-    // public DateTime toDateTime(DateTimeType hapiDt) {
-    //   // TODO: do we want 0 to be the default value if null?
-    //   int year = hapiDt.getYear() == null ? 0 : hapiDt.getYear();
-    //   // months in HAPI are zero-indexed -- don't want that
-    //   int month = hapiDt.getMonth() == null ? 0 : hapiDt.getMonth() + 1;
-    //   int day = hapiDt.getDay() == null ? 0 : hapiDt.getDay();
-    //   int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
-    //   int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
-    //   int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
-    //   int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
-    //   return new DateTime().withPartial(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
-    // }
-
     protected DateTime toDateTime(Date result) {
         // NOTE: By going through the Java primitive here, we are losing the precision support of the HAPI-DateTimeType
-        // We need a solution that preserves the partial precision...
         return DateTime.fromJavaDate(result);
     }
 
-    protected Object mapPrimitive(Object result) {
-        if (result instanceof Date) {
-            return toDateTime((Date)result);
+    protected DateTime toDateTime(DateTimeType value) {
+        // TODO: Convert tzHour, tzMin and tzSign to a BigDecimal to set TimeZoneOffset
+        switch (value.getPrecision()) {
+            case YEAR: return new DateTime(value.getYear());
+            case MONTH: return new DateTime(value.getYear(), value.getMonth());
+            case DAY: return new DateTime(value.getYear(), value.getMonth(), value.getDay());
+            case SECOND: return new DateTime(value.getYear(), value.getMonth(), value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
+            case MILLI: return new DateTime(value.getYear(), value.getMonth(), value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
+            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        }
+    }
+
+    protected DateTime toDateTime(DateType value) {
+        // TODO: This ought to work, but I'm getting an incorrect month value returned from the Hapi DateType, looks like a Java Calendar problem?
+        switch (value.getPrecision()) {
+            case YEAR: return new DateTime(value.getYear());
+            case MONTH: return new DateTime(value.getYear(), value.getMonth());
+            case DAY: return new DateTime(value.getYear(), value.getMonth(), value.getDay());
+            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        }
+    }
+
+    protected Time toTime(TimeType value) {
+        throw new RuntimeException("Time values are not supported yet.");
+    }
+
+    protected DateTime toDateTime(InstantType value) {
+        // TODO: Timezone support
+        return new DateTime(value.getYear(), value.getMonth(), value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
+    }
+
+    protected Object mapPrimitive(Object result, Object source) {
+        if (source instanceof DateTimeType) {
+            return toDateTime((DateTimeType)source);
+        }
+        else if (source instanceof DateType) {
+            return toDateTime((DateType)source);
+        }
+        else if (source instanceof TimeType) {
+            return toTime((TimeType)source);
+        }
+        else if (source instanceof InstantType) {
+            return toDateTime((InstantType)source);
+        }
+        else {
+            return result;
         }
 
-        if (result instanceof BoundCodeDt) {
-            return ((BoundCodeDt)result).getValue();
-        }
+        // The HAPI primitive types use the same Java types as the CQL Engine with the exception of the date types,
+        // where the HAPI classes return Java Dates, the engine expects runtime.DateTime instances
 
-        if (result instanceof BaseDateTimeDt) {
-            return DateTime.fromJavaDate(((BaseDateTimeDt)result).getValue());
-        }
-
-        if (result instanceof BaseDateTimeType) {
-            return DateTime.fromJavaDate(((BaseDateTimeType)result).getValue());
-        }
-
+//        if (result instanceof BoundCodeDt) {
+//            return ((BoundCodeDt)result).getValue();
+//        }
+//
+//        if (result instanceof BaseDateTimeDt) {
+//            return DateTime.fromJavaDate(((BaseDateTimeDt)result).getValue());
+//        }
+//
+//        if (result instanceof BaseDateTimeType) {
+//            return DateTime.fromJavaDate(((BaseDateTimeType)result).getValue());
+//        }
+//
 //        if (result instanceof TimeType) {
 //            return toTime((TimeType)result);
 //        }
-
-        return result;
+//
+//        return result;
     }
 
     protected boolean pathIsChoice(String path) {
@@ -172,7 +196,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
             }
 
             Object result = accessor.invoke(target);
-            result = mapPrimitive(result);
+            result = mapPrimitive(result, target);
             return result;
         } catch (NoSuchMethodException e) {
             if (pathIsChoice(path)) {
@@ -207,6 +231,208 @@ public abstract class BaseFhirDataProvider implements DataProvider
     @Override
     public Class resolveType(String typeName) {
         try {
+            // TODO: Obviously would like to be able to automate this, but there is no programmatic way of which I'm aware
+            // For the primitive types, not such a big deal.
+            // For the enumerations, the type names are generated from the binding name in the spreadsheet, which doesn't make it to the StructureDefinition,
+            // and the schema has no way of indicating whether the enum will be common (i.e. in Enumerations) or per resource
+            switch (typeName) {
+                case "base64Binary": typeName = "Base64BinaryType"; break;
+                case "boolean": typeName = "BooleanType"; break;
+                case "dateTime": typeName = "DateTimeType"; break;
+                case "date": typeName = "DateType"; break;
+                case "decimal": typeName = "DecimalType"; break;
+                case "instant": typeName = "InstantType"; break;
+                case "integer": typeName = "IntegerType"; break;
+                case "positiveInt": typeName = "PositiveIntType"; break;
+                case "unsignedInt": typeName = "UnsignedIntType"; break;
+                case "string": typeName = "StringType"; break;
+                case "code": typeName = "CodeType"; break;
+                case "markdown": typeName = "MarkdownType"; break;
+                case "uri": typeName = "UriType"; break;
+                case "uuid": typeName = "UuidType"; break;
+                case "id": typeName = "IdType"; break;
+                case "oid": typeName = "OidType"; break;
+                case "PlanActionPrecheckBehavior": typeName = "PlanDefinition$PlanActionPrecheckBehavior"; break;
+                case "ProvenanceEntityRole": typeName = "Provenance$ProvenanceEntityRole"; break;
+                case "UnitsOfTime": typeName = "Timing$UnitsOfTime"; break;
+                case "AddressType": typeName = "Address$AddressType"; break;
+                case "AllergyIntoleranceCategory": typeName = "AllergyIntolerance$AllergyIntoleranceCategory"; break;
+                case "SpecimenStatus": typeName = "Specimen$SpecimenStatus"; break;
+                case "RestfulCapabilityMode": typeName = "CapabilityStatement$RestfulCapabilityMode"; break;
+                case "DetectedIssueSeverity": typeName = "DetectedIssue$DetectedIssueSeverity"; break;
+                case "IssueSeverity": typeName = "OperationOutcome$IssueSeverity"; break;
+                case "DataElementStringency": typeName = "DataElement$DataElementStringency"; break;
+                case "PlanActionConditionKind": typeName = "PlanDefinition$PlanActionConditionKind"; break;
+                case "EncounterStatus": typeName = "Encounter$EncounterStatus"; break;
+                case "StructureDefinitionKind": typeName = "StructureDefinition$StructureDefinitionKind"; break;
+                case "PublicationStatus": typeName = "Enumerations$PublicationStatus"; break;
+                case "ConsentDataMeaning": typeName = "Consent$ConsentDataMeaning"; break;
+                case "QuestionnaireResponseStatus": typeName = "QuestionnaireResponse$QuestionnaireResponseStatus"; break;
+                case "SearchComparator": typeName = "SearchParameter$SearchComparator"; break;
+                case "AllergyIntoleranceType": typeName = "AllergyIntolerance$AllergyIntoleranceType"; break;
+                case "DocumentRelationshipType": typeName = "DocumentReference$DocumentRelationshipType"; break;
+                case "AllergyIntoleranceClinicalStatus": typeName = "AllergyIntolerance$AllergyIntoleranceClinicalStatus"; break;
+                case "CarePlanActivityStatus": typeName = "CarePlan$CarePlanActivityStatus"; break;
+                case "ActionList": typeName = "ProcessRequest$ActionList"; break;
+                case "ParticipationStatus": typeName = "Appointment$ParticipationStatus"; break;
+                case "PlanActionSelectionBehavior": typeName = "PlanDefinition$PlanActionSelectionBehavior"; break;
+                case "DocumentMode": typeName = "CapabilityStatement$DocumentMode"; break;
+                case "AssertionOperatorType": typeName = "TestScript$AssertionOperatorType"; break;
+                case "DaysOfWeek": typeName = "HealthcareService$DaysOfWeek"; break;
+                case "IssueType": typeName = "OperationOutcome$IssueType"; break;
+                case "ContentType": typeName = "TestScript$ContentType"; break;
+                case "StructureMapContextType": typeName = "StructureMap$StructureMapContextType"; break;
+                case "FamilyHistoryStatus": typeName = "FamilyMemberHistory$FamilyHistoryStatus"; break;
+                case "MedicationStatementCategory": typeName = "MedicationStatement$MedicationStatementCategory"; break;
+                case "CommunicationStatus": typeName = "Communication$CommunicationStatus"; break;
+                case "ClinicalImpressionStatus": typeName = "ClinicalImpression$ClinicalImpressionStatus"; break;
+                case "AssertionResponseTypes": typeName = "TestScript$AssertionResponseTypes"; break;
+                case "NarrativeStatus": typeName = "Narrative$NarrativeStatus"; break;
+                case "ReferralCategory": typeName = "ReferralRequest$ReferralCategory"; break;
+                case "MeasmntPrinciple": typeName = "DeviceComponent$MeasmntPrinciple"; break;
+                case "ConsentExceptType": typeName = "Consent$ConsentExceptType"; break;
+                case "EndpointStatus": typeName = "Endpoint$EndpointStatus"; break;
+                case "GuidePageKind": typeName = "ImplementationGuide$GuidePageKind"; break;
+                case "GuideDependencyType": typeName = "ImplementationGuide$GuideDependencyType"; break;
+                case "ResourceVersionPolicy": typeName = "CapabilityStatement$ResourceVersionPolicy"; break;
+                case "MedicationRequestStatus": typeName = "MedicationRequest$MedicationRequestStatus"; break;
+                case "MedicationAdministrationStatus": typeName = "MedicationAdministration$MedicationAdministrationStatus"; break;
+                case "NamingSystemIdentifierType": typeName = "NamingSystem$NamingSystemIdentifierType"; break;
+                case "AccountStatus": typeName = "Account$AccountStatus"; break;
+                case "ProcedureRequestPriority": typeName = "ProcedureRequest$ProcedureRequestPriority"; break;
+                case "MedicationDispenseStatus": typeName = "MedicationDispsense$MedicationDispenseStatus"; break;
+                case "IdentifierUse": typeName = "Identifier$IdentifierUse"; break;
+                case "DigitalMediaType": typeName = "Media$DigitalMediaType"; break;
+                case "TestReportParticipantType": typeName = "TestReport$TestReportParticipantType"; break;
+                case "BindingStrength": typeName = "Enumerations$BindingStrength"; break;
+                case "ConsentStatus": typeName = "Consent$ConsentStatus"; break;
+                case "ParticipantRequired": typeName = "Appointment$ParticipantRequired"; break;
+                case "XPathUsageType": typeName = "SearchParameter$XPathUsageType"; break;
+                case "StructureMapInputMode": typeName = "StructureMap$StructureMapInputMode"; break;
+                case "InstanceAvailability": typeName = "ImagingStudy$InstanceAvailability"; break;
+                case "LinkageType": typeName = "Linkage$LinkageType"; break;
+                case "ReferenceHandlingPolicy": typeName = "CapabilityStatement$ReferenceHandlingPolicy"; break;
+                case "FilterOperator": typeName = "CodeSystem$FilterOperator"; break;
+                case "NamingSystemType": typeName = "NamingSystem$NamingSystemType"; break;
+                case "ResearchStudyStatus": typeName = "ResearchStudy$ResearchStudyStatus"; break;
+                case "ExtensionContext": typeName = "StructureDefinition$ExtensionContext"; break;
+                case "AuditEventOutcome": typeName = "AuditEvent$AuditEventOutcome"; break;
+                case "ConstraintSeverity": typeName = "ElementDefinition$ConstraintSeverity"; break;
+                case "EventCapabilityMode": typeName = "CapabilityStatement$EventCapabilityMode"; break;
+                case "PlanActionParticipantType": typeName = "PlanDefinition$PlanActionParticipantType"; break;
+                case "ProcedureStatus": typeName = "Procedure$ProcedureStatus"; break;
+                case "ResearchSubjectStatus": typeName = "ResearchSubject$ResearchSubjectStatus"; break;
+                case "PlanActionGroupingBehavior": typeName = "PlanDefinition$PlanActionGroupingBehavior"; break;
+                case "CompositeMeasureScoring": typeName = "Measure$CompositeMeasureScoring"; break;
+                case "DeviceMetricCategory": typeName = "Device$DeviceMetricCategory"; break;
+                case "QuestionnaireStatus": typeName = "Questionnaire$QuestionnaireStatus"; break;
+                case "StructureMapTransform": typeName = "StructureMap$StructureMapTransform"; break;
+                case "ResponseType": typeName = "MessageHeader$ResponseType"; break;
+                case "AggregationMode": typeName = "ElementDefinition$AggregationMode"; break;
+                case "CapabilityStatementKind": typeName = "CapabilityStatement$CapabilityStatementKind"; break;
+                case "sequenceType": typeName = "Sequence$SequenceType"; break;
+                case "AllergyIntoleranceVerificationStatus": typeName = "AllergyIntolerance$AllergyIntoleranceVerificationStatus"; break;
+                case "EventTiming": typeName = "Timing$EventTiming"; break;
+                case "GoalStatus": typeName = "Goal$GoalStatus"; break;
+                case "SearchParamType": typeName = "Enumerations$SearchParamType"; break;
+                case "SystemRestfulInteraction": typeName = "CapabilityStatement$SystemRestfulInteraction"; break;
+                case "StructureMapModelMode": typeName = "StructureMap$StructureMapModelMode"; break;
+                case "TaskStatus": typeName = "Task$TaskStatus"; break;
+                case "MeasurePopulationType": typeName = "Measure$MeasurePopulationType"; break;
+                case "SubscriptionChannelType": typeName = "Subscription$SubscriptionChannelType"; break;
+                case "ProcedureRequestStatus": typeName = "ProcedureRequest$ProcedureRequestStatus"; break;
+                case "ReferralStatus": typeName = "ReferralRequest$ReferralStatus"; break;
+                case "AssertionDirectionType": typeName = "TestScript$AssertionDirectionType"; break;
+                case "SlicingRules": typeName = "ElementDefinition$SlicingRules"; break;
+                case "ExplanationOfBenefitStatus": typeName = "ExplanationOfBenefit$ExplanationOfBenefitStatus"; break;
+                case "LinkType": typeName = "Patient$LinkType"; break;
+                case "AllergyIntoleranceCriticality": typeName = "AllergyIntolerance$AllergyIntoleranceCriticality"; break;
+                case "ConceptMapEquivalence": typeName = "ConceptMap$ConceptMapEquivalence"; break;
+                case "PropertyRepresentation": typeName = "ElementDefinition$PropertyRepresentation"; break;
+                case "AuditEventAction": typeName = "AuditEvent$AuditEventAction"; break;
+                case "MeasureDataUsage": typeName = "Measure$MeasureDataUsage"; break;
+                case "TriggerType": typeName = "TriggerDefinition$TriggerType"; break;
+                case "ActivityDefinitionCategory": typeName = "ActivityDefinition$ActivityDefinitionCategory"; break;
+                case "SearchModifierCode": typeName = "SearchParameter$SearchModifierCode"; break;
+                case "CompositionStatus": typeName = "Composition$CompositionStatus"; break;
+                case "AppointmentStatus": typeName = "Appointment$AppointmentStatus"; break;
+                case "MessageSignificanceCategory": typeName = "Conformance$MessageSignificanceCategory"; break;
+                case "OperationParameterUse": typeName = "OperationDefinition$OperationParameterUse"; break;
+                case "ListMode": typeName = "ListResource$ListMode"; break;
+                case "ObservationStatus": typeName = "Observation$ObservationStatus"; break;
+                case "qualityType": typeName = "Sequence$QualityType"; break;
+                case "AdministrativeGender": typeName = "Enumerations$AdministrativeGender"; break;
+                case "MeasureType": typeName = "Measure$MeasureType"; break;
+                case "QuestionnaireItemType": typeName = "Questionnaire$QuestionnaireItemType"; break;
+                case "StructureMapListMode": typeName = "StructureMap$StructureMapListMode"; break;
+                case "DeviceMetricCalibrationType": typeName = "DeviceMetric$DeviceMetricCalibrationType"; break;
+                case "SupplyRequestStatus": typeName = "SupplyRequest$SupplyRequestStatus"; break;
+                case "EncounterLocationStatus": typeName = "Encounter$EncounterLocationStatus"; break;
+                case "SupplyDeliveryStatus": typeName = "SupplyDelivery$SupplyDeliveryStatus"; break;
+                case "DiagnosticReportStatus": typeName = "DiagnosticReport$DiagnosticReportStatus"; break;
+                case "FlagStatus": typeName = "Flag$FlagStatus"; break;
+                case "AllergyIntoleranceCertainty": typeName = "AllergyIntolerance$AllergyIntoleranceCertainty"; break;
+                case "CarePlanStatus": typeName = "CarePlan$CarePlanStatus"; break;
+                case "ListStatus": typeName = "ListResource$ListStatus"; break;
+                case "MeasureScoring": typeName = "Measure$MeasureScoring"; break;
+                case "AuditEventAgentNetworkType": typeName = "AuditEvent$AuditEventAgentNetworkType"; break;
+                case "AddressUse": typeName = "Address$AddressUse"; break;
+                case "ConditionalDeleteStatus": typeName = "CapabilityStatement$ConditionalDeleteStatus"; break;
+                case "ContactPointUse": typeName = "ContactPoint$ContactPointUse"; break;
+                case "DeviceMetricOperationalStatus": typeName = "DeviceMetric$DeviceMetricOperationalStatus"; break;
+                case "NutritionOrderStatus": typeName = "NutritionOrder$NutritionOrderStatus"; break;
+                case "ContributorType": typeName = "Contributor$ContributorType"; break;
+                case "ReferenceVersionRules": typeName = "ElementDefinition$ReferenceVersionRules"; break;
+                case "Use": typeName = "Claim$Use"; break;
+                case "IdentityAssuranceLevel": typeName = "Person$IdentityAssuranceLevel"; break;
+                case "MeasureReportStatus": typeName = "MeasureReport$MeasureReportStatus"; break;
+                case "DeviceMetricColor": typeName = "DeviceMetric$DeviceMetricColor"; break;
+                case "SearchEntryMode": typeName = "SearchParameter$SearchEntryMode"; break;
+                case "ConditionalReadStatus": typeName = "CapabilityStatement$ConditionalReadStatus"; break;
+                case "ConditionVerificationStatus": typeName = "Condition$ConditionVerificationStatus"; break;
+                case "AllergyIntoleranceSeverity": typeName = "AllergyIntolerance$AllergyIntoleranceSeverity"; break;
+                case "OperationKind": typeName = "OperationDefinition$OperationKind"; break;
+                case "ObservationRelationshipType": typeName = "Observation$ObservationRelationshipType"; break;
+                case "NameUse": typeName = "HumanName$NameUse"; break;
+                case "SubscriptionStatus": typeName = "Subscription$SubscriptionStatus"; break;
+                case "DocumentReferenceStatus": typeName = "DocumentReference$DocumentReferenceStatus"; break;
+                case "CommunicationRequestStatus": typeName = "CommunicationRequest$CommunicationRequestStatus"; break;
+                case "LocationMode": typeName = "Location$LocationMode"; break;
+                case "repositoryType": typeName = "Sequence$RepositoryType"; break;
+                case "CarePlanRelationship": typeName = "CarePlan$CarePlanRelationship"; break;
+                case "LocationStatus": typeName = "Location$LocationStatus"; break;
+                case "UnknownContentCode": typeName = "CapabilityStatement$UnknownContentCode"; break;
+                case "NoteType": typeName = "Enumerations$NoteType"; break;
+                case "TestReportStatus": typeName = "TestReport$TestReportStatus"; break;
+                case "HTTPVerb": typeName = "Bundle$HTTPVerb"; break;
+                case "CodeSystemContentMode": typeName = "CodeSystem$CodeSystemContentMode"; break;
+                case "PlanActionRelationshipType": typeName = "PlanDefinition$PlanActionRelationshipType"; break;
+                case "EpisodeOfCareStatus": typeName = "EpisodeOfCare$EpisodeOfCareStatus"; break;
+                case "RemittanceOutcome": typeName = "Enumerations$RemittanceOutcome"; break;
+                case "ContactPointSystem": typeName = "ContactPoint$ContactPointSystem"; break;
+                case "SlotStatus": typeName = "Slot$SlotStatus"; break;
+                case "PropertyType": typeName = "CodeSystem$PropertyType"; break;
+                case "TypeDerivationRule": typeName = "StructureDefinition$TypeDerivationRule"; break;
+                case "MedicationStatementStatus": typeName = "MedicationStatement$MedicationStatementStatus"; break;
+                case "GuidanceResponseStatus": typeName = "GuidanceResponse$GuidanceResponseStatus"; break;
+                case "QuantityComparator": typeName = "Quantity$QuantityComparator"; break;
+                case "RelatedArtifactType": typeName = "RelatedArtifact$RelatedArtifactType"; break;
+                case "DeviceStatus": typeName = "Device$DeviceStatus"; break;
+                case "TestReportResultCodes": typeName = "TestReport$TestReportResultCodes"; break;
+                case "MeasureReportType": typeName = "MeasureReport$MeasureReportType"; break;
+                case "SampledDataDataType": typeName = "SampledData$SampledDataDataType"; break;
+                case "CompartmentType": typeName = "CompartmentDefinition$CompartmentType"; break;
+                case "CompositionAttestationMode": typeName = "Composition$CompositionAttestationMode"; break;
+                case "PlanActionRequiredBehavior": typeName = "PlanDefinition$PlanActionRequiredBehavior"; break;
+                case "DeviceMetricCalibrationState": typeName = "DeviceMetric$DeviceMetricCalibrationState"; break;
+                case "GroupType": typeName = "Group$GroupType"; break;
+                case "TypeRestfulInteraction": typeName = "CapabilityStatement$TypeRestfulInteraction"; break;
+                case "PlanActionCardinalityBehavior": typeName = "PlanDefinition$PlanActionCardinalityBehavior"; break;
+                case "CodeSystemHierarchyMeaning": typeName = "CodeSystem$CodeSystemHierarchyMeaning"; break;
+                case "MedicationStatementNotTaken": typeName = "MedicationStatement$MedicationStatementNotTaken"; break;
+                case "BundleType": typeName = "Bundle$BundleType"; break;
+                case "SystemVersionProcessingMode": typeName = "ExpansionProfile$SystemVersionProcessingMode"; break;
+            }
             return Class.forName(String.format("%s.%s", packageName, typeName));
         }
         catch (ClassNotFoundException e) {

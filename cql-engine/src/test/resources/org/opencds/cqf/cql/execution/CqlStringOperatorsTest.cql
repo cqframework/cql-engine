@@ -15,16 +15,16 @@ define ConcatenateNullB : Concatenate(null, 'b')
 define ConcatenateAB : Concatenate('a', 'b')
 
 //Indexer
-define IndexerNullNull : Indexer(null, null)
+define IndexerNullNull : Indexer(null as String, null) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
 define IndexerANull : Indexer('a', null)
-define IndexerNull1 : Indexer(null, 1)
+define IndexerNull1 : Indexer(null as String, 1) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
 define IndexerAB0 : Indexer('ab', 0)
 define IndexerAB1 : Indexer('ab', 1)
 define IndexerAB2 : Indexer('ab', 2)
 define IndexerABNeg1 : Indexer('ab', -1)
 
 //Length
-define LengthNull : Length(null)
+define LengthNull : Length(null as String) // cast is required due to ambiguity with Length(String) and Length(List<Any>)
 define LengthEmpty : Length('')
 define LengthA : Length('a')
 define LengthAB : Length('ab')

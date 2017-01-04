@@ -4,10 +4,12 @@ import ca.uhn.fhir.context.FhirContext;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.Resource;
+import org.hamcrest.Matchers;
+import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.OutputType;
 import org.hl7.fhirpath.tests.Tests;
@@ -15,8 +17,8 @@ import org.opencds.cqf.cql.data.fhir.FhirDataProvider;
 import org.opencds.cqf.cql.data.fhir.TestFhirLibrary;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.execution.LibraryLoader;
+import org.opencds.cqf.cql.runtime.*;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXB;
@@ -68,7 +70,7 @@ public class TestFhirPath {
                         results.add(output.getValue());
                         break;
                     case CODE:
-                        results.add(output.getValue()); // TODO: This is probably wrong...
+                        results.add(new Code().withCode(output.getValue()));
                         break;
                 }
             }
@@ -77,13 +79,39 @@ public class TestFhirPath {
         return results;
     }
 
+    private ModelManager modelManager;
+    private ModelManager getModelManager() {
+        if (modelManager == null) {
+            modelManager = new ModelManager();
+        }
+
+        return modelManager;
+    }
+
+    private LibraryManager libraryManager;
+    private LibraryManager getLibraryManager() {
+        if (libraryManager == null) {
+            libraryManager = new LibraryManager(getModelManager());
+            libraryManager.getLibrarySourceLoader().clearProviders();
+            libraryManager.getLibrarySourceLoader().registerProvider(new TestLibrarySourceProvider());
+        }
+        return libraryManager;
+    }
+
+    private LibraryLoader libraryLoader;
+    private LibraryLoader getLibraryLoader() {
+        if (libraryLoader == null) {
+            libraryLoader = new TestLibraryLoader(libraryManager);
+        }
+        return libraryLoader;
+    }
+
     private Library translate(String cql) {
 //        try {
             ArrayList<CqlTranslator.Options> options = new ArrayList<>();
             options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-            CqlTranslator translator = CqlTranslator.fromText(cql, new LibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
+            CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
             if (translator.getErrors().size() > 0) {
-                System.err.println("Translation failed due to errors:");
                 ArrayList<String> errors = new ArrayList<>();
                 for (CqlTranslatorException error : translator.getErrors()) {
                     TrackBack tb = error.getLocator();
@@ -118,9 +146,46 @@ public class TestFhirPath {
         return library;
     }
 
+    private Boolean compareResults(Object expectedResult, Object actualResult) {
+        // Perform FHIR system-defined type conversions
+        if (actualResult instanceof Enumeration) {
+            actualResult = new Code().withCode(((Enumeration)actualResult).getValueAsString());
+        }
+        else if (actualResult instanceof BooleanType) {
+            actualResult = ((BooleanType)actualResult).getValue();
+        }
+        else if (actualResult instanceof IntegerType) {
+            actualResult = ((IntegerType)actualResult).getValue();
+        }
+        else if (actualResult instanceof DecimalType) {
+            actualResult = ((DecimalType)actualResult).getValue();
+        }
+        else if (actualResult instanceof StringType) {
+            actualResult = ((StringType)actualResult).getValue();
+        }
+        else if (actualResult instanceof BaseDateTimeType) {
+            actualResult = DateTime.fromJavaDate(((BaseDateTimeType)actualResult).getValue());
+        }
+        else if (actualResult instanceof Quantity) {
+            Quantity quantity = (Quantity)actualResult;
+            actualResult = new org.opencds.cqf.cql.runtime.Quantity()
+                    .withValue(quantity.getValue())
+                    .withUnit(quantity.getUnit());
+        }
+        else if (actualResult instanceof Coding) {
+            Coding coding = (Coding)actualResult;
+            actualResult = new Code()
+                    .withCode(coding.getCode())
+                    .withDisplay(coding.getDisplay())
+                    .withSystem(coding.getSystem())
+                    .withVersion(coding.getVersion());
+        }
+        return Value.equals(expectedResult, actualResult);
+    }
+
     private void runTest(org.hl7.fhirpath.tests.Test test) {
         Resource resource = loadResource(test.getInputfile());
-        String cql = String.format("using FHIR version '1.8' parameter %s %s define Test: %s",
+        String cql = String.format("library TestFHIRPath using FHIR version '1.8' include FHIRHelpers version '1.8' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
 
         Library library = null;
@@ -132,7 +197,7 @@ public class TestFhirPath {
             try {
                 library = translate(cql);
             }
-            catch (CqlTranslatorException e) {
+            catch (Exception e) {
                 testPassed = true;
             }
 
@@ -144,6 +209,8 @@ public class TestFhirPath {
             library = translate(cql);
 
             Context context = new Context(library);
+
+            context.registerLibraryLoader(getLibraryLoader());
 
             FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
             //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open/");
@@ -167,7 +234,7 @@ public class TestFhirPath {
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
-                    Boolean comparison = Value.equals(expectedResult, actualResult);
+                    Boolean comparison = compareResults(expectedResult, actualResult);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
                     }
@@ -208,5 +275,13 @@ public class TestFhirPath {
             System.out.println(String.format("Finished test group %s.", group.getName()));
         }
         System.out.println(String.format("Passed %s of %s tests.", passCounter, testCounter));
+    }
+
+    @Test
+    public void testDateType() {
+        DateType birthDate = new DateType(1974, 12, 25);
+        assertThat(birthDate.getYear(), is(1974));
+        assertThat(birthDate.getMonth(), is(12));
+        assertThat(birthDate.getDay(), is(25));
     }
 }
