@@ -284,4 +284,12 @@ public class TestFhirPath {
         assertThat(birthDate.getMonth(), is(12));
         assertThat(birthDate.getDay(), is(25));
     }
+
+    @Test
+    public void testDate() {
+        Date birthDate = new DateType(1974, 12, 25).getValue();
+        assertThat(birthDate.getYear(), is(1974));
+        assertThat(birthDate.getMonth(), is(12));
+        assertThat(birthDate.getDay(), is(25));
+    }
 }
