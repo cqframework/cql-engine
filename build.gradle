@@ -3,13 +3,8 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.opencds.cqf'
-    version = '1.0-SNAPSHOT'
-	
-//	repositories {
-//		flatDir {
-//            dirs "$rootProject.projectDir/libs"
-//        }
-//	}
+    version = '1.1.0-SNAPSHOT'
+
 }
 
 subprojects {
@@ -89,6 +84,15 @@ subprojects {
     tasks.withType(Javadoc) {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
+
+    task sourcesJar(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts {
+        archives sourcesJar
+    }
 }
 
 configure(subprojects.findAll {it.name in ['cql-engine']}) {
@@ -118,15 +122,6 @@ configure(subprojects.findAll {it.name in ['cql-engine']}) {
             file(xjc.destDir).mkdirs()
 
             ant.taskdef(name: 'xjc', classname: 'org.jvnet.jaxb2_commons.xjc.XJC2Task', classpath: configurations.xjc.asPath)
-
-            /* The above sets up the task, but the real work of the task should be specified in the subproject using
-               generateSources.doLast.  For example:
-                   generateSources.doLast {
-                       ant.xjc(destdir: xjc.destDir, schema: "${projectDir}/path/to/file.xsd") {
-                           arg(line: xjc.args)
-                       }
-                   }
-            */
         }
     }
 
@@ -136,6 +131,62 @@ configure(subprojects.findAll {it.name in ['cql-engine']}) {
     clean {
         delete xjc.destDir
     }
+}
+
+configure(subprojects.findAll {it.name in ['cql-engine', 'cql-engine-fhir']}) {
+    apply plugin: 'maven'
+    apply plugin: 'signing'
+
+    signing {
+        required { gradle.taskGraph.hasTask(uploadArchives) }
+        sign configurations.archives
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: project.hasProperty("ossrhUsername") ? ossrhUsername : "", password: project.hasProperty("ossrhPassword") ? ossrhPassword : "")
+                }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: project.hasProperty("ossrhUsername") ? ossrhUsername : "", password: project.hasProperty("ossrhPassword") ? ossrhPassword : "")
+                }
+
+                pom.project {
+                    name project.name
+                    packaging 'jar'
+                    description "The ${project.name} library for the CQL Evaluation Engine"
+                    url 'http://opencds.org'
+
+                    scm {
+                        connection 'scm:git:git@github.com:DBCG/cql_engine.git'
+                        developerConnection 'scm:git:git@github.com:DBCG/cql_engine.git'
+                        url 'git@github.com:DBCG/cql_engine.git'
+                    }
+
+                    licenses {
+                        license {
+                            name 'The Apache License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            name 'Bryn Rhodes'
+                        }
+                        developer {
+                            name 'Christopher Schuler'
+                        }
+                    }
+                }
+            }
+        }
+    }
+    uploadArchives.dependsOn sourcesJar
 }
 
 task wrapper(type: Wrapper) {
