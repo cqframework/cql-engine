@@ -1,9 +1,6 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.DefaultLibrarySourceProvider;
-import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.*;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
@@ -22,10 +19,19 @@ public class TestCrossResourceSearch {
     private File xmlFile;
     private Library library;
 
+    private ModelManager modelManager;
+    private ModelManager getModelManager() {
+        if (modelManager == null) {
+            modelManager = new ModelManager();
+        }
+
+        return modelManager;
+    }
+
     private LibraryManager libraryManager;
     private LibraryManager getLibraryManager() {
         if (libraryManager == null) {
-            libraryManager = new LibraryManager();
+            libraryManager = new LibraryManager(getModelManager());
             DefaultLibrarySourceProvider librarySourceProvider = new DefaultLibrarySourceProvider(new File(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir/").toPath().toAbsolutePath());
             libraryManager.getLibrarySourceLoader().registerProvider(librarySourceProvider);
         }
@@ -96,7 +102,7 @@ public class TestCrossResourceSearch {
         try {
             ArrayList<CqlTranslator.Options> options = new ArrayList<>();
             options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-            CqlTranslator translator = CqlTranslator.fromFile(cql, new LibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
+            CqlTranslator translator = CqlTranslator.fromFile(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
             if (translator.getErrors().size() > 0) {
                 System.err.println("Translation failed due to errors:");
                 ArrayList<String> errors = new ArrayList<>();

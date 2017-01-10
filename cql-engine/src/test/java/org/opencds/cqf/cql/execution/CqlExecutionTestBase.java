@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.execution;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.ObjectFactory;
 import org.cqframework.cql.elm.tracking.TrackBack;
@@ -30,13 +31,14 @@ public abstract class CqlExecutionTestBase<T> {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
         if (library == null) {
-            LibraryManager libraryManager = new LibraryManager();
+            ModelManager modelManager = new ModelManager();
+            LibraryManager libraryManager = new LibraryManager(modelManager);
             try {
                 File cqlFile = new File(URLDecoder.decode(this.getClass().getResource(fileName + ".cql").getFile(), "UTF-8"));
 
                 ArrayList<CqlTranslator.Options> options = new ArrayList<>();
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, libraryManager, options.toArray(new CqlTranslator.Options[options.size()]));
+                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, options.toArray(new CqlTranslator.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");

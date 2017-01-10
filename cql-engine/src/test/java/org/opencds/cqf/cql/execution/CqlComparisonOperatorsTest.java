@@ -607,10 +607,10 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("SimpleNotEqFloat1Int1").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("SimpleNotEqFloat1Int2").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("QuantityNotEqCM1CM1").getExpression().evaluate(context);
         assertThat(result, is(false));

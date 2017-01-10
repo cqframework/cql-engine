@@ -185,7 +185,7 @@ public class Context {
     public void setParameter(String libraryName, String name, Object value) {
         boolean enteredLibrary = enterLibrary(libraryName);
         try {
-            String fullName = String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name);
+            String fullName = libraryName != null ? String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name) : name;
             parameters.put(fullName, value);
         }
         finally {
@@ -196,7 +196,7 @@ public class Context {
     public Object resolveParameterRef(String libraryName, String name) {
         boolean enteredLibrary = enterLibrary(libraryName);
         try {
-            String fullName = String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name);
+            String fullName = libraryName != null ? String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name) : name;
             if (parameters.containsKey(fullName)) {
                 return parameters.get(fullName);
             }
