@@ -15,6 +15,7 @@ import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -23,10 +24,12 @@ import java.util.List;
 public class JpaFhirDataProvider extends BaseFhirDataProvider {
 
     // need these to access the dao
-    private Collection<IResourceProvider> providers;
+    private HashMap<String, IResourceProvider> providers;
 
     public JpaFhirDataProvider(Collection<IResourceProvider> providers) {
-        this.providers = providers;
+        for (IResourceProvider i : providers) {
+            this.providers.put(i.getResourceType().getSimpleName(), i);
+        }
     }
 
     private String endpoint;
@@ -147,11 +150,7 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
     }
 
     public JpaResourceProviderDstu3<? extends IAnyResource> resolveResourceProvider(String datatype) {
-        for (IResourceProvider resProvider : providers) {
-            if (resProvider.getResourceType().getSimpleName().equals(datatype))
-                return (JpaResourceProviderDstu3<? extends IAnyResource>) resProvider;
-        }
-        throw new IllegalArgumentException("Unable to resolve resource provider for :" + datatype);
+        return (JpaResourceProviderDstu3<? extends IAnyResource>) providers.get(datatype);
     }
 
     private String getPatientSearchParam(String dataType) {

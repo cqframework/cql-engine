@@ -7,33 +7,27 @@ import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
-import org.hamcrest.Matchers;
 import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.dstu3.model.Quantity;
+import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
-import org.hl7.fhirpath.tests.OutputType;
 import org.hl7.fhirpath.tests.Tests;
 import org.opencds.cqf.cql.data.fhir.FhirDataProvider;
-import org.opencds.cqf.cql.data.fhir.TestFhirLibrary;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Value;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
-import java.io.*;
-import java.net.URLDecoder;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 /**
@@ -279,17 +273,21 @@ public class TestFhirPath {
 
     @Test
     public void testDateType() {
-        DateType birthDate = new DateType(1974, 12, 25);
+        // DateType Month is zero-based (11 == December)
+        DateType birthDate = new DateType(1974, 11, 25);
         assertThat(birthDate.getYear(), is(1974));
-        assertThat(birthDate.getMonth(), is(12));
+        assertThat(birthDate.getMonth(), is(11));
         assertThat(birthDate.getDay(), is(25));
     }
 
     @Test
     public void testDate() {
-        Date birthDate = new DateType(1974, 12, 25).getValue();
-        assertThat(birthDate.getYear(), is(1974));
-        assertThat(birthDate.getMonth(), is(12));
-        assertThat(birthDate.getDay(), is(25));
+        // NOTE: DateType uses default GMT
+        Date birthDate = new DateType(1974, 11, 25).getValue();
+        GregorianCalendar calendar = new GregorianCalendar(TimeZone.getTimeZone("GMT"));
+        calendar.setTime(birthDate);
+        assertThat(calendar.get(Calendar.YEAR), is(1974));
+        assertThat(calendar.get(Calendar.MONTH), is(11));
+        assertThat(calendar.get(Calendar.DAY_OF_MONTH), is(25));
     }
 }
