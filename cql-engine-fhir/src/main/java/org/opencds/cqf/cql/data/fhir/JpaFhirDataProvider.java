@@ -27,6 +27,7 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
     private HashMap<String, IResourceProvider> providers;
 
     public JpaFhirDataProvider(Collection<IResourceProvider> providers) {
+        this.providers = new HashMap<>();
         for (IResourceProvider i : providers) {
             this.providers.put(i.getResourceType().getSimpleName(), i);
         }
