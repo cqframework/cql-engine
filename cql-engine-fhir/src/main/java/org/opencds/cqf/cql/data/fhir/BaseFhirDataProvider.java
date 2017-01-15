@@ -78,8 +78,8 @@ public abstract class BaseFhirDataProvider implements DataProvider
         // TODO: This ought to work, but I'm getting an incorrect month value returned from the Hapi DateType, looks like a Java Calendar problem?
         switch (value.getPrecision()) {
             case YEAR: return new DateTime(value.getYear());
-            case MONTH: return new DateTime(value.getYear(), value.getMonth());
-            case DAY: return new DateTime(value.getYear(), value.getMonth(), value.getDay());
+            case MONTH: return new DateTime(value.getYear(), value.getMonth() + 1); // Month is zero based in DateType.
+            case DAY: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }

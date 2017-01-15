@@ -29,7 +29,9 @@ subprojects {
         }	
     }
 
-    dependencies {        
+    dependencies {
+        testCompile group: 'info.cqframework', name: 'cql', version: '1.2.0-SNAPSHOT'
+        testCompile group: 'info.cqframework', name: 'model', version: '1.2.0-SNAPSHOT'
         testCompile group: 'info.cqframework', name: 'cql-to-elm', version: '1.2.0-SNAPSHOT'
         testCompile group: 'info.cqframework', name: 'quick', version: '1.2.0-SNAPSHOT'
         testCompile group: 'org.testng', name: 'testng', version: '6.8.8'
