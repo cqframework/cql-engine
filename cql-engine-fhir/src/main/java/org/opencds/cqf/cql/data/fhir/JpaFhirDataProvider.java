@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by Chris Schuler on 12/15/2016.
  */
-public class JpaFhirDataProvider extends BaseFhirDataProvider {
+public class JpaFhirDataProvider extends FhirDataProvider {
 
     // need these to access the dao
     private HashMap<String, IResourceProvider> providers;
