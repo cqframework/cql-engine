@@ -53,8 +53,6 @@ public class FhirDataProvider extends BaseFhirDataProvider {
     }
 
     private IGenericClient fhirClient;
-
-    // TODO: It would be nice not to have to expose this, but I needed it in the MeasureEvaluator....
     public IGenericClient getFhirClient() {
         return fhirClient;
     }

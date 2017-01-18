@@ -33,19 +33,6 @@ public class JpaFhirDataProvider extends FhirDataProvider {
         }
     }
 
-    private String endpoint;
-    public String getEndpoint() {
-        return endpoint;
-    }
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-        fhirClient = fhirContext.newRestfulGenericClient(endpoint);
-    }
-    public JpaFhirDataProvider withEndpoint(String endpoint) {
-        setEndpoint(endpoint);
-        return this;
-    }
-
     private TerminologyProvider terminologyProvider;
     public TerminologyProvider getTerminologyProvider() {
         return terminologyProvider;
@@ -60,13 +47,6 @@ public class JpaFhirDataProvider extends FhirDataProvider {
     }
     public void setExpandValueSets(boolean expandValueSets) {
         this.expandValueSets = expandValueSets;
-    }
-
-    private IGenericClient fhirClient;
-
-    // TODO: It would be nice not to have to expose this, but I needed it in the MeasureEvaluator....
-    public IGenericClient getFhirClient() {
-        return fhirClient;
     }
 
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,

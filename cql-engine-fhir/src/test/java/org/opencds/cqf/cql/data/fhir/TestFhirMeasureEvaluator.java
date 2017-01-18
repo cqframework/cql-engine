@@ -78,7 +78,7 @@ public class TestFhirMeasureEvaluator {
         cal.set(2014, 12, 31, 11, 59, 59);
         Date periodEnd = cal.getTime();
 
-        org.hl7.fhir.dstu3.model.MeasureReport report = evaluator.evaluate(provider.getFhirClient(), context, measure, patient, periodStart, periodEnd);
+        org.hl7.fhir.dstu3.model.MeasureReport report = evaluator.evaluate(context, measure, patient, periodStart, periodEnd);
 
         if (report == null) {
             throw new RuntimeException("MeasureReport is null");
@@ -199,7 +199,7 @@ public class TestFhirMeasureEvaluator {
         cal.set(2014, 12, 31, 11, 59, 59);
         Date periodEnd = cal.getTime();
 
-        org.hl7.fhir.dstu3.model.MeasureReport report = evaluator.evaluate(provider.getFhirClient(), context, measure, patient, periodStart, periodEnd);
+        org.hl7.fhir.dstu3.model.MeasureReport report = evaluator.evaluate(context, measure, patient, periodStart, periodEnd);
 
         if (report == null) {
             throw new RuntimeException("MeasureReport is null");
