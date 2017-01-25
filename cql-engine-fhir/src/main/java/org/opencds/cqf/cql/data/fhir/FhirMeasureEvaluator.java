@@ -10,13 +10,14 @@ import org.opencds.cqf.cql.runtime.Interval;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.UUID;
 
 
 /**
  * Created by Bryn on 5/7/2016.
  */
 public class FhirMeasureEvaluator {
-    public MeasureReport evaluate(IGenericClient fhirClient, Context context, Measure measure, Patient patient, Date periodStart, Date periodEnd) {
+    public MeasureReport evaluate(Context context, Measure measure, Patient patient, Date periodStart, Date periodEnd) {
         MeasureReport report = new MeasureReport();
         report.setMeasure(new Reference(measure));
         report.setPatient(new Reference(patient));
@@ -65,16 +66,17 @@ public class FhirMeasureEvaluator {
             expressionNames.add(supplementalData.getCriteria());
         }
 
+        // TODO: Need to return both the MeasureReport and the EvaluatedResources Bundle
         FhirMeasureBundler bundler = new FhirMeasureBundler();
         //String[] expressionNameArray = new String[expressionNames.size()];
         //expressionNameArray = expressionNames.toArray(expressionNameArray);
         //org.hl7.fhir.dstu3.model.Bundle evaluatedResources = bundler.bundle(context, expressionNameArray);
         org.hl7.fhir.dstu3.model.Bundle evaluatedResources = bundler.bundle(resources.values());
-        String jsonString = fhirClient.getFhirContext().newJsonParser().encodeResourceToString(evaluatedResources);
-        ca.uhn.fhir.rest.api.MethodOutcome result = fhirClient.create().resource(evaluatedResources).execute();
-        report.setEvaluatedResources(new Reference(result.getId()));
-
-        //report.setEvaluatedResources(new Reference(bundleId));
+        evaluatedResources.setId(UUID.randomUUID().toString());
+        //String jsonString = fhirClient.getFhirContext().newJsonParser().encodeResourceToString(evaluatedResources);
+        //ca.uhn.fhir.rest.api.MethodOutcome result = fhirClient.create().resource(evaluatedResources).execute();
+        report.setEvaluatedResources(new Reference('#' + evaluatedResources.getId()));
+        report.addContained(evaluatedResources);
         return report;
     }
 }
