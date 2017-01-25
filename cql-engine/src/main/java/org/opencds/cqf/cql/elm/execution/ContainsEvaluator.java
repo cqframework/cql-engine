@@ -21,13 +21,17 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
 
   @Override
   public Object evaluate(Context context) {
-    Object test = getOperand().get(0).evaluate(context);
+    Object operand = getOperand().get(0).evaluate(context);
 
-    if (test instanceof Interval) {
-      Interval left = (Interval)test;
+    if (operand == null) {
+      return null;
+    }
+
+    if (operand instanceof Interval) {
+      Interval left = (Interval)operand;
       Object right = getOperand().get(1).evaluate(context);
 
-      if (left != null && right != null) {
+      if (right != null) {
         Object leftStart = left.getStart();
         Object leftEnd = left.getEnd();
 
@@ -36,13 +40,13 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
       return null;
     }
 
-    else if (test instanceof Iterable) {
-      Iterable<Object> list = (Iterable<Object>)test;
+    else if (operand instanceof Iterable) {
+      Iterable<Object> list = (Iterable<Object>)operand;
       Object testElement = getOperand().get(1).evaluate(context);
 
       return InEvaluator.in(testElement, list);
     }
 
-    throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", test.getClass().getName()));
+    throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", operand.getClass().getName()));
   }
 }

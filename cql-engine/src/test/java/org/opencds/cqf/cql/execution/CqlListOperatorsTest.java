@@ -21,8 +21,11 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result;
 
-        // result = context.resolveExpressionRef("ContainsABNullHasNull").getExpression().evaluate(context);
-        // assertThat(result, is(false));
+        result = context.resolveExpressionRef("ContainsABNullHasNull").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ContainsNullFirst").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("ContainsABCHasA").getExpression().evaluate(context);
         assertThat(result, is(true));

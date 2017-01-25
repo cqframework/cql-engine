@@ -1,13 +1,16 @@
 package org.opencds.cqf.cql.execution;
 
+import org.joda.time.Partial;
+import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
 import org.testng.annotations.Test;
+
 import java.math.BigDecimal;
-import java.util.*;
-import org.joda.time.Partial;
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -203,6 +206,12 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         */
         result = context.resolveExpressionRef("TestContainsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TestNullElement1").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TestNullElement2").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("IntegerIntervalContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));

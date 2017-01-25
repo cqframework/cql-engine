@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Value;
-import org.opencds.cqf.cql.runtime.DateTime;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -49,11 +48,11 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
   public static Boolean in(Object testElement, Interval interval) {
     if (testElement == null) { return null; }
-    Object rightStart = ((Interval)interval).getStart();
-    Object rightEnd = ((Interval)interval).getEnd();
+    Object rightStart = interval.getStart();
+    Object rightEnd = interval.getEnd();
 
-    if (rightStart == null && ((Interval)interval).getLowClosed()) { return true; }
-    else if (rightEnd == null && ((Interval)interval).getHighClosed()) { return true; }
+    if (rightStart == null && interval.getLowClosed()) { return true; }
+    else if (rightEnd == null && interval.getHighClosed()) { return true; }
     else if (rightStart == null || rightEnd == null) { return null; }
 
     return (Value.compareTo(testElement, rightStart, ">=") && Value.compareTo(testElement, rightEnd, "<="));

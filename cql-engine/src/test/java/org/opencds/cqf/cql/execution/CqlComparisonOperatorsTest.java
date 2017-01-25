@@ -482,7 +482,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         // assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("EquivNullTrue").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("EquivInt1Int1").getExpression().evaluate(context);
         assertThat(result, is(true));
