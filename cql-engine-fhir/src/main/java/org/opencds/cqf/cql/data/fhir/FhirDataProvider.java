@@ -143,7 +143,7 @@ public class FhirDataProvider extends BaseFhirDataProvider {
                 throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
               }
 
-              params.append(String.format("%s=%s%s",
+              params.append(String.format("&%s=%s%s",
                       lowDatePath,
                       dateRange.getLowClosed() ? "ge" : "gt",
                       dateRange.getLow().toString()));
@@ -155,7 +155,7 @@ public class FhirDataProvider extends BaseFhirDataProvider {
                 throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
               }
 
-              params.append(String.format("%s=%s%s",
+              params.append(String.format("&%s=%s%s",
                       highDatePath,
                       dateRange.getHighClosed() ? "le" : "lt",
                       dateRange.getHigh().toString()));
