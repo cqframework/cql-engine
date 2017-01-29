@@ -7,6 +7,7 @@ import org.opencds.cqf.cql.execution.Variable;
 import org.opencds.cqf.cql.runtime.Value;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static org.opencds.cqf.cql.runtime.Value.ensureIterable;
@@ -104,14 +105,24 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 shouldInclude = true;
                 resolveRelationship(context);
                 resolveWhere(context);
-				if (shouldInclude)
-					result.add(resolveResult(context, element));
+                if (shouldInclude) {
+                    Object r = resolveResult(context, element);
+                    if (!(r instanceof Iterable)) {
+                        sourceIsList = false;
+                    }
+                    result.add(r);
+                }
             }
         }
 
         if (this.getReturn() != null && this.getReturn().isDistinct()) {
             result = DistinctEvaluator.distinct(result);
         }
+
+        if (result.size() > 1) {
+            sourceIsList = true;
+        }
+
         sortResult(result);
 
         context.pop();
@@ -132,6 +143,18 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
         org.cqframework.cql.elm.execution.AliasedQuerySource source = this.getSource().get(0);
         Object sourceObject = source.getExpression().evaluate(context);
+
+        if (sourceObject instanceof Iterable) {
+            Iterable i = (Iterable)sourceObject;
+            Iterator it = i.iterator();
+            int count = 0;
+            while (it.hasNext()) {
+                it.next();
+                count++;
+            }
+
+        }
+
         boolean sourceIsList = sourceObject instanceof Iterable;
         Iterable<Object> sourceData = ensureIterable(sourceObject);
         List<Object> result = new ArrayList<>();
@@ -143,9 +166,14 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 shouldInclude = true;
                 resolveRelationship(context);
                 resolveWhere(context);
-                Object o = resolveResult(context, element);
-				if (shouldInclude)
-					result.add(resolveResult(context, element));
+
+				if (shouldInclude) {
+                    Object r = resolveResult(context, element);
+                    if (!(r instanceof Iterable)) {
+                        sourceIsList = false;
+                    }
+                    result.add(r);
+                }
             }
             finally {
                 context.pop();
@@ -155,6 +183,11 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         if (this.getReturn() != null && this.getReturn().isDistinct()) {
             result = DistinctEvaluator.distinct(result);
         }
+
+        if (result.size() > 1) {
+            sourceIsList = true;
+        }
+
         sortResult(result);
 
         return sourceIsList ? result : result.get(0);

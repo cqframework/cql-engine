@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.data.fhir;
 
 import org.hl7.fhir.dstu3.model.Bundle;
 import ca.uhn.fhir.rest.client.IGenericClient;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -46,7 +48,7 @@ public class FhirBundleCursor implements Iterable<Object> {
          */
         public boolean hasNext() {
             return current < results.getEntry().size() - 1
-                    || results.getLink(results.LINK_NEXT) != null;
+                    || results.getLink(IBaseBundle.LINK_NEXT) != null;
         }
 
         /**
