@@ -300,7 +300,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
                 case "NamingSystemIdentifierType": typeName = "NamingSystem$NamingSystemIdentifierType"; break;
                 case "AccountStatus": typeName = "Account$AccountStatus"; break;
                 case "ProcedureRequestPriority": typeName = "ProcedureRequest$ProcedureRequestPriority"; break;
-                case "MedicationDispenseStatus": typeName = "MedicationDispsense$MedicationDispenseStatus"; break;
+                case "MedicationDispenseStatus": typeName = "MedicationDispense$MedicationDispenseStatus"; break;
                 case "IdentifierUse": typeName = "Identifier$IdentifierUse"; break;
                 case "DigitalMediaType": typeName = "Media$DigitalMediaType"; break;
                 case "TestReportParticipantType": typeName = "TestReport$TestReportParticipantType"; break;
