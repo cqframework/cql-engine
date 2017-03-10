@@ -419,6 +419,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeDurationBetweenMonthUncertain7").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("DurationInYears").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
         result = context.resolveExpressionRef("TimeDurationBetweenHour").getExpression().evaluate(context);
         assertThat(result, is(2));
 

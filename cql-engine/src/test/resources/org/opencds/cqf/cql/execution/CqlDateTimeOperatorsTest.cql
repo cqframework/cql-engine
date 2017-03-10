@@ -139,6 +139,11 @@ define DateTimeDurationBetweenMonthUncertain4: months between DateTime(2005) and
 define DateTimeDurationBetweenMonthUncertain5: months between DateTime(2005) and DateTime(2006, 7) = 24
 define DateTimeDurationBetweenMonthUncertain6: months between DateTime(2005) and DateTime(2006, 7) >= 5
 define DateTimeDurationBetweenMonthUncertain7: months between DateTime(2005) and DateTime(2006, 7) <= 24
+
+define DateTime1: @2012-03-10T10:20:00
+define DateTime2: @2013-03-10T09:20:00
+define DurationInYears: years between (date from DateTime1) and (date from DateTime2)
+
 define TimeDurationBetweenHour: hours between @T20:26:15.555 and @T23:25:15.555
 define TimeDurationBetweenMinute: minutes between @T23:20:16.555 and @T23:25:15.555
 define TimeDurationBetweenSecond: seconds between @T23:25:10.556 and @T23:25:15.555
