@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 
@@ -20,7 +22,8 @@ public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFro
     Object operand = getOperand().evaluate(context);
 
     if (operand instanceof DateTime) {
-      return (DateTime)operand;
+      LocalDate date = new LocalDate(((DateTime)operand).getPartial());
+      return new DateTime().withPartial(new Partial(date));
     }
     throw new IllegalArgumentException(String.format("Cannot DateFrom arguments of type '%s'.", operand.getClass().getName()));
   }

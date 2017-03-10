@@ -1,7 +1,10 @@
 .DS_Store
-
+.gradle
+.idea
+*.iml
 /Src/java/.nb-gradle/
-/.idea
+/cql-engine/*.iml
 /cql-engine/build
+/cql-engine/src/generated
 /cql-engine-fhir/build
-
+/cql-engine-fhir/*.iml
