@@ -1,21 +1,14 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IQuery;
-import org.opencds.cqf.cql.data.DataProvider;
+import org.hl7.fhir.dstu3.model.Bundle;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.Enumeration;
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.net.URLEncoder;
 
 /**
@@ -101,7 +94,7 @@ public class FhirDataProvider extends BaseFhirDataProvider {
                 params.append("&");
             }
 
-            params.append(String.format("%s=Patient/%s", getPatientSearchParam(dataType), URLEncode((String)contextValue)));
+            params.append(String.format("%s=%s", getPatientSearchParam(dataType), URLEncode((String)contextValue)));
         }
 
         if (codePath != null && !codePath.equals("")) {
