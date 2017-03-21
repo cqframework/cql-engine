@@ -49,12 +49,12 @@ public class DateTime {
   }
 
   public static int getFieldIndex(String dateTimeElement) {
-    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("year", "month", "day", "hour", "minute", "second", "millisecond"));
+    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("year", "month", "day", "hour", "minute", "second", "millisecond", "week"));
     return indexes.indexOf(dateTimeElement.toLowerCase());
   }
 
   public static int getFieldIndex2(String dateTimeElement) {
-    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("years", "months", "days", "hours", "minutes", "seconds", "milliseconds"));
+    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("years", "months", "days", "hours", "minutes", "seconds", "milliseconds", "weeks"));
     return indexes.indexOf(dateTimeElement.toLowerCase());
   }
 

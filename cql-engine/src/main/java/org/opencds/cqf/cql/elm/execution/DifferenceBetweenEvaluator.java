@@ -1,17 +1,15 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.*;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
-
-// for Uncertainty
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.runtime.Uncertainty;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import org.joda.time.*;
+// for Uncertainty
 
 /*
 difference in precision between(low DateTime, high DateTime) Integer
@@ -62,6 +60,7 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
               if (dt) { ret += rightTrunc.getValue(idx) - leftTrunc.getValue(idx); }
               else { ret += rightTrunc.getValue(idx - 3) - leftTrunc.getValue(idx - 3); }
               break;
+      case 7: ret = Days.daysBetween(leftTrunc, rightTrunc).getDays() / 7;
     }
     return ret;
   }
@@ -86,6 +85,12 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
 
       if (idx != -1) {
 
+        boolean weeks = false;
+        if (idx == 7) {
+          idx = 2;
+          weeks = true;
+        }
+
         // Uncertainty
         if (Uncertainty.isUncertain(leftDT, precision)) {
           ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
@@ -108,6 +113,10 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
 
         Partial leftTrunc = new Partial(DateTime.getFields(idx + 1), a);
         Partial rightTrunc = new Partial(DateTime.getFields(idx + 1), b);
+
+        if (weeks) {
+          idx = 7;
+        }
 
         return between(leftTrunc, rightTrunc, idx, true);
       }

@@ -1,17 +1,15 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.*;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
-
-// for Uncertainty
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.runtime.Uncertainty;
 
-import java.util.Arrays;
 import java.util.ArrayList;
 
-import org.joda.time.*;
+// for Uncertainty
 
 /*
 duration between(low DateTime, high DateTime) Integer
@@ -54,6 +52,7 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
               // now do the actual millisecond DurationBetween - add to ret
               ret += rightDT.getPartial().getValue(idx) - leftDT.getPartial().getValue(idx);
               break;
+      case 7: ret = Days.daysBetween(leftDT.getPartial(), rightDT.getPartial()).getDays() / 7;
     }
     return ret;
   }

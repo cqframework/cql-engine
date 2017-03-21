@@ -1,9 +1,5 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.joda.time.IllegalFieldValueException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -33,6 +29,9 @@ public class Uncertainty {
 
   public static boolean isUncertain(DateTime dt, String precision) {
     try {
+      if (precision.toLowerCase().equals("weeks") || precision.toLowerCase().equals("week")) {
+        precision = "Day";
+      }
       int test = dt.getPartial().getValue(dt.getFieldIndex(precision));
     } catch (IndexOutOfBoundsException e) {
       return true;

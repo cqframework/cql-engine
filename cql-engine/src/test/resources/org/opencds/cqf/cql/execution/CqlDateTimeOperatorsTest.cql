@@ -112,6 +112,9 @@ define DateTimeDifferenceHour: difference in hours between DateTime(2000, 4, 1, 
 define DateTimeDifferenceMinute: difference in minutes between DateTime(2005, 12, 10, 5, 16) and DateTime(2005, 12, 10, 5, 25)
 define DateTimeDifferenceSecond: difference in seconds between DateTime(2000, 10, 10, 10, 5, 45) and DateTime(2000, 10, 10, 10, 5, 50)
 define DateTimeDifferenceMillisecond: difference in milliseconds between DateTime(2000, 10, 10, 10, 5, 45, 500) and DateTime(2000, 10, 10, 10, 5, 45, 900)
+define DateTimeDifferenceWeeks: difference in weeks between DateTime(2000, 10, 15) and DateTime(2000, 10, 28)
+define DateTimeDifferenceWeeks2: difference in weeks between DateTime(2000, 10, 15) and DateTime(2000, 10, 29)
+define DateTimeDifferenceWeeks3: weeks between @2012-03-10T22:05:09 and @2012-03-24T07:19:33
 define DateTimeDifferenceNegative: difference in years between DateTime(2016) and DateTime(1998)
 define DateTimeDifferenceUncertain: difference in months between DateTime(2005) and DateTime(2006, 7) > 5
 define TimeDifferenceHour: difference in hours between @T20:20:15.555 and @T23:25:15.555
@@ -143,6 +146,10 @@ define DateTimeDurationBetweenMonthUncertain7: months between DateTime(2005) and
 define DateTime1: @2012-03-10T10:20:00
 define DateTime2: @2013-03-10T09:20:00
 define DurationInYears: years between (date from DateTime1) and (date from DateTime2)
+
+define DurationInWeeks: weeks between @2012-03-10T22:05:09 and @2012-03-20T07:19:33
+define DurationInWeeks2: weeks between @2012-03-10T22:05:09 and @2012-03-24T07:19:33
+define DurationInWeeks3: weeks between @2012-03-10T06:05:09 and @2012-03-24T07:19:33
 
 define TimeDurationBetweenHour: hours between @T20:26:15.555 and @T23:25:15.555
 define TimeDurationBetweenMinute: minutes between @T23:20:16.555 and @T23:25:15.555

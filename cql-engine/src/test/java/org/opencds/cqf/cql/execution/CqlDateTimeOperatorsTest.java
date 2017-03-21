@@ -346,6 +346,15 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeDifferenceMillisecond").getExpression().evaluate(context);
         assertThat(result, is(400));
 
+        result = context.resolveExpressionRef("DateTimeDifferenceWeeks").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DateTimeDifferenceWeeks2").getExpression().evaluate(context);
+        assertThat(result, is(2));
+
+        result = context.resolveExpressionRef("DateTimeDifferenceWeeks2").getExpression().evaluate(context);
+        assertThat(result, is(2));
+
         result = context.resolveExpressionRef("DateTimeDifferenceNegative").getExpression().evaluate(context);
         assertThat(result, is(-18));
 
@@ -370,6 +379,15 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("DateTimeDurationBetweenYear").getExpression().evaluate(context);
         assertThat(result, is(5));
+
+        result = context.resolveExpressionRef("DurationInWeeks").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DurationInWeeks2").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DurationInWeeks3").getExpression().evaluate(context);
+        assertThat(result, is(2));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenYearOffset").getExpression().evaluate(context);
         assertThat(result, is(4));
