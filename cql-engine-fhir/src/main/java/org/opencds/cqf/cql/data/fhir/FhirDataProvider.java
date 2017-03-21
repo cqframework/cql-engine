@@ -10,6 +10,8 @@ import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Bryn on 4/16/2016.
@@ -163,8 +165,20 @@ public class FhirDataProvider extends BaseFhirDataProvider {
             search = fhirClient.search().byUrl(String.format("%s", dataType));
         }
 
-        Bundle results = search.returnBundle(Bundle.class).execute();
+        Bundle results = cleanEntry(search.returnBundle(Bundle.class).execute(), dataType);
+
         return new FhirBundleCursor(fhirClient, results);
+    }
+
+    private Bundle cleanEntry(Bundle bundle, String dataType) {
+        List<Bundle.BundleEntryComponent> entry = new ArrayList<>();
+        for (Bundle.BundleEntryComponent comp : bundle.getEntry()){
+            if (comp.getResource().getResourceType().name().equals(dataType)) {
+                entry.add(comp);
+            }
+        }
+        bundle.setEntry(entry);
+        return bundle;
     }
 
     private String getPatientSearchParam(String dataType) {

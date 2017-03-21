@@ -5,11 +5,11 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.joda.time.Partial;
-import org.testng.annotations.Test;
 import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +21,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class TestFhirDataProvider {
 
-    /* TODO: Fix this test --
-        java.lang.IllegalArgumentException: Unknown TypeRestfulInteraction code 'patch'
-            at org.hl7.fhir.dstu3.model.CapabilityStatement$TypeRestfulInteractionEnumFactory.fromCode(CapabilityStatement.java:507) */
-    //@Test
+    @Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
         IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
@@ -33,9 +30,21 @@ public class TestFhirDataProvider {
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    /* TODO: Fix this test --
-        java.lang.IllegalArgumentException: Unknown TypeRestfulInteraction code 'patch'
-            at org.hl7.fhir.dstu3.model.CapabilityStatement$TypeRestfulInteractionEnumFactory.fromCode(CapabilityStatement.java:507) */
+    @Test
+    public void testDataProviderRetrieve() {
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
+
+//        Iterator it = results.iterator();
+//        List<Patient> patients = new ArrayList<>();
+//       while(it.hasNext()) {
+//            patients.add((Patient) it.next());
+//        }
+//
+//        assertTrue(patients.size() > 0);
+        assertTrue(results.iterator().hasNext());
+    }
+
     @Test
     public void testPatientRetrieve() {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
