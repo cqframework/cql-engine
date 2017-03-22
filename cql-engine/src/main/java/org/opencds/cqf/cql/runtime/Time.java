@@ -83,4 +83,9 @@ public class Time {
     int [] values = { dt.hourOfDay().get(), dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
     return new Time().withPartial(new Partial(fields, values)).withTimezoneOffset(new BigDecimal(0));
   }
+
+  @Override
+  public String toString() {
+    return this.getPartial().toString();
+  }
 }

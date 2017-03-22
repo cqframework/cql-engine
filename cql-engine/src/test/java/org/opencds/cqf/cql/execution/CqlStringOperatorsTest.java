@@ -239,4 +239,28 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("UpperAB").getExpression().evaluate(context);
         assertThat(result, is("AB"));
     }
+
+//    @Test
+//    public void testToString() throws JAXBException {
+//        Context context = new Context(library);
+//        Object result = context.resolveExpressionRef("QuantityToString").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("DateTimeToString1").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("DateTimeToString2").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("DateTimeToString3").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("TimeToString1").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("TupleToString").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("IntervalToString").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("UncertaintyToString").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("CodeToString").getExpression().evaluate(context);
+//
+//        result = context.resolveExpressionRef("ConceptToString").getExpression().evaluate(context);
+//    }
 }

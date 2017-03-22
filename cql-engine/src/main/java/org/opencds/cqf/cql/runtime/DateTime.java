@@ -223,4 +223,9 @@ public class DateTime {
     }
     return true;
   }
+
+  @Override
+  public String toString() {
+    return this.getPartial().toString();
+  }
 }

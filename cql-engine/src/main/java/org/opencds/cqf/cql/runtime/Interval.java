@@ -1,12 +1,10 @@
 package org.opencds.cqf.cql.runtime;
 
 import org.apache.commons.lang3.NotImplementedException;
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
+import org.joda.time.Partial;
 import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
 import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
-import org.joda.time.Partial;
+
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 
@@ -235,5 +233,10 @@ public class Interval {
         }
 
         throw new NotImplementedException(String.format("MaxValue is not implemented for type %s.", type.getTypeName()));
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Interval [ %s, %s ]", getLow().toString(), getHigh().toString());
     }
 }

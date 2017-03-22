@@ -127,4 +127,8 @@ public class Uncertainty {
     return new ArrayList<Interval>(Arrays.asList(leftU, rightU));
   }
 
+  @Override
+  public String toString() {
+    return getUncertaintyInterval().toString();
+  }
 }

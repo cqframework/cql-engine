@@ -1,5 +1,7 @@
 library StringOperator version '1'
 
+codesystem "LOINC": 'http://loinc.org'
+
 context Population
 
 //Combine
@@ -69,3 +71,15 @@ define UpperEmpty : Upper('')
 define UpperA : Upper('a')
 define UpperB : Upper('B')
 define UpperAB : Upper('aB')
+
+// toString tests
+define QuantityToString: 125 'cm'
+define DateTimeToString1: DateTime(2000, 1, 1)
+define DateTimeToString2: DateTime(2000, 1, 1, 15, 25, 25, 300)
+define DateTimeToString3: DateTime(2000, 1, 1, 8, 25, 25, 300, -7)
+define TimeToString1: @T09:30:01.003
+define TupleToString: Tuple { this: 'is', a: 123, test: 25 'g' }
+define IntervalToString: Interval [ DateTime(1999, 12, 31), DateTime(2000, 1, 1) ]
+define UncertaintyToString: difference in months between DateTime(2005) and DateTime(2006, 7)
+define CodeToString: Code { code: '4225-6', system: 'http://loinc.org', version: '2.1', display: 'loinc' }
+define ConceptToString: Concept { Code '66071002' from "LOINC", Code 'B18.1' from "LOINC"} display 'Type B viral hepatitis'

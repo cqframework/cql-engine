@@ -66,4 +66,12 @@ public class Code {
 
         return false;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Code { code: %s, system: %s, version: %s, display: %s }",
+                getCode(), getSystem(), getVersion(), getDisplay()
+        );
+    }
 }

@@ -14,7 +14,7 @@ public class Tuple {
   }
 
   public HashMap<String, Object> getElements() {
-    if (elements == null) { return new HashMap<String, Object>(); }
+    if (elements == null) { return new HashMap<>(); }
     return elements;
   }
 
@@ -25,5 +25,14 @@ public class Tuple {
   public Tuple withElements(HashMap<String, Object> elements) {
     setElements(elements);
     return this;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder("Tuple {\n");
+    for (String key : elements.keySet()) {
+      builder.append("\t").append(key).append(" -> ").append(elements.get(key)).append("\n");
+    }
+    return builder.append("}").toString();
   }
 }

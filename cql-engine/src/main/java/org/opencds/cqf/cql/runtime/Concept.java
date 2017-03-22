@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.cqframework.cql.elm.execution.In;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,5 +53,15 @@ public class Concept {
         }
 
         return true;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder().append("Concept {\n");
+        for (Code code : getCodes()) {
+            builder.append("\t").append(code.toString()).append("\n");
+        }
+
+        return builder.append("}").toString();
     }
 }
