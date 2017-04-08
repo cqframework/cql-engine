@@ -75,6 +75,7 @@ public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InVal
     else if (code instanceof Concept) {
       for (ValueSetInfo vsi : valueSetInfos) {
         for (Code codes : ((Concept)code).getCodes()) {
+          if (codes == null) return null;
           if (provider.in(codes, vsi)) { return true; }
         }
         return false;

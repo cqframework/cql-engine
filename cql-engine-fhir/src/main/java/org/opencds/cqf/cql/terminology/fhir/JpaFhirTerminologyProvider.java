@@ -29,8 +29,10 @@ public class JpaFhirTerminologyProvider implements TerminologyProvider {
     @Override
     public boolean in(Code code, ValueSetInfo valueSet) throws ResourceNotFoundException {
         for (Code c : expand(valueSet)) {
-            if (c.getCode().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
+            if (c == null) continue;
+            if (c.getCode().equals(code.getCode()) && c.getSystem().equals(code.getSystem())) {
                 return true;
+            }
         }
         return false;
     }

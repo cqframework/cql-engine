@@ -153,7 +153,7 @@ define EquivalentDateTimeNull           : {DateTime(2001, 9, 11), DateTime(2012,
 define EquivalentDateTimeFalse          : {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} ~ {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 1)}
 define EquivalentTimeTrue               : { @T15:59:59.999, @T20:59:59.999 } ~ { @T15:59:59.999, @T20:59:59.999 }
 define EquivalentTimeNull               : { @T15:59:59.999, @T20:59:59.999 } ~ { @T15:59:59.999, @T20:59:59.999, null }
-define EquivalentTimeFalse               : { @T15:59:59.999, @T20:59:59.999 } ~ { @T15:59:59.999, @T20:59:59.995 }
+define EquivalentTimeFalse              : { @T15:59:59.999, @T20:59:59.999 } ~ { @T15:59:59.999, @T20:59:59.995 }
 
 //NotEqual
 define NotEqualEmptyAndEmpty : {} != {}
