@@ -21,81 +21,89 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testAdd() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("DateTimeAdd5Years").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2010, 10, 10})));
+        Context context = new Context(library);
 
-      try {
-        result = context.resolveExpressionRef("DateTimeAddInvalidYears").getExpression().evaluate(context);
-      } catch (ArithmeticException ae) {
+        // simple cache test -- watching behavior while stepping through tests
+        context.setExpressionCaching(true);
+
+        Object result = context.resolveExpressionRef("DateTimeAdd5Years").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2010, 10, 10})));
+
+        try {
+        result = context.resolveExpressionRef("DateTimeAddInvalidYears").evaluate(context);
+        } catch (ArithmeticException ae) {
         assertThat(ae.getMessage(), is("The date time addition results in a year greater than the accepted range."));
-      }
+        }
 
-      result = context.resolveExpressionRef("DateTimeAdd5Months").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 10, 10})));
+        result = context.resolveExpressionRef("DateTimeAdd5Months").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 10, 10})));
 
-      result = context.resolveExpressionRef("DateTimeAddMonthsOverflow").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2006, 3, 10})));
+        result = context.resolveExpressionRef("DateTimeAddMonthsOverflow").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2006, 3, 10})));
 
-      result = context.resolveExpressionRef("DateTimeAdd5Days").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 15})));
+        result = context.resolveExpressionRef("DateTimeAdd5Days").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 15})));
 
-      result = context.resolveExpressionRef("DateTimeAddDaysOverflow").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 7, 1})));
+        result = context.resolveExpressionRef("DateTimeAddDaysOverflow").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 7, 1})));
 
-      result = context.resolveExpressionRef("DateTimeAdd5Hours").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 10})));
+        result = context.resolveExpressionRef("DateTimeAdd5Hours").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 10})));
 
-      result = context.resolveExpressionRef("DateTimeAddHoursOverflow").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 11, 0})));
+        result = context.resolveExpressionRef("DateTimeAddHoursOverflow").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 11, 0})));
 
-      result = context.resolveExpressionRef("DateTimeAdd5Minutes").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 10})));
+        result = context.resolveExpressionRef("DateTimeAdd5Minutes").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 10})));
 
-      result = context.resolveExpressionRef("DateTimeAddMinutesOverflow").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 6, 0})));
+        result = context.resolveExpressionRef("DateTimeAddMinutesOverflow").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 6, 0})));
 
-      result = context.resolveExpressionRef("DateTimeAdd5Seconds").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 10})));
+        result = context.resolveExpressionRef("DateTimeAdd5Seconds").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 10})));
 
-      result = context.resolveExpressionRef("DateTimeAddSecondsOverflow").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 6, 0})));
+        result = context.resolveExpressionRef("DateTimeAddSecondsOverflow").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 6, 0})));
 
-      result = context.resolveExpressionRef("DateTimeAdd5Milliseconds").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 10})));
+        result = context.resolveExpressionRef("DateTimeAdd5Milliseconds").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 10})));
 
-      result = context.resolveExpressionRef("DateTimeAddMillisecondsOverflow").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 6, 0})));
+        result = context.resolveExpressionRef("DateTimeAddMillisecondsOverflow").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 6, 0})));
 
-      result = context.resolveExpressionRef("DateTimeAddLeapYear").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2013, 2, 28})));
+        result = context.resolveExpressionRef("DateTimeAddLeapYear").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2013, 2, 28})));
 
-      result = context.resolveExpressionRef("DateTimeAdd2YearsByMonths").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+        result = context.resolveExpressionRef("DateTimeAdd2YearsByMonths").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
 
-      result = context.resolveExpressionRef("DateTimeAdd2YearsByDays").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+        result = context.resolveExpressionRef("DateTimeAdd2YearsByDays").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
 
-      result = context.resolveExpressionRef("DateTimeAdd2YearsByDaysRem5Days").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+        result = context.resolveExpressionRef("DateTimeAdd2YearsByDaysRem5Days").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
 
-      result = context.resolveExpressionRef("TimeAdd5Hours").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        result = context.resolveExpressionRef("TimeAdd5Hours").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
 
-      result = context.resolveExpressionRef("TimeAdd1Minute").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 59, 999})));
+        result = context.resolveExpressionRef("TimeAdd1Minute").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 59, 999})));
 
-      result = context.resolveExpressionRef("TimeAdd1Second").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 999})));
+        result = context.resolveExpressionRef("TimeAdd1Second").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 999})));
 
-      result = context.resolveExpressionRef("TimeAdd1Millisecond").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 0})));
+        result = context.resolveExpressionRef("TimeAdd1Millisecond").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 0})));
 
-      result = context.resolveExpressionRef("TimeAdd5Hours1Minute").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {21, 0, 59, 999})));
+        result = context.resolveExpressionRef("TimeAdd5Hours1Minute").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {21, 0, 59, 999})));
 
-      result = context.resolveExpressionRef("TimeAdd5hoursByMinute").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        // checking access ordering and returning correct result
+        result = context.resolveExpressionRef("TimeAdd1Second").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 999})));
+
+        result = context.resolveExpressionRef("TimeAdd5hoursByMinute").evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
     }
 
     /**

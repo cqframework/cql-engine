@@ -6,15 +6,19 @@ import org.opencds.cqf.cql.data.SystemDataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import javax.xml.namespace.QName;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * Created by Bryn on 4/12/2016.
  */
 public class Context {
+
+    private boolean enableExpressionCache = false;
+    private LinkedHashMap expressions = new LinkedHashMap(15, 0.9f, true) {
+        protected boolean removeEldestEntry(Map.Entry eldest) {
+            return size() > 10;
+        }
+    };
 
     private Map<String, Object> parameters = new HashMap<>();
     private Stack<String> currentContext = new Stack<>();
@@ -34,6 +38,26 @@ public class Context {
 		if (library.getIdentifier() != null)
 			libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+    }
+
+    public void setExpressionCaching(boolean yayOrNay) {
+        this.enableExpressionCache = yayOrNay;
+    }
+
+    public boolean isExpressionInCache(String name) {
+        return this.expressions.containsKey(name);
+    }
+
+    public boolean isExpressionCachingEnabled() {
+        return this.enableExpressionCache;
+    }
+
+    public void addExpressionToCache(String name, Object result) {
+        this.expressions.put(name, result);
+    }
+
+    public Object getExpressionResultFromCache(String name) {
+        return this.expressions.get(name);
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
