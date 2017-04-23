@@ -14,6 +14,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
+import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -156,7 +157,7 @@ public class TestFhirMeasureEvaluator {
         return library;
     }
 
-    //@Test
+    @Test
     public void TestMeasure() throws IOException, JAXBException {
         File cqlFile = new File(URLDecoder.decode(TestFhirMeasureEvaluator.class.getResource("library-test.cql").getFile(), "UTF-8"));
         String cql = FileUtils.readFileToString(cqlFile, StandardCharsets.UTF_8);
