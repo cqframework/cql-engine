@@ -167,32 +167,32 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testExp() throws JAXBException {
         Context context = new Context(library);
-        // Object result = context.resolveExpressionRef("ExpNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
-        //
-        // result = context.resolveExpressionRef("Exp0").getExpression().evaluate(context);
-        // assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
-        //
-        // result = context.resolveExpressionRef("ExpNeg0").getExpression().evaluate(context);
-        // assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
-        //
-        // result = context.resolveExpressionRef("Exp1").getExpression().evaluate(context);
-        // assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp(1d))));
-        //
-        // result = context.resolveExpressionRef("ExpNeg1").getExpression().evaluate(context);
-        // assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp((double) -1))));
-        //
-        // try {
-        //   result = context.resolveExpressionRef("Exp1000").getExpression().evaluate(context);
-        // } catch (ArithmeticException ae) {
-        //   assertThat(ae.getMessage(), is("Results in positive infinity"));
-        // }
-        //
-        // try {
-        //   result = context.resolveExpressionRef("Exp1000D").getExpression().evaluate(context);
-        // } catch (ArithmeticException ae) {
-        //   assertThat(ae.getMessage(), is("Results in positive infinity"));
-        // }
+        Object result = context.resolveExpressionRef("ExpNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("Exp0").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
+
+        result = context.resolveExpressionRef("ExpNeg0").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(1.0)));
+
+        result = context.resolveExpressionRef("Exp1").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp(1d))));
+
+        result = context.resolveExpressionRef("ExpNeg1").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp((double) -1))));
+
+        try {
+            result = context.resolveExpressionRef("Exp1000").getExpression().evaluate(context);
+        } catch (ArithmeticException ae) {
+            assertThat(ae.getMessage(), is("Results in positive infinity"));
+        }
+
+        try {
+            result = context.resolveExpressionRef("Exp1000D").getExpression().evaluate(context);
+        } catch (ArithmeticException ae) {
+            assertThat(ae.getMessage(), is("Results in positive infinity"));
+        }
     }
 
     /**

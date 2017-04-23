@@ -9,7 +9,6 @@ import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +20,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class TestFhirDataProvider {
 
-    @Test
+    //@Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
         IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
@@ -30,7 +29,7 @@ public class TestFhirDataProvider {
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    @Test
+    //@Test
     public void testDataProviderRetrieve() {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
@@ -45,7 +44,7 @@ public class TestFhirDataProvider {
         assertTrue(results.iterator().hasNext());
     }
 
-    @Test
+    //@Test
     public void testPatientRetrieve() {
         FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", "33775", "Patient", null, null, null, null, null, null, null, null);

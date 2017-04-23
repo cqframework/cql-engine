@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.rest.api.PreferReturnEnum;
-import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -54,7 +52,7 @@ public class FhirMeasureEvaluator {
                 }
                 MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
                 populationReport.setCount(count);
-                populationReport.setType(population.getType().toCode()); // TODO: It's not clear why these properties are represented differently in the HAPI client, they're the same type in the FHIR spec...
+                populationReport.setCode(population.getCode()); // TODO: It's not clear why these properties are represented differently in the HAPI client, they're the same type in the FHIR spec...
                 reportGroup.getPopulation().add(populationReport);
             }
         }

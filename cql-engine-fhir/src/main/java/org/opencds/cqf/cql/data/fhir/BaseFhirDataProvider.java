@@ -1,11 +1,7 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.primitive.BaseDateTimeDt;
-import ca.uhn.fhir.model.primitive.BoundCodeDt;
-import ca.uhn.fhir.model.primitive.DateDt;
 import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.dstu3.model.codesystems.DaysOfWeek;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -15,7 +11,6 @@ import org.opencds.cqf.cql.runtime.Time;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 

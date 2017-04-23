@@ -169,7 +169,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         // NOTE: The escape characters (i.e. the backslashes) remain in the string...
         Object result = context.resolveExpressionRef("StringTestEscapeQuotes").getExpression().evaluate(context);
-        assertThat(result, is("\\'I start with a single quote and end with a double quote\\\""));
+        assertThat(result, is("\'I start with a single quote and end with a double quote\""));
 
         // NOTE: This test returns "\u0048\u0069" instead of the string equivalent "Hi"
         // result = context.resolveExpressionRef("StringUnicodeTest").getExpression().evaluate(context);
