@@ -12,6 +12,6 @@ public class CodeDefEvaluator extends org.cqframework.cql.elm.execution.CodeDef 
     @Override
     public Object evaluate(Context context) {
         CodeSystemInfo info = (CodeSystemInfo) getCodeSystem().evaluate(context);
-        return context.resolveTerminologyProvider().lookup(new Code().withCode(this.getId()), info);
+        return new Code().withCode(this.getId()).withSystem(info.getId());
     }
 }
