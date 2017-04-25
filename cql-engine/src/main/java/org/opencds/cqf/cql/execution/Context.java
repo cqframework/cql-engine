@@ -105,6 +105,16 @@ public class Context {
         }
     }
 
+    public CodeDef resolveCodeRef(String name) {
+        for (CodeDef codeDef : getCurrentLibrary().getCodes().getDef()) {
+            if (codeDef.getName().equals(name)) {
+                return codeDef;
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("Could not resolve code reference '%s'.", name));
+    }
+
     private IncludeDef resolveLibraryRef(String libraryName) {
         for (IncludeDef includeDef : getCurrentLibrary().getIncludes().getDef()) {
             if (includeDef.getLocalIdentifier().equals(libraryName)) {

@@ -1,15 +1,22 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import org.cqframework.cql.cql2elm.*;
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
+import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
+import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Created by Christopher Schuler on 11/5/2016.
@@ -38,36 +45,32 @@ public class TestCrossResourceSearch {
         return libraryManager;
     }
 
-//    @Test
-//    public void test1 () throws JAXBException, IOException {
-//        ArrayList<Object> results = new ArrayList<>();
-//        Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir").toAbsolutePath();
-//        JsonFileBasedFhirProvider provider = new JsonFileBasedFhirProvider(System.getProperty("user.dir") +
-//                "/src/test/resources/org/opencds/cqf/cql/data/data", "http://nsengdevsfcluster.westus.cloudapp.azure.com:8314/terminology");
-//
-//        try {
-//            translate(new File(path.resolve("SimpleCrossResourceSearch.cql").toString()));
-//        } catch (IllegalArgumentException e) {
-//            System.out.println("Translation failed: " + e.getMessage());
-//            return;
-//        }
-//
-//        Context context = new Context(library);
-//        context.registerDataProvider("http://hl7.org/fhir", provider);
-//
-//        for (ExpressionDef exp : library.getStatements().getDef()) {
-//            context.enterContext(exp.getContext());
-//            if (context.getCurrentContext().equals("Patient")) {
-//                context.setContextValue("Patient", "CrossResourceSearchData");
-//            }
-//            Object result = exp.getExpression().evaluate(context);
-//            results.add(result);
-//            System.out.println(result.toString());
-//        }
-//
-//        assertTrue(results.size() > 0);
-//    }
-//
+    @Test
+    public void test1 () throws JAXBException, IOException {
+        ArrayList<Object> results = new ArrayList<>();
+        Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir").toAbsolutePath();
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cql-measure-processor/baseDstu3");
+
+        try {
+            translate(new File(path.resolve("SimpleCrossResourceSearch.cql").toString()));
+        } catch (IllegalArgumentException e) {
+            System.out.println("Translation failed: " + e.getMessage());
+            return;
+        }
+
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", provider);
+
+        for (ExpressionDef exp : library.getStatements().getDef()) {
+            context.enterContext(exp.getContext());
+            Object result = exp.getExpression().evaluate(context);
+            results.add(result);
+            System.out.println(result.toString());
+        }
+
+        assertTrue(results.size() > 0);
+    }
+
 //    @Test
 //    public void test2 () throws JAXBException, IOException {
 //        ArrayList<Object> results = new ArrayList<>();

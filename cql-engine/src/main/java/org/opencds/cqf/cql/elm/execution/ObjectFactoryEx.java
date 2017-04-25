@@ -61,6 +61,15 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Code createCode() { return new CodeEvaluator(); }
 
     @Override
+    public CodeDef createCodeDef() { return new CodeDefEvaluator(); }
+
+    @Override
+    public CodeRef createCodeRef() { return new CodeRefEvaluator(); }
+
+    @Override
+    public CodeSystemDef createCodeSystemDef() { return new CodeSystemDefEvaluator(); }
+
+    @Override
     public CodeSystemRef createCodeSystemRef() { return new CodeSystemRefEvaluator(); }
 
     @Override
