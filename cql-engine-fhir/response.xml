@@ -15,32 +15,26 @@
             <source alias="P">
                <expression dataType="fhir:Procedure" xsi:type="Retrieve"/>
             </source>
-            <where xsi:type="And">
-               <operand xsi:type="Equal">
-                  <operand path="value" xsi:type="Property">
-                     <source path="code" xsi:type="Property">
-                        <source xsi:type="Indexer">
-                           <operand path="coding" xsi:type="Property">
-                              <source path="code" scope="C" xsi:type="Property"/>
-                           </operand>
-                           <operand valueType="t:Integer" value="0" xsi:type="Literal"/>
-                        </source>
+            <where xsi:type="Equal">
+               <operand path="value" xsi:type="Property">
+                  <source path="code" xsi:type="Property">
+                     <source xsi:type="Indexer">
+                        <operand path="coding" xsi:type="Property">
+                           <source path="code" scope="C" xsi:type="Property"/>
+                        </operand>
+                        <operand valueType="t:Integer" value="0" xsi:type="Literal"/>
                      </source>
-                  </operand>
-                  <operand valueType="t:String" value="447395005" xsi:type="Literal"/>
+                  </source>
                </operand>
-               <operand xsi:type="Equal">
-                  <operand path="value" xsi:type="Property">
-                     <source path="code" xsi:type="Property">
-                        <source xsi:type="Indexer">
-                           <operand path="coding" xsi:type="Property">
-                              <source path="code" scope="P" xsi:type="Property"/>
-                           </operand>
-                           <operand valueType="t:Integer" value="0" xsi:type="Literal"/>
-                        </source>
+               <operand path="value" xsi:type="Property">
+                  <source path="code" xsi:type="Property">
+                     <source xsi:type="Indexer">
+                        <operand path="coding" xsi:type="Property">
+                           <source path="code" scope="P" xsi:type="Property"/>
+                        </operand>
+                        <operand valueType="t:Integer" value="0" xsi:type="Literal"/>
                      </source>
-                  </operand>
-                  <operand valueType="t:String" value="443682009" xsi:type="Literal"/>
+                  </source>
                </operand>
             </where>
             <return distinct="true">

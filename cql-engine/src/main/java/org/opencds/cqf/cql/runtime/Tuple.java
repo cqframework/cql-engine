@@ -9,6 +9,10 @@ public class Tuple {
 
   protected HashMap<String, Object> elements;
 
+  public Tuple() {
+    this.elements = new HashMap<>();
+  }
+
   public Object getElement(String key) {
     return elements.get(key);
   }

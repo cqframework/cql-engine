@@ -4,10 +4,11 @@ import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
+import org.opencds.cqf.cql.runtime.AliasList;
+import org.opencds.cqf.cql.runtime.Tuple;
 import org.opencds.cqf.cql.runtime.Value;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static org.opencds.cqf.cql.runtime.Value.ensureIterable;
 
@@ -17,6 +18,7 @@ import static org.opencds.cqf.cql.runtime.Value.ensureIterable;
 public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
     private boolean shouldInclude;
+    private Deque<AliasList> multiQueryStack;
 
     public void resolveRelationship(Context context) {
         // TODO: This is the most naive possible implementation here, but it should perform okay with 1) caching and 2) small data sets
@@ -77,48 +79,149 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
     }
 
     public Object multisourceQuery(Context context) {
-        // pushing variables
-        boolean sourceIsList = false;
-        for (AliasedQuerySource source : this.getSource()) {
-            Object sourceObject = source.getExpression().evaluate(context);
-            sourceIsList = sourceObject instanceof Iterable;
-            Iterable<Object> sourceData = ensureIterable(sourceObject);
+        multiQueryStack = new ArrayDeque<>();
 
-            for (Object element : sourceData) {
-                if (sourceIsList) {
-                    Variable v = new Variable().withName(source.getAlias()).withValue(element);
-                    v.setIsList(true);
-                    context.push(v);
-                }
-                else
-                    context.push(new Variable().withName(source.getAlias()).withValue(element));
-            }
+        for (AliasedQuerySource source : this.getSource()) {
+            // assuming list
+            Object sourceObject = source.getExpression().evaluate(context);
+            Iterable<Object> sourceData = ensureIterable(sourceObject);
+            List target = new ArrayList<>();
+            sourceData.forEach(target::add);
+            multiQueryStack.addFirst(new AliasList(source.getAlias()).withBase(target));
         }
 
-        List<Object> result = new ArrayList<>();
-        for (AliasedQuerySource source : this.getSource()) {
-            Object sourceObject = source.getExpression().evaluate(context);
-            Iterable<Object> sourceData = ensureIterable(sourceObject);
-
-            for (Object element : sourceData) {
+        // times operation results in list of Tuples
+        AliasList result = times();
+        List<Object> returnList = new ArrayList<>();
+        int count = 0;
+        // now do the operation
+        for (Object tuple : result.getBase()) {
+            try {
+                count = 0;
+                for (String key : ((Tuple) tuple).getElements().keySet()) {
+                    Variable v = new Variable().withName(key).withValue(((Tuple) tuple).getElements().get(key));
+                    context.push(v);
+                    count++;
+                }
                 shouldInclude = true;
                 resolveRelationship(context);
                 resolveWhere(context);
                 if (shouldInclude)
-                    result.add(resolveResult(context, element));
+                    returnList.add(resolveResult(context, tuple));
+            }
+            finally {
+                while (count > 0) {
+                    context.pop();
+                    count--;
+                }
             }
         }
 
-        if (this.getReturn() != null && this.getReturn().isDistinct()) {
-            result = DistinctEvaluator.distinct(result);
+        // collapse list of Tuples into a singleton Tuple list
+        // returnList = collapse(returnList);
+
+        return returnList;
+    }
+
+    // Not used, but keeping logic around in case of future implementation...
+    public List<Object> collapse(List toCollapse) {
+        List<Object> returnList = new ArrayList<>();
+        Tuple singletonTuple = new Tuple();
+        for (Object obj : toCollapse) {
+            for (String key : ((Tuple) obj).getElements().keySet()) {
+                if (singletonTuple.getElements().containsKey(key)
+                        && !((List)singletonTuple.getElements().get(key)).contains(((Tuple) obj).getElements().get(key))) {
+                    ((List)singletonTuple.getElements().get(key)).add(((Tuple) obj).getElements().get(key));
+                }
+                else {
+                    List<Object> resourceList = new ArrayList<>();
+                    resourceList.add(((Tuple) obj).getElements().get(key));
+                    singletonTuple.getElements().put(key, resourceList);
+                }
+            }
         }
 
-        sortResult(result);
-
-        context.pop();
-        // TODO: not sure if this is right --> sourceIsList logic...
-        return sourceIsList ? result : result.get(0);
+        returnList.add(singletonTuple);
+        return returnList;
     }
+
+    public AliasList times() {
+        while (multiQueryStack.size() > 1) {
+            AliasList a = multiQueryStack.removeFirst();
+            AliasList b = multiQueryStack.removeFirst();
+            multiQueryStack.addFirst(cartesianProduct(a, b));
+        }
+
+        return multiQueryStack.removeFirst();
+    }
+
+    public AliasList cartesianProduct(AliasList a, AliasList b) {
+        AliasList result = new AliasList(a.getName() + b.getName());
+        for (Object o : a.getBase()) {
+            for (Object oo : b.getBase()) {
+                if (o instanceof Tuple && oo instanceof Tuple) {
+                    // error
+                }
+                else if (o instanceof Tuple) {
+                    Tuple temp = new Tuple().withElements((HashMap<String, Object>) ((Tuple) o).getElements().clone());
+                    temp.getElements().put(b.getName(), oo);
+                    result.getBase().add(temp);
+                }
+                else {
+                    HashMap<String, Object> tupleMap = new HashMap<>();
+                    tupleMap.put(a.getName(), o);
+                    tupleMap.put(b.getName(), oo);
+                    result.getBase().add(new Tuple().withElements(tupleMap));
+                }
+            }
+        }
+
+        return result;
+    }
+
+//    public Object multisourceQuery(Context context) {
+//        // pushing variables
+//        boolean sourceIsList = false;
+//        for (AliasedQuerySource source : this.getSource()) {
+//            Object sourceObject = source.getExpression().evaluate(context);
+//            sourceIsList = sourceObject instanceof Iterable;
+//            Iterable<Object> sourceData = ensureIterable(sourceObject);
+//
+//            for (Object element : sourceData) {
+//                if (sourceIsList) {
+//                    Variable v = new Variable().withName(source.getAlias()).withValue(element);
+//                    v.setIsList(true);
+//                    context.push(v);
+//                }
+//                else
+//                    context.push(new Variable().withName(source.getAlias()).withValue(element));
+//            }
+//        }
+//
+//        List<Object> result = new ArrayList<>();
+//        for (AliasedQuerySource source : this.getSource()) {
+//            Object sourceObject = source.getExpression().evaluate(context);
+//            Iterable<Object> sourceData = ensureIterable(sourceObject);
+//
+//            for (Object element : sourceData) {
+//                shouldInclude = true;
+//                resolveRelationship(context);
+//                resolveWhere(context);
+//                if (shouldInclude)
+//                    result.add(resolveResult(context, element));
+//            }
+//        }
+//
+//        if (this.getReturn() != null && this.getReturn().isDistinct()) {
+//            result = DistinctEvaluator.distinct(result);
+//        }
+//
+//        sortResult(result);
+//
+//        context.pop();
+//        // TODO: not sure if this is right --> sourceIsList logic...
+//        return sourceIsList ? result : result.get(0);
+//    }
 
     @Override
     public Object evaluate(Context context) {
