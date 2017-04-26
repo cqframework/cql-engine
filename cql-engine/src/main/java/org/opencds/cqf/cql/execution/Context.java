@@ -7,6 +7,7 @@ import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import javax.xml.namespace.QName;
 import java.util.*;
+import java.util.List;
 
 /**
  * Created by Bryn on 4/12/2016.
@@ -146,11 +147,13 @@ public class Context {
             return resolveType(((NamedTypeSpecifier)typeSpecifier).getName());
         }
         else if (typeSpecifier instanceof ListTypeSpecifier) {
-            return resolveType(((ListTypeSpecifier)typeSpecifier).getElementType());
+            // TODO: This doesn't allow for list-distinguished overloads...
+            return List.class;
+            //return resolveType(((ListTypeSpecifier)typeSpecifier).getElementType());
         }
         else {
-            throw new IllegalArgumentException(String.format("Resolution for %s type specifiers not implemented yet.",
-                    typeSpecifier.getClass().getName()));
+            // TODO: This doesn't allow for tuple-distinguished overloads....
+            return Tuple.class;
         }
     }
 
