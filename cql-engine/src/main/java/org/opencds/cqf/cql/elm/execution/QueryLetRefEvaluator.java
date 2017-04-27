@@ -9,6 +9,6 @@ public class QueryLetRefEvaluator  extends org.cqframework.cql.elm.execution.Que
 
     @Override
     public Object evaluate (Context context) {
-        return this.getName();
+        return context.resolveLetExpressionRef(this.getName()).evaluate(context);
     }
 }

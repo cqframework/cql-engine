@@ -27,6 +27,7 @@ public class Context {
     private Stack<Stack<Variable> > windows = new Stack<>();
     private Map<String, Library> libraries = new HashMap<>();
     private Stack<Library> currentLibrary = new Stack<>();
+    private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
 
     private Library library;
@@ -59,6 +60,18 @@ public class Context {
 
     public Object getExpressionResultFromCache(String name) {
         return this.expressions.get(name);
+    }
+
+    public void addLetExpression(String name, Expression result) {
+        if (letExpressions.getElements().containsKey(name)) {
+            throw new IllegalArgumentException("Non-unique expression reference in let clause.");
+        }
+
+        letExpressions.getElements().put(name, result);
+    }
+
+    public void clearLetExpressions() {
+        letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
@@ -126,7 +139,19 @@ public class Context {
         throw new IllegalArgumentException(String.format("Could not resolve library reference '%s'.", libraryName));
     }
 
+    public Expression resolveLetExpressionRef(String name) {
+        for (String key : letExpressions.getElements().keySet()) {
+            if (key.equals(name)) {
+                return (Expression) letExpressions.getElements().get(key);
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
+                name, getCurrentLibrary().getIdentifier().getId()));
+    }
+
     public ExpressionDef resolveExpressionRef(String name) {
+
         for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
             if (expressionDef.getName().equals(name)) {
                 return expressionDef;

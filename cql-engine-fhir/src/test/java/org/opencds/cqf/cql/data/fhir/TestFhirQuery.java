@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import org.cqframework.cql.cql2elm.*;
-import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
@@ -15,16 +15,19 @@ import java.io.PrintWriter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Created by Christopher Schuler on 11/5/2016.
  */
-public class TestCrossResourceSearch {
+public class TestFhirQuery {
 
     private File xmlFile;
     private Library library;
+    private FhirDataProvider provider;
+    private Context context;
 
     private ModelManager modelManager;
     private ModelManager getModelManager() {
@@ -45,61 +48,35 @@ public class TestCrossResourceSearch {
         return libraryManager;
     }
 
-    @Test
-    public void test1 () throws JAXBException, IOException {
-        ArrayList<Object> results = new ArrayList<>();
+    @BeforeTest
+    public void beforeTest() throws JAXBException, IOException {
         Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir").toAbsolutePath();
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cql-measure-processor/baseDstu3");
+        provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cql-measure-processor/baseDstu3");
 
         try {
-            translate(new File(path.resolve("SimpleCrossResourceSearch.cql").toString()));
+            translate(new File(path.resolve("TestFhirQuery.cql").toString()));
         } catch (IllegalArgumentException e) {
             System.out.println("Translation failed: " + e.getMessage());
             return;
         }
 
-        Context context = new Context(library);
+        context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", provider);
-
-        for (ExpressionDef exp : library.getStatements().getDef()) {
-            context.enterContext(exp.getContext());
-            Object result = exp.getExpression().evaluate(context);
-            results.add(result);
-            System.out.println(result.toString());
-        }
-
-        assertTrue(results.size() > 0);
     }
 
-//    @Test
-//    public void test2 () throws JAXBException, IOException {
-//        ArrayList<Object> results = new ArrayList<>();
-//        Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir").toAbsolutePath();
-//        JsonFileBasedFhirProvider provider = new JsonFileBasedFhirProvider(System.getProperty("user.dir") +
-//                "/src/test/resources/org/opencds/cqf/cql/data/data", "http://nsengdevsfcluster.westus.cloudapp.azure.com:8314/terminology");
-//
-//        try {
-//            translate(new File(path.resolve("ComplexCrossResourceSearch.cql").toString()));
-//        } catch (IllegalArgumentException e) {
-//            System.out.println("Translation failed: " + e.getMessage());
-//            return;
-//        }
-//
-//        Context context = new Context(library);
-//        context.registerDataProvider("http://hl7.org/fhir", provider);
-//
-//        for (ExpressionDef exp : library.getStatements().getDef()) {
-//            context.enterContext(exp.getContext());
-//            if (context.getCurrentContext().equals("Patient")) {
-//                context.setContextValue("Patient", "CrossResourceSearchData");
-//            }
-//            Object result = exp.getExpression().evaluate(context);
-//            results.add(result);
-//            System.out.println(result.toString());
-//        }
-//
-//        assertTrue(results.size() > 0);
-//    }
+    @Test
+    public void testCrossResourceSearch() {
+        Object result = context.resolveExpressionRef("xRefSearch").evaluate(context);
+
+        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
+    }
+
+    @Test
+    public void testLetClause() {
+        Object result = context.resolveExpressionRef("testLet").evaluate(context);
+
+        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
+    }
 
     public void translate(File cql) throws JAXBException, IOException {
         try {

@@ -59,12 +59,13 @@ public abstract class BaseFhirDataProvider implements DataProvider
 
     protected DateTime toDateTime(DateTimeType value) {
         // TODO: Convert tzHour, tzMin and tzSign to a BigDecimal to set TimeZoneOffset
+        // NOTE: month is 0-indexed, hence the +1
         switch (value.getPrecision()) {
             case YEAR: return new DateTime(value.getYear());
-            case MONTH: return new DateTime(value.getYear(), value.getMonth());
-            case DAY: return new DateTime(value.getYear(), value.getMonth(), value.getDay());
-            case SECOND: return new DateTime(value.getYear(), value.getMonth(), value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
-            case MILLI: return new DateTime(value.getYear(), value.getMonth(), value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
+            case MONTH: return new DateTime(value.getYear(), value.getMonth() + 1);
+            case DAY: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+            case SECOND: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
+            case MILLI: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
