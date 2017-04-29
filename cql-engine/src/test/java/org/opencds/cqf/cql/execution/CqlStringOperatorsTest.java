@@ -49,6 +49,9 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ConcatenateAB").getExpression().evaluate(context);
         assertThat(result, is("ab"));
+
+        result = context.resolveExpressionRef("ConcatenateABWithAdd").getExpression().evaluate(context);
+        assertThat(result, is("ab"));
     }
 
     /**

@@ -140,6 +140,10 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
       return ret;
     }
 
+    else if (left instanceof String && right instanceof String) {
+      return ((String) left).concat((String) right);
+    }
+
     throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }
 

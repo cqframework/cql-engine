@@ -15,6 +15,7 @@ define ConcatenateNullNull : Concatenate(null, null)
 define ConcatenateANull : Concatenate('a', null)
 define ConcatenateNullB : Concatenate(null, 'b')
 define ConcatenateAB : Concatenate('a', 'b')
+define ConcatenateABWithAdd: 'a' + 'b'
 
 //Indexer
 define IndexerNullNull : Indexer(null as String, null) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
