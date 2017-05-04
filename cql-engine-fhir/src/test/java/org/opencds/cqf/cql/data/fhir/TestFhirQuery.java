@@ -1,20 +1,8 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import org.cqframework.cql.cql2elm.*;
-import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.tracking.TrackBack;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.execution.CqlLibraryReader;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.testng.AssertJUnit.assertTrue;
@@ -22,50 +10,12 @@ import static org.testng.AssertJUnit.assertTrue;
 /**
  * Created by Christopher Schuler on 11/5/2016.
  */
-public class TestFhirQuery {
-
-    private File xmlFile;
-    private Library library;
-    private FhirDataProvider provider;
-    private Context context;
-
-    private ModelManager modelManager;
-    private ModelManager getModelManager() {
-        if (modelManager == null) {
-            modelManager = new ModelManager();
-        }
-
-        return modelManager;
-    }
-
-    private LibraryManager libraryManager;
-    private LibraryManager getLibraryManager() {
-        if (libraryManager == null) {
-            libraryManager = new LibraryManager(getModelManager());
-            DefaultLibrarySourceProvider librarySourceProvider = new DefaultLibrarySourceProvider(new File(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir/").toPath().toAbsolutePath());
-            libraryManager.getLibrarySourceLoader().registerProvider(librarySourceProvider);
-        }
-        return libraryManager;
-    }
-
-    @BeforeTest
-    public void beforeTest() throws JAXBException, IOException {
-        Path path = Paths.get(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/fhir").toAbsolutePath();
-        provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cql-measure-processor/baseDstu3");
-
-        try {
-            translate(new File(path.resolve("TestFhirQuery.cql").toString()));
-        } catch (IllegalArgumentException e) {
-            System.out.println("Translation failed: " + e.getMessage());
-            return;
-        }
-
-        context = new Context(library);
-        context.registerDataProvider("http://hl7.org/fhir", provider);
-    }
+public class TestFhirQuery extends FhirExecutionTestBase {
 
     @Test
     public void testCrossResourceSearch() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         Object result = context.resolveExpressionRef("xRefSearch").evaluate(context);
 
         assertTrue(result instanceof Iterable && ((List)result).size() > 0);
@@ -73,40 +23,11 @@ public class TestFhirQuery {
 
     @Test
     public void testLetClause() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         Object result = context.resolveExpressionRef("testLet").evaluate(context);
 
         assertTrue(result instanceof Iterable && ((List)result).size() > 0);
     }
 
-    public void translate(File cql) throws JAXBException, IOException {
-        try {
-            ArrayList<CqlTranslator.Options> options = new ArrayList<>();
-            options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-            CqlTranslator translator = CqlTranslator.fromFile(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
-            if (translator.getErrors().size() > 0) {
-                System.err.println("Translation failed due to errors:");
-                ArrayList<String> errors = new ArrayList<>();
-                for (CqlTranslatorException error : translator.getErrors()) {
-                    TrackBack tb = error.getLocator();
-                    String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
-                                  tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
-                    errors.add(lines + error.getMessage());
-                }
-                throw new IllegalArgumentException(errors.toString());
-            }
-
-            // output translated library for review
-            xmlFile = new File("response.xml");
-            xmlFile.createNewFile();
-            PrintWriter pw = new PrintWriter(xmlFile, "UTF-8");
-            pw.println(translator.toXml());
-            pw.println();
-            pw.close();
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        library = CqlLibraryReader.read(xmlFile);
-    }
 }

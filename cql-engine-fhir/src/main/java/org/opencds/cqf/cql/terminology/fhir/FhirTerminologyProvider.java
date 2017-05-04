@@ -119,12 +119,12 @@ public class FhirTerminologyProvider implements TerminologyProvider {
       // TODO: Implement as CodeSystem/$lookup
       // http://hl7.org/fhir/2016Sep/codesystem-operations.html#lookup
       Parameters respParam = fhirClient
-			.operation()
-      .onType(CodeSystem.class)
-			.named("lookup")
-      .withParameter(Parameters.class, "code", new CodeType(code.getCode()))
-      .andParameter("system", new UriType(codeSystem.getId()))
-      .execute();
+            .operation()
+            .onType(CodeSystem.class)
+            .named("lookup")
+            .withParameter(Parameters.class, "code", new CodeType(code.getCode()))
+            .andParameter("system", new UriType(codeSystem.getId()))
+            .execute();
 
       return code.withSystem(codeSystem.getId())
                  .withDisplay(((StringType)respParam.getParameter().get(1).getValue()).getValue());

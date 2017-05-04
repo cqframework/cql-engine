@@ -72,7 +72,8 @@ public class DateTime {
   }
 
   public DateTime() {
-
+    dateTime = new Partial();
+    timezoneOffset = new BigDecimal(0);
   }
 
   public DateTime(int year) {

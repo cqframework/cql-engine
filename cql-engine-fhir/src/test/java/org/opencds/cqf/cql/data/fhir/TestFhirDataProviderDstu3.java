@@ -9,6 +9,7 @@ import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.testng.annotations.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,36 +19,29 @@ import static org.testng.Assert.assertTrue;
 /**
  * Created by Bryn on 4/16/2016.
  */
-public class TestFhirDataProvider {
+public class TestFhirDataProviderDstu3 {
 
-    //@Test
+    @Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
-        IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3");
+        IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 
         Bundle patients = fhirClient.search().forResource("Patient").returnBundle(Bundle.class).execute();
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    //@Test
+    @Test
     public void testDataProviderRetrieve() {
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
 
-//        Iterator it = results.iterator();
-//        List<Patient> patients = new ArrayList<>();
-//       while(it.hasNext()) {
-//            patients.add((Patient) it.next());
-//        }
-//
-//        assertTrue(patients.size() > 0);
         assertTrue(results.iterator().hasNext());
     }
 
-    //@Test
+    @Test
     public void testPatientRetrieve() {
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
-        Iterable<Object> results = provider.retrieve("Patient", "33775", "Patient", null, null, null, null, null, null, null, null);
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
         List<Patient> patients = new ArrayList<>();
 
         int resultCount = 0;

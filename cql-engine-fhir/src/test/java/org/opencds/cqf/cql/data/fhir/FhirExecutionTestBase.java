@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.execution;
+package org.opencds.cqf.cql.data.fhir;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
@@ -6,7 +6,7 @@ import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
-import org.testng.annotations.AfterClass;
+import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.testng.annotations.BeforeMethod;
 
 import javax.xml.bind.JAXBException;
@@ -21,8 +21,17 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public abstract class CqlExecutionTestBase<T> {
+/**
+ * Created by Christopher on 5/3/2017.
+ */
+public abstract class FhirExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
+
+    FhirDataProviderDstu2 dstu2Provider =
+            new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.dstu2.resource");
+    FhirDataProvider dstu3Provider =
+            new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+
     Library library = null;
     private File xmlFile = null;
 
@@ -69,12 +78,5 @@ public abstract class CqlExecutionTestBase<T> {
             library = CqlLibraryReader.read(xmlFile);
             libraries.put(fileName, library);
         }
-    }
-
-    @AfterClass
-    public void oneTimeTearDown() {
-//        if (xmlFile != null) {
-//            xmlFile.delete();
-//        }
     }
 }

@@ -168,7 +168,7 @@ public class TestFhirMeasureEvaluator {
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open");
         //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cql-measure-processor/baseDstu3");
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 
         FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
         provider.setTerminologyProvider(terminologyProvider);
