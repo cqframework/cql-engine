@@ -245,7 +245,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
     private String mapPath(String path) {
         // TODO: map all [x] types here...
         switch(path) {
-            case "medcationCodeableConcept": return "medication";
+            case "medicationCodeableConcept": return "medication";
             case "medicationReference": return "medication";
         }
         return path;
