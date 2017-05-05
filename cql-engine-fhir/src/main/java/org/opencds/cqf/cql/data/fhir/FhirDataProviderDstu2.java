@@ -216,6 +216,9 @@ public class FhirDataProviderDstu2 implements DataProvider {
             return ((Enumeration)target).getValueAsString();
         }
 
+        // need this for some interesting mapping in Hapi for dstu2...
+        path = mapPath(path);
+
         Class<?> clazz = target.getClass();
         try {
             String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
@@ -237,6 +240,15 @@ public class FhirDataProviderDstu2 implements DataProvider {
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         }
+    }
+
+    private String mapPath(String path) {
+        // TODO: map all [x] types here...
+        switch(path) {
+            case "medcationCodeableConcept": return "medication";
+            case "medicationReference": return "medication";
+        }
+        return path;
     }
 
     private Object mapPrimitive(Object target) {
