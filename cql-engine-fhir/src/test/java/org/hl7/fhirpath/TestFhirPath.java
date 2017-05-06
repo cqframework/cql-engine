@@ -179,7 +179,7 @@ public class TestFhirPath {
 
     private void runTest(org.hl7.fhirpath.tests.Test test) {
         Resource resource = loadResource(test.getInputfile());
-        String cql = String.format("library TestFHIRPath using FHIR version '1.8' include FHIRHelpers version '1.8' called FHIRHelpers parameter %s %s define Test: %s",
+        String cql = String.format("library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
 
         Library library = null;

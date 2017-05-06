@@ -52,7 +52,7 @@ public class FhirMeasureEvaluator {
                 }
                 MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
                 populationReport.setCount(count);
-                populationReport.setCode(population.getCode()); // TODO: It's not clear why these properties are represented differently in the HAPI client, they're the same type in the FHIR spec...
+                populationReport.setCode(population.getCode());
                 reportGroup.getPopulation().add(populationReport);
             }
         }
