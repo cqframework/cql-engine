@@ -179,6 +179,11 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return ((Enumeration)target).getValueAsString();
         }
 
+        // TODO: find a better way for choice types ...
+        else if (path.equals("asNeededBoolean") || path.equals("asNeededCodeableConcept")) {
+            path = "asNeeded";
+        }
+
         Class<? extends Object> clazz = target.getClass();
         try {
             String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));

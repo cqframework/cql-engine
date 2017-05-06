@@ -70,11 +70,6 @@ public class FhirDataProviderDstu2 implements DataProvider {
     }
 
     @Override
-    public Class resolveType(String typeName) {
-        return null;
-    }
-
-    @Override
     public Object resolvePath(Object target, String path) {
         String[] identifiers = path.split("\\.");
         for (String identifier : identifiers) {
@@ -261,6 +256,36 @@ public class FhirDataProviderDstu2 implements DataProvider {
             return DateTime.fromJavaDate((Date) target);
         }
 
+//        else if (target instanceof CodingDt) {
+//            CodingDt dt = (CodingDt) target;
+//            return new Code()
+//                    .withCode(dt.getCode())
+//                    .withSystem(dt.getSystem())
+//                    .withDisplay(dt.getDisplay())
+//                    .withVersion(dt.getVersion());
+//        }
+//
+//        else if (target instanceof Iterable) {
+//            List<Object> list = new ArrayList<>();
+//            for (Object o : (Iterable) target) {
+//                list.add(mapPrimitive(o));
+//            }
+//            return list;
+//        }
+
+//        else if (target instanceof CodeableConceptDt) {
+//            CodeableConceptDt dt = (CodeableConceptDt) target;
+//            List<Code> codes = new ArrayList<>();
+//            for (CodingDt code : dt.getCoding()) {
+//                codes.add(new Code()
+//                            .withCode(code.getCode())
+//                            .withSystem(code.getSystem())
+//                            .withDisplay(code.getDisplay())
+//                            .withVersion(code.getVersion()));
+//            }
+//            return new Concept().withCodes(codes);
+//        }
+
         return target;
     }
 
@@ -296,5 +321,38 @@ public class FhirDataProviderDstu2 implements DataProvider {
         }
         bundle.setEntry(entry);
         return bundle;
+    }
+
+    @Override
+    public Class resolveType(String typeName) {
+        String tempPackage = packageName;
+        try {
+            // TODO: Obviously would like to be able to automate this, but there is no programmatic way of which I'm aware
+            // For the primitive types, not such a big deal.
+            // For the enumerations, the type names are generated from the binding name in the spreadsheet, which doesn't make it to the StructureDefinition,
+            // and the schema has no way of indicating whether the enum will be common (i.e. in Enumerations) or per resource
+            switch (typeName) {
+                case "Coding": typeName = "CodingDt"; break;
+                case "Quantity": typeName = "QuantityDt"; break;
+                case "Period": typeName = "PeriodDt"; break;
+                case "Range": typeName = "RangeDt"; break;
+                case "CodeableConcept": typeName = "CodeableConceptDt"; break;
+                case "AddressType": typeName = "AddressDt"; break;
+                case "Timing": typeName = "TimingDt"; break;
+                case "integer": typeName = "IntegerDt"; break;
+                case "decimal": typeName = "DecimalDt"; break;
+                case "code": typeName = "CodeDt"; break;
+                case "id": typeName = "IdDt"; break;
+                case "boolean": typeName = "BooleanDt"; break;
+                case "uri": typeName = "UriDt"; break;
+                case "time": typeName = "TimeDt"; break;
+                case "unsignedInt": typeName = "UnsignedIntDt"; break;
+                case "oid": typeName = "OidDt"; break;
+            }
+            return Class.forName(String.format("%s.%s", tempPackage, typeName));
+        }
+        catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", tempPackage, typeName));
+        }
     }
 }
