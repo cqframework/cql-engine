@@ -1,6 +1,6 @@
 library XResourceSearch version '1'
 
-using FHIR
+using FHIR version '3.0.0'
 
 define xRefSearch:
     from [Condition] C, [Procedure] P

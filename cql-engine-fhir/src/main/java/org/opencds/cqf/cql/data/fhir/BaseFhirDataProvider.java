@@ -19,6 +19,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Bryn on 9/13/2016.
@@ -155,8 +157,29 @@ public abstract class BaseFhirDataProvider implements DataProvider
     }
 
     protected boolean pathIsChoice(String path) {
-        // TODO: Better support for choice types, needs to be more generic, quick fix for now...
-        return path.endsWith("DateTime") || path.endsWith("Period");
+        // Pretty consistent format: lowercase root followed by Type.
+        // outliers
+        if (path.startsWith("notDoneReason") || path.endsWith("valueSet")
+                || path.endsWith("multipleBirth") || path.endsWith("asNeeded")
+                || path.endsWith("onBehalfOf") || path.endsWith("defaultValue")) {
+            return true;
+        }
+
+        // get the substring from first uppercase to end of string
+        Pattern pattern = Pattern.compile("[A-Z].*");
+        Matcher matcher = pattern.matcher(path);
+        String type = path;
+        if (matcher.find()) {
+            type = matcher.group();
+        }
+
+        try {
+            Class.forName(String.format("%s.%s", getPackageName(), type));
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+
+        return true;
     }
 
     protected Object resolveChoiceProperty(Object target, String path, String typeName) {
@@ -165,35 +188,22 @@ public abstract class BaseFhirDataProvider implements DataProvider
     }
 
     protected Object resolveChoiceProperty(Object target, String path) {
-        if (path.endsWith("DateTime")) {
-            Object result = resolveChoiceProperty(target, path, "DateTime");
-            if (!(result instanceof DateTimeType)) {
-                return null;
-            }
-//            if (result != null && !(result instanceof DateTime)) {
-//                throw new IllegalArgumentException(String.format(
-//                        "Choice property %s of resource %s was accessed as a DateTime, but is present as a %s.",
-//                        path, target.getClass().getSimpleName(), result.getClass().getSimpleName()));
-//            }
-
-            return result;
+        Pattern pattern = Pattern.compile("[A-Z].*");
+        Matcher matcher = pattern.matcher(path);
+        String type = path;
+        if (matcher.find()) {
+            type = matcher.group();
         }
 
-        if (path.endsWith("Period")) {
-            Object result = resolveChoiceProperty(target, path, "Period");
-            if (!(result instanceof Period)) {
-                return null;
-            }
-//            if (result != null && !(result instanceof Period)) {
-//                throw new IllegalArgumentException(String.format(
-//                        "Choice property %s of resource %s was accessed as a Period, but is present as a %s.",
-//                        path, target.getClass().getSimpleName(), result.getClass().getSimpleName()));
-//            }
-
-            return result;
+        Class clazz;
+        try {
+            clazz = Class.forName(String.format("%s.%s", getPackageName(), type));
+        } catch (ClassNotFoundException e) {
+            throw new IllegalArgumentException("Error resolving choice property: " + e.getMessage());
         }
 
-        throw new IllegalArgumentException(String.format("Unknown choice type for choice path %s", path));
+        Object object = resolveChoiceProperty(target, path, type);
+        return clazz.isInstance(object) ? object : null;
     }
 
     protected Object resolveProperty(Object target, String path) {
