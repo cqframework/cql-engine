@@ -222,7 +222,7 @@ public class Context {
                             OperandDef operandDef = operandIterator.next();
                             Object argument = argumentIterator.next();
                             // TODO: This is actually wrong, but to fix this would require preserving type information in the ELM....
-                            isMatch = argument == null ? true : isType(argument.getClass(), resolveOperandType(operandDef));
+                            isMatch = isType(resolveType(argument), resolveOperandType(operandDef));
                         }
                         else {
                             isMatch = false;
