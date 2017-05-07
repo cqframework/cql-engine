@@ -535,7 +535,6 @@ public abstract class BaseFhirDataProvider implements DataProvider
         }
 
         if (target.getClass().getSimpleName().contains("EnumFactory") && path.equals("value")) {
-            // TODO: not sure what to do here...
             return;
         }
 

@@ -9,11 +9,6 @@ public class InstanceEvaluator extends org.cqframework.cql.elm.execution.Instanc
 
     @Override
     public Object evaluate(Context context) {
-//        String type =
-//        if (context.resolveType(this.getClassType()).getName().contains("$")) {
-//
-//        }
-
         Class clazz = context.resolveType(this.getClassType());
         try {
             Object object = clazz.newInstance();
@@ -26,8 +21,5 @@ public class InstanceEvaluator extends org.cqframework.cql.elm.execution.Instanc
         } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
         }
-//        catch (NoSuchFieldException e) {
-//            throw new IllegalArgumentException(String.format("The field %s does not exist in class %s", this.getElement().get(0).getName(), clazz.getSimpleName()));
-//        }
     }
 }
