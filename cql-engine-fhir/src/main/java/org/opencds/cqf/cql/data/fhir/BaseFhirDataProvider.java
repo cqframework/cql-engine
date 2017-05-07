@@ -2,6 +2,12 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.exceptions.FHIRException;
+import org.joda.time.LocalTime;
+import org.joda.time.Partial;
+import org.joda.time.ReadablePartial;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -81,7 +87,9 @@ public abstract class BaseFhirDataProvider implements DataProvider
     }
 
     protected Time toTime(TimeType value) {
-        throw new RuntimeException("Time values are not supported yet.");
+        DateTimeFormatter dtf = ISODateTimeFormat.timeParser();
+        ReadablePartial partial = new LocalTime(dtf.parseMillis(value.getValue()));
+        return new Time().withPartial(new Partial(partial));
     }
 
     protected DateTime toDateTime(InstantType value) {
@@ -97,6 +105,9 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return new Date();
         }
         else if (target instanceof TimeType) {
+            if (value instanceof Time) {
+                return ((Time) value).getPartial().toString();
+            }
             return new Date();
         }
         else {
@@ -194,6 +205,10 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return ((Enumeration)target).getValueAsString();
         }
 
+        else if (target.getClass().getSimpleName().contains("EnumFactory") && path.equals("value")) {
+            return target.toString();
+        }
+
         // TODO: find a better way for choice types ...
         else if (path.equals("asNeededBoolean") || path.equals("asNeededCodeableConcept")) {
             path = "asNeeded";
@@ -264,6 +279,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
                 case "string": typeName = "StringType"; break;
                 case "code": typeName = "CodeType"; break;
                 case "markdown": typeName = "MarkdownType"; break;
+                case "time": typeName = "TimeType"; break;
                 case "uri": typeName = "UriType"; break;
                 case "uuid": typeName = "UuidType"; break;
                 case "id": typeName = "IdType"; break;
@@ -484,6 +500,9 @@ public abstract class BaseFhirDataProvider implements DataProvider
                 case "FHIRDefinedType": typeName = "Enumerations$FHIRDefinedType"; break;
                 case "FHIRAllTypes": typeName = "Enumerations$FHIRAllTypes"; break;
             }
+            if (typeName.contains("$")) {
+                typeName += "EnumFactory";
+            }
             return Class.forName(String.format("%s.%s", packageName, typeName));
         }
         catch (ClassNotFoundException e) {
@@ -515,6 +534,11 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return;
         }
 
+        if (target.getClass().getSimpleName().contains("EnumFactory") && path.equals("value")) {
+            // TODO: not sure what to do here...
+            return;
+        }
+
         Class<? extends Object> clazz = target.getClass();
         try {
             String readAccessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
@@ -537,14 +561,29 @@ public abstract class BaseFhirDataProvider implements DataProvider
                 accessor = clazz.getMethod(accessorMethodName, readAccessor.getReturnType());
             }
 
-            accessor.invoke(target, fromJavaPrimitive(value, target));
+            try {
+                accessor.invoke(target, fromJavaPrimitive(value, target));
+            } catch (IllegalArgumentException e) {
+                // HACK: SimpleQuantity moving in on Quantity's turf
+                if (value instanceof Quantity) {
+                    value = ((Quantity) value).castToSimpleQuantity(new SimpleQuantity());
+                    accessor.invoke(target, value);
+                }
+                else {
+                    throw new IllegalArgumentException(e.getMessage());
+                }
+            }
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (InvocationTargetException e) {
             throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+        } catch (FHIRException e) {
+            throw new IllegalArgumentException(String.format("The class %s is unable to resolve the type %s in the %s method",
+                    target.getClass().getSimpleName(), value.getClass().getSimpleName(), getReadAccessor(target.getClass(), path).getName()));
         }
+
     }
 
     protected Field getProperty(Class clazz, String path) {

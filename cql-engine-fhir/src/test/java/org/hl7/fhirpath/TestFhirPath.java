@@ -301,16 +301,13 @@ public class TestFhirPath {
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
-        // TODO: Not sure I get why this is failing, not in the critical path right now...
-        //result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
-        // TODO: Could not create an instance of RequestGroup$RequestStatus... needs to be an Enumeration<RequestGroup.RequestStatus>()?
-        //result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
-        // TODO: Could not resolve type model.time? Case issue somewhere?
-        //result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToDecimal").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
