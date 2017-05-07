@@ -89,7 +89,22 @@ public abstract class BaseFhirDataProvider implements DataProvider
         return new DateTime(value.getYear(), value.getMonth(), value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
     }
 
-    protected Object mapPrimitive(Object result, Object source) {
+    protected Object fromJavaPrimitive(Object value, Object target) {
+        if (target instanceof DateTimeType) {
+            return new Date(); // TODO: Why is this so hard?
+        }
+        else if (target instanceof DateType) {
+            return new Date();
+        }
+        else if (target instanceof TimeType) {
+            return new Date();
+        }
+        else {
+            return value;
+        }
+    }
+
+    protected Object toJavaPrimitive(Object result, Object source) {
         if (source instanceof DateTimeType) {
             return toDateTime((DateTimeType)source);
         }
@@ -197,7 +212,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
             }
 
             Object result = accessor.invoke(target);
-            result = mapPrimitive(result, target);
+            result = toJavaPrimitive(result, target);
             return result;
         } catch (NoSuchMethodException e) {
             if (pathIsChoice(path)) {
@@ -477,6 +492,24 @@ public abstract class BaseFhirDataProvider implements DataProvider
     }
 
     @Override
+    public Class resolveType(Object value) {
+        if (value == null) {
+            return Object.class;
+        }
+
+        if (value instanceof org.hl7.fhir.dstu3.model.Enumeration) {
+            String className = ((org.hl7.fhir.dstu3.model.Enumeration)value).getEnumFactory().getClass().getSimpleName();
+            try {
+                return Class.forName(String.format("%s.%s", packageName, className.substring(0, className.indexOf("EnumFactory"))));
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", packageName, className));
+            }
+        }
+
+        return value.getClass();
+    }
+
+    @Override
     public void setValue(Object target, String path, Object value) {
         if (target == null) {
             return;
@@ -484,9 +517,27 @@ public abstract class BaseFhirDataProvider implements DataProvider
 
         Class<? extends Object> clazz = target.getClass();
         try {
+            String readAccessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
+            String readElementAccessorMethodName = String.format("%sElement", readAccessorMethodName);
+            Method readAccessor = null;
+            try {
+                readAccessor = clazz.getMethod(readElementAccessorMethodName);
+            }
+            catch (NoSuchMethodException e) {
+                readAccessor = clazz.getMethod(readAccessorMethodName);
+            }
+
             String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
-            Method accessor = clazz.getMethod(accessorMethodName);
-            accessor.invoke(target, value);
+            String elementAccessorMethodName = String.format("%sElement", accessorMethodName);
+            Method accessor = null;
+            try {
+                accessor = clazz.getMethod(elementAccessorMethodName, readAccessor.getReturnType());
+            }
+            catch (NoSuchMethodException e) {
+                accessor = clazz.getMethod(accessorMethodName, readAccessor.getReturnType());
+            }
+
+            accessor.invoke(target, fromJavaPrimitive(value, target));
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (InvocationTargetException e) {

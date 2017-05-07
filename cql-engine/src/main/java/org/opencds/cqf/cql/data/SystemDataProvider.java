@@ -104,6 +104,15 @@ public class SystemDataProvider implements DataProvider {
     }
 
     @Override
+    public Class resolveType(Object value) {
+        if (value == null) {
+            return Object.class;
+        }
+
+        return value.getClass();
+    }
+
+    @Override
     public Class resolveType(String typeName) {
         switch (typeName) {
             case "Boolean": return Boolean.class;

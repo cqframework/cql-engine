@@ -324,6 +324,15 @@ public class FhirDataProviderDstu2 implements DataProvider {
     }
 
     @Override
+    public Class resolveType(Object value) {
+        if (value == null) {
+            return Object.class;
+        }
+
+        return value.getClass();
+    }
+
+    @Override
     public Class resolveType(String typeName) {
         String tempPackage = packageName;
         try {

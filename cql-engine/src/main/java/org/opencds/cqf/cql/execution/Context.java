@@ -182,6 +182,15 @@ public class Context {
         }
     }
 
+    public Class resolveType(Object value) {
+        if (value == null) {
+            return Object.class;
+        }
+
+        DataProvider dataProvider = resolveDataProvider(value.getClass().getPackage().getName());
+        return dataProvider.resolveType(value);
+    }
+
     private Class resolveOperandType(OperandDef operandDef) {
         if (operandDef.getOperandTypeSpecifier() != null) {
             return resolveType(operandDef.getOperandTypeSpecifier());
