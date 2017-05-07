@@ -187,6 +187,18 @@ public class Context {
             return Object.class;
         }
 
+        String packageName = value.getClass().getPackage().getName();
+
+        // May not be necessary, idea is to sync with the use of List.class for ListTypeSpecifiers in the resolveType above
+        if (value instanceof Iterable) {
+            return List.class;
+        }
+
+        // Primitives should just use the type
+        if (packageName.startsWith("java")) {
+            return value.getClass();
+        }
+
         DataProvider dataProvider = resolveDataProvider(value.getClass().getPackage().getName());
         return dataProvider.resolveType(value);
     }
