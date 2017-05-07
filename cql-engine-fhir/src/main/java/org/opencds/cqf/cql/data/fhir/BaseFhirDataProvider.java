@@ -526,14 +526,14 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return Object.class;
         }
 
-        if (value instanceof org.hl7.fhir.dstu3.model.Enumeration) {
-            String className = ((org.hl7.fhir.dstu3.model.Enumeration)value).getEnumFactory().getClass().getSimpleName();
-            try {
-                return Class.forName(String.format("%s.%s", packageName, className.substring(0, className.indexOf("EnumFactory"))));
-            } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", packageName, className));
-            }
-        }
+//        if (value instanceof org.hl7.fhir.dstu3.model.Enumeration) {
+//            String className = ((org.hl7.fhir.dstu3.model.Enumeration)value).getEnumFactory().getClass().getSimpleName();
+//            try {
+//                return Class.forName(String.format("%s.%s", packageName, className.substring(0, className.indexOf("EnumFactory"))));
+//            } catch (ClassNotFoundException e) {
+//                throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", packageName, className));
+//            }
+//        }
 
         return value.getClass();
     }
