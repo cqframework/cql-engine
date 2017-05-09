@@ -162,6 +162,11 @@ public class Context {
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
+    public Object createInstance(QName typeName) {
+        DataProvider dataProvider = resolveDataProvider(typeName);
+        return dataProvider.createInstance(typeName.getLocalPart());
+    }
+
     public Class resolveType(QName typeName) {
         DataProvider dataProvider = resolveDataProvider(typeName);
         return dataProvider.resolveType(typeName.getLocalPart());

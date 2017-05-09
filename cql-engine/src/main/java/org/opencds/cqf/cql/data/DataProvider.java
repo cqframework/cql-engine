@@ -20,5 +20,7 @@ public interface DataProvider {
 
     Class resolveType(Object value);
 
+    Object createInstance(String typeName);
+
     void setValue(Object target, String path, Object value);
 }

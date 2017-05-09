@@ -9,17 +9,12 @@ public class InstanceEvaluator extends org.cqframework.cql.elm.execution.Instanc
 
     @Override
     public Object evaluate(Context context) {
-        Class clazz = context.resolveType(this.getClassType());
-        try {
-            Object object = clazz.newInstance();
-            for (org.cqframework.cql.elm.execution.InstanceElement element : this.getElement()) {
-                Object value = element.getValue().evaluate(context);
-                context.setValue(object, element.getName(), value);
-            }
-
-            return object;
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
+        Object object = context.createInstance(this.getClassType());
+        for (org.cqframework.cql.elm.execution.InstanceElement element : this.getElement()) {
+            Object value = element.getValue().evaluate(context);
+            context.setValue(object, element.getName(), value);
         }
+
+        return object;
     }
 }

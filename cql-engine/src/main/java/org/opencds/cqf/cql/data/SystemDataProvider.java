@@ -133,4 +133,15 @@ public class SystemDataProvider implements DataProvider {
                 }
         }
     }
+
+    @Override
+    public Object createInstance(String typeName) {
+        Class clazz = resolveType(typeName);
+        try {
+            Object object = clazz.newInstance();
+            return object;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
+        }
+    }
 }

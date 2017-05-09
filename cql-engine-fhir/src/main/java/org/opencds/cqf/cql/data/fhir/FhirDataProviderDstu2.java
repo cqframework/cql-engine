@@ -332,6 +332,16 @@ public class FhirDataProviderDstu2 implements DataProvider {
         return value.getClass();
     }
 
+    public Object createInstance(String typeName) {
+        Class clazz = resolveType(typeName);
+        try {
+            Object object = clazz.newInstance();
+            return object;
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
+        }
+    }
+
     @Override
     public Class resolveType(String typeName) {
         String tempPackage = packageName;
