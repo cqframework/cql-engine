@@ -130,6 +130,11 @@ public abstract class BaseFhirDataProvider implements DataProvider
         else if (source instanceof InstantType) {
             return toDateTime((InstantType)source);
         }
+
+        // Need to map HAPI primitives to CQL primitives
+        else if (result instanceof PrimitiveType) {
+            return ((PrimitiveType) result).getValue();
+        }
         else {
             return result;
         }
