@@ -117,6 +117,25 @@ public abstract class BaseFhirDataProvider implements DataProvider
         }
     }
 
+    protected Object mapPrimitive(Object result) {
+        if (result instanceof IntegerType) {
+            return ((IntegerType) result).getValue();
+        }
+        else if (result instanceof DecimalType) {
+            return ((DecimalType) result).getValue();
+        }
+        else if (result instanceof BooleanType) {
+            return ((BooleanType) result).getValue();
+        }
+        else if (result instanceof CodeType) {
+            return ((CodeType) result).getValue();
+        }
+        else if (result instanceof StringType) {
+            return ((StringType) result).getValue();
+        }
+        return result;
+    }
+
     protected Object toJavaPrimitive(Object result, Object source) {
         if (source instanceof DateTimeType) {
             return toDateTime((DateTimeType)source);
@@ -129,11 +148,6 @@ public abstract class BaseFhirDataProvider implements DataProvider
         }
         else if (source instanceof InstantType) {
             return toDateTime((InstantType)source);
-        }
-
-        // Need to map HAPI primitives to CQL primitives
-        else if (result instanceof PrimitiveType) {
-            return ((PrimitiveType) result).getValue();
         }
         else {
             return result;
