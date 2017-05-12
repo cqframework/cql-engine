@@ -198,7 +198,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
 
         Class clazz;
         try {
-            clazz = Class.forName(String.format("%s.%s", getPackageName(), type));
+            clazz = Class.forName(String.format("%s.%s", getPackageName(), type + "Type"));
         } catch (ClassNotFoundException e) {
             throw new IllegalArgumentException("Error resolving choice property: " + e.getMessage());
         }
