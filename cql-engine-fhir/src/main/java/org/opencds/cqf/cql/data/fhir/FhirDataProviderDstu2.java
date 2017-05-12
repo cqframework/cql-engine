@@ -2,18 +2,25 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.model.api.Bundle;
-import ca.uhn.fhir.model.dstu.composite.PeriodDt;
+import ca.uhn.fhir.model.api.IValueSetEnumBinder;
+import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
+import ca.uhn.fhir.model.dstu2.composite.CodingDt;
+import ca.uhn.fhir.model.dstu2.composite.PeriodDt;
+import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
+import ca.uhn.fhir.model.primitive.*;
 import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IQuery;
-import org.hl7.fhir.dstu3.model.Enumeration;
+import org.apache.commons.lang3.EnumUtils;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URLEncoder;
@@ -67,6 +74,57 @@ public class FhirDataProviderDstu2 implements DataProvider {
     public FhirDataProviderDstu2 withEndpoint(String endpoint) {
         setEndpoint(endpoint);
         return this;
+    }
+
+    protected Object fromJavaPrimitive(Object value, Object target) {
+        if (target instanceof DateTimeDt) {
+            return new Date(); // TODO: Why is this so hard?
+        }
+        else if (target instanceof DateDt) {
+            return new Date();
+        }
+        else if (target instanceof TimeDt) {
+            if (value instanceof Time) {
+                return ((Time) value).getPartial().toString();
+            }
+            return new Date();
+        }
+        else {
+            return value;
+        }
+    }
+
+    protected Class resolveReturnType(Class clazz, Object target, String path) {
+        if (target instanceof PeriodDt) {
+            if (path.equals("start") || path.equals("end")) {
+                return DateTimeDt.class;
+            }
+        }
+        else if (target instanceof QuantityDt) {
+            if (path.equals("value")) {
+                return DecimalDt.class;
+            }
+            else if (path.equals("unit")) {
+                return StringDt.class;
+            }
+        }
+        else if (target instanceof CodingDt) {
+            if (path.equals("code")) {
+                return CodeDt.class;
+            }
+            else if (path.equals("system")) {
+                return UriDt.class;
+            }
+            else if (path.equals("version") || path.equals("display")) {
+                return StringDt.class;
+            }
+        }
+        else if (target instanceof CodeableConceptDt) {
+            if (path.equals("text")) {
+                return StringDt.class;
+            }
+        }
+        return clazz;
     }
 
     @Override
@@ -183,6 +241,15 @@ public class FhirDataProviderDstu2 implements DataProvider {
         return new FhirBundleCursorDstu2(fhirClient, results);
     }
 
+    public IValueSetEnumBinder<Enum<?>> getBinder(Class clazz) {
+        try {
+            Field field = clazz.getField("VALUESET_BINDER");
+            return (IValueSetEnumBinder<Enum<?>>) field.get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Enumeration field access error in class " + clazz.getSimpleName());
+        }
+    }
+
     @Override
     public void setValue(Object target, String path, Object value) {
         if (target == null) {
@@ -191,10 +258,18 @@ public class FhirDataProviderDstu2 implements DataProvider {
 
         Class<?> clazz = target.getClass();
 
+        if (clazz.getSimpleName().contains("Enum") && path.equals("value")) {
+            target = getBinder(clazz).fromCodeString(value.toString());
+            return;
+        }
+
         try {
+            String readAccessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
+            Method readAccessor = clazz.getMethod(readAccessorMethodName);
+
             String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
-            Method accessor = clazz.getMethod(accessorMethodName);
-            accessor.invoke(target, value);
+            Method accessor = clazz.getMethod(accessorMethodName, resolveReturnType(readAccessor.getReturnType(), target, path));
+            accessor.invoke(target, fromJavaPrimitive(value, target));
         } catch (NoSuchMethodException e) {
             throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (InvocationTargetException e) {
@@ -207,14 +282,15 @@ public class FhirDataProviderDstu2 implements DataProvider {
     protected Object resolveProperty(Object target, String path) {
         if (target == null) { return null; }
 
-        if (target instanceof Enumeration && path.equals("value")) {
-            return ((Enumeration)target).getValueAsString();
-        }
-
         // need this for some interesting mapping in Hapi for dstu2...
         path = mapPath(path);
 
         Class<?> clazz = target.getClass();
+
+        if (clazz.getSimpleName().contains("Enum") && path.equals("value")) {
+            return getBinder(clazz).toCodeString((Enum<?>) target);
+        }
+
         try {
             String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
             String elementAccessorMethodName = String.format("%sElement", accessorMethodName);
@@ -249,7 +325,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
     private Object mapPrimitive(Object target) {
         if (target instanceof PeriodDt) {
             PeriodDt period = (PeriodDt) target;
-            return new Interval(DateTime.fromJavaDate(period.getStart().getValue()), true, DateTime.fromJavaDate(period.getEnd().getValue()), true);
+            return new Interval(DateTime.fromJavaDate(period.getStart()), true, DateTime.fromJavaDate(period.getEnd()), true);
         }
 
         else if (target instanceof Date) {
@@ -334,6 +410,9 @@ public class FhirDataProviderDstu2 implements DataProvider {
 
     public Object createInstance(String typeName) {
         Class clazz = resolveType(typeName);
+        if (clazz.getSimpleName().contains("Enum")) {
+            return EnumUtils.getEnumList(clazz).get(0);
+        }
         try {
             Object object = clazz.newInstance();
             return object;
@@ -344,13 +423,14 @@ public class FhirDataProviderDstu2 implements DataProvider {
 
     @Override
     public Class resolveType(String typeName) {
-        String tempPackage = packageName;
+        String truePackage = "ca.uhn.fhir.model.dstu2.composite";
         try {
             // TODO: Obviously would like to be able to automate this, but there is no programmatic way of which I'm aware
             // For the primitive types, not such a big deal.
             // For the enumerations, the type names are generated from the binding name in the spreadsheet, which doesn't make it to the StructureDefinition,
             // and the schema has no way of indicating whether the enum will be common (i.e. in Enumerations) or per resource
             switch (typeName) {
+                // ca.uhn.fhir.model.dstu2.composite
                 case "Coding": typeName = "CodingDt"; break;
                 case "Quantity": typeName = "QuantityDt"; break;
                 case "Period": typeName = "PeriodDt"; break;
@@ -358,20 +438,38 @@ public class FhirDataProviderDstu2 implements DataProvider {
                 case "CodeableConcept": typeName = "CodeableConceptDt"; break;
                 case "AddressType": typeName = "AddressDt"; break;
                 case "Timing": typeName = "TimingDt"; break;
-                case "integer": typeName = "IntegerDt"; break;
-                case "decimal": typeName = "DecimalDt"; break;
-                case "code": typeName = "CodeDt"; break;
-                case "id": typeName = "IdDt"; break;
-                case "boolean": typeName = "BooleanDt"; break;
-                case "uri": typeName = "UriDt"; break;
-                case "time": typeName = "TimeDt"; break;
-                case "unsignedInt": typeName = "UnsignedIntDt"; break;
-                case "oid": typeName = "OidDt"; break;
+                case "Money": typeName = "MoneyDt"; break;
+                case "Count": typeName = "CountDt"; break;
+                case "Distance": typeName = "DistanceDt"; break;
+                case "Duration": typeName = "DurationDt"; break;
+                case "SimpleQuantity": typeName = "SimpleQuantityDt"; break;
+                case "Age": typeName = "AgeDt"; break;
+                // ca.uhn.fhir.model.primitive
+                case "base64Binary": typeName = "Base64BinaryDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "boolean": typeName = "BooleanDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "dateTime": typeName = "DateTimeDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "date": typeName = "DateDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "decimal": typeName = "DecimalDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "instant": typeName = "InstantDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "integer": typeName = "IntegerDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "positiveInt": typeName = "PositiveIntDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "unsignedInt": typeName = "UnsignedIntDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "string": typeName = "StringDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "code": typeName = "CodeDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "markdown": typeName = "MarkdownDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "time": typeName = "TimeDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "uri": typeName = "UriDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "uuid": typeName = "UriDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "id": typeName = "IdDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                case "oid": typeName = "OidDt"; truePackage = "ca.uhn.fhir.model.primitive"; break;
+                // ca.uhn.fhir.model.dstu2.valueset -- Enums
+                default: typeName += "Enum"; truePackage = "ca.uhn.fhir.model.dstu2.valueset"; break;
+
             }
-            return Class.forName(String.format("%s.%s", tempPackage, typeName));
+            return Class.forName(String.format("%s.%s", truePackage, typeName));
         }
         catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", tempPackage, typeName));
+            throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", truePackage, typeName));
         }
     }
 }
