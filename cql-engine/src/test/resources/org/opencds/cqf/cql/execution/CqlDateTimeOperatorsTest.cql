@@ -92,6 +92,7 @@ define DateTimeMillisecond: DateTime(2003, 10, 29, 20, 50, 33, 955)
 //DateTimeComponentFrom
 define DateTimeComponentFromYear: year from DateTime(2003, 10, 29, 20, 50, 33, 955)
 define DateTimeComponentFromMonth: month from DateTime(2003, 10, 29, 20, 50, 33, 955)
+define DateTimeComponentFromMonthMinBoundary: month from DateTime(2003, 01, 29, 20, 50, 33, 955)
 define DateTimeComponentFromDay: day from DateTime(2003, 10, 29, 20, 50, 33, 955)
 define DateTimeComponentFromHour: hour from DateTime(2003, 10, 29, 20, 50, 33, 955)
 define DateTimeComponentFromMinute: minute from DateTime(2003, 10, 29, 20, 50, 33, 955)

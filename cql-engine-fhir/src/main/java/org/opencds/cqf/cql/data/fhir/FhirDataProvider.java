@@ -193,6 +193,7 @@ public class FhirDataProvider extends BaseFhirDataProvider {
     }
 
     private String convertPathToSearchParam(String dataType, String codePath) {
+        if (codePath.startsWith("date") && codePath.endsWith("value")) return "date";
         return codePath.replace('.', '-');
         // TODO: The above won't work in all cases, but is a best guess for now
         // What we really need is something like the below, but that's a lot of specific mapping...

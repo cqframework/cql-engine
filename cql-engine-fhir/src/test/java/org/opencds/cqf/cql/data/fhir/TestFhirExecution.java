@@ -18,4 +18,13 @@ public class TestFhirExecution extends FhirExecutionTestBase {
         Object result = context.resolveExpressionRef("testCoalesce").getExpression().evaluate(context);
         Assert.assertTrue((Integer)((List) result).get(0) == 72);
     }
+
+    @Test
+    public void testMonthFrom() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        context.setParameter(null, "MAXYEAR", 2014);
+        Object result = context.resolveExpressionRef("testMonthFrom").getExpression().evaluate(context);
+        Assert.assertTrue(result != null);
+    }
 }

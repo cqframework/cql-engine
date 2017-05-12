@@ -296,6 +296,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeComponentFromMonth").getExpression().evaluate(context);
         assertThat(result, is(10));
 
+        result = context.resolveExpressionRef("DateTimeComponentFromMonthMinBoundary").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
         result = context.resolveExpressionRef("DateTimeComponentFromDay").getExpression().evaluate(context);
         assertThat(result, is(29));
 
