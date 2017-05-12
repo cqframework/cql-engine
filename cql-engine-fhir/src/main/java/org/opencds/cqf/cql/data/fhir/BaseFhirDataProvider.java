@@ -196,15 +196,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
             }
         }
 
-        Class clazz;
-        try {
-            clazz = Class.forName(String.format("%s.%s", getPackageName(), type + "Type"));
-        } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException("Error resolving choice property: " + e.getMessage());
-        }
-
-        Object object = resolveChoiceProperty(target, path, type);
-        return clazz.isInstance(object) ? object : null;
+        return resolveChoiceProperty(target, path, type);
     }
 
     protected Object resolveProperty(Object target, String path) {
