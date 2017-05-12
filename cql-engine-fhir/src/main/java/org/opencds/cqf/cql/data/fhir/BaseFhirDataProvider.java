@@ -167,12 +167,12 @@ public abstract class BaseFhirDataProvider implements DataProvider
     }
 
     protected String resolveChoiceOutlier(String path) {
-        if (path.startsWith("notDoneReason")) return "notDoneReason";
-        else if (path.startsWith("valueSet")) return "valueSet";
-        else if (path.startsWith("multipleBirth")) return "multipleBirth";
-        else if (path.startsWith("asNeeded")) return "asNeeded";
-        else if (path.startsWith("onBehalfOf")) return "onBehalfOf";
-        else if (path.startsWith("defaultValue")) return "defaultValue";
+        if (path.startsWith("notDoneReason")) return path.replace("notDoneReason", "");
+        else if (path.startsWith("valueSet")) return path.replace("valueSet", "");
+        else if (path.startsWith("multipleBirth")) return path.replace("multipleBirth", "");
+        else if (path.startsWith("asNeeded")) return path.replace("asNeeded", "");
+        else if (path.startsWith("onBehalfOf")) return path.replace("onBehalfOf", "");
+        else if (path.startsWith("defaultValue")) return path.replace("defaultValue", "");
         return path;
     }
 
