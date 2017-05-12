@@ -138,9 +138,9 @@ public abstract class BaseFhirDataProvider implements DataProvider
     protected boolean pathIsChoice(String path) {
         // Pretty consistent format: lowercase root followed by Type.
         // outliers
-        if (path.startsWith("notDoneReason") || path.endsWith("valueSet")
-                || path.endsWith("multipleBirth") || path.endsWith("asNeeded")
-                || path.endsWith("onBehalfOf") || path.endsWith("defaultValue")) {
+        if (path.startsWith("notDoneReason") || path.startsWith("valueSet")
+                || path.startsWith("multipleBirth") || path.startsWith("asNeeded")
+                || path.startsWith("onBehalfOf") || path.startsWith("defaultValue")) {
             return true;
         }
 
