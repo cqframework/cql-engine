@@ -5,10 +5,12 @@ import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import static org.testng.Assert.assertTrue;
 /**
  * Created by Bryn on 4/16/2016.
  */
-public class TestFhirDataProviderDstu3 {
+public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     @Test
     public void testFhirClient() {
@@ -51,6 +53,15 @@ public class TestFhirDataProviderDstu3 {
         }
 
         assertTrue(patients.size() == resultCount);
+    }
+
+    @Test
+    public void testChoiceTypes() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+
+        Object result = context.resolveExpressionRef("testChoiceTypes").getExpression().evaluate(context);
+        Assert.assertTrue(result != null);
     }
 
     // TODO: Fix this test

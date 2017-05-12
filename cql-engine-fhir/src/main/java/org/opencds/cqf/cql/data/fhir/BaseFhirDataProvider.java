@@ -135,14 +135,19 @@ public abstract class BaseFhirDataProvider implements DataProvider
         }
     }
 
-    protected boolean pathIsChoice(String path) {
-        // Pretty consistent format: lowercase root followed by Type.
+    protected boolean pathIsChoiceOutlier(String path) {
         // outliers
         if (path.startsWith("notDoneReason") || path.startsWith("valueSet")
                 || path.startsWith("multipleBirth") || path.startsWith("asNeeded")
                 || path.startsWith("onBehalfOf") || path.startsWith("defaultValue")) {
             return true;
         }
+        return false;
+    }
+
+    protected boolean pathIsChoice(String path) {
+        // Pretty consistent format: lowercase root followed by Type.
+        if (pathIsChoiceOutlier(path)) return true;
 
         // get the substring from first uppercase to end of string
         Pattern pattern = Pattern.compile("[A-Z].*");
@@ -161,17 +166,34 @@ public abstract class BaseFhirDataProvider implements DataProvider
         return true;
     }
 
+    protected String resolveChoiceOutlier(String path) {
+        if (path.startsWith("notDoneReason")) return "notDoneReason";
+        else if (path.startsWith("valueSet")) return "valueSet";
+        else if (path.startsWith("multipleBirth")) return "multipleBirth";
+        else if (path.startsWith("asNeeded")) return "asNeeded";
+        else if (path.startsWith("onBehalfOf")) return "onBehalfOf";
+        else if (path.startsWith("defaultValue")) return "defaultValue";
+        return path;
+    }
+
     protected Object resolveChoiceProperty(Object target, String path, String typeName) {
         String rootPath = path.substring(0, path.indexOf(typeName));
         return resolveProperty(target, rootPath);
     }
 
     protected Object resolveChoiceProperty(Object target, String path) {
-        Pattern pattern = Pattern.compile("[A-Z].*");
-        Matcher matcher = pattern.matcher(path);
-        String type = path;
-        if (matcher.find()) {
-            type = matcher.group();
+        String type;
+        if (pathIsChoiceOutlier(path)) {
+            type = resolveChoiceOutlier(path);
+        }
+
+        else {
+            Pattern pattern = Pattern.compile("[A-Z].*");
+            Matcher matcher = pattern.matcher(path);
+            type = path;
+            if (matcher.find()) {
+                type = matcher.group();
+            }
         }
 
         Class clazz;
