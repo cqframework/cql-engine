@@ -10,4 +10,4 @@ define MedicationRequests:
 define testCoalesce:
     MedicationRequests M
         return
-            Coalesce(M.dosageInstruction[0].timing.repeat.frequencyMax, M.dosageInstruction[0].timing.repeat.frequency)
+            Coalesce(M.dosageInstruction[0].timing.repeat.frequencyMax.value, M.dosageInstruction[0].timing.repeat.frequency.value)

@@ -117,25 +117,6 @@ public abstract class BaseFhirDataProvider implements DataProvider
         }
     }
 
-    protected Object mapPrimitive(Object result) {
-        if (result instanceof IntegerType) {
-            return ((IntegerType) result).getValue();
-        }
-        else if (result instanceof DecimalType) {
-            return ((DecimalType) result).getValue();
-        }
-        else if (result instanceof BooleanType) {
-            return ((BooleanType) result).getValue();
-        }
-        else if (result instanceof CodeType) {
-            return ((CodeType) result).getValue();
-        }
-        else if (result instanceof StringType) {
-            return ((StringType) result).getValue();
-        }
-        return result;
-    }
-
     protected Object toJavaPrimitive(Object result, Object source) {
         if (source instanceof DateTimeType) {
             return toDateTime((DateTimeType)source);
@@ -152,27 +133,6 @@ public abstract class BaseFhirDataProvider implements DataProvider
         else {
             return result;
         }
-
-        // The HAPI primitive types use the same Java types as the CQL Engine with the exception of the date types,
-        // where the HAPI classes return Java Dates, the engine expects runtime.DateTime instances
-
-//        if (result instanceof BoundCodeDt) {
-//            return ((BoundCodeDt)result).getValue();
-//        }
-//
-//        if (result instanceof BaseDateTimeDt) {
-//            return DateTime.fromJavaDate(((BaseDateTimeDt)result).getValue());
-//        }
-//
-//        if (result instanceof BaseDateTimeType) {
-//            return DateTime.fromJavaDate(((BaseDateTimeType)result).getValue());
-//        }
-//
-//        if (result instanceof TimeType) {
-//            return toTime((TimeType)result);
-//        }
-//
-//        return result;
     }
 
     protected boolean pathIsChoice(String path) {
@@ -238,11 +198,6 @@ public abstract class BaseFhirDataProvider implements DataProvider
             return target.toString();
         }
 
-        // TODO: find a better way for choice types ...
-        else if (path.equals("asNeededBoolean") || path.equals("asNeededCodeableConcept")) {
-            path = "asNeeded";
-        }
-
         Class<? extends Object> clazz = target.getClass();
         try {
             String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
@@ -276,7 +231,7 @@ public abstract class BaseFhirDataProvider implements DataProvider
     public Object resolvePath(Object target, String path) {
         String[] identifiers = path.split("\\.");
         for (String identifier : identifiers) {
-            // handling indexes: item[0].code
+            // handling indexes: i.e. item[0].code
             if (identifier.contains("[")) {
                 int j = Character.getNumericValue(identifier.charAt(identifier.indexOf("[") + 1));
                 target = resolveProperty(target, identifier.replaceAll("\\[\\d\\]", ""));

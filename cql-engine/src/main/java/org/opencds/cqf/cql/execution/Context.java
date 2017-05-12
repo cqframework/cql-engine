@@ -64,7 +64,7 @@ public class Context {
 
     public void addLetExpression(String name, Expression result) {
         if (letExpressions.getElements().containsKey(name)) {
-            throw new IllegalArgumentException("Non-unique expression reference in let clause.");
+            return;
         }
 
         letExpressions.getElements().put(name, result);
