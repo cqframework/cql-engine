@@ -1,12 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Value;
-import java.util.Iterator;
+
 import java.math.BigDecimal;
-import java.math.RoundingMode;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
 Variance(argument List<Decimal>) Decimal
@@ -23,42 +21,30 @@ Return types: BigDecimal & Quantity
 */
 public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Variance {
 
-  public static Object variance(Object source) {
-    if (source instanceof Iterable) {
-      Iterable<Object> element = (Iterable<Object>)source;
-      Iterator<Object> itr = element.iterator();
+  public static Object variance(List<Object> source) {
 
-      if (!itr.hasNext()) { return null; } // empty list
-
-      DescriptiveStatistics stats = new DescriptiveStatistics();
-      Object value = itr.next();
-      while (value == null) { value = itr.next(); }
-      if (!itr.hasNext()) { return null; } // no non-null elements
-
-      if (value instanceof BigDecimal) {
-        stats.addValue(((BigDecimal)value).doubleValue());
-        while (itr.hasNext()) {
-          BigDecimal next = (BigDecimal)itr.next();
-          if (next != null) { stats.addValue(next.doubleValue()); }
-        }
-        BigDecimal retVal = new BigDecimal(stats.getVariance());
-        return retVal.precision() > 8 ? retVal.setScale(8, RoundingMode.FLOOR) : retVal;
-      }
-
-      else if (value instanceof Quantity) {
-        stats.addValue((((Quantity)value).getValue()).doubleValue());
-        while (itr.hasNext()) {
-          BigDecimal next = ((Quantity)itr.next()).getValue();
-          if (next != null) { stats.addValue(next.doubleValue()); }
-        }
-        Quantity retVal = new Quantity().withValue(new BigDecimal(stats.getVariance()))
-                                        .withUnit(((Quantity)value).getUnit());
-        return retVal.getValue().precision() > 8 ? retVal.withValue(retVal.getValue().setScale(8, RoundingMode.FLOOR)) : retVal;
-      }
-
-      throw new IllegalArgumentException(String.format("Cannot PopulationVariance arguments of type '%s'.", value.getClass().getName()));
+    if (source == null) {
+      return null;
     }
-    throw new IllegalArgumentException(String.format("Invalid instance '%s' for Variance operation.", source.getClass().getName()));
+
+    if (source.isEmpty()) {
+      return null;
+    }
+
+    Object mean = AvgEvaluator.avg(source);
+
+    List<Object> newVals = new ArrayList<>();
+
+    for (Object element : source) {
+      if (element != null) {
+        newVals.add(MultiplyEvaluator.multiply(
+                SubtractEvaluator.subtract(element, mean),
+                SubtractEvaluator.subtract(element, mean))
+        );
+      }
+    }
+
+    return DivideEvaluator.divide(SumEvaluator.sum(newVals), new BigDecimal(newVals.size() - 1)); // slight variation to Avg
   }
 
   @Override
@@ -66,6 +52,6 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
     Object source = getSource().evaluate(context);
     if (source == null) { return null; }
 
-    return variance(source);
+    return variance((List<Object>) source);
   }
 }

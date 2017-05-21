@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.util.Iterator;
 import java.math.BigDecimal;
 
@@ -49,7 +51,7 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
     else { return null; } // TODO: maybe throw exception here?
 
     if (size == 0) { return null; } // all elements null
-    return avg.divide(new BigDecimal(size));
+    return Value.verifyPrecision((BigDecimal) DivideEvaluator.divide(avg, new BigDecimal(size)));
   }
 
   @Override

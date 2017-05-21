@@ -24,7 +24,7 @@ define testExpressionSortEnumString:
 define testExpressionSortInt:
     [Observation] O
         where O.issued.value is not null
-        sort by O.issued.value desc
+        sort by year from O.issued.value desc
 
 define testExpressionSortQuantity:
     [Substance] S

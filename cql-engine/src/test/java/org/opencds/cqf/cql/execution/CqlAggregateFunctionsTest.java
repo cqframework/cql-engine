@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import javax.xml.bind.JAXBException;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -170,7 +171,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testPopulationStdDev() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef("PopStdDevTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("1.41421356"))); //23730951454746218587388284504413604736328125
+      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.41421356")) == 0); //23730951454746218587388284504413604736328125
     }
 
     /**
@@ -180,7 +181,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testPopulationVariance() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef("PopVarianceTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("2")));
+      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("2.0")) == 0);
     }
 
     /**
@@ -190,7 +191,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testStdDev() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef("StdDevTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("1.58113883"))); //00841897613935316257993690669536590576171875
+      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.58113883")) == 0); //00841897613935316257993690669536590576171875
     }
 
     /**
@@ -213,6 +214,6 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testVariance() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef("VarianceTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("2.5")));
+      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("2.5")) == 0);
     }
 }

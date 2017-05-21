@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /*
@@ -17,26 +19,30 @@ If either argument is null, the result is null.
  */
 public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object left = getOperand().get(0).evaluate(context);
-        Object right = getOperand().get(1).evaluate(context);
-
+    public static Object power(Object left, Object right) {
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof Integer) {
             if ((Integer)right < 0) {
-              return new BigDecimal(1).divide(new BigDecimal((Integer)left).pow(Math.abs((Integer)right)));
+                return new BigDecimal(1).divide(new BigDecimal((Integer)left).pow(Math.abs((Integer)right)));
             }
             return new BigDecimal((Integer)left).pow((Integer)right).intValue();
         }
 
         if (left instanceof BigDecimal) {
-            return new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue()));
+            return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())));
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Power arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return power(left, right);
     }
 }
