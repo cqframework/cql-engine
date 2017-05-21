@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Value;
+
+import java.math.BigDecimal;
 
 /*
 structured type Quantity
@@ -19,6 +22,7 @@ public class QuantityEvaluator extends org.cqframework.cql.elm.execution.Quantit
 
     @Override
     public Object evaluate(Context context) {
-        return new org.opencds.cqf.cql.runtime.Quantity().withValue(this.getValue()).withUnit(this.getUnit());
+        BigDecimal value = Value.verifyPrecision(this.getValue());
+        return new org.opencds.cqf.cql.runtime.Quantity().withValue(value).withUnit(this.getUnit());
     }
 }

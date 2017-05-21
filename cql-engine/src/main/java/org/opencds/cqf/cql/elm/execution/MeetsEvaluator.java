@@ -28,7 +28,10 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
 
       if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-      return (Value.compareTo(rightStart, leftEnd, ">")) ? Value.compareTo(rightStart, Interval.successor(leftEnd), "==") : Value.compareTo(leftStart, Interval.successor(rightEnd), "==");
+      return (GreaterEvaluator.greater(rightStart, leftEnd))
+              ? EqualEvaluator.equal(rightStart, Value.successor(leftEnd))
+              : EqualEvaluator.equal(leftStart, Value.successor(rightEnd)
+      );
     }
     return null;
   }

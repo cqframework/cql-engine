@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,8 +40,6 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
       Interval leftInterval = (Interval)left;
       Interval rightInterval = (Interval)right;
 
-      if (leftInterval == null || rightInterval == null) { return null; }
-
       if (!OverlapsEvaluator.overlaps(leftInterval, rightInterval)) { return null; }
 
       Object leftStart = leftInterval.getStart();
@@ -52,8 +49,8 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
 
       if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-      Object max = Value.compareTo(leftStart, rightStart, ">") ? leftStart : rightStart;
-      Object min = Value.compareTo(leftEnd, rightEnd, "<") ? leftEnd : rightEnd;
+      Object max = GreaterEvaluator.greater(leftStart, rightStart) ? leftStart : rightStart;
+      Object min = LessEvaluator.less(leftEnd, rightEnd) ? leftEnd : rightEnd;
 
       return new Interval(max, true, min, true);
     }
@@ -66,7 +63,7 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
           return null;
       }
 
-      List<Object> result = new ArrayList<Object>();
+      List<Object> result = new ArrayList<>();
       for (Object leftItem : leftArr) {
           if (InEvaluator.in(leftItem, rightArr)) {
               result.add(leftItem);

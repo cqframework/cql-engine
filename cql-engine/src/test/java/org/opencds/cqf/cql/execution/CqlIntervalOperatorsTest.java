@@ -5,11 +5,12 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Time;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,12 +23,9 @@ import static org.hamcrest.Matchers.nullValue;
 public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
     @Test
-    public void TestIntervalOperators() {
+    public void TestAfter() {
         Context context = new Context(library);
 
-        /*
-        After:
-        */
         Object result = context.resolveExpressionRef("TestAfterNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -96,11 +94,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Before:
-        */
-        result = context.resolveExpressionRef("TestBeforeNull").getExpression().evaluate(context);
+    @Test
+    public void TestBefore() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestBeforeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalBeforeFalse").getExpression().evaluate(context);
@@ -168,24 +168,30 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Collapse:
-        */
-        result = context.resolveExpressionRef("TestCollapseNull").getExpression().evaluate(context);
+    @Test
+    public void TestCollapse() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestCollapseNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(new Interval(1, true, 10, true), new Interval(12, true, 19, true))));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 10, true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(12, true, 19, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse2").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(new Interval(1, true, 2, true), new Interval(3, true, 19, true))));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 2, true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(3, true, 19, true)));
 
         result = context.resolveExpressionRef("DecimalIntervalCollapse").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true), new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true))));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalCollapse").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true), new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true))));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("DateTimeCollapse").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)((ArrayList<Object>)result).get(0)).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1})));
@@ -200,11 +206,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(((Time)((Interval)((ArrayList<Object>)result).get(1)).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {17, 59, 59, 999})));
         assertThat(((Time)((Interval)((ArrayList<Object>)result).get(1)).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {22, 59, 59, 999})));
         assertThat(((ArrayList<Object>)result).size(), is(2));
+    }
 
-        /*
-        Contains:
-        */
-        result = context.resolveExpressionRef("TestContainsNull").getExpression().evaluate(context);
+    @Test
+    public void TestContains() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestContainsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TestNullElement1").getExpression().evaluate(context);
@@ -242,11 +250,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeContainsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Ends
-        */
-        result = context.resolveExpressionRef("TestEndsNull").getExpression().evaluate(context);
+    @Test
+    public void TestEnds() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestEndsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalEndsTrue").getExpression().evaluate(context);
@@ -278,11 +288,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeEndsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Equal
-        */
-        result = context.resolveExpressionRef("TestEqualNull").getExpression().evaluate(context);
+    @Test
+    public void TestEqual() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestEqualNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalEqualTrue").getExpression().evaluate(context);
@@ -314,30 +326,32 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Except:
-        */
-        result = context.resolveExpressionRef("TestExceptNull").getExpression().evaluate(context);
+    @Test
+    public void TestExcept() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalExcept1to3").getExpression().evaluate(context);
-        assertThat((Interval)result, is(new Interval(1, true, 3, true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 3, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("DecimalIntervalExcept1to3").getExpression().evaluate(context);
-        assertThat((Interval)result, is(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.99999999"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.99999999"), true)));
 
         result = context.resolveExpressionRef("DecimalIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("QuantityIntervalExcept1to4").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.99999999")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.99999999")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("Except12").getExpression().evaluate(context);
-        assertThat((Interval)result, is(new Interval(1, true, 2, true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 2, true)));
 
         result = context.resolveExpressionRef("ExceptDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 5})));
@@ -354,11 +368,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("ExceptTime2").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 0, 0, 0})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 59, 59, 999})));
+    }
 
-        /*
-        In
-        */
-        result = context.resolveExpressionRef("TestInNull").getExpression().evaluate(context);
+    @Test
+    public void TestIn() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalInTrue").getExpression().evaluate(context);
@@ -396,11 +412,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+    }
 
-        /*
-        Includes
-        */
-        result = context.resolveExpressionRef("TestIncludesNull").getExpression().evaluate(context);
+    @Test
+    public void TestIncludes() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestIncludesNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalIncludesTrue").getExpression().evaluate(context);
@@ -432,16 +450,17 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Included In
-        */
+    @Test
+    public void TestIncludedIn() {
+        Context context = new Context(library);
 
         // This is going to the InEvaluator for some reason
         // result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
         // assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("IntegerIntervalIncludedInFalse").getExpression().evaluate(context);
@@ -470,28 +489,29 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Intersect
-        */
+    @Test
+    public void TestIntersect() {
+        Context context = new Context(library);
 
         // result = context.resolveExpressionRef("TestIntersectNull").getExpression().evaluate(context);
         // assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(4, true, 10, true)));
+        Object result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)result).equal(new Interval(4, true, 10, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("DecimalIntervalIntersectTest4to10").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new BigDecimal("4.0"), true, new BigDecimal("10.0"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("4.0"), true, new BigDecimal("10.0"), true)));
 
         result = context.resolveExpressionRef("IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("QuantityIntervalIntersectTest5to10").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalIntersectTestNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -504,11 +524,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {4, 59, 59, 999})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {6, 59, 59, 999})));
 
-        /*
-        Equivalent
-        */
+    }
 
-        result = context.resolveExpressionRef("IntegerIntervalEquivalentTrue").getExpression().evaluate(context);
+    @Test
+    public void TestEquivalent() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("IntegerIntervalEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("IntegerIntervalEquivalentFalse").getExpression().evaluate(context);
@@ -537,11 +559,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeEquivalentFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Meets
-        */
-        result = context.resolveExpressionRef("TestMeetsNull").getExpression().evaluate(context);
+    @Test
+    public void TestMeets() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestMeetsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalMeetsTrue").getExpression().evaluate(context);
@@ -573,11 +597,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        MeetsBefore
-        */
-        result = context.resolveExpressionRef("TestMeetsBeforeNull").getExpression().evaluate(context);
+    @Test
+    public void TestMeetsBefore() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestMeetsBeforeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalMeetsBeforeTrue").getExpression().evaluate(context);
@@ -609,11 +635,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        MeetsAfter
-        */
-        result = context.resolveExpressionRef("TestMeetsAfterNull").getExpression().evaluate(context);
+    @Test
+    public void TestMeetsAfter() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestMeetsAfterNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalMeetsAfterTrue").getExpression().evaluate(context);
@@ -645,11 +673,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        NotEqual
-        */
-        result = context.resolveExpressionRef("IntegerIntervalNotEqualTrue").getExpression().evaluate(context);
+    @Test
+    public void TestNotEqual() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("IntegerIntervalNotEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("IntegerIntervalNotEqualFalse").getExpression().evaluate(context);
@@ -678,11 +708,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeNotEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Overlaps
-        */
-        result = context.resolveExpressionRef("TestOverlapsNull").getExpression().evaluate(context);
+    @Test
+    public void TestOverlaps() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestOverlapsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalOverlapsTrue").getExpression().evaluate(context);
@@ -714,11 +746,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        OverlapsBefore
-        */
-        result = context.resolveExpressionRef("TestOverlapsBeforeNull").getExpression().evaluate(context);
+    @Test
+    public void TestOverlapsBefore() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestOverlapsBeforeNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalOverlapsBeforeTrue").getExpression().evaluate(context);
@@ -750,11 +784,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        OverlapsAfter
-        */
-        result = context.resolveExpressionRef("TestOverlapsAfterNull").getExpression().evaluate(context);
+    @Test
+    public void TestOverlapsAfter() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestOverlapsAfterNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalOverlapsAfterTrue").getExpression().evaluate(context);
@@ -786,11 +822,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        ProperlyIncludes
-        */
-        result = context.resolveExpressionRef("TestProperlyIncludesNull").getExpression().evaluate(context);
+    @Test
+    public void TestProperlyIncludes() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestProperlyIncludesNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalProperlyIncludesTrue").getExpression().evaluate(context);
@@ -822,11 +860,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeProperlyIncludesFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        ProperlyIncludedIn
-        */
-        result = context.resolveExpressionRef("TestProperlyIncludedInNull").getExpression().evaluate(context);
+    @Test
+    public void TestProperlyIncludedIn() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestProperlyIncludedInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
@@ -858,18 +898,20 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeProperlyIncludedInFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Interval
-        */
-        result = context.resolveExpressionRef("IntegerIntervalTest").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(1, true, 10, true)));
+    @Test
+    public void TestInterval() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("IntegerIntervalTest").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 10, true)));
 
         result = context.resolveExpressionRef("DecimalIntervalTest").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalTest").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("DateTimeIntervalTest").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 1, 0, 0, 0, 0})));
@@ -878,29 +920,33 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeIntervalTest").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 599})));
+    }
 
-        /*
-        Start
-        */
-        result = context.resolveExpressionRef("IntegerIntervalStart").getExpression().evaluate(context);
+    @Test
+    public void TestStart() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("IntegerIntervalStart").getExpression().evaluate(context);
         assertThat(result, is(1));
 
         result = context.resolveExpressionRef("DecimalIntervalStart").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("1.0")));
 
         result = context.resolveExpressionRef("QuantityIntervalStart").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g")));
 
         result = context.resolveExpressionRef("DateTimeIntervalStart").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 1, 0, 0, 0, 0})));
 
         result = context.resolveExpressionRef("TimeIntervalStart").getExpression().evaluate(context);
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
+    }
 
-        /*
-        Starts
-        */
-        result = context.resolveExpressionRef("TestStartsNull").getExpression().evaluate(context);
+    @Test
+    public void TestStarts() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestStartsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalStartsTrue").getExpression().evaluate(context);
@@ -932,27 +978,29 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        /*
-        Union
-        */
-        result = context.resolveExpressionRef("TestUnionNull").getExpression().evaluate(context);
+    @Test
+    public void TestUnion() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalUnion1To15").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(1, true, 15, true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 15, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("DecimalIntervalUnion1To15").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new BigDecimal("1.0"), true, new BigDecimal("15.0"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("15.0"), true)));
 
         result = context.resolveExpressionRef("DecimalIntervalUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("QuantityIntervalUnion1To15").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("15.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("15.0")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -970,11 +1018,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+    }
 
-        /*
-        Width
-        */
-        result = context.resolveExpressionRef("IntegerIntervalTestWidth9").getExpression().evaluate(context);
+    @Test
+    public void TestWidth() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("IntegerIntervalTestWidth9").getExpression().evaluate(context);
         assertThat(result, is(9));
 
         result = context.resolveExpressionRef("IntervalTestWidthNull").getExpression().evaluate(context);
@@ -984,25 +1034,27 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal("11.0")));
 
         result = context.resolveExpressionRef("QuantityIntervalTestWidth5").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
 
         result = context.resolveExpressionRef("DateTimeWidth").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("20")).withUnit("days")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("20")).withUnit("days")));
 
         result = context.resolveExpressionRef("TimeWidth").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("36000000")).withUnit("milliseconds")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("36000000")).withUnit("milliseconds")));
+    }
 
-        /*
-        End
-        */
-        result = context.resolveExpressionRef("IntegerIntervalEnd").getExpression().evaluate(context);
+    @Test
+    public void TestEnd() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("IntegerIntervalEnd").getExpression().evaluate(context);
         assertThat(result, is(10));
 
         result = context.resolveExpressionRef("DecimalIntervalEnd").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("10.0")));
 
         result = context.resolveExpressionRef("QuantityIntervalEnd").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("10.0")).withUnit("g")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("10.0")).withUnit("g")));
 
         result = context.resolveExpressionRef("DateTimeIntervalEnd").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 5, 2, 0, 0, 0, 0})));

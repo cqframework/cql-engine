@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -27,6 +26,6 @@ public class NotEqualEvaluator extends org.cqframework.cql.elm.execution.NotEqua
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return !Value.equals(left, right);
+        return !EqualEvaluator.equal(left, right);
     }
 }

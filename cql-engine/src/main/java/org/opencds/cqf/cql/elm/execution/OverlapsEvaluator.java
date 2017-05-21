@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 overlaps(left Interval<T>, right Interval<T>) Boolean
@@ -28,7 +27,8 @@ public class OverlapsEvaluator extends org.cqframework.cql.elm.execution.Overlap
 
     if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-    return (Value.compareTo(leftStart, rightEnd, "<=") && Value.compareTo(rightStart, leftEnd, "<="));
+    return (LessOrEqualEvaluator.lessOrEqual(leftStart, rightEnd)
+            && LessOrEqualEvaluator.lessOrEqual(rightStart, leftEnd));
   }
 
   @Override

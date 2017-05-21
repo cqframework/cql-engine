@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.runtime;
 
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
+import org.opencds.cqf.cql.elm.execution.LessEvaluator;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -223,6 +225,41 @@ public class DateTime {
       }
     }
     return true;
+  }
+
+  public Integer compareTo(DateTime other) {
+    int size;
+
+    // Uncertainty detection
+    if (this.getPartial().size() != other.getPartial().size()) {
+      size = this.getPartial().size() > other.getPartial().size() ? other.getPartial().size() : this.getPartial().size();
+    }
+    else { size = this.getPartial().size(); }
+
+    for (int i = 0; i < size; ++i) {
+      Object left = this.getPartial().getValue(i);
+      Object right = other.getPartial().getValue(i);
+      if (GreaterEvaluator.greater(left, right)) { return 1; }
+      else if (LessEvaluator.less(left, right)) { return -1; }
+    }
+    // Uncertainty wrinkle
+    if (this.getPartial().size() != other.getPartial().size()) { return null; }
+    return 0;
+  }
+
+  public Boolean equal(DateTime other) {
+    if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
+      return null;
+    }
+    DateTime left = new DateTime().withPartial(this.getPartial()).withTimezoneOffset(this.getTimezoneOffset());
+    DateTime right = new DateTime().withPartial(other.getPartial()).withTimezoneOffset(other.getTimezoneOffset());
+
+    // for DateTime equals, all DateTime elements must be present -- any null values result in null return
+    if (this.getPartial().size() < 7) left = expandPartialMin(left, 7);
+    if (other.getPartial().size() < 7) right = expandPartialMin(right, 7);
+
+    return Arrays.equals(left.dateTime.getValues(), right.dateTime.getValues())
+            && left.getTimezoneOffset().compareTo(right.getTimezoneOffset()) == 0;
   }
 
   @Override

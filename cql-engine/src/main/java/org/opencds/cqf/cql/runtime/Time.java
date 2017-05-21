@@ -2,6 +2,9 @@ package org.opencds.cqf.cql.runtime;
 
 import org.joda.time.Partial;
 import org.joda.time.DateTimeFieldType;
+import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
+import org.opencds.cqf.cql.elm.execution.LessEvaluator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.math.BigDecimal;
@@ -84,8 +87,50 @@ public class Time {
     return new Time().withPartial(new Partial(fields, values)).withTimezoneOffset(new BigDecimal(0));
   }
 
+  public static Time expandPartialMin(Time dt, int size) {
+    for (int i = dt.getPartial().size(); i < size; ++i) {
+      dt.setPartial(dt.getPartial().with(getField(i), getField(i).getField(null).getMinimumValue()));
+    }
+    return dt;
+  }
+
   @Override
   public String toString() {
     return this.getPartial().toString();
+  }
+
+  public Integer compareTo(Time other) {
+    int size;
+
+    // Uncertainty detection
+    if (this.getPartial().size() != other.getPartial().size()) {
+      size = this.getPartial().size() > other.getPartial().size() ? other.getPartial().size() : this.getPartial().size();
+    }
+    else { size = this.getPartial().size(); }
+
+    for (int i = 0; i < size; ++i) {
+      Object left = this.getPartial().getValue(i);
+      Object right = other.getPartial().getValue(i);
+      if (GreaterEvaluator.greater(left, right)) { return 1; }
+      else if (LessEvaluator.less(left, right)) { return -1; }
+    }
+    // Uncertainty wrinkle
+    if (this.getPartial().size() != other.getPartial().size()) { return null; }
+    return 0;
+  }
+
+  public Boolean equal(Time other) {
+    if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
+      return null;
+    }
+    Time left = new Time().withPartial(this.getPartial()).withTimezoneOffset(this.getTimezoneOffset());
+    Time right = new Time().withPartial(other.getPartial()).withTimezoneOffset(other.getTimezoneOffset());
+
+    // for Time equals, all Time elements must be present -- any null values result in null return
+    if (this.getPartial().size() < 4) left = expandPartialMin(left, 4);
+    if (other.getPartial().size() < 4) right = expandPartialMin(right, 4);
+
+    return Arrays.equals(left.time.getValues(), right.time.getValues())
+            && left.getTimezoneOffset().compareTo(right.getTimezoneOffset()) == 0;
   }
 }

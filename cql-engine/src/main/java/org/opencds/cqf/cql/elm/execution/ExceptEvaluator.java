@@ -3,9 +3,9 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Value;
-import java.util.List;
+
 import java.util.ArrayList;
-import java.math.BigDecimal;
+import java.util.List;
 
 /*
 except(left List<T>, right List<T>) List<T>
@@ -37,19 +37,24 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
 
       if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-      if (Value.compareTo(rightStart, leftEnd, ">")) { return left; }
-      else if (Value.compareTo(leftStart, rightStart, "<") && Value.compareTo(leftEnd, rightEnd, ">")) { return null; }
+      if (GreaterEvaluator.greater(rightStart, leftEnd)) { return left; }
+
+      else if (LessEvaluator.less(leftStart, rightStart)
+              && GreaterEvaluator.greater(leftEnd, rightEnd)) { return null; }
 
       // left interval starts before right interval
-      if ((Value.compareTo(leftStart, rightStart, "<") && Value.compareTo(leftEnd, rightEnd, "<="))) {
-        Object min = Value.compareTo(Interval.predecessor(rightStart), leftEnd, "<") ? Interval.predecessor(rightStart) : leftEnd;
+      if ((LessEvaluator.less(leftStart, rightStart) && LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd))) {
+        Object min = LessEvaluator.less(Value.predecessor(rightStart), leftEnd) ? Value.predecessor(rightStart) : leftEnd;
         return new Interval(leftStart, true, min, true);
       }
       // right interval starts before left interval
-      else if (Value.compareTo(leftStart, rightStart, ">=") && Value.compareTo(leftEnd, rightEnd, ">")) {
-        Object max = Value.compareTo(Interval.successor(rightEnd), leftStart, ">") ? Interval.successor(rightEnd) : leftStart;
+      else if (GreaterEvaluator.greater(leftEnd, rightEnd)
+              && GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart))
+      {
+        Object max = GreaterEvaluator.greater(Value.successor(rightEnd), leftStart) ? Value.successor(rightEnd) : leftStart;
         return new Interval(max, true, leftEnd, true);
       }
+
       throw new IllegalArgumentException(String.format("The following interval values led to an undefined Except result: leftStart: %s, leftEnd: %s, rightStart: %s, rightEnd: %s", leftStart.toString(), leftEnd.toString(), rightStart.toString(), rightEnd.toString()));
     }
 
@@ -57,7 +62,7 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
       Iterable<Object> leftArr = (Iterable<Object>)left;
       Iterable<Object> rightArr = (Iterable<Object>)right;
 
-      List<Object> result = new ArrayList<Object>();
+      List<Object> result = new ArrayList<>();
       for (Object leftItem : leftArr) {
           if (!InEvaluator.in(leftItem, rightArr)) {
               result.add(leftItem);

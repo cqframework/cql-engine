@@ -3,7 +3,10 @@ package org.opencds.cqf.cql.elm.execution;
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /*
@@ -26,11 +29,11 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
     @Override
     public Object evaluate(Context context) {
         switch (valueType.getLocalPart()) {
-            case "Integer": return org.opencds.cqf.cql.runtime.Interval.maxValue(Integer.class);
-            case "Decimal": return org.opencds.cqf.cql.runtime.Interval.maxValue(BigDecimal.class);
-            case "Quantity": return org.opencds.cqf.cql.runtime.Interval.maxValue(org.opencds.cqf.cql.runtime.Quantity.class);
-            case "DateTime": return org.opencds.cqf.cql.runtime.Interval.maxValue(DateTime.class);
-            case "Time": return org.opencds.cqf.cql.runtime.Interval.maxValue(Time.class);
+            case "Integer": return Value.maxValue(Integer.class);
+            case "Decimal": return Value.maxValue(BigDecimal.class);
+            case "Quantity": return Value.maxValue(Quantity.class);
+            case "DateTime": return Value.maxValue(DateTime.class);
+            case "Time": return Value.maxValue(Time.class);
             default: throw new NotImplementedException(String.format("maxValue not implemented for type %s", valueType.getLocalPart()));
         }
     }

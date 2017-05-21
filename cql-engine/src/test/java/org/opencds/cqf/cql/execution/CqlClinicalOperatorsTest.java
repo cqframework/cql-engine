@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.opencds.cqf.cql.elm.execution.CalculateAgeAtEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -54,7 +55,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("CalculateAgeUncertain").getExpression().evaluate(context);
         Integer low = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(2), new int[] {2000, 12})), DateTime.getToday(), "month");
         Integer high = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime().withPartial(new Partial(DateTime.getFields(2), new int[] {2000, 1})), DateTime.getToday(), "month");
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(low, true, high, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(low, true, high, true)));
     }
 
     /**
@@ -82,7 +83,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(521683200));
 
         result = context.resolveExpressionRef("CalculateAgeAtUncertain").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(187, true, 198, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(187, true, 198, true)));
     }
 
     /**

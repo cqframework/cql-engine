@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 import java.util.ArrayList;
 
@@ -32,7 +31,10 @@ Note that the union operator can also be invoked with the symbolic operator (|).
 public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
 
   public static Interval union(Object left, Object right) {
-    if (left == null || right == null) { return null; }
+
+    if (left == null || right == null) {
+      return null;
+    }
 
     Object leftStart = ((Interval)left).getStart();
     Object leftEnd = ((Interval)left).getEnd();
@@ -45,8 +47,8 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
       return null;
     }
 
-    Object min = Value.compareTo(leftStart, rightStart, "<") ? leftStart : rightStart;
-    Object max = Value.compareTo(leftEnd, rightEnd, ">") ? leftEnd : rightEnd;
+    Object min = LessEvaluator.less(leftStart, rightStart) ? leftStart : rightStart;
+    Object max = GreaterEvaluator.greater(leftEnd, rightEnd) ? leftEnd : rightEnd;
 
     return new Interval(min, true, max, true);
   }

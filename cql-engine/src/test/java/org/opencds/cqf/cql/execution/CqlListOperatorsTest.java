@@ -13,6 +13,22 @@ import static org.hamcrest.Matchers.*;
 
 public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
+    @Test
+    public void testSort() throws JAXBException {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("simpleSortAsc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1, 1, 2, 4, 5, 6)));
+
+        result = context.resolveExpressionRef("simpleSortDesc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(6, 5, 4, 2, 1, 1)));
+
+//        result = context.resolveExpressionRef("simpleSortStringAsc").getExpression().evaluate(context);
+//        assertThat(result, is(Arrays.asList(1, 1, 2, 4, 5, 6)));
+//
+//        result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
+//        assertThat(result, is(Arrays.asList(6, 5, 4, 2, 1, 1)));
+    }
+
     /**
      * {@link org.opencds.cqf.cql.elm.execution.Contains#evaluate(Context)}
      */
@@ -119,9 +135,6 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("EqualDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
-
-        result = context.resolveExpressionRef("EqualDateTimeNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("EqualTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));

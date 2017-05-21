@@ -35,7 +35,7 @@ public class CaseEvaluator extends org.cqframework.cql.elm.execution.Case {
   public Object selectedCase(Context context, Object comparand) {
     for (CaseItem caseItem : getCaseItem()) {
       Object when = caseItem.getWhen().evaluate(context);
-      Boolean check = Value.equivalent(comparand, when);
+      Boolean check = EquivalentEvaluator.equivalent(comparand, when);
       if (check == null) { continue; }
       else if (check) {
         return caseItem.getThen().evaluate(context);

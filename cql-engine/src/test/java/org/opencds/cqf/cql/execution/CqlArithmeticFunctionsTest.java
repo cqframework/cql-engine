@@ -1,18 +1,15 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
+import org.joda.time.Partial;
+import org.opencds.cqf.cql.runtime.*;
+import org.testng.Assert;
 import org.testng.annotations.Test;
+
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
-import org.joda.time.Partial;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.*;
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**
@@ -56,7 +53,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal("2.0")));
 
         result = context.resolveExpressionRef("Add1Q1Q").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("2.0")).withUnit("g/cm3")));
+        Assert.assertEquals(new BigDecimal("2.0"), ((Quantity) result).getValue());
+        Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("AddIAndD").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("3.0")));
@@ -115,10 +113,12 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("3.33333333")));
 
         result = context.resolveExpressionRef("Divide1Q1").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g/cm3")));
+        Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+        Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("Divide1Q1Q").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g/cm3")));
+        Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+        Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("Divide10I5D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2.0")));
@@ -127,7 +127,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2.0")));
 
         result = context.resolveExpressionRef("Divide10Q5I").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("2.0")).withUnit("g")));
+        Assert.assertEquals(new BigDecimal("2.0"), ((Quantity) result).getValue());
+        Assert.assertEquals("g", ((Quantity) result).getUnit());
     }
 
     /**
@@ -266,21 +267,18 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMaximum() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("IntegerMaxValue").getExpression().evaluate(context);
-      assertThat(result, is(Integer.MAX_VALUE));
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("IntegerMaxValue").getExpression().evaluate(context);
+        assertThat(result, is(Integer.MAX_VALUE));
 
-      result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
-      assertThat(result, is(Interval.maxValue(BigDecimal.class)));
+        result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo((BigDecimal) Value.maxValue(BigDecimal.class)) == 0);
 
-      result = context.resolveExpressionRef("QuantityMaxValue").getExpression().evaluate(context);
-      assertThat(result, is(Interval.maxValue(Quantity.class)));
+        result = context.resolveExpressionRef("DateTimeMaxValue").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
 
-      result = context.resolveExpressionRef("DateTimeMaxValue").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
-
-      result = context.resolveExpressionRef("TimeMaxValue").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 999})));
+        result = context.resolveExpressionRef("TimeMaxValue").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 999})));
     }
 
     /**
@@ -288,21 +286,18 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testMinimum() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("IntegerMinValue").getExpression().evaluate(context);
-      assertThat(result, is(Integer.MIN_VALUE));
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("IntegerMinValue").getExpression().evaluate(context);
+        assertThat(result, is(Integer.MIN_VALUE));
 
-      result = context.resolveExpressionRef("DecimalMinValue").getExpression().evaluate(context);
-      assertThat(result, is(Interval.minValue(BigDecimal.class)));
+        result = context.resolveExpressionRef("DecimalMinValue").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo((BigDecimal) Value.minValue(BigDecimal.class)) == 0);
 
-      result = context.resolveExpressionRef("QuantityMinValue").getExpression().evaluate(context);
-      assertThat(result, is(Interval.minValue(Quantity.class)));
+        result = context.resolveExpressionRef("DateTimeMinValue").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
 
-      result = context.resolveExpressionRef("DateTimeMinValue").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
-
-      result = context.resolveExpressionRef("TimeMinValue").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
+        result = context.resolveExpressionRef("TimeMinValue").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
     }
 
     /**
@@ -356,7 +351,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         // TODO: should return multiplied units i.e. cm2
         result = context.resolveExpressionRef("Multiply1CMBy2CM").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal(2.0)).withUnit("cm")));
+        Assert.assertTrue(new BigDecimal("2.0").compareTo(((Quantity) result).getValue()) == 0);
+        Assert.assertEquals("cm", ((Quantity) result).getUnit());
     }
 
     /**
@@ -395,7 +391,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.0")));
 
         result = context.resolveExpressionRef("Negate1CM").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("-1.0")).withUnit("cm")));
+        Assert.assertTrue(new BigDecimal("-1.0").compareTo(((Quantity) result).getValue()) == 0);
+        Assert.assertEquals("cm", ((Quantity) result).getUnit());
     }
 
     /**
@@ -416,31 +413,32 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(0));
 
         result = context.resolveExpressionRef("PredecessorOf1D").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Interval.predecessor(new BigDecimal(1.0))));
+        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Value.predecessor(new BigDecimal(1.0))));
 
-       result = context.resolveExpressionRef("PredecessorOf101D").getExpression().evaluate(context);
-       assertThat(result, is(Interval.predecessor(new BigDecimal("1.01"))));
+        result = context.resolveExpressionRef("PredecessorOf101D").getExpression().evaluate(context);
+        assertThat(result, is(Value.predecessor(new BigDecimal("1.01"))));
 
-       result = context.resolveExpressionRef("PredecessorOf1QCM").getExpression().evaluate(context);
-       assertThat(result, is(new Quantity().withValue(new BigDecimal("0.99999999")).withUnit("cm")));
+        result = context.resolveExpressionRef("PredecessorOf1QCM").getExpression().evaluate(context);
+        Assert.assertTrue(new BigDecimal("0.99999999").compareTo(((Quantity) result).getValue()) == 0);
+        Assert.assertEquals("cm", ((Quantity) result).getUnit());
 
-       result = context.resolveExpressionRef("PredecessorOfJan12000").getExpression().evaluate(context);
-       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {1999, 12, 31})));
+        result = context.resolveExpressionRef("PredecessorOfJan12000").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {1999, 12, 31})));
 
-       result = context.resolveExpressionRef("PredecessorOfNoon").getExpression().evaluate(context);
-       assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 59, 59, 999})));
+        result = context.resolveExpressionRef("PredecessorOfNoon").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 59, 59, 999})));
 
-       try {
+        try {
          result = context.resolveExpressionRef("PredecessorUnderflowDt").getExpression().evaluate(context);
-       } catch (RuntimeException re) {
+        } catch (RuntimeException re) {
          assertThat(re.getMessage(), is("The result of the predecessor operation exceeds the minimum value allowed for type DateTime."));
-       }
+        }
 
-       try {
+        try {
          result = context.resolveExpressionRef("PredecessorUnderflowT").getExpression().evaluate(context);
-       } catch (RuntimeException re) {
+        } catch (RuntimeException re) {
          assertThat(re.getMessage(), is("The result of the predecessor operation exceeds the minimum value allowed for type Time."));
-       }
+        }
     }
 
     /**
@@ -508,8 +506,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Round0D4").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
-       result = context.resolveExpressionRef("Round3D14159").getExpression().evaluate(context);
-       assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("3.14")));
+        result = context.resolveExpressionRef("Round3D14159").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("3.14")));
 
         result = context.resolveExpressionRef("RoundNeg0D5").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
@@ -548,7 +546,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
 
         result = context.resolveExpressionRef("Subtract1CMAnd2CM").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal(-1.0)).withUnit("cm")));
+        Assert.assertTrue(new BigDecimal("-1.0").compareTo(((Quantity) result).getValue()) == 0);
+        Assert.assertEquals("cm", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("Subtract2And11D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("0.9")));
@@ -572,10 +571,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(2));
 
         result = context.resolveExpressionRef("SuccessorOf1D").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Interval.successor(new BigDecimal(1.0))));
+        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Value.successor(new BigDecimal(1.0))));
 
        result = context.resolveExpressionRef("SuccessorOf101D").getExpression().evaluate(context);
-       assertThat(result, is(Interval.successor(new BigDecimal("1.01"))));
+       assertThat(result, is(Value.successor(new BigDecimal("1.01"))));
 
        result = context.resolveExpressionRef("SuccessorOfJan12000").getExpression().evaluate(context);
        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2000, 1, 2})));

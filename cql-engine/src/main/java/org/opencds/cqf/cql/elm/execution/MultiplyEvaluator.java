@@ -1,11 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Uncertainty;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /*
 *(left Integer, right Integer) Integer
@@ -40,24 +41,27 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
 
     // *(Decimal, Decimal)
     else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-        return ((BigDecimal)left).multiply((BigDecimal)right).setScale(8, RoundingMode.FLOOR);
+        return Value.verifyPrecision(((BigDecimal)left).multiply((BigDecimal)right));
     }
 
     // *(Quantity, Quantity)
     else if (left instanceof Quantity && right instanceof Quantity) {
       // TODO: unit multiplication i.e. cm*cm = cm^2
       String unit = ((Quantity)left).getUnit();
-      return new Quantity().withValue((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()).setScale(8, RoundingMode.FLOOR)).withUnit(unit);
+      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()));
+      return new Quantity().withValue(value).withUnit(unit);
     }
 
     // *(Decimal, Quantity)
     else if (left instanceof BigDecimal && right instanceof Quantity) {
-      return ((BigDecimal)left).multiply(((Quantity)right).getValue()).setScale(8, RoundingMode.FLOOR);
+      BigDecimal value = Value.verifyPrecision(((BigDecimal)left).multiply(((Quantity)right).getValue()));
+      return ((Quantity) right).withValue(value);
     }
 
     // *(Quantity, Decimal)
     else if (left instanceof Quantity && right instanceof BigDecimal) {
-      return (((Quantity)left).getValue()).multiply((BigDecimal)right).setScale(8, RoundingMode.FLOOR);
+      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply((BigDecimal)right));
+      return ((Quantity) left).withValue(value);
     }
 
     // *(Uncertainty, Uncertainty)

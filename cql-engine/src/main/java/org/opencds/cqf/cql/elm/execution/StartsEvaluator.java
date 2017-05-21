@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 starts(left Interval<T>, right Interval<T>) Boolean
@@ -32,8 +31,11 @@ public class StartsEvaluator extends org.cqframework.cql.elm.execution.Starts {
 
       if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-      return (Value.compareTo(leftStart, rightStart, "==") && Value.compareTo(leftEnd, rightEnd, "<="));
+      return (EqualEvaluator.equal(leftStart, rightStart)
+              && LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)
+      );
     }
+
     return null;
   }
 }

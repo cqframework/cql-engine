@@ -20,3 +20,17 @@ define MeasurementPeriod:
 define testMonthFrom:
     [Immunization] I
         where I.date.value in MeasurementPeriod
+
+define "Immunizations between October and December":
+    [Immunization] I
+            where month from I.date.value in {10, 11, 12}
+
+define "Immunizations between January and April":
+    [Immunization] I
+        where month from I.date.value in {1, 2, 3, 4}
+
+define "Immunizations in range":
+    from "Immunizations between October and December" OctDec,
+    "Immunizations between January and April" JanApr
+        where year from OctDec.date.value = year from JanApr.date.value - 1
+        return Union(OctDec, JanApr)

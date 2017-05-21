@@ -1,9 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.runtime.Uncertainty;
 
 import java.math.BigDecimal;
 
@@ -32,14 +31,19 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
     }
 
     else if (left instanceof BigDecimal) {
-      if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
+      if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
+        return null;
+      }
       return ((BigDecimal)left).divideAndRemainder((BigDecimal)right)[0];
     }
 
     else if (left instanceof Uncertainty && right instanceof Uncertainty) {
       Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
       Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
-      if (Value.compareTo(rightInterval.getStart(), 0, "==") || Value.compareTo(rightInterval.getEnd(), 0, "==")) { return null; }
+
+      if (EqualEvaluator.equal(rightInterval.getStart(), 0)
+              || EqualEvaluator.equal(rightInterval.getEnd(), 0)) { return null; }
+
       return new Uncertainty().withUncertaintyInterval(new Interval(div(leftInterval.getStart(), rightInterval.getStart()), true, div(leftInterval.getEnd(), rightInterval.getEnd()), true));
     }
 

@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
+
 import java.util.ArrayList;
 
 /*
@@ -37,22 +37,23 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
     Object operand1 = getOperand().get(0).evaluate(context);
     Object operand2 = getOperand().get(1).evaluate(context);
 
-    if (operand1 == null || operand2 == null) { return null; }
+    if (operand1 == null || operand2 == null) {
+      return null;
+    }
 
     if (operand1 instanceof Interval) {
       Interval left = (Interval)operand1;
-      Interval right = (Interval)operand2;;
+      Interval right = (Interval)operand2;
 
-      if (left != null && right != null) {
-        Object leftStart = left.getStart();
-        Object leftEnd = left.getEnd();
-        Object rightStart = right.getStart();
-        Object rightEnd = right.getEnd();
+      Object leftStart = left.getStart();
+      Object leftEnd = left.getEnd();
+      Object rightStart = right.getStart();
+      Object rightEnd = right.getEnd();
 
-        return (Value.compareTo(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd), "<")
-                && Value.compareTo(rightStart, leftStart, "<=") && Value.compareTo(rightEnd, leftEnd, ">="));
-      }
-      return null;
+      return (LessEvaluator.less(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd))
+              && LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
+              && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd)
+      );
     }
 
     else if (operand1 instanceof Iterable) {

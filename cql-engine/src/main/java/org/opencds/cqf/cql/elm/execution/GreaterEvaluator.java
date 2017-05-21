@@ -1,7 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Uncertainty;
+
+import java.math.BigDecimal;
 
 /*
 >(left Integer, right Integer) Boolean
@@ -24,14 +29,47 @@ If either argument is null, the result is null.
  */
 public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater {
 
-  public static Object greater(Object left, Object right) {
+    public static Boolean greater(Object left, Object right) {
 
-    if (left == null || right == null) {
-        return null;
+        if (left == null || right == null) {
+            return null;
+        }
+
+        if (left instanceof Integer && right instanceof Integer) {
+            return ((Integer) left).compareTo((Integer) right) > 0;
+        }
+
+        else if (left instanceof BigDecimal && right instanceof BigDecimal) {
+            return ((BigDecimal) left).compareTo((BigDecimal) right) > 0;
+        }
+
+        else if (left instanceof Quantity && right instanceof Quantity) {
+            return ((Quantity) left).compareTo((Quantity) right) > 0;
+        }
+
+        else if (left instanceof DateTime && right instanceof DateTime) {
+            return ((DateTime) left).compareTo((DateTime) right) > 0;
+        }
+
+        else if (left instanceof Time && right instanceof Time) {
+            return ((Time) left).compareTo((Time) right) > 0;
+        }
+
+        else if (left instanceof String && right instanceof String) {
+            return ((String) left).compareTo((String) right) > 0;
+        }
+
+        else if (left instanceof Uncertainty && right instanceof Integer) {
+            if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval())) {
+                return null;
+            }
+            return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) > 0;
+        }
+
+        throw new IllegalArgumentException(
+                String.format("Cannot perform greater than operator on types %s and %s",
+                        left.getClass().getSimpleName(), right.getClass().getSimpleName()));
     }
-
-    return Value.compareTo(left, right, ">");
-  }
 
     @Override
     public Object evaluate(Context context) {

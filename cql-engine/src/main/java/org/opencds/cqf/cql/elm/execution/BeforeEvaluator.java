@@ -1,13 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Uncertainty;
-
-import java.util.ArrayList;
+import org.opencds.cqf.cql.runtime.*;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -47,15 +41,15 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
     if (testLeft == null || testRight == null) { return null; }
 
     if (testLeft instanceof Interval && testRight instanceof Interval) {
-      return Value.compareTo(((Interval)testLeft).getStart(), ((Interval)testRight).getEnd(), "<");
+      return LessEvaluator.less(((Interval)testLeft).getStart(), ((Interval)testRight).getEnd());
     }
 
     else if (testLeft instanceof Interval && !(testRight instanceof Interval)) {
-      return Value.compareTo(((Interval)testLeft).getEnd(), testRight, "<");
+      return LessEvaluator.less(((Interval)testLeft).getEnd(), testRight);
     }
 
     else if (!(testLeft instanceof Interval) && testRight instanceof Interval) {
-      return Value.compareTo(testLeft, ((Interval)testRight).getStart(), "<");
+      return LessEvaluator.less(testLeft, ((Interval)testRight).getStart());
     }
 
     // (DateTime, DateTime)

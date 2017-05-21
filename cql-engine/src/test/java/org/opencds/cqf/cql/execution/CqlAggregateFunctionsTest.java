@@ -128,7 +128,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testMedian() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef("MedianTestDecimal").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("3.50000000")));
+      assertThat(result, is(new BigDecimal("3.5")));
     }
 
     /**

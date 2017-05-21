@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.opencds.cqf.cql.runtime.*;
 import java.math.BigDecimal;
@@ -25,7 +26,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal("5.0")));
 
         result = context.resolveExpressionRef("AnyQuantity").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
 
         result = context.resolveExpressionRef("AnyDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 4, 4})));
@@ -34,7 +35,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {9, 0, 0, 0})));
 
         result = context.resolveExpressionRef("AnyInterval").getExpression().evaluate(context);
-        assertThat(result, is(new Interval(2, true, 7, true)));
+        Assert.assertTrue(((Interval) result).equal(new Interval(2, true, 7, true)));
 
         result = context.resolveExpressionRef("AnyList").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
@@ -65,7 +66,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     public void testCode() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("CodeLiteral").getExpression().evaluate(context);
-        assertThat(result, is(new Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure")));
+        Assert.assertTrue(((Code) result).equal(new Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure")));
     }
 
     /**
@@ -75,7 +76,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     public void testConcept() throws JAXBException {
       Context context = new Context(library);
       Object result = context.resolveExpressionRef("ConceptTest").getExpression().evaluate(context);
-      assertThat(result, is(new Concept().withCodes(Arrays.asList(new Code().withCode("66071002").withSystem("http://loinc.org"), new Code().withCode("B18.1").withSystem("http://loinc.org"))).withDisplay("Type B viral hepatitis")));
+      Assert.assertTrue(((Concept) result).equal(new Concept().withCodes(Arrays.asList(new Code().withCode("66071002").withSystem("http://loinc.org"), new Code().withCode("B18.1").withSystem("http://loinc.org"))).withDisplay("Type B viral hepatitis")));
     }
 
     /**
@@ -106,7 +107,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2015, 2, 10})));
 
       result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
-      assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(19, true, 49, true)));
+      Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(19, true, 49, true)));
 
       result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
@@ -154,14 +155,14 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     public void testQuantity() throws JAXBException {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("QuantityTest").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("150.2")).withUnit("lbs")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("150.2")).withUnit("lbs")));
 
         result = context.resolveExpressionRef("QuantityTest2").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("2.5589")).withUnit("eskimo kisses")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("2.5589")).withUnit("eskimo kisses")));
 
         // NOTE: This should also return an error as the fractional precision is greater than 8
         result = context.resolveExpressionRef("QuantityFractionalTooBig").getExpression().evaluate(context);
-        assertThat(result, is(new Quantity().withValue(new BigDecimal("5.999999999")).withUnit("g")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.99999999")).withUnit("g")));
     }
 
     @Test

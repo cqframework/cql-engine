@@ -1,11 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.ArrayList;
-
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.DateTime;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 /*
 simple type DateTime
@@ -43,9 +44,9 @@ public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTim
 
     org.opencds.cqf.cql.runtime.DateTime dt = new org.opencds.cqf.cql.runtime.DateTime();
 
-    if (dt.formatCheck(new ArrayList<Object>(Arrays.asList(year, month, day, hour, minute, second, millis)))) {
-      int [] values = dt.getValues(year, month, day, hour, minute, second, millis);
-      return dt.withPartial(new Partial(dt.getFields(values.length), values)).withTimezoneOffset(offset);
+    if (DateTime.formatCheck(new ArrayList<>(Arrays.asList(year, month, day, hour, minute, second, millis)))) {
+      int [] values = DateTime.getValues(year, month, day, hour, minute, second, millis);
+      return dt.withPartial(new Partial(DateTime.getFields(values.length), values)).withTimezoneOffset(offset);
     }
     else {
       throw new IllegalArgumentException("DateTime format is invalid");

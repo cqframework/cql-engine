@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -38,7 +37,8 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
 
         if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-        return (Value.compareTo(leftStart, rightStart, "<=") && Value.compareTo(leftEnd, rightEnd, ">="));
+        return (LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart)
+                && GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd));
       }
 
       else if (left instanceof Iterable) {

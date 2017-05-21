@@ -31,7 +31,7 @@ public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf 
         boolean nullSwitch = false;
         for (Object element : (Iterable)source) {
             index++;
-            Boolean equiv = Value.equivalent(element, elementToFind);
+            Boolean equiv = EquivalentEvaluator.equivalent(element, elementToFind);
             if (equiv == null) { nullSwitch = true; }
             else if (equiv) {
                 return index;

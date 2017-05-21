@@ -26,6 +26,18 @@ If either argument is null, the result is null.
  */
 public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
 
+  private static BigDecimal divideHelper(BigDecimal left, BigDecimal right) {
+    if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
+      return null;
+    }
+
+    try {
+      return Value.verifyPrecision(left.divide(right));
+    } catch (ArithmeticException e) {
+      return left.divide(right, 8, RoundingMode.FLOOR);
+    }
+  }
+
   public static Object divide(Object left, Object right) {
 
     if (left == null || right == null) {
@@ -33,22 +45,23 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
     }
 
     if (left instanceof BigDecimal && right instanceof BigDecimal) {
-      if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
-      return ((BigDecimal)left).divide((BigDecimal)right, 8, RoundingMode.FLOOR);
+      return divideHelper((BigDecimal) left, (BigDecimal) right);
     }
 
     else if (left instanceof Quantity && right instanceof Quantity) {
-      if (Value.compareTo(((Quantity)right).getValue(), new BigDecimal(0), "==")) { return null; }
-      return new Quantity().withValue((((Quantity)left).getValue()).divide(((Quantity)right).getValue(), 8, RoundingMode.FLOOR)).withUnit(((Quantity)left).getUnit());
+      BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue());
+      return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity) left).getUnit());
     }
 
     else if (left instanceof Quantity && right instanceof BigDecimal) {
-      if (Value.compareTo(right, new BigDecimal("0.0"), "==")) { return null; }
-      return new Quantity().withValue((((Quantity)left).getValue()).divide((BigDecimal)right, 8, RoundingMode.FLOOR)).withUnit(((Quantity)left).getUnit());
+      BigDecimal value = divideHelper(((Quantity) left).getValue(), (BigDecimal) right);
+      return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity)left).getUnit());
     }
 
-    throw new IllegalArgumentException(String.format("Cannot Divide arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-
+    throw new IllegalArgumentException(
+            String.format("Cannot Divide arguments of type '%s' and '%s'.",
+                    left.getClass().getName(), right.getClass().getName())
+    );
   }
 
     @Override

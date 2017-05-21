@@ -6,6 +6,12 @@ import java.math.BigDecimal;
  * Created by Bryn on 4/15/2016.
  */
 public class Quantity {
+
+    public Quantity() {
+        this.value = new BigDecimal("0.0");
+        this.unit = "";
+    }
+
     private BigDecimal value;
     public BigDecimal getValue() {
         return value;
@@ -30,15 +36,12 @@ public class Quantity {
         return this;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Quantity)) {
-            return false;
-        }
+    public Integer compareTo(Quantity other) {
+        return this.getValue().compareTo(other.getValue());
+    }
 
-        Quantity otherQuantity = (Quantity)other;
-        return value.compareTo(otherQuantity.getValue()) == 0
-                && ((unit == null && otherQuantity.getUnit() == null) || unit.equals(otherQuantity.getUnit()));
+    public Boolean equal(Quantity other) {
+        return value.equals(other.getValue()) && ((unit == null && other.getUnit() == null) || unit.equals(other.getUnit()));
     }
 
     @Override

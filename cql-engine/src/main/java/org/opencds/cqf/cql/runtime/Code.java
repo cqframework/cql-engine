@@ -53,18 +53,12 @@ public class Code {
         return this;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (other instanceof Code) {
-            Code otherCode = (Code)other;
-            return this.getCode().equals(otherCode.getCode())
-                    && ((this.getSystem() == null && otherCode.getSystem() == null)
-                    || (this.getSystem() != null && this.getSystem().equals(otherCode.getSystem())))
-                    && ((this.getVersion() == null && otherCode.getVersion() == null)
-                    || (this.getVersion() != null && this.getVersion().equals(otherCode.getVersion())));
-        }
-
-        return false;
+    public Boolean equal(Code other) {
+        return this.getCode().equals(other.getCode())
+                && ((this.getSystem() == null && other.getSystem() == null)
+                || (this.getSystem() != null && this.getSystem().equals(other.getSystem())))
+                && ((this.getVersion() == null && other.getVersion() == null)
+                || (this.getVersion() != null && this.getVersion().equals(other.getVersion())));
     }
 
     @Override

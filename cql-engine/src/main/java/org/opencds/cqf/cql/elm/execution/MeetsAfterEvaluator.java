@@ -27,7 +27,7 @@ public class MeetsAfterEvaluator extends org.cqframework.cql.elm.execution.Meets
 
       if (leftStart == null || rightEnd == null) { return null; }
 
-      return Value.compareTo(leftStart, Interval.successor(rightEnd), "==");
+      return EqualEvaluator.equal(leftStart, Value.successor(rightEnd));
     }
     return null;
   }

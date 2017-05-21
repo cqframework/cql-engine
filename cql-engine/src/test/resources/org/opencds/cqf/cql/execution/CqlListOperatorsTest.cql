@@ -2,6 +2,14 @@ library ListOperator version '1'
 
 context Population
 
+//Sort
+define simpleList: {4, 5, 1, 6, 2, 1}
+define simpleListString: {'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}
+define simpleSortAsc: simpleList sL sort asc
+define simpleSortDesc: simpleList sL sort desc
+define simpleSortStringAsc: simpleListString sls sort asc
+define simpleSortStringDesc: simpleListString sls sort desc
+
 //Contains
 define ContainsABNullHasNull: { 'a', 'b', null } contains null
 define ContainsNullFirst: { null, 'b', 'c' } contains 'a'
@@ -32,7 +40,6 @@ define Equal123And12: { 1, 2, 3 } = { 1, 2 }
 define Equal123And123: { 1, 2, 3 } = { 1, 2, 3 }
 define EqualDateTimeTrue: {DateTime(2012, 5, 10, 0, 0, 0, 0), DateTime(2014, 12, 10, 0, 0, 0, 0)} = {DateTime(2012, 5, 10, 0, 0, 0, 0), DateTime(2014, 12, 10, 0, 0, 0, 0)}
 define EqualDateTimeFalse: {DateTime(2012, 5, 10, 0, 0, 0, 0), DateTime(2014, 12, 10, 0, 0, 0, 0)} = {DateTime(2012, 1, 10, 0, 0, 0, 0), DateTime(2014, 12, 10, 0, 0, 0, 0)}
-define EqualDateTimeNull: {DateTime(2012, 5, 10), DateTime(2014, 12, 10)} = {DateTime(2012, 1, 10), DateTime(2014, 12, 10)}
 define EqualTimeTrue: { @T15:59:59.999, @T20:59:59.999, @T20:59:59.999 } = { @T15:59:59.999, @T20:59:59.999, @T20:59:59.999 }
 define EqualTimeFalse: { @T15:59:59.999, @T20:59:59.999, @T20:59:59.999 } = { @T10:59:59.999, @T20:59:59.999, @T20:59:59.999 }
 

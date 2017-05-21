@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 ends(left Interval<T>, right Interval<T>) Boolean
@@ -32,7 +31,8 @@ public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
 
       if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-      return (Value.compareTo(leftStart, rightStart, ">=") && Value.compareTo(leftEnd, rightEnd, "=="));
+      return (GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart)
+              && EqualEvaluator.equal(leftEnd, rightEnd));
     }
     return null;
   }

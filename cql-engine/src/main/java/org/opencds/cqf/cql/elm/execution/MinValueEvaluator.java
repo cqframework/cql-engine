@@ -2,10 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.*;
+
 import java.math.BigDecimal;
 
 /*
@@ -28,11 +26,11 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
     @Override
     public Object evaluate(Context context) {
         switch (valueType.getLocalPart()) {
-            case "Integer": return Interval.minValue(Integer.class);
-            case "Decimal": return Interval.minValue(BigDecimal.class);
-            case "Quantity": return Interval.minValue(Quantity.class);
-            case "DateTime": return Interval.minValue(DateTime.class);
-            case "Time": return Interval.minValue(Time.class);
+            case "Integer": return Value.minValue(Integer.class);
+            case "Decimal": return Value.minValue(BigDecimal.class);
+            case "Quantity": return Value.minValue(Quantity.class);
+            case "DateTime": return Value.minValue(DateTime.class);
+            case "Time": return Value.minValue(Time.class);
             default: throw new NotImplementedException(String.format("MinValue not implemented for type %s", valueType.getLocalPart()));
         }
     }

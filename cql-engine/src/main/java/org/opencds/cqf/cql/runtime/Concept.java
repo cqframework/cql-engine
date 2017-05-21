@@ -40,15 +40,10 @@ public class Concept {
         return this;
     }
 
-    @Override
-    public boolean equals(Object other) {
-        // Concept equality is defined as
-        if (other instanceof Concept) {
-            Concept otherConcept = (Concept)other;
-            for (Code code : this.getCodes()) {
-                if (!InEvaluator.in(code, otherConcept.getCodes())) {
-                    return false;
-                }
+    public Boolean equal(Concept other) {
+        for (Code code : this.getCodes()) {
+            if (!InEvaluator.in(code, other.getCodes())) {
+                return false;
             }
         }
 

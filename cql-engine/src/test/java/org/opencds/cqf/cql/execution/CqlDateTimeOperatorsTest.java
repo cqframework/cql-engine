@@ -6,6 +6,7 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Uncertainty;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import java.math.BigDecimal;
 import javax.xml.bind.JAXBException;
@@ -410,22 +411,22 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(-788));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainInterval").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(17, true, 44, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(17, true, 44, true)));
 
         // result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainInterval2").getExpression().evaluate(context);
         // assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(5, true, 17, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainAdd").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(34, true, 88, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(34, true, 88, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainSubtract").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(12, true, 28, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(12, true, 28, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainMultiply").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(289, true, 1936, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(289, true, 1936, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainDiv").getExpression().evaluate(context);
-        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(3, true, 2, true)));
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(3, true, 2, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenMonthUncertain").getExpression().evaluate(context);
         assertThat(result, is(true));

@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 overlaps before(left Interval<T>, right Interval<T>) Boolean
@@ -23,12 +22,11 @@ public class OverlapsBeforeEvaluator extends org.cqframework.cql.elm.execution.O
 
     if (left != null && right != null) {
       Object leftStart = left.getStart();
-      Object leftEnd = left.getEnd();
       Object rightStart = right.getStart();
-      Object rightEnd = right.getEnd();
 
-      return (Value.compareTo(leftStart, rightStart, "<") && OverlapsEvaluator.overlaps(left, right));
+      return (LessEvaluator.less(leftStart, rightStart) && OverlapsEvaluator.overlaps(left, right));
     }
+
     return null;
   }
 }

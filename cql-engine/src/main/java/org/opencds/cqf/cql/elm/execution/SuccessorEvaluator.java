@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Value;
 
 /*
 successor of<T>(argument T) T
@@ -25,6 +25,6 @@ public class SuccessorEvaluator extends org.cqframework.cql.elm.execution.Succes
     @Override
     public Object evaluate(Context context) {
         Object argument = this.getOperand().evaluate(context);
-        return Interval.successor(argument);
+        return Value.successor(argument);
     }
 }

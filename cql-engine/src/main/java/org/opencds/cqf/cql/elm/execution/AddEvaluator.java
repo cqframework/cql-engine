@@ -57,7 +57,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
     }
 
     else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-      return ((BigDecimal)left).add((BigDecimal)right);
+      return Value.verifyPrecision(((BigDecimal)left).add((BigDecimal)right));
     }
 
     else if (left instanceof Quantity && right instanceof Quantity) {

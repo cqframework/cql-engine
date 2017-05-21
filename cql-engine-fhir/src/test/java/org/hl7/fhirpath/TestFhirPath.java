@@ -13,12 +13,12 @@ import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.Tests;
 import org.opencds.cqf.cql.data.fhir.FhirDataProvider;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderDstu2;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Value;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXB;
@@ -176,7 +176,7 @@ public class TestFhirPath {
                     .withSystem(coding.getSystem())
                     .withVersion(coding.getVersion());
         }
-        return Value.equals(expectedResult, actualResult);
+        return EqualEvaluator.equal(expectedResult, actualResult);
     }
 
     private void runTest(org.hl7.fhirpath.tests.Test test) {

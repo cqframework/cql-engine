@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
+
 import java.util.ArrayList;
 
 /*
@@ -43,16 +43,15 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
       Interval left = (Interval)operand1;
       Interval right = (Interval)operand2;
 
-      if (left != null && right != null) {
-        Object leftStart = left.getStart();
-        Object leftEnd = left.getEnd();
-        Object rightStart = right.getStart();
-        Object rightEnd = right.getEnd();
+      Object leftStart = left.getStart();
+      Object leftEnd = left.getEnd();
+      Object rightStart = right.getStart();
+      Object rightEnd = right.getEnd();
 
-        return (Value.compareTo(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd), ">")
-                && Value.compareTo(leftStart, rightStart, "<=") && Value.compareTo(leftEnd, rightEnd, ">="));
-      }
-      return null;
+      return (GreaterEvaluator.greater(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd))
+              && LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart)
+              && GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd)
+      );
     }
 
     else if (operand1 instanceof Iterable) {

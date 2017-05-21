@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+
 import java.util.HashMap;
 
 /**
@@ -29,6 +31,22 @@ public class Tuple {
   public Tuple withElements(HashMap<String, Object> elements) {
     setElements(elements);
     return this;
+  }
+
+  public Boolean equal(Tuple other) {
+    HashMap<String, Object> leftMap = getElements();
+    HashMap<String, Object> rightMap = other.getElements();
+
+    for (String key : rightMap.keySet()) {
+      if (leftMap.containsKey(key)) {
+        Boolean equal = EqualEvaluator.equal(rightMap.get(key), leftMap.get(key));
+        if (equal == null) { return null; }
+        else if (!equal) { return false; }
+      }
+      else { return false; }
+    }
+
+    return true;
   }
 
   @Override

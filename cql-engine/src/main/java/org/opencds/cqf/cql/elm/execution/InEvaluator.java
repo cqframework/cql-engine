@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -37,7 +36,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
     boolean nullSwitch = false;
     for (Object element : list) {
-      Boolean equiv = Value.equivalent(testElement, element);
+      Boolean equiv = EquivalentEvaluator.equivalent(testElement, element);
       if (equiv == null) { nullSwitch = true; }
       else if (equiv) { return true; }
     }
@@ -55,7 +54,8 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
     else if (rightEnd == null && interval.getHighClosed()) { return true; }
     else if (rightStart == null || rightEnd == null) { return null; }
 
-    return (Value.compareTo(testElement, rightStart, ">=") && Value.compareTo(testElement, rightEnd, "<="));
+    return (GreaterOrEqualEvaluator.greaterOrEqual(testElement, rightStart)
+            && LessOrEqualEvaluator.lessOrEqual(testElement, rightEnd));
   }
 
   @Override

@@ -1,8 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
 
 import java.lang.reflect.Type;
@@ -12,6 +11,7 @@ import java.math.BigDecimal;
  * Created by Bryn on 4/15/2016.
  */
 public class Interval {
+
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {
         this.low = low;
         this.lowClosed = lowClosed;
@@ -90,25 +90,18 @@ public class Interval {
      */
     public Object getStart() {
         if (!lowClosed) {
-            return successor(low);
+            return Value.successor(low);
         }
         else {
-            return low == null ? minValue(pointType) : low;
+            return low == null ? Value.minValue(pointType) : low;
         }
     }
 
-    @Override
-    public boolean equals(Object other) {
-        if (!(other instanceof Interval)) {
-            return false;
-        }
-
-        Interval otherInterval = (Interval)other;
-        // TODO: Use Boolean to enable null propagation...
-        return this.getLow() != null && this.getLow().equals(otherInterval.getLow())
-                && this.getLowClosed() == otherInterval.getLowClosed()
-                && this.getHigh() != null && this.getHigh().equals(otherInterval.getHigh())
-                && this.getHighClosed() == otherInterval.getHighClosed();
+    public Boolean equal(Interval other) {
+        return this.getLow() != null && EqualEvaluator.equal(this.getLow(), other.getLow())
+                && this.getLowClosed() == other.getLowClosed()
+                && this.getHigh() != null && EqualEvaluator.equal(this.getHigh(), other.getHigh())
+                && this.getHighClosed() == other.getHighClosed();
     }
 
     /*
@@ -123,116 +116,11 @@ public class Interval {
      */
     public Object getEnd() {
         if (!highClosed) {
-            return predecessor(high);
+            return Value.predecessor(high);
         }
         else {
-            return high == null ? maxValue(pointType) : high;
+            return high == null ? Value.maxValue(pointType) : high;
         }
-    }
-
-    public static Object successor(Object value) {
-        if (value == null) {
-            return null;
-        }
-
-        else if (value instanceof Integer) {
-          return ((Integer)value) + 1;
-        }
-        else if (value instanceof BigDecimal) {
-          return ((BigDecimal)value).add(new BigDecimal("0.00000001"));
-        }
-        else if (value instanceof Quantity) {
-          Quantity quantity = (Quantity)value;
-          return new Quantity().withValue((BigDecimal)successor(quantity.getValue())).withUnit(quantity.getUnit());
-        }
-        else if (value instanceof DateTime) {
-          if (Value.compareTo(value, maxValue(DateTime.class), ">=")) {
-            throw new RuntimeException("The result of the successor operation exceeds the maximum value allowed for type DateTime.");
-          }
-          DateTime dt = (DateTime)value;
-          return new DateTime().withPartial(dt.getPartial().property(DateTime.getField(dt.getPartial().size() - 1)).addToCopy(1));
-        }
-        else if (value instanceof Time) {
-          if (Value.compareTo(value, maxValue(Time.class), ">=")) {
-            throw new RuntimeException("The result of the successor operation exceeds the maximum value allowed for type Time.");
-          }
-          Time t = (Time)value;
-          return new Time().withPartial(t.getPartial().property(Time.getField(t.getPartial().size() - 1)).addToCopy(1));
-        }
-
-        throw new NotImplementedException(String.format("Successor is not implemented for type %s", value.getClass().getName()));
-    }
-
-    public static Object predecessor(Object value) {
-        if (value == null) {
-            return null;
-        }
-        else if (value instanceof Integer) {
-          return ((Integer)value) - 1;
-        }
-        else if (value instanceof BigDecimal) {
-          return ((BigDecimal)value).subtract(new BigDecimal("0.00000001"));
-        }
-        else if (value instanceof Quantity) {
-          Quantity quantity = (Quantity)value;
-          return new Quantity().withValue((BigDecimal)predecessor(quantity.getValue())).withUnit(quantity.getUnit());
-        }
-        else if (value instanceof DateTime) {
-          if (Value.compareTo(value, minValue(DateTime.class), "<=")) {
-            throw new RuntimeException("The result of the predecessor operation exceeds the minimum value allowed for type DateTime.");
-          }
-          DateTime dt = (DateTime)value;
-          return new DateTime().withPartial(dt.getPartial().property(DateTime.getField(dt.getPartial().size() - 1)).addToCopy(-1));
-        }
-        else if (value instanceof Time) {
-          if (Value.compareTo(value, minValue(Time.class), "<=")) {
-            throw new RuntimeException("The result of the predecessor operation exceeds the minimum value allowed for type Time.");
-          }
-          Time t = (Time)value;
-          return new Time().withPartial(t.getPartial().property(Time.getField(t.getPartial().size() - 1)).addToCopy(-1));
-        }
-
-        throw new NotImplementedException(String.format("Predecessor is not implemented for type %s", value.getClass().getName()));
-    }
-
-    public static Object minValue(Type type) {
-        if (type == Integer.class) {
-            return Integer.MIN_VALUE;
-        }
-        else if (type == BigDecimal.class) {
-            return new BigDecimal("-9999999999999999999999999999.99999999");
-        }
-        else if (type == Quantity.class) {
-            return new Quantity().withValue((BigDecimal)minValue(BigDecimal.class));
-        }
-        else if (type == DateTime.class) {
-          return new DateTime().withPartial(new Partial(DateTime.fields, new int[] {0001, 1, 1, 0, 0, 0, 0}));
-        }
-        else if (type == Time.class) {
-          return new Time().withPartial(new Partial(Time.fields, new int[] {0, 0, 0, 0}));
-        }
-
-        throw new NotImplementedException(String.format("MinValue is not implemented for type %s.", type.getTypeName()));
-    }
-
-    public static Object maxValue(Type type) {
-        if (type == Integer.class) {
-            return Integer.MAX_VALUE;
-        }
-        else if (type == BigDecimal.class) {
-            return new BigDecimal("9999999999999999999999999999.99999999");
-        }
-        else if (type == Quantity.class) {
-            return new Quantity().withValue((BigDecimal)maxValue(BigDecimal.class));
-        }
-        else if (type == DateTime.class) {
-          return new DateTime().withPartial(new Partial(DateTime.fields, new int[] {9999, 12, 31, 23, 59, 59, 999}));
-        }
-        else if (type == Time.class) {
-          return new Time().withPartial(new Partial(Time.fields, new int[] {23, 59, 59, 999}));
-        }
-
-        throw new NotImplementedException(String.format("MaxValue is not implemented for type %s.", type.getTypeName()));
     }
 
     @Override

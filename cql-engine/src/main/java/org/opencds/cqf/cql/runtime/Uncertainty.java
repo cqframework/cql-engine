@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
+import org.opencds.cqf.cql.elm.execution.LessEvaluator;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -7,6 +10,7 @@ import java.util.Arrays;
 * Created by Chris Schuler on 6/25/2016
 */
 public class Uncertainty {
+
   private Interval uncertainty;
 
   public Interval getUncertaintyInterval() {
@@ -109,8 +113,8 @@ public class Uncertainty {
 
   public static ArrayList<Interval> getLeftRightIntervals(Object left, Object right) {
 
-    Interval leftU = new Interval(0, true, 0, true);
-    Interval rightU = new Interval(0, true, 0, true);
+    Interval leftU;
+    Interval rightU;
 
     if (left instanceof Uncertainty && right instanceof Uncertainty) {
       leftU = ((Uncertainty)left).getUncertaintyInterval();
@@ -124,7 +128,22 @@ public class Uncertainty {
       leftU = Uncertainty.toUncertainty(left);
       rightU = ((Uncertainty)right).getUncertaintyInterval();
     }
-    return new ArrayList<Interval>(Arrays.asList(leftU, rightU));
+    return new ArrayList<>(Arrays.asList(leftU, rightU));
+  }
+
+  public Boolean equal(Object other) {
+    ArrayList<Interval> intervals = Uncertainty.getLeftRightIntervals(this, other);
+    Interval leftU = intervals.get(0);
+    Interval rightU = intervals.get(1);
+
+    if (LessEvaluator.less(leftU.getEnd(), rightU.getStart())) {
+      return false;
+    }
+    if (GreaterEvaluator.greater(leftU.getStart(), rightU.getEnd())) {
+      return false;
+    }
+
+    return null;
   }
 
   @Override

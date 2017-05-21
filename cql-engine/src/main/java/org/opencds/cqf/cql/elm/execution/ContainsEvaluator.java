@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 contains(argument List<T>, element T) Boolean
@@ -35,7 +34,8 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         Object leftStart = left.getStart();
         Object leftEnd = left.getEnd();
 
-        return (Value.compareTo(right, leftStart, ">=") && Value.compareTo(right, leftEnd, "<="));
+        return (GreaterOrEqualEvaluator.greaterOrEqual(right, leftStart)
+                && LessOrEqualEvaluator.lessOrEqual(right, leftEnd));
       }
       return null;
     }
