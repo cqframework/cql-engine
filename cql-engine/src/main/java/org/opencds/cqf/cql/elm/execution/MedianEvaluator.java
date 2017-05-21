@@ -6,7 +6,6 @@ import org.opencds.cqf.cql.runtime.Quantity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 /*
@@ -22,11 +21,6 @@ If the source is null, the result is null.
 * Created by Chris Schuler on 6/13/2016
 */
 public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
-
-  public static ArrayList<Object> sortList(ArrayList<Object> values) {
-    Collections.sort(values, CqlList.valueSort);
-    return values;
-  }
 
   public static Object median(Object source) {
     Iterable<Object> element = (Iterable<Object>)source;
@@ -48,7 +42,7 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
       return null;
     }
 
-    values = sortList(values);
+    values = CqlList.sortList(values);
 
     if (values.size() % 2 != 0) {
       return values.get(values.size() / 2);

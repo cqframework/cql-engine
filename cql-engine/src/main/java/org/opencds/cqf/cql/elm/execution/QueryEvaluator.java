@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
+import org.cqframework.cql.elm.execution.ByExpression;
 import org.cqframework.cql.elm.execution.LetClause;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
@@ -71,14 +72,25 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : element;
     }
 
-    public void sortResult(List<Object> result) {
+    public void sortResult(List<Object> result, Context context, String alias) {
+
         org.cqframework.cql.elm.execution.SortClause sortClause = this.getSort();
+
         if (sortClause != null) {
+
             for (org.cqframework.cql.elm.execution.SortByItem byItem : sortClause.getBy()) {
+
+                if (byItem instanceof ByExpression) {
+                    CqlList.sortByExpression(result, context, (ByExpression)byItem, alias);
+                    return;
+                }
+
                 String direction = byItem.getDirection().value();
+
                 if (direction == null || direction.equals("asc") || direction.equals("ascending")) {
                     java.util.Collections.sort(result, CqlList.valueSort);
                 }
+
                 else if (direction.equals("desc") || direction.equals("descending")) {
                     java.util.Collections.sort(result, CqlList.valueSort);
                     java.util.Collections.reverse(result);
@@ -133,30 +145,35 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         // collapse list of Tuples into a singleton Tuple list
         // returnList = collapse(returnList);
 
+        // TODO: sorting for List<Tuple>
+        if (returnList.size() > 0 && !(returnList.get(0) instanceof Tuple)) {
+            sortResult(returnList, context, null);
+        }
+
         return returnList;
     }
 
     // Not used, but keeping logic around in case of future implementation...
-    public List<Object> collapse(List toCollapse) {
-        List<Object> returnList = new ArrayList<>();
-        Tuple singletonTuple = new Tuple();
-        for (Object obj : toCollapse) {
-            for (String key : ((Tuple) obj).getElements().keySet()) {
-                if (singletonTuple.getElements().containsKey(key)
-                        && !((List)singletonTuple.getElements().get(key)).contains(((Tuple) obj).getElements().get(key))) {
-                    ((List)singletonTuple.getElements().get(key)).add(((Tuple) obj).getElements().get(key));
-                }
-                else {
-                    List<Object> resourceList = new ArrayList<>();
-                    resourceList.add(((Tuple) obj).getElements().get(key));
-                    singletonTuple.getElements().put(key, resourceList);
-                }
-            }
-        }
-
-        returnList.add(singletonTuple);
-        return returnList;
-    }
+//    public List<Object> collapse(List toCollapse) {
+//        List<Object> returnList = new ArrayList<>();
+//        Tuple singletonTuple = new Tuple();
+//        for (Object obj : toCollapse) {
+//            for (String key : ((Tuple) obj).getElements().keySet()) {
+//                if (singletonTuple.getElements().containsKey(key)
+//                        && !((List)singletonTuple.getElements().get(key)).contains(((Tuple) obj).getElements().get(key))) {
+//                    ((List)singletonTuple.getElements().get(key)).add(((Tuple) obj).getElements().get(key));
+//                }
+//                else {
+//                    List<Object> resourceList = new ArrayList<>();
+//                    resourceList.add(((Tuple) obj).getElements().get(key));
+//                    singletonTuple.getElements().put(key, resourceList);
+//                }
+//            }
+//        }
+//
+//        returnList.add(singletonTuple);
+//        return returnList;
+//    }
 
     public AliasList times() {
         while (multiQueryStack.size() > 1) {
@@ -224,7 +241,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
             result = DistinctEvaluator.distinct(result);
         }
 
-        sortResult(result);
+        sortResult(result, context, source.getAlias());
 
         return sourceIsList ? result : result.get(0);
     }

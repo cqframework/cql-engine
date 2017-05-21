@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Value;
-import java.util.Iterator;
+import org.opencds.cqf.cql.runtime.CqlList;
+
 import java.util.ArrayList;
-import java.math.BigDecimal;
+import java.util.Iterator;
 
 /*
 Mode(argument List<T>) T
@@ -35,7 +34,7 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
       }
 
       if (values.isEmpty()) { return null; } // all null
-      values = MedianEvaluator.sortList(values);
+      values = CqlList.sortList(values);
 
       int max = 0;
       for (int i = 0; i < values.size(); ++i) {

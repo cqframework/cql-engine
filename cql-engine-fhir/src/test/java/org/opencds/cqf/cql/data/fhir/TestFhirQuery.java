@@ -30,4 +30,22 @@ public class TestFhirQuery extends FhirExecutionTestBase {
         assertTrue(result instanceof Iterable && ((List)result).size() > 0);
     }
 
+    @Test
+    public void testExpressionSort() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+
+        Object result = context.resolveExpressionRef("testExpressionSortDateTime").evaluate(context);
+        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
+
+        result = context.resolveExpressionRef("testExpressionSortEnumString").evaluate(context);
+        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
+
+        result = context.resolveExpressionRef("testExpressionSortInt").evaluate(context);
+        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
+
+        result = context.resolveExpressionRef("testExpressionSortQuantity").evaluate(context);
+        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
+    }
+
 }

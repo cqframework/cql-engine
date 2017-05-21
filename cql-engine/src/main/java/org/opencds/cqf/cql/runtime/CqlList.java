@@ -19,33 +19,37 @@ public class CqlList {
     private static String alias;
     private static Expression expression;
 
+    public static Integer compareTo(Object comparandOne, Object comparandTwo) {
+        if (comparandOne instanceof Integer) {
+            return (Integer)comparandOne - (Integer)comparandTwo;
+        }
+
+        else if (comparandOne instanceof BigDecimal) {
+            return ((BigDecimal)comparandOne).compareTo((BigDecimal)comparandTwo);
+        }
+
+        else if (comparandOne instanceof Quantity) {
+            return ((Quantity)comparandOne).getValue().compareTo(((Quantity)comparandTwo).getValue());
+        }
+
+        else if (comparandOne instanceof DateTime) {
+            return ((DateTime)comparandOne).compareTo(((DateTime)comparandTwo));
+        }
+
+        else if (comparandOne instanceof String) {
+            return ((String)comparandOne).compareTo(((String)comparandTwo));
+        }
+
+        else if (comparandOne instanceof Time) {
+            return ((Time)comparandOne).compareTo(((Time)comparandTwo));
+        }
+
+        throw new IllegalArgumentException("Type is not comparable");
+    }
+
     public static Comparator<Object> valueSort = new Comparator<Object>() {
         public int compare(Object comparandOne, Object comparandTwo) {
-            if (comparandOne instanceof Integer) {
-                return (Integer)comparandOne - (Integer)comparandTwo;
-            }
-
-            else if (comparandOne instanceof BigDecimal) {
-                return ((BigDecimal)comparandOne).compareTo((BigDecimal)comparandOne);
-            }
-
-            else if (comparandOne instanceof Quantity) {
-                return ((Quantity)comparandOne).getValue().compareTo(((Quantity)comparandTwo).getValue());
-            }
-
-            else if (comparandOne instanceof DateTime) {
-                return ((DateTime)comparandOne).compareTo(((DateTime)comparandTwo));
-            }
-
-            else if (comparandOne instanceof String) {
-                return ((String)comparandOne).compareTo(((String)comparandTwo));
-            }
-
-            else if (comparandOne instanceof Time) {
-                return ((Time)comparandOne).compareTo(((Time)comparandTwo));
-            }
-
-            throw new IllegalArgumentException("Type is not comparable");
+            return compareTo(comparandOne, comparandTwo);
         }
     };
 
@@ -72,31 +76,7 @@ public class CqlList {
             else if (comparandOne == null) return 1;
             else if (comparandTwo == null) return -1;
 
-            if (comparandOne instanceof Integer) {
-                return (Integer)comparandOne - (Integer)comparandTwo;
-            }
-
-            else if (comparandOne instanceof BigDecimal) {
-                return ((BigDecimal)comparandOne).compareTo((BigDecimal)comparandTwo);
-            }
-
-            else if (comparandOne instanceof Quantity) {
-                return ((Quantity)comparandOne).getValue().compareTo(((Quantity)comparandTwo).getValue());
-            }
-
-            else if (comparandOne instanceof DateTime) {
-                return ((DateTime)comparandOne).compareTo(((DateTime)comparandTwo));
-            }
-
-            else if (comparandOne instanceof String) {
-                return ((String)comparandOne).compareTo(((String)comparandTwo));
-            }
-
-            else if (comparandOne instanceof Time) {
-                return ((Time)comparandOne).compareTo(((Time)comparandTwo));
-            }
-
-            throw new IllegalArgumentException("Type is not comparable");
+            return compareTo(comparandOne, comparandTwo);
         }
     };
 
