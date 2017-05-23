@@ -163,6 +163,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public GreaterOrEqual createGreaterOrEqual() { return new GreaterOrEqualEvaluator(); }
 
     @Override
+    public IdentifierRef createIdentifierRef() { return new IdentifierRefEvaluator(); }
+
+    @Override
     public If createIf() { return new IfEvaluator(); }
 
     // @Override

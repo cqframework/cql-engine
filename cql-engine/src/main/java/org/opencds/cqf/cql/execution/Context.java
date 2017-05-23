@@ -162,6 +162,23 @@ public class Context {
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
+    public Object resolveIdentifierRef(String name) {
+        for (Stack<Variable> stack : windows) {
+            for (Variable var : stack) {
+                Object value = var.getValue();
+                if (value instanceof org.opencds.cqf.cql.runtime.Tuple) {
+                    for (String key : ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().keySet()) {
+                        if (key.equals(name)) {
+                            return ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().get(key);
+                        }
+                    }
+                }
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot resolve identifier " + name);
+    }
+
     public Object createInstance(QName typeName) {
         DataProvider dataProvider = resolveDataProvider(typeName);
         return dataProvider.createInstance(typeName.getLocalPart());
