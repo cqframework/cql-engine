@@ -37,19 +37,21 @@ import java.util.Date;
  * Created by Bryn on 5/7/2016.
  */
 public class TestFhirMeasureEvaluator {
-    //@Test
+    @Test
     public void TestCBP() throws IOException, JAXBException {
         File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-col.elm.xml").getFile(), "UTF-8"));
         Library library = CqlLibraryReader.read(xmlFile);
 
         Context context = new Context(library);
 
-        //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
-        //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open");
-        //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://open-api2.hspconsortium.org/payerextract/data");
+//        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+//        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open");
+//        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
+//        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://open-api2.hspconsortium.org/payerextract/data");
+        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 
-        FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
+        FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+//        FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
         provider.setTerminologyProvider(terminologyProvider);
         provider.setExpandValueSets(true);
 
