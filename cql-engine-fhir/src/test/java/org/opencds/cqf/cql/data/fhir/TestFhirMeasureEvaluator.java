@@ -120,7 +120,6 @@ public class TestFhirMeasureEvaluator {
     }
 
     private Library translate(String cql) {
-//        try {
         ArrayList<CqlTranslator.Options> options = new ArrayList<>();
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
         CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
@@ -135,24 +134,10 @@ public class TestFhirMeasureEvaluator {
             throw new IllegalArgumentException(errors.toString());
         }
 
-//            // output translated library for review
-//            xmlFile = new File("response.xml");
-//            xmlFile.createNewFile();
-//            PrintWriter pw = new PrintWriter(xmlFile, "UTF-8");
-//            pw.println(translator.toXml());
-//            pw.println();
-//            pw.close();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
         Library library = null;
         try {
             library = CqlLibraryReader.read(new StringReader(translator.toXml()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
+        } catch (IOException | JAXBException e) {
             e.printStackTrace();
         }
 

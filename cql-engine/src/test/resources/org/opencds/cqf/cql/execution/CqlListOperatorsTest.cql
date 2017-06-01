@@ -18,6 +18,7 @@ define ContainsJan2012True: { DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateT
 define ContainsJan2012False: { DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 1) } contains DateTime(2012, 1, 1)
 define ContainsTimeTrue: { @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T05:59:59.999
 define ContainsTimeFalse: { @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T08:59:59.999
+define ContainsNullLeft: null contains 'a'
 
 //Distinct
 define DistinctEmptyList: distinct {}
@@ -49,6 +50,7 @@ define Except1234And23: { 1, 2, 3, 4 } except { 2, 3 }
 define Except23And1234: { 2, 3 } except { 1, 2, 3, 4 }
 define ExceptDateTime: { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }
 define ExceptTime: { @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } except { @T20:59:59.999, @T12:59:59.999 }
+define ExceptNullRight: { 1, 4 } except null
 
 //Exists
 define ExistsEmpty: Exists({})
@@ -57,6 +59,7 @@ define Exists1: Exists({ 1 })
 define Exists12: Exists({ 1, 2 })
 define ExistsDateTime: Exists({ DateTime(2012, 5, 10), DateTime(2014, 12, 10) })
 define ExistsTime: Exists({ @T15:59:59.999, @T20:59:59.999 })
+define ExistsNull: Exists(null)
 
 //Flatten
 define FlattenEmpty: Flatten({{},{}})
@@ -94,6 +97,9 @@ define IncludesDateTimeTrue: {DateTime(2001, 9, 11), DateTime(2012, 5, 10), Date
 define IncludesDateTimeFalse: {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} includes {DateTime(2012, 5, 11)}
 define IncludesTimeTrue: { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 } includes @T15:59:59.999
 define IncludesTimeFalse: { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 } includes @T16:59:59.999
+define IncludesNullLeft: null includes {2}
+// this test is going to the ContainsEvaluator
+// define IncludesNullRight: {'s', 'a', 'm'} includes null
 
 //IncludedIn
 define IncludedInEmptyAndEmpty: {} included in {}
@@ -105,6 +111,9 @@ define IncludedInDateTimeTrue: { DateTime(2012, 5, 10)} included in {DateTime(20
 define IncludedInDateTimeFalse: {DateTime(2012, 5, 11)} included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
 define IncludedInTimeTrue: @T15:59:59.999 included in { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 }
 define IncludedInTimeFalse: @T16:59:59.999 included in { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 }
+// the following expression is going to the InEvaluator
+// define IncludedInNullLeft: null included in {2}
+define IncludedInNullRight: {'s', 'a', 'm'} included in null
 
 //Indexer
 define IndexerNull1 :    (null as List<System.Any>)[1] // Cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
@@ -147,6 +156,7 @@ define Length1Null: Length({1, null})
 define Length12: Length({1, 2})
 define LengthDateTime: Length({DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)})
 define LengthTime: Length({ @T15:59:59.999, @T20:59:59.999, @T15:59:59.999, @T20:59:59.999, @T15:59:59.999, @T20:59:59.999 })
+define LengthNull: Length(null as String)
 
 //Equivalent
 define EquivalentEmptyAndEmpty          : {} ~ {}
@@ -174,7 +184,7 @@ define NotEqualDateTimeFalse: {DateTime(2001, 9, 11, 0, 0, 0, 0), DateTime(2012,
 define NotEqualTimeTrue: { @T15:59:59.999, @T20:59:59.999 } = { @T15:59:59.999, @T20:59:59.999 }
 define NotEqualTimeFalse: { @T15:59:59.999, @T20:59:59.999 } = { @T15:59:59.999, @T20:59:49.999 }
 
-//ProperlyInclues
+//ProperlyIncludes
 define ProperIncludesEmptyAndEmpty:       {} properly includes {}
 define ProperIncludesListNullAndListNull: {null} properly includes {null}
 define ProperIncludes123AndEmpty:         {1, 2, 3} properly includes {}
@@ -183,7 +193,10 @@ define ProperIncludes123And4:             {1, 2, 3} properly includes {4}
 define ProperIncludesDateTimeTrue:        {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly includes {DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
 define ProperIncludesDateTimeFalse:       {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly includes {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
 define ProperIncludesTimeTrue:            { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999 }
-define ProperIncludesTimeFalse:            { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }
+define ProperIncludesTimeFalse:           { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }
+define ProperlyIncludesNullLeft: null properly includes {2}
+// the following expression is going to the ProperContains ELM
+// define ProperlyIncludesNulRight: {'s', 'u', 'n'} properly includes null
 
 //ProperlyIncludedIn
 define ProperIncludedInEmptyAndEmpty: {} properly included in {}
@@ -195,6 +208,9 @@ define ProperIncludedInDateTimeTrue: {DateTime(2012, 5, 10), DateTime(2014, 12, 
 define ProperIncludedInDateTimeFalse: {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
 define ProperIncludedInTimeTrue: { @T15:59:59.999, @T20:59:59.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
 define ProperIncludedInTimeFalse: { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
+// the following expression is going to the ProperIn ELM
+// define ProperlyIncludedInNullLeft: null properly included in {2}
+define ProperlyIncludedInNulRight: {'s', 'u', 'n'} properly included in null
 
 //SingletonFrom
 define SingletonFromEmpty: singleton from {}

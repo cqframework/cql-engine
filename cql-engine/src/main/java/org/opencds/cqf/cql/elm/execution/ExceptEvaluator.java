@@ -24,10 +24,17 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
 
   @Override
   public Object evaluate(Context context) {
+
     Object left = getOperand().get(0).evaluate(context);
     Object right = getOperand().get(1).evaluate(context);
 
-    if (left == null || right == null) { return null; }
+    if (left == null) {
+      return null;
+    }
+
+    if (right == null) {
+      return left;
+    }
 
     if (left instanceof Interval) {
       Object leftStart = ((Interval)left).getStart();

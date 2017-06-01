@@ -20,20 +20,32 @@ public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue 
     public Object evaluate(Context context) {
 
         Object src = getSource().evaluate(context);
-        if (src == null) { return null; }
+
+        if (src == null) {
+            return true;
+        }
 
         if(src instanceof Iterable) {
           Iterable<Object> element = (Iterable<Object>)src;
           Iterator<Object> elemsItr = element.iterator();
-          if (!elemsItr.hasNext()) { return null; } // empty list
-          while (elemsItr.hasNext()) {
+
+            if (!elemsItr.hasNext()) { // empty list
+                return true;
+            }
+
+            while (elemsItr.hasNext()) {
               Object exp = elemsItr.next();
-              if (exp == null) { continue; } // skip null
+
+              if (exp == null) { // skip null
+                  continue;
+              }
               Boolean boolVal = (Boolean) exp;
 
-              if (boolVal == null || Boolean.FALSE == boolVal) return false;
+              if (Boolean.FALSE == boolVal) return false;
           }
-        }else{
+        }
+
+        else {
             return null;
         }
 

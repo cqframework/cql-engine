@@ -23,7 +23,11 @@ public class DistinctEvaluator extends org.cqframework.cql.elm.execution.Distinc
     public static List<Object> distinct(Iterable<Object> source) {
         List<Object> result = new ArrayList<>();
         for (Object element : source) {
-            if (!InEvaluator.in(element, result)) {
+            Object in = InEvaluator.in(element, result);
+
+            if (in == null) continue;
+
+            if (!(Boolean) in) {
                 result.add(element);
             }
         }

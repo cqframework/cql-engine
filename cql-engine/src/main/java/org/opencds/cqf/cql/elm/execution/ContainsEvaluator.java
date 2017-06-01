@@ -23,7 +23,7 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
     Object operand = getOperand().get(0).evaluate(context);
 
     if (operand == null) {
-      return null;
+      return false;
     }
 
     if (operand instanceof Interval) {

@@ -38,7 +38,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Object result;
 
         result = context.resolveExpressionRef("ContainsABNullHasNull").getExpression().evaluate(context);
-        assertThat(result, is(true));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("ContainsNullFirst").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -56,6 +56,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ContainsTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ContainsNullLeft").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -167,6 +170,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("ExceptTime").getExpression().evaluate(context);
         assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((ArrayList<Object>)result).size(), is(1));
+
+        result = context.resolveExpressionRef("ExceptNullRight").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1, 4)));
     }
 
     /**
@@ -194,6 +200,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ExistsTime").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ExistsNull").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -260,13 +269,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Object result;
 
         result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
-        assertThat(result, is(true));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("In1And12").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -321,6 +330,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("IncludesTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("IncludesNullLeft").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        // TODO: fix test - going to ContainsEvaluator
+//        result = context.resolveExpressionRef("IncludesNullRight").getExpression().evaluate(context);
+//        assertThat(result, is(true));
     }
 
     /**
@@ -356,6 +372,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("IncludedInTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        // TODO: fix test - going to InEvaluator
+//        result = context.resolveExpressionRef("IncludedInNullLeft").getExpression().evaluate(context);
+//        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("IncludedInNullRight").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -503,6 +526,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("LengthTime").getExpression().evaluate(context);
         assertThat(result, is(6));
+
+        result = context.resolveExpressionRef("LengthNull").getExpression().evaluate(context);
+        assertThat(result, is(0));
     }
 
     /**
@@ -623,6 +649,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ProperIncludesTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperlyIncludesNullLeft").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        // TODO: fix test - going to ProperContains - not implemented
+//        result = context.resolveExpressionRef("ProperlyIncludesNulRight").getExpression().evaluate(context);
+//        assertThat(result, is(true));
     }
 
     /**
@@ -634,7 +667,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Object result;
 
         result = context.resolveExpressionRef("ProperIncludedInEmptyAndEmpty").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ProperIncludedInListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -652,6 +685,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ProperIncludedInDateTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        // TODO: fix test - going to ProperIn - not implemented
+//        result = context.resolveExpressionRef("ProperlyIncludedInNullLeft").getExpression().evaluate(context);
+//        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ProperlyIncludedInNulRight").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 

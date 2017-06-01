@@ -40,7 +40,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("AllTrueEmptyList").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
     }
 
     /**
@@ -74,7 +74,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("AnyTrueEmptyList").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
     }
 
     /**
@@ -101,6 +101,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("CountTestTime").getExpression().evaluate(context);
         assertThat(result, is(3));
+
+        result = context.resolveExpressionRef("CountTestNull").getExpression().evaluate(context);
+        assertThat(result, is(0));
     }
 
     /**

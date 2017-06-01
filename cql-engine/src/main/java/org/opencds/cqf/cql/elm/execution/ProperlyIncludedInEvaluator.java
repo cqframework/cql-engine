@@ -34,11 +34,16 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
 
   @Override
   public Object evaluate(Context context) {
+
     Object operand1 = getOperand().get(0).evaluate(context);
     Object operand2 = getOperand().get(1).evaluate(context);
 
-    if (operand1 == null || operand2 == null) {
-      return null;
+    if (operand1 == null) {
+      return true;
+    }
+
+    if (operand2 == null) {
+      return false;
     }
 
     if (operand1 instanceof Interval) {
@@ -60,7 +65,17 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
       ArrayList<Object> left = (ArrayList<Object>)operand1;
       ArrayList<Object> right = (ArrayList<Object>)operand2;
 
-      return (Boolean)IncludedInEvaluator.includedIn(left, right) && right.size() > left.size();
+      if (left.isEmpty()) {
+        return true;
+      }
+
+      Object includes = IncludedInEvaluator.includedIn(left, right);
+
+      if (includes == null) {
+        return null;
+      }
+
+      return (Boolean)includes && right.size() > left.size();
     }
 
     throw new IllegalArgumentException(String.format("Cannot ProperlyIncludes arguments of type: %s", operand1.getClass().getName()));

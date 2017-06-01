@@ -29,6 +29,7 @@ define AvgTest1: Avg({ 1.0, 2.0, 3.0, 6.0 })
 define CountTest1: Count({ 15, 5, 99, null, 1 })
 define CountTestDateTime: Count({ DateTime(2014), DateTime(2001), DateTime(2010) })
 define CountTestTime: Count({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })
+define CountTestNull: Count({})
 
 //Max
 define MaxTestInteger: Max({ 5, 12, 1, 15, 0, 4, 90, 44 })

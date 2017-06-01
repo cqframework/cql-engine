@@ -21,22 +21,36 @@ public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
   public Object evaluate(Context context) {
 
     Object source = getSource().evaluate(context);
-    if (source == null) { return null; }
 
-    Integer size = new Integer(0);
+    if (source == null) {
+      return 0;
+    }
+
+    Integer size = 0;
 
     if (source instanceof Iterable) {
       Iterable<Object> element = (Iterable<Object>)source;
       Iterator<Object> itr = element.iterator();
 
-      if (!itr.hasNext()) { return size; } // empty list
+      if (!itr.hasNext()) { // empty list
+        return size;
+      }
+
       while (itr.hasNext()) {
         Object value = itr.next();
-        if (value == null) { continue; } // skip null
+
+        if (value == null) { // skip null
+          continue;
+        }
+
         ++size;
       }
     }
-    else { return null; }
+
+    else {
+      return null;
+    }
+
     return size;
   }
 }

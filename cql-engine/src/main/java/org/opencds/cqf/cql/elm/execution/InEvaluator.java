@@ -30,15 +30,27 @@ If either argument is null, the result is null.
 public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
   public static Boolean in(Object testElement, Iterable<? extends Object> list) {
+
+    if (testElement == null) {
+      return null;
+    }
+
     if (list == null) {
-        return null;
+        return false;
     }
 
     boolean nullSwitch = false;
+
     for (Object element : list) {
       Boolean equiv = EquivalentEvaluator.equivalent(testElement, element);
-      if (equiv == null) { nullSwitch = true; }
-      else if (equiv) { return true; }
+
+      if (equiv == null) {
+        nullSwitch = true;
+      }
+
+      else if (equiv) {
+        return true;
+      }
     }
 
     if (nullSwitch) { return null; }
@@ -46,13 +58,28 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
   }
 
   public static Boolean in(Object testElement, Interval interval) {
-    if (testElement == null) { return null; }
+    if (testElement == null) {
+      return null;
+    }
+
+    if (interval == null) {
+      return false;
+    }
+
     Object rightStart = interval.getStart();
     Object rightEnd = interval.getEnd();
 
-    if (rightStart == null && interval.getLowClosed()) { return true; }
-    else if (rightEnd == null && interval.getHighClosed()) { return true; }
-    else if (rightStart == null || rightEnd == null) { return null; }
+    if (rightStart == null && interval.getLowClosed()) {
+      return true;
+    }
+
+    else if (rightEnd == null && interval.getHighClosed()) {
+      return true;
+    }
+
+    else if (rightStart == null || rightEnd == null) {
+      return null;
+    }
 
     return (GreaterOrEqualEvaluator.greaterOrEqual(testElement, rightStart)
             && LessOrEqualEvaluator.lessOrEqual(testElement, rightEnd));
@@ -63,7 +90,9 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
     Object left = getOperand().get(0).evaluate(context);
     Object right = getOperand().get(1).evaluate(context);
 
-    if (right == null) { return null; }
+    if (right == null) {
+      return false;
+    }
 
     if (right instanceof Interval) {
       return in(left, (Interval)right);

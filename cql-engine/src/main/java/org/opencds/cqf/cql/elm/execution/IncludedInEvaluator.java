@@ -29,30 +29,45 @@ Note that the order of elements does not matter for the purposes of determining 
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
   public static Object includedIn(Object left, Object right) {
-    if (left != null || right != null) {
-      if (left instanceof Interval) {
-        Object leftStart = ((Interval)left).getStart();
-        Object leftEnd = ((Interval)left).getEnd();
-        Object rightStart = ((Interval)right).getStart();
-        Object rightEnd = ((Interval)right).getEnd();
 
-        if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
-
-        return (LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
-                && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd));
-      }
-
-      else if (left instanceof Iterable) {
-        for (Object element : (Iterable)left) {
-            if (!InEvaluator.in(element, (Iterable)right)) {
-                return false;
-            }
-        }
-        return true;
-      }
-      throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    if (left == null) {
+      return true;
     }
-   return null;
+
+    if (right == null) {
+      return false;
+    }
+
+    if (left instanceof Interval) {
+      Object leftStart = ((Interval)left).getStart();
+      Object leftEnd = ((Interval)left).getEnd();
+      Object rightStart = ((Interval)right).getStart();
+      Object rightEnd = ((Interval)right).getEnd();
+
+      if (leftStart == null || leftEnd == null
+              || rightStart == null || rightEnd == null)
+      {
+        return null;
+      }
+
+      return (LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
+              && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd));
+    }
+
+    else if (left instanceof Iterable) {
+      for (Object element : (Iterable)left) {
+        Object in = InEvaluator.in(element, (Iterable)right);
+
+        if (in == null) continue;
+
+        if (!(Boolean) in) {
+            return false;
+        }
+      }
+      return true;
+    }
+
+    throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }
 
   @Override

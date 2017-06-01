@@ -27,7 +27,7 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
         Object value = getOperand().evaluate(context);
 
         if (value == null) {
-            return null;
+            return 0;
         }
 
         if (value instanceof String) {

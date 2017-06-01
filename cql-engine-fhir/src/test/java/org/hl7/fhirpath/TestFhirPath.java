@@ -103,7 +103,6 @@ public class TestFhirPath {
     }
 
     private Library translate(String cql) {
-//        try {
             ArrayList<CqlTranslator.Options> options = new ArrayList<>();
             options.add(CqlTranslator.Options.EnableDateRangeOptimization);
             CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
@@ -117,18 +116,6 @@ public class TestFhirPath {
                 }
                 throw new IllegalArgumentException(errors.toString());
             }
-
-//            // output translated library for review
-//            xmlFile = new File("response.xml");
-//            xmlFile.createNewFile();
-//            PrintWriter pw = new PrintWriter(xmlFile, "UTF-8");
-//            pw.println(translator.toXml());
-//            pw.println();
-//            pw.close();
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
 
         Library library = null;
         try {
