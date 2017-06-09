@@ -32,6 +32,8 @@ public class Context {
 
     private Library library;
 
+    private boolean enableTraceLogging = false;
+
     public Context(Library library) {
         this.library = library;
         pushWindow();
@@ -40,6 +42,15 @@ public class Context {
 		if (library.getIdentifier() != null)
 			libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+    }
+
+    public boolean isTraceLoggingEnabled() {
+        return enableTraceLogging;
+    }
+
+    public Context setEnableTraceLogging(boolean enableTraceLogging) {
+        this.enableTraceLogging = enableTraceLogging;
+        return this;
     }
 
     public void setExpressionCaching(boolean yayOrNay) {

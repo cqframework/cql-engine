@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 
@@ -43,6 +45,8 @@ If either argument is null, the result is null.
  * Created by Bryn on 5/25/2016 
  */
 public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
+
+  final Logger logger = LoggerFactory.getLogger(AddEvaluator.class);
 
   private static final int YEAR_RANGE_MAX = 9999;
 
@@ -147,11 +151,37 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
     throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
   }
 
-    @Override
-    public Object evaluate(Context context) {
-      Object left = getOperand().get(0).evaluate(context);
-      Object right = getOperand().get(1).evaluate(context);
-
-      return add(left, right);
+  public void logIt(Object left, Object right) {
+    if (left == null && right != null) {
+      logger.debug("Left operand: null, Right operand: {}", right.toString());
     }
+    else if (left != null && right == null) {
+      logger.debug("Left operand: {}, Right operand: null");
+    }
+    else if (left == null && right == null) {
+      logger.debug("Both operands are null");
+    }
+    else {
+      logger.debug("Left operand: {}, Right operand: {}", left.toString(), right.toString());
+    }
+  }
+
+  @Override
+  public Object evaluate(Context context) {
+    Object left = getOperand().get(0).evaluate(context);
+    Object right = getOperand().get(1).evaluate(context);
+
+    if (left == null || right == null) {
+      if (context.isTraceLoggingEnabled()) {
+        logIt(left, right);
+      }
+      return null;
+    }
+
+    if (context.isTraceLoggingEnabled()) {
+      logIt(left, right);
+    }
+
+    return add(left, right);
+  }
 }

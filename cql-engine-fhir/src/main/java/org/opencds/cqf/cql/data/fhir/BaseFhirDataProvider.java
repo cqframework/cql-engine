@@ -160,7 +160,11 @@ public abstract class BaseFhirDataProvider implements DataProvider
         try {
             Class.forName(String.format("%s.%s", getPackageName(), type));
         } catch (ClassNotFoundException e) {
-            return false;
+            try {
+                Class.forName(String.format("%s.%s", getPackageName(), type + "Type"));
+            } catch (ClassNotFoundException ex) {
+                return false;
+            }
         }
 
         return true;
