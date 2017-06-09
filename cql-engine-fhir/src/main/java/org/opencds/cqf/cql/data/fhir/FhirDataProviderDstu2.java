@@ -27,6 +27,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Christopher on 5/2/2017.
@@ -205,7 +207,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
         if (dateRange != null) {
             if (dateRange.getLow() != null) {
                 String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
-                if (lowDatePath == null || lowDatePath.equals("")) {
+                if (lowDatePath.equals("")) {
                     throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
                 }
 
@@ -217,7 +219,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
 
             if (dateRange.getHigh() != null) {
                 String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
-                if (highDatePath == null || highDatePath.equals("")) {
+                if (highDatePath.equals("")) {
                     throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
                 }
 
@@ -279,6 +281,70 @@ public class FhirDataProviderDstu2 implements DataProvider {
         }
     }
 
+    private boolean pathIsChoice(String path) {
+        // Pretty consistent format: lowercase root followed by Type.
+        if (pathIsChoiceOutlier(path)) return true;
+
+        // get the substring from first uppercase to end of string
+        Pattern pattern = Pattern.compile("[A-Z].*");
+        Matcher matcher = pattern.matcher(path);
+        String type = path;
+        if (matcher.find()) {
+            type = matcher.group();
+        }
+
+        try {
+            Class.forName(String.format("%s.%s", getPackageName(), type));
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    protected boolean pathIsChoiceOutlier(String path) {
+        // outliers
+        if (path.startsWith("notDoneReason") || path.startsWith("valueSet")
+                || path.startsWith("multipleBirth") || path.startsWith("asNeeded")
+                || path.startsWith("onBehalfOf") || path.startsWith("defaultValue")) {
+            return true;
+        }
+        return false;
+    }
+
+    protected String resolveChoiceOutlier(String path) {
+        if (path.startsWith("notDoneReason")) return path.replace("notDoneReason", "");
+        else if (path.startsWith("valueSet")) return path.replace("valueSet", "");
+        else if (path.startsWith("multipleBirth")) return path.replace("multipleBirth", "");
+        else if (path.startsWith("asNeeded")) return path.replace("asNeeded", "");
+        else if (path.startsWith("onBehalfOf")) return path.replace("onBehalfOf", "");
+        else if (path.startsWith("defaultValue")) return path.replace("defaultValue", "");
+        return path;
+    }
+
+    protected Object resolveChoiceProperty(Object target, String path, String typeName) {
+        String rootPath = path.substring(0, path.indexOf(typeName));
+        return resolveProperty(target, rootPath);
+    }
+
+    protected Object resolveChoiceProperty(Object target, String path) {
+        String type;
+        if (pathIsChoiceOutlier(path)) {
+            type = resolveChoiceOutlier(path);
+        }
+
+        else {
+            Pattern pattern = Pattern.compile("[A-Z].*");
+            Matcher matcher = pattern.matcher(path);
+            type = path;
+            if (matcher.find()) {
+                type = matcher.group();
+            }
+        }
+
+        return resolveChoiceProperty(target, path, type);
+    }
+
     protected Object resolveProperty(Object target, String path) {
         if (target == null) { return null; }
 
@@ -305,7 +371,13 @@ public class FhirDataProviderDstu2 implements DataProvider {
             return mapPrimitive(accessor.invoke(target));
 
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            if (pathIsChoice(path)) {
+                return resolveChoiceProperty(target, path);
+            }
+
+            else {
+                throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            }
         } catch (InvocationTargetException e) {
             throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (IllegalAccessException e) {

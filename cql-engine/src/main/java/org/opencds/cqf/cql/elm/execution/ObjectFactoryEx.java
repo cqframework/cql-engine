@@ -142,6 +142,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ExpressionRef createExpressionRef() { return new ExpressionRefEvaluator(); }
 
     @Override
+    public Filter createFilter() { return new FilterEvaluator(); }
+
+    @Override
     public First createFirst() { return new FirstEvaluator(); }
 
     @Override
