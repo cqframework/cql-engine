@@ -69,6 +69,6 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return divide(left, right);
+        return context.logTrace(this.getClass(), divide(left, right), left, right);
     }
 }

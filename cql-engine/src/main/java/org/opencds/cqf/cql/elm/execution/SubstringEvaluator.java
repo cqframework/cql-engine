@@ -17,12 +17,7 @@ If stringToSub or startIndex is null, or startIndex is out of range, the result 
  */
 public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substring {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object stringValue = getStringToSub().evaluate(context);
-        Object startIndexValue = getStartIndex().evaluate(context);
-        Object lengthValue = getLength() == null ? null : getLength().evaluate(context);
-
+    public static Object substring(Object stringValue, Object startIndexValue, Object lengthValue) {
         if (stringValue == null || startIndexValue == null) {
             return null;
         }
@@ -37,6 +32,7 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
         if (lengthValue == null) {
             return string.substring(startIndex);
         }
+
         else {
             int endIndex = startIndex + (Integer)lengthValue;
             if (endIndex > string.length()) {
@@ -49,5 +45,14 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
 
             return string.substring(startIndex, endIndex);
         }
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object stringValue = getStringToSub().evaluate(context);
+        Object startIndexValue = getStartIndex().evaluate(context);
+        Object lengthValue = getLength() == null ? null : getLength().evaluate(context);
+
+        return context.logTrace(this.getClass(), substring(stringValue, startIndexValue, lengthValue), stringValue, startIndexValue, lengthValue);
     }
 }

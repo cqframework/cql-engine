@@ -13,10 +13,7 @@ import java.util.Date;
 /**
 * Created by Chris Schuler on 6/20/2016
 */
-public class DateTime {
-
-  protected Partial dateTime;
-  protected BigDecimal timezoneOffset;
+public class DateTime extends BaseTemporal {
 
   protected static final DateTimeFieldType[] fields = new DateTimeFieldType[] {
     DateTimeFieldType.year(),
@@ -27,18 +24,6 @@ public class DateTime {
     DateTimeFieldType.secondOfMinute(),
     DateTimeFieldType.millisOfSecond(),
   };
-
-  public static int[] getValues(Integer... values) {
-    int count = 0;
-    int[] temp = new int[7];
-    for (Integer value : values) {
-      if (value != null) {
-        temp[count] = value;
-        ++count;
-      }
-    }
-    return Arrays.copyOf(temp, count);
-  }
 
   public static DateTimeFieldType[] getFields(int numFields) {
     DateTimeFieldType[] ret = new DateTimeFieldType[numFields];
@@ -74,7 +59,7 @@ public class DateTime {
   }
 
   public DateTime() {
-    dateTime = new Partial();
+    partial = new Partial();
     timezoneOffset = new BigDecimal(0);
   }
 
@@ -141,25 +126,9 @@ public class DateTime {
     setTimezoneOffset(timezoneOffset);
   }
 
-  public Partial getPartial() {
-    return dateTime;
-  }
-
-  public void setPartial(Partial newDateTime) {
-    dateTime = newDateTime;
-  }
-
   public DateTime withPartial(Partial newDateTime) {
     setPartial(newDateTime);
     return this;
-  }
-
-  public BigDecimal getTimezoneOffset() {
-    return timezoneOffset;
-  }
-
-  public void setTimezoneOffset(BigDecimal newTimezoneOffset) {
-    timezoneOffset = newTimezoneOffset;
   }
 
   public DateTime withTimezoneOffset(BigDecimal newTimezoneOffset) {
@@ -216,37 +185,6 @@ public class DateTime {
     return dt;
   }
 
-  public static Boolean formatCheck(ArrayList<Object> timeElements) {
-    boolean prevNull = false;
-    for (Object element : timeElements) {
-      if (element == null) { prevNull = true; }
-      else if (element != null && prevNull) {
-        return false;
-      }
-    }
-    return true;
-  }
-
-  public Integer compareTo(DateTime other) {
-    int size;
-
-    // Uncertainty detection
-    if (this.getPartial().size() != other.getPartial().size()) {
-      size = this.getPartial().size() > other.getPartial().size() ? other.getPartial().size() : this.getPartial().size();
-    }
-    else { size = this.getPartial().size(); }
-
-    for (int i = 0; i < size; ++i) {
-      Object left = this.getPartial().getValue(i);
-      Object right = other.getPartial().getValue(i);
-      if (GreaterEvaluator.greater(left, right)) { return 1; }
-      else if (LessEvaluator.less(left, right)) { return -1; }
-    }
-    // Uncertainty wrinkle
-    if (this.getPartial().size() != other.getPartial().size()) { return null; }
-    return 0;
-  }
-
   public Boolean equal(DateTime other) {
     if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
       return null;
@@ -258,7 +196,7 @@ public class DateTime {
     if (this.getPartial().size() < 7) left = expandPartialMin(left, 7);
     if (other.getPartial().size() < 7) right = expandPartialMin(right, 7);
 
-    return Arrays.equals(left.dateTime.getValues(), right.dateTime.getValues())
+    return Arrays.equals(left.partial.getValues(), right.partial.getValues())
             && left.getTimezoneOffset().compareTo(right.getTimezoneOffset()) == 0;
   }
 

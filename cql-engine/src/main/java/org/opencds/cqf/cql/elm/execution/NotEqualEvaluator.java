@@ -26,6 +26,6 @@ public class NotEqualEvaluator extends org.cqframework.cql.elm.execution.NotEqua
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return !EqualEvaluator.equal(left, right);
+        return context.logTrace(this.getClass(), !EqualEvaluator.equal(left, right), left, right);
     }
 }

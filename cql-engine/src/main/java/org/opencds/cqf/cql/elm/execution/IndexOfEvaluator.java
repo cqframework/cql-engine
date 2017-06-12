@@ -18,26 +18,39 @@ If the list argument is null, the result is null.
  */
 public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object source = getSource().evaluate(context);
-        Object elementToFind = getElement().evaluate(context);
-
+    public static Object indexOf(Object source, Object elementToFind) {
         if (source == null) {
             return null;
         }
 
         int index = -1;
         boolean nullSwitch = false;
+
         for (Object element : (Iterable)source) {
             index++;
             Boolean equiv = EquivalentEvaluator.equivalent(element, elementToFind);
-            if (equiv == null) { nullSwitch = true; }
+
+            if (equiv == null) {
+                nullSwitch = true;
+            }
+
             else if (equiv) {
                 return index;
             }
         }
-        if (nullSwitch) { return null; }
+
+        if (nullSwitch) {
+            return null;
+        }
+
         return -1;
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object source = getSource().evaluate(context);
+        Object elementToFind = getElement().evaluate(context);
+
+        return context.logTrace(this.getClass(), indexOf(source, elementToFind), source, elementToFind);
     }
 }

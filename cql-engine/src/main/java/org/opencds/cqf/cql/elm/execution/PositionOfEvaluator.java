@@ -15,11 +15,7 @@ If either argument is null, the result is null.
  */
 public class PositionOfEvaluator extends org.cqframework.cql.elm.execution.PositionOf {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object pattern = getPattern().evaluate(context);
-        Object string = getString().evaluate(context);
-
+    public static Object positionOf(Object pattern, Object string) {
         if (pattern == null || string == null) {
             return null;
         }
@@ -28,6 +24,14 @@ public class PositionOfEvaluator extends org.cqframework.cql.elm.execution.Posit
             return ((String)string).indexOf((String)pattern);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), pattern.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform PositionOf operation with arguments of type '%s' and '%s'.", pattern.getClass().getName(), string.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object pattern = getPattern().evaluate(context);
+        Object string = getString().evaluate(context);
+
+        return context.logTrace(this.getClass(), positionOf(pattern, string), pattern, string);
     }
 }

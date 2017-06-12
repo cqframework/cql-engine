@@ -29,48 +29,51 @@ If either argument is null, the result is null.
  */
 public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Intersect {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
+    public static Object intersect(Object left, Object right) {
 
-    if (left == null || right == null) { return null; }
+        if (left == null || right == null) {
+            return null;
+        }
 
-    if (left instanceof Interval) {
-      Interval leftInterval = (Interval)left;
-      Interval rightInterval = (Interval)right;
+        if (left instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+            Interval rightInterval = (Interval)right;
 
-      if (!OverlapsEvaluator.overlaps(leftInterval, rightInterval)) { return null; }
+            if (!OverlapsEvaluator.overlaps(leftInterval, rightInterval)) { return null; }
 
-      Object leftStart = leftInterval.getStart();
-      Object leftEnd = leftInterval.getEnd();
-      Object rightStart = rightInterval.getStart();
-      Object rightEnd = rightInterval.getEnd();
+            Object leftStart = leftInterval.getStart();
+            Object leftEnd = leftInterval.getEnd();
+            Object rightStart = rightInterval.getStart();
+            Object rightEnd = rightInterval.getEnd();
 
-      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+            if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
 
-      Object max = GreaterEvaluator.greater(leftStart, rightStart) ? leftStart : rightStart;
-      Object min = LessEvaluator.less(leftEnd, rightEnd) ? leftEnd : rightEnd;
+            Object max = GreaterEvaluator.greater(leftStart, rightStart) ? leftStart : rightStart;
+            Object min = LessEvaluator.less(leftEnd, rightEnd) ? leftEnd : rightEnd;
 
-      return new Interval(max, true, min, true);
+            return new Interval(max, true, min, true);
+        }
+
+        else if (left instanceof Iterable) {
+            Iterable leftArr = (Iterable)left;
+            Iterable rightArr = (Iterable)right;
+
+            List<Object> result = new ArrayList<>();
+            for (Object leftItem : leftArr) {
+                if (InEvaluator.in(leftItem, rightArr)) {
+                    result.add(leftItem);
+                }
+            }
+            return result;
+        }
+        throw new IllegalArgumentException(String.format("Cannot Intersect arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
-    else if (left instanceof Iterable) {
-      Iterable<Object> leftArr = (Iterable<Object>)left;
-      Iterable<Object> rightArr = (Iterable<Object>)right;
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-      if (leftArr == null || rightArr == null) {
-          return null;
-      }
-
-      List<Object> result = new ArrayList<>();
-      for (Object leftItem : leftArr) {
-          if (InEvaluator.in(leftItem, rightArr)) {
-              result.add(leftItem);
-          }
-      }
-      return result;
+        return context.logTrace(this.getClass(), intersect(left, right), left, right);
     }
-    throw new IllegalArgumentException(String.format("Cannot Intersect arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
 }

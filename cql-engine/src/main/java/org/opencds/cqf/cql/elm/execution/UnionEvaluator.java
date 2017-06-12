@@ -4,6 +4,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -30,54 +31,56 @@ Note that the union operator can also be invoked with the symbolic operator (|).
  */
 public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
 
-  public static Interval union(Object left, Object right) {
+    public static Object union(Object left, Object right) {
+        if (left == null || right == null) {
+            return null;
+        }
 
-    if (left == null || right == null) {
-      return null;
+        if (left instanceof Interval) {
+            Object leftStart = ((Interval) left).getStart();
+            Object leftEnd = ((Interval) left).getEnd();
+            Object rightStart = ((Interval) right).getStart();
+            Object rightEnd = ((Interval) right).getEnd();
+
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null)
+            {
+                return null;
+            }
+
+            if (!OverlapsEvaluator.overlaps((Interval) left, (Interval) right)
+                    && !MeetsEvaluator.meets((Interval) left, (Interval) right))
+            {
+                return null;
+            }
+
+            Object min = LessEvaluator.less(leftStart, rightStart) ? leftStart : rightStart;
+            Object max = GreaterEvaluator.greater(leftEnd, rightEnd) ? leftEnd : rightEnd;
+
+            return new Interval(min, true, max, true);
+        }
+
+        else if (left instanceof Iterable) {
+            // List Logic
+            List<Object> result = new ArrayList<>();
+            for (Object leftElement : (Iterable)left) {
+                result.add(leftElement);
+            }
+
+            for (Object rightElement : (Iterable)right) {
+                result.add(rightElement);
+            }
+            return result;
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot Union arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
     }
 
-    Object leftStart = ((Interval)left).getStart();
-    Object leftEnd = ((Interval)left).getEnd();
-    Object rightStart = ((Interval)right).getStart();
-    Object rightEnd = ((Interval)right).getEnd();
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-    if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
-
-    if (!OverlapsEvaluator.overlaps((Interval)left, (Interval)right) && !MeetsEvaluator.meets((Interval)left, (Interval)right)) {
-      return null;
+        return context.logTrace(this.getClass(), union(left, right), left, right);
     }
-
-    Object min = LessEvaluator.less(leftStart, rightStart) ? leftStart : rightStart;
-    Object max = GreaterEvaluator.greater(leftEnd, rightEnd) ? leftEnd : rightEnd;
-
-    return new Interval(min, true, max, true);
-  }
-
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
-
-    if (left == null || right == null) {
-        return null;
-    }
-
-    if (left instanceof Interval) {
-      return union(left, right);
-    }
-
-    else if (left instanceof Iterable) {
-      // List Logic
-      ArrayList result = new ArrayList();
-      for (Object leftElement : (Iterable)left) {
-          result.add(leftElement);
-      }
-
-      for (Object rightElement : (Iterable)right) {
-          result.add(rightElement);
-      }
-      return result;
-    }
-    throw new IllegalArgumentException(String.format("Cannot Union arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
-  }
 }

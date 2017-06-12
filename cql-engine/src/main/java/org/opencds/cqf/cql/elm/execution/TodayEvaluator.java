@@ -17,6 +17,6 @@ public class TodayEvaluator extends org.cqframework.cql.elm.execution.Today {
 
   @Override
   public Object evaluate(Context context) {
-    return DateTime.getToday();
+    return context.logTrace(this.getClass(), DateTime.getToday());
   }
 }

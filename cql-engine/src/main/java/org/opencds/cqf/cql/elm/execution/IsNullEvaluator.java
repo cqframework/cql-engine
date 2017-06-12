@@ -14,8 +14,14 @@ If the argument evaluates to null, the result is true; otherwise, the result is 
  */
 public class IsNullEvaluator extends org.cqframework.cql.elm.execution.IsNull {
 
+    public static Object isNull(Object operand) {
+        return operand == null;
+    }
+
     @Override
     public Object evaluate(Context context) {
-        return getOperand().evaluate(context) == null;
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), isNull(operand), operand);
     }
 }

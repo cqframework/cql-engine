@@ -15,12 +15,12 @@ Now is defined in this way for two reasons:
 */
 
 /**
-* Created by Chris Schuler on 6/21/2016.
-*/
+ * Created by Chris Schuler on 6/21/2016.
+ */
 public class NowEvaluator extends org.cqframework.cql.elm.execution.Now {
 
-  @Override
-  public Object evaluate(Context context) {
-    return DateTime.getNow();
-  }
+    @Override
+    public Object evaluate(Context context) {
+        return context.logTrace(this.getClass(), DateTime.getNow());
+    }
 }

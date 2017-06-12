@@ -4,6 +4,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -28,56 +29,59 @@ Note that the order of elements does not matter for the purposes of determining 
 */
 
 /**
-* Created by Chris Schuler on 6/8/2016
-*/
+ * Created by Chris Schuler on 6/8/2016
+ */
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
-  @Override
-  public Object evaluate(Context context) {
+    public static Object properlyIncudedIn(Object left, Object right) {
+        if (left == null) {
+            return true;
+        }
 
-    Object operand1 = getOperand().get(0).evaluate(context);
-    Object operand2 = getOperand().get(1).evaluate(context);
+        if (right == null) {
+            return false;
+        }
 
-    if (operand1 == null) {
-      return true;
+        if (left instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+            Interval rightInterval = (Interval)right;
+
+            Object leftStart = leftInterval.getStart();
+            Object leftEnd = leftInterval.getEnd();
+            Object rightStart = rightInterval.getStart();
+            Object rightEnd = rightInterval.getEnd();
+
+            return (LessEvaluator.less(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd))
+                    && LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
+                    && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd)
+            );
+        }
+
+        else if (left instanceof Iterable) {
+            List leftArr = (List) left;
+            List rightArr = (List) right;
+
+            if (leftArr.isEmpty()) {
+                return true;
+            }
+
+            Object includes = IncludedInEvaluator.includedIn(left, right);
+
+            if (includes == null) {
+                return null;
+            }
+
+            return (Boolean)includes && rightArr.size() > leftArr.size();
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot perform ProperlyIncludes operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
     }
 
-    if (operand2 == null) {
-      return false;
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), properlyIncudedIn(left, right), left, right);
     }
-
-    if (operand1 instanceof Interval) {
-      Interval left = (Interval)operand1;
-      Interval right = (Interval)operand2;
-
-      Object leftStart = left.getStart();
-      Object leftEnd = left.getEnd();
-      Object rightStart = right.getStart();
-      Object rightEnd = right.getEnd();
-
-      return (LessEvaluator.less(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd))
-              && LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
-              && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd)
-      );
-    }
-
-    else if (operand1 instanceof Iterable) {
-      ArrayList<Object> left = (ArrayList<Object>)operand1;
-      ArrayList<Object> right = (ArrayList<Object>)operand2;
-
-      if (left.isEmpty()) {
-        return true;
-      }
-
-      Object includes = IncludedInEvaluator.includedIn(left, right);
-
-      if (includes == null) {
-        return null;
-      }
-
-      return (Boolean)includes && right.size() > left.size();
-    }
-
-    throw new IllegalArgumentException(String.format("Cannot ProperlyIncludes arguments of type: %s", operand1.getClass().getName()));
-  }
 }

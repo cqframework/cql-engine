@@ -17,17 +17,14 @@ If the source list is null, the result is null.
  */
 public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.SingletonFrom {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object singletonFrom(Object operand) {
+        if (operand == null) {
             return null;
         }
 
         Object result = null;
         boolean first = true;
-        for (Object element : (Iterable)value) {
+        for (Object element : (Iterable) operand) {
             if (first) {
                 result = element;
                 first = false;
@@ -37,5 +34,12 @@ public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.Si
             }
         }
         return result;
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), singletonFrom(operand), operand);
     }
 }

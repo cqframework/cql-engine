@@ -14,26 +14,37 @@ If either argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/7/2016
-*/
+ * Created by Chris Schuler on 6/7/2016
+ */
 public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
 
-  @Override
-  public Object evaluate(Context context) {
-    Interval leftInterval = (Interval)getOperand().get(0).evaluate(context);
-    Interval rightInterval = (Interval)getOperand().get(1).evaluate(context);
+    public static Object ends(Object left, Object right) {
+        Interval leftInterval = (Interval) left;
+        Interval rightInterval = (Interval) right;
 
-    if (leftInterval != null && rightInterval != null) {
-      Object leftStart = leftInterval.getStart();
-      Object leftEnd = leftInterval.getEnd();
-      Object rightStart = rightInterval.getStart();
-      Object rightEnd = rightInterval.getEnd();
+        if (leftInterval != null && rightInterval != null) {
+            Object leftStart = leftInterval.getStart();
+            Object leftEnd = leftInterval.getEnd();
+            Object rightStart = rightInterval.getStart();
+            Object rightEnd = rightInterval.getEnd();
 
-      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null) {
+                return null;
+            }
 
-      return (GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart)
-              && EqualEvaluator.equal(leftEnd, rightEnd));
+            return (GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart)
+                    && EqualEvaluator.equal(leftEnd, rightEnd));
+        }
+
+        return null;
     }
-    return null;
-  }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), ends(left, right), left, right);
+    }
 }

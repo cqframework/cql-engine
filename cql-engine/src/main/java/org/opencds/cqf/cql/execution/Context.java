@@ -32,6 +32,7 @@ public class Context {
 
     private Library library;
 
+    private TraceExecution trace = new TraceExecution();
     private boolean enableTraceLogging = false;
 
     public Context(Library library) {
@@ -42,6 +43,43 @@ public class Context {
 		if (library.getIdentifier() != null)
 			libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+    }
+
+    public void logEntry(Class clazz, Object ... operands) {
+        if (!enableTraceLogging) {
+            return;
+        }
+
+        trace.logEntry(clazz, operands);
+    }
+
+    public Object logExit(Class clazz, Object result) {
+        if (!enableTraceLogging) {
+            return result;
+        }
+
+        return trace.logExit(clazz, result);
+    }
+
+    public Object logTrace(Class clazz, Object ... criteria) {
+        if (!enableTraceLogging) {
+            return criteria[0];
+        }
+
+        return trace.logTrace(clazz, criteria);
+    }
+
+    public void logError(Class clazz, String message) {
+        if (!enableTraceLogging) {
+            return;
+        }
+
+        trace.logError(clazz, message);
+    }
+
+    public String getTrace() {
+        String header = getCurrentLibrary().getLocalId() + "\n";
+        return trace.getTraceString();
     }
 
     public boolean isTraceLoggingEnabled() {

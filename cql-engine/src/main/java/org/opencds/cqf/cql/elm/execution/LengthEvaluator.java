@@ -22,30 +22,37 @@ If the argument is null, the result is null.
  */
 public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object length(Object operand) {
+        if (operand == null) {
             return 0;
         }
 
-        if (value instanceof String) {
-            return ((String) value).length();
+        if (operand instanceof String) {
+            return ((String) operand).length();
         }
 
-        if (value instanceof Iterable) {
-            if (value instanceof List) {
-                return ((List) value).size();
-            } else {
+        if (operand instanceof Iterable) {
+            if (operand instanceof List) {
+                return ((List) operand).size();
+            }
+
+            else {
                 int size = 0;
-                for(Object curr : (Iterable) value)
-                {
+                for(Object curr : (Iterable) operand) {
                     size++;
                 }
+
                 return size;
             }
         }
-        throw new IllegalArgumentException(String.format("Cannot %s of type '%s'.", this.getClass().getSimpleName(), value.getClass().getName()));
+
+        throw new IllegalArgumentException(String.format("Cannot perform Length operator on type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), length(operand), operand);
     }
 }

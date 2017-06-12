@@ -21,79 +21,80 @@ If either or both arguments are null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/23/2016
-*/
+ * Created by Chris Schuler on 6/23/2016
+ */
 public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
-
-    if (left == null || right == null) { return null; }
-
-    if (left instanceof DateTime && right instanceof DateTime) {
-      DateTime leftDT = (DateTime)left;
-      DateTime rightDT = (DateTime)right;
-      String precision = getPrecision().value();
-
-      if (precision == null) {
-        throw new IllegalArgumentException("Precision must be specified.");
-      }
-
-      int idx = DateTime.getFieldIndex(precision);
-
-      if (idx != -1) {
-        // check level of precision
-        if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
-          return null;
+    public static Object sameAs(Object left, Object right, String precision) {
+        if (left == null || right == null) {
+            return null;
         }
 
-        for (int i = 0; i < idx + 1; ++i) {
-          if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
-            return false;
-          }
+        if (precision == null) {
+            throw new IllegalArgumentException("Precision must be specified.");
         }
 
-        return true;
-      }
+        if (left instanceof DateTime && right instanceof DateTime) {
+            DateTime leftDT = (DateTime)left;
+            DateTime rightDT = (DateTime)right;
 
-      else {
-        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-      }
+            int idx = DateTime.getFieldIndex(precision);
+
+            if (idx != -1) {
+                // check level of precision
+                if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
+                    return null;
+                }
+
+                for (int i = 0; i < idx + 1; ++i) {
+                    if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            else {
+                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+            }
+        }
+
+        if (left instanceof Time && right instanceof Time) {
+            Time leftT = (Time)left;
+            Time rightT = (Time)right;
+
+            int idx = Time.getFieldIndex(precision);
+
+            if (idx != -1) {
+                // check level of precision
+                if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
+                    return null;
+                }
+
+                for (int i = 0; i < idx + 1; ++i) {
+                    if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            }
+
+            else {
+                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot perform SameAs operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
-    if (left instanceof Time && right instanceof Time) {
-      Time leftT = (Time)left;
-      Time rightT = (Time)right;
-      String precision = getPrecision().value();
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision().value();
 
-      if (precision == null) {
-        throw new IllegalArgumentException("Precision must be specified.");
-      }
-
-      int idx = Time.getFieldIndex(precision);
-
-      if (idx != -1) {
-        // check level of precision
-        if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
-          return null;
-        }
-
-        for (int i = 0; i < idx + 1; ++i) {
-          if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {
-            return false;
-          }
-        }
-
-        return true;
-      }
-
-      else {
-        throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-      }
+        return context.logTrace(this.getClass(), sameAs(left, right, precision), left, right, precision);
     }
-
-    throw new IllegalArgumentException(String.format("Cannot SameAs arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
 }

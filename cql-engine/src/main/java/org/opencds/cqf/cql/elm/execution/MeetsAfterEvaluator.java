@@ -16,19 +16,26 @@ If either argument is null, the result is null.
 */
 public class MeetsAfterEvaluator extends org.cqframework.cql.elm.execution.MeetsAfter {
 
+  public static Object meetsAfter(Interval left, Interval right) {
+    if (left == null || right == null) {
+      return null;
+    }
+
+    Object leftStart = left.getStart();
+    Object rightEnd = right.getEnd();
+
+    if (leftStart == null || rightEnd == null) {
+      return null;
+    }
+
+    return EqualEvaluator.equal(leftStart, Value.successor(rightEnd));
+  }
+
   @Override
   public Object evaluate(Context context) {
     Interval left = (Interval)getOperand().get(0).evaluate(context);
     Interval right = (Interval)getOperand().get(1).evaluate(context);
 
-    if (left != null && right != null) {
-      Object leftStart = left.getStart();
-      Object rightEnd = right.getEnd();
-
-      if (leftStart == null || rightEnd == null) { return null; }
-
-      return EqualEvaluator.equal(leftStart, Value.successor(rightEnd));
-    }
-    return null;
+    return context.logTrace(this.getClass(), meetsAfter(left, right), left, right);
   }
 }

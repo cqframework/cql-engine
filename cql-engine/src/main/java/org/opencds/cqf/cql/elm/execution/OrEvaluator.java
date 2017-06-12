@@ -14,17 +14,22 @@ If both arguments are false, the result is false. Otherwise, the result is null.
  */
 public class OrEvaluator extends org.cqframework.cql.elm.execution.Or {
 
+    public static Object or(Boolean left, Boolean right) {
+        if (left == null || right == null) {
+            if ((left != null && left) || (right != null && right)) {
+                return true;
+            }
+            return null;
+        }
+
+        return (left || right);
+    }
+
     @Override
     public Object evaluate(Context context) {
         Boolean left = (Boolean) getOperand().get(0).evaluate(context);
         Boolean right = (Boolean) getOperand().get(1).evaluate(context);
 
-        if (left == null || right == null) {
-            if ((left != null && left == true) || (right != null && right == true)) {
-                return true;
-            }
-            return null;
-        }
-        return (left || right);
+        return context.logTrace(this.getClass(), or(left, right), left, right);
     }
 }

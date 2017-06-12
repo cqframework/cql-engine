@@ -22,9 +22,7 @@ If the argument is null, the result is null.
  */
 public class ToDecimalEvaluator extends org.cqframework.cql.elm.execution.ToDecimal {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object operand = getOperand().evaluate(context);
+    public static Object toDecimal(Object operand) {
         if (operand == null) {
             return null;
         }
@@ -34,14 +32,21 @@ public class ToDecimalEvaluator extends org.cqframework.cql.elm.execution.ToDeci
         }
 
         if (operand instanceof String) {
-          try { // added error checking - not sure if this is handled during translation -- Chris Schuler
-            return new BigDecimal((String)operand);
-          }
-          catch (NumberFormatException nfe) {
-            throw new IllegalArgumentException("Unable to convert given string to Decimal");
-          }
+            try {
+                return new BigDecimal((String)operand);
+            }
+            catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("Unable to convert given string to Decimal");
+            }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot call %s with argument of type '%s'.", this.getClass().getSimpleName(), operand.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot call ToDecimal operator with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), toDecimal(operand), operand);
     }
 }

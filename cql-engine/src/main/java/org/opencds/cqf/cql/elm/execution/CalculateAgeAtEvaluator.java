@@ -23,7 +23,10 @@ The CalculateAgeAt operators are defined in terms of a DateTime duration calcula
 public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.CalculateAgeAt {
 
   public static Object calculateAgeAt(Object birthDate, Object asOf, String precision) {
-    if (birthDate == null || asOf == null) { return null; }
+
+    if (birthDate == null || asOf == null) {
+      return null;
+    }
 
     return DurationBetweenEvaluator.durationBetween(birthDate, asOf, precision);
   }
@@ -33,6 +36,7 @@ public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.C
     Object birthDate = getOperand().get(0).evaluate(context);
     Object asOf = getOperand().get(1).evaluate(context);
     String precision = getPrecision().value();
-    return calculateAgeAt(birthDate, asOf, precision);
+
+    return context.logTrace(this.getClass(), calculateAgeAt(birthDate, asOf, precision), birthDate, asOf);
   }
 }

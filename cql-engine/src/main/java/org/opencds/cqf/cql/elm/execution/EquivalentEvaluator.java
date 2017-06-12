@@ -42,17 +42,17 @@ The ~ operator for lists returns true if and only if the lists contain elements 
 public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equivalent {
 
     public static Boolean equivalent(Object left, Object right) {
-        if ((left == null) && (right == null)) {
+        if (left == null && right == null) {
             return true;
         }
 
-        if ((left == null) || (right == null)) {
+        if (left == null || right == null) {
             return false;
         }
 
         if (left instanceof Iterable) {
-            Iterator<Object> leftIterator = ((Iterable<Object>)left).iterator();
-            Iterator<Object> rightIterator = ((Iterable<Object>)right).iterator();
+            Iterator leftIterator = ((Iterable)left).iterator();
+            Iterator rightIterator = ((Iterable)right).iterator();
 
             while (leftIterator.hasNext()) {
                 Object leftObject = leftIterator.next();
@@ -78,10 +78,17 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             HashMap<String, Object> rightMap = ((Tuple)right).getElements();
             for (String key : rightMap.keySet()) {
                 if (leftMap.containsKey(key)) {
-                    if (equivalent(rightMap.get(key), leftMap.get(key)) == null) { return null; }
-                    else if (!equivalent(rightMap.get(key), leftMap.get(key))) { return false; }
+                    Object areKeyValsSame = equivalent(rightMap.get(key), leftMap.get(key));
+                    if (areKeyValsSame == null) {
+                        return null;
+                    }
+                    else if (!(Boolean) areKeyValsSame) {
+                        return false;
+                    }
                 }
-                else { return false; }
+                else {
+                    return false;
+                }
             }
             return true;
         }
@@ -121,6 +128,6 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return equivalent(left, right);
+        return context.logTrace(this.getClass(), equivalent(left, right), left, right);
     }
 }

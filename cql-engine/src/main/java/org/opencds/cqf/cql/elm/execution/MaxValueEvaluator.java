@@ -26,15 +26,21 @@ For any other type, attempting to invoke maximum results in an error.
  */
 public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValue {
 
-    @Override
-    public Object evaluate(Context context) {
-        switch (valueType.getLocalPart()) {
+    public static Object maximum(String type) {
+        switch (type) {
             case "Integer": return Value.maxValue(Integer.class);
             case "Decimal": return Value.maxValue(BigDecimal.class);
             case "Quantity": return Value.maxValue(Quantity.class);
             case "DateTime": return Value.maxValue(DateTime.class);
             case "Time": return Value.maxValue(Time.class);
-            default: throw new NotImplementedException(String.format("maxValue not implemented for type %s", valueType.getLocalPart()));
+            default: throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
         }
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        String type = getValueType().getLocalPart();
+
+        return context.logTrace(this.getClass(), maximum(type), type);
     }
 }

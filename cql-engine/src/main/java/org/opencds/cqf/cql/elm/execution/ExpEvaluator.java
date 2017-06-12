@@ -17,30 +17,37 @@ If the argument is null, the result is null.
  */
 public class ExpEvaluator extends org.cqframework.cql.elm.execution.Exp {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object exp(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof BigDecimal){
-          BigDecimal retVal = new BigDecimal(0);
-          try {
-            retVal = new BigDecimal(Math.exp(((BigDecimal)value).doubleValue()));
-          } catch (NumberFormatException nfe) {
-            if (((BigDecimal)value).compareTo(new BigDecimal(0)) > 0) {
-              throw new ArithmeticException("Results in positive infinity");
+        if (operand instanceof BigDecimal){
+            BigDecimal retVal;
+            try {
+                retVal = new BigDecimal(Math.exp(((BigDecimal)operand).doubleValue()));
             }
-            else if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) {
-              throw new ArithmeticException("Results in negative infinity");
+            catch (NumberFormatException nfe) {
+                if (((BigDecimal)operand).compareTo(new BigDecimal(0)) > 0) {
+                    throw new ArithmeticException("Results in positive infinity");
+                }
+                else if (((BigDecimal)operand).compareTo(new BigDecimal(0)) < 0) {
+                    throw new ArithmeticException("Results in negative infinity");
+                }
+                else {
+                    throw new NumberFormatException();
+                }
             }
-            else { throw new NumberFormatException(); }
-          }
-          return retVal;
+            return retVal;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.",this.getClass().getSimpleName(), value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform Exp evaluation with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), exp(operand), operand);
     }
 }

@@ -20,17 +20,23 @@ The CalculateAge operators are defined in terms of a DateTime duration calculati
 */
 
 /**
-* Created by Chris Schuler on 7/14/2016
-*/
+ * Created by Chris Schuler on 7/14/2016
+ */
 public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.CalculateAge {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object operand = getOperand().evaluate(context);
-    String precision = getPrecision().value();
+    public static Object calculateAge(Object operand, String precision) {
+        if (operand == null) {
+            return null;
+        }
 
-    if (operand == null) { return null; }
+        return CalculateAgeAtEvaluator.calculateAgeAt(operand, DateTime.getToday(), precision);
+    }
 
-    return CalculateAgeAtEvaluator.calculateAgeAt(operand, DateTime.getToday(), precision);
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+        String precision = getPrecision().value();
+
+        return context.logTrace(this.getClass(), calculateAge(operand, precision), operand);
+    }
 }

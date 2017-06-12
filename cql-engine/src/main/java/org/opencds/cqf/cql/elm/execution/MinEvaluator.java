@@ -22,32 +22,44 @@ If the source is null, the result is null.
 public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
 
   public static Object min(Object source) {
-    if (source instanceof Iterable) {
-      Iterable<Object> element = (Iterable<Object>)source;
-      Iterator<Object> itr = element.iterator();
+    if (source == null) {
+      return null;
+    }
 
-      if (!itr.hasNext()) { return null; } // empty list
+    if (source instanceof Iterable) {
+      Iterable element = (Iterable)source;
+      Iterator itr = element.iterator();
+
+      if (!itr.hasNext()) { // empty list
+        return null;
+      }
+
       Object min = itr.next();
-      while (min == null && itr.hasNext()) { min = itr.next(); }
+      while (min == null && itr.hasNext()) {
+        min = itr.next();
+      }
       while (itr.hasNext()) {
         Object value = itr.next();
 
-        if (value == null) { continue; } // skip null
+        if (value == null) { // skip null
+          continue;
+        }
 
-        if ((Boolean)LessEvaluator.less(value, min)) { min = value; }
+        if (LessEvaluator.less(value, min)) {
+          min = value;
+        }
 
       }
       return min;
     }
-    throw new IllegalArgumentException(String.format("Cannot Min arguments of type '%s'.", source.getClass().getName()));
+
+    throw new IllegalArgumentException(String.format("Cannot perform Min operation with arguments of type '%s'.", source.getClass().getName()));
   }
 
   @Override
   public Object evaluate(Context context) {
-
     Object source = getSource().evaluate(context);
-    if (source == null) { return null; }
 
-    return min(source);
+    return context.logTrace(this.getClass(), min(source), source);
   }
 }

@@ -27,77 +27,85 @@ If the code argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 7/13/2016
-*/
+ * Created by Chris Schuler on 7/13/2016
+ */
 public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InValueSet {
 
-  public Object inValueSet(Context context, Object code, Object valueset) {
-    if (code == null) { return null; }
+    public Object inValueSet(Context context, Object code, Object valueset) {
 
-    // Resolve ValueSetRef & CodeSystemRef -- Account for multiple codesystems represented within a valueset
-    ValueSetDef vsd = resolveVSR(context, (ValueSetRef)valueset);
-    List<CodeSystemDef> codeSystemDefs = new ArrayList<>();
-    for (CodeSystemRef csr : vsd.getCodeSystem()) {
-      codeSystemDefs.add(resolveCSR(context, csr));
-    }
-
-    List<CodeSystemInfo> codeSystemInfos = new ArrayList<>();
-    if (codeSystemDefs.size() > 0) {
-      for (CodeSystemDef csd : codeSystemDefs) {
-        codeSystemInfos.add(new CodeSystemInfo().withId(csd.getId()).withVersion(csd.getVersion()));
-      }
-    }
-    // TODO: find better solution than this -- temporary solution
-    else {
-      codeSystemInfos.add(new CodeSystemInfo().withId(null).withVersion(null));
-    }
-
-    List<ValueSetInfo> valueSetInfos = new ArrayList<>();
-    for (CodeSystemInfo csi : codeSystemInfos) {
-      valueSetInfos.add(new ValueSetInfo().withId(vsd.getId()).withVersion(vsd.getVersion()).withCodeSystem(csi));
-    }
-
-    TerminologyProvider provider = context.resolveTerminologyProvider();
-
-    // perform operation
-    if (code instanceof String) {
-      for (ValueSetInfo vsi : valueSetInfos) {
-        if (provider.in(new Code().withCode((String)code), vsi)) { return true; }
-      }
-      return false;
-    }
-    else if (code instanceof Code) {
-      for (ValueSetInfo vsi : valueSetInfos) {
-        if (provider.in((Code)code, vsi)) { return true; }
-      }
-      return false;
-    }
-    else if (code instanceof Concept) {
-      for (ValueSetInfo vsi : valueSetInfos) {
-        for (Code codes : ((Concept)code).getCodes()) {
-          if (codes == null) return null;
-          if (provider.in(codes, vsi)) { return true; }
+        if (code == null) {
+            return null;
         }
-        return false;
-      }
+
+        // Resolve ValueSetRef & CodeSystemRef -- Account for multiple codesystems represented within a valueset
+        ValueSetDef vsd = resolveVSR(context, (ValueSetRef)valueset);
+        List<CodeSystemDef> codeSystemDefs = new ArrayList<>();
+        for (CodeSystemRef csr : vsd.getCodeSystem()) {
+            codeSystemDefs.add(resolveCSR(context, csr));
+        }
+
+        List<CodeSystemInfo> codeSystemInfos = new ArrayList<>();
+        if (codeSystemDefs.size() > 0) {
+            for (CodeSystemDef csd : codeSystemDefs) {
+                codeSystemInfos.add(new CodeSystemInfo().withId(csd.getId()).withVersion(csd.getVersion()));
+            }
+        }
+
+        // TODO: find better solution than this -- temporary solution
+        else {
+            codeSystemInfos.add(new CodeSystemInfo().withId(null).withVersion(null));
+        }
+
+        List<ValueSetInfo> valueSetInfos = new ArrayList<>();
+        for (CodeSystemInfo csi : codeSystemInfos) {
+            valueSetInfos.add(new ValueSetInfo().withId(vsd.getId()).withVersion(vsd.getVersion()).withCodeSystem(csi));
+        }
+
+        TerminologyProvider provider = context.resolveTerminologyProvider();
+
+        // perform operation
+        if (code instanceof String) {
+            for (ValueSetInfo vsi : valueSetInfos) {
+                if (provider.in(new Code().withCode((String)code), vsi)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (code instanceof Code) {
+            for (ValueSetInfo vsi : valueSetInfos) {
+                if (provider.in((Code)code, vsi)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        else if (code instanceof Concept) {
+            for (ValueSetInfo vsi : valueSetInfos) {
+                for (Code codes : ((Concept)code).getCodes()) {
+                    if (codes == null) return null;
+                    if (provider.in(codes, vsi)) return true;
+                }
+                return false;
+            }
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot InValueSet Code arguments of type '%s'.", code.getClass().getName()));
     }
 
-    throw new IllegalArgumentException(String.format("Cannot InValueSet Code arguments of type '%s'.", code.getClass().getName()));
-  }
+    public ValueSetDef resolveVSR(Context context, ValueSetRef valueset) {
+        return context.resolveValueSetRef(valueset.getLibraryName(), valueset.getName());
+    }
 
-  @Override
-  public Object evaluate(Context context) {
-    Object code = getCode().evaluate(context);
-    Object valueset = getValueset();
+    public CodeSystemDef resolveCSR(Context context, CodeSystemRef codesystem) {
+        return context.resolveCodeSystemRef(codesystem.getLibraryName(), codesystem.getName());
+    }
 
-    return inValueSet(context, code, valueset);
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Object code = getCode().evaluate(context);
+        Object valueset = getValueset();
 
-  public ValueSetDef resolveVSR(Context context, ValueSetRef valueset) {
-    return context.resolveValueSetRef(valueset.getLibraryName(), valueset.getName());
-  }
-
-  public CodeSystemDef resolveCSR(Context context, CodeSystemRef codesystem) {
-    return context.resolveCodeSystemRef(codesystem.getLibraryName(), codesystem.getName());
-  }
+        return context.logTrace(this.getClass(), inValueSet(context, code, valueset), code, valueset);
+    }
 }

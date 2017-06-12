@@ -1,11 +1,13 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.DateTime;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ArrayList;
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.runtime.Time;
 
 /*
 simple type Time
@@ -29,9 +31,9 @@ public class TimeEvaluator extends org.cqframework.cql.elm.execution.Time {
 
     org.opencds.cqf.cql.runtime.Time time = new org.opencds.cqf.cql.runtime.Time();
 
-    if (DateTime.formatCheck(new ArrayList<Object>(Arrays.asList(hour, minute, second, millis)))) {
-      int [] values = DateTime.getValues(hour, minute, second, millis);
-      return time.withPartial(new Partial(time.getFields(values.length), values)).withTimezoneOffset(offset);
+    if (BaseTemporal.formatCheck(new ArrayList<>(Arrays.asList(hour, minute, second, millis)))) {
+      int [] values = BaseTemporal.getValues(hour, minute, second, millis);
+      return time.withPartial(new Partial(Time.getFields(values.length), values)).withTimezoneOffset(offset);
     }
     throw new IllegalArgumentException("Time format is invalid");
   }

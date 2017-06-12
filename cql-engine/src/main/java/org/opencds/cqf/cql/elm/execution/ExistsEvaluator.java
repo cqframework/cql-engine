@@ -15,16 +15,22 @@ If the argument is null, the result is null.
  */
 public class ExistsEvaluator extends org.cqframework.cql.elm.execution.Exists {
 
-    @Override
-    public Object evaluate(Context context) {
-        Iterable<Object> value = (Iterable<Object>)getOperand().evaluate(context);
+    public static Object exists(Object operand) {
+        Iterable value = (Iterable) operand;
 
         if (value == null) {
             return false;
         }
 
-        Iterator<Object> iterator = value.iterator();
+        Iterator iterator = value.iterator();
 
         return iterator.hasNext();
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand= getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), exists(operand), operand);
     }
 }

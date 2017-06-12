@@ -13,9 +13,14 @@ The not operator returns true if the argument is false and false if the argument
  */
 public class NotEvaluator extends org.cqframework.cql.elm.execution.Not {
 
+    public static Object not(Boolean operand) {
+        return operand == null ? null : !operand;
+    }
+
     @Override
     public Object evaluate(Context context) {
-        Boolean val = (Boolean) getOperand().evaluate(context);
-        return val == null ? null : !val;
+        Boolean operand = (Boolean) getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), not(operand), operand);
     }
 }

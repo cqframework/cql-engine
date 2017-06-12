@@ -171,8 +171,8 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     @Override
     public If createIf() { return new IfEvaluator(); }
 
-    // @Override
-    // public Implies createImplies() { return new ImpliesEvaluator(); }
+     @Override
+     public Implies createImplies() { return new ImpliesEvaluator(); }
 
     @Override
     public IncludedIn createIncludedIn() { return new IncludedInEvaluator(); }

@@ -72,6 +72,6 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return less(left, right);
+        return context.logTrace(this.getClass(), less(left, right), left, right);
     }
 }

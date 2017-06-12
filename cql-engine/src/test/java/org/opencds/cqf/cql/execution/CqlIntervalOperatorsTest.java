@@ -173,7 +173,6 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void TestCollapse() {
         Context context = new Context(library);
-
         Object result = context.resolveExpressionRef("TestCollapseNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 

@@ -12,23 +12,30 @@ If either argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/8/2016
-*/
+ * Created by Chris Schuler on 6/8/2016
+ */
 public class MeetsBeforeEvaluator extends org.cqframework.cql.elm.execution.MeetsBefore {
 
-  @Override
-  public Object evaluate(Context context) {
-    Interval left = (Interval)getOperand().get(0).evaluate(context);
-    Interval right = (Interval)getOperand().get(1).evaluate(context);
+    public static Object meetsBefore(Interval left, Interval right) {
+        if (left == null || right == null) {
+            return null;
+        }
 
-    if (left != null && right != null) {
-      Object leftEnd = left.getEnd();
-      Object rightStart = right.getStart();
+        Object leftEnd = left.getEnd();
+        Object rightStart = right.getStart();
 
-      if (leftEnd == null || rightStart == null) { return null; }
+        if (leftEnd == null || rightStart == null) {
+            return null;
+        }
 
-      return EqualEvaluator.equal(rightStart, Value.successor(leftEnd));
+        return EqualEvaluator.equal(rightStart, Value.successor(leftEnd));
     }
-    return null;
-  }
+
+    @Override
+    public Object evaluate(Context context) {
+        Interval left = (Interval)getOperand().get(0).evaluate(context);
+        Interval right = (Interval)getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), meetsBefore(left, right), left, right);
+    }
 }

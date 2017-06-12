@@ -73,6 +73,6 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return greaterOrEqual(left, right);
+        return context.logTrace(this.getClass(), greaterOrEqual(left, right), left, right);
     }
 }

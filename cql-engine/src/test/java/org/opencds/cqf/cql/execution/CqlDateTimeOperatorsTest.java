@@ -112,79 +112,78 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testAfter() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("DateTimeAfterYearTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("DateTimeAfterYearTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterYearFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterYearFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterMonthTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterMonthTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterMonthFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterMonthFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterDayTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterDayTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterDayFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterDayFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterHourTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterHourTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterHourFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterHourFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterMinuteTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterMinuteTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterMinuteFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterMinuteFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterSecondTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterSecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterSecondFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterSecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterMillisecondTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterMillisecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("DateTimeAfterMillisecondFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("DateTimeAfterMillisecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("DateTimeAfterUncertain").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("DateTimeAfterUncertain").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("TimeAfterHourTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("TimeAfterHourTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("TimeAfterHourFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("TimeAfterHourFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("TimeAfterMinuteTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("TimeAfterMinuteTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("TimeAfterMinuteFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("TimeAfterMinuteFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("TimeAfterSecondTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("TimeAfterSecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("TimeAfterSecondFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("TimeAfterSecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      result = context.resolveExpressionRef("TimeAfterMillisecondTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        result = context.resolveExpressionRef("TimeAfterMillisecondTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
-      result = context.resolveExpressionRef("TimeAfterMillisecondFalse").getExpression().evaluate(context);
-      assertThat(result, is(false));
+        result = context.resolveExpressionRef("TimeAfterMillisecondFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
-      // result = context.resolveExpressionRef("TimeAfterTimeCstor").getExpression().evaluate(context);
-      // assertThat(result, is(true));
-
+        // result = context.resolveExpressionRef("TimeAfterTimeCstor").getExpression().evaluate(context);
+        // assertThat(result, is(true));
   }
 
     /**

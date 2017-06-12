@@ -16,15 +16,15 @@ public class FilterEvaluator extends Filter {
     public Object evaluate(Context context) {
         Object source = this.getSource().evaluate(context);
 
-        if (source == null) {
-            return null;
-        }
-
         List<Object> ret = new ArrayList<>();
+
+        if (source == null) {
+            ret = null;
+        }
 
         if (source instanceof Iterable) {
 
-            for (Object obj : (List<Object>) source) {
+            for (Object obj : (List) source) {
                 try {
                     // Hmmm... This is hard without the alias.
                     // TODO: verify this works for all cases -> will scope always be present?
@@ -43,6 +43,6 @@ public class FilterEvaluator extends Filter {
             }
         }
 
-        return ret;
+        return context.logTrace(this.getClass(), ret, source);
     }
 }

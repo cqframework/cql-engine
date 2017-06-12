@@ -25,11 +25,7 @@ If either argument is null, the result is null.
  */
 public class IndexerEvaluator extends org.cqframework.cql.elm.execution.Indexer {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object left = getOperand().get(0).evaluate(context);
-        Object right = getOperand().get(1).evaluate(context);
-
+    public static Object indexer(Object left, Object right) {
         if (left == null || right == null) {
             return null;
         }
@@ -56,6 +52,15 @@ public class IndexerEvaluator extends org.cqframework.cql.elm.execution.Indexer 
                 return null;
             }
         }
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s' and '%s'.", this.getClass().getSimpleName(), left.getClass().getName(), right.getClass().getName()));
+
+        throw new IllegalArgumentException(String.format("Cannot Indexer arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), indexer(left, right), left, right);
     }
 }

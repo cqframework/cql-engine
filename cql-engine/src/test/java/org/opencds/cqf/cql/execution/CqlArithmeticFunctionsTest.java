@@ -34,7 +34,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
         result = context.resolveExpressionRef("Abs1cm").getExpression().evaluate(context);
-        assertThat(result, is(new BigDecimal("1.0")));
+        Assert.assertTrue(((Quantity)result).compareTo(new Quantity().withValue(new BigDecimal("1.0")).withUnit("cm")) == 0);
     }
 
     /**

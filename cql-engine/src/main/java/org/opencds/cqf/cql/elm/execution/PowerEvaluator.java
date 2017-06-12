@@ -35,7 +35,7 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
             return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())));
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Power arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform Power operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
@@ -43,6 +43,6 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return power(left, right);
+        return context.logTrace(this.getClass(), power(left, right), left, right);
     }
 }

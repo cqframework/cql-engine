@@ -99,8 +99,8 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         }
 
         else if (left instanceof Iterable) {
-            Iterator<Object> leftIterator = ((Iterable<Object>)left).iterator();
-            Iterator<Object> rightIterator = ((Iterable<Object>)right).iterator();
+            Iterator leftIterator = ((Iterable)left).iterator();
+            Iterator rightIterator = ((Iterable)right).iterator();
 
             while (leftIterator.hasNext()) {
                 Object leftObject = leftIterator.next();
@@ -133,6 +133,6 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return equal(left, right);
+        return context.logTrace(this.getClass(), equal(left, right), left, right);
     }
 }

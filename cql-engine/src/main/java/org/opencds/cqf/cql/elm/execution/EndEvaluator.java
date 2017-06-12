@@ -20,13 +20,20 @@ If the argument is null, the result is null.
  */
 public class EndEvaluator extends org.cqframework.cql.elm.execution.End {
 
-    @Override
-    public Object evaluate(Context context) {
-        Interval argument = (Interval)this.getOperand().evaluate(context);
-        if (argument != null) {
-            return argument.getEnd();
+    public static Object end(Object operand) {
+        Interval argument = (Interval) operand;
+
+        if (argument == null) {
+            return null;
         }
 
-        return null;
+        return argument.getEnd();
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = this.getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), end(operand), operand);
     }
 }

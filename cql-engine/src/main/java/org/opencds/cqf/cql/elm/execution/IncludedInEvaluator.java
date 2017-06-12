@@ -28,53 +28,62 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
-  public static Object includedIn(Object left, Object right) {
+    public static Object included(Object left, Object right) {
+        if (left instanceof Interval) {
+            Object leftStart = ((Interval)left).getStart();
+            Object leftEnd = ((Interval)left).getEnd();
+            Object rightStart = ((Interval)right).getStart();
+            Object rightEnd = ((Interval)right).getEnd();
 
-    if (left == null) {
-      return true;
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null)
+            {
+                return null;
+            }
+
+            return (LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
+                    && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd));
+        }
+
+        else if (left instanceof Iterable) {
+            for (Object element : (Iterable)left) {
+                Object in = InEvaluator.in(element, (Iterable)right);
+
+                if (in == null) continue;
+
+                if (!(Boolean) in) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        throw new IllegalArgumentException();
     }
 
-    if (right == null) {
-      return false;
-    }
+    public static Object includedIn(Object left, Object right) {
 
-    if (left instanceof Interval) {
-      Object leftStart = ((Interval)left).getStart();
-      Object leftEnd = ((Interval)left).getEnd();
-      Object rightStart = ((Interval)right).getStart();
-      Object rightEnd = ((Interval)right).getEnd();
+        if (left == null) {
+            return true;
+        }
 
-      if (leftStart == null || leftEnd == null
-              || rightStart == null || rightEnd == null)
-      {
-        return null;
-      }
-
-      return (LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
-              && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd));
-    }
-
-    else if (left instanceof Iterable) {
-      for (Object element : (Iterable)left) {
-        Object in = InEvaluator.in(element, (Iterable)right);
-
-        if (in == null) continue;
-
-        if (!(Boolean) in) {
+        if (right == null) {
             return false;
         }
-      }
-      return true;
+
+        try {
+            return included(left, right);
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        }
     }
 
-    throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
-
-    return includedIn(left, right);
-  }
+        return context.logTrace(this.getClass(), includedIn(left, right), left, right);
+    }
 }

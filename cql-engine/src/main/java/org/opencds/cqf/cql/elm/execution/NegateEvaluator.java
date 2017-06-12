@@ -19,23 +19,31 @@ If the argument is null, the result is null.
  */
 public class NegateEvaluator extends org.cqframework.cql.elm.execution.Negate {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object value = getOperand().evaluate(context);
+    public static Object negate(Object source) {
+        if (source == null) {
+            return null;
+        }
 
-    if (value instanceof Integer) {
-        return -(int) value;
+        if (source instanceof Integer) {
+            return -(int) source;
+        }
+
+        if (source instanceof BigDecimal) {
+            return ((BigDecimal) source).negate();
+        }
+
+        if (source instanceof Quantity) {
+            Quantity quantity = (Quantity) source;
+            return new Quantity().withValue(quantity.getValue().negate()).withUnit(quantity.getUnit());
+        }
+
+        return source;
     }
 
-    if (value instanceof BigDecimal) {
-        return ((BigDecimal)value).negate();
-    }
+    @Override
+    public Object evaluate(Context context) {
+        Object source = getOperand().evaluate(context);
 
-    if (value instanceof Quantity) {
-        Quantity quantity = (Quantity) value;
-        return new Quantity().withValue(quantity.getValue().negate()).withUnit(quantity.getUnit());
+        return context.logTrace(this.getClass(), negate(source), source);
     }
-
-    return value;
-  }
 }

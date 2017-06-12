@@ -17,22 +17,26 @@ If the argument is null, the result is null.
  */
 public class FloorEvaluator extends org.cqframework.cql.elm.execution.Floor {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object floor(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof BigDecimal) {
-            return BigDecimal.valueOf(Math.floor(((BigDecimal)value).doubleValue())).intValue();
+        if (operand instanceof BigDecimal) {
+            return BigDecimal.valueOf(Math.floor(((BigDecimal) operand).doubleValue())).intValue();
         }
 
-        else if (value instanceof Quantity) {
-          return BigDecimal.valueOf(Math.floor(((Quantity)value).getValue().doubleValue())).intValue();
+        else if (operand instanceof Quantity) {
+            return BigDecimal.valueOf(Math.floor(((Quantity) operand).getValue().doubleValue())).intValue();
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Floor operation with argument of type '%s'.", value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform Floor operation with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), floor(operand), operand);
     }
 }

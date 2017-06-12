@@ -17,33 +17,37 @@ Return types: BigDecimal & Quantity
 */
 
 /**
-* Created by Chris Schuler on 6/14/2016
-*/
+ * Created by Chris Schuler on 6/14/2016
+ */
 public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution.PopulationStdDev {
 
-  public static Object popStdDev(List<Object> source) {
+    public static Object popStdDev(Object source) {
 
-    if (source == null) {
-      return null;
+        if (source == null) {
+            return null;
+        }
+
+        if (source instanceof Iterable) {
+
+            if (((List) source).isEmpty()) {
+                return null;
+            }
+
+            Object variance = PopulationVarianceEvaluator.popVariance(source);
+
+            return variance instanceof BigDecimal ?
+                    PowerEvaluator.power(variance, new BigDecimal("0.5")) :
+                    new Quantity().withValue((BigDecimal) PowerEvaluator.power(((Quantity) variance).getValue(),
+                            new BigDecimal("0.5"))).withUnit(((Quantity) variance).getUnit());
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot perform Population Standard Deviation operation with argument of type '%s'.", source.getClass().getName()));
     }
 
-    if (source.isEmpty()) {
-      return null;
+    @Override
+    public Object evaluate(Context context) {
+        Object source = getSource().evaluate(context);
+
+        return popStdDev(source);
     }
-
-    Object variance = PopulationVarianceEvaluator.popVariance(source);
-
-    return variance instanceof BigDecimal ?
-            PowerEvaluator.power(variance, new BigDecimal("0.5")) :
-            new Quantity().withValue((BigDecimal) PowerEvaluator.power(((Quantity) variance).getValue(),
-                    new BigDecimal("0.5"))).withUnit(((Quantity)variance).getUnit());
-  }
-
-  @Override
-  public Object evaluate(Context context) {
-    Object source = getSource().evaluate(context);
-    if (source == null) { return null; }
-
-    return popStdDev((List<Object>) source);
-  }
 }

@@ -22,44 +22,62 @@ Avg(argument List<Quantity>) Quantity
 */
 public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
 
-  public static Object avg(Object source) {
+  public static Object avg(Object src) {
+
+    if (src == null) {
+      return null;
+    }
+
     BigDecimal avg = new BigDecimal(0);
     int size = 0;
 
-    if (source instanceof Iterable) {
-      Iterable<Object> element = (Iterable<Object>)source;
+    if (src instanceof Iterable) {
+      Iterable<Object> element = (Iterable<Object>)src;
       Iterator<Object> itr = element.iterator();
 
-      if (!itr.hasNext()) { return null; } // empty list
+      if (!itr.hasNext()) { // empty list
+        return null;
+      }
 
       while (itr.hasNext()) {
         Object value = itr.next();
-        if (value == null) { continue; }
+
+        if (value == null) {
+          continue;
+        }
+
         ++size;
 
         if (value instanceof BigDecimal) {
           avg = avg.add((BigDecimal)value);
         }
+
         else if (value instanceof Quantity) {
           avg = avg.add(((Quantity)value).getValue());
         }
+
         else {
           throw new IllegalArgumentException(String.format("Cannot Average arguments of type '%s'.", value.getClass().getName()));
         }
       }
     }
-    else { return null; } // TODO: maybe throw exception here?
 
-    if (size == 0) { return null; } // all elements null
+    else { // TODO: maybe throw exception here?
+      return null;
+    }
+
+    if (size == 0) { // all elements null
+      return null;
+    }
+
     return Value.verifyPrecision((BigDecimal) DivideEvaluator.divide(avg, new BigDecimal(size)));
   }
 
   @Override
   public Object evaluate(Context context) {
 
-    Object source = getSource().evaluate(context);
-    if (source == null) { return null; }
+    Object src = getSource().evaluate(context);
 
-    return avg(source);
+    return context.logTrace(this.getClass(), avg(src), src);
   }
 }

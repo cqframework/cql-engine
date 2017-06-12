@@ -11,13 +11,15 @@ import java.util.List;
 */
 public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach {
 
-    public Object forEach(Iterable<Object> source, Object element, Context context) {
+    // TODO: create tests
+
+    public Object forEach(Object source, Object element, Context context) {
         if (source == null || element == null) {
             return null;
         }
 
         List<Object> retVal = new ArrayList<>();
-        for (Object o : source) {
+        for (Object o : (Iterable) source) {
             retVal.add(context.resolvePath(o, element.toString()));
         }
         return retVal;
@@ -25,6 +27,9 @@ public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach 
 
     @Override
     public Object evaluate(Context context) {
-        return forEach((Iterable<Object>) getSource().evaluate(context), getElement().evaluate(context), context);
+        Object source = getSource().evaluate(context);
+        Object element = getSource().evaluate(context);
+
+        return context.logTrace(this.getClass(), forEach(source, element, context), source, element);
     }
 }

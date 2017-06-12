@@ -15,26 +15,30 @@ If either argument is null, or any element in the source list of strings is null
  * Created by Bryn on 5/25/2016.
  */
 public class CombineEvaluator extends org.cqframework.cql.elm.execution.Combine {
-    @Override
-    public Object evaluate(Context context) {
-        Object sourceVal = this.getSource().evaluate(context);
-        String separator = this.getSeparator() == null ? "" : (String) this.getSeparator().evaluate(context);
 
-        if (sourceVal == null || separator == null) {
+    public static Object combine(Object source, String separator) {
+
+        if (source == null || separator == null) {
             return null;
-        } else {
-            if (sourceVal instanceof Iterable) {
+        }
+
+        else {
+            if (source instanceof Iterable) {
                 StringBuffer buffer = new StringBuffer("");
-                Iterator iterator = ((Iterable) sourceVal).iterator();
+                Iterator iterator = ((Iterable) source).iterator();
                 boolean first = true;
+
                 while (iterator.hasNext()) {
                     Object item = iterator.next();
+
                     if (item == null) {
                         return null;
                     }
+
                     if (!first) {
                         buffer.append(separator);
                     }
+
                     else {
                         first = false;
                     }
@@ -43,6 +47,14 @@ public class CombineEvaluator extends org.cqframework.cql.elm.execution.Combine 
                 return buffer.toString();
             }
         }
-        throw new IllegalArgumentException(String.format("Cannot %s arguments of type '%s'.", this.getClass().getSimpleName(), sourceVal.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Combine arguments of type '%s'.", source.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object source = this.getSource().evaluate(context);
+        String separator = this.getSeparator() == null ? "" : (String) this.getSeparator().evaluate(context);
+
+        return context.logTrace(this.getClass(), combine(source, separator), source);
     }
 }

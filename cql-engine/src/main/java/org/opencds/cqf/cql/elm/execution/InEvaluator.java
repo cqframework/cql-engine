@@ -29,78 +29,66 @@ If either argument is null, the result is null.
  */
 public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
-  public static Boolean in(Object testElement, Iterable<? extends Object> list) {
+    public static Boolean in(Object left, Object right) {
 
-    if (testElement == null) {
-      return null;
+        if (left == null) {
+            return null;
+        }
+
+        if (right == null) {
+            return false;
+        }
+
+        if (right instanceof Iterable) {
+            boolean nullSwitch = false;
+
+            for (Object element : (Iterable) right) {
+                Boolean equiv = EquivalentEvaluator.equivalent(left, element);
+
+                if (equiv == null) {
+                    nullSwitch = true;
+                }
+
+                else if (equiv) {
+                    return true;
+                }
+            }
+
+            if (nullSwitch) {
+                return null;
+            }
+
+            return false;
+        }
+
+        else if (right instanceof Interval) {
+            Object rightStart = ((Interval) right).getStart();
+            Object rightEnd = ((Interval) right).getEnd();
+
+            if (rightStart == null && ((Interval) right).getLowClosed()) {
+                return true;
+            }
+
+            else if (rightEnd == null && ((Interval) right).getHighClosed()) {
+                return true;
+            }
+
+            else if (rightStart == null || rightEnd == null) {
+                return null;
+            }
+
+            return (GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart)
+                    && LessOrEqualEvaluator.lessOrEqual(left, rightEnd));
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot In arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
-    if (list == null) {
-        return false;
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), in(left, right), left, right);
     }
-
-    boolean nullSwitch = false;
-
-    for (Object element : list) {
-      Boolean equiv = EquivalentEvaluator.equivalent(testElement, element);
-
-      if (equiv == null) {
-        nullSwitch = true;
-      }
-
-      else if (equiv) {
-        return true;
-      }
-    }
-
-    if (nullSwitch) { return null; }
-    return false;
-  }
-
-  public static Boolean in(Object testElement, Interval interval) {
-    if (testElement == null) {
-      return null;
-    }
-
-    if (interval == null) {
-      return false;
-    }
-
-    Object rightStart = interval.getStart();
-    Object rightEnd = interval.getEnd();
-
-    if (rightStart == null && interval.getLowClosed()) {
-      return true;
-    }
-
-    else if (rightEnd == null && interval.getHighClosed()) {
-      return true;
-    }
-
-    else if (rightStart == null || rightEnd == null) {
-      return null;
-    }
-
-    return (GreaterOrEqualEvaluator.greaterOrEqual(testElement, rightStart)
-            && LessOrEqualEvaluator.lessOrEqual(testElement, rightEnd));
-  }
-
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
-
-    if (right == null) {
-      return false;
-    }
-
-    if (right instanceof Interval) {
-      return in(left, (Interval)right);
-    }
-
-    else if (right instanceof Iterable) {
-      return in(left, (Iterable<Object>)right);
-    }
-    throw new IllegalArgumentException(String.format("Cannot In arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
 }

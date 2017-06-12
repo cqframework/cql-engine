@@ -14,17 +14,21 @@ If the argument is null, the result is null.
  */
 public class UpperEvaluator extends org.cqframework.cql.elm.execution.Upper {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object upper(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof String) {
-            return ((String)value).toUpperCase();
+        if (operand instanceof String) {
+            return ((String) operand).toUpperCase();
         }
-        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.", this.getClass().getSimpleName(), value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform Upper operation with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), upper(operand), operand);
     }
 }

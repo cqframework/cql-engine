@@ -14,20 +14,25 @@ If the argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler 6/8/2016
-*/
+ * Created by Chris Schuler 6/8/2016
+ */
 public class WidthEvaluator extends org.cqframework.cql.elm.execution.Width {
 
-  @Override
-  public Object evaluate(Context context) {
+    public static Object width(Interval operand) {
+        if (operand != null) {
+            Object start = operand.getStart();
+            Object end = operand.getEnd();
 
-    Interval argument = (Interval)getOperand().evaluate(context);
+            return Interval.getSize(start, end);
+        }
 
-    if (argument != null) {
-      Object start = argument.getStart();
-      Object end = argument.getEnd();
-      return Interval.getSize(start, end);
+        return null;
     }
-    return null;
-  }
+
+    @Override
+    public Object evaluate(Context context) {
+        Interval operand = (Interval)getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), width(operand), operand);
+    }
 }

@@ -17,18 +17,25 @@ If the argument is null, the result is null.
  */
 public class ToConceptEvaluator extends org.cqframework.cql.elm.execution.ToConcept {
 
-    @Override
-    public Object evaluate(Context context) {
+    public static Object toConcept(Object operand) {
         Concept result = new Concept();
-        Object source = getOperand().evaluate(context);
-        if (source instanceof Iterable) {
-            for (Object code : (Iterable<Object>)source) {
+
+        if (operand instanceof Iterable) {
+            for (Object code : (Iterable) operand) {
                 result.withCode((Code)code);
             }
         }
         else {
-            result.withCode((Code)source);
+            result.withCode((Code) operand);
         }
+
         return result;
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), toConcept(operand), operand);
     }
 }

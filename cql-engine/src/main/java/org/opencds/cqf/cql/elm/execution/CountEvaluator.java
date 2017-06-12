@@ -13,44 +13,48 @@ Count(argument List<T>) Integer
 */
 
 /**
-* Created by Chris Schuler on 6/13/2016
-*/
+ * Created by Chris Schuler on 6/13/2016
+ */
 public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
 
-  @Override
-  public Object evaluate(Context context) {
-
-    Object source = getSource().evaluate(context);
-
-    if (source == null) {
-      return 0;
-    }
-
-    Integer size = 0;
-
-    if (source instanceof Iterable) {
-      Iterable<Object> element = (Iterable<Object>)source;
-      Iterator<Object> itr = element.iterator();
-
-      if (!itr.hasNext()) { // empty list
-        return size;
-      }
-
-      while (itr.hasNext()) {
-        Object value = itr.next();
-
-        if (value == null) { // skip null
-          continue;
+    public static Object count(Object source) {
+        if (source == null) {
+            return 0;
         }
 
-        ++size;
-      }
+        Integer size = 0;
+
+        if (source instanceof Iterable) {
+            Iterable<Object> element = (Iterable<Object>)source;
+            Iterator<Object> itr = element.iterator();
+
+            if (!itr.hasNext()) { // empty list
+                return size;
+            }
+
+            while (itr.hasNext()) {
+                Object value = itr.next();
+
+                if (value == null) { // skip null
+                    continue;
+                }
+
+                ++size;
+            }
+        }
+
+        else {
+            return null;
+        }
+
+        return size;
     }
 
-    else {
-      return null;
-    }
+    @Override
+    public Object evaluate(Context context) {
 
-    return size;
-  }
+        Object source = getSource().evaluate(context);
+
+        return context.logTrace(this.getClass(), count(source), source);
+    }
 }

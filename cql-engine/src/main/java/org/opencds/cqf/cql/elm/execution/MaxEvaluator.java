@@ -18,37 +18,49 @@ Possible return types include: Integer, BigDecimal, Quantity, DateTime, Time, St
 */
 
 /**
-* Created by Chris Schuler on 6/13/2016
-*/
+ * Created by Chris Schuler on 6/13/2016
+ */
 public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
 
-  public static Object max(Object source) {
-    if (source instanceof Iterable) {
-      Iterable<Object> element = (Iterable<Object>)source;
-      Iterator<Object> itr = element.iterator();
+    public static Object max(Object source) {
+        if (source == null) {
+            return null;
+        }
 
-      if (!itr.hasNext()) { return null; } // empty list
-      Object max = itr.next();
-      while (max == null && itr.hasNext()) { max = itr.next(); }
-      while (itr.hasNext()) {
-        Object value = itr.next();
+        if (source instanceof Iterable) {
+            Iterable element = (Iterable)source;
+            Iterator itr = element.iterator();
 
-        if (value == null) { continue; } // skip null
+            if (!itr.hasNext()) { // empty list
+                return null;
+            }
 
-        if ((Boolean)GreaterEvaluator.greater(value, max)) { max = value; }
-      }
-      return max;
+            Object max = itr.next();
+            while (max == null && itr.hasNext()) {
+                max = itr.next();
+            }
+
+            while (itr.hasNext()) {
+                Object value = itr.next();
+
+                if (value == null) { // skip null
+                    continue;
+                }
+
+                if (GreaterEvaluator.greater(value, max)) {
+                    max = value;
+                }
+            }
+            return max;
+        }
+
+        return null;
     }
-    else { return null; }
-  }
 
-  @Override
-  public Object evaluate(Context context) {
+    @Override
+    public Object evaluate(Context context) {
+        Object source = getSource().evaluate(context);
 
-    Object source = getSource().evaluate(context);
-    if (source == null) { return null; }
-
-
-    return max(source);
-  }
+        return context.logTrace(this.getClass(), max(source), source);
+    }
 }

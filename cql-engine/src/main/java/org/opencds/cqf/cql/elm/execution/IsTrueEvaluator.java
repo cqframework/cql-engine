@@ -14,8 +14,14 @@ If the argument evaluates to true, the result is true; otherwise, the result is 
  */
 public class IsTrueEvaluator extends org.cqframework.cql.elm.execution.IsTrue {
 
+    public static Object isTrue(Boolean operand) {
+        return Boolean.TRUE == operand;
+    }
+
     @Override
     public Object evaluate(Context context) {
-        return Boolean.TRUE == (Boolean) getOperand().evaluate(context);
+        Boolean operand = (Boolean) getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), isTrue(operand), operand);
     }
 }

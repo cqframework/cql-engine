@@ -22,9 +22,14 @@ If the argument is null, the result is null.
  */
 public class SuccessorEvaluator extends org.cqframework.cql.elm.execution.Successor {
 
+    public static Object successor(Object operand) {
+        return Value.successor(operand);
+    }
+
     @Override
     public Object evaluate(Context context) {
-        Object argument = this.getOperand().evaluate(context);
-        return Value.successor(argument);
+        Object operand = this.getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), successor(operand), operand);
     }
 }

@@ -8,6 +8,8 @@ import org.joda.time.Partial;
 import javax.xml.bind.JAXBException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -455,7 +457,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Object result;
 
         result = context.resolveExpressionRef("IntersectEmptyListAndEmptyList").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList()));
+        assertThat(result, is(Collections.emptyList()));
 
         result = context.resolveExpressionRef("Intersect1234And23").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(2, 3)));
@@ -464,14 +466,14 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(Arrays.asList(2, 3)));
 
         result = context.resolveExpressionRef("IntersectDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
-        assertThat(((DateTime)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
-        assertThat(((ArrayList<Object>)result).size(), is(2));
+        assertThat(((DateTime)((ArrayList)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        assertThat(((DateTime)((ArrayList)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        assertThat(((ArrayList)result).size(), is(2));
 
         result = context.resolveExpressionRef("IntersectTime").getExpression().evaluate(context);
-        assertThat(((Time)((ArrayList<Object>)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
-        assertThat(((Time)((ArrayList<Object>)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
-        assertThat(((ArrayList<Object>)result).size(), is(2));
+        assertThat(((Time)((ArrayList)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((Time)((ArrayList)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        assertThat(((ArrayList)result).size(), is(2));
     }
 
     /**

@@ -38,31 +38,34 @@ For specific semantics for each conversion, refer to the explicit conversion ope
  */
 public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert {
 
-  private Class resolveType(Context context) {
-    if (this.getToTypeSpecifier() != null) {
-      return context.resolveType(this.getToTypeSpecifier());
+    private Class resolveType(Context context) {
+        if (this.getToTypeSpecifier() != null) {
+            return context.resolveType(this.getToTypeSpecifier());
+        }
+        return context.resolveType(this.getToType());
     }
-    return context.resolveType(this.getToType());
-  }
 
-  @Override
-  public Object evaluate(Context context) {
+    private static Object convert(Object operand, Class type) {
+        if (operand == null) { return null; }
 
-    Object operand = getOperand().evaluate(context);
-    if (operand == null) { return null; }
+        try {
+            if (type.isInstance(operand)) {
+                Class cls = operand.getClass();
+                return cls.newInstance();
+            }
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Error during conversion: " + e.getMessage());
+        }
 
-    Class type = resolveType(context);
-
-    try {
-      if (type.isInstance(operand)) {
-        Class cls = operand.getClass();
-        return cls.newInstance();
-      }
-    } catch (InstantiationException e) {
-      e.printStackTrace();
-    } catch (IllegalAccessException e) {
-      e.printStackTrace();
+        throw new IllegalArgumentException(String.format("Cannot Convert a value of type %s as %s.", operand.getClass().getName(), type.getName()));
     }
-    throw new IllegalArgumentException(String.format("Cannot Convert a value of type %s as %s.", operand.getClass().getName(), type.getName()));
-  }
+
+    @Override
+    public Object evaluate(Context context) {
+
+        Object operand = getOperand().evaluate(context);
+        Class type = resolveType(context);
+
+        return context.logTrace(this.getClass(), convert(operand, type), operand);
+    }
 }

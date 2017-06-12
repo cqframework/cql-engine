@@ -26,34 +26,41 @@ If the argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/14/2016
-*/
+ * Created by Chris Schuler on 6/14/2016
+ */
 public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToString {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object operand = getOperand().evaluate(context);
+    public static Object toString(Object operand) {
+        if (operand == null) {
+            return null;
+        }
 
-    if (operand == null) { return null; }
+        if (operand instanceof Integer) {
+            return Integer.toString((Integer)operand);
+        }
+        else if (operand instanceof BigDecimal) {
+            return operand.toString();
+        }
+        else if (operand instanceof Quantity) {
+            return (((Quantity)operand).getValue()).toString() + ((Quantity)operand).getUnit();
+        }
+        else if (operand instanceof Boolean) {
+            return Boolean.toString((Boolean)operand);
+        }
+        else if (operand instanceof DateTime) {
+            return ((DateTime)operand).getPartial().toString();
+        }
+        else if (operand instanceof Time) {
+            return ((Time)operand).getPartial().toString();
+        }
 
-    if (operand instanceof Integer) {
-      return Integer.toString((Integer)operand);
+        throw new IllegalArgumentException(String.format("Cannot ToString a value of type %s.", operand.getClass().getName()));
     }
-    else if (operand instanceof BigDecimal) {
-      return ((BigDecimal)operand).toString();
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), toString(operand), operand);
     }
-    else if (operand instanceof Quantity) {
-      return (((Quantity)operand).getValue()).toString() + ((Quantity)operand).getUnit();
-    }
-    else if (operand instanceof Boolean) {
-      return Boolean.toString((Boolean)operand);
-    }
-    else if (operand instanceof DateTime) {
-      return ((DateTime)operand).getPartial().toString();
-    }
-    else if (operand instanceof Time) {
-      return ((Time)operand).getPartial().toString();
-    }
-    throw new IllegalArgumentException(String.format("Cannot ToString a value of type %s.", operand.getClass().getName()));
-  }
 }

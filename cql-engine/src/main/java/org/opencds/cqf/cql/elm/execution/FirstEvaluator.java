@@ -14,16 +14,23 @@ If the argument is null, the result is null.
  */
 public class FirstEvaluator extends org.cqframework.cql.elm.execution.First {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getSource().evaluate(context);
+    public static Object first(Object source) {
 
-        if (value == null) { return null; }
+        if (source == null) {
+            return null;
+        }
 
-        for (Object element : (Iterable)value) {
+        for (Object element : (Iterable) source) {
             return element;
         }
 
         return null;
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object source = getSource().evaluate(context);
+
+        return context.logTrace(this.getClass(), first(source), source);
     }
 }

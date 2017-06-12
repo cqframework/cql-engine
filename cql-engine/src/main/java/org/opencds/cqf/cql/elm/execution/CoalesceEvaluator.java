@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.Expression;
 import org.opencds.cqf.cql.execution.Context;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
 
@@ -20,28 +23,34 @@ The static type of the first argument determines the type of the result, and all
  * Created by Bryn on 5/25/2016.
  */
 public class CoalesceEvaluator extends org.cqframework.cql.elm.execution.Coalesce {
-    @Override
-    public Object evaluate(Context context) {
-        List<org.cqframework.cql.elm.execution.Expression> operands = getOperand();
 
-        Iterator<org.cqframework.cql.elm.execution.Expression> expressions = operands.iterator();
-        while (expressions.hasNext()) {
-            org.cqframework.cql.elm.execution.Expression expression = expressions.next();
-            Object tmpVal = expression.evaluate(context);
-            if (tmpVal != null) {
-                if (tmpVal instanceof Iterable && operands.size() == 1) {
-                    Iterator<Object> elemsItr = ((Iterable) tmpVal).iterator();
-                    while (elemsItr.hasNext()) {
-                        Object obj = elemsItr.next();
+    public static Object coalesce(List<Object> operands) {
+        for (Object operand : operands) {
+
+            if (operand != null) {
+
+                if (operand instanceof Iterable && operands.size() == 1) {
+
+                    for (Object obj : ((Iterable) operand)) {
                         if (obj != null) {
                             return obj;
                         }
                     }
                     return null;
                 }
-                return tmpVal;
+                return operand;
             }
         }
         return null;
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        List<Object> operands = new ArrayList<>();
+        for (Expression operand : getOperand()) {
+            operands.add(operand.evaluate(context));
+        }
+
+        return context.logTrace(this.getClass(), coalesce(operands), operands);
     }
 }

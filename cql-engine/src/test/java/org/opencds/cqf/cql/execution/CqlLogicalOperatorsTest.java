@@ -49,6 +49,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testImplies() throws JAXBException {
         Context context = new Context(library);
+        // TODO: uncomment this and cql once working
         // Object result = context.resolveExpressionRef("TrueImpliesTrue").getExpression().evaluate(context);
         // assertThat(result, is(true));
         //

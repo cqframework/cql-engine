@@ -15,23 +15,30 @@ If the argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/14/2016
-*/
+ * Created by Chris Schuler on 6/14/2016
+ */
 public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInteger {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object value = getOperand().evaluate(context);
+    public static Object toInteger(Object operand) {
+        if (operand == null) {
+            return null;
+        }
 
-    if (value == null) { return null; }
-
-    if (value instanceof String) {
-      try {
-        return Integer.parseInt((String)value);
-      } catch (NumberFormatException nfe) {
-        throw new NumberFormatException("Unable to convert given string to Integer");
-      }
+        if (operand instanceof String) {
+            try {
+                return Integer.parseInt((String) operand);
+            }
+            catch (NumberFormatException nfe) {
+                throw new NumberFormatException("Unable to convert given string to Integer");
+            }
+        }
+        throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Boolean - use String values.", operand.getClass().getName()));
     }
-    throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Boolean - use String values.", value.getClass().getName()));
-  }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), toInteger(operand), operand);
+    }
 }

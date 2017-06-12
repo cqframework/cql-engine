@@ -16,11 +16,7 @@ If either argument is null, the result is null.
  */
 public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object left = getOperand().get(0).evaluate(context);
-        Object right = getOperand().get(1).evaluate(context);
-
+    public static Object log(Object left, Object right) {
         if (left == null || right == null) {
             return null;
         }
@@ -35,6 +31,15 @@ public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
 
             return new BigDecimal(value / base);
         }
-        throw new IllegalArgumentException(String.format("Cannot Log arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+
+        throw new IllegalArgumentException(String.format("Cannot perform Log operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), log(left, right), left, right);
     }
 }

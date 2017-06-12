@@ -11,22 +11,26 @@ If either argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/8/2016
-*/
+ * Created by Chris Schuler on 6/8/2016
+ */
 public class OverlapsBeforeEvaluator extends org.cqframework.cql.elm.execution.OverlapsBefore {
 
-  @Override
-  public Object evaluate(Context context) {
-    Interval left = (Interval)getOperand().get(0).evaluate(context);
-    Interval right = (Interval)getOperand().get(1).evaluate(context);
+    public static Object overlapsBefore(Interval left, Interval right) {
+        if (left != null && right != null) {
+            Object leftStart = left.getStart();
+            Object rightStart = right.getStart();
 
-    if (left != null && right != null) {
-      Object leftStart = left.getStart();
-      Object rightStart = right.getStart();
+            return (LessEvaluator.less(leftStart, rightStart) && OverlapsEvaluator.overlaps(left, right));
+        }
 
-      return (LessEvaluator.less(leftStart, rightStart) && OverlapsEvaluator.overlaps(left, right));
+        return null;
     }
 
-    return null;
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Interval left = (Interval)getOperand().get(0).evaluate(context);
+        Interval right = (Interval)getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), overlapsBefore(left, right), left, right);
+    }
 }

@@ -17,30 +17,47 @@ ToQuantity('5.5 cm2'), ToQuantity('5.5cm2'), or ToQuantity('5.5') - optional +/-
 */
 
 /**
-* Created by Chris Schuler on 6/14/2016
-*/
+ * Created by Chris Schuler on 6/14/2016
+ */
 public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQuantity {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object operand = getOperand().evaluate(context);
-
-    if (operand == null) { return null; }
-
-    if (operand instanceof String) {
-      String str = (String)operand;
-      String number = "";
-      String unit = "";
-      for (char c : str.toCharArray()) {
-        if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.isEmpty()) { number += c; }
-        else if (Character.isLetter(c) || c == '/') { unit += c; }
-        else if (c == ' ') { continue; }
-        else {
-          throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
+    public static Object toQuantity(Object operand) {
+        if (operand == null) {
+            return null;
         }
-      }
-      return new Quantity().withValue(new BigDecimal(number)).withUnit(unit.toLowerCase());
+
+        if (operand instanceof String) {
+            String str = (String)operand;
+            String number = "";
+            String unit = "";
+            for (char c : str.toCharArray()) {
+                if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.isEmpty())
+                {
+                    number += c;
+                }
+
+                else if (Character.isLetter(c) || c == '/') {
+                    unit += c;
+                }
+
+                else if (c == ' ') {
+                    continue;
+                }
+
+                else {
+                    throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
+                }
+            }
+            return new Quantity().withValue(new BigDecimal(number)).withUnit(unit.toLowerCase());
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String values.", operand.getClass().getName()));
     }
-    throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String values.", operand.getClass().getName()));
-  }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), toQuantity(operand), operand);
+    }
 }

@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.execution.TraceExecution;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.math.BigDecimal;
 
@@ -16,29 +17,33 @@ If the argument is null, the result is null.
 
 /**
  * Created by Bryn on 5/24/2016.
- * Edited by Chris Schuler on 6/14/2016
  */
 public class AbsEvaluator extends org.cqframework.cql.elm.execution.Abs {
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
 
-        if (value == null) {
+    public static Object abs(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof Integer) {
-            return Math.abs((Integer)value);
+        if (operand instanceof Integer) {
+            return  Math.abs((Integer)operand);
         }
 
-        else if (value instanceof BigDecimal) {
-            return ((BigDecimal)value).abs();
+        else if (operand instanceof BigDecimal) {
+            return ((BigDecimal)operand).abs();
         }
 
-        else if (value instanceof Quantity) {
-          return (((Quantity)value).getValue()).abs();
+        else if (operand instanceof Quantity) {
+            return new Quantity().withValue((((Quantity)operand).getValue()).abs()).withUnit(((Quantity)operand).getUnit());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.",this.getClass().getSimpleName(), value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot evaluate the Abs operator with an argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), abs(operand), operand);
     }
 }

@@ -22,61 +22,65 @@ If either argument is null, the result is null.
  */
 public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
 
-  @Override
-  public Object evaluate(Context context) {
+    public static Object except(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
 
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
+        if (right == null) {
+            return left;
+        }
 
-    if (left == null) {
-      return null;
+        if (left instanceof Interval) {
+            Object leftStart = ((Interval)left).getStart();
+            Object leftEnd = ((Interval)left).getEnd();
+            Object rightStart = ((Interval)right).getStart();
+            Object rightEnd = ((Interval)right).getEnd();
+
+            if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+
+            if (GreaterEvaluator.greater(rightStart, leftEnd)) { return left; }
+
+            else if (LessEvaluator.less(leftStart, rightStart)
+                    && GreaterEvaluator.greater(leftEnd, rightEnd)) { return null; }
+
+            // left interval starts before right interval
+            if ((LessEvaluator.less(leftStart, rightStart) && LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd))) {
+                Object min = LessEvaluator.less(Value.predecessor(rightStart), leftEnd) ? Value.predecessor(rightStart) : leftEnd;
+                return new Interval(leftStart, true, min, true);
+            }
+            // right interval starts before left interval
+            else if (GreaterEvaluator.greater(leftEnd, rightEnd)
+                    && GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart))
+            {
+                Object max = GreaterEvaluator.greater(Value.successor(rightEnd), leftStart) ? Value.successor(rightEnd) : leftStart;
+                return new Interval(max, true, leftEnd, true);
+            }
+
+            throw new IllegalArgumentException(String.format("The following interval values led to an undefined Except result: leftStart: %s, leftEnd: %s, rightStart: %s, rightEnd: %s", leftStart.toString(), leftEnd.toString(), rightStart.toString(), rightEnd.toString()));
+        }
+
+        else if (left instanceof Iterable) {
+            Iterable leftArr = (Iterable)left;
+            Iterable rightArr = (Iterable)right;
+
+            List<Object> result = new ArrayList<>();
+            for (Object leftItem : leftArr) {
+                if (!InEvaluator.in(leftItem, rightArr)) {
+                    result.add(leftItem);
+                }
+            }
+            return result;
+        }
+        throw new IllegalArgumentException(String.format("Cannot Except arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
-    if (right == null) {
-      return left;
+    @Override
+    public Object evaluate(Context context) {
+
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), except(left, right), left, right);
     }
-
-    if (left instanceof Interval) {
-      Object leftStart = ((Interval)left).getStart();
-      Object leftEnd = ((Interval)left).getEnd();
-      Object rightStart = ((Interval)right).getStart();
-      Object rightEnd = ((Interval)right).getEnd();
-
-      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
-
-      if (GreaterEvaluator.greater(rightStart, leftEnd)) { return left; }
-
-      else if (LessEvaluator.less(leftStart, rightStart)
-              && GreaterEvaluator.greater(leftEnd, rightEnd)) { return null; }
-
-      // left interval starts before right interval
-      if ((LessEvaluator.less(leftStart, rightStart) && LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd))) {
-        Object min = LessEvaluator.less(Value.predecessor(rightStart), leftEnd) ? Value.predecessor(rightStart) : leftEnd;
-        return new Interval(leftStart, true, min, true);
-      }
-      // right interval starts before left interval
-      else if (GreaterEvaluator.greater(leftEnd, rightEnd)
-              && GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart))
-      {
-        Object max = GreaterEvaluator.greater(Value.successor(rightEnd), leftStart) ? Value.successor(rightEnd) : leftStart;
-        return new Interval(max, true, leftEnd, true);
-      }
-
-      throw new IllegalArgumentException(String.format("The following interval values led to an undefined Except result: leftStart: %s, leftEnd: %s, rightStart: %s, rightEnd: %s", leftStart.toString(), leftEnd.toString(), rightStart.toString(), rightEnd.toString()));
-    }
-
-    else if (left instanceof Iterable) {
-      Iterable<Object> leftArr = (Iterable<Object>)left;
-      Iterable<Object> rightArr = (Iterable<Object>)right;
-
-      List<Object> result = new ArrayList<>();
-      for (Object leftItem : leftArr) {
-          if (!InEvaluator.in(leftItem, rightArr)) {
-              result.add(leftItem);
-          }
-      }
-      return result;
-    }
-    throw new IllegalArgumentException(String.format("Cannot Except arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
 }

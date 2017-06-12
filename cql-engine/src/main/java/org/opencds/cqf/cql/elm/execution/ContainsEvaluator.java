@@ -14,39 +14,42 @@ If either argument is null, the result is null.
 */
 
 /**
- * Created by Bryn on 5/25/2016 
+ * Created by Bryn on 5/25/2016
  */
 public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contains {
 
-  @Override
-  public Object evaluate(Context context) {
-    Object operand = getOperand().get(0).evaluate(context);
+    public static Object contains(Object left, Object right) {
+        if (left == null) {
+            return false;
+        }
 
-    if (operand == null) {
-      return false;
+        if (left instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+
+            if (right != null) {
+                Object leftStart = leftInterval.getStart();
+                Object leftEnd = leftInterval.getEnd();
+
+                return (GreaterOrEqualEvaluator.greaterOrEqual(right, leftStart)
+                        && LessOrEqualEvaluator.lessOrEqual(right, leftEnd));
+            }
+            return null;
+        }
+
+        else if (left instanceof Iterable) {
+            Iterable<Object> list = (Iterable<Object>)left;
+
+            return InEvaluator.in(right, list);
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", left.getClass().getName()));
     }
 
-    if (operand instanceof Interval) {
-      Interval left = (Interval)operand;
-      Object right = getOperand().get(1).evaluate(context);
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-      if (right != null) {
-        Object leftStart = left.getStart();
-        Object leftEnd = left.getEnd();
-
-        return (GreaterOrEqualEvaluator.greaterOrEqual(right, leftStart)
-                && LessOrEqualEvaluator.lessOrEqual(right, leftEnd));
-      }
-      return null;
+        return context.logTrace(this.getClass(), contains(left, right));
     }
-
-    else if (operand instanceof Iterable) {
-      Iterable<Object> list = (Iterable<Object>)operand;
-      Object testElement = getOperand().get(1).evaluate(context);
-
-      return InEvaluator.in(testElement, list);
-    }
-
-    throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", operand.getClass().getName()));
-  }
 }

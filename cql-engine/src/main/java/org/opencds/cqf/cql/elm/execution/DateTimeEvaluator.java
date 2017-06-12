@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.DateTime;
 
 import java.math.BigDecimal;
@@ -44,8 +45,8 @@ public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTim
 
     org.opencds.cqf.cql.runtime.DateTime dt = new org.opencds.cqf.cql.runtime.DateTime();
 
-    if (DateTime.formatCheck(new ArrayList<>(Arrays.asList(year, month, day, hour, minute, second, millis)))) {
-      int [] values = DateTime.getValues(year, month, day, hour, minute, second, millis);
+    if (BaseTemporal.formatCheck(new ArrayList<>(Arrays.asList(year, month, day, hour, minute, second, millis)))) {
+      int [] values = BaseTemporal.getValues(year, month, day, hour, minute, second, millis);
       return dt.withPartial(new Partial(DateTime.getFields(values.length), values)).withTimezoneOffset(offset);
     }
     else {

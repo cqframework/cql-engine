@@ -17,30 +17,38 @@ If the argument is null, the result is null.
  */
 public class LnEvaluator extends org.cqframework.cql.elm.execution.Ln {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object ln(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof BigDecimal){
-          BigDecimal retVal = new BigDecimal(0);
-          try {
-            retVal = new BigDecimal(Math.log(((BigDecimal)value).doubleValue()));
-          } catch (NumberFormatException nfe){
-            if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) {
-              return null;
+        if (operand instanceof BigDecimal){
+            BigDecimal retVal;
+            try {
+                retVal = new BigDecimal(Math.log(((BigDecimal) operand).doubleValue()));
             }
-            else if (((BigDecimal)value).compareTo(new BigDecimal(0)) == 0) {
-              throw new ArithmeticException("Results in negative infinity");
+            catch (NumberFormatException nfe){
+                if (((BigDecimal) operand).compareTo(new BigDecimal(0)) < 0) {
+                    return null;
+                }
+
+                else if (((BigDecimal) operand).compareTo(new BigDecimal(0)) == 0) {
+                    throw new ArithmeticException("Results in negative infinity");
+                }
+                else {
+                    throw new NumberFormatException();
+                }
             }
-            else { throw new NumberFormatException(); }
-          }
             return retVal;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Natural Log with argument of type '%s'.", value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform Natural Log operation with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), ln(operand), operand);
     }
 }

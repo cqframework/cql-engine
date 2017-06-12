@@ -27,52 +27,29 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Includes {
 
-  public static Object includes(Object left, Object right) {
+    public static Object includes(Object left, Object right) {
 
-    if (left == null) {
-      return false;
-    }
-
-    if (right == null) {
-      return true;
-    }
-
-    if (left instanceof Interval) {
-      Object leftStart = ((Interval)left).getStart();
-      Object leftEnd = ((Interval)left).getEnd();
-      Object rightStart = ((Interval)right).getStart();
-      Object rightEnd = ((Interval)right).getEnd();
-
-      if (leftStart == null || leftEnd == null
-              || rightStart == null || rightEnd == null) {
-        return null;
-      }
-
-      return (LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart)
-              && GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd));
-    }
-
-    else if (left instanceof Iterable) {
-      for (Object rightElement : (Iterable)right) {
-        Object in = InEvaluator.in(rightElement, (Iterable)left);
-
-        if (in == null) continue;
-
-        if (!(Boolean) in) {
-          return false;
+        if (left == null) {
+            return false;
         }
-      }
-      return true;
+
+        if (right == null) {
+            return true;
+        }
+
+        try {
+            return IncludedInEvaluator.included(right, left);
+        }
+        catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(String.format("Cannot Includes arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        }
     }
 
-    throw new IllegalArgumentException(String.format("Cannot Includes arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-  @Override
-  public Object evaluate(Context context) {
-	Object left = getOperand().get(0).evaluate(context);
-	Object right = getOperand().get(1).evaluate(context);
-
-	return includes(left, right);
-  }
+        return context.logTrace(this.getClass(), includes(left, right), left, right);
+    }
 }

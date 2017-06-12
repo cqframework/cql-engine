@@ -19,13 +19,10 @@ define IsNull = true and null
  * Created by Bryn on 5/25/2016.
  */
 public class AndEvaluator extends org.cqframework.cql.elm.execution.And {
-    @Override
-    public Object evaluate(Context context) {
-        Boolean left = (Boolean) getOperand().get(0).evaluate(context);
-        Boolean right = (Boolean) getOperand().get(1).evaluate(context);
 
+    public static Object and(Boolean left, Boolean right) {
         if (left == null || right == null) {
-            if ((left != null && left == false) || (right != null && right == false)) {
+            if ((left != null && !left) || (right != null && !right)) {
                 return false;
             }
 
@@ -33,5 +30,22 @@ public class AndEvaluator extends org.cqframework.cql.elm.execution.And {
         }
 
         return (left && right);
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Boolean left = (Boolean) getOperand().get(0).evaluate(context);
+        Boolean right = (Boolean) getOperand().get(1).evaluate(context);
+
+        // need this dup code to avoid null pointer ...
+        if (left == null || right == null) {
+            if ((left != null && !left) || (right != null && !right)) {
+                return false;
+            }
+
+            return null;
+        }
+
+        return context.logTrace(this.getClass(), (left && right), left, right);
     }
 }

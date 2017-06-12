@@ -21,26 +21,36 @@ If precision is not specified or null, 0 is assumed.
  */
 public class RoundEvaluator extends org.cqframework.cql.elm.execution.Round {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-        Object precisionValue = getPrecision() == null ? null : getPrecision().evaluate(context);
-        //BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
+    public static Object round(Object operand, Object precision) {
         RoundingMode rm = RoundingMode.HALF_UP;
 
-        if (value == null) { return null; }
+        if (operand == null) {
+            return null;
+        }
 
-        if (((BigDecimal)value).compareTo(new BigDecimal(0)) < 0) { rm = RoundingMode.HALF_DOWN; }
-
-        if (value instanceof BigDecimal){
-            if (precisionValue == null || ((Integer)precisionValue == 0)) {
-                return ((BigDecimal)value).setScale(0, rm);
+        if (operand instanceof BigDecimal){
+            if (((BigDecimal) operand).compareTo(new BigDecimal(0)) < 0) {
+                rm = RoundingMode.HALF_DOWN;
             }
+
+            if (precision == null || ((Integer) precision == 0)) {
+                return ((BigDecimal) operand).setScale(0, rm);
+            }
+
             else {
-                return ((BigDecimal)value).setScale((Integer)precisionValue, rm);
+                return ((BigDecimal) operand).setScale((Integer)precision, rm);
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Round with argument of type '%s'.", value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot Round with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+        Object precision = getPrecision() == null ? null : getPrecision().evaluate(context);
+        //BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
+
+        return context.logTrace(this.getClass(), round(operand, precision), operand, precision);
     }
 }

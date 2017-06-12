@@ -30,6 +30,6 @@ public class ElmTests {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("TestFilter").getExpression().evaluate(context);
 
-        Assert.assertTrue(((List<Object>) result).size() == 2);
+        Assert.assertTrue(((List) result).size() == 2);
     }
 }

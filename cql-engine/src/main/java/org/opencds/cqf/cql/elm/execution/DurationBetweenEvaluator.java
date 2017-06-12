@@ -75,7 +75,14 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
   }
 
   public static Object durationBetween(Object left, Object right, String precision) {
-    if (left == null || right == null) { return null; }
+
+    if (left == null || right == null) {
+      return null;
+    }
+
+    if (precision == null) {
+      throw new IllegalArgumentException("Precision must be specified.");
+    }
 
     if (left instanceof DateTime && right instanceof DateTime) {
       DateTime leftDT = (DateTime)left;
@@ -154,10 +161,6 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
     Object right = getOperand().get(1).evaluate(context);
     String precision = getPrecision().value();
 
-    if (precision == null) {
-      throw new IllegalArgumentException("Precision must be specified.");
-    }
-
-    return durationBetween(left, right, precision);
+    return context.logTrace(this.getClass(), durationBetween(left, right, precision), left, right);
   }
 }

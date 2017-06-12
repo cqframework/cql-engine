@@ -23,42 +23,48 @@ If the argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 7/12/2016
-*/
+ * Created by Chris Schuler on 7/12/2016
+ */
 public class ToTimeEvaluator extends org.cqframework.cql.elm.execution.ToTime {
 
-  public static BigDecimal getTimezone(String isoTimeString) {
-    BigDecimal tz = new BigDecimal(new DateTime(isoTimeString).getZone().getOffset(0) / 3600000.0);
-    if (isoTimeString.indexOf('+') != -1) {
-      String[] temp = isoTimeString.split("\\+");
-      String[] temp2 = temp[1].split(":");
-      Double hour = Double.parseDouble(temp2[0]);
-      Double minute = Integer.parseInt(temp2[1]) / 60.0;
-      tz = new BigDecimal(hour + minute);
-    }
-    else if (isoTimeString.indexOf('-') != -1) {
-      String[] temp = isoTimeString.split("-");
-      String[] temp2 = temp[1].split(":");
-      Double hour = Double.parseDouble(temp2[0]);
-      Double minute = Integer.parseInt(temp2[1]) / 60.0;
-      tz = new BigDecimal(hour + minute).negate();
-    }
-    return tz;
-  }
-
-  @Override
-  public Object evaluate(Context context) {
-    Object operand = getOperand().evaluate(context);
-
-    if (operand == null) { return null; }
-
-    String[] timeAndTimezone = operand.toString().replace('T', ' ').replace('Z', ' ').trim().split("[\\+-]");
-    String[] time = timeAndTimezone[0].split("\\W");
-    int[] values = new int[time.length];
-    for (int i = 0; i < values.length; ++i) {
-      values[i] = Integer.parseInt(time[i]);
+    public static BigDecimal getTimezone(String isoTimeString) {
+        BigDecimal tz = new BigDecimal(new DateTime(isoTimeString).getZone().getOffset(0) / 3600000.0);
+        if (isoTimeString.indexOf('+') != -1) {
+            String[] temp = isoTimeString.split("\\+");
+            String[] temp2 = temp[1].split(":");
+            Double hour = Double.parseDouble(temp2[0]);
+            Double minute = Integer.parseInt(temp2[1]) / 60.0;
+            tz = new BigDecimal(hour + minute);
+        }
+        else if (isoTimeString.indexOf('-') != -1) {
+            String[] temp = isoTimeString.split("-");
+            String[] temp2 = temp[1].split(":");
+            Double hour = Double.parseDouble(temp2[0]);
+            Double minute = Integer.parseInt(temp2[1]) / 60.0;
+            tz = new BigDecimal(hour + minute).negate();
+        }
+        return tz;
     }
 
-    return new Time().withPartial(new Partial(Time.getFields(values.length), values)).withTimezoneOffset(getTimezone(operand.toString()));
-  }
+    public static Object toTime(Object operand) {
+        if (operand == null) {
+            return null;
+        }
+
+        String[] timeAndTimezone = operand.toString().replace('T', ' ').replace('Z', ' ').trim().split("[\\+-]");
+        String[] time = timeAndTimezone[0].split("\\W");
+        int[] values = new int[time.length];
+        for (int i = 0; i < values.length; ++i) {
+            values[i] = Integer.parseInt(time[i]);
+        }
+
+        return new Time().withPartial(new Partial(Time.getFields(values.length), values)).withTimezoneOffset(getTimezone(operand.toString()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), toTime(operand), operand);
+    }
 }

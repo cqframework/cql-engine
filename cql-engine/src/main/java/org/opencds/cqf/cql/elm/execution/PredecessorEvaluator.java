@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Value;
 
+import javax.management.ObjectName;
+
 /*
 predecessor of<T>(argument T) T
 
@@ -22,14 +24,18 @@ If the argument is null, the result is null.
  */
 public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Predecessor {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object predecessor(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        return Value.predecessor(value);
+        return Value.predecessor(operand);
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), predecessor(operand), operand);
     }
 }

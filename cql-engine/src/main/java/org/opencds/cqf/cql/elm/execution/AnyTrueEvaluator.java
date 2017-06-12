@@ -16,17 +16,15 @@ If the source is null, the result is null.
  * Created by Bryn on 5/25/2016.
  */
 public class AnyTrueEvaluator extends org.cqframework.cql.elm.execution.AnyTrue {
-    @Override
-    public Object evaluate(Context context) {
 
-        Object source = getSource().evaluate(context);
+    public static Object anyTrue(Object src) {
 
-        if (source == null) {
+        if (src == null) {
             return false;
         }
 
-        if(source instanceof Iterable) {
-            Iterable<Object> element = (Iterable<Object>)source;
+        if(src instanceof Iterable) {
+            Iterable<Object> element = (Iterable<Object>)src;
             Iterator<Object> elemsItr = element.iterator();
 
             if (!elemsItr.hasNext()) { // empty list
@@ -42,7 +40,9 @@ public class AnyTrueEvaluator extends org.cqframework.cql.elm.execution.AnyTrue 
 
                 Boolean boolVal = (Boolean) exp;
 
-                if (Boolean.TRUE == boolVal) return true;
+                if (Boolean.TRUE == boolVal) {
+                    return true;
+                }
             }
         }
 
@@ -51,5 +51,13 @@ public class AnyTrueEvaluator extends org.cqframework.cql.elm.execution.AnyTrue 
         }
 
         return false; // all null or all false
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+
+        Object src = getSource().evaluate(context);
+
+        return context.logTrace(this.getClass(), anyTrue(src), src);
     }
 }

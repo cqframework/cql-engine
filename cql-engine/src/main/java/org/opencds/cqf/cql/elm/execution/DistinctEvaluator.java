@@ -37,6 +37,7 @@ public class DistinctEvaluator extends org.cqframework.cql.elm.execution.Distinc
     @Override
     public Object evaluate(Context context) {
         Object value = this.getOperand().evaluate(context);
-        return distinct((Iterable<Object>)value);
+
+        return context.logTrace(this.getClass(), distinct((Iterable<Object>)value), value);
     }
 }

@@ -79,6 +79,6 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return multiply(left, right);
+        return context.logTrace(this.getClass(), multiply(left, right), left, right);
     }
 }

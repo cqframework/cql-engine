@@ -17,23 +17,28 @@ If the argument is null, the result is null.
  */
 public class TruncateEvaluator extends org.cqframework.cql.elm.execution.Truncate {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object truncate(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof BigDecimal) {
-            Double val = ((BigDecimal)value).doubleValue();
+        if (operand instanceof BigDecimal) {
+            Double val = ((BigDecimal) operand).doubleValue();
             if (val < 0){
-                return ((BigDecimal)value).setScale(0, BigDecimal.ROUND_CEILING).intValue();
+                return ((BigDecimal) operand).setScale(0, BigDecimal.ROUND_CEILING).intValue();
             }
             else {
-                return ((BigDecimal)value).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+                return ((BigDecimal) operand).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
             }
         }
-        throw new IllegalArgumentException(String.format("Cannot Truncate with argument of type '%s'.", value.getClass().getName()));
+
+        throw new IllegalArgumentException(String.format("Cannot Truncate with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), truncate(operand), operand);
     }
 }

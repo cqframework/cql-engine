@@ -28,36 +28,47 @@ end
 */
 
 /**
-*   Created by Chris Schuler on 9/25/2016
-*/
+ *   Created by Chris Schuler on 9/25/2016
+ */
 public class CaseEvaluator extends org.cqframework.cql.elm.execution.Case {
 
-  public Object selectedCase(Context context, Object comparand) {
-    for (CaseItem caseItem : getCaseItem()) {
-      Object when = caseItem.getWhen().evaluate(context);
-      Boolean check = EquivalentEvaluator.equivalent(comparand, when);
-      if (check == null) { continue; }
-      else if (check) {
-        return caseItem.getThen().evaluate(context);
-      }
-    }
-    return getElse().evaluate(context);
-  }
+    public Object selectedCase(Context context, Object comparand) {
+        for (CaseItem caseItem : getCaseItem()) {
+            Object when = caseItem.getWhen().evaluate(context);
+            Boolean check = EquivalentEvaluator.equivalent(comparand, when);
+            if (check == null) {
+                continue;
+            }
 
-  public Object standardCase(Context context) {
-    for (CaseItem caseItem : getCaseItem()) {
-      Boolean when = (Boolean)caseItem.getWhen().evaluate(context);
-      if (when == null) { continue; }
-      if (when) {
-        return caseItem.getThen().evaluate(context);
-      }
-    }
-    return getElse().evaluate(context);
-  }
+            if (check) {
+                return caseItem.getThen().evaluate(context);
+            }
+        }
 
-  @Override
-  public Object evaluate(Context context) {
-    Expression comparand = getComparand();
-    return comparand == null ? standardCase(context) : selectedCase(context, comparand.evaluate(context));
-  }
+        return getElse().evaluate(context);
+    }
+
+    public Object standardCase(Context context) {
+
+        for (CaseItem caseItem : getCaseItem()) {
+            Boolean when = (Boolean)caseItem.getWhen().evaluate(context);
+
+            if (when == null) {
+                continue;
+            }
+
+            if (when) {
+                return caseItem.getThen().evaluate(context);
+            }
+        }
+
+        return getElse().evaluate(context);
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Expression comparand = getComparand();
+        Object ret = comparand == null ? standardCase(context) : selectedCase(context, comparand.evaluate(context));
+        return context.logTrace(this.getClass(), ret, this.getCaseItem());
+    }
 }

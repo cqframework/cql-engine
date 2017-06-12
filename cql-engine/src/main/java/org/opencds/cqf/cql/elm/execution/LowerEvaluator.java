@@ -14,17 +14,21 @@ If the argument is null, the result is null.
  */
 public class LowerEvaluator extends org.cqframework.cql.elm.execution.Lower {
 
-    @Override
-    public Object evaluate(Context context) {
-        Object value = getOperand().evaluate(context);
-
-        if (value == null) {
+    public static Object lower(Object operand) {
+        if (operand == null) {
             return null;
         }
 
-        if (value instanceof String) {
-            return ((String) value).toLowerCase();
+        if (operand instanceof String) {
+            return ((String) operand).toLowerCase();
         }
-        throw new IllegalArgumentException(String.format("Cannot %s with argument of type '%s'.", this.getClass().getSimpleName(), value.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform Lower operation with argument of type '%s'.", operand.getClass().getName()));
+    }
+
+    @Override
+    public Object evaluate(Context context) {
+        Object operand = getOperand().evaluate(context);
+
+        return context.logTrace(this.getClass(), lower(operand), operand);
     }
 }

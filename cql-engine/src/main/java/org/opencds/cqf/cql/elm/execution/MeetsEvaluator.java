@@ -15,32 +15,37 @@ If either argument is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/8/2016
-*/
+ * Created by Chris Schuler on 6/8/2016
+ */
 public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
 
-  public static Boolean meets(Interval left, Interval right) {
-    if (left != null && right != null) {
-      Object leftStart = left.getStart();
-      Object leftEnd = left.getEnd();
-      Object rightStart = right.getStart();
-      Object rightEnd = right.getEnd();
+    public static Boolean meets(Interval left, Interval right) {
+        if (left == null || right == null) {
+            return null;
+        }
 
-      if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+        Object leftStart = left.getStart();
+        Object leftEnd = left.getEnd();
+        Object rightStart = right.getStart();
+        Object rightEnd = right.getEnd();
 
-      return (GreaterEvaluator.greater(rightStart, leftEnd))
-              ? EqualEvaluator.equal(rightStart, Value.successor(leftEnd))
-              : EqualEvaluator.equal(leftStart, Value.successor(rightEnd)
-      );
+        if (leftStart == null || leftEnd == null
+                || rightStart == null || rightEnd == null)
+        {
+            return null;
+        }
+
+        return (GreaterEvaluator.greater(rightStart, leftEnd))
+                ? EqualEvaluator.equal(rightStart, Value.successor(leftEnd))
+                : EqualEvaluator.equal(leftStart, Value.successor(rightEnd)
+        );
     }
-    return null;
-  }
 
-  @Override
-  public Object evaluate(Context context) {
-    Interval left = (Interval)getOperand().get(0).evaluate(context);
-    Interval right = (Interval)getOperand().get(1).evaluate(context);
+    @Override
+    public Object evaluate(Context context) {
+        Interval left = (Interval)getOperand().get(0).evaluate(context);
+        Interval right = (Interval)getOperand().get(1).evaluate(context);
 
-    return meets(left, right);
-  }
+        return context.logTrace(this.getClass(), meets(left, right), left, right);
+    }
 }
