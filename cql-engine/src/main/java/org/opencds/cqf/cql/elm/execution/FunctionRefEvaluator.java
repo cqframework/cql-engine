@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.Expression;
+import org.cqframework.cql.elm.execution.FunctionDef;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
 
@@ -13,13 +15,13 @@ public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.Func
     @Override
     public Object evaluate(Context context) {
         ArrayList<Object> arguments = new ArrayList<>();
-        for (org.cqframework.cql.elm.execution.Expression operand : this.getOperand()) {
+        for (Expression operand : this.getOperand()) {
             arguments.add(operand.evaluate(context));
         }
 
         boolean enteredLibrary = context.enterLibrary(this.getLibraryName());
         try {
-            org.cqframework.cql.elm.execution.FunctionDef functionDef = context.resolveFunctionRef(this.getName(), arguments);
+            FunctionDef functionDef = context.resolveFunctionRef(this.getName(), arguments);
             context.pushWindow();
             try {
                 for (int i = 0; i < arguments.size(); i++) {

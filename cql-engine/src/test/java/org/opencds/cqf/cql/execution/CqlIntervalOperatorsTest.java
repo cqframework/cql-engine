@@ -824,6 +824,22 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     @Test
+    public void TestPointFrom() {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("TestPointFromNull").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("TestPointFromInteger").getExpression().evaluate(context);
+        Assert.assertTrue((Integer) result == 1);
+
+        result = context.resolveExpressionRef("TestPointFromDecimal").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.0")) == 0);
+
+        result = context.resolveExpressionRef("TestPointFromQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("1.0")).withUnit("cm")));
+    }
+
+    @Test
     public void TestProperlyIncludes() {
         Context context = new Context(library);
 

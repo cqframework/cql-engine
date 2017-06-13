@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import javax.xml.bind.JAXBException;
 import java.util.*;
@@ -82,6 +83,28 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("IndexerABNeg1").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.LastPositionOf#evaluate(Context)}
+     */
+    @Test
+    public void testLastPositionOf() throws JAXBException {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("LastPositionOfNull").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("LastPositionOfNull1").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("LastPositionOfNull2").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("LastPositionOf1").getExpression().evaluate(context);
+        Assert.assertTrue((Integer) result == 1);
+
+        result = context.resolveExpressionRef("LastPositionOf2").getExpression().evaluate(context);
+        Assert.assertTrue((Integer) result == 11);
     }
 
     /**
@@ -178,6 +201,28 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("SplitABComma").getExpression().evaluate(context);
         assertThat(result, is(new ArrayList<Object>(Arrays.asList("a", "b"))));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.LastPositionOf#evaluate(Context)}
+     */
+    @Test
+    public void testStartsWith() throws JAXBException {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("StartsWithNull").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("StartsWithNull1").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("StartsWithNull2").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("StartsWithTrue1").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("StartsWithFalse1").getExpression().evaluate(context);
+        Assert.assertTrue(!(Boolean) result);
     }
 
     /**

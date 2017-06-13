@@ -277,6 +277,12 @@ define DateTimeOverlapsAfterFalse: Interval[DateTime(2012, 1, 26), DateTime(2012
 define TimeOverlapsAfterTrue: Interval[@T12:00:00.000, @T21:59:59.999] overlaps Interval[@T10:00:00.000, @T19:59:59.999]
 define TimeOverlapsAfterFalse: Interval[@T20:00:00.000, @T21:59:59.999] overlaps Interval[@T10:00:00.000, @T19:59:59.999]
 
+//PointFrom
+define TestPointFromNull: point from Interval[null, null]
+define TestPointFromInteger: point from Interval[1, 1]
+define TestPointFromDecimal: point from Interval[1.0, 1.0]
+define TestPointFromQuantity: point from Interval[1.0 'cm', 1.0 'cm']
+
 //ProperlyIncludes
 define TestProperlyIncludesNull: NullInterval properly includes IntegerIntervalTest
 define IntegerIntervalProperlyIncludesTrue: IntegerIntervalTest properly includes IntegerIntervalTest4

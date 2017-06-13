@@ -30,30 +30,33 @@ public class Interval {
         }
 
         if ((this.low != null && this.low.getClass() != pointType)
-            || (this.high != null && this.high.getClass() != pointType)) {
+                || (this.high != null && this.high.getClass() != pointType)) {
             throw new IllegalArgumentException("Low and high boundary values of an interval must be of the same type.");
         }
     }
 
     public static Object getSize(Object start, Object end) {
-      if (start == null || end == null) { return null; }
+        if (start == null || end == null) {
+            return null;
+        }
 
-      if (start instanceof Integer || start instanceof BigDecimal || start instanceof Quantity) {
-        return SubtractEvaluator.subtract(end, start);
-      }
-      else if (start instanceof DateTime) {
-        return new Quantity()
-          .withValue(new BigDecimal(DurationBetweenEvaluator.between((DateTime)start, (DateTime)end, ((DateTime)start).getPartial().size() - 1)))
-          .withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
-      }
-      else if (start instanceof Time) {
-        return new Quantity()
-          .withValue(new BigDecimal(DurationBetweenEvaluator.between((Time)start, (Time)end, ((Time)start).getPartial().size() - 1)))
-          .withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
-      }
+        if (start instanceof Integer || start instanceof BigDecimal || start instanceof Quantity) {
+            return SubtractEvaluator.subtract(end, start);
+        }
 
-      throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));
+        else if (start instanceof DateTime) {
+            return new Quantity()
+                .withValue(new BigDecimal(DurationBetweenEvaluator.between((DateTime)start, (DateTime)end, ((DateTime)start).getPartial().size() - 1)))
+                .withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
+        }
 
+        else if (start instanceof Time) {
+            return new Quantity()
+                .withValue(new BigDecimal(DurationBetweenEvaluator.between((Time)start, (Time)end, ((Time)start).getPartial().size() - 1)))
+                .withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));
     }
 
     private Object low;

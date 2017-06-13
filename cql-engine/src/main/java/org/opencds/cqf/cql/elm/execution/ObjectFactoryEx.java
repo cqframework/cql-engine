@@ -55,6 +55,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Ceiling createCeiling() { return new CeilingEvaluator(); }
 
     @Override
+    public Children createChildren() { return new ChildrenEvaluator(); }
+
+    @Override
     public Coalesce createCoalesce() { return new CoalesceEvaluator(); }
 
     @Override
@@ -101,6 +104,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public DateTimeComponentFrom createDateTimeComponentFrom() { return new DateTimeComponentFromEvaluator(); }
+
+    @Override
+    public Descendents createDescendents() { return new DescendentsEvaluator(); }
 
     @Override
     public DifferenceBetween createDifferenceBetween() { return new DifferenceBetweenEvaluator(); }
@@ -220,6 +226,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Last createLast() { return new LastEvaluator(); }
 
     @Override
+    public LastPositionOf createLastPositionOf() { return new LastPositionOfEvaluator(); }
+
+    @Override
     public Length createLength() { return new LengthEvaluator(); }
 
     @Override
@@ -260,6 +269,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public MeetsBefore createMeetsBefore() { return new MeetsBeforeEvaluator(); }
+
+    @Override
+    public Message createMessage() { return new MessageEvaluator(); }
 
     @Override
     public MinValue createMinValue() { return new MinValueEvaluator(); }
@@ -310,6 +322,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ParameterRef createParameterRef() { return new ParameterRefEvaluator(); }
 
     @Override
+    public PointFrom createPointFrom() { return new PointFromEvaluator(); }
+
+    @Override
     public PopulationStdDev createPopulationStdDev() { return new PopulationStdDevEvaluator(); }
 
     @Override
@@ -343,6 +358,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public QueryLetRef createQueryLetRef() { return new QueryLetRefEvaluator(); }
 
     @Override
+    public Repeat createRepeat() { return new RepeatEvaluator(); }
+
+    @Override
     public Retrieve createRetrieve() { return new RetrieveEvaluator(); }
 
     @Override
@@ -361,6 +379,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public SingletonFrom createSingletonFrom() { return new SingletonFromEvaluator(); }
 
     @Override
+    public Slice createSlice() { return new SliceEvaluator(); }
+
+    @Override
     public Split createSplit() { return new SplitEvaluator(); }
 
     @Override
@@ -368,6 +389,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Starts createStarts() { return new StartsEvaluator(); }
+
+    @Override
+    public StartsWith createStartsWith() { return new StartsWithEvaluator(); }
 
     @Override
     public StdDev createStdDev() { return new StdDevEvaluator(); }
@@ -410,6 +434,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public ToInteger createToInteger() { return new ToIntegerEvaluator(); }
+
+    @Override
+    public ToList createToList() { return new ToListEvaluator(); }
 
     @Override
     public ToQuantity createToQuantity() { return new ToQuantityEvaluator(); }

@@ -26,6 +26,13 @@ define IndexerAB1 : Indexer('ab', 1)
 define IndexerAB2 : Indexer('ab', 2)
 define IndexerABNeg1 : Indexer('ab', -1)
 
+//LastPositionOf
+define LastPositionOfNull: LastPositionOf(null, null)
+define LastPositionOfNull1: LastPositionOf(null, 'hi')
+define LastPositionOfNull2: LastPositionOf('hi', null)
+define LastPositionOf1: LastPositionOf('hi', 'Ohio is the place to be!')
+define LastPositionOf2: LastPositionOf('hi', 'Say hi to Ohio!')
+
 //Length
 define LengthNull : Length(null as String) // cast is required due to ambiguity with Length(String) and Length(List<Any>)
 define LengthEmpty : Length('')
@@ -53,6 +60,13 @@ define SplitNullComma : Split(null, ',')
 define SplitABNull : Split('a,b', null)
 define SplitABDash : Split('a,b', '-')
 define SplitABComma : Split('a,b', ',')
+
+//StartsWith
+define StartsWithNull: StartsWith(null, null)
+define StartsWithNull1: StartsWith('hi', null)
+define StartsWithNull2: StartsWith(null, 'hi')
+define StartsWithTrue1: StartsWith('Breathe deep the gathering gloom', 'Bre')
+define StartsWithFalse1: StartsWith('Breathe deep the gathering gloom', 'bre')
 
 //Substring
 define SubstringNullNull : Substring(null, null)
