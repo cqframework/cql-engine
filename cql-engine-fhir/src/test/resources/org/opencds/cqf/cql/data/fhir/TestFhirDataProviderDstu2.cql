@@ -10,3 +10,7 @@ define testCode:
 
 define testDate:
     [Appointment] A where A."start".value before year of DateTime(2014, 10, 10)
+
+define testDecimal:
+    [MedicationDispense] MD
+        where MD.quantity.value.value >= 15.0

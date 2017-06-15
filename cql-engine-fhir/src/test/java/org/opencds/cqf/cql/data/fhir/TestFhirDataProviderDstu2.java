@@ -14,6 +14,7 @@ import static org.testng.Assert.assertTrue;
 public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 
     private Context context;
+
     @BeforeMethod
     public void before() {
         context = new Context(library);
@@ -53,6 +54,12 @@ public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
     @Test
     public void testDstu2ProviderDate() {
         Object result = context.resolveExpressionRef("testDate").getExpression().evaluate(context);
+        assertTrue(result != null);
+    }
+
+    @Test
+    public void testDstu2ProviderDecimal() {
+        Object result = context.resolveExpressionRef("testDecimal").getExpression().evaluate(context);
         assertTrue(result != null);
     }
 }

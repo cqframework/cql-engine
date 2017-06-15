@@ -346,10 +346,9 @@ public class FhirDataProviderDstu2 implements DataProvider {
     }
 
     protected Object resolveProperty(Object target, String path) {
-        if (target == null) { return null; }
-
-        // need this for some interesting mapping in Hapi for dstu2...
-        path = mapPath(path);
+        if (target == null) {
+            return null;
+        }
 
         Class<?> clazz = target.getClass();
 
@@ -383,15 +382,6 @@ public class FhirDataProviderDstu2 implements DataProvider {
         } catch (IllegalAccessException e) {
             throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         }
-    }
-
-    private String mapPath(String path) {
-        // TODO: map all [x] types here...
-        switch(path) {
-            case "medicationCodeableConcept": return "medication";
-            case "medicationReference": return "medication";
-        }
-        return path;
     }
 
     private Object mapPrimitive(Object target) {
@@ -486,8 +476,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
             return EnumUtils.getEnumList(clazz).get(0);
         }
         try {
-            Object object = clazz.newInstance();
-            return object;
+            return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
         }
