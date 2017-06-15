@@ -19,11 +19,9 @@ import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -76,6 +74,113 @@ public class FhirDataProviderDstu2 implements DataProvider {
     public FhirDataProviderDstu2 withEndpoint(String endpoint) {
         setEndpoint(endpoint);
         return this;
+    }
+
+    @Override
+    public Iterable<Object> retrieve(String context, Object contextValue, String dataType,
+                                     String templateId, String codePath, Iterable<Code> codes,
+                                     String valueSet, String datePath, String dateLowPath,
+                                     String dateHighPath, Interval dateRange)
+    {
+        IQuery<Bundle> search;
+
+        // TODO: It's unclear from the FHIR documentation whether we need to use a URLEncoder.encode call on the embedded system and valueset uris here...
+        StringBuilder params = new StringBuilder();
+
+        if (templateId != null && !templateId.equals("")) {
+            params.append(String.format("_profile=%s", templateId));
+        }
+
+        if (codePath == null && (codes != null || valueSet != null)) {
+            throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
+        }
+
+        if (context != null && context.equals("Patient") && contextValue != null) {
+            if (params.length() > 0) {
+                params.append("&");
+            }
+
+            params.append(String.format("%s=%s", getPatientSearchParam(dataType), contextValue));
+        }
+
+        if (codePath != null && !codePath.equals("")) {
+            if (params.length() > 0) {
+                params.append("&");
+            }
+            if (valueSet != null && !valueSet.equals("")) {
+                if (terminologyProvider != null && expandValueSets) {
+                    ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
+                    codes = terminologyProvider.expand(valueSetInfo);
+                }
+                else {
+                    params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), valueSet));
+                }
+            }
+
+            if (codes != null) {
+                StringBuilder codeList = new StringBuilder();
+                for (Code code : codes) {
+                    if (codeList.length() > 0) {
+                        codeList.append(",");
+                    }
+
+                    if (code.getSystem() != null) {
+                        codeList.append(code.getSystem());
+                        codeList.append("|");
+                    }
+
+                    codeList.append(code.getCode());
+                }
+                params.append(String.format("%s=%s", convertPathToSearchParam(dataType, codePath), codeList.toString()));
+            }
+        }
+
+        if (dateRange != null) {
+            if (dateRange.getLow() != null) {
+                String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
+                if (lowDatePath.equals("")) {
+                    throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
+                }
+
+                params.append(String.format("&%s=%s%s",
+                        lowDatePath,
+                        dateRange.getLowClosed() ? "ge" : "gt",
+                        dateRange.getLow().toString()));
+            }
+
+            if (dateRange.getHigh() != null) {
+                String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
+                if (highDatePath.equals("")) {
+                    throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
+                }
+
+                params.append(String.format("&%s=%s%s",
+                        highDatePath,
+                        dateRange.getHighClosed() ? "le" : "lt",
+                        dateRange.getHigh().toString()));
+            }
+        }
+
+        // TODO: Use compartment search for patient context?
+        if (params.length() > 0) {
+            search = fhirClient.search().byUrl(String.format("%s?%s", dataType, params.toString()));
+        }
+        else {
+            search = fhirClient.search().byUrl(String.format("%s", dataType));
+        }
+
+        ca.uhn.fhir.model.dstu2.resource.Bundle results = cleanEntry(search.returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class).execute(), dataType);
+
+        return new FhirBundleCursorDstu2(fhirClient, results);
+    }
+
+    public IValueSetEnumBinder<Enum<?>> getBinder(Class clazz) {
+        try {
+            Field field = clazz.getField("VALUESET_BINDER");
+            return (IValueSetEnumBinder<Enum<?>>) field.get(null);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Enumeration field access error in class " + clazz.getSimpleName());
+        }
     }
 
     protected Object fromJavaPrimitive(Object value, Object target) {
@@ -146,113 +251,6 @@ public class FhirDataProviderDstu2 implements DataProvider {
     }
 
     @Override
-    public Iterable<Object> retrieve(String context, Object contextValue, String dataType,
-                                     String templateId, String codePath, Iterable<Code> codes,
-                                     String valueSet, String datePath, String dateLowPath,
-                                     String dateHighPath, Interval dateRange)
-    {
-        IQuery<Bundle> search;
-
-        // TODO: It's unclear from the FHIR documentation whether we need to use a URLEncoder.encode call on the embedded system and valueset uris here...
-        StringBuilder params = new StringBuilder();
-
-        if (templateId != null && !templateId.equals("")) {
-            params.append(String.format("_profile=%s", templateId));
-        }
-
-        if (codePath == null && (codes != null || valueSet != null)) {
-            throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
-        }
-
-        if (context != null && context.equals("Patient") && contextValue != null) {
-            if (params.length() > 0) {
-                params.append("&");
-            }
-
-            params.append(String.format("%s=%s", getPatientSearchParam(dataType), URLEncode((String)contextValue)));
-        }
-
-        if (codePath != null && !codePath.equals("")) {
-            if (params.length() > 0) {
-                params.append("&");
-            }
-            if (valueSet != null && !valueSet.equals("")) {
-                if (terminologyProvider != null && expandValueSets) {
-                    ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
-                    codes = terminologyProvider.expand(valueSetInfo);
-                }
-                else {
-                    params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), URLEncode(valueSet)));
-                }
-            }
-
-            if (codes != null) {
-                StringBuilder codeList = new StringBuilder();
-                for (Code code : codes) {
-                    if (codeList.length() > 0) {
-                        codeList.append(",");
-                    }
-
-                    if (code.getSystem() != null) {
-                        codeList.append(URLEncode(code.getSystem()));
-                        codeList.append("|");
-                    }
-
-                    codeList.append(URLEncode(code.getCode()));
-                }
-                params.append(String.format("%s=%s", convertPathToSearchParam(dataType, codePath), codeList.toString()));
-            }
-        }
-
-        if (dateRange != null) {
-            if (dateRange.getLow() != null) {
-                String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
-                if (lowDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
-                }
-
-                params.append(String.format("&%s=%s%s",
-                        lowDatePath,
-                        dateRange.getLowClosed() ? "ge" : "gt",
-                        dateRange.getLow().toString()));
-            }
-
-            if (dateRange.getHigh() != null) {
-                String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
-                if (highDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
-                }
-
-                params.append(String.format("&%s=%s%s",
-                        highDatePath,
-                        dateRange.getHighClosed() ? "le" : "lt",
-                        dateRange.getHigh().toString()));
-            }
-        }
-
-        // TODO: Use compartment search for patient context?
-        if (params.length() > 0) {
-            search = fhirClient.search().byUrl(String.format("%s?%s", dataType, params.toString()));
-        }
-        else {
-            search = fhirClient.search().byUrl(String.format("%s", dataType));
-        }
-
-        ca.uhn.fhir.model.dstu2.resource.Bundle results = cleanEntry(search.returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class).execute(), dataType);
-
-        return new FhirBundleCursorDstu2(fhirClient, results);
-    }
-
-    public IValueSetEnumBinder<Enum<?>> getBinder(Class clazz) {
-        try {
-            Field field = clazz.getField("VALUESET_BINDER");
-            return (IValueSetEnumBinder<Enum<?>>) field.get(null);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Enumeration field access error in class " + clazz.getSimpleName());
-        }
-    }
-
-    @Override
     public void setValue(Object target, String path, Object value) {
         if (target == null) {
             return;
@@ -281,7 +279,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
         }
     }
 
-    private boolean pathIsChoice(String path) {
+    protected boolean pathIsChoice(String path) {
         // Pretty consistent format: lowercase root followed by Type.
         if (pathIsChoiceOutlier(path)) return true;
 
@@ -384,7 +382,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
         }
     }
 
-    private Object mapPrimitive(Object target) {
+    protected Object mapPrimitive(Object target) {
         if (target instanceof PeriodDt) {
             PeriodDt period = (PeriodDt) target;
             return new Interval(DateTime.fromJavaDate(period.getStart()), true, DateTime.fromJavaDate(period.getEnd()), true);
@@ -394,40 +392,10 @@ public class FhirDataProviderDstu2 implements DataProvider {
             return DateTime.fromJavaDate((Date) target);
         }
 
-//        else if (target instanceof CodingDt) {
-//            CodingDt dt = (CodingDt) target;
-//            return new Code()
-//                    .withCode(dt.getCode())
-//                    .withSystem(dt.getSystem())
-//                    .withDisplay(dt.getDisplay())
-//                    .withVersion(dt.getVersion());
-//        }
-//
-//        else if (target instanceof Iterable) {
-//            List<Object> list = new ArrayList<>();
-//            for (Object o : (Iterable) target) {
-//                list.add(mapPrimitive(o));
-//            }
-//            return list;
-//        }
-
-//        else if (target instanceof CodeableConceptDt) {
-//            CodeableConceptDt dt = (CodeableConceptDt) target;
-//            List<Code> codes = new ArrayList<>();
-//            for (CodingDt code : dt.getCoding()) {
-//                codes.add(new Code()
-//                            .withCode(code.getCode())
-//                            .withSystem(code.getSystem())
-//                            .withDisplay(code.getDisplay())
-//                            .withVersion(code.getVersion()));
-//            }
-//            return new Concept().withCodes(codes);
-//        }
-
         return target;
     }
 
-    private String getPatientSearchParam(String dataType) {
+    protected String getPatientSearchParam(String dataType) {
         switch (dataType) {
             case "Patient":
                 return "_id";
@@ -438,19 +406,11 @@ public class FhirDataProviderDstu2 implements DataProvider {
         }
     }
 
-    private String convertPathToSearchParam(String dataType, String codePath) {
+    protected String convertPathToSearchParam(String dataType, String codePath) {
         return codePath.replace('.', '-');
     }
 
-    private String URLEncode(String url) {
-        try {
-            return URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e.getMessage());
-        }
-    }
-
-    private ca.uhn.fhir.model.dstu2.resource.Bundle cleanEntry(ca.uhn.fhir.model.dstu2.resource.Bundle bundle, String dataType) {
+    protected ca.uhn.fhir.model.dstu2.resource.Bundle cleanEntry(ca.uhn.fhir.model.dstu2.resource.Bundle bundle, String dataType) {
         List<ca.uhn.fhir.model.dstu2.resource.Bundle.Entry> entry = new ArrayList<>();
         for (ca.uhn.fhir.model.dstu2.resource.Bundle.Entry comp : bundle.getEntry()){
             if (comp.getResource().getResourceName().equals(dataType)) {
