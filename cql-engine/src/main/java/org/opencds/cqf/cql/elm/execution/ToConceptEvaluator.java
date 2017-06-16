@@ -18,6 +18,10 @@ If the argument is null, the result is null.
 public class ToConceptEvaluator extends org.cqframework.cql.elm.execution.ToConcept {
 
     public static Object toConcept(Object operand) {
+        if (operand == null) {
+            return null;
+        }
+
         Concept result = new Concept();
 
         if (operand instanceof Iterable) {
