@@ -50,6 +50,11 @@ public class FhirMeasureEvaluator {
                         }
                     }
                 }
+                else if (result instanceof Resource) {
+                	count++;
+                	resources.put(((Resource)result).getId(), (Resource)result);
+                }
+                
                 MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
                 populationReport.setCount(count);
                 populationReport.setCode(population.getCode());
