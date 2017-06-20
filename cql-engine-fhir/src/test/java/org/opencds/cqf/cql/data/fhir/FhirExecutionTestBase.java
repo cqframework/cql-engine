@@ -27,10 +27,10 @@ import static org.hamcrest.Matchers.is;
 public abstract class FhirExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
 
-    FhirDataProviderDstu2 dstu2Provider =
-            new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.dstu2.resource");
-    FhirDataProvider dstu3Provider =
-            new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+    BaseFhirDataProvider dstu2Provider =
+            new FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
+    BaseFhirDataProvider dstu3Provider =
+            new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 
     Library library = null;
     private File xmlFile = null;

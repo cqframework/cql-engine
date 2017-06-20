@@ -1,10 +1,12 @@
 package org.opencds.cqf.cql.file.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Period;
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
 import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
 import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
@@ -52,10 +54,9 @@ How do I use it?
       - etc...
 */
 
-public class FileBasedFhirProvider extends BaseFhirDataProvider {
+public class FileBasedFhirProvider extends BaseDataProviderStu3 {
 
     private Path path;
-    private FhirTerminologyProvider terminologyProvider;
 
     public FileBasedFhirProvider (String path, String endpoint) {
         if (path.isEmpty()) {
@@ -64,8 +65,9 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
         this.path = Paths.get(path);
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
+        setFhirContext(FhirContext.forDstu3());
     }
-
+    
     private URL pathToModelJar;
     public void setPathToModelJar(URL pathToModelJar) {
         this.pathToModelJar = pathToModelJar;
@@ -76,6 +78,7 @@ public class FileBasedFhirProvider extends BaseFhirDataProvider {
         return this;
     }
 
+    @Override
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
                                      String codePath, Iterable<Code> codes, String valueSet, String datePath,
                                      String dateLowPath, String dateHighPath, Interval dateRange) {

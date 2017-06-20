@@ -14,6 +14,8 @@ public interface DataProvider {
 
     String getPackageName();
 
+    void setPackageName(String packageName);
+
     Object resolvePath(Object target, String path);
 
     Class resolveType(String typeName);

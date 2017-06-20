@@ -19,10 +19,11 @@ public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
     public void before() {
         context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu2Provider);
-        FhirDataProviderDstu2 primitiveProvider = new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.primitive");
-        context.registerDataProvider("http://hl7.org/fhir", primitiveProvider);
-        FhirDataProviderDstu2 compositeProvider = new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.dstu2.composite");
-        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
+        BaseFhirDataProvider provider = new FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
+//        FhirDataProviderDstu2 primitiveProvider = new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.primitive");
+//        context.registerDataProvider("http://hl7.org/fhir", primitiveProvider);
+//        FhirDataProviderDstu2 compositeProvider = new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.dstu2.composite");
+//        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
     }
 
     @Test

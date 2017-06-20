@@ -8,15 +8,12 @@ import ca.uhn.fhir.model.dstu2.composite.CodingDt;
 import ca.uhn.fhir.model.dstu2.composite.PeriodDt;
 import ca.uhn.fhir.model.dstu2.composite.QuantityDt;
 import ca.uhn.fhir.model.primitive.*;
-import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.apache.commons.lang3.EnumUtils;
-import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.lang.reflect.Field;
@@ -31,49 +28,11 @@ import java.util.regex.Pattern;
 /**
  * Created by Christopher on 5/2/2017.
  */
-public class FhirDataProviderDstu2 implements DataProvider {
-
-    private FhirContext fhirContext;
-    private String packageName;
-    private String endpoint;
-    private IGenericClient fhirClient;
-    private boolean expandValueSets;
-
-    private TerminologyProvider terminologyProvider;
+public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
 
     public FhirDataProviderDstu2() {
-        this.fhirContext = FhirContext.forDstu2();
-    }
-
-    public TerminologyProvider getTerminologyProvider() {
-        return terminologyProvider;
-    }
-    public void setTerminologyProvider(TerminologyProvider terminologyProvider) {
-        this.terminologyProvider = terminologyProvider;
-    }
-
-    @Override
-    public String getPackageName() { return this.packageName; }
-
-    public void setPackageName(String packageName) { this.packageName = packageName; }
-    public FhirDataProviderDstu2 withPackageName(String packageName) {
-        setPackageName(packageName);
-        return this;
-    }
-
-    public boolean getExpandValueSets() { return expandValueSets; }
-    public void setExpandValueSets(boolean expandValueSets) { this.expandValueSets = expandValueSets; }
-
-    public IGenericClient getFhirClient() { return fhirClient; }
-
-    public String getEndpoint() { return endpoint; }
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
-        fhirClient = fhirContext.newRestfulGenericClient(endpoint);
-    }
-    public FhirDataProviderDstu2 withEndpoint(String endpoint) {
-        setEndpoint(endpoint);
-        return this;
+        setPackageName("ca.uhn.fhir.model.dstu2.resource");
+        setFhirContext(FhirContext.forDstu2());
     }
 
     @Override
@@ -108,12 +67,12 @@ public class FhirDataProviderDstu2 implements DataProvider {
                 params.append("&");
             }
             if (valueSet != null && !valueSet.equals("")) {
-                if (terminologyProvider != null && expandValueSets) {
+                if (getTerminologyProvider() != null && isExpandValueSets()) {
                     ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
-                    codes = terminologyProvider.expand(valueSetInfo);
+                    codes = getTerminologyProvider().expand(valueSetInfo);
                 }
                 else {
-                    params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), valueSet));
+                    params.append(String.format("%s:in=%s", convertPathToSearchParam(codePath), valueSet));
                 }
             }
 
@@ -131,13 +90,13 @@ public class FhirDataProviderDstu2 implements DataProvider {
 
                     codeList.append(code.getCode());
                 }
-                params.append(String.format("%s=%s", convertPathToSearchParam(dataType, codePath), codeList.toString()));
+                params.append(String.format("%s=%s", convertPathToSearchParam(codePath), codeList.toString()));
             }
         }
 
         if (dateRange != null) {
             if (dateRange.getLow() != null) {
-                String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
+                String lowDatePath = convertPathToSearchParam(dateLowPath != null ? dateLowPath : datePath);
                 if (lowDatePath.equals("")) {
                     throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
                 }
@@ -149,7 +108,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
             }
 
             if (dateRange.getHigh() != null) {
-                String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
+                String highDatePath = convertPathToSearchParam(dateHighPath != null ? dateHighPath : datePath);
                 if (highDatePath.equals("")) {
                     throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
                 }
@@ -163,15 +122,15 @@ public class FhirDataProviderDstu2 implements DataProvider {
 
         // TODO: Use compartment search for patient context?
         if (params.length() > 0) {
-            search = fhirClient.search().byUrl(String.format("%s?%s", dataType, params.toString()));
+            search = getFhirClient().search().byUrl(String.format("%s?%s", dataType, params.toString()));
         }
         else {
-            search = fhirClient.search().byUrl(String.format("%s", dataType));
+            search = getFhirClient().search().byUrl(String.format("%s", dataType));
         }
 
         ca.uhn.fhir.model.dstu2.resource.Bundle results = cleanEntry(search.returnBundle(ca.uhn.fhir.model.dstu2.resource.Bundle.class).execute(), dataType);
 
-        return new FhirBundleCursorDstu2(fhirClient, results);
+        return new FhirBundleCursorDstu2(getFhirClient(), results);
     }
 
     public IValueSetEnumBinder<Enum<?>> getBinder(Class clazz) {
@@ -183,9 +142,10 @@ public class FhirDataProviderDstu2 implements DataProvider {
         }
     }
 
+    @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
         if (target instanceof DateTimeDt) {
-            return new Date(); // TODO: Why is this so hard?
+            return new Date();
         }
         else if (target instanceof DateDt) {
             return new Date();
@@ -232,22 +192,6 @@ public class FhirDataProviderDstu2 implements DataProvider {
             }
         }
         return clazz;
-    }
-
-    @Override
-    public Object resolvePath(Object target, String path) {
-        String[] identifiers = path.split("\\.");
-        for (String identifier : identifiers) {
-            // handling indexes: item[0].code
-            if (identifier.contains("[")) {
-                int j = Character.getNumericValue(identifier.charAt(identifier.indexOf("[") + 1));
-                target = resolveProperty(target, identifier.replaceAll("\\[\\d\\]", ""));
-                target = ((ArrayList) target).get(j);
-            } else
-                target = resolveProperty(target, identifier);
-        }
-
-        return target;
     }
 
     @Override
@@ -343,6 +287,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
         return resolveChoiceProperty(target, path, type);
     }
 
+    @Override
     protected Object resolveProperty(Object target, String path) {
         if (target == null) {
             return null;
@@ -395,21 +340,6 @@ public class FhirDataProviderDstu2 implements DataProvider {
         return target;
     }
 
-    protected String getPatientSearchParam(String dataType) {
-        switch (dataType) {
-            case "Patient":
-                return "_id";
-            case "Observation":
-            case "RiskAssessment":
-                return "subject";
-            default: return "patient";
-        }
-    }
-
-    protected String convertPathToSearchParam(String dataType, String codePath) {
-        return codePath.replace('.', '-');
-    }
-
     protected ca.uhn.fhir.model.dstu2.resource.Bundle cleanEntry(ca.uhn.fhir.model.dstu2.resource.Bundle bundle, String dataType) {
         List<ca.uhn.fhir.model.dstu2.resource.Bundle.Entry> entry = new ArrayList<>();
         for (ca.uhn.fhir.model.dstu2.resource.Bundle.Entry comp : bundle.getEntry()){
@@ -430,6 +360,7 @@ public class FhirDataProviderDstu2 implements DataProvider {
         return value.getClass();
     }
 
+    @Override
     public Object createInstance(String typeName) {
         Class clazz = resolveType(typeName);
         if (clazz.getSimpleName().contains("Enum")) {

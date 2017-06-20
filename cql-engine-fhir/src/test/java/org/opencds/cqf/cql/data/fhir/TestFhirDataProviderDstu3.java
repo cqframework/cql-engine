@@ -34,7 +34,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     @Test
     public void testDataProviderRetrieve() {
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
 
         assertTrue(results.iterator().hasNext());
@@ -42,7 +42,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     @Test
     public void testPatientRetrieve() {
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
         List<Patient> patients = new ArrayList<>();
 

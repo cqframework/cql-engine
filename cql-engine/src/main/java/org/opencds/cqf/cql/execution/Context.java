@@ -427,6 +427,17 @@ public class Context {
     public DataProvider resolveDataProvider(String packageName) {
         DataProvider dataProvider = packageMap.get(packageName);
         if (dataProvider == null) {
+            if (packageName.startsWith("ca.uhn.fhir.model.dstu2") || packageName.equals("ca.uhn.fhir.model.primitive"))
+            {
+                for (DataProvider provider : dataProviders.values()) {
+                    if (provider.getPackageName().startsWith("ca.uhn.fhir.model.dstu2")
+                            || provider.getPackageName().equals("ca.uhn.fhir.model.primitive"))
+                    {
+                        provider.setPackageName(packageName);
+                        return provider;
+                    }
+                }
+            }
             throw new IllegalArgumentException(String.format("Could not resolve data provider for package '%s'.", packageName));
         }
 

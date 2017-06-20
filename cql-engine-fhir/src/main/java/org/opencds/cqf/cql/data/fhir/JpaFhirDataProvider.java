@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.jpa.dao.SearchParameterMap;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaResourceProviderDstu3;
-import ca.uhn.fhir.rest.client.IGenericClient;
 import ca.uhn.fhir.rest.param.*;
 import ca.uhn.fhir.rest.server.IBundleProvider;
 import ca.uhn.fhir.rest.server.IResourceProvider;
@@ -10,7 +9,6 @@ import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.util.ArrayList;
@@ -21,7 +19,7 @@ import java.util.List;
 /**
  * Created by Chris Schuler on 12/15/2016.
  */
-public class JpaFhirDataProvider extends FhirDataProvider {
+public class JpaFhirDataProvider extends BaseFhirDataProvider {
 
     // need these to access the dao
     private HashMap<String, IResourceProvider> providers;
@@ -33,20 +31,19 @@ public class JpaFhirDataProvider extends FhirDataProvider {
         }
     }
 
-    private TerminologyProvider terminologyProvider;
-    public TerminologyProvider getTerminologyProvider() {
-        return terminologyProvider;
-    }
-    public void setTerminologyProvider(TerminologyProvider terminologyProvider) {
-        this.terminologyProvider = terminologyProvider;
+    @Override
+    protected String resolveClassName(String typeName) {
+        return null;
     }
 
-    private boolean expandValueSets;
-    public boolean getExpandValueSets() {
-        return expandValueSets;
+    @Override
+    protected Object fromJavaPrimitive(Object value, Object target) {
+        return null;
     }
-    public void setExpandValueSets(boolean expandValueSets) {
-        this.expandValueSets = expandValueSets;
+
+    @Override
+    protected Object toJavaPrimitive(Object result, Object source) {
+        return null;
     }
 
     public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
@@ -80,15 +77,12 @@ public class JpaFhirDataProvider extends FhirDataProvider {
                 ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
                 codes = terminologyProvider.expand(valueSetInfo);
             }
-//            else {
-//                map.add(convertPathToSearchParam(dataType, codePath), );
-//            }
             if (codes != null) {
                 TokenOrListParam codeParams = new TokenOrListParam();
                 for (Code code : codes) {
                     codeParams.add(code.getSystem(), code.getCode());
                 }
-                map.add(convertPathToSearchParam(dataType, codePath), codeParams);
+                map.add(convertPathToSearchParam(codePath), codeParams);
             }
         }
 
@@ -96,11 +90,11 @@ public class JpaFhirDataProvider extends FhirDataProvider {
             DateParam low = null;
             DateParam high = null;
             if (dateRange.getLow() != null) {
-                low = new DateParam(ParamPrefixEnum.GREATERTHAN_OR_EQUALS, convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath));
+                low = new DateParam(ParamPrefixEnum.GREATERTHAN_OR_EQUALS, convertPathToSearchParam(dateLowPath != null ? dateLowPath : datePath));
             }
 
             if (dateRange.getHigh() != null) {
-                high = new DateParam(ParamPrefixEnum.LESSTHAN_OR_EQUALS, convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath));
+                high = new DateParam(ParamPrefixEnum.LESSTHAN_OR_EQUALS, convertPathToSearchParam(dateHighPath != null ? dateHighPath : datePath));
             }
             DateRangeParam rangeParam;
             if (low == null && high != null) {
@@ -111,7 +105,7 @@ public class JpaFhirDataProvider extends FhirDataProvider {
             }
             else
                 rangeParam = new DateRangeParam(high, low);
-            map.add(convertPathToSearchParam(dataType, datePath), rangeParam);
+            map.add(convertPathToSearchParam(datePath), rangeParam);
         }
 
         JpaResourceProviderDstu3<? extends IAnyResource> jpaResProvider = resolveResourceProvider(dataType);
@@ -132,26 +126,5 @@ public class JpaFhirDataProvider extends FhirDataProvider {
 
     public JpaResourceProviderDstu3<? extends IAnyResource> resolveResourceProvider(String datatype) {
         return (JpaResourceProviderDstu3<? extends IAnyResource>) providers.get(datatype);
-    }
-
-    private String getPatientSearchParam(String dataType) {
-        switch (dataType) {
-            case "Patient":
-                return "_id";
-            case "Observation":
-                return "subject";
-            case "Procedure":
-                return "subject";
-            case "Condition":
-                return "subject";
-            case "RiskAssessment":
-                return "subject";
-            default:
-                return "patient";
-        }
-    }
-
-    private String convertPathToSearchParam(String dataType, String codePath) {
-        return codePath.replace('.', '-');
     }
 }

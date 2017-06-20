@@ -24,6 +24,11 @@ public class SystemDataProvider implements DataProvider {
         return "org.opencds.cqf.cql.runtime";
     }
 
+    @Override
+    public void setPackageName(String packageName) {
+
+    }
+
     private Field getProperty(Class clazz, String path) {
         try {
             Field field = clazz.getDeclaredField(path);

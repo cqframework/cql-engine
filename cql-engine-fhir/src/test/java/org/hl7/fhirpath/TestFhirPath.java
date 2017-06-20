@@ -11,8 +11,9 @@ import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.Tests;
-import org.opencds.cqf.cql.data.fhir.FhirDataProvider;
+import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderDstu2;
+import org.opencds.cqf.cql.data.fhir.FhirDataProviderStu3;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
@@ -195,9 +196,9 @@ public class TestFhirPath {
 
             context.registerLibraryLoader(getLibraryLoader());
 
-            FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
-            //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhir3.healthintersections.com.au/open/");
-            //FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://wildfhir.aegis.net/fhir");
+            BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+            //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
+            //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
             context.registerDataProvider("http://hl7.org/fhir", provider);
 
             context.setParameter(null, resource.fhirType(), resource);
@@ -278,14 +279,14 @@ public class TestFhirPath {
     }
 
     // TODO: Resolve Error: Could not load model information for model FHIR, version 3.0.0 because version 1.0.2 is already loaded
-    //@Test
+    @Test
     public void testFhirHelpersStu3() {
         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
         Library library = translate(cql);
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-        FhirDataProvider provider = new FhirDataProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
@@ -302,21 +303,23 @@ public class TestFhirPath {
         result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
     }
 
-    @Test
+    //@Test
     public void testFhirHelpersDstu2() {
         String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
         Library library = translate(cql);
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-        FhirDataProviderDstu2 compositeProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.composite");
-        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
-        FhirDataProviderDstu2 primitiveProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.primitive");
-        context.registerDataProvider("http://hl7.org/fhir", primitiveProvider);
-        FhirDataProviderDstu2 enumProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.valueset");
-        context.registerDataProvider("http://hl7.org/fhir", enumProvider);
-        FhirDataProviderDstu2 resourceProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.resource");
-        context.registerDataProvider("http://hl7.org/fhir", resourceProvider);
+        BaseFhirDataProvider provider = new FhirDataProviderDstu2();
+        context.registerDataProvider("http://hl7.org/fhir", provider);
+//        FhirDataProviderDstu2 compositeProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.composite");
+//        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
+//        FhirDataProviderDstu2 primitiveProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.primitive");
+//        context.registerDataProvider("http://hl7.org/fhir", primitiveProvider);
+//        FhirDataProviderDstu2 enumProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.valueset");
+//        context.registerDataProvider("http://hl7.org/fhir", enumProvider);
+//        FhirDataProviderDstu2 resourceProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.resource");
+//        context.registerDataProvider("http://hl7.org/fhir", resourceProvider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
