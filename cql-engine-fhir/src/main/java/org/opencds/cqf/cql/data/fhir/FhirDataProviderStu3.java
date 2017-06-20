@@ -23,7 +23,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
         setFhirContext(FhirContext.forDstu3());
     }
 
-    private String URLEncode(String url) {
+    protected String URLEncode(String url) {
         try {
             return URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {
@@ -138,7 +138,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
 
         org.hl7.fhir.dstu3.model.Bundle results = cleanEntry(search.returnBundle(org.hl7.fhir.dstu3.model.Bundle.class).execute(), dataType);
 
-        return new FhirBundleCursor(fhirClient, results);
+        return new FhirBundleCursorStu3(fhirClient, results);
     }
 
     private org.hl7.fhir.dstu3.model.Bundle cleanEntry(org.hl7.fhir.dstu3.model.Bundle bundle, String dataType) {

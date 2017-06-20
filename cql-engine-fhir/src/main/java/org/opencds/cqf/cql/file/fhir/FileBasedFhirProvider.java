@@ -7,7 +7,6 @@ import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Period;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
-import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
 import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
 import org.opencds.cqf.cql.runtime.Code;
@@ -67,7 +66,7 @@ public class FileBasedFhirProvider extends BaseDataProviderStu3 {
                 : new FhirTerminologyProvider().withEndpoint(endpoint);
         setFhirContext(FhirContext.forDstu3());
     }
-    
+
     private URL pathToModelJar;
     public void setPathToModelJar(URL pathToModelJar) {
         this.pathToModelJar = pathToModelJar;

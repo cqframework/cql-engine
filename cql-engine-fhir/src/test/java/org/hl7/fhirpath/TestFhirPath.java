@@ -13,6 +13,7 @@ import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.Tests;
 import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderDstu2;
+import org.opencds.cqf.cql.data.fhir.FhirDataProviderHL7;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderStu3;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
@@ -312,14 +313,30 @@ public class TestFhirPath {
 
         BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
-//        FhirDataProviderDstu2 compositeProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.composite");
-//        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
-//        FhirDataProviderDstu2 primitiveProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.primitive");
-//        context.registerDataProvider("http://hl7.org/fhir", primitiveProvider);
-//        FhirDataProviderDstu2 enumProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.valueset");
-//        context.registerDataProvider("http://hl7.org/fhir", enumProvider);
-//        FhirDataProviderDstu2 resourceProvider = new FhirDataProviderDstu2().withPackageName("ca.uhn.fhir.model.dstu2.resource");
-//        context.registerDataProvider("http://hl7.org/fhir", resourceProvider);
+
+        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToDecimal").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
+    }
+
+    //@Test
+    public void testFhirHelpersHL7() {
+        String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
+        Library library = translate(cql);
+        Context context = new Context(library);
+        context.registerLibraryLoader(getLibraryLoader());
+
+        BaseFhirDataProvider provider = new FhirDataProviderHL7();
+        context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);

@@ -10,8 +10,8 @@ import java.util.NoSuchElementException;
 /**
  * Created by Bryn on 4/16/2016.
  */
-public class FhirBundleCursor implements Iterable<Object> {
-    public FhirBundleCursor(IGenericClient fhirClient, Bundle results) {
+public class FhirBundleCursorStu3 implements Iterable<Object> {
+    public FhirBundleCursorStu3(IGenericClient fhirClient, Bundle results) {
         this.fhirClient = fhirClient;
         this.results = results;
     }

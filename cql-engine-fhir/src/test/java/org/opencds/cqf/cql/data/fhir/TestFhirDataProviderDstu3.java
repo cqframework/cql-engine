@@ -35,7 +35,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
     @Test
     public void testDataProviderRetrieve() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
-        FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
+        FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
 
         assertTrue(results.iterator().hasNext());
     }
