@@ -13,11 +13,12 @@ import static org.hamcrest.Matchers.*;
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Abs#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AbsEvaluator#evaluate(Context)}
      */
     @Test
     public void testAbs() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("AbsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 

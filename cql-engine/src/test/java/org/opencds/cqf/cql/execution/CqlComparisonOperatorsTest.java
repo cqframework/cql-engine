@@ -10,17 +10,19 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
     @Test
     public void testBetween() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("BetweenIntTrue").getExpression().evaluate(context);
-      assertThat(result, is(true));
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("BetweenIntTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Equal#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
     public void testEqual() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("SimpleEqTrueTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -144,14 +146,13 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Greater#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.GreaterEvaluator#evaluate(Context)}
      */
     @Test
     public void testGreater() throws JAXBException {
         Context context = new Context(library);
-        Object result;
 
-        result = context.resolveExpressionRef("GreaterZZ").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("GreaterZZ").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("GreaterZ1").getExpression().evaluate(context);
@@ -216,14 +217,13 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.GreaterOrEqual#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.GreaterOrEqualEvaluator#evaluate(Context)}
      */
     @Test
     public void testGreaterOrEqual() throws JAXBException {
         Context context = new Context(library);
-        Object result;
 
-        result = context.resolveExpressionRef("GreaterOrEqualZZ").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("GreaterOrEqualZZ").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("GreaterOrEqualZ1").getExpression().evaluate(context);
@@ -295,14 +295,13 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Less#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.LessEvaluator#evaluate(Context)}
      */
     @Test
     public void testLess() throws JAXBException {
         Context context = new Context(library);
-        Object result;
 
-        result = context.resolveExpressionRef("LessZZ").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("LessZZ").getExpression().evaluate(context);
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("LessZ1").getExpression().evaluate(context);
@@ -368,14 +367,13 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.LessOrEqual#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.LessOrEqualEvaluator#evaluate(Context)}
      */
     @Test
     public void testLessOrEqual() throws JAXBException {
         Context context = new Context(library);
-        Object result;
 
-        result = context.resolveExpressionRef("LessOrEqualZZ").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("LessOrEqualZZ").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("LessOrEqualZ1").getExpression().evaluate(context);
@@ -447,14 +445,13 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Equivalent#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
     public void testEquivalent() throws JAXBException {
         Context context = new Context(library);
-        Object result;
 
-        result = context.resolveExpressionRef("EquivTrueTrue").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("EquivTrueTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("EquivTrueFalse").getExpression().evaluate(context);
@@ -552,11 +549,12 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.NotEqual#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
     public void testNotEqual() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("SimpleNotEqTrueTrue").getExpression().evaluate(context);
         assertThat(result, is(false));
 

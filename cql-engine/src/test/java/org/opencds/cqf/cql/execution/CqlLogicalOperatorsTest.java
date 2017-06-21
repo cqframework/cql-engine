@@ -6,15 +6,15 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-@Test(groups = {"a"})
 public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.And#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AndEvaluator#evaluate(Context)}
      */
     @Test
     public void testAnd() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("TrueAndTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -44,7 +44,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Implies#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ImpliesEvaluator#evaluate(Context)}
      */
     @Test
     public void testImplies() throws JAXBException {
@@ -79,11 +79,12 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Not#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
     public void testNot() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("NotTrue").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -95,11 +96,12 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Or#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.OrEvaluator#evaluate(Context)}
      */
     @Test
     public void testOr() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("TrueOrTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -129,11 +131,12 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Xor#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.XorEvaluator#evaluate(Context)}
      */
     @Test
     public void testXOr() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("TrueXorTrue").getExpression().evaluate(context);
         assertThat(result, is(false));
 

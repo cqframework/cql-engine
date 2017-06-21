@@ -1,26 +1,27 @@
 package org.opencds.cqf.cql.execution;
 
+import org.joda.time.Partial;
+import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.opencds.cqf.cql.runtime.*;
-import java.math.BigDecimal;
-import org.joda.time.Partial;
-import java.util.Arrays;
-import java.util.ArrayList;
-import java.util.HashMap;
+
 import javax.xml.bind.JAXBException;
+import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.HashMap;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.hamcrest.Matchers.comparesEqualTo;
 
 public class CqlTypesTest extends CqlExecutionTestBase {
 
     @Test
     public void testAny() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("AnyInteger").getExpression().evaluate(context);
-        assertThat(result, is(new Integer(5)));
+        assertThat(result, is(5));
 
         result = context.resolveExpressionRef("AnyDecimal").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("5.0")));
@@ -50,6 +51,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     @Test
     public void testBoolean() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("BooleanTestTrue").getExpression().evaluate(context);
         assertThat(result.getClass().getSimpleName(), is("Boolean"));
         assertThat(result, is(true));
@@ -60,60 +62,65 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Code#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CodeEvaluator#evaluate(Context)}
      */
     @Test
     public void testCode() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("CodeLiteral").getExpression().evaluate(context);
         Assert.assertTrue(((Code) result).equal(new Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure")));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Concept#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ConceptEvaluator#evaluate(Context)}
      */
     @Test
     public void testConcept() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("ConceptTest").getExpression().evaluate(context);
-      Assert.assertTrue(((Concept) result).equal(new Concept().withCodes(Arrays.asList(new Code().withCode("66071002").withSystem("http://loinc.org"), new Code().withCode("B18.1").withSystem("http://loinc.org"))).withDisplay("Type B viral hepatitis")));
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConceptTest").getExpression().evaluate(context);
+        Assert.assertTrue(((Concept) result).equal(new Concept().withCodes(Arrays.asList(new Code().withCode("66071002").withSystem("http://loinc.org"), new Code().withCode("B18.1").withSystem("http://loinc.org"))).withDisplay("Type B viral hepatitis")));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.DateTime#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.DateTimeEvaluator#evaluate(Context)}
      */
     @Test
     public void testDateTime() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("DateTimeNull").getExpression().evaluate(context);
-      assertThat(result, is(nullValue()));
+        Context context = new Context(library);
 
-      try {
-        result = context.resolveExpressionRef("DateTimeUpperBoundExcept").getExpression().evaluate(context);
-      } catch (IllegalArgumentException e) {
-        assertThat(e.getMessage(), is("The year: 10000 falls above the accepted bounds of 0001-9999."));
-      }
+        Object result = context.resolveExpressionRef("DateTimeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-      try {
-        result = context.resolveExpressionRef("DateTimeLowerBoundExcept").getExpression().evaluate(context);
-      } catch (IllegalArgumentException e) {
-        assertThat(e.getMessage(), is("The year: 0 falls below the accepted bounds of 0001-9999."));
-      }
+        try {
+            context.resolveExpressionRef("DateTimeUpperBoundExcept").getExpression().evaluate(context);
+        }
+        catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("The year: 10000 falls above the accepted bounds of 0001-9999."));
+        }
 
-      result = context.resolveExpressionRef("DateTimeProper").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 7, 7, 6, 25, 33, 910})));
+        try {
+            context.resolveExpressionRef("DateTimeLowerBoundExcept").getExpression().evaluate(context);
+        }
+        catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), is("The year: 0 falls below the accepted bounds of 0001-9999."));
+        }
 
-      result = context.resolveExpressionRef("DateTimeIncomplete").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2015, 2, 10})));
+        result = context.resolveExpressionRef("DateTimeProper").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 7, 7, 6, 25, 33, 910})));
 
-      result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
-      Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(19, true, 49, true)));
+        result = context.resolveExpressionRef("DateTimeIncomplete").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2015, 2, 10})));
 
-      result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
+        result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
+        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(19, true, 49, true)));
 
-      result = context.resolveExpressionRef("DateTimeMax").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
+        result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
+
+        result = context.resolveExpressionRef("DateTimeMax").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
     }
 
     @Test
@@ -145,15 +152,16 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         // assertThat(result, is(new Integer(-2147483649)));
 
         Object result = context.resolveExpressionRef("IntegerProper").getExpression().evaluate(context);
-        assertThat(result, is(new Integer(5000)));
+        assertThat(result, is(5000));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Quantity#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.QuantityEvaluator#evaluate(Context)}
      */
     @Test
     public void testQuantity() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("QuantityTest").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("150.2")).withUnit("lbs")));
 
@@ -178,7 +186,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Time#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.TimeEvaluator#evaluate(Context)}
      */
     @Test
     public void testTime() throws JAXBException {

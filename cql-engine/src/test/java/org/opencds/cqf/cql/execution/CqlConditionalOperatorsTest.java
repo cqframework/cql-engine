@@ -1,17 +1,21 @@
 package org.opencds.cqf.cql.execution;
 
 import org.testng.annotations.Test;
+
 import javax.xml.bind.JAXBException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
 
+  /**
+   * {@link org.opencds.cqf.cql.elm.execution.IfEvaluator#evaluate(Context)}
+   */
   @Test
   public void testIfThenElse() throws JAXBException {
     Context context = new Context(library);
+
     Object result = context.resolveExpressionRef("IfTrue1").getExpression().evaluate(context);
     assertThat(result, is(5));
 
@@ -22,9 +26,13 @@ public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
     assertThat(result, is(10));
   }
 
+  /**
+   * {@link org.opencds.cqf.cql.elm.execution.CaseEvaluator#evaluate(Context)}
+   */
   @Test
   public void testStandardCase() throws JAXBException {
     Context context = new Context(library);
+
     Object result = context.resolveExpressionRef("StandardCase1").getExpression().evaluate(context);
     assertThat(result, is(5));
 
@@ -35,9 +43,13 @@ public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
     assertThat(result, is(15));
   }
 
+  /**
+   * {@link org.opencds.cqf.cql.elm.execution.CaseEvaluator#evaluate(Context)}
+   */
   @Test
   public void testSelectedCase() throws JAXBException {
     Context context = new Context(library);
+
     Object result = context.resolveExpressionRef("SelectedCase1").getExpression().evaluate(context);
     assertThat(result, is(12));
 

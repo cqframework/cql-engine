@@ -16,19 +16,21 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
     @Test
     public void testAge() throws JAXBException {
-      Context context = new Context(library);
-      // Object result = context.resolveExpressionRef("AgeYears").getExpression().evaluate(context);
-      // assertThat(result, is(2));
+        Context context = new Context(library);
+
+        // Object result = context.resolveExpressionRef("AgeYears").getExpression().evaluate(context);
+        // assertThat(result, is(2));
     }
 
     @Test
     public void testAgeAt() throws JAXBException {
-      Context context = new Context(library);
-      Object result;
+        Context context = new Context(library);
+
+        Object result;
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.CalculateAge#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CalculateAgeEvaluator#evaluate(Context)}
      */
     @Test
     public void testCalculateAge() throws JAXBException {
@@ -59,7 +61,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.CalculateAgeAt#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CalculateAgeAtEvaluator#evaluate(Context)}
      */
     @Test
     public void testCalculateAgeAt() throws JAXBException {
@@ -87,7 +89,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Equal#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
     public void testEqual() throws JAXBException {
@@ -112,7 +114,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Equivalent#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
     public void testEquivalent() throws JAXBException {
@@ -150,7 +152,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.InCodeSystem#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.InCodeSystemEvaluator#evaluate(Context)}
      */
     @Test
     public void testInCodesystem() throws JAXBException {
@@ -158,7 +160,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ValueSetDef#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.InValueSetEvaluator#evaluate(Context)}
      */
     @Test
     public void testInValueset() throws JAXBException {

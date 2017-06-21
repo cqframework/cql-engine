@@ -1,12 +1,13 @@
 package org.opencds.cqf.cql.execution;
 
-import org.testng.annotations.Test;
+import org.joda.time.Partial;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
-import org.joda.time.Partial;
+import org.testng.annotations.Test;
+
 import javax.xml.bind.JAXBException;
-import java.util.Arrays;
-import java.util.ArrayList;
+import java.util.Collections;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -14,11 +15,12 @@ import static org.hamcrest.Matchers.nullValue;
 public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Coalesce#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CoalesceEvaluator#evaluate(Context)}
      */
     @Test
     public void testCoalesce() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("CoalesceANull").getExpression().evaluate(context);
         assertThat(result, is("a"));
 
@@ -35,10 +37,10 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is("a"));
 
         result = context.resolveExpressionRef("CoalesceFirstList").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList("a")));
+        assertThat(result, is(Collections.singletonList("a")));
 
         result = context.resolveExpressionRef("CoalesceLastList").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList("a")));
+        assertThat(result, is(Collections.singletonList("a")));
 
         result = context.resolveExpressionRef("DateTimeCoalesce").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 18})));
@@ -54,11 +56,12 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IsNull#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IsNullEvaluator#evaluate(Context)}
      */
     @Test
     public void testIsNull() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("IsNullTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -76,11 +79,12 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IsFalse#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IsFalseEvaluator#evaluate(Context)}
      */
     @Test
     public void testIsFalse() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("IsFalseFalse").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -92,11 +96,12 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IsTrue#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IsTrueEvaluator#evaluate(Context)}
      */
     @Test
     public void testIsTrue() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("IsTrueTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 

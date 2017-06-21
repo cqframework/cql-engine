@@ -1,26 +1,26 @@
 package org.opencds.cqf.cql.execution;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import javax.xml.bind.JAXBException;
+import org.joda.time.Partial;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
-import org.joda.time.Partial;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
-@Test(groups = {"a"})
 public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.AllTrue#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AllTrueEvaluator#evaluate(Context)}
      */
     @Test
     public void testAllTrue() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("AllTrueAllTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -44,11 +44,12 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.AnyTrue#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AnyTrueEvaluator#evaluate(Context)}
      */
     @Test
     public void testAnyTrue() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("AnyTrueAllTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -78,21 +79,23 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Avg#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AvgEvaluator#evaluate(Context)}
      */
     @Test
     public void testAvg() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("AvgTest1").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("3.0")));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Count#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CountEvaluator#evaluate(Context)}
      */
     @Test
     public void testCount() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("CountTest1").getExpression().evaluate(context);
         assertThat(result, is(4));
 
@@ -107,11 +110,12 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Max#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MaxEvaluator#evaluate(Context)}
      */
     @Test
     public void testMax() throws JAXBException {
         Context context = new Context(library);
+
         Object result = context.resolveExpressionRef("MaxTestInteger").getExpression().evaluate(context);
         assertThat(result, is(90));
 
@@ -126,97 +130,105 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Median#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MedianEvaluator#evaluate(Context)}
      */
     @Test
     public void testMedian() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("MedianTestDecimal").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("3.5")));
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("MedianTestDecimal").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal("3.5")));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Min#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MinEvaluator#evaluate(Context)}
      */
     @Test
     public void testMin() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("MinTestInteger").getExpression().evaluate(context);
-      assertThat(result, is(0));
+        Context context = new Context(library);
 
-      result = context.resolveExpressionRef("MinTestString").getExpression().evaluate(context);
-      assertThat(result, is("bye"));
+        Object result = context.resolveExpressionRef("MinTestInteger").getExpression().evaluate(context);
+        assertThat(result, is(0));
 
-      result = context.resolveExpressionRef("MinTestDateTime").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
+        result = context.resolveExpressionRef("MinTestString").getExpression().evaluate(context);
+        assertThat(result, is("bye"));
 
-      result = context.resolveExpressionRef("MinTestTime").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
+        result = context.resolveExpressionRef("MinTestDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
+
+        result = context.resolveExpressionRef("MinTestTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Mode#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ModeEvaluator#evaluate(Context)}
      */
     @Test
     public void testMode() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("ModeTestDateTime").getExpression().evaluate(context);
-      assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
+        Context context = new Context(library);
 
-      result = context.resolveExpressionRef("ModeTestTime").getExpression().evaluate(context);
-      assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
+        Object result = context.resolveExpressionRef("ModeTestDateTime").getExpression().evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
+
+        result = context.resolveExpressionRef("ModeTestTime").getExpression().evaluate(context);
+        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.StdDev#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.StdDevEvaluator#evaluate(Context)}
      */
     @Test
     public void testPopulationStdDev() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("PopStdDevTest1").getExpression().evaluate(context);
-      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.41421356")) == 0); //23730951454746218587388284504413604736328125
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("PopStdDevTest1").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.41421356")) == 0); //23730951454746218587388284504413604736328125
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.PopulationVariance#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.PopulationVarianceEvaluator#evaluate(Context)}
      */
     @Test
     public void testPopulationVariance() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("PopVarianceTest1").getExpression().evaluate(context);
-      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("2.0")) == 0);
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("PopVarianceTest1").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("2.0")) == 0);
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.StdDev#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.StdDevEvaluator#evaluate(Context)}
      */
     @Test
     public void testStdDev() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("StdDevTest1").getExpression().evaluate(context);
-      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.58113883")) == 0); //00841897613935316257993690669536590576171875
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("StdDevTest1").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("1.58113883")) == 0); //00841897613935316257993690669536590576171875
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Sum#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.SumEvaluator#evaluate(Context)}
      */
     @Test
     public void testSum() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("SumTest1").getExpression().evaluate(context);
-      assertThat(result, is(new BigDecimal("20.0")));
+        Context context = new Context(library);
 
-      result = context.resolveExpressionRef("SumTestNull").getExpression().evaluate(context);
-      assertThat(result, is(1));
+        Object result = context.resolveExpressionRef("SumTest1").getExpression().evaluate(context);
+        assertThat(result, is(new BigDecimal("20.0")));
+
+        result = context.resolveExpressionRef("SumTestNull").getExpression().evaluate(context);
+        assertThat(result, is(1));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.Variance#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.VarianceEvaluator#evaluate(Context)}
      */
     @Test
     public void testVariance() throws JAXBException {
-      Context context = new Context(library);
-      Object result = context.resolveExpressionRef("VarianceTest1").getExpression().evaluate(context);
-      Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("2.5")) == 0);
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("VarianceTest1").getExpression().evaluate(context);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("2.5")) == 0);
     }
 }
