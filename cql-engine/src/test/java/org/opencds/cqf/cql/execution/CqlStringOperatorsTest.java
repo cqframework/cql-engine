@@ -54,6 +54,22 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.EndsWithEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testEndsWith() throws JAXBException {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("EndsWithNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("EndsWithTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("EndsWithFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.IndexerEvaluator#evaluate(Context)}
      */
     @Test
@@ -80,6 +96,37 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("IndexerABNeg1").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.MatchesEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testMatches() throws JAXBException {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("MatchesNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("MatchesNumberFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("MatchesNumberTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("MatchesAllTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("MatchesWordsAndSpacesTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("MatchesWordsAndSpacesFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("MatchesNotWords").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("MatchesWhiteSpace").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**
@@ -172,6 +219,26 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("PositionOfCInAB").getExpression().evaluate(context);
         assertThat(result, is(-1));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.ReplaceMatchesEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testReplaceMatches() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ReplaceMatchesNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("ReplaceMatchesAll").getExpression().evaluate(context);
+        assertThat(result, is("But still waters run deep"));
+
+        result = context.resolveExpressionRef("ReplaceMatchesMany").getExpression().evaluate(context);
+        assertThat(result, is("Who put the bang in the bang she bang she bang?"));
+
+        result = context.resolveExpressionRef("ReplaceMatchesSpaces").getExpression().evaluate(context);
+        assertThat(result, is("All$that$glitters$is$not$gold"));
     }
 
     /**

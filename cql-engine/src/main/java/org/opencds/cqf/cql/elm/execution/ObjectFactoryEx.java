@@ -27,9 +27,6 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     @Override
     public And createAnd() { return new AndEvaluator(); }
 
-    // @Override
-    // public Any createAny() { return new AnyEvaluator(); }
-
     @Override
     public AnyTrue createAnyTrue() { return new AnyTrueEvaluator(); }
 
@@ -125,6 +122,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Ends createEnds() { return new EndsEvaluator(); }
+
+    @Override
+    public EndsWith createEndsWith() { return new EndsWithEvaluator(); }
 
     @Override
     public Equal createEqual() { return new EqualEvaluator(); }
@@ -253,6 +253,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Lower createLower() { return new LowerEvaluator(); }
 
     @Override
+    public Matches createMatches() { return new MatchesEvaluator(); }
+
+    @Override
     public MaxValue createMaxValue() { return new MaxValueEvaluator(); }
 
     @Override
@@ -359,6 +362,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Repeat createRepeat() { return new RepeatEvaluator(); }
+
+    @Override
+    public ReplaceMatches createReplaceMatches() { return new ReplaceMatchesEvaluator(); }
 
     @Override
     public Retrieve createRetrieve() { return new RetrieveEvaluator(); }

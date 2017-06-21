@@ -17,6 +17,11 @@ define ConcatenateNullB : Concatenate(null, 'b')
 define ConcatenateAB : Concatenate('a', 'b')
 define ConcatenateABWithAdd: 'a' + 'b'
 
+//EndsWith
+define EndsWithNull: EndsWith(null, null)
+define EndsWithTrue: EndsWith('Chris Schuler is the man!!', 'n!!')
+define EndsWithFalse: EndsWith('Chris Schuler is the man!!', 'n!')
+
 //Indexer
 define IndexerNullNull : Indexer(null as String, null) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
 define IndexerANull : Indexer('a', null)
@@ -46,6 +51,16 @@ define LowerA : Lower('A')
 define LowerB : Lower('b')
 define LowerAB : Lower('Ab')
 
+//Matches
+define MatchesNull: Matches('Not all who wander are lost', null)
+define MatchesNumberFalse: Matches('Not all who wander are lost', '.*\\d+')
+define MatchesNumberTrue: Matches('Not all who wander are lost - circa 2017', '.*\\d+')
+define MatchesAllTrue: Matches('Not all who wander are lost', '.*')
+define MatchesWordsAndSpacesTrue: Matches('Not all who wander are lost', '[\\w|\\s]+')
+define MatchesWordsAndSpacesFalse: Matches('Not all who wander are lost - circa 2017', '[\\w]+')
+define MatchesNotWords: Matches('   ', '\\W+')
+define MatchesWhiteSpace: Matches(' \n\t', '\\s+')
+
 //PositionOf
 define PositionOfNullNull : PositionOf(null, null)
 define PositionOfANull : PositionOf('a', null)
@@ -53,6 +68,12 @@ define PositionOfNullA : PositionOf(null, 'a')
 define PositionOfAInAB : PositionOf('a', 'ab')
 define PositionOfBInAB : PositionOf('b', 'ab')
 define PositionOfCInAB : PositionOf('c', 'ab')
+
+//ReplaceMatches
+define ReplaceMatchesNull: ReplaceMatches('Not all who wander are lost', null, 'But I am...')
+define ReplaceMatchesAll: ReplaceMatches('Not all who wander are lost', 'Not all who wander are lost', 'But still waters run deep')
+define ReplaceMatchesMany: ReplaceMatches('Who put the bop in the bop she bop she bop?', 'bop', 'bang')
+define ReplaceMatchesSpaces: ReplaceMatches('All that glitters is not gold', '\\s', '\\$')
 
 //Split
 define SplitNullNull : Split(null, null)
