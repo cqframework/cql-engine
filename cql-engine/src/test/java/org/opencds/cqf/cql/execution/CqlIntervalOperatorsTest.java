@@ -710,6 +710,64 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     @Test
+    public void TestOnOrAfter() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestOnOrAfterNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TestOnOrAfterDateTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestOnOrAfterDateFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TestOnOrAfterTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestOnOrAfterTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TestOnOrAfterIntegerTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestOnOrAfterDecimalFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TestOnOrAfterQuantityTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void TestOnOrBefore() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TestOnOrBeforeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeDateTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeDateFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeIntegerTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeDecimalFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TestOnOrBeforeQuantityTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+    }
+
+    @Test
     public void TestOverlaps() {
         Context context = new Context(library);
 

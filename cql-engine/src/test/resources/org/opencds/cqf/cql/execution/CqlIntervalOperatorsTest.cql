@@ -238,6 +238,26 @@ define DateTimeNotEqualFalse: Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTi
 define TimeNotEqualTrue: Interval[@T10:00:00.000, @T19:59:59.999] != Interval[@T10:10:00.000, @T19:59:59.999]
 define TimeNotEqualFalse: Interval[@T10:00:00.000, @T19:59:59.999] != Interval[@T10:00:00.000, @T19:59:59.999]
 
+//OnOrAfter
+define TestOnOrAfterNull: Interval[@2012-12-01, @2013-12-01] on or after null
+define TestOnOrAfterDateTrue: Interval[@2012-12-01, @2013-12-01] on or after month of @2012-11-15
+define TestOnOrAfterDateFalse: @2012-11-15 on or after month of Interval[@2012-12-01, @2013-12-01]
+define TestOnOrAfterTimeTrue: Interval[@T10:00:00.000, @T19:59:59.999] on or after hour of Interval[@T08:00:00.000, @T09:59:59.999]
+define TestOnOrAfterTimeFalse: Interval[@T10:00:00.000, @T19:59:59.999] on or after hour of Interval[@T08:00:00.000, @T11:59:59.999]
+define TestOnOrAfterIntegerTrue: Interval[6, 10] on or after 6
+define TestOnOrAfterDecimalFalse: 2.5 on or after Interval[1.666, 2.50000001]
+define TestOnOrAfterQuantityTrue: 2.5 'mg' on or after Interval[1.666 'mg', 2.50000000 'mg']
+
+//OnOrBefore
+define TestOnOrBeforeNull: Interval[@2012-12-01, @2013-12-01] on or before null
+define TestOnOrBeforeDateTrue: Interval[@2012-10-01, @2012-11-01] on or before month of @2012-11-15
+define TestOnOrBeforeDateFalse: @2012-11-15 on or before month of Interval[@2012-10-01, @2013-12-01]
+define TestOnOrBeforeTimeTrue: Interval[@T05:00:00.000, @T07:59:59.999] on or before hour of Interval[@T08:00:00.000, @T09:59:59.999]
+define TestOnOrBeforeTimeFalse: Interval[@T10:00:00.000, @T19:59:59.999] on or before hour of Interval[@T08:00:00.000, @T11:59:59.999]
+define TestOnOrBeforeIntegerTrue: Interval[4, 6] on or before 6
+define TestOnOrBeforeDecimalFalse: 1.6667 on or before Interval[1.666, 2.50000001]
+define TestOnOrBeforeQuantityTrue: 1.666 'mg' on or before Interval[1.666 'mg', 2.50000000 'mg']
+
 //Overlaps
 define TestOverlapsNull: NullInterval overlaps IntegerIntervalTest
 define IntegerIntervalOverlapsTrue: IntegerIntervalTest overlaps IntegerIntervalTest4
