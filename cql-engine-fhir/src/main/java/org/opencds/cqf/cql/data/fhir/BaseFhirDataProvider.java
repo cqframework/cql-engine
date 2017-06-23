@@ -134,7 +134,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             return getFhirContext().getResourceDefinition((IAnyResource) base);
         }
 
-        else if (base instanceof IBaseBackboneElement) {
+        else if (base instanceof IBaseBackboneElement || base instanceof IBaseElement) {
             return (BaseRuntimeElementCompositeDefinition) getFhirContext().getElementDefinition(base.getClass());
         }
 
