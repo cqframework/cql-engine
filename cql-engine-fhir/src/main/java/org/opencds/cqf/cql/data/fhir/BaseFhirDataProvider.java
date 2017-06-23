@@ -112,10 +112,18 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         if (child == null) {
             child = resolveChoiceProperty(definition, path);
         }
+
         List<IBase> values = child.getAccessor().getValues(base);
 
         if (values == null || values.isEmpty()) {
             return null;
+        }
+
+        if (child instanceof RuntimeChildChoiceDefinition && !child.getElementName().equalsIgnoreCase(path)) {
+            if (!values.get(0).getClass().getSimpleName().equalsIgnoreCase(child.getChildByName(path).getImplementingClass().getSimpleName()))
+            {
+                return null;
+            }
         }
 
         return toJavaPrimitive(child.getMax() < 1 ? values : values.get(0), base);
@@ -141,13 +149,14 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         for (Object child :  definition.getChildren()) {
             if (child instanceof RuntimeChildChoiceDefinition) {
                 RuntimeChildChoiceDefinition choiceDefinition = (RuntimeChildChoiceDefinition) child;
+
                 if (choiceDefinition.getElementName().startsWith(path)) {
                     return choiceDefinition;
                 }
             }
         }
 
-        throw new IllegalArgumentException(String.format("Unable to resolve type %s for %s", path, definition.getName()));
+        throw new IllegalArgumentException(String.format("Unable to resolve path %s for %s", path, definition.getName()));
     }
 
     protected Class resolveClass(String className) {

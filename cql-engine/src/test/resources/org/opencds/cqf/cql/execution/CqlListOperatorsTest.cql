@@ -220,6 +220,28 @@ define SingletonFrom12: singleton from { 1, 2 }
 define SingletonFromDateTime: singleton from { DateTime(2012, 5, 10) }
 define SingletonFromTime: singleton from { @T15:59:59.999 }
 
+//Skip
+define SkipNull: Skip(null, 3)
+define SkipEven: Skip({1,2,3,4,5}, 2)
+define SkipOdd: Skip({1,2,3,4,5}, 3)
+define SkipNone: Skip({1,2,3,4,5}, 0)
+define SkipAll: Skip({1,2,3,4,5}, 5)
+
+//Tail
+define TailNull: Tail(null)
+define TailEven: Tail({1,2,3,4})
+define TailOdd: Tail({1,2,3,4,5})
+define TailEmpty: Tail({})
+define TailOneElement: Tail({1})
+
+//Take
+define TakeNull: Take(null, 3)
+//define TakeNullEmpty: Take({1,2,3}, null)
+define TakeEmpty: Take({1,2,3}, 0)
+define TakeEven: Take({1,2,3,4}, 2)
+define TakeOdd: Take({1,2,3,4}, 3)
+define TakeAll: Take({1,2,3,4}, 4)
+
 //Union
 define UnionEmptyAndEmpty: {} union {}
 define UnionListNullAndListNull: { null } union { null }

@@ -711,6 +711,79 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.SliceEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testSkip() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("SkipNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("SkipEven").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(3,4,5)));
+
+        result = context.resolveExpressionRef("SkipOdd").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(4,5)));
+
+        result = context.resolveExpressionRef("SkipNone").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1,2,3,4,5)));
+
+        result = context.resolveExpressionRef("SkipAll").getExpression().evaluate(context);
+        assertThat(result, is(Collections.emptyList()));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.SliceEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testTail() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TailNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TailEven").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(2,3,4)));
+
+        result = context.resolveExpressionRef("TailOdd").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(2,3,4,5)));
+
+        result = context.resolveExpressionRef("TailEmpty").getExpression().evaluate(context);
+        assertThat(result, is(Collections.emptyList()));
+
+        result = context.resolveExpressionRef("TailOneElement").getExpression().evaluate(context);
+        assertThat(result, is(Collections.emptyList()));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.SliceEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testTake() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TakeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        // TODO: uncomment once the Take map is corrected
+//        result = context.resolveExpressionRef("TakeNullEmpty").getExpression().evaluate(context);
+//        assertThat(result, is(Collections.emptyList()));
+
+        result = context.resolveExpressionRef("TakeEmpty").getExpression().evaluate(context);
+        assertThat(result, is(Collections.emptyList()));
+
+        result = context.resolveExpressionRef("TakeEven").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1,2)));
+
+        result = context.resolveExpressionRef("TakeOdd").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1,2,3)));
+
+        result = context.resolveExpressionRef("TakeAll").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1,2,3,4)));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.UnionEvaluator#evaluate(Context)}
      */
     @Test
