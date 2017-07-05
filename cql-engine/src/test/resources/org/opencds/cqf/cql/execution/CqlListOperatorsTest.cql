@@ -236,7 +236,7 @@ define TailOneElement: Tail({1})
 
 //Take
 define TakeNull: Take(null, 3)
-//define TakeNullEmpty: Take({1,2,3}, null)
+define TakeNullEmpty: Take({1,2,3}, null)
 define TakeEmpty: Take({1,2,3}, 0)
 define TakeEven: Take({1,2,3,4}, 2)
 define TakeOdd: Take({1,2,3,4}, 3)

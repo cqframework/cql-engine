@@ -41,9 +41,9 @@ public class SliceEvaluator extends org.cqframework.cql.elm.execution.Slice {
         // Take returns empty list -> Take(List<T>, null) -> start is 0 and end is null
         // Skip returns entire list -> Skip(List<T>, 0) -> start is 0 and end is null
         // Both have the same sig: Slice(List<T>, 0, null)
-        if (start == null) {
-            return source;
-        }
+//        if (start == null) {
+//            return source;
+//        }
 
         if (source instanceof Iterable) {
             List<Object> ret = new ArrayList<>();
