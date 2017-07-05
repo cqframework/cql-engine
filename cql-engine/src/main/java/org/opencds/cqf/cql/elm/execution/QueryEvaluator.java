@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
+import org.cqframework.cql.elm.execution.ByColumn;
 import org.cqframework.cql.elm.execution.ByExpression;
 import org.cqframework.cql.elm.execution.LetClause;
 import org.opencds.cqf.cql.execution.Context;
@@ -82,6 +83,11 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
                 if (byItem instanceof ByExpression) {
                     CqlList.sortByExpression(result, context, (ByExpression)byItem, alias);
+                    return;
+                }
+
+                else if (byItem instanceof ByColumn) {
+                    CqlList.sortByColumn(result, context, (ByColumn)byItem);
                     return;
                 }
 

@@ -222,6 +222,11 @@ public class Context {
                         }
                     }
                 }
+                try {
+                    return resolvePath(value, name);
+                } catch (Exception ignored) {
+
+                }
             }
         }
 

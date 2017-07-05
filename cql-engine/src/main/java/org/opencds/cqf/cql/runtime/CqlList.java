@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.cqframework.cql.elm.execution.ByColumn;
 import org.cqframework.cql.elm.execution.ByExpression;
 import org.cqframework.cql.elm.execution.Expression;
 import org.opencds.cqf.cql.execution.Context;
@@ -18,6 +19,8 @@ public class CqlList {
     private static Context context;
     private static String alias;
     private static Expression expression;
+
+    private static String path;
 
     public static Integer compareTo(Object comparandOne, Object comparandTwo) {
         if (comparandOne instanceof Integer) {
@@ -80,6 +83,19 @@ public class CqlList {
         }
     };
 
+    private static Comparator<Object> columnSort = new Comparator<Object>() {
+        public int compare(Object comparandOne, Object comparandTwo) {
+            Object one = context.resolvePath(comparandOne, path);
+            Object two = context.resolvePath(comparandTwo, path);
+
+            if (one == null && two == null) return 0;
+            else if (one == null) return 1;
+            else if (two == null) return -1;
+
+            return compareTo(one, two);
+        }
+    };
+
     public static ArrayList<Object> sortList(ArrayList<Object> values) {
         Collections.sort(values, CqlList.valueSort);
         return values;
@@ -105,6 +121,19 @@ public class CqlList {
         Collections.sort(resources, expressionSort);
 
         if (sortInfo.getDirection().name().toLowerCase().charAt(0) == 'd') {
+            Collections.reverse(resources);
+        }
+
+        return resources;
+    }
+
+    public static List<Object> sortByColumn(List<Object> resources, Context theContext, ByColumn column) {
+        context = theContext;
+        path = column.getPath();
+
+        Collections.sort(resources, columnSort);
+
+        if (column.getDirection().name().toLowerCase().charAt(0) == 'd') {
             Collections.reverse(resources);
         }
 

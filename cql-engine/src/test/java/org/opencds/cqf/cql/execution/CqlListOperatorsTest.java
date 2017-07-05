@@ -767,8 +767,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         // TODO: uncomment once the Take map is corrected
-//        result = context.resolveExpressionRef("TakeNullEmpty").getExpression().evaluate(context);
-//        assertThat(result, is(Collections.emptyList()));
+        result = context.resolveExpressionRef("TakeNullEmpty").getExpression().evaluate(context);
+        assertThat(result, is(Collections.emptyList()));
 
         result = context.resolveExpressionRef("TakeEmpty").getExpression().evaluate(context);
         assertThat(result, is(Collections.emptyList()));

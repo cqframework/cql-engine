@@ -14,20 +14,24 @@ define testLet:
             randomExpression < year from C.created.value
 
 define testExpressionSortDateTime:
-    [Procedure] P sort by P.performed."start".value asc
+    [Procedure] P sort by performed."start".value
 
 define testExpressionSortEnumString:
     [ActivityDefinition] A
         where A.kind.value is not null
-        sort by A.kind.value desc
+        return
+            Tuple {theKind: A.kind.value}
+            sort by theKind desc
 
 define testExpressionSortInt:
     [Observation] O
         where O.issued.value is not null
-        sort by year from O.issued.value desc
+        sort by year from issued.value desc
 
 define testExpressionSortQuantity:
     [Substance] S
         where S.ingredient is not null
-        sort by S.ingredient[0].quantity.numerator.value.value
+        return
+            Tuple {ingredientNumerator: S.ingredient[0].quantity.numerator.value.value}
+            sort by ingredientNumerator
 
