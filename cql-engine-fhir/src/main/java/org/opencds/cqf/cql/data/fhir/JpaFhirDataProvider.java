@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.data.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.dao.SearchParameterMap;
 import ca.uhn.fhir.jpa.provider.dstu3.JpaResourceProviderDstu3;
 import ca.uhn.fhir.rest.param.*;
@@ -29,6 +30,10 @@ public class JpaFhirDataProvider extends BaseFhirDataProvider {
         for (IResourceProvider i : providers) {
             this.providers.put(i.getResourceType().getSimpleName(), i);
         }
+
+        // NOTE: Defaults to STU3
+        setPackageName("org.hl7.fhir.dstu3.model");
+        setFhirContext(FhirContext.forDstu3());
     }
 
     @Override

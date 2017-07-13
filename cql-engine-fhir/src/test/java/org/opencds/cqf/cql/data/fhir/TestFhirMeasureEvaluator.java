@@ -53,7 +53,7 @@ public class TestFhirMeasureEvaluator {
         FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 //        FhirTerminologyProvider terminologyProvider = new FhirTerminologyProvider().withBasicAuth("brhodes", "apelon123!").withEndpoint("http://fhir.ext.apelon.com/dtsserverws/fhir");
         provider.setTerminologyProvider(terminologyProvider);
-        provider.setExpandValueSets(true);
+//        provider.setExpandValueSets(true);
 
         context.registerDataProvider("http://hl7.org/fhir", provider);
 

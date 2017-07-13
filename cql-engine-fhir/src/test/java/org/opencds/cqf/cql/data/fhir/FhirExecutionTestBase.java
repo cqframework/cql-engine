@@ -29,6 +29,7 @@ public abstract class FhirExecutionTestBase {
 
     BaseFhirDataProvider dstu2Provider = new FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
     BaseFhirDataProvider dstu3Provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+//    BaseFhirDataProvider dstu3Provider = new FhirDataProviderStu3().setEndpoint("http://localhost:8080/cqf-ruler/baseDstu3");
     BaseFhirDataProvider hl7Provider = new FhirDataProviderHL7().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
 
     Library library = null;

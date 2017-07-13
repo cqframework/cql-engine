@@ -1,6 +1,6 @@
 dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
+//    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-structures-dstu3', version: '2.5'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-base', version: '2.5'
     compile group: 'ca.uhn.hapi.fhir', name: 'hapi-fhir-jpaserver-base', version: '2.5'
