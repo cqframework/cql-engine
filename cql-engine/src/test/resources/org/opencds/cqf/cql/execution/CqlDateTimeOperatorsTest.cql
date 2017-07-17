@@ -106,7 +106,7 @@ define TimeComponentFromSecond: second from @T23:20:15.555
 define TimeComponentFromMilli: millisecond from @T23:20:15.555
 
 //Difference
-define DateTimeDifferenceYear: difference in years between DateTime(2000) and DateTime(2005)
+define DateTimeDifferenceYear: difference in years between DateTime(2000) and DateTime(2005, 12)
 define DateTimeDifferenceMonth: difference in months between DateTime(2000, 2) and DateTime(2000, 10)
 define DateTimeDifferenceDay: difference in days between DateTime(2000, 10, 15) and DateTime(2000, 10, 25)
 define DateTimeDifferenceHour: difference in hours between DateTime(2000, 4, 1, 12) and DateTime(2000, 4, 1, 20)
@@ -118,7 +118,7 @@ define DateTimeDifferenceWeeks2: difference in weeks between DateTime(2000, 10, 
 define DateTimeDifferenceWeeks3: difference in weeks between @2012-03-10T22:05:09 and @2012-03-24T07:19:33
 define DateTimeDifferenceNegative: difference in years between DateTime(2016) and DateTime(1998)
 define DateTimeDifferenceUncertain: difference in months between DateTime(2005) and DateTime(2006, 7) > 5
-define TimeDifferenceHour: difference in hours between @T20:20:15.555 and @T23:25:15.555
+define TimeDifferenceHour: difference in hours between @T20 and @T23:25:15.555
 define TimeDifferenceMinute: difference in minutes between @T20:20:15.555 and @T20:25:15.555
 define TimeDifferenceSecond: difference in seconds between @T20:20:15.555 and @T20:20:20.555
 define TimeDifferenceMillis: difference in milliseconds between @T20:20:15.555 and @T20:20:15.550
@@ -153,6 +153,7 @@ define DurationInWeeks2: weeks between @2012-03-10T22:05:09 and @2012-03-24T07:1
 define DurationInWeeks3: weeks between @2012-03-10T06:05:09 and @2012-03-24T07:19:33
 
 define TimeDurationBetweenHour: hours between @T20:26:15.555 and @T23:25:15.555
+define TimeDurationBetweenHourDiffPrecision: hours between @T06 and @T07:00:00Z
 define TimeDurationBetweenMinute: minutes between @T23:20:16.555 and @T23:25:15.555
 define TimeDurationBetweenSecond: seconds between @T23:25:10.556 and @T23:25:15.555
 define TimeDurationBetweenMillis: milliseconds between @T23:25:25.555 and @T23:25:25.560

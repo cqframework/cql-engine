@@ -144,6 +144,16 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
           return new Uncertainty().withUncertaintyInterval(new Interval(between(leftT, highLow.get(0), idx), true, between(leftT, highLow.get(1), idx), true));
         }
 
+        else if (leftT.getPartial().size() > rightT.getPartial().size()) {
+          // each partial must have same number of fields - expand rightDT
+          rightT = Time.expandPartialMin(rightT, leftT.getPartial().size());
+        }
+
+        else if (rightT.getPartial().size() > leftT.getPartial().size()) {
+          // each partial must have same number of fields - expand leftDT
+          leftT = Time.expandPartialMin(leftT, rightT.getPartial().size());
+        }
+
         return between(leftT, rightT, idx);
       }
 

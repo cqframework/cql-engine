@@ -43,9 +43,6 @@ public class TestFhirQuery extends FhirExecutionTestBase {
 
         result = context.resolveExpressionRef("testExpressionSortInt").evaluate(context);
         assertTrue(result instanceof Iterable && ((List)result).size() > 0);
-
-        result = context.resolveExpressionRef("testExpressionSortQuantity").evaluate(context);
-        assertTrue(result instanceof Iterable && ((List)result).size() > 0);
     }
 
 }

@@ -1,13 +1,11 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.joda.time.Partial;
 import org.joda.time.DateTimeFieldType;
-import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
-import org.opencds.cqf.cql.elm.execution.LessEvaluator;
+import org.joda.time.Partial;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.math.BigDecimal;
 
 /**
 * Created by Chris Schuler on 6/16/2016
@@ -67,8 +65,8 @@ public class Time extends BaseTemporal {
     return new Time().withPartial(new Partial(fields, values)).withTimezoneOffset(new BigDecimal(0));
   }
 
-  public static Time expandPartialMin(Time dt) {
-    for (int i = dt.getPartial().size(); i < 4; ++i) {
+  public static Time expandPartialMin(Time dt, int size) {
+    for (int i = dt.getPartial().size(); i < size; ++i) {
       dt.setPartial(dt.getPartial().with(getField(i), getField(i).getField(null).getMinimumValue()));
     }
     return dt;
@@ -82,8 +80,8 @@ public class Time extends BaseTemporal {
     Time right = new Time().withPartial(other.getPartial()).withTimezoneOffset(other.getTimezoneOffset());
 
     // for Time equals, all Time elements must be present -- any null values result in null return
-    if (this.getPartial().size() < 4) left = expandPartialMin(left);
-    if (other.getPartial().size() < 4) right = expandPartialMin(right);
+    if (this.getPartial().size() < 4) left = expandPartialMin(left, 4);
+    if (other.getPartial().size() < 4) right = expandPartialMin(right, 4);
 
     return Arrays.equals(left.partial.getValues(), right.partial.getValues())
             && left.getTimezoneOffset().compareTo(right.getTimezoneOffset()) == 0;

@@ -28,10 +28,3 @@ define testExpressionSortInt:
         where O.issued.value is not null
         sort by year from issued.value desc
 
-define testExpressionSortQuantity:
-    [Substance] S
-        where S.ingredient is not null
-        return
-            Tuple {ingredientNumerator: S.ingredient[0].quantity.numerator.value.value}
-            sort by ingredientNumerator
-
