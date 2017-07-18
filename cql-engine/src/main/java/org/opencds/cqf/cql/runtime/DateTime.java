@@ -2,11 +2,8 @@ package org.opencds.cqf.cql.runtime;
 
 import org.joda.time.DateTimeFieldType;
 import org.joda.time.Partial;
-import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
-import org.opencds.cqf.cql.elm.execution.LessEvaluator;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -36,13 +33,34 @@ public class DateTime extends BaseTemporal {
   }
 
   public static int getFieldIndex(String dateTimeElement) {
-    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("year", "month", "day", "hour", "minute", "second", "millisecond", "week"));
-    return indexes.indexOf(dateTimeElement.toLowerCase());
-  }
+    dateTimeElement = dateTimeElement.toLowerCase();
 
-  public static int getFieldIndex2(String dateTimeElement) {
-    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("years", "months", "days", "hours", "minutes", "seconds", "milliseconds", "weeks"));
-    return indexes.indexOf(dateTimeElement.toLowerCase());
+    if (dateTimeElement.startsWith("year")) {
+      return 0;
+    }
+    else if (dateTimeElement.startsWith("month")) {
+      return 1;
+    }
+    else if (dateTimeElement.startsWith("day")) {
+      return 2;
+    }
+    else if (dateTimeElement.startsWith("hour")) {
+      return 3;
+    }
+    else if (dateTimeElement.startsWith("minute")) {
+      return 4;
+    }
+    else if (dateTimeElement.startsWith("second")) {
+      return 5;
+    }
+    else if (dateTimeElement.startsWith("millisecond")) {
+      return 6;
+    }
+    else if (dateTimeElement.startsWith("week")) {
+      return 7;
+    }
+
+    return -1;
   }
 
   public static String getUnit(int idx) {

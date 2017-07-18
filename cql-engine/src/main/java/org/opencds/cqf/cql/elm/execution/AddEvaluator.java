@@ -71,7 +71,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
-      int idx = DateTime.getFieldIndex2(unit);
+      int idx = DateTime.getFieldIndex(unit);
 
       if (idx != -1) {
         int startSize = ret.getPartial().size();
@@ -115,7 +115,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
-      int idx = Time.getFieldIndex2(unit);
+      int idx = Time.getFieldIndex(unit);
 
       if (idx != -1) {
         int startSize = ret.getPartial().size();

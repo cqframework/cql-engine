@@ -36,7 +36,7 @@ public class Uncertainty {
       if (precision.toLowerCase().equals("weeks") || precision.toLowerCase().equals("week")) {
         precision = "Day";
       }
-      int test = dt.getPartial().getValue(dt.getFieldIndex(precision));
+      dt.getPartial().getValue(DateTime.getFieldIndex(precision));
     } catch (IndexOutOfBoundsException e) {
       return true;
     }
@@ -45,7 +45,7 @@ public class Uncertainty {
 
   public static boolean isUncertain(Time t, String precision) {
     try {
-      int test = t.getPartial().getValue(t.getFieldIndex(precision));
+      t.getPartial().getValue(Time.getFieldIndex(precision));
     } catch (IndexOutOfBoundsException e) {
       return true;
     }
@@ -74,10 +74,10 @@ public class Uncertainty {
       DateTime high = new DateTime().withPartial(uncertain.getPartial());
 
       int idx = DateTime.getFieldIndex(precision);
-      if (idx == -1) { idx = DateTime.getFieldIndex2(precision); }
+      if (idx == -1) { idx = DateTime.getFieldIndex(precision); }
       if (idx != -1) {
         // expand the high and low date times with respective max and min values
-        return new ArrayList<DateTime>(Arrays.asList(DateTime.expandPartialMin(low, idx + 1), DateTime.expandPartialMax(high, idx + 1, high.getPartial().size())));
+        return new ArrayList<>(Arrays.asList(DateTime.expandPartialMin(low, idx + 1), DateTime.expandPartialMax(high, idx + 1, high.getPartial().size())));
       }
 
       else {
@@ -94,14 +94,14 @@ public class Uncertainty {
       Time high = new Time().withPartial(uncertain.getPartial());
 
       int idx = Time.getFieldIndex(precision);
-      if (idx == -1) { idx = Time.getFieldIndex2(precision); }
+      if (idx == -1) { idx = Time.getFieldIndex(precision); }
       if (idx != -1) {
         // expand the high and low times with respective max and min values
         for (int i = uncertain.getPartial().size(); i < idx + 1; ++i) {
           low.setPartial(low.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
           high.setPartial(high.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMaximumValue()));
         }
-        return new ArrayList<Time>(Arrays.asList(low, high));
+        return new ArrayList<>(Arrays.asList(low, high));
       }
       else {
         throw new IllegalArgumentException(String.format("Invalid duration unit: %s", precision));

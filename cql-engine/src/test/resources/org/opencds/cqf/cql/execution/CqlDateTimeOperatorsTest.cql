@@ -17,12 +17,12 @@ define DateTimeAdd5Seconds: DateTime(2005, 5, 10, 5, 5, 5) + 5 seconds
 define DateTimeAddSecondsOverflow: DateTime(2016, 6, 10, 5, 5, 5) + 55 seconds
 define DateTimeAdd5Milliseconds: DateTime(2005, 5, 10, 5, 5, 5, 5) + 5 milliseconds
 define DateTimeAddMillisecondsOverflow: DateTime(2016, 6, 10, 5, 5, 5, 5) + 995 milliseconds
-define DateTimeAddLeapYear: DateTime(2012, 2, 29) + 1 years
+define DateTimeAddLeapYear: DateTime(2012, 2, 29) + 1 year
 define DateTimeAdd2YearsByMonths: DateTime(2014) + 24 months
 define DateTimeAdd2YearsByDays: DateTime(2014) + 730 days
 define DateTimeAdd2YearsByDaysRem5Days: DateTime(2014) + 735 days
 define TimeAdd5Hours: @T15:59:59.999 + 5 hours
-define TimeAdd1Minute: @T15:59:59.999 + 1 minutes
+define TimeAdd1Minute: @T15:59:59.999 + 1 minute
 define TimeAdd1Second: @T15:59:59.999 + 1 seconds
 define TimeAdd1Millisecond: @T15:59:59.999 + 1 milliseconds
 define TimeAdd5Hours1Minute: @T15:59:59.999 + 5 hours + 1 minutes

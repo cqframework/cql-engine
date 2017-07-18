@@ -4,7 +4,6 @@ import org.joda.time.DateTimeFieldType;
 import org.joda.time.Partial;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -30,13 +29,22 @@ public class Time extends BaseTemporal {
   }
 
   public static int getFieldIndex(String dateTimeElement) {
-    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("hour", "minute", "second", "millisecond"));
-    return indexes.indexOf(dateTimeElement.toLowerCase());
-  }
+    dateTimeElement = dateTimeElement.toLowerCase();
 
-  public static int getFieldIndex2(String dateTimeElement) {
-    ArrayList<String> indexes = new ArrayList<>(Arrays.asList("hours", "minutes", "seconds", "milliseconds"));
-    return indexes.indexOf(dateTimeElement.toLowerCase());
+    if (dateTimeElement.startsWith("hour")) {
+      return 0;
+    }
+    else if (dateTimeElement.startsWith("minute")) {
+      return 1;
+    }
+    else if (dateTimeElement.startsWith("second")) {
+      return 2;
+    }
+    else if (dateTimeElement.startsWith("millisecond")) {
+      return 3;
+    }
+
+    return -1;
   }
 
   public static String getUnit(int idx) {
