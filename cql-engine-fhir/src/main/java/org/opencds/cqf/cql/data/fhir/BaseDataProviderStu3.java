@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import org.hl7.fhir.dstu3.model.*;
 import org.joda.time.LocalTime;
 import org.joda.time.Partial;
@@ -21,25 +20,57 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         // TODO: Convert tzHour, tzMin and tzSign to a BigDecimal to set TimeZoneOffset
         // NOTE: month is 0-indexed, hence the +1
         // Getting strange error here NoClassDefFoundError - mapping to org.hl7.fhir.dstu3.model.TemporalPrecisionEnum ??
-        switch (((TemporalPrecisionEnum)value.getPrecision()).ordinal()) {
-            case 1: return new DateTime(value.getYear());
-            case 2: return new DateTime(value.getYear(), value.getMonth() + 1);
-            case 3: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
-            case 4: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
-            case 5: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        if (value.getPrecision().ordinal() == 1) {
+            return new DateTime(value.getYear());
         }
+        else if (value.getPrecision().ordinal() == 2) {
+            return new DateTime(value.getYear(), value.getMonth() + 1);
+        }
+        else if (value.getPrecision().ordinal() == 3) {
+            return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+        }
+        else if (value.getPrecision().ordinal() == 4) {
+            return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
+        }
+        else if (value.getPrecision().ordinal() == 5) {
+            return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
+        }
+        else {
+            throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        }
+
+//        switch (((TemporalPrecisionEnum)value.getPrecision()).ordinal()) {
+//            case 1: return new DateTime(value.getYear());
+//            case 2: return new DateTime(value.getYear(), value.getMonth() + 1);
+//            case 3: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+//            case 4: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
+//            case 5: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
+//            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+//        }
     }
 
     protected DateTime toDateTime(DateType value) {
         // TODO: This ought to work, but I'm getting an incorrect month value returned from the Hapi DateType, looks like a Java Calendar problem?
         // Getting strange error here NoClassDefFoundError - mapping to org.hl7.fhir.dstu3.model.TemporalPrecisionEnum ??
-        switch (((TemporalPrecisionEnum)value.getPrecision()).ordinal()) {
-            case 1: return new DateTime(value.getYear());
-            case 2: return new DateTime(value.getYear(), value.getMonth() + 1); // Month is zero based in DateType.
-            case 3: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        if (value.getPrecision().ordinal() == 1) {
+            return new DateTime(value.getYear());
         }
+        else if (value.getPrecision().ordinal() == 2) {
+            return new DateTime(value.getYear(), value.getMonth() + 1);
+        }
+        else if (value.getPrecision().ordinal() == 3) {
+            return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+        }
+        else {
+            throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        }
+        
+//        switch (((TemporalPrecisionEnum)value.getPrecision()).ordinal()) {
+//            case 1: return new DateTime(value.getYear());
+//            case 2: return new DateTime(value.getYear(), value.getMonth() + 1); // Month is zero based in DateType.
+//            case 3: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+//            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+//        }
     }
 
     protected Time toTime(TimeType value) {
