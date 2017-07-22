@@ -19,22 +19,22 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
     protected DateTime toDateTime(DateTimeType value) {
         // TODO: Convert tzHour, tzMin and tzSign to a BigDecimal to set TimeZoneOffset
         // NOTE: month is 0-indexed, hence the +1
-        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(value.getYear());
-            case MONTH: return new DateTime(value.getYear(), value.getMonth() + 1);
-            case DAY: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
-            case SECOND: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
-            case MILLI: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
+        switch (value.getPrecision().ordinal()) {
+            case 1: return new DateTime(value.getYear());
+            case 2: return new DateTime(value.getYear(), value.getMonth() + 1);
+            case 3: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+            case 4: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond());
+            case 5: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(), value.getMinute(), value.getSecond(), value.getMillis());
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
 
     protected DateTime toDateTime(DateType value) {
         // TODO: This ought to work, but I'm getting an incorrect month value returned from the Hapi DateType, looks like a Java Calendar problem?
-        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(value.getYear());
-            case MONTH: return new DateTime(value.getYear(), value.getMonth() + 1); // Month is zero based in DateType.
-            case DAY: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
+        switch (value.getPrecision().ordinal()) {
+            case 1: return new DateTime(value.getYear());
+            case 2: return new DateTime(value.getYear(), value.getMonth() + 1); // Month is zero based in DateType.
+            case 3: return new DateTime(value.getYear(), value.getMonth() + 1, value.getDay());
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
