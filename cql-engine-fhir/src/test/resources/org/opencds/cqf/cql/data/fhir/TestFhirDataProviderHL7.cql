@@ -14,3 +14,7 @@ define testDate:
 define testDecimal:
     [MedicationDispense] MD
         where MD.quantity.value.value >= 15.0
+
+define testIBaseDataElement:
+    [MedicationOrder] MO
+        where MO.dosageInstruction.timing.event.value is not null

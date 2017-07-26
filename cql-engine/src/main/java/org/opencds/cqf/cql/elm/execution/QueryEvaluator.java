@@ -249,6 +249,10 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
         sortResult(result, context, source.getAlias());
 
+        if ((result == null || result.isEmpty()) && !sourceIsList) {
+            return null;
+        }
+
         return sourceIsList ? result : result.get(0);
     }
 }

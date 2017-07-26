@@ -28,7 +28,7 @@ public class FhirMeasureEvaluator {
         Interval measurementPeriod = new Interval(DateTime.fromJavaDate(periodStart), true, DateTime.fromJavaDate(periodEnd), true);
         context.setParameter(null, "MeasurementPeriod", measurementPeriod);
 
-        HashMap<String,Resource> resources = new HashMap<String, Resource>();
+        HashMap<String,Resource> resources = new HashMap<>();
 
         // for each measure group
         for (Measure.MeasureGroupComponent group : measure.getGroup()) {
@@ -43,7 +43,7 @@ public class FhirMeasureEvaluator {
                     count = (Boolean)result ? 1 : 0;
                 }
                 else if (result instanceof Iterable) {
-                    for (Object item : (Iterable<Object>)result) {
+                    for (Object item : (Iterable)result) {
                         count++;
                         if (item instanceof Resource) {
                             resources.put(((Resource)item).getId(), (Resource)item);
@@ -57,7 +57,7 @@ public class FhirMeasureEvaluator {
             }
         }
 
-        ArrayList<String> expressionNames = new ArrayList<String>();
+        ArrayList<String> expressionNames = new ArrayList<>();
         // HACK: Hijacking Supplemental data to specify the evaluated resources
         // In reality, this should be specified explicitly, but I'm not sure what else to do here....
         for (Measure.MeasureSupplementalDataComponent supplementalData : measure.getSupplementalData()) {

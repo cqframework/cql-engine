@@ -58,4 +58,10 @@ public class TestFhirDataProviderHL7 extends FhirExecutionTestBase {
         Object result = context.resolveExpressionRef("testDecimal").getExpression().evaluate(context);
         assertTrue(result != null);
     }
+
+    @Test
+    public void testHL7ProviderBaseDataElement() {
+        Object result = context.resolveExpressionRef("testIBaseDataElement").getExpression().evaluate(context);
+        assertTrue(result != null);
+    }
 }
