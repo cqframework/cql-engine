@@ -17,4 +17,4 @@ define testDecimal:
 
 define testIBaseDataElement:
     [MedicationOrder] MO
-        where MO.dosageInstruction.timing.event.value is not null
+        where MO.dosageInstruction.timing is not null
