@@ -223,6 +223,46 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
         }
     }
 
+    private static final List<String> choiceTypes = new ArrayList<>();
+    static {
+        choiceTypes.add("Period");
+        choiceTypes.add("Time");
+        choiceTypes.add("Date");
+        choiceTypes.add("CodeableConcept");
+        choiceTypes.add("Timing");
+        choiceTypes.add("Reference");
+        choiceTypes.add("String");
+        choiceTypes.add("Identifier");
+        choiceTypes.add("Quantity");
+        choiceTypes.add("Address");
+        choiceTypes.add("Coding");
+        choiceTypes.add("DateTime");
+        choiceTypes.add("Code");
+        choiceTypes.add("Integer");
+        choiceTypes.add("Boolean");
+        choiceTypes.add("Attachment");
+        choiceTypes.add("Uri");
+        choiceTypes.add("Age");
+        choiceTypes.add("Range");
+        choiceTypes.add("UnsignedInt");
+        choiceTypes.add("Money");
+        choiceTypes.add("Duration");
+        choiceTypes.add("Ratio");
+        choiceTypes.add("SampledData");
+        choiceTypes.add("Instant");
+        choiceTypes.add("Decimal");
+        choiceTypes.add("Id");
+        choiceTypes.add("Base64Binary");
+        choiceTypes.add("Oid");
+        choiceTypes.add("PositiveInt");
+        choiceTypes.add("Markdown");
+        choiceTypes.add("Annotation");
+        choiceTypes.add("Signature");
+        choiceTypes.add("HumanName");
+        choiceTypes.add("ContactPoint");
+        choiceTypes.add("Meta");
+    }
+
     protected boolean pathIsChoice(String path) {
         // Pretty consistent format: lowercase root followed by Type.
         if (pathIsChoiceOutlier(path)) return true;
@@ -235,13 +275,13 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             type = matcher.group();
         }
 
-        try {
-            Class.forName(String.format("%s.%s", getPackageName(), type));
-        } catch (ClassNotFoundException e) {
-            return false;
+        for (String choice : choiceTypes) {
+            if (type.contains(choice)) {
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
     protected boolean pathIsChoiceOutlier(String path) {
