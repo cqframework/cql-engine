@@ -78,15 +78,28 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
         // Potential problems:
         // ValueSetInfo void of id --> want .ontype() instead
-        Parameters respParam = fhirClient
-    			.operation()
-          .onInstance(new IdType("ValueSet", valueSet.getId()))
-    			// .onType(ValueSet.class)
-    			.named("validate-code")
-    			.withParameter(Parameters.class, "code", new StringType(code.getCode()))
-    			.andParameter("system", new StringType(code.getSystem()))
-    			.useHttpGet()
-          .execute();
+        Parameters respParam;
+        if (code.getSystem() != null) {
+            respParam = fhirClient
+                    .operation()
+                    .onInstance(new IdType("ValueSet", valueSet.getId()))
+                    // .onType(ValueSet.class)
+                    .named("validate-code")
+                    .withParameter(Parameters.class, "code", new StringType(code.getCode()))
+                    .andParameter("system", new StringType(code.getSystem()))
+                    .useHttpGet()
+                    .execute();
+        }
+        else {
+            respParam = fhirClient
+                    .operation()
+                    .onInstance(new IdType("ValueSet", valueSet.getId()))
+                    // .onType(ValueSet.class)
+                    .named("validate-code")
+                    .withParameter(Parameters.class, "code", new StringType(code.getCode()))
+                    .useHttpGet()
+                    .execute();
+        }
         return ((BooleanType)respParam.getParameter().get(0).getValue()).booleanValue();
     }
 
