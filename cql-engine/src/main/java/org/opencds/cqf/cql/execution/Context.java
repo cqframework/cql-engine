@@ -551,7 +551,11 @@ public class Context {
 
         // TODO: Path may include .'s and []'s.
         // For now, assume no qualifiers or indexers...
-        Class<? extends Object> clazz = target.getClass();
+        Class<?> clazz = target.getClass();
+
+        if (clazz.getPackage().getName().startsWith("java.lang")) {
+            throw new IllegalArgumentException(String.format("Invalid path: %s for type: %s - this is likely an issue with the data model.", path, clazz.getName()));
+        }
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         return dataProvider.resolvePath(target, path);
