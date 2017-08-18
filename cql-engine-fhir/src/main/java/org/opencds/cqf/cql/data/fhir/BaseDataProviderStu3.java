@@ -144,6 +144,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
             case "oid": typeName = "OidType"; break;
             case "TestScriptRequestMethodCode": typeName = "TestScript$TestScriptRequestMethodCode"; break;
             case "ActionPrecheckBehavior": typeName = "PlanDefinition$ActionPrecheckBehavior"; break;
+            case "PlanActionPrecheckBehavior": typeName = "PlanDefinition$ActionPrecheckBehavior"; break;
             case "ProvenanceEntityRole": typeName = "Provenance$ProvenanceEntityRole"; break;
             case "UnitsOfTime": typeName = "Timing$UnitsOfTime"; break;
             case "AddressType": typeName = "Address$AddressType"; break;
