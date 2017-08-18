@@ -65,6 +65,16 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
     }
 
     @Test
+    public void testDateType() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        context.setContextValue("Patient", "Patient-12214");
+
+        Object result = context.resolveExpressionRef("testDateType").getExpression().evaluate(context);
+        Assert.assertTrue(result != null);
+    }
+
+    @Test
     public void testFileDataProvider() {
         // non-filtering tests
         // Patient context

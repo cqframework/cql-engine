@@ -29,7 +29,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         }
     }
 
-    protected DateTime toDateTime(DateType value) {
+    protected DateTime toDateTime(BaseDateTimeType value) {
         // TODO: This ought to work, but I'm getting an incorrect month value returned from the Hapi DateType, looks like a Java Calendar problem?
         switch (value.getPrecision()) {
             case YEAR: return new DateTime(value.getYear());

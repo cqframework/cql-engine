@@ -10,3 +10,6 @@ define testChoiceTypes:
     MedReqs M
         return
             M.dosageInstruction[0].asNeeded
+
+define testDateType:
+    AgeInYearsAt(Today()) >= 13
