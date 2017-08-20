@@ -22,7 +22,6 @@ define ContainsNullLeft: null contains 'a'
 
 //Descendents
 define DescendentsEmptyList: (null).descendents()
-// TODO: how to call without fhirpath syntax
 
 //Distinct
 define DistinctEmptyList: distinct {}

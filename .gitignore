@@ -8,3 +8,4 @@
 /cql-engine/src/generated
 /cql-engine-fhir/build
 /cql-engine-fhir/*.iml
+*.class

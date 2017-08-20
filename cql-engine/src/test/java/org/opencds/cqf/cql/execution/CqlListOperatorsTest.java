@@ -66,6 +66,17 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.DescendentsEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testDescendents() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("DescendentsEmptyList").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.DistinctEvaluator#evaluate(Context)}
      */
     @Test
