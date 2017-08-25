@@ -79,6 +79,8 @@ public abstract class BaseFhirDataProvider implements DataProvider {
     // Retrieval helpers
     protected String getPatientSearchParam(String dataType) {
         switch (dataType) {
+            case "Coverage":
+                return "beneficiary";
             case "Patient":
                 return "_id";
             case "Observation":
