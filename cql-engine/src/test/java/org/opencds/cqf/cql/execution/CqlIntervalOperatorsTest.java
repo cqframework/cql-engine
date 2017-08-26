@@ -188,12 +188,17 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(12, true, 19, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 2, true)));
-        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(3, true, 19, true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 19, true)));
+
+        result = context.resolveExpressionRef("IntegerIntervalCollapse3").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(4, true, 8, true)));
 
         result = context.resolveExpressionRef("DecimalIntervalCollapse").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
         Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true)));
+
+        result = context.resolveExpressionRef("DecimalIntervalCollapse2").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("4.0"), true, new BigDecimal("8.0"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalCollapse").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
@@ -206,12 +211,22 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(((DateTime)((Interval)((List)result).get(1)).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 30})));
         assertThat(((List)result).size(), is(2));
 
+        result = context.resolveExpressionRef("DateTimeCollapse2").getExpression().evaluate(context);
+        assertThat(((DateTime)((Interval)((List)result).get(0)).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1})));
+        assertThat(((DateTime)((Interval)((List)result).get(0)).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 25})));
+        assertThat(((List)result).size(), is(1));
+
         result = context.resolveExpressionRef("TimeCollapse").getExpression().evaluate(context);
         assertThat(((Time)((Interval)((List)result).get(0)).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {1, 59, 59, 999})));
         assertThat(((Time)((Interval)((List)result).get(0)).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((Time)((Interval)((List)result).get(1)).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {17, 59, 59, 999})));
         assertThat(((Time)((Interval)((List)result).get(1)).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {22, 59, 59, 999})));
         assertThat(((List)result).size(), is(2));
+
+        result = context.resolveExpressionRef("TimeCollapse2").getExpression().evaluate(context);
+        assertThat(((Time)((Interval)((List)result).get(0)).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {1, 59, 59, 999})));
+        assertThat(((Time)((Interval)((List)result).get(0)).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        assertThat(((List)result).size(), is(1));
     }
 
     /**

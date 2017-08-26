@@ -77,6 +77,11 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
                     intervals.remove(i+1);
                     i -= 1;
                 }
+                else if ((Boolean) MeetsBeforeEvaluator.meetsBefore(intervals.get(i), intervals.get(i+1))) {
+                    intervals.set(i, new Interval((intervals.get(i)).getStart(), true, (intervals.get(i+1)).getEnd(), true));
+                    intervals.remove(i+1);
+                    i -= 1;
+                }
             }
         }
 
