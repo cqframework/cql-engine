@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.api.Bundle;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.hl7.fhir.dstu3.model.Enumeration;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
@@ -39,7 +39,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
         //  profile (templateId)
         //  codes
         //  dateRange
-        IQuery<Bundle> search = null; //fhirClient.search().forResource(dataType);
+        IQuery<IBaseBundle> search = null; //fhirClient.search().forResource(dataType);
 
         // TODO: Would like to be able to use the criteria builders, but it looks like they don't have one for :in with a valueset?
         // So..... I'll just construct a search URL
