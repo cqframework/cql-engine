@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.*;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.IGenericClient;
 import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.dstu3.model.SimpleQuantity;
 import org.hl7.fhir.exceptions.FHIRException;

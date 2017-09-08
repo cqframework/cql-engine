@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.data.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.hl7.fhir.instance.model.*;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.joda.time.LocalTime;
 import org.joda.time.Partial;
 import org.joda.time.ReadablePartial;
@@ -38,7 +37,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
         //  profile (templateId)
         //  codes
         //  dateRange
-        IQuery<IBaseBundle> search = null; //fhirClient.search().forResource(dataType);
+        IQuery<ca.uhn.fhir.model.api.Bundle> search = null; //fhirClient.search().forResource(dataType);
 
         // TODO: Would like to be able to use the criteria builders, but it looks like they don't have one for :in with a valueset?
         // So..... I'll just construct a search URL
