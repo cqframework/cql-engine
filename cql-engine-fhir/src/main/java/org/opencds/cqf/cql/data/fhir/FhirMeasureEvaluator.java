@@ -13,8 +13,7 @@ import java.util.*;
  */
 public class FhirMeasureEvaluator {
 
-    private MeasureReport resolveGroupings(MeasureReport report, Measure measure,
-                                           Context context, List<Patient> patients)
+    private MeasureReport resolveGroupings(MeasureReport report, Measure measure, Context context)
     {
         HashMap<String,Resource> resources = new HashMap<>();
 
@@ -42,15 +41,6 @@ public class FhirMeasureEvaluator {
                 MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
                 populationReport.setCount(count);
                 populationReport.setCode(population.getCode());
-
-                /*
-                    TODO - it is a reference to a list...
-                    Probably want to create the list and POST it, then include a reference to it.
-                */
-//                if (patients != null) {
-//                    ListResource list = new ListResource();
-//                    populationReport.setPatients();
-//                }
 
                 reportGroup.getPopulation().add(populationReport);
             }
@@ -91,7 +81,7 @@ public class FhirMeasureEvaluator {
         Interval measurementPeriod = new Interval(DateTime.fromJavaDate(periodStart), true, DateTime.fromJavaDate(periodEnd), true);
         context.setParameter(null, "MeasurementPeriod", measurementPeriod);
 
-        return resolveGroupings(report, measure, context, null);
+        return resolveGroupings(report, measure, context);
     }
 
     public MeasureReport evaluate(Context context, Measure measure, Patient patient, Interval measurementPeriod) {
@@ -99,7 +89,21 @@ public class FhirMeasureEvaluator {
     }
 
     // Population evaluation
-    public MeasureReport evaluate(Context context, Measure measure, List<Patient> patients,
+//    public MeasureReport evaluate(Context context, Measure measure, List<Patient> patients,
+//                                  Interval measurementPeriod, MeasureReport.MeasureReportType type)
+//    {
+//        MeasureReport report = new MeasureReport();
+//        report.setMeasure(new Reference(measure));
+//        Period reportPeriod = new Period();
+//        reportPeriod.setStart((Date) measurementPeriod.getStart());
+//        reportPeriod.setEnd((Date) measurementPeriod.getEnd());
+//        report.setPeriod(reportPeriod);
+//        report.setType(type);
+//
+//        return resolveGroupings(report, measure, context, patients);
+//    }
+
+    public MeasureReport evaluate(Context context, Measure measure, List<Patient> population,
                                   Interval measurementPeriod, MeasureReport.MeasureReportType type)
     {
         MeasureReport report = new MeasureReport();
@@ -110,6 +114,60 @@ public class FhirMeasureEvaluator {
         report.setPeriod(reportPeriod);
         report.setType(type);
 
-        return resolveGroupings(report, measure, context, patients);
+        HashMap<String,Resource> resources = new HashMap<>();
+
+        // for each measure group
+        for (Measure.MeasureGroupComponent group : measure.getGroup()) {
+            MeasureReport.MeasureReportGroupComponent reportGroup = new MeasureReport.MeasureReportGroupComponent();
+            reportGroup.setIdentifier(group.getIdentifier());
+            report.getGroup().add(reportGroup);
+
+            for (Measure.MeasureGroupPopulationComponent pop : group.getPopulation()) {
+                int count = 0;
+                // Worried about performance here with big populations...
+                for (Patient patient : population) {
+                    context.setContextValue("Patient", patient);
+                    Object result = context.resolveExpressionRef(pop.getCriteria()).evaluate(context);
+                    if (result instanceof Boolean) {
+                        count += (Boolean) result ? 1 : 0;
+                    }
+                    else if (result instanceof Iterable) {
+                        for (Object item : (Iterable) result) {
+                            count++;
+                            if (item instanceof Resource) {
+                                resources.put(((Resource) item).getId(), (Resource) item);
+                            }
+                        }
+                    }
+                }
+                MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
+                populationReport.setCount(count);
+                populationReport.setCode(pop.getCode());
+
+                /*
+                    TODO - it is a reference to a list...
+                    Probably want to create the list and POST it, then include a reference to it.
+                */
+//                if (patients != null) {
+//                    ListResource list = new ListResource();
+//                    populationReport.setPatients();
+//                }
+            }
+
+        }
+
+        ArrayList<String> expressionNames = new ArrayList<>();
+        // HACK: Hijacking Supplemental data to specify the evaluated resources
+        // In reality, this should be specified explicitly, but I'm not sure what else to do here....
+        for (Measure.MeasureSupplementalDataComponent supplementalData : measure.getSupplementalData()) {
+            expressionNames.add(supplementalData.getCriteria());
+        }
+
+        FhirMeasureBundler bundler = new FhirMeasureBundler();
+        org.hl7.fhir.dstu3.model.Bundle evaluatedResources = bundler.bundle(resources.values());
+        evaluatedResources.setId(UUID.randomUUID().toString());
+        report.setEvaluatedResources(new Reference('#' + evaluatedResources.getId()));
+        report.addContained(evaluatedResources);
+        return report;
     }
 }
