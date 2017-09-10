@@ -152,6 +152,8 @@ public class FhirMeasureEvaluator {
 //                    ListResource list = new ListResource();
 //                    populationReport.setPatients();
 //                }
+
+                reportGroup.getPopulation().add(populationReport);
             }
 
         }
