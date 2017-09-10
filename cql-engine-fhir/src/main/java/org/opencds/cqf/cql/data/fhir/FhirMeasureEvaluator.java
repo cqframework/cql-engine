@@ -5,35 +5,24 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
+import java.util.*;
 
 
 /**
  * Created by Bryn on 5/7/2016.
  */
 public class FhirMeasureEvaluator {
-    public MeasureReport evaluate(Context context, Measure measure, Patient patient, Date periodStart, Date periodEnd) {
-        MeasureReport report = new MeasureReport();
-        report.setMeasure(new Reference(measure));
-        report.setPatient(new Reference(patient));
-        Period reportPeriod = new Period();
-        reportPeriod.setStart(periodStart);
-        reportPeriod.setEnd(periodEnd);
-        report.setPeriod(reportPeriod);
-        report.setType(MeasureReport.MeasureReportType.INDIVIDUAL);
 
-        Interval measurementPeriod = new Interval(DateTime.fromJavaDate(periodStart), true, DateTime.fromJavaDate(periodEnd), true);
-        context.setParameter(null, "MeasurementPeriod", measurementPeriod);
-
+    private MeasureReport resolveGroupings(MeasureReport report, Measure measure,
+                                           Context context, List<Patient> patients)
+    {
         HashMap<String,Resource> resources = new HashMap<>();
 
         // for each measure group
         for (Measure.MeasureGroupComponent group : measure.getGroup()) {
             MeasureReport.MeasureReportGroupComponent reportGroup = new MeasureReport.MeasureReportGroupComponent();
-            reportGroup.setIdentifier(group.getIdentifier().copy()); // TODO: Do I need to do this copy? Will HAPI FHIR do this automatically?
+            // TODO: Do I need to do this copy? Will HAPI FHIR do this automatically?
+            reportGroup.setIdentifier(group.getIdentifier().copy());
             report.getGroup().add(reportGroup);
             for (Measure.MeasureGroupPopulationComponent population : group.getPopulation()) {
                 // evaluate the criteria expression, should return true/false, translate to 0/1 for report
@@ -53,6 +42,16 @@ public class FhirMeasureEvaluator {
                 MeasureReport.MeasureReportGroupPopulationComponent populationReport = new MeasureReport.MeasureReportGroupPopulationComponent();
                 populationReport.setCount(count);
                 populationReport.setCode(population.getCode());
+
+                /*
+                    TODO - it is a reference to a list...
+                    Probably want to create the list and POST it, then include a reference to it.
+                */
+//                if (patients != null) {
+//                    ListResource list = new ListResource();
+//                    populationReport.setPatients();
+//                }
+
                 reportGroup.getPopulation().add(populationReport);
             }
         }
@@ -78,7 +77,39 @@ public class FhirMeasureEvaluator {
         return report;
     }
 
+    // Patient Evaluation
+    public MeasureReport evaluate(Context context, Measure measure, Patient patient, Date periodStart, Date periodEnd) {
+        MeasureReport report = new MeasureReport();
+        report.setMeasure(new Reference(measure));
+        report.setPatient(new Reference(patient));
+        Period reportPeriod = new Period();
+        reportPeriod.setStart(periodStart);
+        reportPeriod.setEnd(periodEnd);
+        report.setPeriod(reportPeriod);
+        report.setType(MeasureReport.MeasureReportType.INDIVIDUAL);
+
+        Interval measurementPeriod = new Interval(DateTime.fromJavaDate(periodStart), true, DateTime.fromJavaDate(periodEnd), true);
+        context.setParameter(null, "MeasurementPeriod", measurementPeriod);
+
+        return resolveGroupings(report, measure, context, null);
+    }
+
     public MeasureReport evaluate(Context context, Measure measure, Patient patient, Interval measurementPeriod) {
         return evaluate(context, measure, patient, (Date)measurementPeriod.getStart(), (Date)measurementPeriod.getEnd());
+    }
+
+    // Population evaluation
+    public MeasureReport evaluate(Context context, Measure measure, List<Patient> patients,
+                                  Interval measurementPeriod, MeasureReport.MeasureReportType type)
+    {
+        MeasureReport report = new MeasureReport();
+        report.setMeasure(new Reference(measure));
+        Period reportPeriod = new Period();
+        reportPeriod.setStart((Date) measurementPeriod.getStart());
+        reportPeriod.setEnd((Date) measurementPeriod.getEnd());
+        report.setPeriod(reportPeriod);
+        report.setType(type);
+
+        return resolveGroupings(report, measure, context, patients);
     }
 }
