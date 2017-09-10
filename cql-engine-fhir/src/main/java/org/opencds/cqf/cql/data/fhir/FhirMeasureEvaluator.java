@@ -77,4 +77,8 @@ public class FhirMeasureEvaluator {
         report.addContained(evaluatedResources);
         return report;
     }
+
+    public MeasureReport evaluate(Context context, Measure measure, Patient patient, Interval measurementPeriod) {
+        return evaluate(context, measure, patient, (Date)measurementPeriod.getStart(), (Date)measurementPeriod.getEnd());
+    }
 }
