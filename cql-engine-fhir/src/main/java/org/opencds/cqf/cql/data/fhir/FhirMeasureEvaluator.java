@@ -79,7 +79,7 @@ public class FhirMeasureEvaluator {
         report.setType(MeasureReport.MeasureReportType.INDIVIDUAL);
 
         Interval measurementPeriod = new Interval(DateTime.fromJavaDate(periodStart), true, DateTime.fromJavaDate(periodEnd), true);
-        context.setParameter(null, "MeasurementPeriod", measurementPeriod);
+        context.setParameter(null, "Measurement Period", measurementPeriod);
 
         return resolveGroupings(report, measure, context);
     }
@@ -113,6 +113,8 @@ public class FhirMeasureEvaluator {
         reportPeriod.setEnd((Date) measurementPeriod.getEnd());
         report.setPeriod(reportPeriod);
         report.setType(type);
+
+        context.setParameter(null, "Measurement Period", measurementPeriod);
 
         HashMap<String,Resource> resources = new HashMap<>();
 

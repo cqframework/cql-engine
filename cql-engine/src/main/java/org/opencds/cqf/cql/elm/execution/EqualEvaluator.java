@@ -123,9 +123,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return true;
         }
 
-        throw new IllegalArgumentException(
-                String.format("Cannot perform equal operator on types %s and %s",
-                        left.getClass().getSimpleName(), right.getClass().getSimpleName()));
+        return left.equals(right);
     }
 
     @Override
