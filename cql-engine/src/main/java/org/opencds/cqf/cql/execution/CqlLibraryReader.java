@@ -22,6 +22,44 @@ import java.net.URL;
  */
 public class CqlLibraryReader {
 
+    // Performance enhancement additions ~ start
+    public static Unmarshaller getUnmarshaller() throws JAXBException {
+        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
+        Unmarshaller u = context.createUnmarshaller();
+        u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+        return u;
+    }
+
+    public static Library read(Unmarshaller u, File file) throws IOException, JAXBException {
+        return read(u, toSource(file));
+    }
+
+    public static Library read(Unmarshaller u, URL url) throws IOException, JAXBException {
+        return read(u, toSource(url));
+    }
+
+    public static Library read(Unmarshaller u, URI uri) throws IOException, JAXBException {
+        return read(u, toSource(uri));
+    }
+
+    public static Library read(Unmarshaller u, String string) throws IOException, JAXBException {
+        return read(u, toSource(string));
+    }
+
+    public static Library read(Unmarshaller u, InputStream inputStream) throws IOException, JAXBException {
+        return read(u, toSource(inputStream));
+    }
+
+    public static Library read(Unmarshaller u, Reader reader) throws IOException, JAXBException {
+        return read(u, toSource(reader));
+    }
+
+    public static Library read(Unmarshaller u, Source source) throws JAXBException {
+        Object result = u.unmarshal(source);
+        return ((JAXBElement<Library>)result).getValue();
+    }
+    // Performance enhancement additions ~ end
+
     public static Library read(File file) throws IOException, JAXBException {
         return read(toSource(file));
     }
