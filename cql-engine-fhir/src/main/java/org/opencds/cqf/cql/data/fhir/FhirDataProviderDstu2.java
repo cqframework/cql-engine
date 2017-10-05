@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.model.api.Bundle;
 import ca.uhn.fhir.model.api.IValueSetEnumBinder;
 import ca.uhn.fhir.model.dstu2.composite.CodeableConceptDt;
 import ca.uhn.fhir.model.dstu2.composite.CodingDt;
@@ -42,7 +41,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
                                      String valueSet, String datePath, String dateLowPath,
                                      String dateHighPath, Interval dateRange)
     {
-        IQuery<Bundle> search;
+        IQuery<IBaseBundle> search;
 
         // TODO: It's unclear from the FHIR documentation whether we need to use a URLEncoder.encode call on the embedded system and valueset uris here...
         StringBuilder params = new StringBuilder();

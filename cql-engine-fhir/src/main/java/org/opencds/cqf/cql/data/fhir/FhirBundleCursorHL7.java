@@ -1,6 +1,6 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.Bundle;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 

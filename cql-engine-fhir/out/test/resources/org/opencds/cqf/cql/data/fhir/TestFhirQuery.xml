@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="urn:hl7-org:elm:r1" xmlns:t="urn:hl7-org:elm-types:r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fhir="http://hl7.org/fhir" xmlns:a="urn:hl7-org:cql-annotations:r1">
+   <identifier id="XResourceSearch" version="1"/>
+   <schemaIdentifier id="urn:hl7-org:elm" version="r1"/>
+   <usings>
+      <def localIdentifier="System" uri="urn:hl7-org:elm-types:r1"/>
+      <def localIdentifier="FHIR" uri="http://hl7.org/fhir" version="3.0.0"/>
+   </usings>
+   <statements>
+      <def name="xRefSearch" context="Patient" accessLevel="Public">
+         <expression xsi:type="Query">
+            <source alias="C">
+               <expression dataType="fhir:Condition" xsi:type="Retrieve"/>
+            </source>
+            <source alias="P">
+               <expression dataType="fhir:Procedure" xsi:type="Retrieve"/>
+            </source>
+            <where xsi:type="Equal">
+               <operand path="value" xsi:type="Property">
+                  <source path="code" xsi:type="Property">
+                     <source xsi:type="Indexer">
+                        <operand path="coding" xsi:type="Property">
+                           <source path="code" scope="C" xsi:type="Property"/>
+                        </operand>
+                        <operand valueType="t:Integer" value="0" xsi:type="Literal"/>
+                     </source>
+                  </source>
+               </operand>
+               <operand path="value" xsi:type="Property">
+                  <source path="code" xsi:type="Property">
+                     <source xsi:type="Indexer">
+                        <operand path="coding" xsi:type="Property">
+                           <source path="code" scope="P" xsi:type="Property"/>
+                        </operand>
+                        <operand valueType="t:Integer" value="0" xsi:type="Literal"/>
+                     </source>
+                  </source>
+               </operand>
+            </where>
+            <return distinct="true">
+               <expression xsi:type="Tuple">
+                  <element name="C">
+                     <value name="C" xsi:type="AliasRef"/>
+                  </element>
+                  <element name="P">
+                     <value name="P" xsi:type="AliasRef"/>
+                  </element>
+               </expression>
+            </return>
+         </expression>
+      </def>
+      <def name="testLet" context="Patient" accessLevel="Public">
+         <expression xsi:type="Query">
+            <source alias="O">
+               <expression dataType="fhir:Observation" xsi:type="Retrieve"/>
+            </source>
+            <source alias="C">
+               <expression dataType="fhir:Claim" xsi:type="Retrieve"/>
+            </source>
+            <let identifier="randomExpression">
+               <expression precision="Year" xsi:type="DateTimeComponentFrom">
+                  <operand path="value" xsi:type="Property">
+                     <source path="issued" scope="O" xsi:type="Property"/>
+                  </operand>
+               </expression>
+            </let>
+            <where xsi:type="Less">
+               <operand name="randomExpression" xsi:type="QueryLetRef"/>
+               <operand precision="Year" xsi:type="DateTimeComponentFrom">
+                  <operand path="value" xsi:type="Property">
+                     <source path="created" scope="C" xsi:type="Property"/>
+                  </operand>
+               </operand>
+            </where>
+            <return distinct="true">
+               <expression xsi:type="Tuple">
+                  <element name="O">
+                     <value name="O" xsi:type="AliasRef"/>
+                  </element>
+                  <element name="C">
+                     <value name="C" xsi:type="AliasRef"/>
+                  </element>
+               </expression>
+            </return>
+         </expression>
+      </def>
+      <def name="testExpressionSortDateTime" context="Patient" accessLevel="Public">
+         <expression xsi:type="Query">
+            <source alias="P">
+               <expression dataType="fhir:Procedure" xsi:type="Retrieve"/>
+            </source>
+            <sort>
+               <by direction="asc" xsi:type="ByExpression">
+                  <expression path="value" xsi:type="Property">
+                     <source path="start" xsi:type="Property">
+                        <source name="performed" xsi:type="IdentifierRef"/>
+                     </source>
+                  </expression>
+               </by>
+            </sort>
+         </expression>
+      </def>
+      <def name="testExpressionSortEnumString" context="Patient" accessLevel="Public">
+         <expression xsi:type="Query">
+            <source alias="A">
+               <expression dataType="fhir:ActivityDefinition" xsi:type="Retrieve"/>
+            </source>
+            <where xsi:type="Not">
+               <operand xsi:type="IsNull">
+                  <operand path="value" xsi:type="Property">
+                     <source path="kind" scope="A" xsi:type="Property"/>
+                  </operand>
+               </operand>
+            </where>
+            <return>
+               <expression xsi:type="Tuple">
+                  <element name="theKind">
+                     <value path="value" xsi:type="Property">
+                        <source path="kind" scope="A" xsi:type="Property"/>
+                     </value>
+                  </element>
+               </expression>
+            </return>
+            <sort>
+               <by direction="desc" path="theKind" xsi:type="ByColumn"/>
+            </sort>
+         </expression>
+      </def>
+      <def name="testExpressionSortInt" context="Patient" accessLevel="Public">
+         <expression xsi:type="Query">
+            <source alias="O">
+               <expression dataType="fhir:Observation" xsi:type="Retrieve"/>
+            </source>
+            <where xsi:type="Not">
+               <operand xsi:type="IsNull">
+                  <operand path="value" xsi:type="Property">
+                     <source path="issued" scope="O" xsi:type="Property"/>
+                  </operand>
+               </operand>
+            </where>
+            <sort>
+               <by direction="desc" xsi:type="ByExpression">
+                  <expression precision="Year" xsi:type="DateTimeComponentFrom">
+                     <operand path="value" xsi:type="Property">
+                        <source name="issued" xsi:type="IdentifierRef"/>
+                     </operand>
+                  </expression>
+               </by>
+            </sort>
+         </expression>
+      </def>
+   </statements>
+</library>
+
+

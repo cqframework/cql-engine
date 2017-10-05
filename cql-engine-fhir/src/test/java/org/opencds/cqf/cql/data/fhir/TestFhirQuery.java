@@ -35,6 +35,8 @@ public class TestFhirQuery extends FhirExecutionTestBase {
         Context context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
 
+        context.setEnableTraceLogging(true);
+
         Object result = context.resolveExpressionRef("testExpressionSortDateTime").evaluate(context);
         assertTrue(result instanceof Iterable && ((List)result).size() > 0);
 

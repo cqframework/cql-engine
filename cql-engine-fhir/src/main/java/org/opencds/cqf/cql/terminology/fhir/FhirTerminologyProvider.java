@@ -1,6 +1,6 @@
 package org.opencds.cqf.cql.terminology.fhir;
 
-import ca.uhn.fhir.rest.client.IGenericClient;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
