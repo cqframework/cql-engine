@@ -69,6 +69,9 @@ define DateTimeGreaterTrue: DateTime(2012, 2, 12) > DateTime(2012, 2, 10)
 define DateTimeGreaterFalse: DateTime(2012, 2, 12) > DateTime(2012, 2, 13)
 define TimeGreaterTrue: @T10:00:00.001 > @T10:00:00.000
 define TimeGreaterFalse: @T10:00:00.000 > @T10:00:00.001
+define UncertaintyGreaterNull: DateTime(2014) > DateTime(2014, 2, 15)
+define UncertaintyGreaterTrue: DateTime(2015) > DateTime(2014, 2, 15)
+define UncertaintyGreaterFalse: DateTime(2013) > DateTime(2014, 2, 15)
 
 //Greater Or Equal
 define GreaterOrEqualZZ        : 0 >= 0
@@ -94,6 +97,9 @@ define DateTimeGreaterEqFalse: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(201
 define TimeGreaterEqTrue: @T10:00:00.001 >= @T10:00:00.000
 define TimeGreaterEqTrue2: @T10:00:00.000 >= @T10:00:00.000
 define TimeGreaterEqFalse: @T10:00:00.000 >= @T10:00:00.001
+define UncertaintyGreaterEqualNull: DateTime(2014) >= DateTime(2014, 2, 15)
+define UncertaintyGreaterEqualTrue: DateTime(2015) >= DateTime(2014, 2, 15)
+define UncertaintyGreaterEqualFalse: DateTime(2013) >= DateTime(2014, 2, 15)
 
 //Less
 define LessZZ        : 0 < 0
@@ -117,6 +123,9 @@ define DateTimeLessTrue: DateTime(2012, 2, 9) < DateTime(2012, 2, 10)
 define DateTimeLessFalse: DateTime(2012, 2, 14) < DateTime(2012, 2, 13)
 define TimeLessTrue: @T10:00:00.001 < @T10:00:00.002
 define TimeLessFalse: @T10:10:00.000 < @T10:00:00.001
+define UncertaintyLessNull: DateTime(2014) < DateTime(2014, 2, 15)
+define UncertaintyLessTrue: DateTime(2013) < DateTime(2014, 2, 15)
+define UncertaintyLessFalse: DateTime(2015) < DateTime(2014, 2, 15)
 
 //Less Or Equal
 define LessOrEqualZZ        : 0 <= 0
@@ -142,6 +151,9 @@ define DateTimeLessEqFalse: DateTime(2012, 2, 12, 1, 0, 0, 0) <= DateTime(2012, 
 define TimeLessEqTrue: @T10:00:00.001 <= @T10:00:00.002
 define TimeLessEqTrue2: @T10:00:00.000 <= @T10:00:00.000
 define TimeLessEqFalse: @T10:00:00.002 <= @T10:00:00.001
+define UncertaintyLessEqualNull: DateTime(2014) <= DateTime(2014, 2, 15)
+define UncertaintyLessEqualTrue: DateTime(2013) <= DateTime(2014, 2, 15)
+define UncertaintyLessEqualFalse: DateTime(2015) <= DateTime(2014, 2, 15)
 
 //Equivalent
 define EquivTrueTrue                : true ~ true

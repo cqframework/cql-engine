@@ -26,46 +26,48 @@ If either argument is null, the result is null.
  */
 public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
 
-  public static Boolean less(Object left, Object right) {
-    if (left == null || right == null) {
-        return null;
+    public static Boolean less(Object left, Object right) {
+        if (left == null || right == null) {
+            return null;
+        }
+
+        if (left instanceof Integer && right instanceof Integer) {
+            return ((Integer) left).compareTo((Integer) right) < 0;
+        }
+
+        else if (left instanceof BigDecimal && right instanceof BigDecimal) {
+            return ((BigDecimal) left).compareTo((BigDecimal) right) < 0;
+        }
+
+        else if (left instanceof Quantity && right instanceof Quantity) {
+            return ((Quantity) left).compareTo((Quantity) right) < 0;
+        }
+
+        else if (left instanceof DateTime && right instanceof DateTime) {
+            Integer i = ((DateTime) left).compareTo((DateTime) right);
+            return i == null ? null : i < 0;
+        }
+
+        else if (left instanceof Time && right instanceof Time) {
+            Integer i = ((Time) left).compareTo((Time) right);
+            return i == null ? null : i < 0;
+        }
+
+        else if (left instanceof String && right instanceof String) {
+            return ((String) left).compareTo((String) right) < 0;
+        }
+
+        else if (left instanceof Uncertainty && right instanceof Integer) {
+            if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval())) {
+                return null;
+            }
+            return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) < 0;
+        }
+
+        throw new IllegalArgumentException(
+                String.format("Cannot perform less than operator on types %s and %s",
+                        left.getClass().getSimpleName(), right.getClass().getSimpleName()));
     }
-
-      if (left instanceof Integer && right instanceof Integer) {
-          return ((Integer) left).compareTo((Integer) right) < 0;
-      }
-
-      else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-          return ((BigDecimal) left).compareTo((BigDecimal) right) < 0;
-      }
-
-      else if (left instanceof Quantity && right instanceof Quantity) {
-          return ((Quantity) left).compareTo((Quantity) right) < 0;
-      }
-
-      else if (left instanceof DateTime && right instanceof DateTime) {
-          return ((DateTime) left).compareTo((DateTime) right) < 0;
-      }
-
-      else if (left instanceof Time && right instanceof Time) {
-          return ((Time) left).compareTo((Time) right) < 0;
-      }
-
-      else if (left instanceof String && right instanceof String) {
-          return ((String) left).compareTo((String) right) < 0;
-      }
-
-      else if (left instanceof Uncertainty && right instanceof Integer) {
-          if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval())) {
-              return null;
-          }
-          return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) < 0;
-      }
-
-      throw new IllegalArgumentException(
-              String.format("Cannot perform less than operator on types %s and %s",
-                      left.getClass().getSimpleName(), right.getClass().getSimpleName()));
-  }
 
     @Override
     public Object evaluate(Context context) {

@@ -17,10 +17,7 @@ import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.StringReader;
+import java.io.*;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -39,7 +36,8 @@ import java.util.Date;
 public class TestFhirMeasureEvaluator {
     @Test
     public void TestCOL() throws IOException, JAXBException {
-        File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-col.elm.xml").getFile(), "UTF-8"));
+        InputStream is = this.getClass().getResourceAsStream("library-col.elm.xml");
+        File xmlFile = new File(URLDecoder.decode(TestFhirMeasureEvaluator.class.getResource("library-col.elm.xml").getFile(), "UTF-8"));
         Library library = CqlLibraryReader.read(xmlFile);
 
         Context context = new Context(library);

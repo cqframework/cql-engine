@@ -8,3 +8,7 @@ dependencies {
     compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     compile project(':cql-engine')
 }
+
+test {
+    setClasspath(sourceSets.test.runtimeClasspath)
+}
