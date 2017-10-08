@@ -128,6 +128,6 @@ public class Interval {
 
     @Override
     public String toString() {
-        return String.format("Interval [ %s, %s ]", getLow().toString(), getHigh().toString());
+        return String.format("Interval [ %s, %s ]", getStart().toString(), getEnd().toString());
     }
 }
