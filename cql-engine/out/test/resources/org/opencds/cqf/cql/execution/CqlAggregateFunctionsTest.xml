@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="urn:hl7-org:elm:r1" xmlns:t="urn:hl7-org:elm-types:r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fhir="http://hl7.org/fhir" xmlns:a="urn:hl7-org:cql-annotations:r1">
+   <identifier id="AggregateFunctions" version="1"/>
+   <schemaIdentifier id="urn:hl7-org:elm" version="r1"/>
+   <usings>
+      <def localIdentifier="System" uri="urn:hl7-org:elm-types:r1"/>
+   </usings>
+   <statements>
+      <def name="Patient" context="Population">
+         <expression xsi:type="Null"/>
+      </def>
+      <def name="AllTrueAllTrue" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AllTrueTrueFirst" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AllTrueFalseFirst" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AllTrueAllTrueFalseTrue" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AllTrueAllFalseTrueFalse" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AllTrueNullFirst" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="List">
+               <element asType="t:Boolean" xsi:type="As">
+                  <operand xsi:type="Null"/>
+                  <asTypeSpecifier name="t:Boolean" xsi:type="NamedTypeSpecifier"/>
+               </element>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AllTrueEmptyList" context="Population" accessLevel="Public">
+         <expression xsi:type="AllTrue">
+            <source xsi:type="Query">
+               <source alias="X">
+                  <expression xsi:type="List"/>
+               </source>
+               <return distinct="false">
+                  <expression asType="t:Boolean" xsi:type="As">
+                     <operand name="X" xsi:type="AliasRef"/>
+                     <asTypeSpecifier name="t:Boolean" xsi:type="NamedTypeSpecifier"/>
+                  </expression>
+               </return>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueAllTrue" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueAllFalse" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueAllTrueFalseTrue" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueAllFalseTrueFalse" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueTrueFirst" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueFalseFirst" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueNullFirstThenTrue" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element asType="t:Boolean" xsi:type="As">
+                  <operand xsi:type="Null"/>
+                  <asTypeSpecifier name="t:Boolean" xsi:type="NamedTypeSpecifier"/>
+               </element>
+               <element valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueNullFirstThenFalse" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="List">
+               <element asType="t:Boolean" xsi:type="As">
+                  <operand xsi:type="Null"/>
+                  <asTypeSpecifier name="t:Boolean" xsi:type="NamedTypeSpecifier"/>
+               </element>
+               <element valueType="t:Boolean" value="false" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="AnyTrueEmptyList" context="Population" accessLevel="Public">
+         <expression xsi:type="AnyTrue">
+            <source xsi:type="Query">
+               <source alias="X">
+                  <expression xsi:type="List"/>
+               </source>
+               <return distinct="false">
+                  <expression asType="t:Boolean" xsi:type="As">
+                     <operand name="X" xsi:type="AliasRef"/>
+                     <asTypeSpecifier name="t:Boolean" xsi:type="NamedTypeSpecifier"/>
+                  </expression>
+               </return>
+            </source>
+         </expression>
+      </def>
+      <def name="AvgTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="Avg">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="1.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="6.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="CountTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="Count">
+            <source xsi:type="List">
+               <element valueType="t:Integer" value="15" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="5" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="99" xsi:type="Literal"/>
+               <element asType="t:Integer" xsi:type="As">
+                  <operand xsi:type="Null"/>
+                  <asTypeSpecifier name="t:Integer" xsi:type="NamedTypeSpecifier"/>
+               </element>
+               <element valueType="t:Integer" value="1" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="CountTestDateTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Count">
+            <source xsi:type="List">
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2014" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2001" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2010" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="CountTestTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Count">
+            <source xsi:type="List">
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="15" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="5" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="20" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="CountTestNull" context="Population" accessLevel="Public">
+         <expression xsi:type="Count">
+            <source xsi:type="List"/>
+         </expression>
+      </def>
+      <def name="MaxTestInteger" context="Population" accessLevel="Public">
+         <expression xsi:type="Max">
+            <source xsi:type="List">
+               <element valueType="t:Integer" value="5" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="12" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="1" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="15" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="0" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="4" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="90" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="44" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="MaxTestString" context="Population" accessLevel="Public">
+         <expression xsi:type="Max">
+            <source xsi:type="List">
+               <element valueType="t:String" value="hi" xsi:type="Literal"/>
+               <element valueType="t:String" value="bye" xsi:type="Literal"/>
+               <element valueType="t:String" value="zebra" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="MaxTestDateTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Max">
+            <source xsi:type="List">
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="10" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="9" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="10" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="6" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="MaxTestTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Max">
+            <source xsi:type="List">
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="15" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="5" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="20" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="MedianTestDecimal" context="Population" accessLevel="Public">
+         <expression xsi:type="Median">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="6.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="4.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="1.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="MinTestInteger" context="Population" accessLevel="Public">
+         <expression xsi:type="Min">
+            <source xsi:type="List">
+               <element valueType="t:Integer" value="5" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="12" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="1" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="15" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="0" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="4" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="90" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="44" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="MinTestString" context="Population" accessLevel="Public">
+         <expression xsi:type="Min">
+            <source xsi:type="List">
+               <element valueType="t:String" value="hi" xsi:type="Literal"/>
+               <element valueType="t:String" value="bye" xsi:type="Literal"/>
+               <element valueType="t:String" value="zebra" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="MinTestDateTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Min">
+            <source xsi:type="List">
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="10" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="9" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="10" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="6" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="MinTestTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Min">
+            <source xsi:type="List">
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="15" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="5" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="20" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="ModeTestInteger" context="Population" accessLevel="Public">
+         <expression xsi:type="Mode">
+            <source xsi:type="List">
+               <element valueType="t:Integer" value="2" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="1" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="8" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="2" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="9" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="1" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="9" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="9" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="ModeTestDateTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Mode">
+            <source xsi:type="List">
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="10" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="9" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="10" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="6" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="DateTime">
+                  <year valueType="t:Integer" value="2012" xsi:type="Literal"/>
+                  <month valueType="t:Integer" value="9" xsi:type="Literal"/>
+                  <day valueType="t:Integer" value="5" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="ModeTestTime" context="Population" accessLevel="Public">
+         <expression xsi:type="Mode">
+            <source xsi:type="List">
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="15" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="5" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="20" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+               <element xsi:type="Time">
+                  <hour valueType="t:Integer" value="5" xsi:type="Literal"/>
+                  <minute valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <second valueType="t:Integer" value="59" xsi:type="Literal"/>
+                  <millisecond valueType="t:Integer" value="999" xsi:type="Literal"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="PopStdDevTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="PopulationStdDev">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="1.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="4.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="PopVarianceTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="PopulationVariance">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="1.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="4.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="StdDevTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="StdDev">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="1.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="4.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="SumTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="Sum">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="6.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="4.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+      <def name="SumTestNull" context="Population" accessLevel="Public">
+         <expression xsi:type="Sum">
+            <source xsi:type="List">
+               <element asType="t:Integer" xsi:type="As">
+                  <operand xsi:type="Null"/>
+                  <asTypeSpecifier name="t:Integer" xsi:type="NamedTypeSpecifier"/>
+               </element>
+               <element valueType="t:Integer" value="1" xsi:type="Literal"/>
+               <element asType="t:Integer" xsi:type="As">
+                  <operand xsi:type="Null"/>
+                  <asTypeSpecifier name="t:Integer" xsi:type="NamedTypeSpecifier"/>
+               </element>
+            </source>
+         </expression>
+      </def>
+      <def name="VarianceTest1" context="Population" accessLevel="Public">
+         <expression xsi:type="Variance">
+            <source xsi:type="List">
+               <element valueType="t:Decimal" value="1.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="2.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="3.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="4.0" xsi:type="Literal"/>
+               <element valueType="t:Decimal" value="5.0" xsi:type="Literal"/>
+            </source>
+         </expression>
+      </def>
+   </statements>
+</library>
+
+
