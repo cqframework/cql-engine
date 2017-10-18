@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+
+import org.hl7.fhir.dstu3.model.Base;
 import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.dstu3.model.SimpleQuantity;
 import org.hl7.fhir.exceptions.FHIRException;
@@ -262,7 +264,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         } catch (ConfigurationException ce) {
             if (value instanceof Quantity) {
                 try {
-                    value = ((Quantity) value).castToSimpleQuantity(new SimpleQuantity());
+                    value = ((Quantity) value).castToSimpleQuantity((Base) value);
                 } catch (FHIRException e) {
                     throw new IllegalArgumentException("Unable to cast Quantity to SimpleQuantity");
                 }
