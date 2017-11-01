@@ -44,6 +44,9 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
         }
 
         else if (left instanceof Quantity && right instanceof Quantity) {
+            if (((Quantity) left).getValue() == null || ((Quantity) right).getValue() == null) {
+                return null;
+            }
             return ((Quantity) left).compareTo((Quantity) right) > 0;
         }
 
