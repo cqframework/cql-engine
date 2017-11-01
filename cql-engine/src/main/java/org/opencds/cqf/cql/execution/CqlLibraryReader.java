@@ -27,7 +27,7 @@ public class CqlLibraryReader {
 		JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
 		Unmarshaller u = context.createUnmarshaller();
 		try {
-			https://bugs.eclipse.org/bugs/show_bug.cgi?id=406032
+			//https://bugs.eclipse.org/bugs/show_bug.cgi?id=406032
 			//https://javaee.github.io/jaxb-v2/doc/user-guide/ch03.html#compiling-xml-schema-adding-behaviors
 			// for jre environment
 			u.setProperty("com.sun.xml.bind.ObjectFactory", new ObjectFactoryEx());
