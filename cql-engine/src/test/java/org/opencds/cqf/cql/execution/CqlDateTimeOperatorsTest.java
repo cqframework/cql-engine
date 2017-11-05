@@ -367,7 +367,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(5));
 
         result = context.resolveExpressionRef("DateTimeDifferenceMillisecond").getExpression().evaluate(context);
-        assertThat(result, is(400));
+        assertThat(result, is(3600400));
 
         result = context.resolveExpressionRef("DateTimeDifferenceWeeks").getExpression().evaluate(context);
         assertThat(result, is(1));
@@ -395,6 +395,25 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeDifferenceMillis").getExpression().evaluate(context);
         assertThat(result, is(-5));
+
+        // TODO: Uncomment once translator issue https://github.com/cqframework/clinical_quality_language/issues/256 is resolved
+//        result = context.resolveExpressionRef("DifferenceInHoursA").getExpression().evaluate(context);
+//        assertThat(result, is(1));
+//
+//        result = context.resolveExpressionRef("DifferenceInMinutesA").getExpression().evaluate(context);
+//        assertThat(result, is(45));
+//
+//        result = context.resolveExpressionRef("DifferenceInDaysA").getExpression().evaluate(context);
+//        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DifferenceInHoursAA").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DifferenceInMinutesAA").getExpression().evaluate(context);
+        assertThat(result, is(45));
+
+        result = context.resolveExpressionRef("DifferenceInDaysAA").getExpression().evaluate(context);
+        assertThat(result, is(1));
     }
 
     /**

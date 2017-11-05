@@ -2,10 +2,9 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.joda.time.*;
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 
 import java.util.ArrayList;
 
@@ -40,29 +39,38 @@ DateTime(2014, 5, 12) and DateTime(2014, 5, 25) respectively
  */
 public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.execution.DifferenceBetween {
 
-    public static Integer between(Partial leftTrunc, Partial rightTrunc, int idx, boolean dt) {
+    public static Integer betweenMillis(Partial leftTrunc, Partial rightTrunc, org.joda.time.DateTime leftDateTime,
+                                            org.joda.time.DateTime rightDateTime, int idx, boolean dt)
+    {
+        return dt ? Seconds.secondsBetween(leftDateTime, rightDateTime).getSeconds() * 1000 + rightTrunc.getValue(idx) - leftTrunc.getValue(idx)
+                  : Seconds.secondsBetween(leftDateTime, rightDateTime).getSeconds() * 1000 + rightTrunc.getValue(idx - 3) - leftTrunc.getValue(idx - 3);
+    }
+
+    public static Integer between(org.joda.time.DateTime leftDateTime, org.joda.time.DateTime rightDateTime, int idx) {
         Integer ret = 0;
         switch(idx) {
-            case 0: ret = Years.yearsBetween(leftTrunc, rightTrunc).getYears();
+            case 0: ret = Years.yearsBetween(leftDateTime, rightDateTime).getYears();
                 break;
-            case 1: ret = Months.monthsBetween(leftTrunc, rightTrunc).getMonths();
+            case 1: ret = Months.monthsBetween(leftDateTime, rightDateTime).getMonths();
                 break;
-            case 2: ret = Days.daysBetween(leftTrunc, rightTrunc).getDays();
+            case 2: ret = Days.daysBetween(leftDateTime, rightDateTime).getDays();
                 break;
-            case 3: ret = Hours.hoursBetween(leftTrunc, rightTrunc).getHours();
+            case 3: ret = Hours.hoursBetween(leftDateTime, rightDateTime).getHours();
                 break;
-            case 4: ret = Minutes.minutesBetween(leftTrunc, rightTrunc).getMinutes();
+            case 4: ret = Minutes.minutesBetween(leftDateTime, rightDateTime).getMinutes();
                 break;
-            case 5: ret = Seconds.secondsBetween(leftTrunc, rightTrunc).getSeconds();
+            case 5: ret = Seconds.secondsBetween(leftDateTime, rightDateTime).getSeconds();
                 break;
-            case 6: ret = Seconds.secondsBetween(leftTrunc, rightTrunc).getSeconds() * 1000;
-                // now do the actual millisecond DifferenceBetween - add to ret
-                if (dt) { ret += rightTrunc.getValue(idx) - leftTrunc.getValue(idx); }
-                else { ret += rightTrunc.getValue(idx - 3) - leftTrunc.getValue(idx - 3); }
-                break;
-            case 7: ret = Days.daysBetween(leftTrunc, rightTrunc).getDays() / 7;
+            case 7: ret = Days.daysBetween(leftDateTime, rightDateTime).getDays() / 7;
         }
         return ret;
+    }
+
+    public static Integer between(BaseTemporal left, BaseTemporal right, int idx, boolean dt) {
+        if (idx == 6) {
+            return betweenMillis(left.getPartial(), right.getPartial(), left.toJodaDateTime(), right.toJodaDateTime(), idx, dt);
+        }
+        return between(left.toJodaDateTime(), right.toJodaDateTime(), idx);
     }
 
     public static Object difference(Object left, Object right, String precision) {
@@ -74,95 +82,104 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
             return null;
         }
 
-        if (left instanceof DateTime && right instanceof DateTime) {
-            DateTime leftDT = (DateTime)left;
-            DateTime rightDT = (DateTime)right;
+        boolean isDateTime = left instanceof DateTime;
 
-            int idx = DateTime.getFieldIndex(precision);
+        BaseTemporal leftTemporal = (BaseTemporal) left;
+        BaseTemporal rightTemporal = (BaseTemporal) right;
 
-            if (idx != -1) {
+        int index = isDateTime ? DateTime.getFieldIndex(precision) : Time.getFieldIndex(precision);
 
-                boolean weeks = false;
-                if (idx == 7) {
-                    idx = 2;
-                    weeks = true;
-                }
-
-                // Uncertainty
-                if (Uncertainty.isUncertain(leftDT, precision)) {
-                    ArrayList<DateTime> highLow = Uncertainty.getHighLowList(leftDT, precision);
-                    return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1).getPartial(), rightDT.getPartial(), idx, true), true, between(highLow.get(0).getPartial(), rightDT.getPartial(), idx , true), true));
-                }
-
-                else if (Uncertainty.isUncertain(rightDT, precision)) {
-                    ArrayList<DateTime> highLow = Uncertainty.getHighLowList(rightDT, precision);
-                    return new Uncertainty().withUncertaintyInterval(new Interval(between(leftDT.getPartial(), highLow.get(0).getPartial(), idx, true), true, between(leftDT.getPartial(), highLow.get(1).getPartial(), idx, true), true));
-                }
-
-                // truncate Partial
-                int [] a = new int[idx + 1];
-                int [] b = new int[idx + 1];
-
-                for (int i = 0; i < idx + 1; ++i) {
-                    a[i] = leftDT.getPartial().getValue(i);
-                    b[i] = rightDT.getPartial().getValue(i);
-                }
-
-                Partial leftTrunc = new Partial(DateTime.getFields(idx + 1), a);
-                Partial rightTrunc = new Partial(DateTime.getFields(idx + 1), b);
-
-                if (weeks) {
-                    idx = 7;
-                }
-
-                return between(leftTrunc, rightTrunc, idx, true);
+        if (index != -1) {
+            boolean weeks = false;
+            if (index == 7) {
+                index = 2;
+                weeks = true;
             }
 
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+            // Uncertainty
+            if (Uncertainty.isUncertain(leftTemporal, precision)) {
+                if (isDateTime) {
+                    ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) leftTemporal, precision);
+                    return new Uncertainty()
+                            .withUncertaintyInterval(
+                                    new Interval(
+                                            between(highLow.get(1), rightTemporal, index, true), true,
+                                            between(highLow.get(0), rightTemporal, index, true), true
+                                    )
+                            );
+                }
+                else {
+                    ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) leftTemporal, precision);
+                    return new Uncertainty()
+                            .withUncertaintyInterval(
+                                    new Interval(
+                                            between(highLow.get(1), rightTemporal, index, false), true,
+                                            between(highLow.get(0), rightTemporal, index, false), true
+                                    )
+                            );
+                }
             }
+
+            else if (Uncertainty.isUncertain(rightTemporal, precision)) {
+                if (isDateTime) {
+                    ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) rightTemporal, precision);
+                    return new Uncertainty()
+                            .withUncertaintyInterval(
+                                    new Interval(
+                                            between(leftTemporal, highLow.get(0), index, true), true,
+                                            between(leftTemporal, highLow.get(1), index, true), true
+                                    )
+                            );
+                }
+                else {
+                    ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) rightTemporal, precision);
+                    return new Uncertainty()
+                            .withUncertaintyInterval(
+                                    new Interval(
+                                            between(leftTemporal, highLow.get(0), index, false), true,
+                                            between(leftTemporal, highLow.get(1), index, false), true
+                                    )
+                            );
+                }
+            }
+
+            // truncate Partial
+            int [] a = new int[index + 1];
+            int [] b = new int[index + 1];
+
+            for (int i = 0; i < index + 1; ++i) {
+                a[i] = leftTemporal.getPartial().getValue(i);
+                b[i] = rightTemporal.getPartial().getValue(i);
+            }
+
+            Partial leftTrunc =
+                    isDateTime ? new Partial(DateTime.getFields(index + 1), a)
+                               : new Partial(Time.getFields(index + 1), a);
+            Partial rightTrunc =
+                    isDateTime ? new Partial(DateTime.getFields(index + 1), b)
+                               : new Partial(Time.getFields(index + 1), b);
+
+            if (weeks) {
+                index = 7;
+            }
+
+            org.joda.time.DateTime leftDateTime = leftTrunc.toDateTime(new org.joda.time.DateTime(leftTemporal.getChronology()));
+            org.joda.time.DateTime rightDateTime = rightTrunc.toDateTime(new org.joda.time.DateTime(rightTemporal.getChronology()));
+
+            if (!isDateTime) {
+                index += 3;
+            }
+
+            if (index == 6) {
+                return betweenMillis(leftTrunc, rightTrunc, leftDateTime, rightDateTime, index, isDateTime);
+            }
+
+            return between(leftDateTime, rightDateTime, index);
         }
 
-        if (left instanceof Time && right instanceof Time) {
-            Time leftT = (Time)left;
-            Time rightT = (Time)right;
-
-            int idx = Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-
-                // Uncertainty
-                if (Uncertainty.isUncertain(leftT, precision)) {
-                    ArrayList<Time> highLow = Uncertainty.getHighLowList(leftT, precision);
-                    return new Uncertainty().withUncertaintyInterval(new Interval(between(highLow.get(1).getPartial(), rightT.getPartial(), idx, false), true, between(highLow.get(0).getPartial(), rightT.getPartial(), idx, false), true));
-                }
-
-                else if (Uncertainty.isUncertain(rightT, precision)) {
-                    ArrayList<Time> highLow = Uncertainty.getHighLowList(rightT, precision);
-                    return new Uncertainty().withUncertaintyInterval(new Interval(between(leftT.getPartial(), highLow.get(0).getPartial(), idx, false), true, between(leftT.getPartial(), highLow.get(1).getPartial(), idx, false), true));
-                }
-
-                // truncate Partial
-                int [] a = new int[idx + 1];
-                int [] b = new int[idx + 1];
-
-                for (int i = 0; i < idx + 1; ++i) {
-                    a[i] = leftT.getPartial().getValue(i);
-                    b[i] = rightT.getPartial().getValue(i);
-                }
-
-                Partial leftTrunc = new Partial(Time.getFields(idx + 1), a);
-                Partial rightTrunc = new Partial(Time.getFields(idx + 1), b);
-
-                return between(leftTrunc, rightTrunc, idx + 3, false);
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+        else {
+            throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
         }
-
-        throw new IllegalArgumentException(String.format("Cannot DifferenceBetween arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override

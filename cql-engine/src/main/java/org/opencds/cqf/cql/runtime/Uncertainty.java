@@ -52,6 +52,10 @@ public class Uncertainty {
     return false;
   }
 
+  public static boolean isUncertain(BaseTemporal bt, String precision) {
+    return bt instanceof DateTime ? isUncertain((DateTime) bt, precision) : isUncertain((Time) bt, precision);
+  }
+
   /**
   This method's purpose is to return a list of DateTimes with max and min values
   For example:

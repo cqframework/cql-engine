@@ -112,7 +112,7 @@ define DateTimeDifferenceDay: difference in days between DateTime(2000, 10, 15) 
 define DateTimeDifferenceHour: difference in hours between DateTime(2000, 4, 1, 12) and DateTime(2000, 4, 1, 20)
 define DateTimeDifferenceMinute: difference in minutes between DateTime(2005, 12, 10, 5, 16) and DateTime(2005, 12, 10, 5, 25)
 define DateTimeDifferenceSecond: difference in seconds between DateTime(2000, 10, 10, 10, 5, 45) and DateTime(2000, 10, 10, 10, 5, 50)
-define DateTimeDifferenceMillisecond: difference in milliseconds between DateTime(2000, 10, 10, 10, 5, 45, 500) and DateTime(2000, 10, 10, 10, 5, 45, 900)
+define DateTimeDifferenceMillisecond: difference in milliseconds between DateTime(2000, 10, 10, 10, 5, 45, 500, -6.0) and DateTime(2000, 10, 10, 10, 5, 45, 900, -7.0)
 define DateTimeDifferenceWeeks: difference in weeks between DateTime(2000, 10, 15) and DateTime(2000, 10, 28)
 define DateTimeDifferenceWeeks2: difference in weeks between DateTime(2000, 10, 15) and DateTime(2000, 10, 29)
 define DateTimeDifferenceWeeks3: difference in weeks between @2012-03-10T22:05:09 and @2012-03-24T07:19:33
@@ -122,6 +122,27 @@ define TimeDifferenceHour: difference in hours between @T20 and @T23:25:15.555
 define TimeDifferenceMinute: difference in minutes between @T20:20:15.555 and @T20:25:15.555
 define TimeDifferenceSecond: difference in seconds between @T20:20:15.555 and @T20:20:20.555
 define TimeDifferenceMillis: difference in milliseconds between @T20:20:15.555 and @T20:20:15.550
+
+// From Github issue #29
+define DateTimeA: @2017-03-12T01:00:00-07:00 // March 12, 2017, 1:00 AM MST
+define DateTimeAA: DateTime(2017, 3, 12, 1, 0, 0, 0, -7.0)
+define DateTimeB: @2017-03-12T03:00:00-06:00 // 3:00 AM MDT
+define DateTimeBB: DateTime(2017, 3, 12, 3, 0, 0, 0, -6.0)
+define DateTimeC: @2017-11-05T01:30:00-06:00 // November 5, 2017, 1:30 AM MDT
+define DateTimeCC: DateTime(2017, 11, 5, 1, 30, 0, 0, -6.0)
+define DateTimeD: @2017-11-05T01:15:00-07:00 // November 5, 2017, 1:15 AM MST
+define DateTimeDD: DateTime(2017, 11, 5, 1, 15, 0, 0, -7.0)
+define DateTimeE: @2017-03-12T00:00:00-07:00 // March 12, 2017
+define DateTimeEE: DateTime(2017, 3, 12, 0, 0, 0, 0, -7.0)
+define DateTimeF: @2017-03-13T00:00:00-06:00 // March 13, 2017
+define DateTimeFF: DateTime(2017, 3, 13, 0, 0, 0, 0, -6.0)
+
+define DifferenceInHoursA: difference in hours between DateTimeA and DateTimeB // Should be 1
+define DifferenceInMinutesA: difference in minutes between DateTimeC and DateTimeD // Should be 45
+define DifferenceInDaysA: difference in days between DateTimeE and DateTimeF // Should be 1
+define DifferenceInHoursAA: difference in hours between DateTimeAA and DateTimeBB // Should be 1
+define DifferenceInMinutesAA: difference in minutes between DateTimeCC and DateTimeDD // Should be 45
+define DifferenceInDaysAA: difference in days between DateTimeEE and DateTimeFF // Should be 1
 // TODO: Time uncertainty tests
 
 //Duration

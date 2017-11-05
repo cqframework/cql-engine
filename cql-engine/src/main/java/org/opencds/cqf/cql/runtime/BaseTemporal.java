@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
+import org.joda.time.chrono.ISOChronology;
 import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.elm.execution.LessEvaluator;
 
@@ -15,6 +17,7 @@ public abstract class BaseTemporal {
 
     protected Partial partial;
     protected BigDecimal timezoneOffset;
+    protected ISOChronology chronology;
 
     public Partial getPartial() {
         return partial;
@@ -25,8 +28,19 @@ public abstract class BaseTemporal {
     public BigDecimal getTimezoneOffset() {
         return timezoneOffset;
     }
+    public Integer getOffsetMillis() {
+        return timezoneOffset.multiply(new BigDecimal("3600000.0")).intValue();
+    }
     public void setTimezoneOffset(BigDecimal newTimezoneOffset) {
         timezoneOffset = newTimezoneOffset;
+        chronology = ISOChronology.getInstance(DateTimeZone.forOffsetMillis(getOffsetMillis()));
+    }
+    public ISOChronology getChronology() {
+        return this.chronology;
+    }
+
+    public org.joda.time.DateTime toJodaDateTime() {
+        return getPartial().toDateTime(new org.joda.time.DateTime().withChronology(getChronology()));
     }
 
     public static Boolean formatCheck(ArrayList<Object> timeElements) {
