@@ -48,20 +48,30 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
 
     public static Integer between(org.joda.time.DateTime leftDateTime, org.joda.time.DateTime rightDateTime, int idx) {
         Integer ret = 0;
+        Instant leftInstant = leftDateTime.toInstant();
+        Instant rightInstant = rightDateTime.toInstant();
         switch(idx) {
-            case 0: ret = Years.yearsBetween(leftDateTime, rightDateTime).getYears();
+            case 0: ret = Years.yearsBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getYears();
                 break;
-            case 1: ret = Months.monthsBetween(leftDateTime, rightDateTime).getMonths();
+            case 1: ret = Months.monthsBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getMonths();
                 break;
-            case 2: ret = Days.daysBetween(leftDateTime, rightDateTime).getDays();
+            case 2: ret = Days.daysBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getDays();
                 break;
-            case 3: ret = Hours.hoursBetween(leftDateTime, rightDateTime).getHours();
+            case 3: ret = Hours.hoursBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getHours();
                 break;
-            case 4: ret = Minutes.minutesBetween(leftDateTime, rightDateTime).getMinutes();
+            case 4: ret = Minutes.minutesBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getMinutes();
                 break;
-            case 5: ret = Seconds.secondsBetween(leftDateTime, rightDateTime).getSeconds();
+            case 5: ret = Seconds.secondsBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getSeconds();
                 break;
-            case 7: ret = Days.daysBetween(leftDateTime, rightDateTime).getDays() / 7;
+            case 7: ret = Days.daysBetween(leftDateTime.toInstant(), rightDateTime.toInstant()).getDays() / 7;
+        }
+        if (idx < 6) {
+            while (++idx < 7) {
+                if (leftInstant.get(DateTime.getField(idx)) > rightInstant.get(DateTime.getField(idx))) {
+                    ret += 1;
+                    break;
+                }
+            }
         }
         return ret;
     }
@@ -163,8 +173,8 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
                 index = 7;
             }
 
-            org.joda.time.DateTime leftDateTime = leftTrunc.toDateTime(new org.joda.time.DateTime(leftTemporal.getChronology()));
-            org.joda.time.DateTime rightDateTime = rightTrunc.toDateTime(new org.joda.time.DateTime(rightTemporal.getChronology()));
+            org.joda.time.DateTime leftDateTime = isDateTime ? ((DateTime) leftTemporal).getJodaDateTime() : leftTrunc.toDateTime(new org.joda.time.DateTime(leftTemporal.getChronology()));
+            org.joda.time.DateTime rightDateTime = isDateTime ? ((DateTime) rightTemporal).getJodaDateTime() : rightTrunc.toDateTime(new org.joda.time.DateTime(rightTemporal.getChronology()));
 
             if (!isDateTime) {
                 index += 3;

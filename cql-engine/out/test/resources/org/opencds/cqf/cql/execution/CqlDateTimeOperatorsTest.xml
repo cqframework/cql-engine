@@ -1272,11 +1272,15 @@
                <year valueType="t:Integer" value="2000" xsi:type="Literal"/>
                <month valueType="t:Integer" value="10" xsi:type="Literal"/>
                <day valueType="t:Integer" value="15" xsi:type="Literal"/>
+               <hour valueType="t:Integer" value="10" xsi:type="Literal"/>
+               <minute valueType="t:Integer" value="30" xsi:type="Literal"/>
             </operand>
             <operand xsi:type="DateTime">
                <year valueType="t:Integer" value="2000" xsi:type="Literal"/>
                <month valueType="t:Integer" value="10" xsi:type="Literal"/>
                <day valueType="t:Integer" value="25" xsi:type="Literal"/>
+               <hour valueType="t:Integer" value="10" xsi:type="Literal"/>
+               <minute valueType="t:Integer" value="0" xsi:type="Literal"/>
             </operand>
          </expression>
       </def>

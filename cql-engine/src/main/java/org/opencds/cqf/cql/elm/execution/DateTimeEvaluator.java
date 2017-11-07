@@ -45,12 +45,25 @@ public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTim
 
     org.opencds.cqf.cql.runtime.DateTime dt = new org.opencds.cqf.cql.runtime.DateTime();
 
-    if (BaseTemporal.formatCheck(new ArrayList<>(Arrays.asList(year, month, day, hour, minute, second, millis)))) {
-      int [] values = BaseTemporal.getValues(year, month, day, hour, minute, second, millis);
-      return dt.withPartial(new Partial(DateTime.getFields(values.length), values)).withTimezoneOffset(offset);
+    if (month == null) {
+      return new DateTime(year, offset);
     }
-    else {
-      throw new IllegalArgumentException("DateTime format is invalid");
+    if (day == null) {
+      return new DateTime(year, month, offset);
     }
+    if (hour == null) {
+      return new DateTime(year, month, day, offset);
+    }
+    if (minute == null) {
+      return new DateTime(year, month, day, hour, offset);
+    }
+    if (second == null) {
+      return new DateTime(year, month, day, hour, minute, offset);
+    }
+    if (millis == null) {
+      return new DateTime(year, month, day, hour, minute, second, offset);
+    }
+
+    return new DateTime(year, month, day, hour, minute, second, millis, offset);
   }
 }

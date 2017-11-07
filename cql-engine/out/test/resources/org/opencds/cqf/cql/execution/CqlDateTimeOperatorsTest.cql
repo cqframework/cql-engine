@@ -108,7 +108,7 @@ define TimeComponentFromMilli: millisecond from @T23:20:15.555
 //Difference
 define DateTimeDifferenceYear: difference in years between DateTime(2000) and DateTime(2005, 12)
 define DateTimeDifferenceMonth: difference in months between DateTime(2000, 2) and DateTime(2000, 10)
-define DateTimeDifferenceDay: difference in days between DateTime(2000, 10, 15) and DateTime(2000, 10, 25)
+define DateTimeDifferenceDay: difference in days between DateTime(2000, 10, 15, 10, 30) and DateTime(2000, 10, 25, 10, 0)
 define DateTimeDifferenceHour: difference in hours between DateTime(2000, 4, 1, 12) and DateTime(2000, 4, 1, 20)
 define DateTimeDifferenceMinute: difference in minutes between DateTime(2005, 12, 10, 5, 16) and DateTime(2005, 12, 10, 5, 25)
 define DateTimeDifferenceSecond: difference in seconds between DateTime(2000, 10, 10, 10, 5, 45) and DateTime(2000, 10, 10, 10, 5, 50)

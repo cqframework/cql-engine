@@ -24,9 +24,21 @@ public class CqlLibraryReader {
 
     // Performance enhancement additions ~ start
     public static Unmarshaller getUnmarshaller() throws JAXBException {
+        // This is supposed to work based on this link:
+        // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
+        // Override the unmarshal to use the XXXEvaluator classes
+        // This doesn't work exactly how it's described in the link above, but this is functional
         JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
         Unmarshaller u = context.createUnmarshaller();
-        u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+        try {
+            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=406032
+            //https://javaee.github.io/jaxb-v2/doc/user-guide/ch03.html#compiling-xml-schema-adding-behaviors
+            // for jre environment
+            u.setProperty("com.sun.xml.bind.ObjectFactory", new ObjectFactoryEx());
+        } catch (javax.xml.bind.PropertyException e) {
+            // for jdk environment
+            u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+        }
         return u;
     }
 
@@ -85,13 +97,7 @@ public class CqlLibraryReader {
     }
 
     public static Library read(Source source) throws JAXBException {
-        // This is supposed to work based on this link:
-        // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
-        // Override the unmarshal to use the XXXEvaluator classes
-        // This doesn't work exactly how it's described in the link above, but this is functional
-        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-        Unmarshaller u = context.createUnmarshaller();
-        u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+        Unmarshaller u = getUnmarshaller();
         Object result = u.unmarshal(source);
         return ((JAXBElement<Library>)result).getValue();
     }
