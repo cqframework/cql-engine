@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<library xmlns="urn:hl7-org:elm:r1" xmlns:t="urn:hl7-org:elm-types:r1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fhir="http://hl7.org/fhir" xmlns:a="urn:hl7-org:cql-annotations:r1">
+   <identifier id="ErrorsAndMessaging" version="1.0"/>
+   <schemaIdentifier id="urn:hl7-org:elm" version="r1"/>
+   <usings>
+      <def localIdentifier="System" uri="urn:hl7-org:elm-types:r1"/>
+   </usings>
+   <statements>
+      <def name="TestMessageInfo" context="Patient" accessLevel="Public">
+         <expression xsi:type="Message">
+            <source valueType="t:Integer" value="1" xsi:type="Literal"/>
+            <condition valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            <code valueType="t:String" value="100" xsi:type="Literal"/>
+            <severity valueType="t:String" value="Message" xsi:type="Literal"/>
+            <message valueType="t:String" value="Test Message" xsi:type="Literal"/>
+         </expression>
+      </def>
+      <def name="TestMessageWarn" context="Patient" accessLevel="Public">
+         <expression xsi:type="Message">
+            <source valueType="t:Integer" value="2" xsi:type="Literal"/>
+            <condition valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            <code valueType="t:String" value="200" xsi:type="Literal"/>
+            <severity valueType="t:String" value="Warning" xsi:type="Literal"/>
+            <message valueType="t:String" value="You have been warned!" xsi:type="Literal"/>
+         </expression>
+      </def>
+      <def name="TestMessageTrace" context="Patient" accessLevel="Public">
+         <expression xsi:type="Message">
+            <source xsi:type="List">
+               <element valueType="t:Integer" value="3" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="4" xsi:type="Literal"/>
+               <element valueType="t:Integer" value="5" xsi:type="Literal"/>
+            </source>
+            <condition valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            <code valueType="t:String" value="300" xsi:type="Literal"/>
+            <severity valueType="t:String" value="Trace" xsi:type="Literal"/>
+            <message valueType="t:String" value="This is a trace" xsi:type="Literal"/>
+         </expression>
+      </def>
+      <def name="TestMessageError" context="Patient" accessLevel="Public">
+         <expression xsi:type="Message">
+            <source xsi:type="Add">
+               <operand valueType="t:Integer" value="3" xsi:type="Literal"/>
+               <operand valueType="t:Integer" value="1" xsi:type="Literal"/>
+            </source>
+            <condition valueType="t:Boolean" value="true" xsi:type="Literal"/>
+            <code valueType="t:String" value="400" xsi:type="Literal"/>
+            <severity valueType="t:String" value="Error" xsi:type="Literal"/>
+            <message valueType="t:String" value="This is an error!" xsi:type="Literal"/>
+         </expression>
+      </def>
+   </statements>
+</library>
+
+
