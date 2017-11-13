@@ -433,13 +433,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         try {
          result = context.resolveExpressionRef("PredecessorUnderflowDt").getExpression().evaluate(context);
         } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the predecessor operation exceeds the minimum value allowed for type DateTime."));
+         assertThat(re.getMessage(), is("The result of the predecessor operation precedes the minimum value allowed for the type"));
         }
 
         try {
          result = context.resolveExpressionRef("PredecessorUnderflowT").getExpression().evaluate(context);
         } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the predecessor operation exceeds the minimum value allowed for type Time."));
+         assertThat(re.getMessage(), is("The result of the predecessor operation precedes the minimum value allowed for the type"));
         }
     }
 
@@ -587,13 +587,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
        try {
          result = context.resolveExpressionRef("SuccessorOverflowDt").getExpression().evaluate(context);
        } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for type DateTime."));
+         assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for the type"));
        }
 
        try {
          result = context.resolveExpressionRef("SuccessorOverflowT").getExpression().evaluate(context);
        } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for type Time."));
+         assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for the type"));
        }
     }
 

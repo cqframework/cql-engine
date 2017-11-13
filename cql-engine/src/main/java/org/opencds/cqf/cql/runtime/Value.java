@@ -31,6 +31,10 @@ public class Value {
             return null;
         }
 
+        if (GreaterOrEqualEvaluator.greaterOrEqual(value, maxValue(value.getClass()))) {
+            throw new RuntimeException("The result of the successor operation exceeds the maximum value allowed for the type");
+        }
+
         else if (value instanceof Integer) {
             return ((Integer)value) + 1;
         }
@@ -42,18 +46,12 @@ public class Value {
             return new Quantity().withValue((BigDecimal)successor(quantity.getValue())).withUnit(quantity.getUnit());
         }
         else if (value instanceof DateTime) {
-            if (GreaterOrEqualEvaluator.greaterOrEqual(value, maxValue(DateTime.class))) {
-                throw new RuntimeException("The result of the successor operation exceeds the maximum value allowed for type DateTime.");
-            }
             DateTime dt = (DateTime)value;
             return new DateTime()
                     .withPartial(dt.getPartial().property(DateTime.getField(dt.getPartial().size() - 1)).addToCopy(1))
                     .withTimezoneOffset(dt.getTimezoneOffset());
         }
         else if (value instanceof Time) {
-            if (GreaterOrEqualEvaluator.greaterOrEqual(value, maxValue(Time.class))) {
-                throw new RuntimeException("The result of the successor operation exceeds the maximum value allowed for type Time.");
-            }
             Time t = (Time)value;
             return new Time()
                     .withPartial(t.getPartial().property(Time.getField(t.getPartial().size() - 1)).addToCopy(1))
@@ -69,6 +67,9 @@ public class Value {
         if (value == null) {
             return null;
         }
+        if (LessOrEqualEvaluator.lessOrEqual(value, minValue(value.getClass()))) {
+            throw new RuntimeException("The result of the predecessor operation precedes the minimum value allowed for the type");
+        }
         else if (value instanceof Integer) {
             return ((Integer)value) - 1;
         }
@@ -80,18 +81,12 @@ public class Value {
             return new Quantity().withValue((BigDecimal)predecessor(quantity.getValue())).withUnit(quantity.getUnit());
         }
         else if (value instanceof DateTime) {
-            if (LessOrEqualEvaluator.lessOrEqual(value, minValue(DateTime.class))) {
-                throw new RuntimeException("The result of the predecessor operation exceeds the minimum value allowed for type DateTime.");
-            }
             DateTime dt = (DateTime)value;
             return new DateTime()
                     .withPartial(dt.getPartial().property(DateTime.getField(dt.getPartial().size() - 1)).addToCopy(-1))
                     .withTimezoneOffset(dt.getTimezoneOffset());
         }
         else if (value instanceof Time) {
-            if (LessOrEqualEvaluator.lessOrEqual(value, minValue(Time.class))) {
-                throw new RuntimeException("The result of the predecessor operation exceeds the minimum value allowed for type Time.");
-            }
             Time t = (Time)value;
             return new Time()
                     .withPartial(t.getPartial().property(Time.getField(t.getPartial().size() - 1)).addToCopy(-1))
