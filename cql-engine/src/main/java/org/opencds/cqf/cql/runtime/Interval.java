@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.runtime;
 
 import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
 
 import java.lang.reflect.Type;
@@ -32,6 +33,10 @@ public class Interval {
         if ((this.low != null && this.low.getClass() != pointType)
                 || (this.high != null && this.high.getClass() != pointType)) {
             throw new IllegalArgumentException("Low and high boundary values of an interval must be of the same type.");
+        }
+
+        if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
+            throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
         }
     }
 

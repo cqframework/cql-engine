@@ -459,8 +459,12 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainMultiply").getExpression().evaluate(context);
         Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(289, true, 1936, true)));
 
-        result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainDiv").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(3, true, 2, true)));
+        try {
+            result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainDiv").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (RuntimeException re) {
+            // pass
+        }
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenMonthUncertain").getExpression().evaluate(context);
         assertThat(result, is(true));

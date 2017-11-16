@@ -1081,6 +1081,20 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeIntervalTest").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 599})));
+
+        try {
+            result = context.resolveExpressionRef("InvalidIntegerInterval").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (RuntimeException re) {
+            // pass
+        }
+
+        try {
+            result = context.resolveExpressionRef("InvalidIntegerIntervalA").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (RuntimeException re) {
+            // pass
+        }
     }
 
     /**
