@@ -22,7 +22,7 @@ public class CqlRunnerApp
             // main program invocation syntax or not, and accounts for
             // the varied host operating systems or compiled vs debugged.
             String host_executable_path = CqlRunnerApp.class
-                .getProtectionDomain().getCodeSource().getLoc‌ation().getPath();
+                .getProtectionDomain().getCodeSource().getLocation().getPath();
             System.out.println(
                 "Usage: " + host_executable_path + " <source_code_file_path>");
             return;
