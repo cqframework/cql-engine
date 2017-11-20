@@ -21,3 +21,13 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+# How to Use
+
+Note: This section is still being written.
+
+```
+gradle build
+cd cql-engine/build; ln -s libs lib; cd ../..
+./cql-engine/build/scripts/cql-engine ./cql-validation-tests/one.cql
+```

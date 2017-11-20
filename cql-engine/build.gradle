@@ -1,5 +1,8 @@
 // Most build configuration comes from the cql-all parent build!
 
+apply plugin: 'application'
+mainClassName = 'org.opencds.cqf.cql.execution.CqlRunnerApp'
+
 dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
