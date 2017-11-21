@@ -1,9 +1,5 @@
 // Most build configuration comes from the cql-all parent build!
 
-apply plugin: 'application'
-mainClassName = 'org.opencds.cqf.cql.execution.CqlRunnerApp'
-startScripts.classpath += files("lib/test-${project.archivesBaseName}-${project.version}.jar")
-
 dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
@@ -18,4 +14,16 @@ generateSources {
             arg(line: "${xjc.args} -npa -XautoInheritance -XautoInheritance-xmlTypesExtend=org.opencds.cqf.cql.elm.execution.Executable")
         }
     }
+}
+
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle Jar File Example',
+            'Implementation-Version': version,
+            'Main-Class': 'org.opencds.cqf.cql.execution.CqlRunnerApp'
+    }
+    baseName = project.name + '-all'
+    from { configurations.testCompile.collect { it.isDirectory() ? it : zipTree(it) } }
+    from sourceSets.test.output+sourceSets.test.allSource
+    with jar
 }
