@@ -26,8 +26,21 @@ limitations under the License.
 
 Note: This section is still being written.
 
+The following commands will build the CQL Evaluation Engine and then
+execute the CQL engine validation suite against it.
+The syntax is specific to Unix-like operating systems.
+You need to "cd" into the main directory of the project first.
+You need to install Java and Gradle before running the commands.
+
+The "1" argument to test_harness() makes the displayed test results verbose
+with one line per individual test; making it "0" will make 1 line per file.
+
+Perl already comes bundled with all Unix-like systems so doesn't need
+installing; however, the test harness one-liner using it is subject to be
+replaced later with a Java-based solution that may require extra modules.
+
 ```
-gradle build
+gradle assemble
 cd cql-engine/build; ln -s libs lib; cd ../..
-./cql-engine/build/scripts/cql-engine ./cql-validation-tests/one.cql
+HARNESS_PERL=./cql-engine/build/scripts/cql-engine perl -MExtUtils::Command::MM -MTest::Harness -e "undef *Test::Harness::Switches; test_harness(1)" ./cql-validation-tests/*.cql
 ```
