@@ -198,7 +198,7 @@ configure(subprojects.findAll {it.name in ['cql-engine', 'cql-engine-fhir']}) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.4'
+    gradleVersion = '4.1'
 }
 
 idea {
