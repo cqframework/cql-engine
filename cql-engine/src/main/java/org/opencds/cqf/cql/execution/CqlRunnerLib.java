@@ -26,6 +26,7 @@ public class CqlRunnerLib
         // we actually need to remove it and fix whatever plagues
         // "new ModelManager()" that makes it throw an exception when
         // CqlRunnerApp is run on the command-line (running in IntelliJ is ok).
+        /*
         out.println("1..3");
         out.println("ok - first temp stand in test");
         out.println("ok - second temp stand in test");
@@ -34,6 +35,7 @@ public class CqlRunnerLib
         {
             return;
         }
+        */
 
         Library library = cql_to_library(errors, source_code_text);
         if (library == null)
