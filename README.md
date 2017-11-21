@@ -40,8 +40,7 @@ installing; however, the test harness one-liner using it is subject to be
 replaced later with a Java-based solution that may require extra modules.
 
 ```
-gradle assemble
-gradle testJar
-cd cql-engine/build; ln -s libs lib; cd ../..
-HARNESS_PERL=./cql-engine/build/scripts/cql-engine perl -MExtUtils::Command::MM -MTest::Harness -e "undef *Test::Harness::Switches; test_harness(1)" ./cql-validation-tests/*.cql
+gradle fatJar
+chmod 755 ./cql-runner
+HARNESS_PERL=./cql-runner perl -MExtUtils::Command::MM -MTest::Harness -e "undef *Test::Harness::Switches; test_harness(1)" ./cql-validation-tests/*.cql
 ```
