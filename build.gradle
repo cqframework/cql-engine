@@ -33,10 +33,6 @@ subprojects {
         testCompile group: 'uk.co.datumedge', name: 'hamcrest-json', version: '0.2'
         testCompile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
         compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
-        compile group: 'info.cqframework', name: 'cql', version: '1.2.16'
-        compile group: 'info.cqframework', name: 'model', version: '1.2.16'
-        compile group: 'info.cqframework', name: 'cql-to-elm', version: '1.2.16'
-        compile group: 'info.cqframework', name: 'quick', version: '1.2.16'
         runtime files('src/main/resources/log4j.properties')
     }
 
