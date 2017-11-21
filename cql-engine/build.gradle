@@ -2,6 +2,7 @@
 
 apply plugin: 'application'
 mainClassName = 'org.opencds.cqf.cql.execution.CqlRunnerApp'
+startScripts.classpath += files("lib/test-${project.archivesBaseName}-${project.version}.jar")
 
 dependencies {
     compile group: 'joda-time', name: 'joda-time', version: '2.9.3'
