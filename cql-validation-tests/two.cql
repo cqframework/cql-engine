@@ -1,12 +1,15 @@
-library CQL_Validation_Tests_1 version '1'
+library CQL_Validation_Tests version '1'
 
 context Population
 
-define x: 5
-define y: 10
-define z: null
+define _0: plan(1)
 
-define TestMessageInfo: Message(1, true, '100', 'Message', 'Test Message')
-define TestMessageWarn: Message(2, true, '200', 'Warning', 'You have been warned!')
-define TestMessageTrace: Message({3, 4, 5}, true, '300', 'Trace', 'This is a trace')
-// define TestMessageError: Message(3 + 1, true, '400', 'Error', 'This is an error!')
+
+define _1: ok(true, 'this should pass')
+
+
+define function plan(test_count Integer):
+    Message(0, true, '0', 'Message', '1..' + ToString(test_count))
+
+define function ok(is_ok Boolean, message String):
+    Message(0, true, '0', 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
