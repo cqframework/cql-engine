@@ -53,12 +53,14 @@ public class CqlRunnerLib
 
         Context context = new Context(library);
 
-        for (ExpressionDef expressionDef : library.getStatements().getDef())
+        for (ExpressionDef statement : library.getStatements().getDef())
         {
-            // TODO: Only evaluate the statement directly if it is a Message() call,
-            // and handle the output differently.
-            Object result = expressionDef.evaluate(context);
-            out.println(expressionDef.getName() + ": " + (result == null ? "" : result.toString()));
+            if (statement.getAccessLevel().value() == "Public")
+            {
+                // TODO: Handle a Message() call differently from other types.
+                Object result = statement.evaluate(context);
+                out.println(statement.getName() + ": " + (result == null ? "" : result.toString()));
+            }
         }
     }
 }

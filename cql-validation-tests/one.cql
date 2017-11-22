@@ -12,8 +12,8 @@ define _2: ok(false = false, 'false = false')
 define _3: ok(start of Interval[5,7] = 5, 'start of interval 5..7 is 5')
 
 
-define function plan(test_count Integer):
+define private function plan(test_count Integer):
     Message(0, true, '0', 'Message', '1..' + ToString(test_count))
 
-define function ok(is_ok Boolean, message String):
+define private function ok(is_ok Boolean, message String):
     Message(0, true, '0', 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
