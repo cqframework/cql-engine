@@ -28,7 +28,7 @@ public class CqlRunnerApp
             return;
         }
 
-        // File system path for the file containing CQL source
+        // File system path for the file containing CQL or ELM source
         // code that the user wishes to execute as their main program.
         // If the user-specified file path is absolute, toAbsolutePath()
         // will just use that as the final path; otherwise it is taken
@@ -83,15 +83,15 @@ public class CqlRunnerApp
             return;
         }
 
-        // Try to interpret the source_code_text as CQL and execute it.
+        // Try to interpret the source_code_text as CQL or ELM and execute it.
         ArrayList<String> errors = new ArrayList<>();
-        CqlRunnerLib.perform(System.out, errors, source_code_text);
+        CqlRunnerLib.perform(source_code_text, System.out, errors);
 
         if (errors.size() > 0)
         {
             System.out.println("The requested source code providing file"
                 + " [" + source_code_file_path + "] was character data"
-                + " but couldn't be executed as CQL source code:"
+                + " but couldn't be executed as CQL or ELM source code:"
                 + "\n" + String.join("\n", errors));
             return;
         }

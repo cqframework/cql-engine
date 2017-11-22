@@ -32,7 +32,7 @@ The syntax is specific to Unix-like operating systems.
 You need to "cd" into the main directory of the project first.
 You need to install Java and Gradle before running the commands.
 
-The "1" argument to test_harness() makes the displayed test results verbose
+The argument to test_harness() when "1" makes the displayed results verbose
 with one line per individual test; making it "0" will make 1 line per file.
 
 Perl already comes bundled with all Unix-like systems so doesn't need
@@ -41,6 +41,8 @@ replaced later with a Java-based solution that may require extra modules.
 
 ```
 gradle fatJar
+java -jar ./cql-engine/build/libs/cql-engine-all-1.2.37-SNAPSHOT.jar ./cql-validation-tests/one.cql
 chmod 755 ./cql-runner
-HARNESS_PERL=./cql-runner perl -MExtUtils::Command::MM -MTest::Harness -e "undef *Test::Harness::Switches; test_harness(1)" ./cql-validation-tests/*.cql
+./cql-runner ./cql-validation-tests/one.cql
+HARNESS_PERL=./cql-runner perl -MExtUtils::Command::MM -MTest::Harness -e "undef *Test::Harness::Switches; test_harness(0)" ./cql-validation-tests/*.cql
 ```

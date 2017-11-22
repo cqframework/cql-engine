@@ -13,8 +13,13 @@ import org.cqframework.cql.elm.tracking.TrackBack;
  */
 public class CqlToElmLib
 {
-    public static String maybe_cql_to_elm_xml(ArrayList<String> errors,
-        String maybe_cql_source_code)
+    public static String maybe_cql_to_elm_xml(String maybe_cql_source_code)
+    {
+        return maybe_cql_to_elm_xml(maybe_cql_source_code, null);
+    }
+
+    public static String maybe_cql_to_elm_xml(String maybe_cql_source_code,
+        ArrayList<String> errors)
     {
         ModelManager modelManager = new ModelManager();
         LibraryManager libraryManager = new LibraryManager(modelManager);
@@ -28,7 +33,10 @@ public class CqlToElmLib
 
         if (translator.getErrors().size() > 0)
         {
-            collect_errors(errors, translator.getErrors());
+            if (errors != null)
+            {
+                collect_errors(errors, translator.getErrors());
+            }
             return null;
         }
 
@@ -36,7 +44,10 @@ public class CqlToElmLib
 
         if (translator.getErrors().size() > 0)
         {
-            collect_errors(errors, translator.getErrors());
+            if (errors != null)
+            {
+                collect_errors(errors, translator.getErrors());
+            }
             return null;
         }
 

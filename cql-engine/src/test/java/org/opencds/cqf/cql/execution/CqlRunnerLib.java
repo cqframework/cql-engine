@@ -13,26 +13,43 @@ import org.cqframework.cql.elm.execution.Library;
  */
 public class CqlRunnerLib
 {
-    public static void perform(PrintStream out, ArrayList<String> errors,
-        String source_code_text)
+    public static void perform(String maybe_cql_or_elm_sc, PrintStream out,
+        ArrayList<String> errors)
     {
-        String elm_xml = CqlToElmLib.maybe_cql_to_elm_xml(errors, source_code_text);
-        if (elm_xml == null)
-        {
-            return;
-        }
-
         Library library = null;
         try
         {
+            // First try and parse the input as ELM.
             library = CqlLibraryReader.read(new ByteArrayInputStream(
-                elm_xml.getBytes(StandardCharsets.UTF_8)));
+                maybe_cql_or_elm_sc.getBytes(StandardCharsets.UTF_8)));
         }
-        catch (Exception e)
+        catch (Exception e1)
         {
-            errors.add("Translation of CQL to ELM failed due to errors:");
-            errors.add(e.toString());
+            // Parsing the input as ELM failed; try and parse it as CQL.
+            String elm_xml = CqlToElmLib.maybe_cql_to_elm_xml(
+                maybe_cql_or_elm_sc, errors);
+            if (elm_xml == null)
+            {
+                errors.add("The source code failed to parse either as ELM or as CQL.");
+                errors.add("The prior errors were during the attempt to parse as CQL.");
+                errors.add("The next errors were during the attempt to parse as ELM:");
+                errors.add(e1.toString());
+                return;
+            }
+            try
+            {
+                library = CqlLibraryReader.read(new ByteArrayInputStream(
+                    elm_xml.getBytes(StandardCharsets.UTF_8)));
+            }
+            catch (Exception e2)
+            {
+                errors.add("Translation of CQL to ELM succeeded; however"
+                    + " parsing that ELM failed due to errors:");
+                errors.add(e2.toString());
+            }
         }
+
+        // Whether ELM or CQL, we succeeded in parsing it.
 
         Context context = new Context(library);
 
