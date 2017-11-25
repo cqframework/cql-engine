@@ -37,10 +37,11 @@ public class Interval {
         }
 
         // Special case for measure processing - MeasurementPeriod is a java date
-        if (low instanceof Date && high instanceof Date
-                && GreaterEvaluator.greater(DateTime.fromJavaDate((Date) getStart()), DateTime.fromJavaDate((Date) getEnd())))
-        {
-            throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
+        if (low instanceof Date && high instanceof Date) {
+            if (GreaterEvaluator.greater(DateTime.fromJavaDate((Date) getStart()), DateTime.fromJavaDate((Date) getEnd())))
+            {
+                throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
+            }
         }
 
         else if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
