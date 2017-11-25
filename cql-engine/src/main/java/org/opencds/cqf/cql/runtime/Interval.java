@@ -7,6 +7,7 @@ import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by Bryn on 4/15/2016.
@@ -33,6 +34,13 @@ public class Interval {
         if ((this.low != null && this.low.getClass() != pointType)
                 || (this.high != null && this.high.getClass() != pointType)) {
             throw new IllegalArgumentException("Low and high boundary values of an interval must be of the same type.");
+        }
+
+        // Special case for measure processing - MeasurementPeriod is a java date
+        if (low instanceof Date && high instanceof Date
+                && GreaterEvaluator.greater(DateTime.fromJavaDate((Date) getStart()), DateTime.fromJavaDate((Date) getEnd())))
+        {
+            throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
         }
 
         if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
