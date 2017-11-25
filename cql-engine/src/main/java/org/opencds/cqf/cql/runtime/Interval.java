@@ -43,7 +43,7 @@ public class Interval {
             throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
         }
 
-        if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
+        else if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
             throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
         }
     }
