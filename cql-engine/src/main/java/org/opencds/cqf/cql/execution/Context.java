@@ -6,6 +6,7 @@ import org.opencds.cqf.cql.data.SystemDataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import javax.xml.namespace.QName;
+import java.io.PrintStream;
 import java.util.*;
 import java.util.List;
 
@@ -35,13 +36,15 @@ public class Context {
     private TraceExecution trace = new TraceExecution();
     private boolean enableTraceLogging = false;
 
+    private PrintStream messagePrintStream = null;
+
     public Context(Library library) {
         this.library = library;
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", new SystemDataProvider());
         libraryLoader = new DefaultLibraryLoader();
-		if (library.getIdentifier() != null)
-			libraries.put(library.getIdentifier().getId(), library);
+        if (library.getIdentifier() != null)
+            libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
     }
 
@@ -574,5 +577,13 @@ public class Context {
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         dataProvider.setValue(target, path, value);
+    }
+
+    public PrintStream getMessagePrintStream() {
+        return messagePrintStream;
+    }
+
+    public void setMessagePrintStream(PrintStream out) {
+        messagePrintStream = out;
     }
 }
