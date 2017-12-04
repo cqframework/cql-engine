@@ -167,6 +167,8 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testMode() throws JAXBException {
         Context context = new Context(library);
 
+        // TODO: ModeTestInteger
+
         Object result = context.resolveExpressionRef("ModeTestDateTime").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 9, 5})));
 
