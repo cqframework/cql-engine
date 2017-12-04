@@ -4,8 +4,6 @@ codesystem "LOINC": 'http://loinc.org'
 
 context Population
 
-define private ExistenceOfThisEarlierDefineIsWorkaroundForTranslatorDeathWithLaterMessageNullCodeArg: Message(null, true, '', 'Message', '')
-
 define _0: plan(300)
 
 
@@ -127,7 +125,7 @@ define ConceptToString: ok(Equivalent((Concept { Code '66071002' from "LOINC", C
 
 
 define function plan(test_count Integer):
-    Message(null, true, null, 'Message', '1..' + ToString(test_count))
+    Message(null, true, null as String, 'Message', '1..' + ToString(test_count))
 
 define function ok(is_ok Boolean, message String):
-    Message(null, true, null, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
+    Message(null, true, null as String, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)

@@ -6,8 +6,6 @@ valueset "Feeding Intention-Breast": '2.16.840.1.113762.1.4.1045.29'
 
 context Population
 
-define private ExistenceOfThisEarlierDefineIsWorkaroundForTranslatorDeathWithLaterMessageNullCodeArg: Message(null, true, '', 'Message', '')
-
 define _0: plan(300)
 
 
@@ -79,7 +77,7 @@ define InValueSetFalseConcept: ok(Equivalent((Concept { Code '66071002' from "LO
 
 
 define function plan(test_count Integer):
-    Message(null, true, null, 'Message', '1..' + ToString(test_count))
+    Message(null, true, null as String, 'Message', '1..' + ToString(test_count))
 
 define function ok(is_ok Boolean, message String):
-    Message(null, true, null, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
+    Message(null, true, null as String, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
