@@ -2,396 +2,408 @@ library CqlIntervalOperatorsTest version '1'
 
 context Population
 
+define private ExistenceOfThisEarlierDefineIsWorkaroundForTranslatorDeathWithLaterMessageNullCodeArg: Message(null, true, '', 'Message', '')
+
+define _0: plan(300)
+
+
 //After
-define TestAfterNull: null after IntegerIntervalTest
-define IntegerIntervalAfterTrue: IntegerIntervalTest2 after IntegerIntervalTest
-define IntegerIntervalAfterFalse: IntegerIntervalTest after IntegerIntervalTest2
-define IntegerIntervalPointAfterTrue: 12 after IntegerIntervalTest
-define IntegerIntervalPointAfterFalse: 9 after IntegerIntervalTest
-define IntegerIntervalAfterPointTrue: IntegerIntervalTest2 after 5
-define IntegerIntervalAfterPointFalse: IntegerIntervalTest2 after 12
-define DecimalIntervalAfterTrue: DecimalIntervalTest2 after DecimalIntervalTest
-define DecimalIntervalAfterFalse: DecimalIntervalTest after DecimalIntervalTest2
-define DecimalIntervalPointAfterTrue: 12.0 after DecimalIntervalTest
-define DecimalIntervalPointAfterFalse: 9.0 after DecimalIntervalTest
-define DecimalIntervalAfterPointTrue: DecimalIntervalTest2 after 5.0
-define DecimalIntervalAfterPointFalse: DecimalIntervalTest2 after 12.0
-define QuantityIntervalAfterTrue: QuantityIntervalTest2 after QuantityIntervalTest
-define QuantityIntervalAfterFalse: QuantityIntervalTest after QuantityIntervalTest2
-define QuantityIntervalPointAfterTrue: 12.0'g' after QuantityIntervalTest
-define QuantityIntervalPointAfterFalse: 9.0'g' after QuantityIntervalTest
-define QuantityIntervalAfterPointTrue: QuantityIntervalTest2 after 5.0'g'
-define QuantityIntervalAfterPointFalse: QuantityIntervalTest2 after 12.0'g'
-define DateTimeAfterTrue: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] after DateTime(2011, 12, 31)
-define DateTimeAfterFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] after DateTime(2012, 12, 31)
-define TimeAfterTrue: Interval[@T15:59:59.999, @T20:59:59.999] after @T12:59:59.999
-define TimeAfterFalse: Interval[@T15:59:59.999, @T20:59:59.999] after @T17:59:59.999
+define TestAfterNull: ok(Equivalent((null after IntegerIntervalTest),(null)), 'TestAfterNull')
+define IntegerIntervalAfterTrue: ok(Equivalent((IntegerIntervalTest2 after IntegerIntervalTest),(null)), 'IntegerIntervalAfterTrue')
+define IntegerIntervalAfterFalse: ok(Equivalent((IntegerIntervalTest after IntegerIntervalTest2),(null)), 'IntegerIntervalAfterFalse')
+define IntegerIntervalPointAfterTrue: ok(Equivalent((12 after IntegerIntervalTest),(null)), 'IntegerIntervalPointAfterTrue')
+define IntegerIntervalPointAfterFalse: ok(Equivalent((9 after IntegerIntervalTest),(null)), 'IntegerIntervalPointAfterFalse')
+define IntegerIntervalAfterPointTrue: ok(Equivalent((IntegerIntervalTest2 after 5),(null)), 'IntegerIntervalAfterPointTrue')
+define IntegerIntervalAfterPointFalse: ok(Equivalent((IntegerIntervalTest2 after 12),(null)), 'IntegerIntervalAfterPointFalse')
+define DecimalIntervalAfterTrue: ok(Equivalent((DecimalIntervalTest2 after DecimalIntervalTest),(null)), 'DecimalIntervalAfterTrue')
+define DecimalIntervalAfterFalse: ok(Equivalent((DecimalIntervalTest after DecimalIntervalTest2),(null)), 'DecimalIntervalAfterFalse')
+define DecimalIntervalPointAfterTrue: ok(Equivalent((12.0 after DecimalIntervalTest),(null)), 'DecimalIntervalPointAfterTrue')
+define DecimalIntervalPointAfterFalse: ok(Equivalent((9.0 after DecimalIntervalTest),(null)), 'DecimalIntervalPointAfterFalse')
+define DecimalIntervalAfterPointTrue: ok(Equivalent((DecimalIntervalTest2 after 5.0),(null)), 'DecimalIntervalAfterPointTrue')
+define DecimalIntervalAfterPointFalse: ok(Equivalent((DecimalIntervalTest2 after 12.0),(null)), 'DecimalIntervalAfterPointFalse')
+define QuantityIntervalAfterTrue: ok(Equivalent((QuantityIntervalTest2 after QuantityIntervalTest),(null)), 'QuantityIntervalAfterTrue')
+define QuantityIntervalAfterFalse: ok(Equivalent((QuantityIntervalTest after QuantityIntervalTest2),(null)), 'QuantityIntervalAfterFalse')
+define QuantityIntervalPointAfterTrue: ok(Equivalent((12.0'g' after QuantityIntervalTest),(null)), 'QuantityIntervalPointAfterTrue')
+define QuantityIntervalPointAfterFalse: ok(Equivalent((9.0'g' after QuantityIntervalTest),(null)), 'QuantityIntervalPointAfterFalse')
+define QuantityIntervalAfterPointTrue: ok(Equivalent((QuantityIntervalTest2 after 5.0'g'),(null)), 'QuantityIntervalAfterPointTrue')
+define QuantityIntervalAfterPointFalse: ok(Equivalent((QuantityIntervalTest2 after 12.0'g'),(null)), 'QuantityIntervalAfterPointFalse')
+define DateTimeAfterTrue: ok(Equivalent((Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] after DateTime(2011, 12, 31)),(null)), 'DateTimeAfterTrue')
+define DateTimeAfterFalse: ok(Equivalent((Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] after DateTime(2012, 12, 31)),(null)), 'DateTimeAfterFalse')
+define TimeAfterTrue: ok(Equivalent((Interval[@T15:59:59.999, @T20:59:59.999] after @T12:59:59.999),(null)), 'TimeAfterTrue')
+define TimeAfterFalse: ok(Equivalent((Interval[@T15:59:59.999, @T20:59:59.999] after @T17:59:59.999),(null)), 'TimeAfterFalse')
 
 //Before
-define TestBeforeNull : null before IntegerIntervalTest
-define IntegerIntervalBeforeFalse: IntegerIntervalTest2 before IntegerIntervalTest
-define IntegerIntervalBeforeTrue: IntegerIntervalTest before IntegerIntervalTest2
-define IntegerIntervalPointBeforeTrue: 9 before IntegerIntervalTest2
-define IntegerIntervalPointBeforeFalse: 9 before IntegerIntervalTest
-define IntegerIntervalBeforePointTrue: IntegerIntervalTest before 11
-define IntegerIntervalBeforePointFalse: IntegerIntervalTest before 8
-define DecimalIntervalBeforeFalse: DecimalIntervalTest2 before DecimalIntervalTest
-define DecimalIntervalBeforeTrue: DecimalIntervalTest before DecimalIntervalTest2
-define DecimalIntervalPointBeforeTrue: 9.0 before DecimalIntervalTest2
-define DecimalIntervalPointBeforeFalse: 9.0 before DecimalIntervalTest
-define DecimalIntervalBeforePointTrue: DecimalIntervalTest before 11.0
-define DecimalIntervalBeforePointFalse: DecimalIntervalTest before 8.0
-define QuantityIntervalBeforeTrue: QuantityIntervalTest before QuantityIntervalTest2
-define QuantityIntervalBeforeFalse: QuantityIntervalTest2 before QuantityIntervalTest
-define QuantityIntervalPointBeforeTrue: QuantityIntervalTest before 12.0'g'
-define QuantityIntervalPointBeforeFalse: QuantityIntervalTest before 9.0'g'
-define QuantityIntervalBeforePointTrue:  5.0'g' before QuantityIntervalTest2
-define QuantityIntervalBeforePointFalse: 12.0'g' before QuantityIntervalTest2
-define DateTimeBeforeTrue: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] before DateTime(2012, 2, 27)
-define DateTimeBeforeFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] before DateTime(2011, 12, 31)
-define TimeBeforeTrue: Interval[@T15:59:59.999, @T20:59:59.999] before @T22:59:59.999
-define TimeBeforeFalse: Interval[@T15:59:59.999, @T20:59:59.999] before @T10:59:59.999
+define TestBeforeNull : ok(Equivalent((null before IntegerIntervalTest),(null)), 'TestBeforeNull')
+define IntegerIntervalBeforeFalse: ok(Equivalent((IntegerIntervalTest2 before IntegerIntervalTest),(null)), 'IntegerIntervalBeforeFalse')
+define IntegerIntervalBeforeTrue: ok(Equivalent((IntegerIntervalTest before IntegerIntervalTest2),(null)), 'IntegerIntervalBeforeTrue')
+define IntegerIntervalPointBeforeTrue: ok(Equivalent((9 before IntegerIntervalTest2),(null)), 'IntegerIntervalPointBeforeTrue')
+define IntegerIntervalPointBeforeFalse: ok(Equivalent((9 before IntegerIntervalTest),(null)), 'IntegerIntervalPointBeforeFalse')
+define IntegerIntervalBeforePointTrue: ok(Equivalent((IntegerIntervalTest before 11),(null)), 'IntegerIntervalBeforePointTrue')
+define IntegerIntervalBeforePointFalse: ok(Equivalent((IntegerIntervalTest before 8),(null)), 'IntegerIntervalBeforePointFalse')
+define DecimalIntervalBeforeFalse: ok(Equivalent((DecimalIntervalTest2 before DecimalIntervalTest),(null)), 'DecimalIntervalBeforeFalse')
+define DecimalIntervalBeforeTrue: ok(Equivalent((DecimalIntervalTest before DecimalIntervalTest2),(null)), 'DecimalIntervalBeforeTrue')
+define DecimalIntervalPointBeforeTrue: ok(Equivalent((9.0 before DecimalIntervalTest2),(null)), 'DecimalIntervalPointBeforeTrue')
+define DecimalIntervalPointBeforeFalse: ok(Equivalent((9.0 before DecimalIntervalTest),(null)), 'DecimalIntervalPointBeforeFalse')
+define DecimalIntervalBeforePointTrue: ok(Equivalent((DecimalIntervalTest before 11.0),(null)), 'DecimalIntervalBeforePointTrue')
+define DecimalIntervalBeforePointFalse: ok(Equivalent((DecimalIntervalTest before 8.0),(null)), 'DecimalIntervalBeforePointFalse')
+define QuantityIntervalBeforeTrue: ok(Equivalent((QuantityIntervalTest before QuantityIntervalTest2),(null)), 'QuantityIntervalBeforeTrue')
+define QuantityIntervalBeforeFalse: ok(Equivalent((QuantityIntervalTest2 before QuantityIntervalTest),(null)), 'QuantityIntervalBeforeFalse')
+define QuantityIntervalPointBeforeTrue: ok(Equivalent((QuantityIntervalTest before 12.0'g'),(null)), 'QuantityIntervalPointBeforeTrue')
+define QuantityIntervalPointBeforeFalse: ok(Equivalent((QuantityIntervalTest before 9.0'g'),(null)), 'QuantityIntervalPointBeforeFalse')
+define QuantityIntervalBeforePointTrue: ok(Equivalent((5.0'g' before QuantityIntervalTest2),(null)), 'QuantityIntervalBeforePointTrue')
+define QuantityIntervalBeforePointFalse: ok(Equivalent((12.0'g' before QuantityIntervalTest2),(null)), 'QuantityIntervalBeforePointFalse')
+define DateTimeBeforeTrue: ok(Equivalent((Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] before DateTime(2012, 2, 27)),(null)), 'DateTimeBeforeTrue')
+define DateTimeBeforeFalse: ok(Equivalent((Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] before DateTime(2011, 12, 31)),(null)), 'DateTimeBeforeFalse')
+define TimeBeforeTrue: ok(Equivalent((Interval[@T15:59:59.999, @T20:59:59.999] before @T22:59:59.999),(null)), 'TimeBeforeTrue')
+define TimeBeforeFalse: ok(Equivalent((Interval[@T15:59:59.999, @T20:59:59.999] before @T10:59:59.999),(null)), 'TimeBeforeFalse')
 
 //Collapse
-define TestCollapseNull: collapse {Interval(null, null)}
-define IntegerIntervalCollapse: collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }
-define IntegerIntervalCollapse2: collapse { Interval[1,2], Interval[3,7], Interval[10,19], Interval[7,10] }
-define IntegerIntervalCollapse3: collapse { Interval[4,6], Interval[7,8] }
-define DecimalIntervalCollapse: collapse { Interval[1.0,5.0], Interval[3.0,7.0], Interval[12.0,19.0], Interval[7.0,10.0] }
-define DecimalIntervalCollapse2: collapse { Interval[4.0,6.0], Interval[6.00000001,8.0] }
-define QuantityIntervalCollapse: collapse { Interval[1.0 'g',5.0 'g'], Interval[3.0 'g',7.0 'g'], Interval[12.0 'g',19.0 'g'], Interval[7.0 'g',10.0 'g'] }
-define DateTimeCollapse: collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 10), DateTime(2012, 1, 25)], Interval[DateTime(2012, 5, 10), DateTime(2012, 5, 25)], Interval[DateTime(2012, 5, 20), DateTime(2012, 5, 30)] }
-define DateTimeCollapse2: collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 16), DateTime(2012, 5, 25)] }
-define TimeCollapse: collapse { Interval[@T01:59:59.999, @T10:59:59.999], Interval[@T08:59:59.999, @T15:59:59.999], Interval[@T17:59:59.999, @T20:59:59.999], Interval[@T18:59:59.999, @T22:59:59.999] }
-define TimeCollapse2: collapse { Interval[@T01:59:59.999, @T10:59:59.999], Interval[@T11:00:00.000, @T15:59:59.999] }
+define TestCollapseNull: ok(Equivalent((collapse {Interval(null, null)}),(null)), 'TestCollapseNull')
+define IntegerIntervalCollapse: ok(Equivalent((collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }),(null)), 'IntegerIntervalCollapse')
+define IntegerIntervalCollapse2: ok(Equivalent((collapse { Interval[1,2], Interval[3,7], Interval[10,19], Interval[7,10] }),(null)), 'IntegerIntervalCollapse2')
+define IntegerIntervalCollapse3: ok(Equivalent((collapse { Interval[4,6], Interval[7,8] }),(null)), 'IntegerIntervalCollapse3')
+define DecimalIntervalCollapse: ok(Equivalent((collapse { Interval[1.0,5.0], Interval[3.0,7.0], Interval[12.0,19.0], Interval[7.0,10.0] }),(null)), 'DecimalIntervalCollapse')
+define DecimalIntervalCollapse2: ok(Equivalent((collapse { Interval[4.0,6.0], Interval[6.00000001,8.0] }),(null)), 'DecimalIntervalCollapse2')
+define QuantityIntervalCollapse: ok(Equivalent((collapse { Interval[1.0 'g',5.0 'g'], Interval[3.0 'g',7.0 'g'], Interval[12.0 'g',19.0 'g'], Interval[7.0 'g',10.0 'g'] }),(null)), 'QuantityIntervalCollapse')
+define DateTimeCollapse: ok(Equivalent((collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 10), DateTime(2012, 1, 25)], Interval[DateTime(2012, 5, 10), DateTime(2012, 5, 25)], Interval[DateTime(2012, 5, 20), DateTime(2012, 5, 30)] }),(null)), 'DateTimeCollapse')
+define DateTimeCollapse2: ok(Equivalent((collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 16), DateTime(2012, 5, 25)] }),(null)), 'DateTimeCollapse2')
+define TimeCollapse: ok(Equivalent((collapse { Interval[@T01:59:59.999, @T10:59:59.999], Interval[@T08:59:59.999, @T15:59:59.999], Interval[@T17:59:59.999, @T20:59:59.999], Interval[@T18:59:59.999, @T22:59:59.999] }),(null)), 'TimeCollapse')
+define TimeCollapse2: ok(Equivalent((collapse { Interval[@T01:59:59.999, @T10:59:59.999], Interval[@T11:00:00.000, @T15:59:59.999] }),(null)), 'TimeCollapse2')
 
 //Contains
-define TestContainsNull: IntegerIntervalTest contains null
-define TestNullElement1: null contains 5
-define TestNullElement2: Interval[null, 5] contains 10
-define IntegerIntervalContainsTrue: IntegerIntervalTest contains 5
-define IntegerIntervalContainsFalse: IntegerIntervalTest contains 25
-define DecimalIntervalContainsTrue: DecimalIntervalTest contains 8.0
-define DecimalIntervalContainsFalse: DecimalIntervalTest contains 255.0
-define QuantityIntervalContainsTrue: QuantityIntervalTest contains 2.0 'g'
-define QuantityIntervalContainsFalse: QuantityIntervalTest contains 100.0 'g'
-define DateTimeContainsTrue: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 10)
-define DateTimeContainsFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 16)
-define TimeContainsTrue: Interval[@T01:59:59.999, @T10:59:59.999] contains @T05:59:59.999
-define TimeContainsFalse: Interval[@T01:59:59.999, @T10:59:59.999] contains @T15:59:59.999
+define TestContainsNull: ok(Equivalent((IntegerIntervalTest contains null),(null)), 'TestContainsNull')
+define TestNullElement1: ok(Equivalent((null contains 5),(null)), 'TestNullElement1')
+define TestNullElement2: ok(Equivalent((Interval[null, 5] contains 10),(null)), 'TestNullElement2')
+define IntegerIntervalContainsTrue: ok(Equivalent((IntegerIntervalTest contains 5),(null)), 'IntegerIntervalContainsTrue')
+define IntegerIntervalContainsFalse: ok(Equivalent((IntegerIntervalTest contains 25),(null)), 'IntegerIntervalContainsFalse')
+define DecimalIntervalContainsTrue: ok(Equivalent((DecimalIntervalTest contains 8.0),(null)), 'DecimalIntervalContainsTrue')
+define DecimalIntervalContainsFalse: ok(Equivalent((DecimalIntervalTest contains 255.0),(null)), 'DecimalIntervalContainsFalse')
+define QuantityIntervalContainsTrue: ok(Equivalent((QuantityIntervalTest contains 2.0 'g'),(null)), 'QuantityIntervalContainsTrue')
+define QuantityIntervalContainsFalse: ok(Equivalent((QuantityIntervalTest contains 100.0 'g'),(null)), 'QuantityIntervalContainsFalse')
+define DateTimeContainsTrue: ok(Equivalent((Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 10)),(null)), 'DateTimeContainsTrue')
+define DateTimeContainsFalse: ok(Equivalent((Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 16)),(null)), 'DateTimeContainsFalse')
+define TimeContainsTrue: ok(Equivalent((Interval[@T01:59:59.999, @T10:59:59.999] contains @T05:59:59.999),(null)), 'TimeContainsTrue')
+define TimeContainsFalse: ok(Equivalent((Interval[@T01:59:59.999, @T10:59:59.999] contains @T15:59:59.999),(null)), 'TimeContainsFalse')
 
 //End
-define IntegerIntervalEnd: end of IntegerIntervalTest
-define DecimalIntervalEnd: end of DecimalIntervalTest
-define QuantityIntervalEnd: end of QuantityIntervalTest
-define DateTimeIntervalEnd: end of DateTimeIntervalTest
-define TimeIntervalEnd: end of TimeIntervalTest
+define IntegerIntervalEnd: ok(Equivalent((end of IntegerIntervalTest),(null)), 'IntegerIntervalEnd')
+define DecimalIntervalEnd: ok(Equivalent((end of DecimalIntervalTest),(null)), 'DecimalIntervalEnd')
+define QuantityIntervalEnd: ok(Equivalent((end of QuantityIntervalTest),(null)), 'QuantityIntervalEnd')
+define DateTimeIntervalEnd: ok(Equivalent((end of DateTimeIntervalTest),(null)), 'DateTimeIntervalEnd')
+define TimeIntervalEnd: ok(Equivalent((end of TimeIntervalTest),(null)), 'TimeIntervalEnd')
 
 //Ends
-define TestEndsNull: IntegerIntervalTest ends Interval(null, null)
-define IntegerIntervalEndsTrue: IntegerIntervalTest4 ends IntegerIntervalTest
-define IntegerIntervalEndsFalse: IntegerIntervalTest3 ends IntegerIntervalTest
-define DecimalIntervalEndsTrue: DecimalIntervalTest3 ends DecimalIntervalTest
-define DecimalIntervalEndsFalse: DecimalIntervalTest2 ends DecimalIntervalTest
-define QuantityIntervalEndsTrue: QuantityIntervalTest3 ends QuantityIntervalTest
-define QuantityIntervalEndsFalse: QuantityIntervalTest2 ends QuantityIntervalTest
-define DateTimeEndsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)]
-define DateTimeEndsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 16)]
-define TimeEndsTrue: Interval[@T05:59:59.999, @T10:59:59.999] ends Interval[@T01:59:59.999, @T10:59:59.999]
-define TimeEndsFalse: Interval[@T05:59:59.999, @T10:59:59.999] ends Interval[@T01:59:59.999, @T11:59:59.999]
+define TestEndsNull: ok(Equivalent((IntegerIntervalTest ends Interval(null, null)),(null)), 'TestEndsNull')
+define IntegerIntervalEndsTrue: ok(Equivalent((IntegerIntervalTest4 ends IntegerIntervalTest),(null)), 'IntegerIntervalEndsTrue')
+define IntegerIntervalEndsFalse: ok(Equivalent((IntegerIntervalTest3 ends IntegerIntervalTest),(null)), 'IntegerIntervalEndsFalse')
+define DecimalIntervalEndsTrue: ok(Equivalent((DecimalIntervalTest3 ends DecimalIntervalTest),(null)), 'DecimalIntervalEndsTrue')
+define DecimalIntervalEndsFalse: ok(Equivalent((DecimalIntervalTest2 ends DecimalIntervalTest),(null)), 'DecimalIntervalEndsFalse')
+define QuantityIntervalEndsTrue: ok(Equivalent((QuantityIntervalTest3 ends QuantityIntervalTest),(null)), 'QuantityIntervalEndsTrue')
+define QuantityIntervalEndsFalse: ok(Equivalent((QuantityIntervalTest2 ends QuantityIntervalTest),(null)), 'QuantityIntervalEndsFalse')
+define DateTimeEndsTrue: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)]),(null)), 'DateTimeEndsTrue')
+define DateTimeEndsFalse: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 16)]),(null)), 'DateTimeEndsFalse')
+define TimeEndsTrue: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] ends Interval[@T01:59:59.999, @T10:59:59.999]),(null)), 'TimeEndsTrue')
+define TimeEndsFalse: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] ends Interval[@T01:59:59.999, @T11:59:59.999]),(null)), 'TimeEndsFalse')
 
 //Equal
-define TestEqualNull: IntegerIntervalTest = Interval(null, null)
-define IntegerIntervalEqualTrue: IntegerIntervalTest = IntegerIntervalTest
-define IntegerIntervalEqualFalse: IntegerIntervalTest = IntegerIntervalTest2
-define DecimalIntervalEqualTrue: DecimalIntervalTest = DecimalIntervalTest
-define DecimalIntervalEqualFalse: DecimalIntervalTest = DecimalIntervalTest2
-define QuantityIntervalEqualTrue: QuantityIntervalTest = QuantityIntervalTest
-define QuantityIntervalEqualFalse: QuantityIntervalTest = QuantityIntervalTest2
-define DateTimeEqualTrue: Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)] = Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)]
-define DateTimeEqualFalse: Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)] = Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 16, 0, 0, 0, 0)]
-define TimeEqualTrue: Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:59:59.999, @T10:59:59.999]
-define TimeEqualFalse: Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:59:59.999, @T10:58:59.999]
+define TestEqualNull: ok(Equivalent((IntegerIntervalTest = Interval(null, null)),(null)), 'TestEqualNull')
+define IntegerIntervalEqualTrue: ok(Equivalent((IntegerIntervalTest = IntegerIntervalTest),(null)), 'IntegerIntervalEqualTrue')
+define IntegerIntervalEqualFalse: ok(Equivalent((IntegerIntervalTest = IntegerIntervalTest2),(null)), 'IntegerIntervalEqualFalse')
+define DecimalIntervalEqualTrue: ok(Equivalent((DecimalIntervalTest = DecimalIntervalTest),(null)), 'DecimalIntervalEqualTrue')
+define DecimalIntervalEqualFalse: ok(Equivalent((DecimalIntervalTest = DecimalIntervalTest2),(null)), 'DecimalIntervalEqualFalse')
+define QuantityIntervalEqualTrue: ok(Equivalent((QuantityIntervalTest = QuantityIntervalTest),(null)), 'QuantityIntervalEqualTrue')
+define QuantityIntervalEqualFalse: ok(Equivalent((QuantityIntervalTest = QuantityIntervalTest2),(null)), 'QuantityIntervalEqualFalse')
+define DateTimeEqualTrue: ok(Equivalent((Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)] = Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)]),(null)), 'DateTimeEqualTrue')
+define DateTimeEqualFalse: ok(Equivalent((Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)] = Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), DateTime(2012, 1, 16, 0, 0, 0, 0)]),(null)), 'DateTimeEqualFalse')
+define TimeEqualTrue: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'TimeEqualTrue')
+define TimeEqualFalse: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:59:59.999, @T10:58:59.999]),(null)), 'TimeEqualFalse')
 
 //Except
-define NullInterval: Interval[null, null]
-define TestExceptNull: NullInterval except NullInterval
-define IntegerIntervalExcept1to3: IntegerIntervalTest except IntegerIntervalTest4
-define IntegerIntervalExceptNull: Interval[1, 10] except Interval[3, 7]
-define DecimalIntervalExcept1to3: DecimalIntervalTest except DecimalIntervalTest3
-define DecimalIntervalExceptNull: Interval[1.0, 10.0] except Interval[3.0, 7.0]
-define QuantityIntervalExcept1to4: QuantityIntervalTest except QuantityIntervalTest3
-define Except12: Interval[1, 4] except Interval[3, 6]
-define ExceptDateTime: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] except Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 15)]
-define ExceptDateTime2: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 16)] except Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 12)]
-define ExceptTime: Interval[@T05:59:59.999, @T10:59:59.999] except Interval[@T08:59:59.999, @T10:59:59.999]
-define ExceptTime2: Interval[@T08:59:59.999, @T11:59:59.999] except Interval[@T05:59:59.999, @T10:59:59.999]
+define NullInterval: ok(Equivalent((Interval[null, null]),(null)), 'NullInterval')
+define TestExceptNull: ok(Equivalent((NullInterval except NullInterval),(null)), 'TestExceptNull')
+define IntegerIntervalExcept1to3: ok(Equivalent((IntegerIntervalTest except IntegerIntervalTest4),(null)), 'IntegerIntervalExcept1to3')
+define IntegerIntervalExceptNull: ok(Equivalent((Interval[1, 10] except Interval[3, 7]),(null)), 'IntegerIntervalExceptNull')
+define DecimalIntervalExcept1to3: ok(Equivalent((DecimalIntervalTest except DecimalIntervalTest3),(null)), 'DecimalIntervalExcept1to3')
+define DecimalIntervalExceptNull: ok(Equivalent((Interval[1.0, 10.0] except Interval[3.0, 7.0]),(null)), 'DecimalIntervalExceptNull')
+define QuantityIntervalExcept1to4: ok(Equivalent((QuantityIntervalTest except QuantityIntervalTest3),(null)), 'QuantityIntervalExcept1to4')
+define Except12: ok(Equivalent((Interval[1, 4] except Interval[3, 6]),(null)), 'Except12')
+define ExceptDateTime: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] except Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 15)]),(null)), 'ExceptDateTime')
+define ExceptDateTime2: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 16)] except Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 12)]),(null)), 'ExceptDateTime2')
+define ExceptTime: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] except Interval[@T08:59:59.999, @T10:59:59.999]),(null)), 'ExceptTime')
+define ExceptTime2: ok(Equivalent((Interval[@T08:59:59.999, @T11:59:59.999] except Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'ExceptTime2')
 
 //In
-define TestInNull: 5 in NullInterval
-define IntegerIntervalInTrue: 5 in IntegerIntervalTest
-define IntegerIntervalInFalse: 500 in IntegerIntervalTest
-define DecimalIntervalInTrue: 9.0 in DecimalIntervalTest
-define DecimalIntervalInFalse: -2.0 in DecimalIntervalTest
-define QuantityIntervalInTrue: 1.0 'g' in QuantityIntervalTest
-define QuantityIntervalInFalse: 55.0 'g' in QuantityIntervalTest
-define DateTimeInTrue: DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeInFalse: DateTime(2012, 1, 17) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeInNullTrue: DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), null]
-define TimeInTrue: @T07:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
-define TimeInFalse: @T17:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
-define TimeInNull: null in Interval[@T05:59:59.999, @T10:59:59.999]
+define TestInNull: ok(Equivalent((5 in NullInterval),(null)), 'TestInNull')
+define IntegerIntervalInTrue: ok(Equivalent((5 in IntegerIntervalTest),(null)), 'IntegerIntervalInTrue')
+define IntegerIntervalInFalse: ok(Equivalent((500 in IntegerIntervalTest),(null)), 'IntegerIntervalInFalse')
+define DecimalIntervalInTrue: ok(Equivalent((9.0 in DecimalIntervalTest),(null)), 'DecimalIntervalInTrue')
+define DecimalIntervalInFalse: ok(Equivalent((-2.0 in DecimalIntervalTest),(null)), 'DecimalIntervalInFalse')
+define QuantityIntervalInTrue: ok(Equivalent((1.0 'g' in QuantityIntervalTest),(null)), 'QuantityIntervalInTrue')
+define QuantityIntervalInFalse: ok(Equivalent((55.0 'g' in QuantityIntervalTest),(null)), 'QuantityIntervalInFalse')
+define DateTimeInTrue: ok(Equivalent((DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]),(null)), 'DateTimeInTrue')
+define DateTimeInFalse: ok(Equivalent((DateTime(2012, 1, 17) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]),(null)), 'DateTimeInFalse')
+define DateTimeInNullTrue: ok(Equivalent((DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), null]),(null)), 'DateTimeInNullTrue')
+define TimeInTrue: ok(Equivalent((@T07:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'TimeInTrue')
+define TimeInFalse: ok(Equivalent((@T17:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'TimeInFalse')
+define TimeInNull: ok(Equivalent((null in Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'TimeInNull')
 
 //Includes
-define TestIncludesNull: IntegerIntervalTest includes null
-define IntegerIntervalIncludesTrue: IntegerIntervalTest includes IntegerIntervalTest4
-define IntegerIntervalIncludesFalse: IntegerIntervalTest includes IntegerIntervalTest3
-define DecimalIntervalIncludesTrue: DecimalIntervalTest includes DecimalIntervalTest3
-define DecimalIntervalIncludesFalse: DecimalIntervalTest includes DecimalIntervalTest2
-define QuantityIntervalIncludesTrue: QuantityIntervalTest includes QuantityIntervalTest3
-define QuantityIntervalIncludesFalse: QuantityIntervalTest includes QuantityIntervalTest2
-define DateTimeIncludesTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
-define DateTimeIncludesFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)]
-define TimeIncludesTrue: Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T06:59:59.999, @T09:59:59.999]
-define TimeIncludesFalse: Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T04:59:59.999, @T09:59:59.999]
+define TestIncludesNull: ok(Equivalent((IntegerIntervalTest includes null),(null)), 'TestIncludesNull')
+define IntegerIntervalIncludesTrue: ok(Equivalent((IntegerIntervalTest includes IntegerIntervalTest4),(null)), 'IntegerIntervalIncludesTrue')
+define IntegerIntervalIncludesFalse: ok(Equivalent((IntegerIntervalTest includes IntegerIntervalTest3),(null)), 'IntegerIntervalIncludesFalse')
+define DecimalIntervalIncludesTrue: ok(Equivalent((DecimalIntervalTest includes DecimalIntervalTest3),(null)), 'DecimalIntervalIncludesTrue')
+define DecimalIntervalIncludesFalse: ok(Equivalent((DecimalIntervalTest includes DecimalIntervalTest2),(null)), 'DecimalIntervalIncludesFalse')
+define QuantityIntervalIncludesTrue: ok(Equivalent((QuantityIntervalTest includes QuantityIntervalTest3),(null)), 'QuantityIntervalIncludesTrue')
+define QuantityIntervalIncludesFalse: ok(Equivalent((QuantityIntervalTest includes QuantityIntervalTest2),(null)), 'QuantityIntervalIncludesFalse')
+define DateTimeIncludesTrue: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]),(null)), 'DateTimeIncludesTrue')
+define DateTimeIncludesFalse: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)]),(null)), 'DateTimeIncludesFalse')
+define TimeIncludesTrue: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T06:59:59.999, @T09:59:59.999]),(null)), 'TimeIncludesTrue')
+define TimeIncludesFalse: ok(Equivalent((Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T04:59:59.999, @T09:59:59.999]),(null)), 'TimeIncludesFalse')
 
 //Included In
 //define TestIncludedInNull: null included in IntegerIntervalTest
-define IntegerIntervalIncludedInTrue: IntegerIntervalTest4 included in IntegerIntervalTest
-define IntegerIntervalIncludedInFalse: IntegerIntervalTest3 included in IntegerIntervalTest
-define DecimalIntervalIncludedInTrue: DecimalIntervalTest3 included in DecimalIntervalTest
-define DecimalIntervalIncludedInFalse: DecimalIntervalTest2 included in DecimalIntervalTest
-define QuantityIntervalIncludedInTrue: QuantityIntervalTest3 included in QuantityIntervalTest
-define QuantityIntervalIncludedInFalse: QuantityIntervalTest2 included in QuantityIntervalTest
-define DateTimeIncludedInTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeIncludedInFalse: Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define TimeIncludedInTrue: Interval[@T06:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]
-define TimeIncludedInFalse: Interval[@T04:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]
+define IntegerIntervalIncludedInTrue: ok(Equivalent((IntegerIntervalTest4 included in IntegerIntervalTest),(null)), 'IntegerIntervalIncludedInTrue')
+define IntegerIntervalIncludedInFalse: ok(Equivalent((IntegerIntervalTest3 included in IntegerIntervalTest),(null)), 'IntegerIntervalIncludedInFalse')
+define DecimalIntervalIncludedInTrue: ok(Equivalent((DecimalIntervalTest3 included in DecimalIntervalTest),(null)), 'DecimalIntervalIncludedInTrue')
+define DecimalIntervalIncludedInFalse: ok(Equivalent((DecimalIntervalTest2 included in DecimalIntervalTest),(null)), 'DecimalIntervalIncludedInFalse')
+define QuantityIntervalIncludedInTrue: ok(Equivalent((QuantityIntervalTest3 included in QuantityIntervalTest),(null)), 'QuantityIntervalIncludedInTrue')
+define QuantityIntervalIncludedInFalse: ok(Equivalent((QuantityIntervalTest2 included in QuantityIntervalTest),(null)), 'QuantityIntervalIncludedInFalse')
+define DateTimeIncludedInTrue: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]),(null)), 'DateTimeIncludedInTrue')
+define DateTimeIncludedInFalse: ok(Equivalent((Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]),(null)), 'DateTimeIncludedInFalse')
+define TimeIncludedInTrue: ok(Equivalent((Interval[@T06:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'TimeIncludedInTrue')
+define TimeIncludedInFalse: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]),(null)), 'TimeIncludedInFalse')
 
 //Intersect
 //define TestIntersectNull: IntegerIntervalTest intersect Interval[5, null)
-define IntegerIntervalIntersectTest4to10: IntegerIntervalTest intersect IntegerIntervalTest4
-define IntegerIntervalIntersectTestNull: IntegerIntervalTest intersect IntegerIntervalTest2
-define DecimalIntervalIntersectTest4to10: DecimalIntervalTest intersect DecimalIntervalTest3
-define DecimalIntervalIntersectTestNull: DecimalIntervalTest intersect DecimalIntervalTest2
-define QuantityIntervalIntersectTest5to10: QuantityIntervalTest intersect QuantityIntervalTest3
-define QuantityIntervalIntersectTestNull: QuantityIntervalTest intersect QuantityIntervalTest2
-define DateTimeIntersect: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] intersect Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 10)]
-define TimeIntersect: Interval[@T04:59:59.999, @T09:59:59.999] intersect Interval[@T04:59:59.999, @T06:59:59.999]
+define IntegerIntervalIntersectTest4to10: ok(Equivalent((IntegerIntervalTest intersect IntegerIntervalTest4),(null)), 'IntegerIntervalIntersectTest4to10')
+define IntegerIntervalIntersectTestNull: ok(Equivalent((IntegerIntervalTest intersect IntegerIntervalTest2),(null)), 'IntegerIntervalIntersectTestNull')
+define DecimalIntervalIntersectTest4to10: ok(Equivalent((DecimalIntervalTest intersect DecimalIntervalTest3),(null)), 'DecimalIntervalIntersectTest4to10')
+define DecimalIntervalIntersectTestNull: ok(Equivalent((DecimalIntervalTest intersect DecimalIntervalTest2),(null)), 'DecimalIntervalIntersectTestNull')
+define QuantityIntervalIntersectTest5to10: ok(Equivalent((QuantityIntervalTest intersect QuantityIntervalTest3),(null)), 'QuantityIntervalIntersectTest5to10')
+define QuantityIntervalIntersectTestNull: ok(Equivalent((QuantityIntervalTest intersect QuantityIntervalTest2),(null)), 'QuantityIntervalIntersectTestNull')
+define DateTimeIntersect: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] intersect Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 10)]),(null)), 'DateTimeIntersect')
+define TimeIntersect: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] intersect Interval[@T04:59:59.999, @T06:59:59.999]),(null)), 'TimeIntersect')
 
 //Equivalent
-define IntegerIntervalEquivalentTrue: IntegerIntervalTest ~ IntegerIntervalTest
-define IntegerIntervalEquivalentFalse: IntegerIntervalTest3 ~ IntegerIntervalTest
-define DecimalIntervalEquivalentTrue: DecimalIntervalTest ~ DecimalIntervalTest
-define DecimalIntervalEquivalentFalse: DecimalIntervalTest2 ~ DecimalIntervalTest
-define QuantityIntervalEquivalentTrue: QuantityIntervalTest ~ QuantityIntervalTest
-define QuantityIntervalEquivalentFalse: QuantityIntervalTest2 ~ QuantityIntervalTest
-define DateTimeEquivalentTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] ~ Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
-define DateTimeEquivalentFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] ~ Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 15)]
-define TimeEquivalentTrue: Interval[@T04:59:59.999, @T09:59:59.999] ~ Interval[@T04:59:59.999, @T09:59:59.999]
-define TimeEquivalentFalse: Interval[@T04:59:59.999, @T09:59:59.999] ~ Interval[@T04:58:59.999, @T09:59:59.999]
+define IntegerIntervalEquivalentTrue: ok(Equivalent((IntegerIntervalTest ~ IntegerIntervalTest),(null)), 'IntegerIntervalEquivalentTrue')
+define IntegerIntervalEquivalentFalse: ok(Equivalent((IntegerIntervalTest3 ~ IntegerIntervalTest),(null)), 'IntegerIntervalEquivalentFalse')
+define DecimalIntervalEquivalentTrue: ok(Equivalent((DecimalIntervalTest ~ DecimalIntervalTest),(null)), 'DecimalIntervalEquivalentTrue')
+define DecimalIntervalEquivalentFalse: ok(Equivalent((DecimalIntervalTest2 ~ DecimalIntervalTest),(null)), 'DecimalIntervalEquivalentFalse')
+define QuantityIntervalEquivalentTrue: ok(Equivalent((QuantityIntervalTest ~ QuantityIntervalTest),(null)), 'QuantityIntervalEquivalentTrue')
+define QuantityIntervalEquivalentFalse: ok(Equivalent((QuantityIntervalTest2 ~ QuantityIntervalTest),(null)), 'QuantityIntervalEquivalentFalse')
+define DateTimeEquivalentTrue: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] ~ Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]),(null)), 'DateTimeEquivalentTrue')
+define DateTimeEquivalentFalse: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] ~ Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 15)]),(null)), 'DateTimeEquivalentFalse')
+define TimeEquivalentTrue: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] ~ Interval[@T04:59:59.999, @T09:59:59.999]),(null)), 'TimeEquivalentTrue')
+define TimeEquivalentFalse: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] ~ Interval[@T04:58:59.999, @T09:59:59.999]),(null)), 'TimeEquivalentFalse')
 
 //Meets
-define TestMeetsNull: Interval(null, 5] meets Interval(null, 15)
-define IntegerIntervalMeetsTrue: IntegerIntervalTest meets IntegerIntervalTest2
-define IntegerIntervalMeetsFalse: IntegerIntervalTest meets IntegerIntervalTest3
-define DecimalIntervalMeetsTrue: Interval[3.01, 5.00000001] meets Interval[5.00000002, 8.50]
-define DecimalIntervalMeetsFalse: Interval[3.01, 5.00000001] meets Interval[5.5, 8.50]
-define QuantityIntervalMeetsTrue: Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.00000002 'g', 8.50 'g']
-define QuantityIntervalMeetsFalse: Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.5 'g', 8.50 'g']
-define DateTimeMeetsTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
-define DateTimeMeetsFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]
-define TimeMeetsTrue: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:00:00.000, @T19:59:59.999]
-define TimeMeetsFalse: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:12:00.000, @T19:59:59.999]
+define TestMeetsNull: ok(Equivalent((Interval(null, 5] meets Interval(null, 15)),(null)), 'TestMeetsNull')
+define IntegerIntervalMeetsTrue: ok(Equivalent((IntegerIntervalTest meets IntegerIntervalTest2),(null)), 'IntegerIntervalMeetsTrue')
+define IntegerIntervalMeetsFalse: ok(Equivalent((IntegerIntervalTest meets IntegerIntervalTest3),(null)), 'IntegerIntervalMeetsFalse')
+define DecimalIntervalMeetsTrue: ok(Equivalent((Interval[3.01, 5.00000001] meets Interval[5.00000002, 8.50]),(null)), 'DecimalIntervalMeetsTrue')
+define DecimalIntervalMeetsFalse: ok(Equivalent((Interval[3.01, 5.00000001] meets Interval[5.5, 8.50]),(null)), 'DecimalIntervalMeetsFalse')
+define QuantityIntervalMeetsTrue: ok(Equivalent((Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.00000002 'g', 8.50 'g']),(null)), 'QuantityIntervalMeetsTrue')
+define QuantityIntervalMeetsFalse: ok(Equivalent((Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.5 'g', 8.50 'g']),(null)), 'QuantityIntervalMeetsFalse')
+define DateTimeMeetsTrue: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]),(null)), 'DateTimeMeetsTrue')
+define DateTimeMeetsFalse: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]),(null)), 'DateTimeMeetsFalse')
+define TimeMeetsTrue: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:00:00.000, @T19:59:59.999]),(null)), 'TimeMeetsTrue')
+define TimeMeetsFalse: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:12:00.000, @T19:59:59.999]),(null)), 'TimeMeetsFalse')
 
 //MeetsBefore
-define TestMeetsBeforeNull: Interval(null, 5] meets before Interval(null, 25]
-define IntegerIntervalMeetsBeforeTrue: IntegerIntervalTest meets before IntegerIntervalTest2
-define IntegerIntervalMeetsBeforeFalse: IntegerIntervalTest meets before IntegerIntervalTest3
-define DecimalIntervalMeetsBeforeTrue: Interval[3.50000001, 5.00000011] meets before Interval[5.00000012, 8.50]
-define DecimalIntervalMeetsBeforeFalse: Interval[8.01, 15.00000001] meets before Interval[15.00000000, 18.50]
-define QuantityIntervalMeetsBeforeTrue: Interval[3.50000001 'g', 5.00000011 'g'] meets before Interval[5.00000012 'g', 8.50 'g']
-define QuantityIntervalMeetsBeforeFalse: Interval[8.01 'g', 15.00000001 'g'] meets before Interval[15.00000000 'g', 18.50 'g']
-define DateTimeMeetsBeforeTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
-define DateTimeMeetsBeforeFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]
-define TimeMeetsBeforeTrue: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:00:00.000, @T19:59:59.999]
-define TimeMeetsBeforeFalse: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:12:00.000, @T19:59:59.999]
+define TestMeetsBeforeNull: ok(Equivalent((Interval(null, 5] meets before Interval(null, 25]),(null)), 'TestMeetsBeforeNull')
+define IntegerIntervalMeetsBeforeTrue: ok(Equivalent((IntegerIntervalTest meets before IntegerIntervalTest2),(null)), 'IntegerIntervalMeetsBeforeTrue')
+define IntegerIntervalMeetsBeforeFalse: ok(Equivalent((IntegerIntervalTest meets before IntegerIntervalTest3),(null)), 'IntegerIntervalMeetsBeforeFalse')
+define DecimalIntervalMeetsBeforeTrue: ok(Equivalent((Interval[3.50000001, 5.00000011] meets before Interval[5.00000012, 8.50]),(null)), 'DecimalIntervalMeetsBeforeTrue')
+define DecimalIntervalMeetsBeforeFalse: ok(Equivalent((Interval[8.01, 15.00000001] meets before Interval[15.00000000, 18.50]),(null)), 'DecimalIntervalMeetsBeforeFalse')
+define QuantityIntervalMeetsBeforeTrue: ok(Equivalent((Interval[3.50000001 'g', 5.00000011 'g'] meets before Interval[5.00000012 'g', 8.50 'g']),(null)), 'QuantityIntervalMeetsBeforeTrue')
+define QuantityIntervalMeetsBeforeFalse: ok(Equivalent((Interval[8.01 'g', 15.00000001 'g'] meets before Interval[15.00000000 'g', 18.50 'g']),(null)), 'QuantityIntervalMeetsBeforeFalse')
+define DateTimeMeetsBeforeTrue: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]),(null)), 'DateTimeMeetsBeforeTrue')
+define DateTimeMeetsBeforeFalse: ok(Equivalent((Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]),(null)), 'DateTimeMeetsBeforeFalse')
+define TimeMeetsBeforeTrue: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:00:00.000, @T19:59:59.999]),(null)), 'TimeMeetsBeforeTrue')
+define TimeMeetsBeforeFalse: ok(Equivalent((Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:12:00.000, @T19:59:59.999]),(null)), 'TimeMeetsBeforeFalse')
 
 //MeetsAfter
-define TestMeetsAfterNull: Interval(null, 5] meets after Interval[11, null)
-define IntegerIntervalMeetsAfterTrue: IntegerIntervalTest2 meets after IntegerIntervalTest
-define IntegerIntervalMeetsAfterFalse: IntegerIntervalTest3 meets after IntegerIntervalTest
-define DecimalIntervalMeetsAfterTrue: Interval[55.00000123, 128.032156] meets after Interval[12.00258, 55.00000122]
-define DecimalIntervalMeetsAfterFalse: Interval[55.00000124, 150.222222] meets after Interval[12.00258, 55.00000122]
-define QuantityIntervalMeetsAfterTrue: Interval[55.00000123 'g', 128.032156 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']
-define QuantityIntervalMeetsAfterFalse: Interval[55.00000124 'g', 150.222222 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']
-define DateTimeMeetsAfterTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)] meets Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
-define DateTimeMeetsAfterFalse: Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)] meets Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
-define TimeMeetsAfterTrue: Interval[@T10:00:00.000, @T19:59:59.999] meets Interval[@T04:59:59.999, @T09:59:59.999]
-define TimeMeetsAfterFalse: Interval[@T10:12:00.000, @T19:59:59.999] meets Interval[@T04:59:59.999, @T09:59:59.999]
+define TestMeetsAfterNull: ok(Equivalent((Interval(null, 5] meets after Interval[11, null)),(null)), 'TestMeetsAfterNull')
+define IntegerIntervalMeetsAfterTrue: ok(Equivalent((IntegerIntervalTest2 meets after IntegerIntervalTest),(null)), 'IntegerIntervalMeetsAfterTrue')
+define IntegerIntervalMeetsAfterFalse: ok(Equivalent((IntegerIntervalTest3 meets after IntegerIntervalTest),(null)), 'IntegerIntervalMeetsAfterFalse')
+define DecimalIntervalMeetsAfterTrue: ok(Equivalent((Interval[55.00000123, 128.032156] meets after Interval[12.00258, 55.00000122]),(null)), 'DecimalIntervalMeetsAfterTrue')
+define DecimalIntervalMeetsAfterFalse: ok(Equivalent((Interval[55.00000124, 150.222222] meets after Interval[12.00258, 55.00000122]),(null)), 'DecimalIntervalMeetsAfterFalse')
+define QuantityIntervalMeetsAfterTrue: ok(Equivalent((Interval[55.00000123 'g', 128.032156 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']),(null)), 'QuantityIntervalMeetsAfterTrue')
+define QuantityIntervalMeetsAfterFalse: ok(Equivalent((Interval[55.00000124 'g', 150.222222 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']),(null)), 'QuantityIntervalMeetsAfterFalse')
+define DateTimeMeetsAfterTrue: ok(Equivalent((Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)] meets Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]),(null)), 'DateTimeMeetsAfterTrue')
+define DateTimeMeetsAfterFalse: ok(Equivalent((Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)] meets Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]),(null)), 'DateTimeMeetsAfterFalse')
+define TimeMeetsAfterTrue: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] meets Interval[@T04:59:59.999, @T09:59:59.999]),(null)), 'TimeMeetsAfterTrue')
+define TimeMeetsAfterFalse: ok(Equivalent((Interval[@T10:12:00.000, @T19:59:59.999] meets Interval[@T04:59:59.999, @T09:59:59.999]),(null)), 'TimeMeetsAfterFalse')
 
 //NotEqual
-define IntegerIntervalNotEqualTrue: IntegerIntervalTest != IntegerIntervalTest2
-define IntegerIntervalNotEqualFalse: IntegerIntervalTest != IntegerIntervalTest
-define DecimalIntervalNotEqualTrue: DecimalIntervalTest != DecimalIntervalTest2
-define DecimalIntervalNotEqualFalse: DecimalIntervalTest != DecimalIntervalTest
-define QuantityIntervalNotEqualTrue: QuantityIntervalTest != QuantityIntervalTest2
-define QuantityIntervalNotEqualFalse: QuantityIntervalTest != QuantityIntervalTest
-define DateTimeNotEqualTrue: Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 0)] != Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 22)]
-define DateTimeNotEqualFalse: Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 0)] != Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 0)]
-define TimeNotEqualTrue: Interval[@T10:00:00.000, @T19:59:59.999] != Interval[@T10:10:00.000, @T19:59:59.999]
-define TimeNotEqualFalse: Interval[@T10:00:00.000, @T19:59:59.999] != Interval[@T10:00:00.000, @T19:59:59.999]
+define IntegerIntervalNotEqualTrue: ok(Equivalent((IntegerIntervalTest != IntegerIntervalTest2),(null)), 'IntegerIntervalNotEqualTrue')
+define IntegerIntervalNotEqualFalse: ok(Equivalent((IntegerIntervalTest != IntegerIntervalTest),(null)), 'IntegerIntervalNotEqualFalse')
+define DecimalIntervalNotEqualTrue: ok(Equivalent((DecimalIntervalTest != DecimalIntervalTest2),(null)), 'DecimalIntervalNotEqualTrue')
+define DecimalIntervalNotEqualFalse: ok(Equivalent((DecimalIntervalTest != DecimalIntervalTest),(null)), 'DecimalIntervalNotEqualFalse')
+define QuantityIntervalNotEqualTrue: ok(Equivalent((QuantityIntervalTest != QuantityIntervalTest2),(null)), 'QuantityIntervalNotEqualTrue')
+define QuantityIntervalNotEqualFalse: ok(Equivalent((QuantityIntervalTest != QuantityIntervalTest),(null)), 'QuantityIntervalNotEqualFalse')
+define DateTimeNotEqualTrue: ok(Equivalent((Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 0)] != Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 22)]),(null)), 'DateTimeNotEqualTrue')
+define DateTimeNotEqualFalse: ok(Equivalent((Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 0)] != Interval[DateTime(2012, 1, 15, 0, 0, 0, 0), DateTime(2012, 1, 25, 0, 0, 0, 0)]),(null)), 'DateTimeNotEqualFalse')
+define TimeNotEqualTrue: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] != Interval[@T10:10:00.000, @T19:59:59.999]),(null)), 'TimeNotEqualTrue')
+define TimeNotEqualFalse: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] != Interval[@T10:00:00.000, @T19:59:59.999]),(null)), 'TimeNotEqualFalse')
 
 //OnOrAfter
-define TestOnOrAfterNull: Interval[@2012-12-01, @2013-12-01] on or after null
-define TestOnOrAfterDateTrue: Interval[@2012-12-01, @2013-12-01] on or after month of @2012-11-15
-define TestOnOrAfterDateFalse: @2012-11-15 on or after month of Interval[@2012-12-01, @2013-12-01]
-define TestOnOrAfterTimeTrue: Interval[@T10:00:00.000, @T19:59:59.999] on or after hour of Interval[@T08:00:00.000, @T09:59:59.999]
-define TestOnOrAfterTimeFalse: Interval[@T10:00:00.000, @T19:59:59.999] on or after hour of Interval[@T08:00:00.000, @T11:59:59.999]
-define TestOnOrAfterIntegerTrue: Interval[6, 10] on or after 6
-define TestOnOrAfterDecimalFalse: 2.5 on or after Interval[1.666, 2.50000001]
-define TestOnOrAfterQuantityTrue: 2.5 'mg' on or after Interval[1.666 'mg', 2.50000000 'mg']
+define TestOnOrAfterNull: ok(Equivalent((Interval[@2012-12-01, @2013-12-01] on or after null),(null)), 'TestOnOrAfterNull')
+define TestOnOrAfterDateTrue: ok(Equivalent((Interval[@2012-12-01, @2013-12-01] on or after month of @2012-11-15),(null)), 'TestOnOrAfterDateTrue')
+define TestOnOrAfterDateFalse: ok(Equivalent((@2012-11-15 on or after month of Interval[@2012-12-01, @2013-12-01]),(null)), 'TestOnOrAfterDateFalse')
+define TestOnOrAfterTimeTrue: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] on or after hour of Interval[@T08:00:00.000, @T09:59:59.999]),(null)), 'TestOnOrAfterTimeTrue')
+define TestOnOrAfterTimeFalse: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] on or after hour of Interval[@T08:00:00.000, @T11:59:59.999]),(null)), 'TestOnOrAfterTimeFalse')
+define TestOnOrAfterIntegerTrue: ok(Equivalent((Interval[6, 10] on or after 6),(null)), 'TestOnOrAfterIntegerTrue')
+define TestOnOrAfterDecimalFalse: ok(Equivalent((2.5 on or after Interval[1.666, 2.50000001]),(null)), 'TestOnOrAfterDecimalFalse')
+define TestOnOrAfterQuantityTrue: ok(Equivalent((2.5 'mg' on or after Interval[1.666 'mg', 2.50000000 'mg']),(null)), 'TestOnOrAfterQuantityTrue')
 
 //OnOrBefore
-define TestOnOrBeforeNull: Interval[@2012-12-01, @2013-12-01] on or before null
-define TestOnOrBeforeDateTrue: Interval[@2012-10-01, @2012-11-01] on or before month of @2012-11-15
-define TestOnOrBeforeDateFalse: @2012-11-15 on or before month of Interval[@2012-10-01, @2013-12-01]
-define TestOnOrBeforeTimeTrue: Interval[@T05:00:00.000, @T07:59:59.999] on or before hour of Interval[@T08:00:00.000, @T09:59:59.999]
-define TestOnOrBeforeTimeFalse: Interval[@T10:00:00.000, @T19:59:59.999] on or before hour of Interval[@T08:00:00.000, @T11:59:59.999]
-define TestOnOrBeforeIntegerTrue: Interval[4, 6] on or before 6
-define TestOnOrBeforeDecimalFalse: 1.6667 on or before Interval[1.666, 2.50000001]
-define TestOnOrBeforeQuantityTrue: 1.666 'mg' on or before Interval[1.666 'mg', 2.50000000 'mg']
+define TestOnOrBeforeNull: ok(Equivalent((Interval[@2012-12-01, @2013-12-01] on or before null),(null)), 'TestOnOrBeforeNull')
+define TestOnOrBeforeDateTrue: ok(Equivalent((Interval[@2012-10-01, @2012-11-01] on or before month of @2012-11-15),(null)), 'TestOnOrBeforeDateTrue')
+define TestOnOrBeforeDateFalse: ok(Equivalent((@2012-11-15 on or before month of Interval[@2012-10-01, @2013-12-01]),(null)), 'TestOnOrBeforeDateFalse')
+define TestOnOrBeforeTimeTrue: ok(Equivalent((Interval[@T05:00:00.000, @T07:59:59.999] on or before hour of Interval[@T08:00:00.000, @T09:59:59.999]),(null)), 'TestOnOrBeforeTimeTrue')
+define TestOnOrBeforeTimeFalse: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] on or before hour of Interval[@T08:00:00.000, @T11:59:59.999]),(null)), 'TestOnOrBeforeTimeFalse')
+define TestOnOrBeforeIntegerTrue: ok(Equivalent((Interval[4, 6] on or before 6),(null)), 'TestOnOrBeforeIntegerTrue')
+define TestOnOrBeforeDecimalFalse: ok(Equivalent((1.6667 on or before Interval[1.666, 2.50000001]),(null)), 'TestOnOrBeforeDecimalFalse')
+define TestOnOrBeforeQuantityTrue: ok(Equivalent((1.666 'mg' on or before Interval[1.666 'mg', 2.50000000 'mg']),(null)), 'TestOnOrBeforeQuantityTrue')
 
 //Overlaps
-define TestOverlapsNull: NullInterval overlaps IntegerIntervalTest
-define IntegerIntervalOverlapsTrue: IntegerIntervalTest overlaps IntegerIntervalTest4
-define IntegerIntervalOverlapsFalse: IntegerIntervalTest overlaps IntegerIntervalTest2
-define DecimalIntervalOverlapsTrue: DecimalIntervalTest overlaps DecimalIntervalTest3
-define DecimalIntervalOverlapsFalse: DecimalIntervalTest overlaps DecimalIntervalTest2
-define QuantityIntervalOverlapsTrue: QuantityIntervalTest overlaps QuantityIntervalTest3
-define QuantityIntervalOverlapsFalse: QuantityIntervalTest overlaps QuantityIntervalTest2
-define DateTimeOverlapsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define DateTimeOverlapsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)]
-define TimeOverlapsTrue: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T12:00:00.000, @T21:59:59.999]
-define TimeOverlapsFalse: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T20:00:00.000, @T21:59:59.999]
+define TestOverlapsNull: ok(Equivalent((NullInterval overlaps IntegerIntervalTest),(null)), 'TestOverlapsNull')
+define IntegerIntervalOverlapsTrue: ok(Equivalent((IntegerIntervalTest overlaps IntegerIntervalTest4),(null)), 'IntegerIntervalOverlapsTrue')
+define IntegerIntervalOverlapsFalse: ok(Equivalent((IntegerIntervalTest overlaps IntegerIntervalTest2),(null)), 'IntegerIntervalOverlapsFalse')
+define DecimalIntervalOverlapsTrue: ok(Equivalent((DecimalIntervalTest overlaps DecimalIntervalTest3),(null)), 'DecimalIntervalOverlapsTrue')
+define DecimalIntervalOverlapsFalse: ok(Equivalent((DecimalIntervalTest overlaps DecimalIntervalTest2),(null)), 'DecimalIntervalOverlapsFalse')
+define QuantityIntervalOverlapsTrue: ok(Equivalent((QuantityIntervalTest overlaps QuantityIntervalTest3),(null)), 'QuantityIntervalOverlapsTrue')
+define QuantityIntervalOverlapsFalse: ok(Equivalent((QuantityIntervalTest overlaps QuantityIntervalTest2),(null)), 'QuantityIntervalOverlapsFalse')
+define DateTimeOverlapsTrue: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]),(null)), 'DateTimeOverlapsTrue')
+define DateTimeOverlapsFalse: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)]),(null)), 'DateTimeOverlapsFalse')
+define TimeOverlapsTrue: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T12:00:00.000, @T21:59:59.999]),(null)), 'TimeOverlapsTrue')
+define TimeOverlapsFalse: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T20:00:00.000, @T21:59:59.999]),(null)), 'TimeOverlapsFalse')
 
 //OverlapsBefore
-define TestOverlapsBeforeNull: NullInterval overlaps before IntegerIntervalTest
-define IntegerIntervalOverlapsBeforeTrue: IntegerIntervalTest overlaps before IntegerIntervalTest4
-define IntegerIntervalOverlapsBeforeFalse: IntegerIntervalTest4 overlaps before IntegerIntervalTest
-define DecimalIntervalOverlapsBeforeTrue: DecimalIntervalTest overlaps before DecimalIntervalTest3
-define DecimalIntervalOverlapsBeforeFalse: DecimalIntervalTest3 overlaps before DecimalIntervalTest
-define QuantityIntervalOverlapsBeforeTrue: QuantityIntervalTest overlaps before QuantityIntervalTest3
-define QuantityIntervalOverlapsBeforeFalse: QuantityIntervalTest3 overlaps before QuantityIntervalTest
-define DateTimeOverlapsBeforeTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define DateTimeOverlapsBeforeFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)]
-define TimeOverlapsBeforeTrue: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T12:00:00.000, @T21:59:59.999]
-define TimeOverlapsBeforeFalse: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T20:00:00.000, @T21:59:59.999]
+define TestOverlapsBeforeNull: ok(Equivalent((NullInterval overlaps before IntegerIntervalTest),(null)), 'TestOverlapsBeforeNull')
+define IntegerIntervalOverlapsBeforeTrue: ok(Equivalent((IntegerIntervalTest overlaps before IntegerIntervalTest4),(null)), 'IntegerIntervalOverlapsBeforeTrue')
+define IntegerIntervalOverlapsBeforeFalse: ok(Equivalent((IntegerIntervalTest4 overlaps before IntegerIntervalTest),(null)), 'IntegerIntervalOverlapsBeforeFalse')
+define DecimalIntervalOverlapsBeforeTrue: ok(Equivalent((DecimalIntervalTest overlaps before DecimalIntervalTest3),(null)), 'DecimalIntervalOverlapsBeforeTrue')
+define DecimalIntervalOverlapsBeforeFalse: ok(Equivalent((DecimalIntervalTest3 overlaps before DecimalIntervalTest),(null)), 'DecimalIntervalOverlapsBeforeFalse')
+define QuantityIntervalOverlapsBeforeTrue: ok(Equivalent((QuantityIntervalTest overlaps before QuantityIntervalTest3),(null)), 'QuantityIntervalOverlapsBeforeTrue')
+define QuantityIntervalOverlapsBeforeFalse: ok(Equivalent((QuantityIntervalTest3 overlaps before QuantityIntervalTest),(null)), 'QuantityIntervalOverlapsBeforeFalse')
+define DateTimeOverlapsBeforeTrue: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]),(null)), 'DateTimeOverlapsBeforeTrue')
+define DateTimeOverlapsBeforeFalse: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)]),(null)), 'DateTimeOverlapsBeforeFalse')
+define TimeOverlapsBeforeTrue: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T12:00:00.000, @T21:59:59.999]),(null)), 'TimeOverlapsBeforeTrue')
+define TimeOverlapsBeforeFalse: ok(Equivalent((Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T20:00:00.000, @T21:59:59.999]),(null)), 'TimeOverlapsBeforeFalse')
 
 //OverlapsAfter
-define TestOverlapsAfterNull: NullInterval overlaps after IntegerIntervalTest
-define IntegerIntervalOverlapsAfterTrue: IntegerIntervalTest5 overlaps after IntegerIntervalTest
-define IntegerIntervalOverlapsAfterFalse: IntegerIntervalTest4 overlaps after IntegerIntervalTest
-define DecimalIntervalOverlapsAfterTrue: DecimalIntervalTest4 overlaps after DecimalIntervalTest
-define DecimalIntervalOverlapsAfterFalse: DecimalIntervalTest3 overlaps after DecimalIntervalTest
-define QuantityIntervalOverlapsAfterTrue: QuantityIntervalTest4 overlaps after QuantityIntervalTest
-define QuantityIntervalOverlapsAfterFalse: QuantityIntervalTest3 overlaps after QuantityIntervalTest
-define DateTimeOverlapsAfterTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] overlaps Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
-define DateTimeOverlapsAfterFalse: Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)] overlaps Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
-define TimeOverlapsAfterTrue: Interval[@T12:00:00.000, @T21:59:59.999] overlaps Interval[@T10:00:00.000, @T19:59:59.999]
-define TimeOverlapsAfterFalse: Interval[@T20:00:00.000, @T21:59:59.999] overlaps Interval[@T10:00:00.000, @T19:59:59.999]
+define TestOverlapsAfterNull: ok(Equivalent((NullInterval overlaps after IntegerIntervalTest),(null)), 'TestOverlapsAfterNull')
+define IntegerIntervalOverlapsAfterTrue: ok(Equivalent((IntegerIntervalTest5 overlaps after IntegerIntervalTest),(null)), 'IntegerIntervalOverlapsAfterTrue')
+define IntegerIntervalOverlapsAfterFalse: ok(Equivalent((IntegerIntervalTest4 overlaps after IntegerIntervalTest),(null)), 'IntegerIntervalOverlapsAfterFalse')
+define DecimalIntervalOverlapsAfterTrue: ok(Equivalent((DecimalIntervalTest4 overlaps after DecimalIntervalTest),(null)), 'DecimalIntervalOverlapsAfterTrue')
+define DecimalIntervalOverlapsAfterFalse: ok(Equivalent((DecimalIntervalTest3 overlaps after DecimalIntervalTest),(null)), 'DecimalIntervalOverlapsAfterFalse')
+define QuantityIntervalOverlapsAfterTrue: ok(Equivalent((QuantityIntervalTest4 overlaps after QuantityIntervalTest),(null)), 'QuantityIntervalOverlapsAfterTrue')
+define QuantityIntervalOverlapsAfterFalse: ok(Equivalent((QuantityIntervalTest3 overlaps after QuantityIntervalTest),(null)), 'QuantityIntervalOverlapsAfterFalse')
+define DateTimeOverlapsAfterTrue: ok(Equivalent((Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] overlaps Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]),(null)), 'DateTimeOverlapsAfterTrue')
+define DateTimeOverlapsAfterFalse: ok(Equivalent((Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)] overlaps Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]),(null)), 'DateTimeOverlapsAfterFalse')
+define TimeOverlapsAfterTrue: ok(Equivalent((Interval[@T12:00:00.000, @T21:59:59.999] overlaps Interval[@T10:00:00.000, @T19:59:59.999]),(null)), 'TimeOverlapsAfterTrue')
+define TimeOverlapsAfterFalse: ok(Equivalent((Interval[@T20:00:00.000, @T21:59:59.999] overlaps Interval[@T10:00:00.000, @T19:59:59.999]),(null)), 'TimeOverlapsAfterFalse')
 
 //PointFrom
-define TestPointFromNull: point from Interval[null, null]
-define TestPointFromInteger: point from Interval[1, 1]
-define TestPointFromDecimal: point from Interval[1.0, 1.0]
-define TestPointFromQuantity: point from Interval[1.0 'cm', 1.0 'cm']
+define TestPointFromNull: ok(Equivalent((point from Interval[null, null]),(null)), 'TestPointFromNull')
+define TestPointFromInteger: ok(Equivalent((point from Interval[1, 1]),(null)), 'TestPointFromInteger')
+define TestPointFromDecimal: ok(Equivalent((point from Interval[1.0, 1.0]),(null)), 'TestPointFromDecimal')
+define TestPointFromQuantity: ok(Equivalent((point from Interval[1.0 'cm', 1.0 'cm']),(null)), 'TestPointFromQuantity')
 
 //ProperlyIncludes
-define TestProperlyIncludesNull: NullInterval properly includes IntegerIntervalTest
-define IntegerIntervalProperlyIncludesTrue: IntegerIntervalTest properly includes IntegerIntervalTest4
-define IntegerIntervalProperlyIncludesFalse: IntegerIntervalTest properly includes IntegerIntervalTest5
-define DecimalIntervalProperlyIncludesTrue: DecimalIntervalTest properly includes DecimalIntervalTest3
-define DecimalIntervalProperlyIncludesFalse: DecimalIntervalTest properly includes DecimalIntervalTest4
-define QuantityIntervalProperlyIncludesTrue: QuantityIntervalTest properly includes QuantityIntervalTest3
-define QuantityIntervalProperlyIncludesFalse: QuantityIntervalTest properly includes QuantityIntervalTest4
-define DateTimeProperlyIncludesTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)]
-define DateTimeProperlyIncludesFalse: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)]
-define TimeProperlyIncludesTrue: Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T21:59:59.998]
-define TimeProperlyIncludesFalse: Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T22:00:00.000]
+define TestProperlyIncludesNull: ok(Equivalent((NullInterval properly includes IntegerIntervalTest),(null)), 'TestProperlyIncludesNull')
+define IntegerIntervalProperlyIncludesTrue: ok(Equivalent((IntegerIntervalTest properly includes IntegerIntervalTest4),(null)), 'IntegerIntervalProperlyIncludesTrue')
+define IntegerIntervalProperlyIncludesFalse: ok(Equivalent((IntegerIntervalTest properly includes IntegerIntervalTest5),(null)), 'IntegerIntervalProperlyIncludesFalse')
+define DecimalIntervalProperlyIncludesTrue: ok(Equivalent((DecimalIntervalTest properly includes DecimalIntervalTest3),(null)), 'DecimalIntervalProperlyIncludesTrue')
+define DecimalIntervalProperlyIncludesFalse: ok(Equivalent((DecimalIntervalTest properly includes DecimalIntervalTest4),(null)), 'DecimalIntervalProperlyIncludesFalse')
+define QuantityIntervalProperlyIncludesTrue: ok(Equivalent((QuantityIntervalTest properly includes QuantityIntervalTest3),(null)), 'QuantityIntervalProperlyIncludesTrue')
+define QuantityIntervalProperlyIncludesFalse: ok(Equivalent((QuantityIntervalTest properly includes QuantityIntervalTest4),(null)), 'QuantityIntervalProperlyIncludesFalse')
+define DateTimeProperlyIncludesTrue: ok(Equivalent((Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)]),(null)), 'DateTimeProperlyIncludesTrue')
+define DateTimeProperlyIncludesFalse: ok(Equivalent((Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)]),(null)), 'DateTimeProperlyIncludesFalse')
+define TimeProperlyIncludesTrue: ok(Equivalent((Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T21:59:59.998]),(null)), 'TimeProperlyIncludesTrue')
+define TimeProperlyIncludesFalse: ok(Equivalent((Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T22:00:00.000]),(null)), 'TimeProperlyIncludesFalse')
 
 //ProperlyIncludedIn
-define TestProperlyIncludedInNull: IntegerIntervalTest properly included in NullInterval
-define IntegerIntervalProperlyIncludedInTrue: IntegerIntervalTest4 properly included in IntegerIntervalTest
-define IntegerIntervalProperlyIncludedInFalse: IntegerIntervalTest5 properly included in IntegerIntervalTest
-define DecimalIntervalProperlyIncludedInTrue: DecimalIntervalTest3 properly included in DecimalIntervalTest
-define DecimalIntervalProperlyIncludedInFalse: DecimalIntervalTest4 properly included in DecimalIntervalTest
-define QuantityIntervalProperlyIncludedInTrue: QuantityIntervalTest3 properly included in QuantityIntervalTest
-define QuantityIntervalProperlyIncludedInFalse: QuantityIntervalTest properly included in QuantityIntervalTest4
-define DateTimeProperlyIncludedInTrue: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)] properly included in Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define DateTimeProperlyIncludedInFalse: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)] properly included in Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define TimeProperlyIncludedInTrue: Interval[@T12:01:01.000, @T21:59:59.998] properly included in Interval[@T12:00:00.000, @T21:59:59.999]
-define TimeProperlyIncludedInFalse: Interval[@T12:01:01.000, @T22:00:00.000] properly included in Interval[@T12:00:00.000, @T21:59:59.999]
+define TestProperlyIncludedInNull: ok(Equivalent((IntegerIntervalTest properly included in NullInterval),(null)), 'TestProperlyIncludedInNull')
+define IntegerIntervalProperlyIncludedInTrue: ok(Equivalent((IntegerIntervalTest4 properly included in IntegerIntervalTest),(null)), 'IntegerIntervalProperlyIncludedInTrue')
+define IntegerIntervalProperlyIncludedInFalse: ok(Equivalent((IntegerIntervalTest5 properly included in IntegerIntervalTest),(null)), 'IntegerIntervalProperlyIncludedInFalse')
+define DecimalIntervalProperlyIncludedInTrue: ok(Equivalent((DecimalIntervalTest3 properly included in DecimalIntervalTest),(null)), 'DecimalIntervalProperlyIncludedInTrue')
+define DecimalIntervalProperlyIncludedInFalse: ok(Equivalent((DecimalIntervalTest4 properly included in DecimalIntervalTest),(null)), 'DecimalIntervalProperlyIncludedInFalse')
+define QuantityIntervalProperlyIncludedInTrue: ok(Equivalent((QuantityIntervalTest3 properly included in QuantityIntervalTest),(null)), 'QuantityIntervalProperlyIncludedInTrue')
+define QuantityIntervalProperlyIncludedInFalse: ok(Equivalent((QuantityIntervalTest properly included in QuantityIntervalTest4),(null)), 'QuantityIntervalProperlyIncludedInFalse')
+define DateTimeProperlyIncludedInTrue: ok(Equivalent((Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)] properly included in Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]),(null)), 'DateTimeProperlyIncludedInTrue')
+define DateTimeProperlyIncludedInFalse: ok(Equivalent((Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)] properly included in Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]),(null)), 'DateTimeProperlyIncludedInFalse')
+define TimeProperlyIncludedInTrue: ok(Equivalent((Interval[@T12:01:01.000, @T21:59:59.998] properly included in Interval[@T12:00:00.000, @T21:59:59.999]),(null)), 'TimeProperlyIncludedInTrue')
+define TimeProperlyIncludedInFalse: ok(Equivalent((Interval[@T12:01:01.000, @T22:00:00.000] properly included in Interval[@T12:00:00.000, @T21:59:59.999]),(null)), 'TimeProperlyIncludedInFalse')
 
 //Start
-define IntegerIntervalStart: start of IntegerIntervalTest
-define DecimalIntervalStart: start of DecimalIntervalTest
-define QuantityIntervalStart: start of QuantityIntervalTest
-define DateTimeIntervalStart: start of DateTimeIntervalTest
-define TimeIntervalStart: start of TimeIntervalTest
+define IntegerIntervalStart: ok(Equivalent((start of IntegerIntervalTest),(null)), 'IntegerIntervalStart')
+define DecimalIntervalStart: ok(Equivalent((start of DecimalIntervalTest),(null)), 'DecimalIntervalStart')
+define QuantityIntervalStart: ok(Equivalent((start of QuantityIntervalTest),(null)), 'QuantityIntervalStart')
+define DateTimeIntervalStart: ok(Equivalent((start of DateTimeIntervalTest),(null)), 'DateTimeIntervalStart')
+define TimeIntervalStart: ok(Equivalent((start of TimeIntervalTest),(null)), 'TimeIntervalStart')
 
 //Starts
-define TestStartsNull: NullInterval starts IntegerIntervalTest
-define IntegerIntervalStartsTrue: IntegerIntervalTest4 starts IntegerIntervalTest5
-define IntegerIntervalStartsFalse: IntegerIntervalTest starts IntegerIntervalTest4
-define DecimalIntervalStartsTrue: DecimalIntervalTest3 starts DecimalIntervalTest4
-define DecimalIntervalStartsFalse: DecimalIntervalTest starts DecimalIntervalTest3
-define QuantityIntervalStartsTrue: QuantityIntervalTest3 starts QuantityIntervalTest4
-define QuantityIntervalStartsFalse: QuantityIntervalTest starts QuantityIntervalTest3
-define DateTimeStartsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 27)]
-define DateTimeStartsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 6), DateTime(2012, 1, 27)]
-define TimeStartsTrue: Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T05:59:59.999, @T17:59:59.999]
-define TimeStartsFalse: Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T04:59:59.999, @T17:59:59.999]
+define TestStartsNull: ok(Equivalent((NullInterval starts IntegerIntervalTest),(null)), 'TestStartsNull')
+define IntegerIntervalStartsTrue: ok(Equivalent((IntegerIntervalTest4 starts IntegerIntervalTest5),(null)), 'IntegerIntervalStartsTrue')
+define IntegerIntervalStartsFalse: ok(Equivalent((IntegerIntervalTest starts IntegerIntervalTest4),(null)), 'IntegerIntervalStartsFalse')
+define DecimalIntervalStartsTrue: ok(Equivalent((DecimalIntervalTest3 starts DecimalIntervalTest4),(null)), 'DecimalIntervalStartsTrue')
+define DecimalIntervalStartsFalse: ok(Equivalent((DecimalIntervalTest starts DecimalIntervalTest3),(null)), 'DecimalIntervalStartsFalse')
+define QuantityIntervalStartsTrue: ok(Equivalent((QuantityIntervalTest3 starts QuantityIntervalTest4),(null)), 'QuantityIntervalStartsTrue')
+define QuantityIntervalStartsFalse: ok(Equivalent((QuantityIntervalTest starts QuantityIntervalTest3),(null)), 'QuantityIntervalStartsFalse')
+define DateTimeStartsTrue: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 27)]),(null)), 'DateTimeStartsTrue')
+define DateTimeStartsFalse: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 6), DateTime(2012, 1, 27)]),(null)), 'DateTimeStartsFalse')
+define TimeStartsTrue: ok(Equivalent((Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T05:59:59.999, @T17:59:59.999]),(null)), 'TimeStartsTrue')
+define TimeStartsFalse: ok(Equivalent((Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T04:59:59.999, @T17:59:59.999]),(null)), 'TimeStartsFalse')
 
 //Union
-define TestUnionNull: NullInterval union IntegerIntervalTest
-define IntegerIntervalUnion1To15: IntegerIntervalTest union IntegerIntervalTest5
-define IntegerIntervalUnionNull: IntegerIntervalTest union IntegerIntervalTest3
-define DecimalIntervalUnion1To15: DecimalIntervalTest union DecimalIntervalTest4
-define DecimalIntervalUnionNull: DecimalIntervalTest union DecimalIntervalTest5
-define QuantityIntervalUnion1To15: QuantityIntervalTest union QuantityIntervalTest4
-define QuantityIntervalUnionNull: QuantityIntervalTest union QuantityIntervalTest5
-define DateTimeUnion: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] union Interval[DateTime(2012, 1, 25), DateTime(2012, 1, 28)]
-define DateTimeUnionNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] union Interval[DateTime(2012, 1, 27), DateTime(2012, 1, 28)]
-define TimeUnion: Interval[@T05:59:59.999, @T15:59:59.999] union Interval[@T10:59:59.999, @T20:59:59.999]
-define TimeUnionNull: Interval[@T05:59:59.999, @T15:59:59.999] union Interval[@T16:59:59.999, @T20:59:59.999]
+define TestUnionNull: ok(Equivalent((NullInterval union IntegerIntervalTest),(null)), 'TestUnionNull')
+define IntegerIntervalUnion1To15: ok(Equivalent((IntegerIntervalTest union IntegerIntervalTest5),(null)), 'IntegerIntervalUnion1To15')
+define IntegerIntervalUnionNull: ok(Equivalent((IntegerIntervalTest union IntegerIntervalTest3),(null)), 'IntegerIntervalUnionNull')
+define DecimalIntervalUnion1To15: ok(Equivalent((DecimalIntervalTest union DecimalIntervalTest4),(null)), 'DecimalIntervalUnion1To15')
+define DecimalIntervalUnionNull: ok(Equivalent((DecimalIntervalTest union DecimalIntervalTest5),(null)), 'DecimalIntervalUnionNull')
+define QuantityIntervalUnion1To15: ok(Equivalent((QuantityIntervalTest union QuantityIntervalTest4),(null)), 'QuantityIntervalUnion1To15')
+define QuantityIntervalUnionNull: ok(Equivalent((QuantityIntervalTest union QuantityIntervalTest5),(null)), 'QuantityIntervalUnionNull')
+define DateTimeUnion: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] union Interval[DateTime(2012, 1, 25), DateTime(2012, 1, 28)]),(null)), 'DateTimeUnion')
+define DateTimeUnionNull: ok(Equivalent((Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] union Interval[DateTime(2012, 1, 27), DateTime(2012, 1, 28)]),(null)), 'DateTimeUnionNull')
+define TimeUnion: ok(Equivalent((Interval[@T05:59:59.999, @T15:59:59.999] union Interval[@T10:59:59.999, @T20:59:59.999]),(null)), 'TimeUnion')
+define TimeUnionNull: ok(Equivalent((Interval[@T05:59:59.999, @T15:59:59.999] union Interval[@T16:59:59.999, @T20:59:59.999]),(null)), 'TimeUnionNull')
 
 //Width
-define IntegerIntervalTestWidth9: width of IntegerIntervalTest
-define IntervalTestWidthNull: width of null
-define DecimalIntervalTestWidth11: width of DecimalIntervalTest4
-define QuantityIntervalTestWidth5: width of QuantityIntervalTest3
-define DateTimeWidth: width of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
-define TimeWidth: width of Interval[@T05:59:59.999, @T15:59:59.999]
+define IntegerIntervalTestWidth9: ok(Equivalent((width of IntegerIntervalTest),(null)), 'IntegerIntervalTestWidth9')
+define IntervalTestWidthNull: ok(Equivalent((width of null),(null)), 'IntervalTestWidthNull')
+define DecimalIntervalTestWidth11: ok(Equivalent((width of DecimalIntervalTest4),(null)), 'DecimalIntervalTestWidth11')
+define QuantityIntervalTestWidth5: ok(Equivalent((width of QuantityIntervalTest3),(null)), 'QuantityIntervalTestWidth5')
+define DateTimeWidth: ok(Equivalent((width of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]),(null)), 'DateTimeWidth')
+define TimeWidth: ok(Equivalent((width of Interval[@T05:59:59.999, @T15:59:59.999]),(null)), 'TimeWidth')
 
 //Interval
-define IntegerIntervalTest: Interval[1, 10]
-define IntegerIntervalTest2: Interval[11, 20]
-define IntegerIntervalTest3: Interval[44, 50]
-define IntegerIntervalTest4: Interval[4, 10]
-define IntegerIntervalTest5: Interval[4, 15]
-define DecimalIntervalTest: Interval[1.0, 10.0]
-define DecimalIntervalTest2: Interval[11.0, 20.0]
-define DecimalIntervalTest3: Interval[4.0, 10.0]
-define DecimalIntervalTest4: Interval[4.0, 15.0]
-define DecimalIntervalTest5: Interval[14.0, 15.0]
-define QuantityIntervalTest: Interval[1.0 'g', 10.0 'g']
-define QuantityIntervalTest2: Interval[11.0 'g', 20.0 'g']
-define QuantityIntervalTest3: Interval[5.0 'g', 10.0 'g']
-define QuantityIntervalTest4: Interval[5.0 'g', 15.0 'g']
-define QuantityIntervalTest5: Interval[14.0 'g', 15.0 'g']
-define DateTimeIntervalTest: Interval[@2016-05-01T00:00:00.000, @2016-05-02T00:00:00.000]
-define TimeIntervalTest: Interval[@T00:00:00.000, @T23:59:59.599]
-define CollapseIntervalTestInteger: {IntegerIntervalTest, IntegerIntervalTest2, IntegerIntervalTest3}
-define InvalidIntegerInterval: Interval[5, 3]
-define InvalidIntegerIntervalA: Interval[5, 5)
+define IntegerIntervalTest: ok(Equivalent((Interval[1, 10]),(null)), 'IntegerIntervalTest')
+define IntegerIntervalTest2: ok(Equivalent((Interval[11, 20]),(null)), 'IntegerIntervalTest2')
+define IntegerIntervalTest3: ok(Equivalent((Interval[44, 50]),(null)), 'IntegerIntervalTest3')
+define IntegerIntervalTest4: ok(Equivalent((Interval[4, 10]),(null)), 'IntegerIntervalTest4')
+define IntegerIntervalTest5: ok(Equivalent((Interval[4, 15]),(null)), 'IntegerIntervalTest5')
+define DecimalIntervalTest: ok(Equivalent((Interval[1.0, 10.0]),(null)), 'DecimalIntervalTest')
+define DecimalIntervalTest2: ok(Equivalent((Interval[11.0, 20.0]),(null)), 'DecimalIntervalTest2')
+define DecimalIntervalTest3: ok(Equivalent((Interval[4.0, 10.0]),(null)), 'DecimalIntervalTest3')
+define DecimalIntervalTest4: ok(Equivalent((Interval[4.0, 15.0]),(null)), 'DecimalIntervalTest4')
+define DecimalIntervalTest5: ok(Equivalent((Interval[14.0, 15.0]),(null)), 'DecimalIntervalTest5')
+define QuantityIntervalTest: ok(Equivalent((Interval[1.0 'g', 10.0 'g']),(null)), 'QuantityIntervalTest')
+define QuantityIntervalTest2: ok(Equivalent((Interval[11.0 'g', 20.0 'g']),(null)), 'QuantityIntervalTest2')
+define QuantityIntervalTest3: ok(Equivalent((Interval[5.0 'g', 10.0 'g']),(null)), 'QuantityIntervalTest3')
+define QuantityIntervalTest4: ok(Equivalent((Interval[5.0 'g', 15.0 'g']),(null)), 'QuantityIntervalTest4')
+define QuantityIntervalTest5: ok(Equivalent((Interval[14.0 'g', 15.0 'g']),(null)), 'QuantityIntervalTest5')
+define DateTimeIntervalTest: ok(Equivalent((Interval[@2016-05-01T00:00:00.000, @2016-05-02T00:00:00.000]),(null)), 'DateTimeIntervalTest')
+define TimeIntervalTest: ok(Equivalent((Interval[@T00:00:00.000, @T23:59:59.599]),(null)), 'TimeIntervalTest')
+define CollapseIntervalTestInteger: ok(Equivalent(({IntegerIntervalTest, IntegerIntervalTest2, IntegerIntervalTest3}),(null)), 'CollapseIntervalTestInteger')
+define InvalidIntegerInterval: ok(Equivalent((Interval[5, 3]),(null)), 'InvalidIntegerInterval')
+define InvalidIntegerIntervalA: ok(Equivalent((Interval[5, 5)),(null)), 'InvalidIntegerIntervalA')
+
+
+define function plan(test_count Integer):
+    Message(null, true, null, 'Message', '1..' + ToString(test_count))
+
+define function ok(is_ok Boolean, message String):
+    Message(null, true, null, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)

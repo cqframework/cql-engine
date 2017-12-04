@@ -2,223 +2,235 @@ library ComparisonOperator version '1'
 
 context Population
 
+define private ExistenceOfThisEarlierDefineIsWorkaroundForTranslatorDeathWithLaterMessageNullCodeArg: Message(null, true, '', 'Message', '')
+
+define _0: plan(300)
+
+
 //Between
-define BetweenIntTrue: 4 between 2 and 6 
+define BetweenIntTrue: ok(Equivalent((4 between 2 and 6 ),(null)), 'BetweenIntTrue')
 
 //Equal
-define SimpleEqTrueTrue : true = true
-define SimpleEqTrueFalse : true = false
-define SimpleEqFalseFalse : false = false
-define SimpleEqFalseTrue : false = true
-define SimpleEqNullNull : null = null
+define SimpleEqTrueTrue : ok(Equivalent((true = true),(null)), 'SimpleEqTrueTrue')
+define SimpleEqTrueFalse : ok(Equivalent((true = false),(null)), 'SimpleEqTrueFalse')
+define SimpleEqFalseFalse : ok(Equivalent((false = false),(null)), 'SimpleEqFalseFalse')
+define SimpleEqFalseTrue : ok(Equivalent((false = true),(null)), 'SimpleEqFalseTrue')
+define SimpleEqNullNull : ok(Equivalent((null = null),(null)), 'SimpleEqNullNull')
 /*define SimpleEqTrueNull : true = null*/
-define SimpleEqNullTrue : null = true
-define SimpleEqInt1Int1 : 1 = 1
-define SimpleEqInt1Int2 : 1 = 2
-define SimpleEqStringAStringA : 'a' = 'a'
-define SimpleEqStringAStringB : 'a' = 'b'
-define SimpleEqFloat1Float1 : 1.0 = 1.0
-define SimpleEqFloat1Float2 : 1.0 = 2.0
-define SimpleEqFloat1Int1 : 1.0 = 1
-define SimpleEqFloat1Int2 : 1.0 = 2
-define QuantityEqCM1CM1 : 1'cm' = 1'cm'
-define QuantityEqCM1M01 : 1'cm' = 0.01'm'
-define TupleEqJohnJohn: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John' }
-define TupleEqJohnJane: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'Jane' }
-define TupleEqJohn1John2: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'John' }
-define TupleEqDateTimeTrue: Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) } = Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) }
-define TupleEqDateTimeFalse: Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) } = Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 5, 0, 0, 0) }
-define TupleEqTimeTrue: Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.541 }
-define TupleEqTimeFalse: Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.540 }
-define ListEqEmptyEmpty : {} = {}
-define ListEqABCABC : { 'a', 'b', 'c' } = { 'a', 'b', 'c' }
-define ListEqABCAB : { 'a', 'b', 'c' } = { 'a', 'b' }
-define ListEqABC123: { 'a', 'b', 'c' } = { 1, 2, 3 }
-define ListEq123ABC: { 1, 2, 3 } = { 'a', 'b', 'c' }
-define ListEq123String123:  { 1, 2, 3 } = { '1', '2', '3' }
-define IntervalEq1To101To10: Interval[1, 10] = Interval[1, 10]
-define IntervalEq1To101To5: Interval[1, 10] = Interval[1, 5]
-define DateTimeEqTodayToday: Today() = Today()
-define DateTimeEqTodayYesterday: Today() = Today() - 1 days
-define DateTimeEqJanJan: DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 1, 5, 5, 0, 0, 0, 0)
-define DateTimeEqJanJuly: DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 7, 5, 5, 0, 0, 0, 0)
-define DateTimeEqNull: DateTime(null) = DateTime(null)
-define DateTimeUTC: @2014-01-25T14:30:14.559+01:00 = @2014-01-25T14:30:14.559+01:00
-define TimeEq10A10A: @T10:00:00.000 = @T10:00:00.000
-define TimeEq10A10P: @T10:00:00.000 = @T22:00:00.000
+define SimpleEqNullTrue : ok(Equivalent((null = true),(null)), 'SimpleEqNullTrue')
+define SimpleEqInt1Int1 : ok(Equivalent((1 = 1),(null)), 'SimpleEqInt1Int1')
+define SimpleEqInt1Int2 : ok(Equivalent((1 = 2),(null)), 'SimpleEqInt1Int2')
+define SimpleEqStringAStringA : ok(Equivalent(('a' = 'a'),(null)), 'SimpleEqStringAStringA')
+define SimpleEqStringAStringB : ok(Equivalent(('a' = 'b'),(null)), 'SimpleEqStringAStringB')
+define SimpleEqFloat1Float1 : ok(Equivalent((1.0 = 1.0),(null)), 'SimpleEqFloat1Float1')
+define SimpleEqFloat1Float2 : ok(Equivalent((1.0 = 2.0),(null)), 'SimpleEqFloat1Float2')
+define SimpleEqFloat1Int1 : ok(Equivalent((1.0 = 1),(null)), 'SimpleEqFloat1Int1')
+define SimpleEqFloat1Int2 : ok(Equivalent((1.0 = 2),(null)), 'SimpleEqFloat1Int2')
+define QuantityEqCM1CM1 : ok(Equivalent((1'cm' = 1'cm'),(null)), 'QuantityEqCM1CM1')
+define QuantityEqCM1M01 : ok(Equivalent((1'cm' = 0.01'm'),(null)), 'QuantityEqCM1M01')
+define TupleEqJohnJohn: ok(Equivalent((Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John' }),(null)), 'TupleEqJohnJohn')
+define TupleEqJohnJane: ok(Equivalent((Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'Jane' }),(null)), 'TupleEqJohnJane')
+define TupleEqJohn1John2: ok(Equivalent((Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'John' }),(null)), 'TupleEqJohn1John2')
+define TupleEqDateTimeTrue: ok(Equivalent((Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) } = Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) }),(null)), 'TupleEqDateTimeTrue')
+define TupleEqDateTimeFalse: ok(Equivalent((Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) } = Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 5, 0, 0, 0) }),(null)), 'TupleEqDateTimeFalse')
+define TupleEqTimeTrue: ok(Equivalent((Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.541 }),(null)), 'TupleEqTimeTrue')
+define TupleEqTimeFalse: ok(Equivalent((Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.540 }),(null)), 'TupleEqTimeFalse')
+define ListEqEmptyEmpty : ok(Equivalent(({} = {}),(null)), 'ListEqEmptyEmpty')
+define ListEqABCABC : ok(Equivalent(({ 'a', 'b', 'c' } = { 'a', 'b', 'c' }),(null)), 'ListEqABCABC')
+define ListEqABCAB : ok(Equivalent(({ 'a', 'b', 'c' } = { 'a', 'b' }),(null)), 'ListEqABCAB')
+define ListEqABC123: ok(Equivalent(({ 'a', 'b', 'c' } = { 1, 2, 3 }),(null)), 'ListEqABC123')
+define ListEq123ABC: ok(Equivalent(({ 1, 2, 3 } = { 'a', 'b', 'c' }),(null)), 'ListEq123ABC')
+define ListEq123String123: ok(Equivalent(({ 1, 2, 3 } = { '1', '2', '3' }),(null)), 'ListEq123String123')
+define IntervalEq1To101To10: ok(Equivalent((Interval[1, 10] = Interval[1, 10]),(null)), 'IntervalEq1To101To10')
+define IntervalEq1To101To5: ok(Equivalent((Interval[1, 10] = Interval[1, 5]),(null)), 'IntervalEq1To101To5')
+define DateTimeEqTodayToday: ok(Equivalent((Today() = Today()),(null)), 'DateTimeEqTodayToday')
+define DateTimeEqTodayYesterday: ok(Equivalent((Today() = Today() - 1 days),(null)), 'DateTimeEqTodayYesterday')
+define DateTimeEqJanJan: ok(Equivalent((DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 1, 5, 5, 0, 0, 0, 0)),(null)), 'DateTimeEqJanJan')
+define DateTimeEqJanJuly: ok(Equivalent((DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 7, 5, 5, 0, 0, 0, 0)),(null)), 'DateTimeEqJanJuly')
+define DateTimeEqNull: ok(Equivalent((DateTime(null) = DateTime(null)),(null)), 'DateTimeEqNull')
+define DateTimeUTC: ok(Equivalent((@2014-01-25T14:30:14.559+01:00 = @2014-01-25T14:30:14.559+01:00),(null)), 'DateTimeUTC')
+define TimeEq10A10A: ok(Equivalent((@T10:00:00.000 = @T10:00:00.000),(null)), 'TimeEq10A10A')
+define TimeEq10A10P: ok(Equivalent((@T10:00:00.000 = @T22:00:00.000),(null)), 'TimeEq10A10P')
 
 //Greater
-define GreaterZZ        : 0 > 0
-define GreaterZ1        : 0 > 1
-define GreaterZNeg1     : 0 > -1
-define GreaterDecZZ     : 0.0 > 0.0
-define GreaterDecZ1     : 0.0 > 1.0
-define GreaterDecZNeg1  : 0.0 > -1.0
-define GreaterCM0CM0    : 0'cm' > 0'cm'
-define GreaterCM0CM1    : 0'cm' > 1'cm'
-define GreaterCM0NegCM1 : 0'cm' > -1'cm'
-define GreaterM1CM1     : 1'm' > 1'cm'
-define GreaterM1CM10    : 1'm' > 10'cm'
-define GreaterAA        : 'a' > 'a'
-define GreaterAB        : 'a' > 'b'
-define GreaterBA        : 'b' > 'a'
-define GreaterAThanAA   : 'a' > 'aa'
-define GreaterAAThanA   : 'aa' > 'a'
-define GreaterJackJill   : 'Jack' > 'Jill'
-define DateTimeGreaterTrue: DateTime(2012, 2, 12) > DateTime(2012, 2, 10)
-define DateTimeGreaterFalse: DateTime(2012, 2, 12) > DateTime(2012, 2, 13)
-define TimeGreaterTrue: @T10:00:00.001 > @T10:00:00.000
-define TimeGreaterFalse: @T10:00:00.000 > @T10:00:00.001
-define UncertaintyGreaterNull: DateTime(2014) > DateTime(2014, 2, 15)
-define UncertaintyGreaterTrue: DateTime(2015) > DateTime(2014, 2, 15)
-define UncertaintyGreaterFalse: DateTime(2013) > DateTime(2014, 2, 15)
+define GreaterZZ        : ok(Equivalent((0 > 0),(null)), 'GreaterZZ')
+define GreaterZ1        : ok(Equivalent((0 > 1),(null)), 'GreaterZ1')
+define GreaterZNeg1     : ok(Equivalent((0 > -1),(null)), 'GreaterZNeg1')
+define GreaterDecZZ     : ok(Equivalent((0.0 > 0.0),(null)), 'GreaterDecZZ')
+define GreaterDecZ1     : ok(Equivalent((0.0 > 1.0),(null)), 'GreaterDecZ1')
+define GreaterDecZNeg1  : ok(Equivalent((0.0 > -1.0),(null)), 'GreaterDecZNeg1')
+define GreaterCM0CM0    : ok(Equivalent((0'cm' > 0'cm'),(null)), 'GreaterCM0CM0')
+define GreaterCM0CM1    : ok(Equivalent((0'cm' > 1'cm'),(null)), 'GreaterCM0CM1')
+define GreaterCM0NegCM1 : ok(Equivalent((0'cm' > -1'cm'),(null)), 'GreaterCM0NegCM1')
+define GreaterM1CM1     : ok(Equivalent((1'm' > 1'cm'),(null)), 'GreaterM1CM1')
+define GreaterM1CM10    : ok(Equivalent((1'm' > 10'cm'),(null)), 'GreaterM1CM10')
+define GreaterAA        : ok(Equivalent(('a' > 'a'),(null)), 'GreaterAA')
+define GreaterAB        : ok(Equivalent(('a' > 'b'),(null)), 'GreaterAB')
+define GreaterBA        : ok(Equivalent(('b' > 'a'),(null)), 'GreaterBA')
+define GreaterAThanAA   : ok(Equivalent(('a' > 'aa'),(null)), 'GreaterAThanAA')
+define GreaterAAThanA   : ok(Equivalent(('aa' > 'a'),(null)), 'GreaterAAThanA')
+define GreaterJackJill   : ok(Equivalent(('Jack' > 'Jill'),(null)), 'GreaterJackJill')
+define DateTimeGreaterTrue: ok(Equivalent((DateTime(2012, 2, 12) > DateTime(2012, 2, 10)),(null)), 'DateTimeGreaterTrue')
+define DateTimeGreaterFalse: ok(Equivalent((DateTime(2012, 2, 12) > DateTime(2012, 2, 13)),(null)), 'DateTimeGreaterFalse')
+define TimeGreaterTrue: ok(Equivalent((@T10:00:00.001 > @T10:00:00.000),(null)), 'TimeGreaterTrue')
+define TimeGreaterFalse: ok(Equivalent((@T10:00:00.000 > @T10:00:00.001),(null)), 'TimeGreaterFalse')
+define UncertaintyGreaterNull: ok(Equivalent((DateTime(2014) > DateTime(2014, 2, 15)),(null)), 'UncertaintyGreaterNull')
+define UncertaintyGreaterTrue: ok(Equivalent((DateTime(2015) > DateTime(2014, 2, 15)),(null)), 'UncertaintyGreaterTrue')
+define UncertaintyGreaterFalse: ok(Equivalent((DateTime(2013) > DateTime(2014, 2, 15)),(null)), 'UncertaintyGreaterFalse')
 
 //Greater Or Equal
-define GreaterOrEqualZZ        : 0 >= 0
-define GreaterOrEqualZ1        : 0 >= 1
-define GreaterOrEqualZNeg1     : 0 >= -1
-define GreaterOrEqualDecZZ     : 0.0 >= 0.0
-define GreaterOrEqualDecZ1     : 0.0 >= 1.0
-define GreaterOrEqualDecZNeg1  : 0.0 >= -1.0
-define GreaterOrEqualCM0CM0    : 0'cm' >= 0'cm'
-define GreaterOrEqualCM0CM1    : 0'cm' >= 1'cm'
-define GreaterOrEqualCM0NegCM1 : 0'cm' >= -1'cm'
-define GreaterOrEqualM1CM1     : 1'm' >= 1'cm'
-define GreaterOrEqualM1CM10    : 1'm' >= 10'cm'
-define GreaterOrEqualAA        : 'a' >= 'a'
-define GreaterOrEqualAB        : 'a' >= 'b'
-define GreaterOrEqualBA        : 'b' >= 'a'
-define GreaterOrEqualAThanAA   : 'a' >= 'aa'
-define GreaterOrEqualAAThanA   : 'aa' >= 'a'
-define GreaterOrEqualJackJill  : 'Jack' >= 'Jill'
-define DateTimeGreaterEqTrue: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 10, 0, 0, 0, 0)
-define DateTimeGreaterEqTrue2: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 12, 0, 0, 0, 0)
-define DateTimeGreaterEqFalse: DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 13, 0, 0, 0, 0)
-define TimeGreaterEqTrue: @T10:00:00.001 >= @T10:00:00.000
-define TimeGreaterEqTrue2: @T10:00:00.000 >= @T10:00:00.000
-define TimeGreaterEqFalse: @T10:00:00.000 >= @T10:00:00.001
-define UncertaintyGreaterEqualNull: DateTime(2014) >= DateTime(2014, 2, 15)
-define UncertaintyGreaterEqualTrue: DateTime(2015) >= DateTime(2014, 2, 15)
-define UncertaintyGreaterEqualFalse: DateTime(2013) >= DateTime(2014, 2, 15)
+define GreaterOrEqualZZ        : ok(Equivalent((0 >= 0),(null)), 'GreaterOrEqualZZ')
+define GreaterOrEqualZ1        : ok(Equivalent((0 >= 1),(null)), 'GreaterOrEqualZ1')
+define GreaterOrEqualZNeg1     : ok(Equivalent((0 >= -1),(null)), 'GreaterOrEqualZNeg1')
+define GreaterOrEqualDecZZ     : ok(Equivalent((0.0 >= 0.0),(null)), 'GreaterOrEqualDecZZ')
+define GreaterOrEqualDecZ1     : ok(Equivalent((0.0 >= 1.0),(null)), 'GreaterOrEqualDecZ1')
+define GreaterOrEqualDecZNeg1  : ok(Equivalent((0.0 >= -1.0),(null)), 'GreaterOrEqualDecZNeg1')
+define GreaterOrEqualCM0CM0    : ok(Equivalent((0'cm' >= 0'cm'),(null)), 'GreaterOrEqualCM0CM0')
+define GreaterOrEqualCM0CM1    : ok(Equivalent((0'cm' >= 1'cm'),(null)), 'GreaterOrEqualCM0CM1')
+define GreaterOrEqualCM0NegCM1 : ok(Equivalent((0'cm' >= -1'cm'),(null)), 'GreaterOrEqualCM0NegCM1')
+define GreaterOrEqualM1CM1     : ok(Equivalent((1'm' >= 1'cm'),(null)), 'GreaterOrEqualM1CM1')
+define GreaterOrEqualM1CM10    : ok(Equivalent((1'm' >= 10'cm'),(null)), 'GreaterOrEqualM1CM10')
+define GreaterOrEqualAA        : ok(Equivalent(('a' >= 'a'),(null)), 'GreaterOrEqualAA')
+define GreaterOrEqualAB        : ok(Equivalent(('a' >= 'b'),(null)), 'GreaterOrEqualAB')
+define GreaterOrEqualBA        : ok(Equivalent(('b' >= 'a'),(null)), 'GreaterOrEqualBA')
+define GreaterOrEqualAThanAA   : ok(Equivalent(('a' >= 'aa'),(null)), 'GreaterOrEqualAThanAA')
+define GreaterOrEqualAAThanA   : ok(Equivalent(('aa' >= 'a'),(null)), 'GreaterOrEqualAAThanA')
+define GreaterOrEqualJackJill  : ok(Equivalent(('Jack' >= 'Jill'),(null)), 'GreaterOrEqualJackJill')
+define DateTimeGreaterEqTrue: ok(Equivalent((DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 10, 0, 0, 0, 0)),(null)), 'DateTimeGreaterEqTrue')
+define DateTimeGreaterEqTrue2: ok(Equivalent((DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 12, 0, 0, 0, 0)),(null)), 'DateTimeGreaterEqTrue2')
+define DateTimeGreaterEqFalse: ok(Equivalent((DateTime(2012, 2, 12, 0, 0, 0, 0) >= DateTime(2012, 2, 13, 0, 0, 0, 0)),(null)), 'DateTimeGreaterEqFalse')
+define TimeGreaterEqTrue: ok(Equivalent((@T10:00:00.001 >= @T10:00:00.000),(null)), 'TimeGreaterEqTrue')
+define TimeGreaterEqTrue2: ok(Equivalent((@T10:00:00.000 >= @T10:00:00.000),(null)), 'TimeGreaterEqTrue2')
+define TimeGreaterEqFalse: ok(Equivalent((@T10:00:00.000 >= @T10:00:00.001),(null)), 'TimeGreaterEqFalse')
+define UncertaintyGreaterEqualNull: ok(Equivalent((DateTime(2014) >= DateTime(2014, 2, 15)),(null)), 'UncertaintyGreaterEqualNull')
+define UncertaintyGreaterEqualTrue: ok(Equivalent((DateTime(2015) >= DateTime(2014, 2, 15)),(null)), 'UncertaintyGreaterEqualTrue')
+define UncertaintyGreaterEqualFalse: ok(Equivalent((DateTime(2013) >= DateTime(2014, 2, 15)),(null)), 'UncertaintyGreaterEqualFalse')
 
 //Less
-define LessZZ        : 0 < 0
-define LessZ1        : 0 < 1
-define LessZNeg1     : 0 < -1
-define LessDecZZ     : 0.0 < 0.0
-define LessDecZ1     : 0.0 < 1.0
-define LessDecZNeg1  : 0.0 < -1.0
-define LessCM0CM0    : 0'cm' < 0'cm'
-define LessCM0CM1    : 0'cm' < 1'cm'
-define LessCM0NegCM1 : 0'cm' < -1'cm'
-define LessM1CM1     : 1'm' < 1'cm'
-define LessM1CM10    : 1'm' < 10'cm'
-define LessAA        : 'a' < 'a'
-define LessAB        : 'a' < 'b'
-define LessBA        : 'b' < 'a'
-define LessAThanAA   : 'a' < 'aa'
-define LessAAThanA   : 'aa' < 'a'
-define LessJackJill  : 'Jack' < 'Jill'
-define DateTimeLessTrue: DateTime(2012, 2, 9) < DateTime(2012, 2, 10)
-define DateTimeLessFalse: DateTime(2012, 2, 14) < DateTime(2012, 2, 13)
-define TimeLessTrue: @T10:00:00.001 < @T10:00:00.002
-define TimeLessFalse: @T10:10:00.000 < @T10:00:00.001
-define UncertaintyLessNull: DateTime(2014) < DateTime(2014, 2, 15)
-define UncertaintyLessTrue: DateTime(2013) < DateTime(2014, 2, 15)
-define UncertaintyLessFalse: DateTime(2015) < DateTime(2014, 2, 15)
+define LessZZ        : ok(Equivalent((0 < 0),(null)), 'LessZZ')
+define LessZ1        : ok(Equivalent((0 < 1),(null)), 'LessZ1')
+define LessZNeg1     : ok(Equivalent((0 < -1),(null)), 'LessZNeg1')
+define LessDecZZ     : ok(Equivalent((0.0 < 0.0),(null)), 'LessDecZZ')
+define LessDecZ1     : ok(Equivalent((0.0 < 1.0),(null)), 'LessDecZ1')
+define LessDecZNeg1  : ok(Equivalent((0.0 < -1.0),(null)), 'LessDecZNeg1')
+define LessCM0CM0    : ok(Equivalent((0'cm' < 0'cm'),(null)), 'LessCM0CM0')
+define LessCM0CM1    : ok(Equivalent((0'cm' < 1'cm'),(null)), 'LessCM0CM1')
+define LessCM0NegCM1 : ok(Equivalent((0'cm' < -1'cm'),(null)), 'LessCM0NegCM1')
+define LessM1CM1     : ok(Equivalent((1'm' < 1'cm'),(null)), 'LessM1CM1')
+define LessM1CM10    : ok(Equivalent((1'm' < 10'cm'),(null)), 'LessM1CM10')
+define LessAA        : ok(Equivalent(('a' < 'a'),(null)), 'LessAA')
+define LessAB        : ok(Equivalent(('a' < 'b'),(null)), 'LessAB')
+define LessBA        : ok(Equivalent(('b' < 'a'),(null)), 'LessBA')
+define LessAThanAA   : ok(Equivalent(('a' < 'aa'),(null)), 'LessAThanAA')
+define LessAAThanA   : ok(Equivalent(('aa' < 'a'),(null)), 'LessAAThanA')
+define LessJackJill  : ok(Equivalent(('Jack' < 'Jill'),(null)), 'LessJackJill')
+define DateTimeLessTrue: ok(Equivalent((DateTime(2012, 2, 9) < DateTime(2012, 2, 10)),(null)), 'DateTimeLessTrue')
+define DateTimeLessFalse: ok(Equivalent((DateTime(2012, 2, 14) < DateTime(2012, 2, 13)),(null)), 'DateTimeLessFalse')
+define TimeLessTrue: ok(Equivalent((@T10:00:00.001 < @T10:00:00.002),(null)), 'TimeLessTrue')
+define TimeLessFalse: ok(Equivalent((@T10:10:00.000 < @T10:00:00.001),(null)), 'TimeLessFalse')
+define UncertaintyLessNull: ok(Equivalent((DateTime(2014) < DateTime(2014, 2, 15)),(null)), 'UncertaintyLessNull')
+define UncertaintyLessTrue: ok(Equivalent((DateTime(2013) < DateTime(2014, 2, 15)),(null)), 'UncertaintyLessTrue')
+define UncertaintyLessFalse: ok(Equivalent((DateTime(2015) < DateTime(2014, 2, 15)),(null)), 'UncertaintyLessFalse')
 
 //Less Or Equal
-define LessOrEqualZZ        : 0 <= 0
-define LessOrEqualZ1        : 0 <= 1
-define LessOrEqualZNeg1     : 0 <= -1
-define LessOrEqualDecZZ     : 0.0 <= 0.0
-define LessOrEqualDecZ1     : 0.0 <= 1.0
-define LessOrEqualDecZNeg1  : 0.0 <= -1.0
-define LessOrEqualCM0CM0    : 0'cm' <= 0'cm'
-define LessOrEqualCM0CM1    : 0'cm' <= 1'cm'
-define LessOrEqualCM0NegCM1 : 0'cm' <= -1'cm'
-define LessOrEqualM1CM1     : 1'm' <= 1'cm'
-define LessOrEqualM1CM10    : 1'm' <= 10'cm'
-define LessOrEqualAA        : 'a' <= 'a'
-define LessOrEqualAB        : 'a' <= 'b'
-define LessOrEqualBA        : 'b' <= 'a'
-define LessOrEqualAThanAA   : 'a' <= 'aa'
-define LessOrEqualAAThanA   : 'aa' <= 'a'
-define LessOrEqualJackJill  : 'Jack' <= 'Jill'
-define DateTimeLessEqTrue: DateTime(2012, 2, 9, 0, 0, 0, 0) <= DateTime(2012, 2, 10, 0, 0, 0, 0)
-define DateTimeLessEqTrue2: DateTime(2012, 2, 12, 0, 0, 0, 0) <= DateTime(2012, 2, 12, 0, 0, 0, 0)
-define DateTimeLessEqFalse: DateTime(2012, 2, 12, 1, 0, 0, 0) <= DateTime(2012, 2, 12, 0, 0, 0, 0)
-define TimeLessEqTrue: @T10:00:00.001 <= @T10:00:00.002
-define TimeLessEqTrue2: @T10:00:00.000 <= @T10:00:00.000
-define TimeLessEqFalse: @T10:00:00.002 <= @T10:00:00.001
-define UncertaintyLessEqualNull: DateTime(2014) <= DateTime(2014, 2, 15)
-define UncertaintyLessEqualTrue: DateTime(2013) <= DateTime(2014, 2, 15)
-define UncertaintyLessEqualFalse: DateTime(2015) <= DateTime(2014, 2, 15)
+define LessOrEqualZZ        : ok(Equivalent((0 <= 0),(null)), 'LessOrEqualZZ')
+define LessOrEqualZ1        : ok(Equivalent((0 <= 1),(null)), 'LessOrEqualZ1')
+define LessOrEqualZNeg1     : ok(Equivalent((0 <= -1),(null)), 'LessOrEqualZNeg1')
+define LessOrEqualDecZZ     : ok(Equivalent((0.0 <= 0.0),(null)), 'LessOrEqualDecZZ')
+define LessOrEqualDecZ1     : ok(Equivalent((0.0 <= 1.0),(null)), 'LessOrEqualDecZ1')
+define LessOrEqualDecZNeg1  : ok(Equivalent((0.0 <= -1.0),(null)), 'LessOrEqualDecZNeg1')
+define LessOrEqualCM0CM0    : ok(Equivalent((0'cm' <= 0'cm'),(null)), 'LessOrEqualCM0CM0')
+define LessOrEqualCM0CM1    : ok(Equivalent((0'cm' <= 1'cm'),(null)), 'LessOrEqualCM0CM1')
+define LessOrEqualCM0NegCM1 : ok(Equivalent((0'cm' <= -1'cm'),(null)), 'LessOrEqualCM0NegCM1')
+define LessOrEqualM1CM1     : ok(Equivalent((1'm' <= 1'cm'),(null)), 'LessOrEqualM1CM1')
+define LessOrEqualM1CM10    : ok(Equivalent((1'm' <= 10'cm'),(null)), 'LessOrEqualM1CM10')
+define LessOrEqualAA        : ok(Equivalent(('a' <= 'a'),(null)), 'LessOrEqualAA')
+define LessOrEqualAB        : ok(Equivalent(('a' <= 'b'),(null)), 'LessOrEqualAB')
+define LessOrEqualBA        : ok(Equivalent(('b' <= 'a'),(null)), 'LessOrEqualBA')
+define LessOrEqualAThanAA   : ok(Equivalent(('a' <= 'aa'),(null)), 'LessOrEqualAThanAA')
+define LessOrEqualAAThanA   : ok(Equivalent(('aa' <= 'a'),(null)), 'LessOrEqualAAThanA')
+define LessOrEqualJackJill  : ok(Equivalent(('Jack' <= 'Jill'),(null)), 'LessOrEqualJackJill')
+define DateTimeLessEqTrue: ok(Equivalent((DateTime(2012, 2, 9, 0, 0, 0, 0) <= DateTime(2012, 2, 10, 0, 0, 0, 0)),(null)), 'DateTimeLessEqTrue')
+define DateTimeLessEqTrue2: ok(Equivalent((DateTime(2012, 2, 12, 0, 0, 0, 0) <= DateTime(2012, 2, 12, 0, 0, 0, 0)),(null)), 'DateTimeLessEqTrue2')
+define DateTimeLessEqFalse: ok(Equivalent((DateTime(2012, 2, 12, 1, 0, 0, 0) <= DateTime(2012, 2, 12, 0, 0, 0, 0)),(null)), 'DateTimeLessEqFalse')
+define TimeLessEqTrue: ok(Equivalent((@T10:00:00.001 <= @T10:00:00.002),(null)), 'TimeLessEqTrue')
+define TimeLessEqTrue2: ok(Equivalent((@T10:00:00.000 <= @T10:00:00.000),(null)), 'TimeLessEqTrue2')
+define TimeLessEqFalse: ok(Equivalent((@T10:00:00.002 <= @T10:00:00.001),(null)), 'TimeLessEqFalse')
+define UncertaintyLessEqualNull: ok(Equivalent((DateTime(2014) <= DateTime(2014, 2, 15)),(null)), 'UncertaintyLessEqualNull')
+define UncertaintyLessEqualTrue: ok(Equivalent((DateTime(2013) <= DateTime(2014, 2, 15)),(null)), 'UncertaintyLessEqualTrue')
+define UncertaintyLessEqualFalse: ok(Equivalent((DateTime(2015) <= DateTime(2014, 2, 15)),(null)), 'UncertaintyLessEqualFalse')
 
 //Equivalent
-define EquivTrueTrue                : true ~ true
-define EquivTrueFalse               : true ~ false
-define EquivFalseFalse              : false ~ false
-define EquivFalseTrue               : false ~ true
-define EquivNullNull                : null ~ null
+define EquivTrueTrue                : ok(Equivalent((true ~ true),(null)), 'EquivTrueTrue')
+define EquivTrueFalse               : ok(Equivalent((true ~ false),(null)), 'EquivTrueFalse')
+define EquivFalseFalse              : ok(Equivalent((false ~ false),(null)), 'EquivFalseFalse')
+define EquivFalseTrue               : ok(Equivalent((false ~ true),(null)), 'EquivFalseTrue')
+define EquivNullNull                : ok(Equivalent((null ~ null),(null)), 'EquivNullNull')
 //define EquivTrueNull                : true ~ null
-define EquivNullTrue                : null ~ true
-define EquivInt1Int1                : 1 ~ 1
-define EquivInt1Int2                : 1 ~ 2
-define EquivStringAStringA          : 'a' ~ 'a'
-define EquivStringAStringB          : 'a' ~ 'b'
-define EquivFloat1Float1            : 1.0 ~ 1.0
-define EquivFloat1Float2            : 1.0 ~ 2.0
-define EquivFloat1Int1              : 1.0 ~ 1
-define EquivFloat1Int2              : 1.0 ~ 2
-define EquivEqCM1CM1                : 1'cm' ~ 1'cm'
-define EquivEqCM1M01                : 1'cm' ~ 0.01'm'
-define EquivTupleJohnJohn           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }
-define EquivTupleJohnJane           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }
-define EquivTupleJohn1John2         : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }
-define EquivListEmptyEmpty          : {} ~ {}
-define EquivListABCABC              : { 'a', 'b', 'c' } ~ { 'a', 'b', 'c' }
-define EquivListABCAB               : { 'a', 'b', 'c' } ~ { 'a', 'b' }
-define EquivListABC123              : { 'a', 'b', 'c' } ~ { 1, 2, 3 }
-define EquivList123ABC              : { 1, 2, 3 } ~ { 'a', 'b', 'c' }
-define EquivList123String123        : { 1, 2, 3 } ~  { '1', '2', '3' }
-define EquivInterval1To101To10      : Interval[1, 10] ~ Interval[1, 10]
-define EquivInterval1To101To5       : Interval[1, 10] ~ Interval[1, 5]
-define EquivDateTimeTodayToday      : Today() ~ Today()
-define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 days
-define EquivTime10A10A              : @T10:00:00.000 ~ @T10:00:00.000
-define EquivTime10A10P              : @T10:00:00.000 ~ @T22:00:00.000
+define EquivNullTrue                : ok(Equivalent((null ~ true),(null)), 'EquivNullTrue')
+define EquivInt1Int1                : ok(Equivalent((1 ~ 1),(null)), 'EquivInt1Int1')
+define EquivInt1Int2                : ok(Equivalent((1 ~ 2),(null)), 'EquivInt1Int2')
+define EquivStringAStringA          : ok(Equivalent(('a' ~ 'a'),(null)), 'EquivStringAStringA')
+define EquivStringAStringB          : ok(Equivalent(('a' ~ 'b'),(null)), 'EquivStringAStringB')
+define EquivFloat1Float1            : ok(Equivalent((1.0 ~ 1.0),(null)), 'EquivFloat1Float1')
+define EquivFloat1Float2            : ok(Equivalent((1.0 ~ 2.0),(null)), 'EquivFloat1Float2')
+define EquivFloat1Int1              : ok(Equivalent((1.0 ~ 1),(null)), 'EquivFloat1Int1')
+define EquivFloat1Int2              : ok(Equivalent((1.0 ~ 2),(null)), 'EquivFloat1Int2')
+define EquivEqCM1CM1                : ok(Equivalent((1'cm' ~ 1'cm'),(null)), 'EquivEqCM1CM1')
+define EquivEqCM1M01                : ok(Equivalent((1'cm' ~ 0.01'm'),(null)), 'EquivEqCM1M01')
+define EquivTupleJohnJohn           : ok(Equivalent((Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }),(null)), 'EquivTupleJohnJohn')
+define EquivTupleJohnJane           : ok(Equivalent((Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }),(null)), 'EquivTupleJohnJane')
+define EquivTupleJohn1John2         : ok(Equivalent((Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }),(null)), 'EquivTupleJohn1John2')
+define EquivListEmptyEmpty          : ok(Equivalent(({} ~ {}),(null)), 'EquivListEmptyEmpty')
+define EquivListABCABC              : ok(Equivalent(({ 'a', 'b', 'c' } ~ { 'a', 'b', 'c' }),(null)), 'EquivListABCABC')
+define EquivListABCAB               : ok(Equivalent(({ 'a', 'b', 'c' } ~ { 'a', 'b' }),(null)), 'EquivListABCAB')
+define EquivListABC123              : ok(Equivalent(({ 'a', 'b', 'c' } ~ { 1, 2, 3 }),(null)), 'EquivListABC123')
+define EquivList123ABC              : ok(Equivalent(({ 1, 2, 3 } ~ { 'a', 'b', 'c' }),(null)), 'EquivList123ABC')
+define EquivList123String123        : ok(Equivalent(({ 1, 2, 3 } ~  { '1', '2', '3' }),(null)), 'EquivList123String123')
+define EquivInterval1To101To10      : ok(Equivalent((Interval[1, 10] ~ Interval[1, 10]),(null)), 'EquivInterval1To101To10')
+define EquivInterval1To101To5       : ok(Equivalent((Interval[1, 10] ~ Interval[1, 5]),(null)), 'EquivInterval1To101To5')
+define EquivDateTimeTodayToday      : ok(Equivalent((Today() ~ Today()),(null)), 'EquivDateTimeTodayToday')
+define EquivDateTimeTodayYesterday  : ok(Equivalent((Today() ~ Today() - 1 days),(null)), 'EquivDateTimeTodayYesterday')
+define EquivTime10A10A              : ok(Equivalent((@T10:00:00.000 ~ @T10:00:00.000),(null)), 'EquivTime10A10A')
+define EquivTime10A10P              : ok(Equivalent((@T10:00:00.000 ~ @T22:00:00.000),(null)), 'EquivTime10A10P')
 
 //Not Equal
-define SimpleNotEqTrueTrue : true != true
-define SimpleNotEqTrueFalse : true != false
-define SimpleNotEqFalseFalse : false != false
-define SimpleNotEqFalseTrue : false != true
-define SimpleNotEqNullNull : null != null
+define SimpleNotEqTrueTrue : ok(Equivalent((true != true),(null)), 'SimpleNotEqTrueTrue')
+define SimpleNotEqTrueFalse : ok(Equivalent((true != false),(null)), 'SimpleNotEqTrueFalse')
+define SimpleNotEqFalseFalse : ok(Equivalent((false != false),(null)), 'SimpleNotEqFalseFalse')
+define SimpleNotEqFalseTrue : ok(Equivalent((false != true),(null)), 'SimpleNotEqFalseTrue')
+define SimpleNotEqNullNull : ok(Equivalent((null != null),(null)), 'SimpleNotEqNullNull')
 // define SimpleNotEqTrueNull : true != null
-define SimpleNotEqNullTrue : null != true
-define SimpleNotEqInt1Int1 : 1 != 1
-define SimpleNotEqInt1Int2 : 1 != 2
-define SimpleNotEqStringAStringA : 'a' != 'a'
-define SimpleNotEqStringAStringB : 'a' != 'b'
-define SimpleNotEqFloat1Float1 : 1.0 != 1.0
-define SimpleNotEqFloat1Float2 : 1.0 != 2.0
-define SimpleNotEqFloat1Int1 : 1.0 != 1
-define SimpleNotEqFloat1Int2 : 1.0 != 2
-define QuantityNotEqCM1CM1 : 1'cm' != 1'cm'
-define QuantityNotEqCM1M01 : 1'cm' != 0.01'm'
-define TupleNotEqJohnJohn: Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 1, Name : 'John' }
-define TupleNotEqJohnJane: Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'Jane' }
-define TupleNotEqJohn1John2: Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'John' }
-define ListNotEqEmptyEmpty : {} != {}
-define ListNotEqABCABC : { 'a', 'b', 'c' } != { 'a', 'b', 'c' }
-define ListNotEqABCAB : { 'a', 'b', 'c' } != { 'a', 'b' }
-define ListNotEqABC123: { 'a', 'b', 'c' } != { 1, 2, 3 }
-define ListNotEq123ABC: { 1, 2, 3 } != { 'a', 'b', 'c' }
-define ListNotEq123String123:  { 1, 2, 3 } != { '1', '2', '3' }
-define IntervalNotEq1To101To10: Interval[1, 10] != Interval[1, 10]
-define IntervalNotEq1To101To5: Interval[1, 10] != Interval[1, 5]
-define DateTimeNotEqTodayToday: Today() != Today()
-define DateTimeNotEqTodayYesterday: Today() != Today() - 1 days
-define TimeNotEq10A10A: @T10:00:00.000 != @T10:00:00.000
-define TimeNotEq10A10P: @T10:00:00.000 != @T22:00:00.000
+define SimpleNotEqNullTrue : ok(Equivalent((null != true),(null)), 'SimpleNotEqNullTrue')
+define SimpleNotEqInt1Int1 : ok(Equivalent((1 != 1),(null)), 'SimpleNotEqInt1Int1')
+define SimpleNotEqInt1Int2 : ok(Equivalent((1 != 2),(null)), 'SimpleNotEqInt1Int2')
+define SimpleNotEqStringAStringA : ok(Equivalent(('a' != 'a'),(null)), 'SimpleNotEqStringAStringA')
+define SimpleNotEqStringAStringB : ok(Equivalent(('a' != 'b'),(null)), 'SimpleNotEqStringAStringB')
+define SimpleNotEqFloat1Float1 : ok(Equivalent((1.0 != 1.0),(null)), 'SimpleNotEqFloat1Float1')
+define SimpleNotEqFloat1Float2 : ok(Equivalent((1.0 != 2.0),(null)), 'SimpleNotEqFloat1Float2')
+define SimpleNotEqFloat1Int1 : ok(Equivalent((1.0 != 1),(null)), 'SimpleNotEqFloat1Int1')
+define SimpleNotEqFloat1Int2 : ok(Equivalent((1.0 != 2),(null)), 'SimpleNotEqFloat1Int2')
+define QuantityNotEqCM1CM1 : ok(Equivalent((1'cm' != 1'cm'),(null)), 'QuantityNotEqCM1CM1')
+define QuantityNotEqCM1M01 : ok(Equivalent((1'cm' != 0.01'm'),(null)), 'QuantityNotEqCM1M01')
+define TupleNotEqJohnJohn: ok(Equivalent((Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 1, Name : 'John' }),(null)), 'TupleNotEqJohnJohn')
+define TupleNotEqJohnJane: ok(Equivalent((Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'Jane' }),(null)), 'TupleNotEqJohnJane')
+define TupleNotEqJohn1John2: ok(Equivalent((Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'John' }),(null)), 'TupleNotEqJohn1John2')
+define ListNotEqEmptyEmpty : ok(Equivalent(({} != {}),(null)), 'ListNotEqEmptyEmpty')
+define ListNotEqABCABC : ok(Equivalent(({ 'a', 'b', 'c' } != { 'a', 'b', 'c' }),(null)), 'ListNotEqABCABC')
+define ListNotEqABCAB : ok(Equivalent(({ 'a', 'b', 'c' } != { 'a', 'b' }),(null)), 'ListNotEqABCAB')
+define ListNotEqABC123: ok(Equivalent(({ 'a', 'b', 'c' } != { 1, 2, 3 }),(null)), 'ListNotEqABC123')
+define ListNotEq123ABC: ok(Equivalent(({ 1, 2, 3 } != { 'a', 'b', 'c' }),(null)), 'ListNotEq123ABC')
+define ListNotEq123String123: ok(Equivalent(({ 1, 2, 3 } != { '1', '2', '3' }),(null)), 'ListNotEq123String123')
+define IntervalNotEq1To101To10: ok(Equivalent((Interval[1, 10] != Interval[1, 10]),(null)), 'IntervalNotEq1To101To10')
+define IntervalNotEq1To101To5: ok(Equivalent((Interval[1, 10] != Interval[1, 5]),(null)), 'IntervalNotEq1To101To5')
+define DateTimeNotEqTodayToday: ok(Equivalent((Today() != Today()),(null)), 'DateTimeNotEqTodayToday')
+define DateTimeNotEqTodayYesterday: ok(Equivalent((Today() != Today() - 1 days),(null)), 'DateTimeNotEqTodayYesterday')
+define TimeNotEq10A10A: ok(Equivalent((@T10:00:00.000 != @T10:00:00.000),(null)), 'TimeNotEq10A10A')
+define TimeNotEq10A10P: ok(Equivalent((@T10:00:00.000 != @T22:00:00.000),(null)), 'TimeNotEq10A10P')
+
+
+define function plan(test_count Integer):
+    Message(null, true, null, 'Message', '1..' + ToString(test_count))
+
+define function ok(is_ok Boolean, message String):
+    Message(null, true, null, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
