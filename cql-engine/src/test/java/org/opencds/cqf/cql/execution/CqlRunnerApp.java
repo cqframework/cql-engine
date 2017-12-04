@@ -85,7 +85,7 @@ public class CqlRunnerApp
 
         // Try to interpret the source_code_text as CQL or ELM and execute it.
         ArrayList<String> errors = new ArrayList<>();
-        CqlRunnerLib.perform(source_code_text, System.out, errors);
+        CqlRunnerLib.perform(source_code_text, errors);
 
         if (errors.size() > 0)
         {

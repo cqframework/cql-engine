@@ -1,20 +1,20 @@
 package org.opencds.cqf.cql.execution;
 
 import java.io.ByteArrayInputStream;
-import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 
+import org.opencds.cqf.cql.elm.execution.ExpressionDefEvaluator;
+
 /**
  * Created by Darren on 2017-11-15.
  */
 public class CqlRunnerLib
 {
-    public static void perform(String maybe_cql_or_elm_sc, PrintStream out,
-        ArrayList<String> errors)
+    public static void perform(String maybe_cql_or_elm_sc, ArrayList<String> errors)
     {
         Library library = null;
         try
@@ -51,16 +51,27 @@ public class CqlRunnerLib
 
         // Whether ELM or CQL, we succeeded in parsing it.
 
+        // Next execute all of the regular statements in the library that
+        // are not marked "private".
+        // Do this such that the only output the user sees from this is the
+        // output from any Message() calls.
+
         Context context = new Context(library);
 
         for (ExpressionDef statement : library.getStatements().getDef())
         {
-            if (statement.getAccessLevel().value() == "Public")
+            if (!(statement instanceof ExpressionDefEvaluator))
             {
-                // TODO: Handle a Message() call differently from other types.
-                Object result = statement.evaluate(context);
-                out.println(statement.getName() + ": " + (result == null ? "" : result.toString()));
+                // This skips over any FunctionDef statements for starters.
+                continue;
             }
+            if (!statement.getAccessLevel().value().equals("Public"))
+            {
+                // Note: It appears that Java interns the string "Public"
+                // since using != here also seems to work.
+                continue;
+            }
+            statement.evaluate(context);
         }
     }
 }
