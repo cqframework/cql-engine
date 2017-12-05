@@ -5,10 +5,10 @@ context Population
 define _0: Plan(300)
 
 
-define TestMessageInfo: Ok(Equivalent((Message(1, true, '100', 'Message', 'Test Message')),(null)), 'TestMessageInfo')
-define TestMessageWarn: Ok(Equivalent((Message(2, true, '200', 'Warning', 'You have been warned!')),(null)), 'TestMessageWarn')
-define TestMessageTrace: Ok(Equivalent((Message({3, 4, 5}, true, '300', 'Trace', 'This is a trace')),(null)), 'TestMessageTrace')
-define TestMessageError: Ok(Equivalent((Message(3 + 1, true, '400', 'Error', 'This is an error!')),(null)), 'TestMessageError')
+define TestMessageInfo: Ok(Equivalent(Message(1, true, '100', 'Message', 'Test Message'), null), 'TestMessageInfo')
+define TestMessageWarn: Ok(Equivalent(Message(2, true, '200', 'Warning', 'You have been warned!'), null), 'TestMessageWarn')
+define TestMessageTrace: Ok(Equivalent(Message({3, 4, 5}, true, '300', 'Trace', 'This is a trace'), null), 'TestMessageTrace')
+define TestMessageError: Ok(Equivalent(Message(3 + 1, true, '400', 'Error', 'This is an error!'), null), 'TestMessageError')
 
 
 define function Plan(testCount Integer):
