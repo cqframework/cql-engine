@@ -41,7 +41,7 @@ public class Quantity {
     }
 
     public Boolean equal(Quantity other) {
-        return value.equals(other.getValue()) && ((unit == null && other.getUnit() == null) || unit.equals(other.getUnit()));
+        return value.compareTo(other.getValue()) == 0 && ((unit == null && other.getUnit() == null) || unit.equals(other.getUnit()));
     }
 
     @Override

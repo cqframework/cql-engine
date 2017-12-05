@@ -71,6 +71,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("QuantityEqCM1CM1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("QuantityEqDiffPrecision").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         // TODO: Quantity unit comparison is not implemented yet
         // result = context.resolveExpressionRef("QuantityEqCM1M01").getExpression().evaluate(context);
         // assertThat(result, is(true));

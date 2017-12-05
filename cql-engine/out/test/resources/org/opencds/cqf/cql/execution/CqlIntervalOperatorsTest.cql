@@ -393,3 +393,5 @@ define QuantityIntervalTest5: Interval[14.0 'g', 15.0 'g']
 define DateTimeIntervalTest: Interval[@2016-05-01T00:00:00.000, @2016-05-02T00:00:00.000]
 define TimeIntervalTest: Interval[@T00:00:00.000, @T23:59:59.599]
 define CollapseIntervalTestInteger: {IntegerIntervalTest, IntegerIntervalTest2, IntegerIntervalTest3}
+define InvalidIntegerInterval: Interval[5, 3]
+define InvalidIntegerIntervalA: Interval[5, 5)

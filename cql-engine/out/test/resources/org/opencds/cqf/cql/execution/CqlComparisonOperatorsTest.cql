@@ -23,6 +23,7 @@ define SimpleEqFloat1Int1 : 1.0 = 1
 define SimpleEqFloat1Int2 : 1.0 = 2
 define QuantityEqCM1CM1 : 1'cm' = 1'cm'
 define QuantityEqCM1M01 : 1'cm' = 0.01'm'
+define QuantityEqDiffPrecision: 2.0'cm' = 2.00'cm'
 define TupleEqJohnJohn: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John' }
 define TupleEqJohnJane: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'Jane' }
 define TupleEqJohn1John2: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'John' }
