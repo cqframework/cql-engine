@@ -67,3 +67,11 @@ define function plan(test_count Integer):
 
 define function ok(is_ok Boolean, message String):
     Message(null, true, null as String, 'Message', (if is_ok then 'ok - ' else 'not ok - ') + message)
+
+define function todo(is_ok2 Boolean, message2 String, why_todo String):
+    ok(is_ok2, message2 + ' # TODO - ' + why_todo)
+    // Note: parser/runtime has a scope-breaking bug manifesting if todo() arg named "message" also.
+
+define function skipped(is_ok2 Boolean, message2 String, why_skipped String):
+    ok(is_ok2, message2 + ' # SKIPPED - ' + why_skipped)
+    // Note: parser/runtime has a scope-breaking bug manifesting if todo() arg named "message" also.
