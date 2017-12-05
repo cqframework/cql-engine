@@ -504,6 +504,25 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeDurationBetweenMillis").getExpression().evaluate(context);
         assertThat(result, is(5));
+
+        // TODO: Uncomment once translator issue https://github.com/cqframework/clinical_quality_language/issues/256 is resolved
+//        result = context.resolveExpressionRef("DurationInHoursA").getExpression().evaluate(context);
+//        assertThat(result, is(1));
+//
+//        result = context.resolveExpressionRef("DurationInMinutesA").getExpression().evaluate(context);
+//        assertThat(result, is(45));
+//
+//        result = context.resolveExpressionRef("DurationInDaysA").getExpression().evaluate(context);
+//        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DurationInHoursAA").getExpression().evaluate(context);
+        assertThat(result, is(1));
+
+        result = context.resolveExpressionRef("DurationInMinutesAA").getExpression().evaluate(context);
+        assertThat(result, is(45));
+
+        result = context.resolveExpressionRef("DurationInDaysAA").getExpression().evaluate(context);
+        assertThat(result, is(0));
     }
 
     /**

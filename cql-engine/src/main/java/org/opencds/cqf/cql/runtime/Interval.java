@@ -60,13 +60,13 @@ public class Interval {
 
         else if (start instanceof DateTime) {
             return new Quantity()
-                .withValue(new BigDecimal(DurationBetweenEvaluator.between((DateTime)start, (DateTime)end, ((DateTime)start).getPartial().size() - 1)))
+                .withValue(new BigDecimal(DurationBetweenEvaluator.between(((DateTime)start).getJodaDateTime(), ((DateTime)end).getJodaDateTime(), ((DateTime)start).getPartial().size() - 1)))
                 .withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
         }
 
         else if (start instanceof Time) {
             return new Quantity()
-                .withValue(new BigDecimal(DurationBetweenEvaluator.between((Time)start, (Time)end, ((Time)start).getPartial().size() - 1)))
+                .withValue(new BigDecimal(DurationBetweenEvaluator.between(((Time)start).getJodaDateTime(), ((Time)end).getJodaDateTime(), ((Time)start).getPartial().size() + 2)))
                 .withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
         }
 

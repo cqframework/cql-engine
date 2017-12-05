@@ -5,7 +5,9 @@
 /Src/java/.nb-gradle/
 /cql-engine/*.iml
 /cql-engine/build
+/cql-engine/out
 /cql-engine/src/generated
 /cql-engine-fhir/build
+/cql-engine-fhir/out
 /cql-engine-fhir/*.iml
 *.class

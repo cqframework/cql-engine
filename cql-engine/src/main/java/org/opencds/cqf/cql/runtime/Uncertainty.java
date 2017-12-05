@@ -3,8 +3,12 @@ package org.opencds.cqf.cql.runtime;
 import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.elm.execution.LessEvaluator;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static org.opencds.cqf.cql.elm.execution.DifferenceBetweenEvaluator.between;
 
 /**
 * Created by Chris Schuler on 6/25/2016
@@ -56,6 +60,67 @@ public class Uncertainty {
     return bt instanceof DateTime ? isUncertain((DateTime) bt, precision) : isUncertain((Time) bt, precision);
   }
 
+  public static Uncertainty resolveUncertaintyWithFunction(BaseTemporal leftTemporal, BaseTemporal rightTemporal,
+                                                           String precision, Object theClass, Method method, int index)
+          throws InvocationTargetException, IllegalAccessException
+  {
+    boolean isDateTime = leftTemporal instanceof DateTime;
+    if (Uncertainty.isUncertain(leftTemporal, precision)) {
+      if (isDateTime) {
+        ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) leftTemporal, precision);
+        Object[] lowParams = {highLow.get(1), rightTemporal, index, true};
+        Object[] highParams = {highLow.get(0), rightTemporal, index, true};
+        return new Uncertainty()
+                .withUncertaintyInterval(
+                        new Interval(
+                                method.invoke(theClass, lowParams), true,
+                                method.invoke(theClass, highParams), true
+                        )
+                );
+      }
+      else {
+        ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) leftTemporal, precision);
+        Object[] lowParams = {highLow.get(1), rightTemporal, index, false};
+        Object[] highParams = {highLow.get(0), rightTemporal, index, false};
+        return new Uncertainty()
+                .withUncertaintyInterval(
+                        new Interval(
+                                method.invoke(theClass, lowParams), true,
+                                method.invoke(theClass, highParams), true
+                        )
+                );
+      }
+    }
+
+    else if (Uncertainty.isUncertain(rightTemporal, precision)) {
+      if (isDateTime) {
+        ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) rightTemporal, precision);
+        Object[] lowParams = {leftTemporal, highLow.get(0), index, true};
+        Object[] highParams = {leftTemporal, highLow.get(1), index, true};
+        return new Uncertainty()
+                .withUncertaintyInterval(
+                        new Interval(
+                                method.invoke(theClass, lowParams), true,
+                                method.invoke(theClass, highParams), true
+                        )
+                );
+      }
+      else {
+        ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) rightTemporal, precision);
+        Object[] lowParams = {leftTemporal, highLow.get(0), index, false};
+        Object[] highParams = {leftTemporal, highLow.get(1), index, false};
+        return new Uncertainty()
+                .withUncertaintyInterval(
+                        new Interval(
+                                method.invoke(theClass, lowParams), true,
+                                method.invoke(theClass, highParams), true
+                        )
+                );
+      }
+    }
+    return null;
+  }
+
   /**
   This method's purpose is to return a list of DateTimes with max and min values
   For example:
@@ -74,8 +139,8 @@ public class Uncertainty {
   */
   public static ArrayList<DateTime> getHighLowList(DateTime uncertain, String precision) {
     if (isUncertain(uncertain, precision)) {
-      DateTime low = new DateTime().withPartial(uncertain.getPartial());
-      DateTime high = new DateTime().withPartial(uncertain.getPartial());
+      DateTime low = new DateTime().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
+      DateTime high = new DateTime().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
 
       int idx = DateTime.getFieldIndex(precision);
       if (idx == -1) { idx = DateTime.getFieldIndex(precision); }
@@ -94,8 +159,8 @@ public class Uncertainty {
 
   public static ArrayList<Time> getHighLowList(Time uncertain, String precision) {
     if (isUncertain(uncertain, precision)) {
-      Time low = new Time().withPartial(uncertain.getPartial());
-      Time high = new Time().withPartial(uncertain.getPartial());
+      Time low = new Time().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
+      Time high = new Time().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
 
       int idx = Time.getFieldIndex(precision);
       if (idx == -1) { idx = Time.getFieldIndex(precision); }

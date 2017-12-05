@@ -23,18 +23,27 @@ public class TimeEvaluator extends org.cqframework.cql.elm.execution.Time {
 
   @Override
   public Object evaluate(Context context) {
-    Integer hour = (this.getHour() == null) ? null : (Integer)this.getHour().evaluate(context);
+
+    if (this.getHour() == null) {
+      return null;
+    }
+
+    Integer hour = (Integer)this.getHour().evaluate(context);
     Integer minute = (this.getMinute() == null) ? null : (Integer)this.getMinute().evaluate(context);
     Integer second = (this.getSecond() == null) ? null : (Integer)this.getSecond().evaluate(context);
     Integer millis = (this.getMillisecond() == null) ? null : (Integer)this.getMillisecond().evaluate(context);
     BigDecimal offset = (this.getTimezoneOffset() == null) ? new BigDecimal(0) : (BigDecimal)this.getTimezoneOffset().evaluate(context);
 
-    org.opencds.cqf.cql.runtime.Time time = new org.opencds.cqf.cql.runtime.Time();
-
-    if (BaseTemporal.formatCheck(new ArrayList<>(Arrays.asList(hour, minute, second, millis)))) {
-      int [] values = BaseTemporal.getValues(hour, minute, second, millis);
-      return time.withPartial(new Partial(Time.getFields(values.length), values)).withTimezoneOffset(offset);
+    if (minute == null) {
+      return new Time(hour, offset);
     }
-    throw new IllegalArgumentException("Time format is invalid");
+    if (second == null) {
+      return new Time(hour, minute, offset);
+    }
+    if (millis == null) {
+      return new Time(hour, minute, second, offset);
+    }
+
+    return new Time(hour, minute, second, millis, offset);
   }
 }

@@ -1,8 +1,11 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.joda.time.Chronology;
 import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
 import org.joda.time.Partial;
 import org.joda.time.chrono.ISOChronology;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.elm.execution.LessEvaluator;
 
@@ -16,21 +19,25 @@ import java.util.Arrays;
 public abstract class BaseTemporal {
 
     protected Partial partial;
-    protected BigDecimal timezoneOffset;
-    protected ISOChronology chronology;
+    BigDecimal timezoneOffset;
+    ISOChronology chronology;
+    org.joda.time.DateTime jodaDateTime;
 
     public Partial getPartial() {
         return partial;
     }
-    public void setPartial(Partial partial) {
-        this.partial = partial;
-    }
+
     public BigDecimal getTimezoneOffset() {
+        if (timezoneOffset == null) {
+            timezoneOffset = new BigDecimal("0.0");
+        }
         return timezoneOffset;
     }
+
     public Integer getOffsetMillis() {
         return timezoneOffset.multiply(new BigDecimal("3600000.0")).intValue();
     }
+
     public void setTimezoneOffset(BigDecimal newTimezoneOffset) {
         timezoneOffset = newTimezoneOffset;
         chronology = ISOChronology.getInstance(DateTimeZone.forOffsetMillis(getOffsetMillis()));
@@ -40,6 +47,9 @@ public abstract class BaseTemporal {
     }
 
     public org.joda.time.DateTime toJodaDateTime() {
+        if (chronology == null) {
+            return getPartial().toDateTime(new org.joda.time.DateTime());
+        }
         return getPartial().toDateTime(new org.joda.time.DateTime().withChronology(getChronology()));
     }
 
@@ -66,6 +76,10 @@ public abstract class BaseTemporal {
         return Arrays.copyOf(temp, count);
     }
 
+    public org.joda.time.DateTime getJodaDateTime() {
+        return jodaDateTime;
+    }
+
     public Integer compareTo(BaseTemporal other) {
         int size;
 
@@ -84,6 +98,18 @@ public abstract class BaseTemporal {
         // Uncertainty wrinkle
         if (this.getPartial().size() != other.getPartial().size()) { return null; }
         return 0;
+    }
+
+    public static Partial truncatePartial(BaseTemporal temporal, int index) {
+        boolean isDateTime = temporal instanceof DateTime;
+        int [] a = new int[index + 1];
+
+        for (int i = 0; i < index + 1; ++i) {
+            a[i] = temporal.getPartial().getValue(i);
+        }
+
+        return isDateTime ? new Partial(DateTime.getFields(index + 1), a)
+                        : new Partial(Time.getFields(index + 1), a);
     }
 
     @Override

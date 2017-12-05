@@ -12,8 +12,6 @@ import java.util.Date;
  */
 public class DateTime extends BaseTemporal {
 
-    private org.joda.time.DateTime jodaDateTime;
-
     protected static final DateTimeFieldType[] fields = new DateTimeFieldType[] {
             DateTimeFieldType.year(),
             DateTimeFieldType.monthOfYear(),
@@ -76,6 +74,25 @@ public class DateTime extends BaseTemporal {
             case 6: return "milliseconds";
         }
         throw new IllegalArgumentException("Invalid index for DateTime unit request.");
+    }
+
+    public org.joda.time.DateTime getDateTimePrecision(Partial partial) {
+        switch (partial.size()) {
+            case 0: return new org.joda.time.DateTime(partial.getChronology());
+            case 1: return new org.joda.time.DateTime(partial.getValue(0), 1, 1, 0, 0, 0, 0, getChronology());
+            case 2: return new org.joda.time.DateTime(partial.getValue(0), partial.getValue(1),1, 0, 0, 0, 0, getChronology());
+            case 3: return new org.joda.time.DateTime(partial.getValue(0), partial.getValue(1), partial.getValue(2), 0, 0, 0, 0, getChronology());
+            case 4: return new org.joda.time.DateTime(partial.getValue(0), partial.getValue(1), partial.getValue(2), partial.getValue(3), 0, 0, 0, getChronology());
+            case 5: return new org.joda.time.DateTime(partial.getValue(0), partial.getValue(1), partial.getValue(2), partial.getValue(3), partial.getValue(4), 0, 0, getChronology());
+            case 6: return new org.joda.time.DateTime(partial.getValue(0), partial.getValue(1), partial.getValue(2), partial.getValue(3), partial.getValue(4), partial.getValue(5), 0, getChronology());
+            case 7: return new org.joda.time.DateTime(partial.getValue(0), partial.getValue(1), partial.getValue(2), partial.getValue(3), partial.getValue(4), partial.getValue(5), partial.getValue(6), getChronology());
+            default: throw new RuntimeException("Error creating Joda DateTime from Partial");
+        }
+    }
+
+    public void setPartial(Partial partial) {
+        this.jodaDateTime = getDateTimePrecision(partial);
+        this.partial = partial;
     }
 
     public DateTime() {
@@ -169,10 +186,6 @@ public class DateTime extends BaseTemporal {
     public DateTime withTimezoneOffset(BigDecimal newTimezoneOffset) {
         setTimezoneOffset(newTimezoneOffset);
         return this;
-    }
-
-    public org.joda.time.DateTime getJodaDateTime() {
-        return jodaDateTime;
     }
 
     public static DateTime fromJavaDate(Date date) {

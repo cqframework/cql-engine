@@ -6,7 +6,12 @@ import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
+
+import static org.opencds.cqf.cql.runtime.BaseTemporal.truncatePartial;
+import static org.opencds.cqf.cql.runtime.Uncertainty.resolveUncertaintyWithFunction;
 
 // for Uncertainty
 
@@ -83,7 +88,8 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
         return between(left.toJodaDateTime(), right.toJodaDateTime(), idx);
     }
 
-    public static Object difference(Object left, Object right, String precision) {
+    public static Object difference(Object left, Object right, String precision)
+            throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         if (precision == null) {
             throw new IllegalArgumentException("Precision must be specified.");
         }
@@ -107,67 +113,15 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
             }
 
             // Uncertainty
-            if (Uncertainty.isUncertain(leftTemporal, precision)) {
-                if (isDateTime) {
-                    ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) leftTemporal, precision);
-                    return new Uncertainty()
-                            .withUncertaintyInterval(
-                                    new Interval(
-                                            between(highLow.get(1), rightTemporal, index, true), true,
-                                            between(highLow.get(0), rightTemporal, index, true), true
-                                    )
-                            );
-                }
-                else {
-                    ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) leftTemporal, precision);
-                    return new Uncertainty()
-                            .withUncertaintyInterval(
-                                    new Interval(
-                                            between(highLow.get(1), rightTemporal, index, false), true,
-                                            between(highLow.get(0), rightTemporal, index, false), true
-                                    )
-                            );
-                }
-            }
-
-            else if (Uncertainty.isUncertain(rightTemporal, precision)) {
-                if (isDateTime) {
-                    ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) rightTemporal, precision);
-                    return new Uncertainty()
-                            .withUncertaintyInterval(
-                                    new Interval(
-                                            between(leftTemporal, highLow.get(0), index, true), true,
-                                            between(leftTemporal, highLow.get(1), index, true), true
-                                    )
-                            );
-                }
-                else {
-                    ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) rightTemporal, precision);
-                    return new Uncertainty()
-                            .withUncertaintyInterval(
-                                    new Interval(
-                                            between(leftTemporal, highLow.get(0), index, false), true,
-                                            between(leftTemporal, highLow.get(1), index, false), true
-                                    )
-                            );
-                }
+            if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
+                DifferenceBetweenEvaluator evaluator = new DifferenceBetweenEvaluator();
+                Method method = evaluator.getClass().getMethod("between", BaseTemporal.class, BaseTemporal.class, int.class, boolean.class);
+                return resolveUncertaintyWithFunction(leftTemporal, rightTemporal, precision, evaluator, method, index);
             }
 
             // truncate Partial
-            int [] a = new int[index + 1];
-            int [] b = new int[index + 1];
-
-            for (int i = 0; i < index + 1; ++i) {
-                a[i] = leftTemporal.getPartial().getValue(i);
-                b[i] = rightTemporal.getPartial().getValue(i);
-            }
-
-            Partial leftTrunc =
-                    isDateTime ? new Partial(DateTime.getFields(index + 1), a)
-                               : new Partial(Time.getFields(index + 1), a);
-            Partial rightTrunc =
-                    isDateTime ? new Partial(DateTime.getFields(index + 1), b)
-                               : new Partial(Time.getFields(index + 1), b);
+            Partial leftTrunc = truncatePartial(leftTemporal, index);
+            Partial rightTrunc = truncatePartial(rightTemporal, index);
 
             if (weeks) {
                 index = 7;
@@ -198,6 +152,11 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision().value();
 
-        return context.logTrace(this.getClass(), difference(left, right, precision), left, right);
+        try {
+            return context.logTrace(this.getClass(), difference(left, right, precision), left, right);
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 
+import java.lang.reflect.InvocationTargetException;
+
 // for Uncertainty
 /*
 CalculateAgeInYears(birthDate DateTime) Integer
@@ -24,7 +26,7 @@ The CalculateAge operators are defined in terms of a DateTime duration calculati
  */
 public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.CalculateAge {
 
-    public static Object calculateAge(Object operand, String precision) {
+    public static Object calculateAge(Object operand, String precision) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if (operand == null) {
             return null;
         }
@@ -37,6 +39,11 @@ public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.Cal
         Object operand = getOperand().evaluate(context);
         String precision = getPrecision().value();
 
-        return context.logTrace(this.getClass(), calculateAge(operand, precision), operand);
+        try {
+            return context.logTrace(this.getClass(), calculateAge(operand, precision), operand);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }

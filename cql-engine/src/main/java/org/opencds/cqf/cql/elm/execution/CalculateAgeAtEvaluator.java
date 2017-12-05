@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 
+import java.lang.reflect.InvocationTargetException;
+
 /*
 CalculateAgeInYearsAt(birthDate DateTime, asOf DateTime) Integer
 CalculateAgeInMonthsAt(birthDate DateTime, asOf DateTime) Integer
@@ -18,25 +20,30 @@ The CalculateAgeAt operators are defined in terms of a DateTime duration calcula
 */
 
 /**
-* Created by Chris Schuler on 7/14/2016
-*/
+ * Created by Chris Schuler on 7/14/2016
+ */
 public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.CalculateAgeAt {
 
-  public static Object calculateAgeAt(Object birthDate, Object asOf, String precision) {
+    public static Object calculateAgeAt(Object birthDate, Object asOf, String precision) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
 
-    if (birthDate == null || asOf == null) {
-      return null;
+        if (birthDate == null || asOf == null) {
+            return null;
+        }
+
+        return DurationBetweenEvaluator.durationBetween(birthDate, asOf, precision);
     }
 
-    return DurationBetweenEvaluator.durationBetween(birthDate, asOf, precision);
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Object birthDate = getOperand().get(0).evaluate(context);
+        Object asOf = getOperand().get(1).evaluate(context);
+        String precision = getPrecision().value();
 
-  @Override
-  public Object evaluate(Context context) {
-    Object birthDate = getOperand().get(0).evaluate(context);
-    Object asOf = getOperand().get(1).evaluate(context);
-    String precision = getPrecision().value();
-
-    return context.logTrace(this.getClass(), calculateAgeAt(birthDate, asOf, precision), birthDate, asOf);
-  }
+        try {
+            return context.logTrace(this.getClass(), calculateAgeAt(birthDate, asOf, precision), birthDate, asOf);
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 }

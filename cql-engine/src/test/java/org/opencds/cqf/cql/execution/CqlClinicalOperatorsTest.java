@@ -8,6 +8,8 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Uncertainty;
 import org.joda.time.Partial;
 import javax.xml.bind.JAXBException;
+import java.lang.reflect.InvocationTargetException;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -33,7 +35,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.CalculateAgeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCalculateAge() throws JAXBException {
+    public void testCalculateAge() throws JAXBException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Context context = new Context(library);
         // TODO: fix this -- translation error
         // Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);

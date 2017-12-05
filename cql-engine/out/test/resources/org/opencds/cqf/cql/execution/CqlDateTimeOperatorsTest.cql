@@ -180,6 +180,12 @@ define TimeDurationBetweenSecond: seconds between @T23:25:10.556 and @T23:25:15.
 define TimeDurationBetweenMillis: milliseconds between @T23:25:25.555 and @T23:25:25.560
 // TODO: Time uncertainty tests
 
+define DurationInHoursA: hours between DateTimeA and DateTimeB // Should be 1
+define DurationInMinutesA: minutes between DateTimeC and DateTimeD // Should be 45
+define DurationInDaysA: days between DateTimeE and DateTimeF // Should be 1
+define DurationInHoursAA: hours between DateTimeAA and DateTimeBB // Should be 1
+define DurationInMinutesAA: minutes between DateTimeCC and DateTimeDD // Should be 45
+define DurationInDaysAA: days between DateTimeEE and DateTimeFF // Should be 1
 //Now
 define DateTimeNow: Now() = Now()
 
