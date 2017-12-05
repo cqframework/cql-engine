@@ -4,7 +4,7 @@ codesystem "LOINC": 'http://loinc.org'
 
 context Population
 
-define _0: Plan(300)
+define TestPlan: Plan(300)
 
 
 //Combine

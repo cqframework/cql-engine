@@ -2,7 +2,7 @@ library ListOperator version '1'
 
 context Population
 
-define _0: Plan(300)
+define TestPlan: Plan(300)
 
 
 //Sort

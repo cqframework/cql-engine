@@ -2,7 +2,7 @@ library ErrorsAndMessaging version '1.0'
 
 context Population
 
-define _0: Plan(300)
+define TestPlan: Plan(300)
 
 
 define TestMessageInfo: Ok(Equivalent(Message(1, true, '100', 'Message', 'Test Message'), null), 'TestMessageInfo')

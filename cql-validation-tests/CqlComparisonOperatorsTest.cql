@@ -2,7 +2,7 @@ library ComparisonOperator version '1'
 
 context Population
 
-define _0: Plan(300)
+define TestPlan: Plan(300)
 
 
 //Between

@@ -2,7 +2,7 @@ library AggregateFunctions version '1'
 
 context Population
 
-define _0: Plan(39)
+define TestPlan: Plan(39)
 
 
 //AllTrue

@@ -6,7 +6,7 @@ valueset "Feeding Intention-Breast": '2.16.840.1.113762.1.4.1045.29'
 
 context Population
 
-define _0: Plan(300)
+define TestPlan: Plan(300)
 
 
 //Age

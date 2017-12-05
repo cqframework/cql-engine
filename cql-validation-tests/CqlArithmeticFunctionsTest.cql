@@ -2,7 +2,7 @@ library ArithmeticFunctions version '1'
 
 context Population
 
-define _0: Plan(162)
+define TestPlan: Plan(162)
 
 
 //Abs
