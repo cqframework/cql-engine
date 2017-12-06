@@ -2,51 +2,66 @@ library ConditionalOperator version '1'
 
 context Population
 
-define TestPlan: Plan(300)
+define TestPlan: Plan(9)
 
 
-define x: Ok(Equivalent(5, null), 'x')
-define y: Ok(Equivalent(10, null), 'y')
-define z: Ok(Equivalent(null, null), 'z')
+define x: 5
+define y: 10
+define z: null
 
 // if-then-else
-define IfTrue1: Ok(Equivalent(if y > x then x else y, null), 'IfTrue1')
-define IfFalse1: Ok(Equivalent(if y = x then y + x else y - x, null), 'IfFalse1')
-define IfNull1: Ok(Equivalent(if y = z then x else y, null), 'IfNull1')
+define IfTrue1: Ok(Equivalent(
+  if y > x then x else y, 5), 'IfTrue1')
+
+define IfFalse1: Ok(Equivalent(
+  if y = x then y + x else y - x, 5), 'IfFalse1')
+
+define IfNull1: Ok(Equivalent(
+  if y = z then x else y, 10), 'IfNull1')
 
 // standard case
-define StandardCase1: Ok(Equivalent((case
+define StandardCase1: Ok(Equivalent(
+  (case
     when y > x then x
     when x > y then y
     else z
-  end), null), 'StandardCase1')
-define StandardCase2: Ok(Equivalent((case
+  end), 5), 'StandardCase1')
+
+define StandardCase2: Ok(Equivalent(
+  (case
     when x > y then x + y
     when x = y then x
     else y - x
-  end), null), 'StandardCase2')
-define StandardCase3: Ok(Equivalent((case
+  end), 5), 'StandardCase2')
+
+define StandardCase3: Ok(Equivalent(
+  (case
     when z ~ y then z + y
     when z ~ x then x
     else x + y
-  end), null), 'StandardCase3')
+  end), 15), 'StandardCase3')
 
 // selected case
-define SelectedCase1: Ok(Equivalent((case x
+define SelectedCase1: Ok(Equivalent(
+  (case x
     when 5 then 12
     when 10 then y + x
     else y - x
-  end), null), 'SelectedCase1')
-define SelectedCase2: Ok(Equivalent((case y
+  end), 12), 'SelectedCase1')
+
+define SelectedCase2: Ok(Equivalent(
+  (case y
     when 5 then 12
     when 10 then y + x
     else y - x
-  end), null), 'SelectedCase2')
-define SelectedCase3: Ok(Equivalent((case y + x
+  end), 15), 'SelectedCase2')
+
+define SelectedCase3: Ok(Equivalent(
+  (case y + x
     when 5 then 12
     when 10 then y + x
     else y - x
-  end), null), 'SelectedCase3')
+  end), 5), 'SelectedCase3')
 
 
 define function Plan(testCount Integer):
