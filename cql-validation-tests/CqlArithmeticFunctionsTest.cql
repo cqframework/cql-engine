@@ -59,10 +59,10 @@ define Exp0  : Ok(Equivalent(Exp(0), 1.0), 'Exp0')
 define ExpNeg0  : Ok(Equivalent(Exp(-0), 1.0), 'ExpNeg0')
 define Exp1  : Ok(Equivalent(Exp(1), 2.718281828459045090795598298427648842334747314453125), 'Exp1')
 define ExpNeg1  : Ok(Equivalent(Exp(-1), 0.367879441171442334024277442949824035167694091796875), 'ExpNeg1')
-//define Exp1000  : Ok(Equivalent(Exp(1000), ...), 'Exp1000')
-define Exp1000  : Skipped(true, 'Exp1000', 'can not trap expected error: Results in positive infinity')
-//define Exp1000D  : Ok(Equivalent(Exp(1000.0), ...), 'Exp1000D')
-define Exp1000D  : Skipped(true, 'Exp1000D', 'can not trap expected error: Results in positive infinity')
+define Exp1000ExpectToDie : ExpectToDie(Equivalent(Exp(1000), null), 'Exp1000')
+define Exp1000  : AssumePrevDied('Exp1000', 'Results in positive infinity')
+define Exp1000DExpectToDie : ExpectToDie(Equivalent(Exp(1000.0), null), 'Exp1000D')
+define Exp1000D  : AssumePrevDied('Exp1000D', 'Results in positive infinity')
 
 //Log
 define LogNullNull  : Ok(Equivalent(Log(null, null), null), 'LogNullNull')
@@ -75,10 +75,10 @@ define LogD125Base2  : Ok(Equivalent(Log(0.125, 2), -3.0), 'LogD125Base2')
 
 //Ln
 define LnNull  : Ok(Equivalent(Ln(null), null), 'LnNull')
-//define Ln0  : Ok(Equivalent(Ln(0), ...), 'Ln0')
-define Ln0  : Skipped(true, 'Ln0', 'can not trap expected error: Results in negative infinity')
-//define LnNeg0  : Ok(Equivalent(Ln(-0), ...), 'LnNeg0')
-define LnNeg0  : Skipped(true, 'LnNeg0', 'can not trap expected error: Results in negative infinity')
+define Ln0ExpectToDie : ExpectToDie(Equivalent(Ln(0), null), 'Ln0')
+define Ln0  : AssumePrevDied('Ln0', 'Results in negative infinity')
+define LnNeg0ExpectToDie : ExpectToDie(Equivalent(Ln(-0), null), 'LnNeg0')
+define LnNeg0  : AssumePrevDied('LnNeg0', 'Results in negative infinity')
 define Ln1  : Ok(Equivalent(Ln(1), 0.0), 'Ln1')
 define LnNeg1  : Ok(Equivalent(Ln(-1), null), 'LnNeg1')
 define Ln1000  : Ok(Equivalent(Ln(1000), 6.907755278982136815102421678602695465087890625), 'Ln1000')
@@ -137,10 +137,10 @@ define PredecessorOf101D: Ok(Equivalent(predecessor of 1.01, 1.00999999), 'Prede
 define PredecessorOf1QCM: Ok(Equivalent(predecessor of 1.0 'cm', 0.99999999'cm'), 'PredecessorOf1QCM')
 define PredecessorOfJan12000: Ok(Equivalent(predecessor of DateTime(2000,1,1), @1999-12-31), 'PredecessorOfJan12000')
 define PredecessorOfNoon: Ok(Equivalent(predecessor of @T12:00:00.000, @T11:59:59.999), 'PredecessorOfNoon')
-//define PredecessorUnderflowDt: Ok(Equivalent(predecessor of DateTime(0001, 1, 1, 0, 0, 0, 0), ...), 'PredecessorUnderflowDt')
-define PredecessorUnderflowDt : Skipped(true, 'PredecessorUnderflowDt', 'can not trap expected error: The result of the predecessor operation precedes the minimum value allowed for the type')
-//define PredecessorUnderflowT: Ok(Equivalent(predecessor of @T00:00:00.000, ...), 'PredecessorUnderflowT')
-define PredecessorUnderflowT : Skipped(true, 'PredecessorUnderflowT', 'can not trap expected error: The result of the predecessor operation precedes the minimum value allowed for the type')
+define PredecessorUnderflowDtExpectToDie: ExpectToDie(Equivalent(predecessor of DateTime(0001, 1, 1, 0, 0, 0, 0), null), 'PredecessorUnderflowDt')
+define PredecessorUnderflowDt : AssumePrevDied('PredecessorUnderflowDt', 'The result of the predecessor operation precedes the minimum value allowed for the type')
+define PredecessorUnderflowTExpectToDie: ExpectToDie(Equivalent(predecessor of @T00:00:00.000, null), 'PredecessorUnderflowT')
+define PredecessorUnderflowT : AssumePrevDied('PredecessorUnderflowT', 'The result of the predecessor operation precedes the minimum value allowed for the type')
 
 //Power
 define PowerNullToNull: Ok(Equivalent(Power(null as Integer, null as Integer), null), 'PowerNullToNull')
@@ -185,10 +185,10 @@ define SuccessorOf1D: Ok(Equivalent(successor of 1.0, 1.00000001), 'SuccessorOf1
 define SuccessorOf101D: Ok(Equivalent(successor of 1.01, 1.01000001), 'SuccessorOf101D')
 define SuccessorOfJan12000: Ok(Equivalent(successor of DateTime(2000,1,1), @2000-01-02), 'SuccessorOfJan12000')
 define SuccessorOfNoon: Ok(Equivalent(successor of @T12:00:00.000, @T12:00:00.001), 'SuccessorOfNoon')
-//define SuccessorOverflowDt: Ok(Equivalent(successor of DateTime(9999, 12, 31, 23, 59, 59, 999), ...), 'SuccessorOverflowDt')
-define SuccessorOverflowDt : Skipped(true, 'SuccessorOverflowDt', 'can not trap expected error: The result of the successor operation exceeds the maximum value allowed for the type')
-//define SuccessorOverflowT: Ok(Equivalent(successor of @T23:59:59.999, ...), 'SuccessorOverflowT')
-define SuccessorOverflowT : Skipped(true, 'SuccessorOverflowT', 'can not trap expected error: The result of the successor operation exceeds the maximum value allowed for the type')
+define SuccessorOverflowDtExpectToDie: ExpectToDie(Equivalent(successor of DateTime(9999, 12, 31, 23, 59, 59, 999), null), 'SuccessorOverflowDt')
+define SuccessorOverflowDt : AssumePrevDied('SuccessorOverflowDt', 'The result of the successor operation exceeds the maximum value allowed for the type')
+define SuccessorOverflowTExpectToDie: ExpectToDie(Equivalent(successor of @T23:59:59.999, null), 'SuccessorOverflowT')
+define SuccessorOverflowT : AssumePrevDied('SuccessorOverflowT', 'The result of the successor operation exceeds the maximum value allowed for the type')
 
 //Truncate
 define TruncateNull: Ok(Equivalent(Truncate(null as Decimal), null), 'TruncateNull')
@@ -227,10 +227,15 @@ define function Plan(testCount Integer):
 define function Ok(isOk Boolean, message String):
     Message(null, true, null as String, 'Message', (if isOk then 'ok - ' else 'not ok - ') + message)
 
+define function ExpectToDie(livingResult Boolean, message2 String):
+    Ok(false, message2 + ' (if you see this, the test actually failed)')
+
+define function AssumePrevDied(message2 String, assumedPrevError String):
+    Ok(true, message2 + ' - expected error: ' + assumedPrevError)
+
 define function Todo(isOk2 Boolean, message2 String, whyTodo String):
     Ok(isOk2, message2 + ' # TODO - ' + whyTodo)
     // Note: parser/runtime has a scope-breaking bug manifesting if Todo() arg named "message" also.
 
 define function Skipped(isOk2 Boolean, message2 String, whySkipped String):
     Ok(isOk2, message2 + ' # SKIPPED - ' + whySkipped)
-    // Note: parser/runtime has a scope-breaking bug manifesting if Skipped() arg named "message" also.
