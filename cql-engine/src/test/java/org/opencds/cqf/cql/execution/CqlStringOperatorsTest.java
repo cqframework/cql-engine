@@ -347,4 +347,15 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("UpperAB").getExpression().evaluate(context);
         assertThat(result, is("AB"));
     }
+
+    // TODO: QuantityToString
+    // TODO: DateTimeToString1
+    // TODO: DateTimeToString2
+    // TODO: DateTimeToString3
+    // TODO: TimeToString1
+    // TODO: TupleToString
+    // TODO: IntervalToString
+    // TODO: UncertaintyToString
+    // TODO: CodeToString
+    // TODO: ConceptToString
 }
