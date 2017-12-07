@@ -77,7 +77,8 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
                     return null;
                 }
 
-                return leftDT.getPartial().getValue(idx) < rightDT.getPartial().getValue(idx);
+                return leftDT.getJodaDateTime().toInstant().get(DateTime.getField(idx))
+                        < rightDT.getJodaDateTime().toInstant().get(DateTime.getField(idx));
             }
 
             else {

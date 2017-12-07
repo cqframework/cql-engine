@@ -47,7 +47,9 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
                 }
 
                 for (int i = 0; i < idx + 1; ++i) {
-                    if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
+                    if (leftDT.getJodaDateTime().toInstant().get(DateTime.getField(i))
+                            != rightDT.getJodaDateTime().toInstant().get(DateTime.getField(i)))
+                    {
                         return false;
                     }
                 }

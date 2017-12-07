@@ -44,6 +44,8 @@ define DateTimeAfterSecondFalse: DateTime(2004, 10, 10, 20, 30, 15) after second
 define DateTimeAfterMillisecondTrue: DateTime(2004, 10, 10, 20, 30, 15, 512) after millisecond of DateTime(2004, 10, 10, 20, 30, 15, 510)
 define DateTimeAfterMillisecondFalse: DateTime(2004, 10, 10, 20, 30, 15, 512) after millisecond of DateTime(2004, 10, 10, 20, 30, 15, 513)
 define DateTimeAfterUncertain: DateTime(2005, 10, 10) after day of DateTime(2005, 9)
+define AfterTimezoneFalse: @2012-03-10T10:20:00.999+07:00 after hour of @2012-03-10T10:20:00.999+06:00
+define AfterTimezoneTrue: @2012-03-10T10:20:00.999+07:00 after hour of @2012-03-10T08:20:00.999+06:00
 define TimeAfterHourTrue: @T15:59:59.999 after hour of @T14:59:59.999
 define TimeAfterHourFalse: @T15:59:59.999 after hour of @T16:59:59.999
 define TimeAfterMinuteTrue: @T15:59:59.999 after minute of @T15:58:59.999
@@ -70,6 +72,8 @@ define DateTimeBeforeSecondTrue: DateTime(2004, 10, 10, 20, 30, 12) before secon
 define DateTimeBeforeSecondFalse: DateTime(2004, 10, 10, 20, 30, 55) before second of DateTime(2004, 10, 10, 20, 30, 16)
 define DateTimeBeforeMillisecondTrue: DateTime(2004, 10, 10, 20, 30, 15, 508) before millisecond of DateTime(2004, 10, 10, 20, 30, 15, 510)
 define DateTimeBeforeMillisecondFalse: DateTime(2004, 10, 10, 20, 30, 15, 599) before millisecond of DateTime(2004, 10, 10, 20, 30, 15, 513)
+define BeforeTimezoneFalse: @2012-03-10T10:20:00.999+07:00 before hour of @2012-03-10T09:20:00.999+06:00
+define BeforeTimezoneTrue: @2012-03-10T10:20:00.999+07:00 before hour of @2012-03-10T10:20:00.999+06:00
 define TimeBeforeHourTrue: @T13:59:59.999 before hour of @T14:59:59.999
 define TimeBeforeHourFalse: @T17:59:59.999 before hour of @T16:59:59.999
 define TimeBeforeMinuteTrue: @T15:57:59.999 before minute of @T15:58:59.999
@@ -205,6 +209,8 @@ define DateTimeSameAsSecondFalse: DateTime(2014, 10, 10, 20, 55, 45) same second
 define DateTimeSameAsMillisecondTrue: DateTime(2014, 12, 10, 20, 55, 45, 500) same millisecond as DateTime(2014, 12, 10, 20, 55, 45, 500)
 define DateTimeSameAsMillisecondFalse: DateTime(2014, 10, 10, 20, 55, 45, 500) same millisecond as DateTime(2014, 10, 10, 21, 55, 45, 501)
 define DateTimeSameAsNull: DateTime(2014, 10) same day as DateTime(2014, 10, 12)
+define SameAsTimezoneFalse: @2012-03-10T10:20:00.999+07:00 same hour as @2012-03-10T10:20:00.999+06:00
+define SameAsTimezoneTrue: @2012-03-10T10:20:00.999+07:00 same hour as @2012-03-10T09:20:00.999+06:00
 define TimeSameAsHourTrue: @T23:25:25.555 same hour as @T23:55:25.900
 define TimeSameAsHourFalse: @T22:25:25.555 same hour as @T23:25:25.555
 define TimeSameAsMinuteTrue: @T23:55:22.555 same minute as @T23:55:25.900
@@ -237,6 +243,8 @@ define DateTimeSameOrAfterMillisecondTrue1: DateTime(2014, 12, 20, 12, 30, 15, 2
 define DateTimeSameOrAfterMillisecondTrue2: DateTime(2014, 10, 25, 10, 25, 20, 500) same millisecond or after DateTime(2014, 10, 25, 10, 25, 20, 499)
 define DateTimeSameOrAfterMillisecondFalse: DateTime(2014, 10, 25, 15, 45, 20, 500) same millisecond or after DateTime(2014, 10, 25, 15, 45, 20, 501)
 define DateTimeSameOrAfterNull1: DateTime(2014, 12, 20) same day or after DateTime(2014, 12)
+define SameOrAfterTimezoneFalse: @2012-03-10T10:20:00.999+07:00 same hour or after @2012-03-10T10:20:00.999+06:00
+define SameOrAfterTimezoneTrue: @2012-03-10T10:20:00.999+07:00 same hour or after @2012-03-10T09:20:00.999+06:00
 define TimeSameOrAfterHourTrue1: @T23:25:25.555 same hour or after @T23:55:25.900
 define TimeSameOrAfterHourTrue2: @T23:25:25.555 same hour or after @T22:55:25.900
 define TimeSameOrAfterHourFalse: @T22:25:25.555 same hour or after @T23:55:25.900
@@ -273,6 +281,8 @@ define DateTimeSameOrBeforeMillisecondTrue1: DateTime(2014, 12, 20, 12, 30, 15, 
 define DateTimeSameOrBeforeMillisecondTrue2: DateTime(2014, 10, 25, 10, 25, 20, 450) same millisecond or before DateTime(2014, 10, 25, 10, 25, 20, 499)
 define DateTimeSameOrBeforeMillisecondFalse: DateTime(2014, 10, 25, 15, 45, 20, 505) same millisecond or before DateTime(2014, 10, 25, 15, 45, 20, 501)
 define DateTimeSameOrBeforeNull1: DateTime(2014, 12, 20) same minute or before DateTime(2014, 12, 20, 15)
+define SameOrBeforeTimezoneFalse: @2012-03-10T10:20:00.999+06:00 same hour or before @2012-03-10T10:20:00.999+07:00
+define SameOrBeforeTimezoneTrue: @2012-03-10T09:20:00.999+07:00 same hour or before @2012-03-10T10:20:00.999+06:00
 define TimeSameOrBeforeHourTrue1: @T23:25:25.555 same hour or before @T23:55:25.900
 define TimeSameOrBeforeHourTrue2: @T21:25:25.555 same hour or before @T22:55:25.900
 define TimeSameOrBeforeHourFalse: @T22:25:25.555 same hour or before @T21:55:25.900

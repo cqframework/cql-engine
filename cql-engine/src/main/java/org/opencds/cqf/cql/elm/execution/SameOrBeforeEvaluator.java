@@ -94,15 +94,15 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
                 }
 
                 for (int i = 0; i < idx + 1; ++i) {
-                    if (leftDT.getPartial().getValue(i) > rightDT.getPartial().getValue(i)) {
+                    if (leftDT.getJodaDateTime().toInstant().get(DateTime.getField(i))
+                            > rightDT.getJodaDateTime().toInstant().get(DateTime.getField(i)))
+                    {
                         return false;
-                    }
-                    else if (leftDT.getPartial().getValue(i) < rightDT.getPartial().getValue(i)) {
-                        return true;
                     }
                 }
 
-                return leftDT.getPartial().getValue(idx) <= rightDT.getPartial().getValue(idx);
+                return leftDT.getJodaDateTime().toInstant().get(DateTime.getField(idx))
+                        <= rightDT.getJodaDateTime().toInstant().get(DateTime.getField(idx));
             }
 
             else {
