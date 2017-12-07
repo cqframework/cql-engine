@@ -272,10 +272,15 @@ define function Plan(testCount Integer):
 define function Ok(isOk Boolean, message String):
     Message(null, true, null as String, 'Message', (if isOk then 'ok - ' else 'not ok - ') + message)
 
+define function ExpectToDie(livingResult Boolean, message2 String):
+    Ok(false, message2 + ' (if you see this, the test actually failed)')
+
+define function AssumePrevDied(message2 String, assumedPrevError String):
+    Ok(true, message2 + ' - expected error: ' + assumedPrevError)
+
 define function Todo(isOk2 Boolean, message2 String, whyTodo String):
     Ok(isOk2, message2 + ' # TODO - ' + whyTodo)
     // Note: parser/runtime has a scope-breaking bug manifesting if Todo() arg named "message" also.
 
 define function Skipped(isOk2 Boolean, message2 String, whySkipped String):
     Ok(isOk2, message2 + ' # SKIPPED - ' + whySkipped)
-    // Note: parser/runtime has a scope-breaking bug manifesting if Skipped() arg named "message" also.

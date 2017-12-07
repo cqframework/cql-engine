@@ -71,7 +71,16 @@ public class CqlRunnerLib
                 // since using != here also seems to work.
                 continue;
             }
-            statement.evaluate(context);
+            try
+            {
+                statement.evaluate(context);
+            }
+            catch (Exception e3)
+            {
+                errors.add("Execution of CQL or ELM statement named ["
+                    + statement.getName() + "] failed due to error:");
+                errors.add(e3.toString());
+            }
         }
     }
 }

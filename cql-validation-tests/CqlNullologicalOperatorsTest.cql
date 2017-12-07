@@ -2,38 +2,38 @@ library NullologicalOperator version '1'
 
 context Population
 
-define TestPlan: Plan(300)
+define TestPlan: Plan(22)
 
 
 //Coalesce
-define CoalesceANull : Ok(Equivalent(Coalesce('a', null), null), 'CoalesceANull')
-define CoalesceNullA : Ok(Equivalent(Coalesce(null, 'a'), null), 'CoalesceNullA')
+define CoalesceANull : Ok(Equivalent(Coalesce('a', null), 'a'), 'CoalesceANull')
+define CoalesceNullA : Ok(Equivalent(Coalesce(null, 'a'), 'a'), 'CoalesceNullA')
 define CoalesceEmptyList : Ok(Equivalent(Coalesce({}), null), 'CoalesceEmptyList')
-define CoalesceListFirstA : Ok(Equivalent(Coalesce({'a', null, null}), null), 'CoalesceListFirstA')
-define CoalesceListLastA : Ok(Equivalent(Coalesce({null, null, 'a'}), null), 'CoalesceListLastA')
-define CoalesceFirstList : Ok(Equivalent(Coalesce({'a'},null, null), null), 'CoalesceFirstList')
-define CoalesceLastList : Ok(Equivalent(Coalesce(null, null, {'a'}), null), 'CoalesceLastList')
-define DateTimeCoalesce: Ok(Equivalent(Coalesce(null, null, DateTime(2012, 5, 18)), null), 'DateTimeCoalesce')
-define DateTimeListCoalesce: Ok(Equivalent(Coalesce({ null, null, DateTime(2012, 5, 18) }), null), 'DateTimeListCoalesce')
-define TimeCoalesce: Ok(Equivalent(Coalesce(null, null, @T05:15:33.556), null), 'TimeCoalesce')
-define TimeListCoalesce: Ok(Equivalent(Coalesce({ null, null, @T05:15:33.556 }), null), 'TimeListCoalesce')
+define CoalesceListFirstA : Ok(Equivalent(Coalesce({'a', null, null}), 'a'), 'CoalesceListFirstA')
+define CoalesceListLastA : Ok(Equivalent(Coalesce({null, null, 'a'}), 'a'), 'CoalesceListLastA')
+define CoalesceFirstList : Ok(Equivalent(Coalesce({'a'},null, null), 'a'), 'CoalesceFirstList')
+define CoalesceLastList : Ok(Equivalent(Coalesce(null, null, {'a'}), 'a'), 'CoalesceLastList')
+define DateTimeCoalesce: Ok(Equivalent(Coalesce(null, null, DateTime(2012, 5, 18)), DateTime(2012, 5, 18)), 'DateTimeCoalesce')
+define DateTimeListCoalesce: Ok(Equivalent(Coalesce({ null, null, DateTime(2012, 5, 18) }), DateTime(2012, 5, 18)), 'DateTimeListCoalesce')
+define TimeCoalesce: Ok(Equivalent(Coalesce(null, null, @T05:15:33.556), @T05:15:33.556), 'TimeCoalesce')
+define TimeListCoalesce: Ok(Equivalent(Coalesce({ null, null, @T05:15:33.556 }), @T05:15:33.556), 'TimeListCoalesce')
 
 //IsNull
-define IsNullTrue                   : Ok(Equivalent(IsNull(null), null), 'IsNullTrue')
-define IsNullFalseEmptyString       : Ok(Equivalent(IsNull(''), null), 'IsNullFalseEmptyString')
-define IsNullAlsoFalseAbcString     : Ok(Equivalent(IsNull('abc'), null), 'IsNullAlsoFalseAbcString')
-define IsNullAlsoFalseNumber1       : Ok(Equivalent(IsNull(1), null), 'IsNullAlsoFalseNumber1')
-define IsNullAlsoFalseNumberZero    : Ok(Equivalent(IsNull(0), null), 'IsNullAlsoFalseNumberZero')
+define IsNullTrue                   : Ok(Equivalent(IsNull(null), true), 'IsNullTrue')
+define IsNullFalseEmptyString       : Ok(Equivalent(IsNull(''), false), 'IsNullFalseEmptyString')
+define IsNullAlsoFalseAbcString     : Ok(Equivalent(IsNull('abc'), false), 'IsNullAlsoFalseAbcString')
+define IsNullAlsoFalseNumber1       : Ok(Equivalent(IsNull(1), false), 'IsNullAlsoFalseNumber1')
+define IsNullAlsoFalseNumberZero    : Ok(Equivalent(IsNull(0), false), 'IsNullAlsoFalseNumberZero')
 
 //IsFalse
-define IsFalseFalse : Ok(Equivalent(IsFalse(false), null), 'IsFalseFalse')
-define IsFalseTrue  : Ok(Equivalent(IsFalse(true), null), 'IsFalseTrue')
-define IsFalseNull  : Ok(Equivalent(IsFalse(null), null), 'IsFalseNull')
+define IsFalseFalse : Ok(Equivalent(IsFalse(false), true), 'IsFalseFalse')
+define IsFalseTrue  : Ok(Equivalent(IsFalse(true), false), 'IsFalseTrue')
+define IsFalseNull  : Ok(Equivalent(IsFalse(null), false), 'IsFalseNull')
 
 //IsTrue
-define IsTrueTrue   : Ok(Equivalent(IsTrue(true), null), 'IsTrueTrue')
-define IsTrueFalse  : Ok(Equivalent(IsTrue(false), null), 'IsTrueFalse')
-define IsTrueNull   : Ok(Equivalent(IsTrue(null), null), 'IsTrueNull')
+define IsTrueTrue   : Ok(Equivalent(IsTrue(true), true), 'IsTrueTrue')
+define IsTrueFalse  : Ok(Equivalent(IsTrue(false), false), 'IsTrueFalse')
+define IsTrueNull   : Ok(Equivalent(IsTrue(null), false), 'IsTrueNull')
 
 
 define function Plan(testCount Integer):
@@ -42,10 +42,15 @@ define function Plan(testCount Integer):
 define function Ok(isOk Boolean, message String):
     Message(null, true, null as String, 'Message', (if isOk then 'ok - ' else 'not ok - ') + message)
 
+define function ExpectToDie(livingResult Boolean, message2 String):
+    Ok(false, message2 + ' (if you see this, the test actually failed)')
+
+define function AssumePrevDied(message2 String, assumedPrevError String):
+    Ok(true, message2 + ' - expected error: ' + assumedPrevError)
+
 define function Todo(isOk2 Boolean, message2 String, whyTodo String):
     Ok(isOk2, message2 + ' # TODO - ' + whyTodo)
     // Note: parser/runtime has a scope-breaking bug manifesting if Todo() arg named "message" also.
 
 define function Skipped(isOk2 Boolean, message2 String, whySkipped String):
     Ok(isOk2, message2 + ' # SKIPPED - ' + whySkipped)
-    // Note: parser/runtime has a scope-breaking bug manifesting if Skipped() arg named "message" also.
