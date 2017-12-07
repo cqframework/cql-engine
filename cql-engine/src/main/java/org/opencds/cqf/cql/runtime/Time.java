@@ -8,11 +8,24 @@ import java.time.Month;
 import java.time.MonthDay;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.TimeZone;
 
 /**
  * Created by Chris Schuler on 6/16/2016
  */
 public class Time extends BaseTemporal {
+
+    public Time(Partial partial) {
+        this.timezone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
+        this.isDateTime = false;
+        setPartial(partial);
+    }
+
+    public Time(Partial partial, DateTimeZone timezone) {
+        this.timezone = timezone;
+        this.isDateTime = false;
+        setPartial(partial);
+    }
 
     protected static final DateTimeFieldType[] fields = new DateTimeFieldType[] {
             DateTimeFieldType.hourOfDay(),
@@ -60,87 +73,10 @@ public class Time extends BaseTemporal {
         throw new IllegalArgumentException("Invalid index for Time unit request.");
     }
 
-    public org.joda.time.DateTime getDateTimePrecision(Partial partial) {
-        switch (partial.size()) {
-            case 0: return new org.joda.time.DateTime();
-            case 1: return new org.joda.time.DateTime(1, 1, 1, partial.getValue(0), 0, 0, 0);
-            case 2: return new org.joda.time.DateTime(1,1,1, partial.getValue(0), partial.getValue(1), 0, 0);
-            case 3: return new org.joda.time.DateTime(1,1,1, partial.getValue(0), partial.getValue(1), partial.getValue(2), 0);
-            case 4: return new org.joda.time.DateTime(1,1,1,partial.getValue(0), partial.getValue(1), partial.getValue(2), partial.getValue(3));
-            default: throw new RuntimeException("Error creating Joda DateTime from Partial");
-        }
-    }
-
-    public void setPartial(Partial partial) {
-        this.jodaDateTime = getDateTimePrecision(partial);
-        this.partial = partial;
-    }
-
-    public Time() {
-        partial = new Partial();
-        timezoneOffset = new BigDecimal(0);
-        jodaDateTime = new org.joda.time.DateTime();
-    }
-
-    public Time(int hour) {
-        setPartial(new Partial().with(DateTimeFieldType.hourOfDay(), hour));
-        jodaDateTime = new DateTime(1, 1, 1, hour, 0, 0, 0);
-    }
-
-    public Time(int hour, BigDecimal offset) {
-        setPartial(new Partial().with(DateTimeFieldType.hourOfDay(), hour));
-        setTimezoneOffset(offset);
-        jodaDateTime = new DateTime(1, 1, 1, hour, 0, 0, 0, getChronology());
-    }
-
-    public Time(int hour, int minute) {
-        setPartial(new Partial(getFields(2), getValues(hour, minute)));
-        jodaDateTime = new DateTime(1, 1, 1, hour, minute, 0, 0);
-    }
-
-    public Time(int hour, int minute, BigDecimal offset) {
-        setPartial(new Partial(getFields(2), getValues(hour, minute)));
-        setTimezoneOffset(offset);
-        jodaDateTime = new DateTime(1, 1, 1, hour, minute, 0, 0, getChronology());
-    }
-
-    public Time(int hour, int minute, int second) {
-        setPartial(new Partial(getFields(3), getValues(hour, minute, second)));
-        jodaDateTime = new DateTime(1, 1, 1, hour, minute, second, 0);
-    }
-
-    public Time(int hour, int minute, int second, BigDecimal offset) {
-        setPartial(new Partial(getFields(3), getValues(hour, minute, second)));
-        setTimezoneOffset(offset);
-        jodaDateTime = new DateTime(1, 1, 1, hour, minute, second, 0, getChronology());
-    }
-
-    public Time(int hour, int minute, int second, int millis) {
-        setPartial(new Partial(getFields(4), getValues(hour, minute, second, millis)));
-        jodaDateTime = new DateTime(1,1,1, hour, minute, second, millis);
-    }
-
-    public Time(int hour, int minute, int second, int millis, BigDecimal offset) {
-        setPartial(new Partial(getFields(4), getValues(hour, minute, second, millis)));
-//        setPartial(new Partial(getFields(4), new int[]{hour, minute, second, millis}));
-        setTimezoneOffset(offset);
-        jodaDateTime = new DateTime(1,1,1, hour, minute, second, millis, getChronology());
-    }
-
-    public Time withPartial(Partial newTime) {
-        setPartial(newTime);
-        return this;
-    }
-
-    public Time withTimezoneOffset(BigDecimal newTimezoneOffset) {
-        setTimezoneOffset(newTimezoneOffset);
-        return this;
-    }
-
     public static Time getTimeOfDay() {
         org.joda.time.DateTime dt = org.joda.time.DateTime.now();
         int [] values = { dt.hourOfDay().get(), dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
-        return new Time().withPartial(new Partial(fields, values)).withTimezoneOffset(new BigDecimal(0));
+        return new Time(new Partial(fields, values), dt.getZone());
     }
 
     public static Time expandPartialMin(Time dt, int size) {
@@ -154,8 +90,8 @@ public class Time extends BaseTemporal {
         if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
             return null;
         }
-        Time left = new Time().withPartial(this.getPartial()).withTimezoneOffset(this.getTimezoneOffset());
-        Time right = new Time().withPartial(other.getPartial()).withTimezoneOffset(other.getTimezoneOffset());
+        Time left = new Time(this.getPartial(), this.getTimezone());
+        Time right = new Time(other.getPartial(), other.getTimezone());
 
         // for Time equals, all Time elements must be present -- any null values result in null return
         if (this.getPartial().size() < 4) left = expandPartialMin(left, 4);

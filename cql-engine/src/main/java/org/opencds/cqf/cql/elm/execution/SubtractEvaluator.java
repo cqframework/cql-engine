@@ -64,7 +64,7 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         // -(DateTime, Quantity)
         else if (left instanceof DateTime && right instanceof Quantity) {
             DateTime dt = (DateTime)left;
-            DateTime ret = new DateTime().withPartial(dt.getPartial());
+            DateTime ret = new DateTime(dt.getPartial(), dt.getTimezone());
             String unit = ((Quantity)right).getUnit();
             int value = ((Quantity)right).getValue().intValue();
 
@@ -107,7 +107,7 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         // -(Time, Quantity)
         else if (left instanceof Time && right instanceof Quantity) {
             Time t = (Time)left;
-            Time ret = new Time().withPartial(t.getPartial());
+            Time ret = new Time(t.getPartial(), t.getTimezone());
             String unit = ((Quantity)right).getUnit();
             int value = ((Quantity)right).getValue().intValue();
 

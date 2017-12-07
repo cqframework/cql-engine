@@ -174,7 +174,7 @@ define DurationInWeeks2: weeks between @2012-03-10T22:05:09 and @2012-03-24T07:1
 define DurationInWeeks3: weeks between @2012-03-10T06:05:09 and @2012-03-24T07:19:33
 
 define TimeDurationBetweenHour: hours between @T20:26:15.555 and @T23:25:15.555
-define TimeDurationBetweenHourDiffPrecision: hours between @T06 and @T07:00:00Z
+define TimeDurationBetweenHourDiffPrecision: hours between @T06Z and @T07:00:00Z
 define TimeDurationBetweenMinute: minutes between @T23:20:16.555 and @T23:25:15.555
 define TimeDurationBetweenSecond: seconds between @T23:25:10.556 and @T23:25:15.555
 define TimeDurationBetweenMillis: milliseconds between @T23:25:25.555 and @T23:25:25.560

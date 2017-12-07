@@ -67,7 +67,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
     // +(DateTime, Quantity)
     else if (left instanceof DateTime && right instanceof Quantity) {
       DateTime dt = (DateTime)left;
-      DateTime ret = new DateTime().withPartial(dt.getPartial());
+      DateTime ret = new DateTime(dt.getPartial(), dt.getTimezone());
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 
@@ -111,7 +111,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
     // +(Time, Quantity)
     else if (left instanceof Time && right instanceof Quantity) {
       Time time = (Time)left;
-      Time ret = new Time().withPartial(time.getPartial());
+      Time ret = new Time(time.getPartial(), time.getTimezone());
       String unit = ((Quantity)right).getUnit();
       int value = ((Quantity)right).getValue().intValue();
 

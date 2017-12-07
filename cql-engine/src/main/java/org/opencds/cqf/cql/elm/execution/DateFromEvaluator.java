@@ -25,7 +25,7 @@ public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFro
 
         if (operand instanceof DateTime) {
             LocalDate date = new LocalDate(((DateTime)operand).getPartial());
-            return new DateTime().withPartial(new Partial(date));
+            return new DateTime(new Partial(date));
         }
 
         throw new IllegalArgumentException(String.format("Cannot DateFrom arguments of type '%s'.", operand.getClass().getName()));

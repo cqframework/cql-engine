@@ -323,7 +323,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(955));
 
         result = context.resolveExpressionRef("DateTimeComponentFromTimezone").getExpression().evaluate(context);
-        assertThat(result, is(new BigDecimal(1)));
+        assertThat(result, is(new BigDecimal("1.00")));
 
         result = context.resolveExpressionRef("DateTimeComponentFromDate").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2003, 10, 29})));

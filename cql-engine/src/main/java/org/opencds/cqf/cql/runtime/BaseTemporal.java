@@ -1,9 +1,6 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.joda.time.Chronology;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.Partial;
+import org.joda.time.*;
 import org.joda.time.chrono.ISOChronology;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
@@ -12,6 +9,7 @@ import org.opencds.cqf.cql.elm.execution.LessEvaluator;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.TimeZone;
 
 /**
  * Created by Christopher Schuler on 6/11/2017.
@@ -19,61 +17,118 @@ import java.util.Arrays;
 public abstract class BaseTemporal {
 
     protected Partial partial;
-    BigDecimal timezoneOffset;
-    ISOChronology chronology;
+    DateTimeZone timezone;
     org.joda.time.DateTime jodaDateTime;
+    boolean isDateTime;
 
     public Partial getPartial() {
         return partial;
     }
 
+    public void setPartial(Partial partial) {
+        this.partial = partial;
+        jodaDateTime = dateTimeFromPartial(partial, timezone);
+    }
+
+    public org.joda.time.DateTime dateTimeFromPartial(Partial partial, DateTimeZone timezone) {
+        org.joda.time.DateTime dt = new org.joda.time.DateTime(timezone);
+
+        if (!isDateTime) {
+            dt.withDate(1, 1, 1);
+            switch (partial.size()) {
+                case 1: return dt.withField(DateTimeFieldType.hourOfDay(), partial.getValue(0))
+                        .withField(DateTimeFieldType.minuteOfHour(), 0)
+                        .withField(DateTimeFieldType.secondOfMinute(), 0)
+                        .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 2: return dt.withField(DateTimeFieldType.hourOfDay(), partial.getValue(0))
+                        .withField(DateTimeFieldType.minuteOfHour(), partial.getValue(1))
+                        .withField(DateTimeFieldType.secondOfMinute(), 0)
+                        .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 3: return dt.withField(DateTimeFieldType.hourOfDay(), partial.getValue(0))
+                        .withField(DateTimeFieldType.minuteOfHour(), partial.getValue(1))
+                        .withField(DateTimeFieldType.secondOfMinute(), partial.getValue(2))
+                        .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 4: return dt.withField(DateTimeFieldType.hourOfDay(), partial.getValue(0))
+                        .withField(DateTimeFieldType.minuteOfHour(), partial.getValue(1))
+                        .withField(DateTimeFieldType.secondOfMinute(), partial.getValue(2))
+                        .withField(DateTimeFieldType.millisOfSecond(), partial.getValue(3));
+            }
+        }
+
+        else {
+            switch (partial.size()) {
+                case 1: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), 1)
+                            .withField(DateTimeFieldType.dayOfMonth(), 1)
+                            .withField(DateTimeFieldType.hourOfDay(), 0)
+                            .withField(DateTimeFieldType.minuteOfHour(), 0)
+                            .withField(DateTimeFieldType.secondOfMinute(), 0)
+                            .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 2: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), partial.getValue(1))
+                            .withField(DateTimeFieldType.dayOfMonth(), 1)
+                            .withField(DateTimeFieldType.hourOfDay(), 0)
+                            .withField(DateTimeFieldType.minuteOfHour(), 0)
+                            .withField(DateTimeFieldType.secondOfMinute(), 0)
+                            .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 3: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), partial.getValue(1))
+                            .withField(DateTimeFieldType.dayOfMonth(), partial.getValue(2))
+                            .withField(DateTimeFieldType.hourOfDay(), 0)
+                            .withField(DateTimeFieldType.minuteOfHour(), 0)
+                            .withField(DateTimeFieldType.secondOfMinute(), 0)
+                            .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 4: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), partial.getValue(1))
+                            .withField(DateTimeFieldType.dayOfMonth(), partial.getValue(2))
+                            .withField(DateTimeFieldType.hourOfDay(), partial.getValue(3))
+                            .withField(DateTimeFieldType.minuteOfHour(), 0)
+                            .withField(DateTimeFieldType.secondOfMinute(), 0)
+                            .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 5: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), partial.getValue(1))
+                            .withField(DateTimeFieldType.dayOfMonth(), partial.getValue(2))
+                            .withField(DateTimeFieldType.hourOfDay(), partial.getValue(3))
+                            .withField(DateTimeFieldType.minuteOfHour(), partial.getValue(4))
+                            .withField(DateTimeFieldType.secondOfMinute(), 0)
+                            .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 6: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), partial.getValue(1))
+                            .withField(DateTimeFieldType.dayOfMonth(), partial.getValue(2))
+                            .withField(DateTimeFieldType.hourOfDay(), partial.getValue(3))
+                            .withField(DateTimeFieldType.minuteOfHour(), partial.getValue(4))
+                            .withField(DateTimeFieldType.secondOfMinute(), partial.getValue(5))
+                            .withField(DateTimeFieldType.millisOfSecond(), 0);
+                case 7: return dt.withField(DateTimeFieldType.year(), partial.getValue(0))
+                            .withField(DateTimeFieldType.monthOfYear(), partial.getValue(1))
+                            .withField(DateTimeFieldType.dayOfMonth(), partial.getValue(2))
+                            .withField(DateTimeFieldType.hourOfDay(), partial.getValue(3))
+                            .withField(DateTimeFieldType.minuteOfHour(), partial.getValue(4))
+                            .withField(DateTimeFieldType.secondOfMinute(), partial.getValue(5))
+                            .withField(DateTimeFieldType.millisOfSecond(), partial.getValue(6));
+            }
+        }
+        return dt;
+    }
+
     public BigDecimal getTimezoneOffset() {
-        if (timezoneOffset == null) {
-            timezoneOffset = new BigDecimal("0.0");
+        if (timezone.getID().equals("UTC")) {
+            return new BigDecimal("0.0");
         }
-        return timezoneOffset;
-    }
-
-    public Integer getOffsetMillis() {
-        return timezoneOffset.multiply(new BigDecimal("3600000.0")).intValue();
-    }
-
-    public void setTimezoneOffset(BigDecimal newTimezoneOffset) {
-        timezoneOffset = newTimezoneOffset;
-        chronology = ISOChronology.getInstance(DateTimeZone.forOffsetMillis(getOffsetMillis()));
-    }
-    public ISOChronology getChronology() {
-        return this.chronology;
-    }
-
-    public org.joda.time.DateTime toJodaDateTime() {
-        if (chronology == null) {
-            return getPartial().toDateTime(new org.joda.time.DateTime());
+        String[] parts = timezone.getID().split(":");
+        if (Integer.parseInt(parts[1]) == 0) {
+            return new BigDecimal(parts[0] + "." + parts[1]);
         }
-        return getPartial().toDateTime(new org.joda.time.DateTime().withChronology(getChronology()));
+        String minuteOffset = Integer.toString(60/Integer.parseInt(parts[1]));
+        return new BigDecimal(parts[0] + "." + minuteOffset);
     }
 
-    public static Boolean formatCheck(ArrayList<Object> timeElements) {
-        boolean prevNull = false;
-        for (Object element : timeElements) {
-            if (element == null) { prevNull = true; }
-            else if (prevNull) {
-                return false;
-            }
-        }
-        return true;
+    public DateTimeZone getTimezone() {
+        return timezone;
     }
 
-    public static int[] getValues(Integer... values) {
-        int count = 0;
-        int[] temp = new int[7];
-        for (Integer value : values) {
-            if (value != null) {
-                temp[count] = value;
-                ++count;
-            }
-        }
-        return Arrays.copyOf(temp, count);
+    public void setTimezone(DateTimeZone timezone) {
+        this.timezone = timezone;
     }
 
     public org.joda.time.DateTime getJodaDateTime() {
@@ -110,6 +165,27 @@ public abstract class BaseTemporal {
 
         return isDateTime ? new Partial(DateTime.getFields(index + 1), a)
                         : new Partial(Time.getFields(index + 1), a);
+    }
+
+    public static Boolean formatCheck(ArrayList<Object> timeElements) {
+        boolean prevNull = false;
+        for (Object element : timeElements) {
+            if (element == null) { prevNull = true; }
+            else if (prevNull) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static DateTimeZone resolveDateTimeZone(BigDecimal offset) {
+        if (offset == null) {
+            return DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
+        }
+        else {
+            int minuteOffset = new BigDecimal("60").multiply(offset.remainder(BigDecimal.ONE)).intValue();
+            return DateTimeZone.forOffsetHoursMinutes(offset.intValue(), minuteOffset);
+        }
     }
 
     @Override

@@ -93,8 +93,8 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(size == 2);
 
         // filtering tests
-        DateTime dtLow = new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1}));
-        DateTime dtHigh = new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2013, 12, 31}));
+        DateTime dtLow = new DateTime(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1}));
+        DateTime dtHigh = new DateTime(new Partial(DateTime.getFields(3), new int[] {2013, 12, 31}));
         // datePath test
         results = provider.retrieve("Population", null, "Encounter", null, null, null, null, "period.end.value", null, null, new Interval(dtLow, true, dtHigh, true));
         size = 0;
@@ -146,8 +146,8 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(size == 0);
 
         // true
-        DateTime dtLow2 = new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2010, 1, 1}));
-        DateTime dtHigh2 = new DateTime().withPartial(new Partial(DateTime.getFields(3), new int[] {2011, 12, 31}));
+        DateTime dtLow2 = new DateTime(new Partial(DateTime.getFields(3), new int[] {2010, 1, 1}));
+        DateTime dtHigh2 = new DateTime(new Partial(DateTime.getFields(3), new int[] {2011, 12, 31}));
         results = provider.retrieve("Population", null, "Condition", null, "code", null, "procedure-outcome", "onset.value", null, null, new Interval(dtLow2, true, dtHigh2, true));
         size = 0;
         for (Object o : results)

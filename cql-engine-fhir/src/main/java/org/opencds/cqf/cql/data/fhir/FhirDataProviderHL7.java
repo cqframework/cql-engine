@@ -4,9 +4,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.hl7.fhir.instance.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.joda.time.LocalTime;
-import org.joda.time.Partial;
-import org.joda.time.ReadablePartial;
+import org.joda.time.*;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
 import org.opencds.cqf.cql.runtime.Code;
@@ -17,6 +15,7 @@ import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * Created by Christopher Schuler on 6/19/2017.
@@ -156,24 +155,55 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
     }
 
     protected DateTime toDateTime(DateTimeType value) {
-        // TODO: Convert tzHour, tzMin and tzSign to a BigDecimal to set TimeZoneOffset
         // NOTE: month is 0-indexed, hence the +1
+        Partial partial = new Partial();
+
+        DateTimeZone zone;
+        if (value.getTimeZone() == null) {
+            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
+        }
+        else {
+            zone = DateTimeZone.forTimeZone(value.getTimeZone());
+        }
         switch (value.getPrecision()) {
-            case YEAR: return new DateTime(value.toCalendar().get(Calendar.YEAR));
-            case MONTH: return new DateTime(value.toCalendar().get(Calendar.YEAR), value.toCalendar().get(1) + 1);
-            case DAY: return new DateTime(value.toCalendar().get(Calendar.YEAR), value.toCalendar().get(Calendar.MONTH) + 1, value.toCalendar().get(Calendar.DAY_OF_MONTH));
-            case SECOND: return new DateTime(value.toCalendar().get(Calendar.YEAR), value.toCalendar().get(Calendar.MONTH) + 1, value.toCalendar().get(Calendar.DAY_OF_MONTH), value.toCalendar().get(Calendar.HOUR), value.toCalendar().get(Calendar.MINUTE), value.toCalendar().get(Calendar.SECOND));
-            case MILLI: return new DateTime(value.toCalendar().get(Calendar.YEAR), value.toCalendar().get(Calendar.MONTH) + 1, value.toCalendar().get(Calendar.DAY_OF_MONTH), value.toCalendar().get(Calendar.HOUR), value.toCalendar().get(Calendar.MINUTE), value.toCalendar().get(Calendar.SECOND), value.toCalendar().get(Calendar.MILLISECOND));
+            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR)), zone);
+            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
+                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1), zone);
+            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
+                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH)), zone);
+            case SECOND: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
+                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH))
+                    .with(DateTimeFieldType.hourOfDay(), value.toCalendar().get(Calendar.HOUR))
+                    .with(DateTimeFieldType.minuteOfHour(), value.toCalendar().get(Calendar.MINUTE))
+                    .with(DateTimeFieldType.secondOfMinute(), value.toCalendar().get(Calendar.SECOND)), zone);
+            case MILLI: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
+                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH))
+                    .with(DateTimeFieldType.hourOfDay(), value.toCalendar().get(Calendar.HOUR))
+                    .with(DateTimeFieldType.minuteOfHour(), value.toCalendar().get(Calendar.MINUTE))
+                    .with(DateTimeFieldType.secondOfMinute(), value.toCalendar().get(Calendar.SECOND))
+                    .with(DateTimeFieldType.millisOfSecond(), value.toCalendar().get(Calendar.MILLISECOND)), zone);
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
 
     protected DateTime toDateTime(DateType value) {
-        // TODO: This ought to work, but I'm getting an incorrect month value returned from the Hapi DateType, looks like a Java Calendar problem?
-        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(value.toCalendar().get(Calendar.YEAR));
-            case MONTH: return new DateTime(value.toCalendar().get(Calendar.YEAR), value.toCalendar().get(Calendar.MONTH) + 1); // Month is zero based in DateType.
-            case DAY: return new DateTime(value.toCalendar().get(Calendar.YEAR), value.toCalendar().get(Calendar.MONTH) + 1, value.toCalendar().get(Calendar.DAY_OF_MONTH));
+        Partial partial = new Partial();
+        DateTimeZone zone;
+        if (value.getTimeZone() == null) {
+            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
+        }
+        else {
+            zone = DateTimeZone.forTimeZone(value.getTimeZone());
+        }        switch (value.getPrecision()) {
+            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR)), zone);
+            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
+                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1), zone);
+            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
+                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 11)
+                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH)), zone);
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
@@ -181,7 +211,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
     protected Time toTime(TimeType value) {
         DateTimeFormatter dtf = ISODateTimeFormat.timeParser();
         ReadablePartial partial = new LocalTime(dtf.parseMillis(value.getValue()));
-        return new Time().withPartial(new Partial(partial));
+        return new Time(new Partial(partial), dtf.getZone());
     }
 
     protected DateTime toDateTime(InstantType value) {

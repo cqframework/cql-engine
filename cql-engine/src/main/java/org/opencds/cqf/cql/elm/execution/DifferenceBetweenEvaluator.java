@@ -83,9 +83,9 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
 
     public static Integer between(BaseTemporal left, BaseTemporal right, int idx, boolean dt) {
         if (idx == 6) {
-            return betweenMillis(left.getPartial(), right.getPartial(), left.toJodaDateTime(), right.toJodaDateTime(), idx, dt);
+            return betweenMillis(left.getPartial(), right.getPartial(), left.getJodaDateTime(), right.getJodaDateTime(), idx, dt);
         }
-        return between(left.toJodaDateTime(), right.toJodaDateTime(), idx);
+        return between(left.getJodaDateTime(), right.getJodaDateTime(), idx);
     }
 
     public static Object difference(Object left, Object right, String precision)
@@ -127,8 +127,8 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
                 index = 7;
             }
 
-            org.joda.time.DateTime leftDateTime = isDateTime ? ((DateTime) leftTemporal).getJodaDateTime() : leftTrunc.toDateTime(new org.joda.time.DateTime(leftTemporal.getChronology()));
-            org.joda.time.DateTime rightDateTime = isDateTime ? ((DateTime) rightTemporal).getJodaDateTime() : rightTrunc.toDateTime(new org.joda.time.DateTime(rightTemporal.getChronology()));
+            org.joda.time.DateTime leftDateTime = isDateTime ? leftTemporal.getJodaDateTime() : leftTrunc.toDateTime(new org.joda.time.DateTime(leftTemporal.getTimezone()));
+            org.joda.time.DateTime rightDateTime = isDateTime ? rightTemporal.getJodaDateTime() : rightTrunc.toDateTime(new org.joda.time.DateTime(rightTemporal.getTimezone()));
 
             if (!isDateTime) {
                 index += 3;

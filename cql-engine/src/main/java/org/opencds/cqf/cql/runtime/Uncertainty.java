@@ -139,8 +139,8 @@ public class Uncertainty {
   */
   public static ArrayList<DateTime> getHighLowList(DateTime uncertain, String precision) {
     if (isUncertain(uncertain, precision)) {
-      DateTime low = new DateTime().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
-      DateTime high = new DateTime().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
+      DateTime low = new DateTime(uncertain.getPartial(), uncertain.getTimezone());
+      DateTime high = new DateTime(uncertain.getPartial(), uncertain.getTimezone());
 
       int idx = DateTime.getFieldIndex(precision);
       if (idx == -1) { idx = DateTime.getFieldIndex(precision); }
@@ -159,8 +159,8 @@ public class Uncertainty {
 
   public static ArrayList<Time> getHighLowList(Time uncertain, String precision) {
     if (isUncertain(uncertain, precision)) {
-      Time low = new Time().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
-      Time high = new Time().withPartial(uncertain.getPartial()).withTimezoneOffset(uncertain.getTimezoneOffset());
+      Time low = new Time(uncertain.getPartial(), uncertain.getTimezone());
+      Time high = new Time(uncertain.getPartial(), uncertain.getTimezone());
 
       int idx = Time.getFieldIndex(precision);
       if (idx == -1) { idx = Time.getFieldIndex(precision); }

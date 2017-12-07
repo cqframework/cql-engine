@@ -5,6 +5,7 @@ import org.hl7.fhir.dstu3.model.CodeableConcept;
 import org.hl7.fhir.dstu3.model.Coding;
 import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Period;
+import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
@@ -357,6 +358,9 @@ public class FileBasedFhirProvider extends BaseDataProviderStu3 {
         int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
         int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
         int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
-        return new DateTime().withPartial(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
+        if (hapiDt.getTimeZone() == null) {
+            return new DateTime(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
+        }
+        return new DateTime(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}), DateTimeZone.forTimeZone(hapiDt.getTimeZone()));
     }
 }

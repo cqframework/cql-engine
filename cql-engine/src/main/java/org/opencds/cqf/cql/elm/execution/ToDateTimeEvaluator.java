@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.DateTimeZone;
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.joda.time.Partial;
 import java.util.ArrayList;
@@ -121,8 +123,10 @@ public class ToDateTimeEvaluator extends org.cqframework.cql.elm.execution.ToDat
         }
 
         int[] values = getValues(new org.joda.time.DateTime(removeTimezone(operand.toString())), numElements(operand.toString()));
-
-        return new DateTime().withPartial(new Partial(DateTime.getFields(values.length), values)).withTimezoneOffset(getTimezone(operand.toString()));
+        return new DateTime(
+                new Partial(DateTime.getFields(values.length), values),
+                BaseTemporal.resolveDateTimeZone(getTimezone(operand.toString()))
+        );
     }
 
     @Override
