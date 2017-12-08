@@ -140,22 +140,36 @@ public abstract class BaseTemporal {
     }
 
     public Integer compareTo(BaseTemporal other) {
-        int size;
+        boolean differentPrecisions = this.getPartial().size() != other.getPartial().size();
 
-        // Uncertainty detection
-        if (this.getPartial().size() != other.getPartial().size()) {
+        int size;
+        if (differentPrecisions) {
             size = this.getPartial().size() > other.getPartial().size() ? other.getPartial().size() : this.getPartial().size();
         }
-        else { size = this.getPartial().size(); }
+        else {
+            size = this.getPartial().size();
+        }
+
+        if (!isDateTime) {
+            size += 3;
+        }
+
+        Instant left = this.jodaDateTime.toInstant();
+        Instant right = other.jodaDateTime.toInstant();
 
         for (int i = 0; i < size; ++i) {
-            Object left = this.getPartial().getValue(i);
-            Object right = other.getPartial().getValue(i);
-            if (GreaterEvaluator.greater(left, right)) { return 1; }
-            else if (LessEvaluator.less(left, right)) { return -1; }
+            if (left.get(DateTime.getField(i)) > right.get(DateTime.getField(i))) {
+                return 1;
+            }
+            else if (left.get(DateTime.getField(i)) < right.get(DateTime.getField(i))) {
+                return -1;
+            }
         }
-        // Uncertainty wrinkle
-        if (this.getPartial().size() != other.getPartial().size()) { return null; }
+
+        if (differentPrecisions) {
+            return null;
+        }
+
         return 0;
     }
 

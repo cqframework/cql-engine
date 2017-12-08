@@ -90,14 +90,7 @@ public class Time extends BaseTemporal {
         if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
             return null;
         }
-        Time left = new Time(this.getPartial(), this.getTimezone());
-        Time right = new Time(other.getPartial(), other.getTimezone());
 
-        // for Time equals, all Time elements must be present -- any null values result in null return
-        if (this.getPartial().size() < 4) left = expandPartialMin(left, 4);
-        if (other.getPartial().size() < 4) right = expandPartialMin(right, 4);
-
-        return Arrays.equals(left.partial.getValues(), right.partial.getValues())
-                && left.getTimezoneOffset().compareTo(right.getTimezoneOffset()) == 0;
+        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
     }
 }

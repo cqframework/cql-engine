@@ -155,22 +155,8 @@ public class DateTime extends BaseTemporal {
         if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
             return null;
         }
-        DateTime left = new DateTime(this.getPartial(), this.getTimezone());
-        DateTime right = new DateTime(other.getPartial(), other.getTimezone());
 
-        // for DateTime equals, all DateTime elements must be present -- any null values result in null return
-        if (this.getPartial().size() < 7) left = expandPartialMin(left, 7);
-        if (other.getPartial().size() < 7) right = expandPartialMin(right, 7);
-
-        boolean tzEqaul = false;
-        if (left.getTimezoneOffset() == null && right.getTimezoneOffset() == null) {
-            tzEqaul = true;
-        }
-        else if (left.getTimezoneOffset() != null && right.getTimezoneOffset() != null) {
-            tzEqaul = left.getTimezoneOffset().compareTo(right.getTimezoneOffset()) == 0;
-        }
-
-        return Arrays.equals(left.partial.getValues(), right.partial.getValues()) && tzEqaul;
+        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
     }
 
     @Override
