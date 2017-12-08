@@ -1,8 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Uncertainty;
 
 /*
 same precision as(left DateTime, right DateTime) Boolean
@@ -34,48 +36,22 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
             throw new IllegalArgumentException("Precision must be specified.");
         }
 
-        if (left instanceof DateTime && right instanceof DateTime) {
-            DateTime leftDT = (DateTime)left;
-            DateTime rightDT = (DateTime)right;
+        if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+            BaseTemporal leftTemporal = (BaseTemporal) left;
+            BaseTemporal rightTemporal = (BaseTemporal) right;
 
             int idx = DateTime.getFieldIndex(precision);
 
             if (idx != -1) {
                 // check level of precision
-                if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
+                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
                     return null;
                 }
 
                 for (int i = 0; i < idx + 1; ++i) {
-                    if (leftDT.getJodaDateTime().toInstant().get(DateTime.getField(i))
-                            != rightDT.getJodaDateTime().toInstant().get(DateTime.getField(i)))
+                    if (leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i))
+                            != rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i)))
                     {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
-        }
-
-        if (left instanceof Time && right instanceof Time) {
-            Time leftT = (Time)left;
-            Time rightT = (Time)right;
-
-            int idx = Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
-                    return null;
-                }
-
-                for (int i = 0; i < idx + 1; ++i) {
-                    if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {
                         return false;
                     }
                 }

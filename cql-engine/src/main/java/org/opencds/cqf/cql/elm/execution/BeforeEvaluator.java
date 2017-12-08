@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import java.util.List;
+
 /*
 *** NOTES FOR INTERVAL ***
 before(left Interval<T>, right Interval<T>) Boolean
@@ -51,10 +53,9 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
             return LessEvaluator.less(left, ((Interval)right).getStart());
         }
 
-        // (DateTime, DateTime)
-        else if (left instanceof DateTime && right instanceof DateTime) {
-            DateTime leftDT = (DateTime)left;
-            DateTime rightDT = (DateTime)right;
+        else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+            BaseTemporal leftTemporal = (BaseTemporal) left;
+            BaseTemporal rightTemporal = (BaseTemporal) right;
 
             if (precision == null) {
                 throw new IllegalArgumentException("Precision must be specified.");
@@ -64,54 +65,21 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
 
             if (idx != -1) {
                 // check level of precision
-                if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
+                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
 
-                    if (Uncertainty.isUncertain(leftDT, precision)) {
-                        return LessEvaluator.less(Uncertainty.getHighLowList(leftDT, precision).get(0), rightDT);
+                    if (Uncertainty.isUncertain(leftTemporal, precision)) {
+                        return LessEvaluator.less(((List) Uncertainty.getHighLowList(leftTemporal, precision)).get(0), rightTemporal);
                     }
 
-                    else if (Uncertainty.isUncertain(rightDT, precision)) {
-                        return LessEvaluator.less(leftDT, Uncertainty.getHighLowList(rightDT, precision).get(1));
-                    }
-
-                    return null;
-                }
-
-                return leftDT.getJodaDateTime().toInstant().get(DateTime.getField(idx))
-                        < rightDT.getJodaDateTime().toInstant().get(DateTime.getField(idx));
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
-        }
-
-        else if (left instanceof Time && right instanceof Time) {
-            Time leftT = (Time)left;
-            Time rightT = (Time)right;
-
-            if (precision == null) {
-                throw new IllegalArgumentException("Precision must be specified.");
-            }
-
-            int idx = Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
-
-                    if (Uncertainty.isUncertain(leftT, precision)) {
-                        return LessEvaluator.less(Uncertainty.getHighLowList(leftT, precision).get(0), rightT);
-                    }
-
-                    else if (Uncertainty.isUncertain(rightT, precision)) {
-                        return LessEvaluator.less(leftT, Uncertainty.getHighLowList(rightT, precision).get(1));
+                    else if (Uncertainty.isUncertain(rightTemporal, precision)) {
+                        return LessEvaluator.less(leftTemporal, ((List)Uncertainty.getHighLowList(rightTemporal, precision)).get(1));
                     }
 
                     return null;
                 }
 
-                return leftT.getPartial().getValue(idx) < rightT.getPartial().getValue(idx);
+                return leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx))
+                        < rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx));
             }
 
             else {

@@ -30,6 +30,10 @@ public abstract class BaseTemporal {
         jodaDateTime = dateTimeFromPartial(partial, timezone);
     }
 
+    public boolean getIsDateTime() {
+        return this.isDateTime;
+    }
+
     public org.joda.time.DateTime dateTimeFromPartial(Partial partial, DateTimeZone timezone) {
         org.joda.time.DateTime dt = new org.joda.time.DateTime(timezone);
 

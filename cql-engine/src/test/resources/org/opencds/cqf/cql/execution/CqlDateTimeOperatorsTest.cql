@@ -75,7 +75,7 @@ define DateTimeBeforeMillisecondFalse: DateTime(2004, 10, 10, 20, 30, 15, 599) b
 define BeforeTimezoneFalse: @2012-03-10T10:20:00.999+07:00 before hour of @2012-03-10T09:20:00.999+06:00
 define BeforeTimezoneTrue: @2012-03-10T10:20:00.999+07:00 before hour of @2012-03-10T10:20:00.999+06:00
 define TimeBeforeHourTrue: @T13:59:59.999 before hour of @T14:59:59.999
-define TimeBeforeHourFalse: @T17:59:59.999 before hour of @T16:59:59.999
+define TimeBeforeHourFalse: @T16:59:59.999 before hour of @T15:59:59.999
 define TimeBeforeMinuteTrue: @T15:57:59.999 before minute of @T15:58:59.999
 define TimeBeforeMinuteFalse: @T15:59:59.999 before minute of @T15:59:59.999
 define TimeBeforeSecondTrue: @T15:59:57.999 before second of @T15:59:58.999

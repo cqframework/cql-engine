@@ -1,9 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.*;
 
 /*
 same precision or after(left DateTime, right DateTime) Boolean
@@ -82,28 +80,28 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
             throw new IllegalArgumentException("Precision must be specified.");
         }
 
-        if (left instanceof DateTime && right instanceof DateTime) {
-            DateTime leftDT = (DateTime)left;
-            DateTime rightDT = (DateTime)right;
+        if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+            BaseTemporal leftTemporal = (BaseTemporal) left;
+            BaseTemporal rightTemporal = (BaseTemporal) right;
 
             int idx = DateTime.getFieldIndex(precision);
 
             if (idx != -1) {
                 // check level of precision
-                if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
+                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
                     return null;
                 }
 
                 for (int i = 0; i < idx + 1; ++i) {
-                    if (leftDT.getJodaDateTime().toInstant().get(DateTime.getField(i))
-                            < rightDT.getJodaDateTime().toInstant().get(DateTime.getField(i)))
+                    if (leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i))
+                            < rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i)))
                     {
                         return false;
                     }
                 }
 
-                return leftDT.getJodaDateTime().toInstant().get(DateTime.getField(idx))
-                        >= rightDT.getJodaDateTime().toInstant().get(DateTime.getField(idx));
+                return leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx))
+                        >= rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx));
             }
 
             else {
@@ -111,34 +109,6 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
             }
         }
 
-        else if (left instanceof Time && right instanceof Time) {
-            Time leftT = (Time)left;
-            Time rightT = (Time)right;
-
-            int idx = Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
-                    return null;
-                }
-
-                for (int i = 0; i < idx + 1; ++i) {
-                    if (leftT.getPartial().getValue(i) < rightT.getPartial().getValue(i)) {
-                        return false;
-                    }
-                    else if (leftT.getPartial().getValue(i) > rightT.getPartial().getValue(i)) {
-                        return true;
-                    }
-                }
-
-                return leftT.getPartial().getValue(idx) >= rightT.getPartial().getValue(idx);
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
-        }
         throw new IllegalArgumentException(String.format("Cannot perform SameOrAfter operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 

@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import java.util.List;
+
 /*
 *** NOTES FOR INTERVAL ***
 after(left Interval<T>, right Interval<T>) Boolean
@@ -53,10 +55,9 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
             return GreaterEvaluator.greater(left, ((Interval)right).getEnd());
         }
 
-        // (DateTime, DateTime)
-        else if (left instanceof DateTime && right instanceof DateTime) {
-            DateTime leftDT = (DateTime)left;
-            DateTime rightDT = (DateTime)right;
+        else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+            BaseTemporal leftTemporal = (BaseTemporal) left;
+            BaseTemporal rightTemporal = (BaseTemporal) right;
 
             if (precision == null) {
                 throw new IllegalArgumentException("Precision must be specified.");
@@ -66,59 +67,19 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
 
             if (idx != -1) {
                 // check level of precision
-                if (idx + 1 > leftDT.getPartial().size() || idx + 1 > rightDT.getPartial().size()) {
+                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
 
-                    // Uncertainty
-                    if (Uncertainty.isUncertain(leftDT, precision)) {
-                        return GreaterEvaluator.greater(Uncertainty.getHighLowList(leftDT, precision).get(0), rightDT);
-                    }
-
-                    else if (Uncertainty.isUncertain(rightDT, precision)) {
-                        return GreaterEvaluator.greater(leftDT, Uncertainty.getHighLowList(rightDT, precision).get(1));
-                    }
-                    return null;
-                }
-                return leftDT.getJodaDateTime().toInstant().get(DateTime.getField(idx))
-                        > rightDT.getJodaDateTime().toInstant().get(DateTime.getField(idx));
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
-        }
-
-        // (Time, Time)
-        else if (left instanceof Time && right instanceof Time) {
-            Time leftT = (Time)left;
-            Time rightT = (Time)right;
-
-            if (precision == null) {
-                throw new IllegalArgumentException("Precision must be specified.");
-            }
-
-            int idx = Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (idx + 1 > leftT.getPartial().size() || idx + 1 > rightT.getPartial().size()) {
-
-                    // Uncertainty
-                    if (Uncertainty.isUncertain(leftT, precision)) {
-                        return GreaterEvaluator.greater(Uncertainty.getHighLowList(leftT, precision).get(0), rightT);
-                    }
-
-                    else if (Uncertainty.isUncertain(rightT, precision)) {
-                        return GreaterEvaluator.greater(leftT, Uncertainty.getHighLowList(rightT, precision).get(1));
+                    if (Uncertainty.isUncertain(leftTemporal, precision)) {
+                        return GreaterEvaluator.greater(((List) Uncertainty.getHighLowList(leftTemporal, precision)).get(0), rightTemporal);
+                    } else if (Uncertainty.isUncertain(rightTemporal, precision)) {
+                        return GreaterEvaluator.greater(leftTemporal, ((List) Uncertainty.getHighLowList(rightTemporal, precision)).get(1));
                     }
 
                     return null;
                 }
 
-                return leftT.getPartial().getValue(idx) > rightT.getPartial().getValue(idx);
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
+                return leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx))
+                        > rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx));
             }
         }
 
