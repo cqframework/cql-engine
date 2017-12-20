@@ -42,7 +42,7 @@ public class Concept {
 
     public Boolean equal(Concept other) {
         for (Code code : this.getCodes()) {
-            if (!InEvaluator.in(code, other.getCodes())) {
+            if (!InEvaluator.in(code, other.getCodes(), null)) {
                 return false;
             }
         }

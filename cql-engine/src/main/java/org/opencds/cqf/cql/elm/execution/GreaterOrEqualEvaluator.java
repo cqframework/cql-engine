@@ -62,7 +62,7 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
       }
 
       else if (left instanceof Uncertainty && right instanceof Integer) {
-          if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval())) {
+          if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval(), null)) {
               return null;
           }
           return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) >= 0;

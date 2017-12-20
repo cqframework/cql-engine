@@ -66,7 +66,7 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
 
             List<Object> result = new ArrayList<>();
             for (Object leftItem : leftArr) {
-                if (!InEvaluator.in(leftItem, rightArr)) {
+                if (!InEvaluator.in(leftItem, rightArr, null)) {
                     result.add(leftItem);
                 }
             }

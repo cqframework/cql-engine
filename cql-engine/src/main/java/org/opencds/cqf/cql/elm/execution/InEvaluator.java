@@ -1,7 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
+import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Time;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -29,7 +32,7 @@ If either argument is null, the result is null.
  */
 public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
-    public static Boolean in(Object left, Object right) {
+    public static Boolean in(Object left, Object right, String precision) {
 
         if (left == null) {
             return null;
@@ -77,6 +80,11 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
                 return null;
             }
 
+            else if (precision != null && rightStart instanceof BaseTemporal) {
+                return (Boolean) SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision)
+                        && (Boolean) SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
+            }
+
             return (GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart)
                     && LessOrEqualEvaluator.lessOrEqual(left, rightEnd));
         }
@@ -88,7 +96,8 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), in(left, right), left, right);
+        return context.logTrace(this.getClass(), in(left, right, precision), left, right);
     }
 }

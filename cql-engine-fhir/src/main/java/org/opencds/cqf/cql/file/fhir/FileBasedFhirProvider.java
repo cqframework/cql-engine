@@ -177,7 +177,7 @@ public class FileBasedFhirProvider extends BaseDataProviderStu3 {
                         dateInterval = new Interval(start, true, end, true);
                     }
 
-                    if (date != null && InEvaluator.in(date, expanded)) {
+                    if (date != null && InEvaluator.in(date, expanded, null)) {
                         results.add(res);
                     }
                     else if (dateInterval != null && (Boolean) IncludesEvaluator.includes(expanded, dateInterval)) {

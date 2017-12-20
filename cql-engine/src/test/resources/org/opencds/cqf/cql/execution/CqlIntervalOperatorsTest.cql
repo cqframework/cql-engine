@@ -142,6 +142,10 @@ define TimeInTrue: @T07:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
 define TimeInFalse: @T17:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
 define TimeInNull: null in Interval[@T05:59:59.999, @T10:59:59.999]
 
+define TestPeriod1: Interval[@2017-12-20T11:00:00, @2017-12-21T21:00:00]
+define TestPeriod2: Interval[@2017-12-20T10:30:00, @2017-12-20T12:00:00]
+define Issue32: TestPeriod2 starts 1 day or less on or after day of start of TestPeriod1
+
 //Includes
 define TestIncludesNull: IntegerIntervalTest includes null
 define IntegerIntervalIncludesTrue: IntegerIntervalTest includes IntegerIntervalTest4

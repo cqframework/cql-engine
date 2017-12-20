@@ -39,7 +39,7 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         else if (left instanceof Iterable) {
             Iterable<Object> list = (Iterable<Object>)left;
 
-            return InEvaluator.in(right, list);
+            return InEvaluator.in(right, list, null);
         }
 
         throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", left.getClass().getName()));

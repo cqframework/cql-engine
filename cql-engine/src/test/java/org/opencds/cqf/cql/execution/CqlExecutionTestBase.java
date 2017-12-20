@@ -58,8 +58,10 @@ public abstract class CqlExecutionTestBase<T> {
                 xmlFile = new File(cqlFile.getParent(), fileName + ".xml");
                 xmlFile.createNewFile();
 
+                String xml = translator.toXml();
+
                 PrintWriter pw = new PrintWriter(xmlFile, "UTF-8");
-                pw.println(translator.toXml());
+                pw.println(xml);
                 pw.println();
                 pw.close();
             } catch (IOException e) {

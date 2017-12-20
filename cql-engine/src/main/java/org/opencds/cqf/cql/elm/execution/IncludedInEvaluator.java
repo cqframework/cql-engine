@@ -47,7 +47,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
 
         else if (left instanceof Iterable) {
             for (Object element : (Iterable)left) {
-                Object in = InEvaluator.in(element, (Iterable)right);
+                Object in = InEvaluator.in(element, (Iterable)right, null);
 
                 if (in == null) continue;
 
