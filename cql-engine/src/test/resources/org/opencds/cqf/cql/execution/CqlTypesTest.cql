@@ -48,6 +48,16 @@ define DecimalPi: 3.14159265
 define IntegerLowerBoundExcept: -2147483649*/
 define IntegerProper: 5000
 
+// Interval
+define TestDateTime1: @2017-12-20T11:00:00
+define function ToDate(Value DateTime):
+  DateTime(year from Value, month from Value, day from Value, 0, 0, 0, 0, timezone from Value)
+
+define function CalendarDayOf(Value DateTime):
+  Interval[Value, ToDate((Value + 1 day)))
+
+define Issue33: CalendarDayOf(TestDateTime1)
+
 //Quantity
 define QuantityTest: 150.2 'lbs'
 define QuantityTest2: 2.5589 'eskimo kisses'

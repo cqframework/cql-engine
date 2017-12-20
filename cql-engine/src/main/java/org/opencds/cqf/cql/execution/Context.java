@@ -212,9 +212,9 @@ public class Context {
     }
 
     public Object resolveIdentifierRef(String name) {
-        for (Stack<Variable> stack : windows) {
-            for (Variable var : stack) {
-                Object value = var.getValue();
+        for (int i = windows.size() - 1; i >= 0; i--) {
+            for (int j = windows.get(i).size() - 1; j >= 0; j--) {
+                Object value = windows.get(i).get(j).getValue();
                 if (value instanceof org.opencds.cqf.cql.runtime.Tuple) {
                     for (String key : ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().keySet()) {
                         if (key.equals(name)) {
@@ -229,6 +229,23 @@ public class Context {
                 }
             }
         }
+//        for (Stack<Variable> stack : windows) {
+//            for (Variable var : stack) {
+//                Object value = var.getValue();
+//                if (value instanceof org.opencds.cqf.cql.runtime.Tuple) {
+//                    for (String key : ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().keySet()) {
+//                        if (key.equals(name)) {
+//                            return ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().get(key);
+//                        }
+//                    }
+//                }
+//                try {
+//                    return resolvePath(value, name);
+//                } catch (Exception ignored) {
+//
+//                }
+//            }
+//        }
 
         throw new IllegalArgumentException("Cannot resolve identifier " + name);
     }
@@ -496,13 +513,20 @@ public class Context {
     }
 
     public Variable resolveVariable(String name) {
-        for (Stack<Variable> stack : windows) {
-            for (Variable v : stack) {
-                if (v.getName().equals(name)) {
-                    return v;
+        for (int i = windows.size() - 1; i >= 0; i--) {
+            for (int j = windows.get(i).size() - 1; j >= 0; j--) {
+                if (windows.get(i).get(j).getName().equals(name)) {
+                    return windows.get(i).get(j);
                 }
             }
         }
+//        for (Stack<Variable> stack : windows) {
+//            for (Variable v : stack) {
+//                if (v.getName().equals(name)) {
+//                    return v;
+//                }
+//            }
+//        }
 
         return null;
     }
