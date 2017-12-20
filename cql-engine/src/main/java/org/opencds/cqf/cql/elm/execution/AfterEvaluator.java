@@ -60,7 +60,7 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
             BaseTemporal rightTemporal = (BaseTemporal) right;
 
             if (precision == null) {
-                throw new IllegalArgumentException("Precision must be specified.");
+                precision = "millisecond";
             }
 
             int idx = DateTime.getFieldIndex(precision);

@@ -77,7 +77,7 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
         }
 
         if (precision == null) {
-            throw new IllegalArgumentException("Precision must be specified.");
+            precision = "millisecond";
         }
 
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {

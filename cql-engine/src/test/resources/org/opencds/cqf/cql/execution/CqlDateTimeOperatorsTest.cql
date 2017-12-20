@@ -257,6 +257,7 @@ define TimeSameOrAfterSecondFalse: @T23:55:25.555 same second or after @T23:55:3
 define TimeSameOrAfterMillisTrue1: @T23:25:25.555 same millisecond or after @T23:25:25.555
 define TimeSameOrAfterMillisTrue2: @T23:25:25.555 same millisecond or after @T22:25:25.550
 define TimeSameOrAfterMillisFalse: @T23:55:25.555 same millisecond or after @T23:55:25.900
+define OnOrAfterTrue: @2017-12-20T11:00:00.000 on or after @2017-12-20T11:00:00.000
 
 //SameOrBefore
 define DateTimeSameOrBeforeYearTrue1: DateTime(2014) same year or before DateTime(2014)

@@ -739,6 +739,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeSameOrAfterMillisFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("OnOrAfterTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**

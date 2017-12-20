@@ -58,7 +58,7 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
             BaseTemporal rightTemporal = (BaseTemporal) right;
 
             if (precision == null) {
-                throw new IllegalArgumentException("Precision must be specified.");
+                precision = "millisecond";
             }
 
             int idx = DateTime.getFieldIndex(precision);
