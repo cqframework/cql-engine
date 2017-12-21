@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.Instant;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -91,16 +92,21 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
                     return null;
                 }
 
+                Instant leftInstant = leftTemporal.getJodaDateTime().toInstant();
+                Instant rightInstant = rightTemporal.getJodaDateTime().toInstant();
+
                 for (int i = 0; i < idx + 1; ++i) {
-                    if (leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i))
-                            > rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i)))
+                    if (leftInstant.get(DateTime.getField(i)) < rightInstant.get(DateTime.getField(i)))
+                    {
+                        return true;
+                    }
+                    else if (leftInstant.get(DateTime.getField(i)) > rightInstant.get(DateTime.getField(i)))
                     {
                         return false;
                     }
                 }
 
-                return leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx))
-                        <= rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx));
+                return leftInstant.get(DateTime.getField(idx)) <= rightInstant.get(DateTime.getField(idx));
             }
 
             else {

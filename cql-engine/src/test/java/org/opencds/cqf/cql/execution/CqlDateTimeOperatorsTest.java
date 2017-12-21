@@ -747,6 +747,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("OnOrAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("Issue32").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**
