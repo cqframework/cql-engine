@@ -21,6 +21,6 @@ public class NowEvaluator extends org.cqframework.cql.elm.execution.Now {
 
     @Override
     public Object evaluate(Context context) {
-        return context.logTrace(this.getClass(), DateTime.getNow());
+        return context.logTrace(this.getClass(), context.getEvaluationDateTime());
     }
 }

@@ -115,19 +115,6 @@ public class DateTime extends BaseTemporal {
         return new DateTime(new Partial(fields, values), dt.getZone());
     }
 
-    public static DateTime getToday() {
-        org.joda.time.DateTime dt = org.joda.time.DateTime.now().withZone(DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset()));
-        int [] values = { dt.year().get(), dt.monthOfYear().get(), dt.dayOfMonth().get(), 0, 0, 0, 0 };
-        return new DateTime(new Partial(fields, values), dt.getZone());
-    }
-
-    public static DateTime getNow() {
-        org.joda.time.DateTime dt = org.joda.time.DateTime.now().withZone(DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset()));
-        int [] values = { dt.year().get(), dt.monthOfYear().get(), dt.dayOfMonth().get(), dt.hourOfDay().get(),
-                dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
-        return new DateTime(new Partial(fields, values), dt.getZone());
-    }
-
     public static DateTime expandPartialMin(DateTime dt, int size) {
         for (int i = dt.getPartial().size(); i < size; ++i) {
             dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));

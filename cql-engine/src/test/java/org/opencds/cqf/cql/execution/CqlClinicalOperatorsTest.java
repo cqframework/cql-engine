@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.DateFromEvaluator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.opencds.cqf.cql.elm.execution.CalculateAgeAtEvaluator;
@@ -37,28 +38,29 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testCalculateAge() throws JAXBException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Context context = new Context(library);
+        DateTime now = context.getEvaluationDateTime();
         // TODO: fix this -- translation error
         // Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
         // assertThat(result, is(16));
 
         Object result = context.resolveExpressionRef("CalculateAgeMonths").getExpression().evaluate(context);
-        assertThat(result, is((CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), DateTime.getToday(), "month"))));
+        assertThat(result, is((CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "month"))));
 
         result = context.resolveExpressionRef("CalculateAgeDays").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), DateTime.getToday(), "day")));
+        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "day")));
 
         result = context.resolveExpressionRef("CalculateAgeHours").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(4), new int[] {2000, 1, 1, 0})), DateTime.getToday(), "hour")));
+        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(4), new int[] {2000, 1, 1, 0})), now, "hour")));
 
         result = context.resolveExpressionRef("CalculateAgeMinutes").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(5), new int[] {2000, 1, 1, 0, 0})), DateTime.getToday(), "minute")));
+        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(5), new int[] {2000, 1, 1, 0, 0})), now, "minute")));
 
         result = context.resolveExpressionRef("CalculateAgeSeconds").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(6), new int[] {2000, 1, 1, 0, 0, 0})), DateTime.getToday(), "second")));
+        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(6), new int[] {2000, 1, 1, 0, 0, 0})), now, "second")));
 
         result = context.resolveExpressionRef("CalculateAgeUncertain").getExpression().evaluate(context);
-        Integer low = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(2), new int[] {2000, 12})), DateTime.getToday(), "month");
-        Integer high = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(2), new int[] {2000, 1})), DateTime.getToday(), "month");
+        Integer low = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(2), new int[] {2000, 12})), now, "month");
+        Integer high = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(2), new int[] {2000, 1})), now, "month");
         Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(low, true, high, true)));
     }
 

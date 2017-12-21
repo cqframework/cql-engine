@@ -192,6 +192,7 @@ define DurationInMinutesAA: minutes between DateTimeCC and DateTimeDD // Should 
 define DurationInDaysAA: days between DateTimeEE and DateTimeFF // Should be 1
 //Now
 define DateTimeNow: Now() = Now()
+define Issue34A: Now()
 
 //SameAs
 define DateTimeSameAsYearTrue: DateTime(2014) same year as DateTime(2014)
@@ -332,3 +333,4 @@ define DateTimeSameOrBeforeTodayTrue1: Today() same day or before Today()
 define DateTimeSameOrBeforeTodayTrue2: Today() same day or before Today() + 1 days
 define DateTimeSameOrBeforeTodayFalse: Today() + 1 years same day or before Today()
 define DateTimeAddTodayTrue: Today() + 1 days > Today()
+define Issue34B: Today()

@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;

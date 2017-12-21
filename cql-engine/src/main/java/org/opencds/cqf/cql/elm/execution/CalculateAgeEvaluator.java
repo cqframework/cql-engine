@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.DateFrom;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 
@@ -26,12 +27,12 @@ The CalculateAge operators are defined in terms of a DateTime duration calculati
  */
 public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.CalculateAge {
 
-    public static Object calculateAge(Object operand, String precision) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public static Object calculateAge(Object operand, String precision, DateTime today) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         if (operand == null) {
             return null;
         }
 
-        return CalculateAgeAtEvaluator.calculateAgeAt(operand, DateTime.getToday(), precision);
+        return CalculateAgeAtEvaluator.calculateAgeAt(operand, today, precision);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.Cal
         String precision = getPrecision().value();
 
         try {
-            return context.logTrace(this.getClass(), calculateAge(operand, precision), operand);
+            return context.logTrace(this.getClass(), calculateAge(operand, precision, context.getEvaluationDateTime()), operand);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());

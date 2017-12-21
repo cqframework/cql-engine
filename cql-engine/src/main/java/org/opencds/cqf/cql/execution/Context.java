@@ -35,13 +35,25 @@ public class Context {
     private TraceExecution trace = new TraceExecution();
     private boolean enableTraceLogging = false;
 
+    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime =
+            org.opencds.cqf.cql.runtime.DateTime.fromJavaDate(new Date(System.currentTimeMillis()));
+
     public Context(Library library) {
+        init(library);
+    }
+
+    public Context(Library library, org.opencds.cqf.cql.runtime.DateTime evaluationDateTime) {
+        this.evaluationDateTime = evaluationDateTime;
+        init(library);
+    }
+
+    private void init(Library library) {
         this.library = library;
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", new SystemDataProvider());
         libraryLoader = new DefaultLibraryLoader();
-		if (library.getIdentifier() != null)
-			libraries.put(library.getIdentifier().getId(), library);
+        if (library.getIdentifier() != null)
+            libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
     }
 
@@ -89,6 +101,10 @@ public class Context {
     public Context setEnableTraceLogging(boolean enableTraceLogging) {
         this.enableTraceLogging = enableTraceLogging;
         return this;
+    }
+
+    public org.opencds.cqf.cql.runtime.DateTime getEvaluationDateTime() {
+        return this.evaluationDateTime;
     }
 
     public void setExpressionCaching(boolean yayOrNay) {

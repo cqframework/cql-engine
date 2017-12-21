@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -538,9 +539,13 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testNow() throws JAXBException {
         Context context = new Context(library);
 
-        // TODO: the result is inconsistent -- sometimes true, sometimes not -- fix evaluator
-        // Object result = context.resolveExpressionRef("DateTimeNow").getExpression().evaluate(context);
-        // assertThat(result, is(true));
+        Object result = context.resolveExpressionRef("DateTimeNow").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999}), DateTimeZone.forOffsetHours(-7)));
+        result = context.resolveExpressionRef("Issue34A").getExpression().evaluate(context);
+        assertThat(((DateTime) result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999})));
+        assertThat(((DateTime) result).getTimezoneOffset(), is(new BigDecimal("-7.00")));
     }
 
     /**
@@ -975,6 +980,11 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("DateTimeAddTodayTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999}), DateTimeZone.forOffsetHours(-7)));
+        result = context.resolveExpressionRef("Issue34B").getExpression().evaluate(context);
+        assertThat(((DateTime) result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 6, 10})));
+        assertThat(((DateTime) result).getTimezoneOffset(), is(new BigDecimal("-7.00")));
     }
 
 }
