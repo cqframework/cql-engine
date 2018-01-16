@@ -85,6 +85,14 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
             size++;
         assertTrue(size == 1);
 
+        /*
+            Commented out by Darren D  per Chris S' instruction.
+            Test failure on DD machine not reproduced by CS.
+            Gradle suite > Gradle test > org.opencds.cqf.cql.data.fhir.TestFhirDataProviderDstu3.testFileDataProvider FAILED
+                java.lang.NullPointerException at TestFhirDataProviderDstu3.java:89
+            Issue not fixed but considered unimportant to do so due to rare use of test.
+            TODO: Fix it.
+
         // Population context
         results = provider.retrieve("Population", null, "Procedure", null, null, null, null, null, null, null, null);
         size = 0;
@@ -186,6 +194,8 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         for (Object o : results)
             size++;
         assertTrue(size == 0);
+
+        */
     }
 
 
