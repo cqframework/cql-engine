@@ -24,8 +24,10 @@ public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFro
         }
 
         if (operand instanceof DateTime) {
-            LocalDate date = new LocalDate(((DateTime)operand).getPartial());
-            return new DateTime(new Partial(date));
+            int year = ((DateTime)operand).getJodaDateTime().getYear();
+            int month = ((DateTime)operand).getJodaDateTime().getMonthOfYear();
+            int day = ((DateTime)operand).getJodaDateTime().getDayOfMonth();
+            return new DateTime(new Partial(DateTime.getFields(3), new int[]{year, month, day}), ((DateTime)operand).getTimezone());
         }
 
         throw new IllegalArgumentException(String.format("Cannot DateFrom arguments of type '%s'.", operand.getClass().getName()));
