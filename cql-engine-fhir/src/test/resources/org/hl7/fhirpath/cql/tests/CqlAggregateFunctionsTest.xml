@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
+	<group name="Avg">
+		<test name="AvgTest1">
+			<expression>Avg({ 1.0, 2.0, 3.0, 6.0 })</expression>
+			<output>3.0</output>
+		</test>
+	</group>
+	<group name="Count">
+		<test name="CountTest1">
+			<expression>Count({ 15, 5, 99, null, 1 })</expression>
+			<output>4</output>
+		</test>
+		<test name="CountTestDateTime">
+			<expression>Count({ DateTime(2014), DateTime(2001), DateTime(2010) })</expression>
+			<output>3</output>
+		</test>
+	</group>
+</tests>

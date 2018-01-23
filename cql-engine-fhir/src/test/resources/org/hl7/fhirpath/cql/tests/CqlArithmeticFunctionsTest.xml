@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
+	<group name="Abs">
+		<test name="AbsNull">
+			<expression>Abs(null as Integer)</expression>
+			<output>null</output>
+		</test>
+		<test name="Abs0">
+			<expression>Abs(0)</expression>
+			<output>0</output>
+		</test>
+	</group>
+	<group name="Add">
+		<test name="Add11">
+			<expression>1 + 1</expression>
+			<output>2</output>
+		</test>
+		<test name="Add1D1D">
+			<expression>1.0 + 1.0</expression>
+			<output>2.0</output>
+		</test>
+	</group>
+	<group name="Ln">
+		<test name="LnNull">
+			<expression>Ln(null)</expression>
+			<output>null</output>
+		</test>
+		<test name="Ln0">
+			<expression invalid="true">Ln(0)</expression>
+		</test>
+	</group>
+</tests>
