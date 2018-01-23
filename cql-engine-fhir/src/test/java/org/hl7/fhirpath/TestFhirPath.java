@@ -1,5 +1,15 @@
 package org.hl7.fhirpath;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.*;
+
+import javax.xml.bind.JAXB;
+import javax.xml.bind.JAXBException;
+
 import ca.uhn.fhir.context.FhirContext;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
@@ -23,14 +33,6 @@ import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBException;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringReader;
-import java.util.*;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -41,13 +43,19 @@ public class TestFhirPath {
 
     private FhirContext fhirContext = FhirContext.forDstu3();
 
-    private Tests loadTests() {
-        return JAXB.unmarshal(TestFhirPath.class.getResourceAsStream("stu3/tests-fhir-r3.xml"), Tests.class);
+    private Tests loadTestsFile(String testsFilePath) {
+        try {
+            InputStream testsFileRaw = TestFhirPath.class.getResourceAsStream(testsFilePath);
+            return JAXB.unmarshal(testsFileRaw, Tests.class);
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("Couldn't load tests file ["+testsFilePath+"]: " + e.toString());
+        }
     }
 
-    private Resource loadResource(String resourcePath) {
+    private Resource loadResourceFile(String resourceFilePath) {
         return (Resource)fhirContext.newXmlParser().parseResource(
-                new InputStreamReader(TestFhirPath.class.getResourceAsStream("stu3/input/" + resourcePath)));
+            new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
     }
 
     private Iterable<Object> loadExpectedResults(org.hl7.fhirpath.tests.Test test) {
@@ -168,8 +176,9 @@ public class TestFhirPath {
         return EqualEvaluator.equal(expectedResult, actualResult);
     }
 
-    private void runTest(org.hl7.fhirpath.tests.Test test) {
-        Resource resource = loadResource(test.getInputfile());
+    private void runStu3Test(org.hl7.fhirpath.tests.Test test) {
+        String resourceFilePath = "stu3/input/" + test.getInputfile();
+        Resource resource = loadResourceFile(resourceFilePath);
         String cql = String.format("library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
 
@@ -240,7 +249,9 @@ public class TestFhirPath {
         // create a CQL library with the expression
         // evaluate the expression
         // validate that the result is equal to the output elements of the test
-        Tests tests = loadTests();
+        String testsFilePath = "stu3/tests-fhir-r3.xml";
+        System.out.println(String.format("Running test file %s...", testsFilePath));
+        Tests tests = loadTestsFile(testsFilePath);
         int testCounter = 0;
         int passCounter = 0;
         for (Group group : tests.getGroup()) {
@@ -248,18 +259,18 @@ public class TestFhirPath {
             for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
                 testCounter += 1;
                 try {
-                    System.out.println(String.format("Running test %s...", test.getName()));
-                    runTest(test);
+                    //System.out.println(String.format("Running test %s...", test.getName()));
+                    runStu3Test(test);
                     passCounter += 1;
                     System.out.println(String.format("Test %s passed.", test.getName()));
                 }
                 catch (Exception e) {
-                    System.out.println(String.format("Test %s failed with exception: %s", test.getName(), e.getMessage()));
+                    System.out.println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
                 }
             }
-            System.out.println(String.format("Finished test group %s.", group.getName()));
+            //System.out.println(String.format("Finished test group %s.", group.getName()));
         }
-        System.out.println(String.format("Passed %s of %s tests.", passCounter, testCounter));
+        System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
     }
 
     private String getStringFromResourceStream(String resourceName) {
