@@ -17,8 +17,8 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
             severity = "message";
         }
 
-        StringBuilder messageBuilder = new StringBuilder();
         if (condition) {
+            StringBuilder messageBuilder = new StringBuilder();
             if (code != null) {
                 messageBuilder.append(code).append(": ");
             }
@@ -36,7 +36,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
                     throw new RuntimeException(messageBuilder.toString());
             }
         }
-        return messageBuilder.toString();
+        return source;
     }
 
     private static Object stripPHI(Object source) {
