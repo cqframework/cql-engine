@@ -106,10 +106,20 @@
 		<test name="Divide1Q1">
 			<expression>1'g/cm3' / 1.0</expression>
 			<output>1.0'g/cm3'</output>
+			<!-- See HL7 STU comment #1443. -->
+			<!-- CQL should support implicit conversion of an Integer or
+			Decimal value to a Quantity, with the default UCUM unit of (`1`). -->
 		</test>
 		<test name="Divide1Q1Q">
 			<expression>1'g/cm3' / 1'g/cm3'</expression>
-			<output>1.0''</output>
+			<output>1.0'1'</output>
+			<!-- See http://unitsofmeasure.org/ucum.html#section-Semantics
+			particularly "the neutral element 1 (so called the unity)". -->
+			<!-- See HL7 STU comment #1442. -->
+			<!-- When dividing quantities with like units, the specification
+			should state clearly that the expected UCUM unit would be the
+			default unit (`1`). -->
+			<!-- See https://github.com/cqframework/clinical_quality_language/issues/193 -->
 			<!-- TODO: make Translator recognize unit changes on Divide() -->
 		</test>
 		<test name="Divide10I5D">
