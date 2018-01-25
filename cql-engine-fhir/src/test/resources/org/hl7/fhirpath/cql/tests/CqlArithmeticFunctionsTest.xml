@@ -109,7 +109,7 @@
 		</test>
 		<test name="Divide1Q1Q">
 			<expression>1'g/cm3' / 1'g/cm3'</expression>
-			<output>1.0</output>
+			<output>1.0''</output>
 			<!-- TODO: make Translator recognize unit changes on Divide() -->
 		</test>
 		<test name="Divide10I5D">
