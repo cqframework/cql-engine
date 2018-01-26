@@ -194,7 +194,7 @@ public class TestFhirPath {
         return EqualEvaluator.equal(expectedResult, actualResult);
     }
 
-    private void runCqlTest(org.hl7.fhirpath.tests.Test test) {
+    private void runIsolatedCqlExprTest(org.hl7.fhirpath.tests.Test test) {
         Expression testQ = test.getExpression();
         if (testQ == null) {
             throw new RuntimeException("Test has no question (expression).");
@@ -263,9 +263,9 @@ public class TestFhirPath {
     }
 
     @Test
-    public void testCqlEngine() {
-        // Load Test cases from org/hl7/fhirpath/cql/tests/*.xml
-        String testsDirPath = "cql/tests";
+    public void testIsolatedCqlExprs() {
+        // Load Test cases from org/hl7/fhirpath/TestIsolatedCqlExprs/tests/*.xml
+        String testsDirPath = "TestIsolatedCqlExprs/tests";
         Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
         for (Object testsFileName : testsFileNames) {
             String testsFilePath = testsDirPath + "/" + testsFileName;
@@ -279,7 +279,7 @@ public class TestFhirPath {
                     testCounter += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
-                        runCqlTest(test);
+                        runIsolatedCqlExprTest(test);
                         passCounter += 1;
                         System.out.println(String.format("Test %s passed.", test.getName()));
                     }
