@@ -600,11 +600,11 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeSameAsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("SameAsTimezoneFalse").getExpression().evaluate(context);
-        assertThat(result, is(false));
-
         result = context.resolveExpressionRef("SameAsTimezoneTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("SameAsTimezoneFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("TimeSameAsHourTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
