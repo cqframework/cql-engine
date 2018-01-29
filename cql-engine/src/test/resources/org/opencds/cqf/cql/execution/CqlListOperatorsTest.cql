@@ -29,7 +29,7 @@ define DistinctEmptyList: distinct {}
 define DistinctNullNullNull: distinct { null, null, null}
 define DistinctANullANull: distinct { 'a', null, 'a', null}
 define Distinct112233: distinct { 1, 1, 2, 2, 3, 3}
-define Distinct123123: distinct { 1, 1, 2, 2, 3, 3}
+define Distinct123123: distinct { 1, 2, 3, 1, 2, 3}
 define DistinctAABBCC: distinct { 'a', 'a', 'b', 'b', 'c', 'c'}
 define DistinctABCABC: distinct { 'a', 'b', 'c', 'a', 'b', 'c'}
 define DistinctDateTime: distinct { DateTime(2012, 10, 5), DateTime(2012, 1, 1), DateTime(2012, 1, 1)}

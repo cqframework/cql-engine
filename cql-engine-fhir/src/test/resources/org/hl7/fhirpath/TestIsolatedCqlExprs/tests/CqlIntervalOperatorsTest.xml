@@ -1311,9 +1311,8 @@
 			<output>9</output>
 		</test>
 		<test name="IntervalTestWidthNull">
-			<expression>width of null</expression>
+			<expression>width of (null as Interval&lt;Any&gt;)</expression>
 			<output>null</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Width with signature (System.Any). -->
 		</test>
 		<test name="DecimalIntervalTestWidth11">
 			<expression>width of Interval[4.0, 15.0]</expression>
