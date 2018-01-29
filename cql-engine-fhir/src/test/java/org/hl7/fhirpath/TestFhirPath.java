@@ -1,14 +1,11 @@
 package org.hl7.fhirpath;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.io.StringReader;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
@@ -22,9 +19,7 @@ import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Enumeration;
-import org.hl7.fhirpath.tests.Expression;
 import org.hl7.fhirpath.tests.Group;
-import org.hl7.fhirpath.tests.Output;
 import org.hl7.fhirpath.tests.Tests;
 import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderDstu2;
@@ -61,19 +56,6 @@ public class TestFhirPath {
     private Resource loadResourceFile(String resourceFilePath) {
         return (Resource)fhirContext.newXmlParser().parseResource(
             new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
-    }
-
-    private Object[] loadResourceDirFileNameList(String resourceDirPath) {
-        /* TODO: Should return String[] but how to do the cast that doesn't die at runtime. */
-        ByteArrayInputStream fileNamesRaw
-            = (ByteArrayInputStream)TestFhirPath.class.getResourceAsStream(resourceDirPath);
-        if (fileNamesRaw == null) {
-            // The directory is empty / contains no files.
-            return new Object[] {};
-        }
-        Stream<String> fileNames = (Stream<String>)new BufferedReader(
-            new InputStreamReader(fileNamesRaw, StandardCharsets.UTF_8)).lines();
-        return fileNames.toArray();
     }
 
     private Iterable<Object> loadExpectedResults(org.hl7.fhirpath.tests.Test test) {
@@ -192,105 +174,6 @@ public class TestFhirPath {
                     .withVersion(coding.getVersion());
         }
         return EqualEvaluator.equal(expectedResult, actualResult);
-    }
-
-    private void runIsolatedCqlExprTest(org.hl7.fhirpath.tests.Test test) {
-        Expression testQ = test.getExpression();
-        if (testQ == null) {
-            throw new RuntimeException("Test has no question (expression).");
-        }
-        String cqlExprQ = testQ.getValue();
-        if (cqlExprQ == null || cqlExprQ.equals("")) {
-            throw new RuntimeException("Test has no question (expression).");
-        }
-
-        Boolean expectInvalid = testQ.isInvalid() != null && testQ.isInvalid();
-
-        try {
-            // If the test expression is invalid, expect an error during
-            // translation or evaluation and fail if we don't get one;
-            // otherwise fail if we do get one.
-            String cqlLibQ = "library TestQ define Q: " + cqlExprQ;
-            Library libraryQ = translate(cqlLibQ);
-            Context contextQ = new Context(libraryQ);
-            contextQ.resolveExpressionRef("Q").getExpression().evaluate(contextQ);
-        }
-        catch (Exception e) {
-            if (expectInvalid) {
-                return;
-            }
-            else {
-                throw new RuntimeException("Unexpected exception thrown for test question: " + e.toString());
-            }
-        }
-        if (expectInvalid) {
-            throw new RuntimeException("Expected exception not thrown for test question.");
-        }
-
-        List<Output> testA = test.getOutput();
-        if (testA.size() != 1) {
-            throw new RuntimeException("Test has not exactly one answer (output).");
-        }
-        String cqlExprA = testA.get(0).getValue();
-        if (cqlExprA == null || cqlExprA.equals("")) {
-            throw new RuntimeException("Test has not exactly one answer (output).");
-        }
-
-        try {
-            String cqlLibA = "library TestA define A: " + cqlExprA;
-            Library libraryA = translate(cqlLibA);
-            Context contextA = new Context(libraryA);
-            contextA.resolveExpressionRef("A").getExpression().evaluate(contextA);
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Unexpected exception thrown for test answer: " + e.toString());
-        }
-
-        Object result;
-        try {
-            String cqlLibE = "library TestE define E: Equivalent(("+cqlExprQ+"),("+cqlExprA+"))";
-            Library libraryE = translate(cqlLibE);
-            Context contextE = new Context(libraryE);
-            result = contextE.resolveExpressionRef("E").getExpression().evaluate(contextE);
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Unexpected exception thrown for test comparison: " + e.toString());
-        }
-
-        if ((Boolean)result != true) {
-            throw new RuntimeException("Actual test answer is not equivalent to expected test answer.");
-        }
-    }
-
-    @Test
-    public void testIsolatedCqlExprs() {
-        // Load Test cases from org/hl7/fhirpath/TestIsolatedCqlExprs/tests/*.xml
-        String testsDirPath = "TestIsolatedCqlExprs/tests";
-        Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
-        for (Object testsFileName : testsFileNames) {
-            String testsFilePath = testsDirPath + "/" + testsFileName;
-            System.out.println(String.format("Running test file %s...", testsFilePath));
-            Tests tests = loadTestsFile(testsFilePath);
-            int testCounter = 0;
-            int passCounter = 0;
-            for (Group group : tests.getGroup()) {
-                System.out.println(String.format("Running test group %s...", group.getName()));
-                for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
-                    testCounter += 1;
-                    try {
-                        //System.out.println(String.format("Running test %s...", test.getName()));
-                        runIsolatedCqlExprTest(test);
-                        passCounter += 1;
-                        System.out.println(String.format("Test %s passed.", test.getName()));
-                    }
-                    catch (Exception e) {
-                        System.out.println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
-                    }
-                }
-                //System.out.println(String.format("Finished test group %s.", group.getName()));
-            }
-            System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
-        }
     }
 
     private void runStu3Test(org.hl7.fhirpath.tests.Test test) {
