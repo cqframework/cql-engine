@@ -369,7 +369,7 @@
 		</test>
 		<test name="DateTimeComponentFromTimezone">
 			<expression>timezone from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)</expression>
-			<output>1</output>
+			<output>1.00</output>
 		</test>
 		<test name="DateTimeComponentFromDate">
 			<expression>date from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)</expression>
@@ -686,6 +686,10 @@
 		<test name="DateTimeNow">
 			<expression>Now() = Now()</expression>
 			<output>true</output>
+		</test>
+		<test name="Issue34A">
+			<expression>Now()</expression>
+			<output>Now()</output>
 		</test>
 	</group>
 	<group name="SameAs">
