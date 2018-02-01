@@ -6,7 +6,7 @@
 //
 
 
-package org.hl7.fhirpath.tests;
+package org.opencds.cqf.cql.execution.tests;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;

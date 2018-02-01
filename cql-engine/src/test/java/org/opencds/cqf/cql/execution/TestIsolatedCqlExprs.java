@@ -1,4 +1,4 @@
-package org.hl7.fhirpath;
+package org.opencds.cqf.cql.execution;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -19,12 +19,10 @@ import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
-import org.hl7.fhirpath.tests.Expression;
-import org.hl7.fhirpath.tests.Group;
-import org.hl7.fhirpath.tests.Output;
-import org.hl7.fhirpath.tests.Tests;
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.execution.CqlLibraryReader;
+import org.opencds.cqf.cql.execution.tests.Expression;
+import org.opencds.cqf.cql.execution.tests.Group;
+import org.opencds.cqf.cql.execution.tests.Output;
+import org.opencds.cqf.cql.execution.tests.Tests;
 import org.testng.annotations.Test;
 
 /**
@@ -68,8 +66,6 @@ public class TestIsolatedCqlExprs {
     private LibraryManager getLibraryManager() {
         if (libraryManager == null) {
             libraryManager = new LibraryManager(getModelManager());
-            libraryManager.getLibrarySourceLoader().clearProviders();
-            libraryManager.getLibrarySourceLoader().registerProvider(new TestLibrarySourceProvider());
         }
         return libraryManager;
     }
@@ -101,7 +97,7 @@ public class TestIsolatedCqlExprs {
         return library;
     }
 
-    private void runIsolatedCqlExprTest(org.hl7.fhirpath.tests.Test test) {
+    private void runIsolatedCqlExprTest(org.opencds.cqf.cql.execution.tests.Test test) {
         Expression testQ = test.getExpression();
         if (testQ == null) {
             throw new RuntimeException("Test has no question (expression).");
@@ -182,7 +178,7 @@ public class TestIsolatedCqlExprs {
             int passCounter = 0;
             for (Group group : tests.getGroup()) {
                 System.out.println(String.format("Running test group %s...", group.getName()));
-                for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
+                for (org.opencds.cqf.cql.execution.tests.Test test : group.getTest()) {
                     testCounter += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
