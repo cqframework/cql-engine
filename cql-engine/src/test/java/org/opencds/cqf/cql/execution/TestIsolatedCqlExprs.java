@@ -5,20 +5,15 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.tracking.TrackBack;
 import org.opencds.cqf.cql.execution.tests.Expression;
 import org.opencds.cqf.cql.execution.tests.Group;
 import org.opencds.cqf.cql.execution.tests.Output;
@@ -53,41 +48,19 @@ public class TestIsolatedCqlExprs {
         return fileNames.toArray();
     }
 
-    private ModelManager modelManager;
-    private ModelManager getModelManager() {
-        if (modelManager == null) {
-            modelManager = new ModelManager();
-        }
-
-        return modelManager;
-    }
-
-    private LibraryManager libraryManager;
-    private LibraryManager getLibraryManager() {
-        if (libraryManager == null) {
-            libraryManager = new LibraryManager(getModelManager());
-        }
-        return libraryManager;
-    }
-
     private Library translate(String cql) {
-            ArrayList<CqlTranslator.Options> options = new ArrayList<>();
-            options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-            CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
-            if (translator.getErrors().size() > 0) {
-                ArrayList<String> errors = new ArrayList<>();
-                for (CqlTranslatorException error : translator.getErrors()) {
-                    TrackBack tb = error.getLocator();
-                    String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
-                            tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
-                    errors.add(lines + error.getMessage());
-                }
-                throw new IllegalArgumentException(errors.toString());
-            }
+        ArrayList<String> errors = new ArrayList<>();
+
+        String elm_xml = CqlToElmLib.maybe_cql_to_elm_xml(cql, errors);
+
+        if (elm_xml == null) {
+            throw new IllegalArgumentException(errors.toString());
+        }
 
         Library library = null;
         try {
-            library = CqlLibraryReader.read(new StringReader(translator.toXml()));
+            library = CqlLibraryReader.read(new ByteArrayInputStream(
+                elm_xml.getBytes(StandardCharsets.UTF_8)));
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JAXBException e) {
