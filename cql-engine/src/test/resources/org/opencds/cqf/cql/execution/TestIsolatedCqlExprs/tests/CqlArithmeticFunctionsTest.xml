@@ -489,6 +489,10 @@
 			<expression>2.0^4.0</expression>
 			<output>16.0</output>
 		</test>
+		<test name="Power2DToNeg2DEquivalence">
+			<expression>Power(2, -2) ~ 0.25</expression>
+		</test>
+		<output>true</output>
 	</group>
 	<group name="Round">
 		<test name="RoundNull">

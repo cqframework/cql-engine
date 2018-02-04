@@ -144,6 +144,7 @@ define Power2DTo2: Power(2.0, 2)
 define Power2To2D: Power(2, 2.0)
 define Power2To4: 2^4
 define Power2DTo4D: 2.0^4.0
+define Power2DToNeg2DEquivalence: Power(2, -2) ~ 0.25
 
 //Round
 define RoundNull: Round(null as Decimal)

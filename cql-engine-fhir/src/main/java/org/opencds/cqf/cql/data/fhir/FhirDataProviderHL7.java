@@ -161,10 +161,12 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
         DateTimeZone zone;
         if (value.getTimeZone() == null) {
             zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
+            value.setTimeZone(zone.toTimeZone());
         }
         else {
             zone = DateTimeZone.forTimeZone(value.getTimeZone());
         }
+
         switch (value.getPrecision()) {
             case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR)), zone);
             case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
