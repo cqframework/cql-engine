@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -143,6 +144,10 @@ public class TestIsolatedCqlExprs {
         // Load Test cases from org/hl7/fhirpath/TestIsolatedCqlExprs/tests/*.xml
         String testsDirPath = "TestIsolatedCqlExprs/tests";
         Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
+        Integer padWidth = Arrays.stream(testsFileNames)
+            .map(f -> ((String)f).length()).reduce(0, (x,y) -> x > y ? x : y);
+        ArrayList<String> fileResults = new ArrayList<>();
+        ArrayList<String> failedTests = new ArrayList<>();
         for (Object testsFileName : testsFileNames) {
             String testsFilePath = testsDirPath + "/" + testsFileName;
             System.out.println(String.format("Running test file %s...", testsFilePath));
@@ -160,12 +165,25 @@ public class TestIsolatedCqlExprs {
                         System.out.println(String.format("Test %s passed.", test.getName()));
                     }
                     catch (Exception e) {
+                        failedTests.add(testsFileName + " -> " + group.getName() + " -> " + test.getName());
                         System.out.println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
                     }
                 }
                 //System.out.println(String.format("Finished test group %s.", group.getName()));
             }
+            fileResults.add(String.format("%-"+padWidth.toString()+"s %3d/%3d", testsFileName, passCounter, testCounter));
             System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
         }
+        System.out.println("==================================================");
+        System.out.println("TestIsolatedCqlExprs Results Summary:");
+        System.out.println(" * Each file's passed/total test count:");
+        for (String fileResult : fileResults) {
+            System.out.println("   * " + fileResult);
+        }
+        System.out.println(" * List of failed tests:");
+        for (String failedTest : failedTests) {
+            System.out.println("   * " + failedTest);
+        }
+        System.out.println("==================================================");
     }
 }
