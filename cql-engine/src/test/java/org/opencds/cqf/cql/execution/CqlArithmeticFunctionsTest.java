@@ -492,6 +492,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("Power2DTo4D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("16.0")));
+
+        result = context.resolveExpressionRef("Power2DToNeg2DEquivalence").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**
