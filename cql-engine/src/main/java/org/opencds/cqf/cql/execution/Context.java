@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.execution;
 
 import org.cqframework.cql.elm.execution.*;
 import org.opencds.cqf.cql.data.DataProvider;
+import org.opencds.cqf.cql.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.data.SystemDataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
@@ -29,6 +30,7 @@ public class Context {
     private Stack<Library> currentLibrary = new Stack<>();
     private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
+    private ExternalFunctionProvider externalFunctionProvider;
 
     private Library library;
 
@@ -331,8 +333,8 @@ public class Context {
 
     // TODO: Could use some caching here, and potentially some better type resolution structures
     public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
-      String str = "";
-      String str2 = "";
+        String str = "";
+        String str2 = "";
         for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
             //str += expressionDef.getName() + " ";
             if (expressionDef instanceof FunctionDef) {
@@ -455,6 +457,14 @@ public class Context {
     public void registerDataProvider(String modelUri, DataProvider dataProvider) {
         dataProviders.put(modelUri, dataProvider);
         packageMap.put(dataProvider.getPackageName(), dataProvider);
+    }
+
+    public void registerExternalFunctionProvider(ExternalFunctionProvider provider) {
+        externalFunctionProvider = provider;
+    }
+
+    public ExternalFunctionProvider getExternalFunctionProvider() {
+        return externalFunctionProvider;
     }
 
     public DataProvider resolveDataProvider(QName dataType) {
