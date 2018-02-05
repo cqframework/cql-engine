@@ -58,6 +58,20 @@ define function CalendarDayOf(Value DateTime):
 
 define Issue33: CalendarDayOf(TestDateTime1)
 
+define x:
+    Interval[
+        @2017-12-20T11:00:00,
+        DateTime(
+            year from (@2017-12-20T11:00:00 + 1 day),
+            month from (@2017-12-20T11:00:00 + 1 day),
+            day from (@2017-12-20T11:00:00 + 1 day),
+            0, 0, 0, 0,
+            timezone from (@2017-12-20T11:00:00 + 1 day)
+        )
+    )
+define y: Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]
+define EquivalentIntervals: Equivalent(x,y)
+
 //Quantity
 define QuantityTest: 150.2 'lbs'
 define QuantityTest2: 2.5589 'eskimo kisses'

@@ -186,6 +186,21 @@
 			<!-- TODO: Fix Engine to make Equivalent() return true for the
 			above pair, which output identical looking values. -->
 		</test>
+		<test name="Issue39">
+			<expression>
+				Interval[
+					@2017-12-20T11:00:00,
+					DateTime(
+					year from (@2017-12-20T11:00:00 + 1 day),
+					month from (@2017-12-20T11:00:00 + 1 day),
+					day from (@2017-12-20T11:00:00 + 1 day),
+					0, 0, 0, 0,
+					timezone from (@2017-12-20T11:00:00 + 1 day)
+					)
+				) ~ Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]
+			</expression>
+			<output>true</output>
+		</test>
 	</group>
 	<group name="Quantity">
 		<test name="QuantityTest">

@@ -115,9 +115,9 @@ public class Interval {
     }
 
     public Boolean equal(Interval other) {
-        return this.getLow() != null && EqualEvaluator.equal(this.getLow(), other.getLow())
+        return this.getLow() != null && EqualEvaluator.equal(this.getStart(), other.getStart())
                 && this.getLowClosed() == other.getLowClosed()
-                && this.getHigh() != null && EqualEvaluator.equal(this.getHigh(), other.getHigh())
+                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
                 && this.getHighClosed() == other.getHighClosed();
     }
 

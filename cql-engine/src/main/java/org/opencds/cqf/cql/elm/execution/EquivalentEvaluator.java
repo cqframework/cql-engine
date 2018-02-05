@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.runtime.Tuple;
 
@@ -71,6 +72,14 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             }
 
             return true;
+        }
+
+        else if (left instanceof Interval) {
+            Object startEquivalence = equivalent(((Interval) left).getStart(), ((Interval) right).getStart());
+            Object endEquivalence = equivalent(((Interval) left).getEnd(), ((Interval) right).getEnd());
+            return (startEquivalence == null && endEquivalence == null)
+                    || (startEquivalence != null && endEquivalence != null
+                    && (Boolean) startEquivalence && (Boolean) endEquivalence);
         }
 
         else if (left instanceof Tuple) {
