@@ -162,29 +162,6 @@
 				)
 			</expression>
 			<output>Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]</output>
-			<!--
-				TODO: The original test was specifically about testing function
-				call stacks, which are currently not supported by this test framework.
-				This was the original holistic test CQL:
-					// Interval
-					define TestDateTime1: @2017-12-20T11:00:00
-					define function ToDate(Value DateTime):
-						DateTime(year from Value, month from Value, day from Value, 0, 0, 0, 0, timezone from Value)
-					define function CalendarDayOf(Value DateTime):
-						Interval[Value, ToDate((Value + 1 day)))
-					define Issue33: CalendarDayOf(TestDateTime1)
-				This was the corresponding Java:
-					public void testInterval() {
-						Context context = new Context(library);
-						Object result = context.resolveExpressionRef("Issue33").getExpression().evaluate(context);
-						assertThat(((DateTime)((Interval)result).getStart()).getPartial(),
-							is(new Partial(DateTime.getFields(6), new int[] {2017, 12, 20, 11, 0, 0})));
-						assertThat(((DateTime)((Interval)result).getEnd()).getPartial(),
-							is(new Partial(DateTime.getFields(7), new int[] {2017, 12, 20, 23, 59, 59, 999})));
-					}
-			-->
-			<!-- TODO: Fix Engine to make Equivalent() return true for the
-			above pair, which output identical looking values. -->
 		</test>
 		<test name="Issue39">
 			<expression>
