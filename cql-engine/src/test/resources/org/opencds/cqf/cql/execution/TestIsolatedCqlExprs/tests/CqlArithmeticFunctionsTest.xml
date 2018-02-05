@@ -459,7 +459,6 @@
 		<test name="Power2ToNeg2">
 			<expression>Power(2, -2)</expression>
 			<output>0.25</output>
-			<!-- TODO: fix Engine error: Cannot call ToDecimal operator with argument of type java.math.BigDecimal -->
 		</test>
 		<test name="Power2DTo2D">
 			<expression>Power(2.0, 2.0)</expression>
@@ -491,8 +490,8 @@
 		</test>
 		<test name="Power2DToNeg2DEquivalence">
 			<expression>Power(2, -2) ~ 0.25</expression>
+			<output>true</output>
 		</test>
-		<output>true</output>
 	</group>
 	<group name="Round">
 		<test name="RoundNull">
