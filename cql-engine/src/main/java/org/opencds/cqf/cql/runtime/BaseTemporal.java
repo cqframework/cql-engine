@@ -1,14 +1,11 @@
 package org.opencds.cqf.cql.runtime;
 
 import org.joda.time.*;
-import org.joda.time.chrono.ISOChronology;
-import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
-import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
-import org.opencds.cqf.cql.elm.execution.LessEvaluator;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.TimeZone;
 
 /**
@@ -116,10 +113,9 @@ public abstract class BaseTemporal {
     }
 
     public BigDecimal getTimezoneOffset() {
-        if (timezone.getID().equals("UTC")) {
-            return new BigDecimal("0.0");
-        }
-        String[] parts = timezone.getID().split(":");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("ZZ");
+        String dtz = dtf.withZone(timezone).print(0);
+        String[] parts = dtz.split(":");
         if (Integer.parseInt(parts[1]) == 0) {
             return new BigDecimal(parts[0] + "." + parts[1]);
         }
