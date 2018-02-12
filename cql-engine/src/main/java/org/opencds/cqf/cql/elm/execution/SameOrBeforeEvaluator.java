@@ -36,7 +36,7 @@ Note that this operator can be invoked using either the on or before or the befo
  */
 public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.SameOrBefore {
 
-    public static Object onOrBefore(Object left, Object right, String precision) {
+    public static Boolean onOrBefore(Object left, Object right, String precision) {
         // Interval, Interval
         if (left instanceof Interval && right instanceof Interval) {
             if (((Interval) left).getStart() instanceof DateTime
@@ -66,7 +66,7 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
         throw new IllegalArgumentException(String.format("Cannot perform OnOrBefore operator with arguments %s and %s", left.getClass().getName(), right.getClass().getName()));
     }
 
-    public static Object sameOrBefore(Object left, Object right, String precision) {
+    public static Boolean sameOrBefore(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }

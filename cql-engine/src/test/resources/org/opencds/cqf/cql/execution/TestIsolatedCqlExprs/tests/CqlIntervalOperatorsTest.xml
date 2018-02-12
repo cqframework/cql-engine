@@ -613,6 +613,18 @@
 			<expression>Interval[@T04:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]</expression>
 			<output>false</output>
 		</test>
+		<test name="DateTimeIncludedInNull">
+			<expression>Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]</expression>
+			<output>null</output>
+		</test>
+		<test name="DateTimeIncludedInPrecisionTrue">
+			<expression>Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in day of Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]</expression>
+			<output>true</output>
+		</test>
+		<test name="DateTimeIncludedInPrecisionTrue">
+			<expression>Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in millisecond of Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]</expression>
+			<output>null</output>
+		</test>
 	</group>
 	<group name="Intersect">
 		<test name="TestIntersectNull">

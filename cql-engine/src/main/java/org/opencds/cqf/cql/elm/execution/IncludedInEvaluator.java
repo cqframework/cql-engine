@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
+import java.util.Optional;
+
 /*
 *** NOTES FOR INTERVAL ***
 included in(left Interval<T>, right Interval<T>) Boolean
@@ -41,8 +43,10 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
                 return null;
             }
 
-            return (LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
-                    && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd));
+            Boolean includedInStart = LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart);
+            Boolean includedInEnd = GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd);
+
+            return includedInStart == null ? null : includedInEnd == null ? null : includedInStart && includedInEnd;
         }
 
         else if (left instanceof Iterable) {
@@ -79,10 +83,37 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         }
     }
 
+    public static Object includedIn(Object left, Object right, String precision) {
+        if (left instanceof Interval) {
+            Object leftStart = ((Interval)left).getStart();
+            Object leftEnd = ((Interval)left).getEnd();
+            Object rightStart = ((Interval)right).getStart();
+            Object rightEnd = ((Interval)right).getEnd();
+
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null)
+            {
+                return null;
+            }
+
+            Boolean includedInStart = SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision);
+            Boolean includedInEnd = SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision);
+
+            return includedInStart == null ? null : includedInEnd == null ? null : includedInStart && includedInEnd;
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    }
+
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() != null ? getPrecision().value() : null;
+
+        if (precision != null) {
+            return context.logTrace(this.getClass(), includedIn(left, right, precision), left, right, precision);
+        }
 
         return context.logTrace(this.getClass(), includedIn(left, right), left, right);
     }
