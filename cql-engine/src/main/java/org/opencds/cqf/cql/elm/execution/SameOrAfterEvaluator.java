@@ -37,7 +37,7 @@ Note that this operator can be invoked using either the on or after or the after
  */
 public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.SameOrAfter {
 
-    public static Object onOrAfter(Object left, Object right, String precision) {
+    public static Boolean onOrAfter(Object left, Object right, String precision) {
         // Interval, Interval
         if (left instanceof Interval && right instanceof Interval) {
             if (((Interval) left).getStart() instanceof DateTime
@@ -67,7 +67,7 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
         throw new IllegalArgumentException(String.format("Cannot perform OnOrAfter operator with arguments %s and %s", left.getClass().getName(), right.getClass().getName()));
     }
 
-    public static Object sameOrAfter(Object left, Object right, String precision) {
+    public static Boolean sameOrAfter(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }

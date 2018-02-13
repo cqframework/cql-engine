@@ -171,6 +171,12 @@ define DateTimeIncludedInTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 
 define DateTimeIncludedInFalse: Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
 define TimeIncludedInTrue: Interval[@T06:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]
 define TimeIncludedInFalse: Interval[@T04:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]
+define DateTimeIncludedInNull:
+    Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]
+define DateTimeIncludedInPrecisionTrue:
+    Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in day of Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]
+define DateTimeIncludedInPrecisionNull:
+    Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in millisecond of Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]
 
 //Intersect
 //define TestIntersectNull: IntegerIntervalTest intersect Interval[5, null)

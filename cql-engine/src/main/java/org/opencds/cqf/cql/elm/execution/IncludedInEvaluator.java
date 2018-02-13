@@ -41,8 +41,10 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
                 return null;
             }
 
-            return (LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
-                    && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd));
+            return AndEvaluator.and(
+                    GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart),
+                    LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)
+            );
         }
 
         else if (left instanceof Iterable) {
@@ -79,10 +81,37 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         }
     }
 
+    public static Object includedIn(Object left, Object right, String precision) {
+        if (left instanceof Interval) {
+            Object leftStart = ((Interval)left).getStart();
+            Object leftEnd = ((Interval)left).getEnd();
+            Object rightStart = ((Interval)right).getStart();
+            Object rightEnd = ((Interval)right).getEnd();
+
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null)
+            {
+                return null;
+            }
+
+            return AndEvaluator.and(
+                    SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
+                    SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
+            );
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    }
+
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() != null ? getPrecision().value() : null;
+
+        if (precision != null) {
+            return context.logTrace(this.getClass(), includedIn(left, right, precision), left, right, precision);
+        }
 
         return context.logTrace(this.getClass(), includedIn(left, right), left, right);
     }
