@@ -324,6 +324,22 @@ define DateTimeProperlyIncludesFalse: Interval[DateTime(2012, 1, 15), DateTime(2
 define TimeProperlyIncludesTrue: Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T21:59:59.998]
 define TimeProperlyIncludesFalse: Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T22:00:00.000]
 
+//ProperContains
+define TimeProperContainsTrue: Interval[@T12:00:00.000, @T21:59:59.999] properly includes @T12:00:00.001
+define TimeProperContainsFalse: Interval[@T12:00:00.000, @T21:59:59.999] properly includes @T12:00:00.000
+define TimeProperContainsNull: Interval[@T12:00:00.001, @T21:59:59.999] properly includes @T12:00:00
+define TimeProperContainsPrecisionTrue: Interval[@T12:00:00.000, @T21:59:59.999] properly includes second of @T12:00:01
+define TimeProperContainsPrecisionFalse: Interval[@T12:00:00.001, @T21:59:59.999] properly includes second of @T12:00:00
+define TimeProperContainsPrecisionNull: Interval[@T12:00:00.001, @T21:59:59.999] properly includes millisecond of @T12:00:00
+
+//ProperIn
+define TimeProperInTrue: @T12:00:00.001 properly included in Interval[@T12:00:00.000, @T21:59:59.999]
+define TimeProperInFalse: @T12:00:00.000 properly included in  Interval[@T12:00:00.000, @T21:59:59.999]
+define TimeProperInNull: @T12:00:00 properly included in Interval[@T12:00:00.001, @T21:59:59.999]
+define TimeProperInPrecisionTrue: @T12:00:01 properly included in second of Interval[@T12:00:00.000, @T21:59:59.999]
+define TimeProperInPrecisionFalse: @T12:00:00 properly included in second of Interval[@T12:00:00.001, @T21:59:59.999]
+define TimeProperInPrecisionNull: @T12:00:00 properly included in millisecond of Interval[@T12:00:00.001, @T21:59:59.999]
+
 //ProperlyIncludedIn
 define TestProperlyIncludedInNull: IntegerIntervalTest properly included in NullInterval
 define IntegerIntervalProperlyIncludedInTrue: IntegerIntervalTest4 properly included in IntegerIntervalTest

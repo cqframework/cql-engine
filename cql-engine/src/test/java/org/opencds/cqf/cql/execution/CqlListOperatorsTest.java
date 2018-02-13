@@ -649,10 +649,46 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ProperlyIncludesNullLeft").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
 
-        // TODO: fix test - going to ProperContains - not implemented
-//        result = context.resolveExpressionRef("ProperlyIncludesNulRight").getExpression().evaluate(context);
-//        assertThat(result, is(true));
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.ProperContainsEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testProperContains() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ProperContainsNullRightFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperContainsNullRightTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ProperContainsTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ProperContainsTimeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.ProperInEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testProperIn() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ProperInNullRightFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperInNullRightTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ProperInTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ProperInTimeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
     }
 
     /**

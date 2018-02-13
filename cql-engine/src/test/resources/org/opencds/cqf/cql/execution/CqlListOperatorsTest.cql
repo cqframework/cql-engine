@@ -199,8 +199,18 @@ define ProperIncludesDateTimeFalse:       {DateTime(2001, 9, 11), DateTime(2012,
 define ProperIncludesTimeTrue:            { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999 }
 define ProperIncludesTimeFalse:           { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }
 define ProperlyIncludesNullLeft: null properly includes {2}
-// the following expression is going to the ProperContains ELM
-// define ProperlyIncludesNulRight: {'s', 'u', 'n'} properly includes null
+
+//ProperContains
+define ProperContainsNullRightFalse: {'s', 'u', 'n'} properly includes null
+define ProperContainsNullRightTrue: {'s', 'u', 'n', null} properly includes null
+define ProperContainsTimeTrue: { @T15:59:59, @T20:59:59.999, @T20:59:49.999 } properly includes @T15:59:59
+define ProperContainsTimeNull: { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes @T15:59:59
+
+//ProperIn
+define ProperInNullRightFalse: null properly included in {'s', 'u', 'n'}
+define ProperInNullRightTrue: null properly included in {'s', 'u', 'n', null}
+define ProperInTimeTrue: @T15:59:59 properly included in { @T15:59:59, @T20:59:59.999, @T20:59:49.999 }
+define ProperInTimeNull: @T15:59:59 properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
 
 //ProperlyIncludedIn
 define ProperIncludedInEmptyAndEmpty: {} properly included in {}

@@ -628,6 +628,42 @@
 			<output>false</output>
 		</test>
 	</group>
+	<group name="ProperContains">
+		<test name="ProperContainsNullRightFalse">
+			<expression>{'s', 'u', 'n'} properly includes null</expression>
+			<output>false</output>
+		</test>
+		<test name="ProperContainsNullRightTrue">
+			<expression>{'s', 'u', 'n', null} properly includes null</expression>
+			<output>true</output>
+		</test>
+		<test name="ProperContainsTimeTrue">
+			<expression>{ @T15:59:59, @T20:59:59.999, @T20:59:49.999 } properly includes @T15:59:59</expression>
+			<output>true</output>
+		</test>
+		<test name="ProperContainsTimeNull">
+			<expression>{ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes @T15:59:59</expression>
+			<output>null</output>
+		</test>
+	</group>
+	<group name="ProperIn">
+		<test name="ProperInNullRightFalse">
+			<expression>null properly included in {'s', 'u', 'n'}</expression>
+			<output>false</output>
+		</test>
+		<test name="ProperInNullRightTrue">
+			<expression>null properly included in {'s', 'u', 'n', null}</expression>
+			<output>true</output>
+		</test>
+		<test name="ProperInTimeTrue">
+			<expression>@T15:59:59 properly included in { @T15:59:59, @T20:59:59.999, @T20:59:49.999 }</expression>
+			<output>true</output>
+		</test>
+		<test name="ProperInTimeNull">
+			<expression>@T15:59:59 properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }</expression>
+			<output>null</output>
+		</test>
+	</group>
 	<group name="ProperlyIncludes">
 		<test name="ProperIncludesEmptyAndEmpty">
 			<expression>{} properly includes {}</expression>
@@ -664,16 +700,6 @@
 		<test name="ProperIncludesTimeFalse">
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }</expression>
 			<output>false</output>
-		</test>
-		<test name="ProperlyIncludesNullLeft">
-			<expression>null properly includes {2}</expression>
-			<output>false</output>
-		</test>
-		<!-- the following expression is going to the ProperContains ELM -->
-		<test name="ProperlyIncludesNulRight">
-			<expression>{'s', 'u', 'n'} properly includes null</expression>
-			<output>false</output>
-			<!-- TODO: fix Engine bug: evaluate not implemented for class ProperContains -->
 		</test>
 	</group>
 	<group name="ProperlyIncludedIn">

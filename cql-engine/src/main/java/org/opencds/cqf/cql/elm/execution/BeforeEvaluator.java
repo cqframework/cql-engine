@@ -35,7 +35,7 @@ If either or both arguments are null, the result is null.
  */
 public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
 
-    public static Object before(Object left, Object right, String precision) {
+    public static Boolean before(Object left, Object right, String precision) {
 
         if (left == null || right == null) {
             return null;
