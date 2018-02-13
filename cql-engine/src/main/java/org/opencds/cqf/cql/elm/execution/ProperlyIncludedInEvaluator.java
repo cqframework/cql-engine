@@ -34,47 +34,7 @@ Note that the order of elements does not matter for the purposes of determining 
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
     public static Object properlyIncudedIn(Object left, Object right) {
-        if (left == null) {
-            return true;
-        }
-
-        if (right == null) {
-            return false;
-        }
-
-        if (left instanceof Interval) {
-            Interval leftInterval = (Interval)left;
-            Interval rightInterval = (Interval)right;
-
-            Object leftStart = leftInterval.getStart();
-            Object leftEnd = leftInterval.getEnd();
-            Object rightStart = rightInterval.getStart();
-            Object rightEnd = rightInterval.getEnd();
-
-            return (LessEvaluator.less(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd))
-                    && LessOrEqualEvaluator.lessOrEqual(rightStart, leftStart)
-                    && GreaterOrEqualEvaluator.greaterOrEqual(rightEnd, leftEnd)
-            );
-        }
-
-        else if (left instanceof Iterable) {
-            List leftArr = (List) left;
-            List rightArr = (List) right;
-
-            if (leftArr.isEmpty()) {
-                return true;
-            }
-
-            Object includes = IncludedInEvaluator.includedIn(left, right);
-
-            if (includes == null) {
-                return null;
-            }
-
-            return (Boolean)includes && rightArr.size() > leftArr.size();
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot perform ProperlyIncludes operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
+        return ProperlyIncludesEvaluator.properlyIncludes(right, left);
     }
 
     @Override
