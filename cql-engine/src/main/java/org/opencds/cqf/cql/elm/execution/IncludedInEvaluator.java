@@ -41,14 +41,10 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
                 return null;
             }
 
-            Boolean includedInStart = GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart);
-            Boolean includedInEnd = LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd);
-
-            if (includedInStart == null || includedInEnd == null) {
-                return null;
-            }
-
-            return includedInStart && includedInEnd;
+            return AndEvaluator.and(
+                    GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart),
+                    LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)
+            );
         }
 
         else if (left instanceof Iterable) {
@@ -98,14 +94,10 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
                 return null;
             }
 
-            Boolean includedInStart = SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision);
-            Boolean includedInEnd = SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision);
-
-            if (includedInStart == null || includedInEnd == null) {
-                return null;
-            }
-
-            return includedInStart && includedInEnd;
+            return AndEvaluator.and(
+                    SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
+                    SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
+            );
         }
 
         throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
