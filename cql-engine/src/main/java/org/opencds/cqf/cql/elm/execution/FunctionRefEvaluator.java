@@ -6,6 +6,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 /**
  * Created by Bryn on 5/25/2016.
@@ -22,15 +23,20 @@ public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.Func
         boolean enteredLibrary = context.enterLibrary(this.getLibraryName());
         try {
             FunctionDef functionDef = context.resolveFunctionRef(this.getName(), arguments);
-            context.pushWindow();
-            try {
-                for (int i = 0; i < arguments.size(); i++) {
-                    context.push(new Variable().withName(functionDef.getOperand().get(i).getName()).withValue(arguments.get(i)));
-                }
-                return functionDef.getExpression().evaluate(context);
+            if (Optional.ofNullable(functionDef.isExternal()).orElse(false)) {
+                return context.getExternalFunctionProvider().evaluate(functionDef.getName(), arguments);
             }
-            finally {
-                context.popWindow();
+            else {
+                context.pushWindow();
+                try {
+                    for (int i = 0; i < arguments.size(); i++) {
+                        context.push(new Variable().withName(functionDef.getOperand().get(i).getName()).withValue(arguments.get(i)));
+                    }
+                    return functionDef.getExpression().evaluate(context);
+                }
+                finally {
+                    context.popWindow();
+                }
             }
         }
         finally {

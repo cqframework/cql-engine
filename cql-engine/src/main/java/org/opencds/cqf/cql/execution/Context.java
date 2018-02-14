@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.execution;
 
 import org.cqframework.cql.elm.execution.*;
 import org.opencds.cqf.cql.data.DataProvider;
+import org.opencds.cqf.cql.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.data.SystemDataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
@@ -331,8 +332,8 @@ public class Context {
 
     // TODO: Could use some caching here, and potentially some better type resolution structures
     public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
-      String str = "";
-      String str2 = "";
+        String str = "";
+        String str2 = "";
         for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
             //str += expressionDef.getName() + " ";
             if (expressionDef instanceof FunctionDef) {
@@ -493,6 +494,23 @@ public class Context {
 
     public TerminologyProvider resolveTerminologyProvider() {
       return terminologyProvider;
+    }
+
+    private Map<VersionedIdentifier, ExternalFunctionProvider> externalFunctionProviders = new HashMap<>();
+
+    public void registerExternalFunctionProvider(VersionedIdentifier identifier, ExternalFunctionProvider provider) {
+        externalFunctionProviders.put(identifier, provider);
+    }
+
+    public ExternalFunctionProvider getExternalFunctionProvider() {
+        Library currentLibrary = getCurrentLibrary();
+        VersionedIdentifier identifier = currentLibrary.getIdentifier();
+        ExternalFunctionProvider provider = externalFunctionProviders.get(identifier);
+        if (provider == null) {
+            throw new IllegalArgumentException(String.format(
+                "Could not resolve external function provider for library '%s'.", identifier));
+        }
+        return provider;
     }
 
     public void enterContext(String context) {
