@@ -663,7 +663,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ProperIncludedInEmptyAndEmpty").getExpression().evaluate(context);
-        //assertThat(result, is(false));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("ProperIncludedInListNullAndListNull").getExpression().evaluate(context);
         assertThat(result, is(false));

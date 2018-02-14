@@ -680,7 +680,6 @@
 		<test name="ProperIncludedInEmptyAndEmpty">
 			<expression>{} properly included in {}</expression>
 			<output>false</output>
-			<!-- TODO: Fix CQL Engine bug that says this is true -->
 		</test>
 		<test name="ProperIncludedInListNullAndListNull">
 			<expression>{null} properly included in {null}</expression>
