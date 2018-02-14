@@ -30,7 +30,6 @@ public class Context {
     private Stack<Library> currentLibrary = new Stack<>();
     private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
-    private ExternalFunctionProvider externalFunctionProvider;
 
     private Library library;
 
@@ -459,14 +458,6 @@ public class Context {
         packageMap.put(dataProvider.getPackageName(), dataProvider);
     }
 
-    public void registerExternalFunctionProvider(ExternalFunctionProvider provider) {
-        externalFunctionProvider = provider;
-    }
-
-    public ExternalFunctionProvider getExternalFunctionProvider() {
-        return externalFunctionProvider;
-    }
-
     public DataProvider resolveDataProvider(QName dataType) {
         DataProvider dataProvider = dataProviders.get(dataType.getNamespaceURI());
         if (dataProvider == null) {
@@ -503,6 +494,23 @@ public class Context {
 
     public TerminologyProvider resolveTerminologyProvider() {
       return terminologyProvider;
+    }
+
+    private Map<VersionedIdentifier, ExternalFunctionProvider> externalFunctionProviders = new HashMap<>();
+
+    public void registerExternalFunctionProvider(VersionedIdentifier identifier, ExternalFunctionProvider provider) {
+        externalFunctionProviders.put(identifier, provider);
+    }
+
+    public ExternalFunctionProvider getExternalFunctionProvider() {
+        Library currentLibrary = getCurrentLibrary();
+        VersionedIdentifier identifier = currentLibrary.getIdentifier();
+        ExternalFunctionProvider provider = externalFunctionProviders.get(identifier);
+        if (provider == null) {
+            throw new IllegalArgumentException(String.format(
+                "Could not resolve external function provider for library '%s'.", identifier));
+        }
+        return provider;
     }
 
     public void enterContext(String context) {

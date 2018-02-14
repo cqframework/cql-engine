@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public class CqlExternalFunctionsTest extends CqlExecutionTestBase {
+public class CqlExternalFunctionsTest2 extends CqlExecutionTestBase {
 
     @Test
     public void testExternalFunctions() throws JAXBException {
@@ -19,15 +19,15 @@ public class CqlExternalFunctionsTest extends CqlExecutionTestBase {
 
         context.registerExternalFunctionProvider(
             library.getIdentifier(),
-            new SystemExternalFunctionProvider(Arrays.asList(MyMath.class.getDeclaredMethods()))
+            new SystemExternalFunctionProvider(Arrays.asList(MyMath2.class.getDeclaredMethods()))
         );
 
         Object result;
 
-        result = context.resolveExpressionRef("CallMyPlus").getExpression().evaluate(context);
-        assertThat(result, is(10));
+        result = context.resolveExpressionRef("CallMyTimes").getExpression().evaluate(context);
+        assertThat(result, is(54));
 
-        result = context.resolveExpressionRef("CallMyMinus").getExpression().evaluate(context);
-        assertThat(result, is(-2));
+        result = context.resolveExpressionRef("CallMyDividedBy").getExpression().evaluate(context);
+        assertThat(result, is(6));
     }
 }
