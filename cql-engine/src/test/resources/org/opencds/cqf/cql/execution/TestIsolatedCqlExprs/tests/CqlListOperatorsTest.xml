@@ -701,6 +701,10 @@
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }</expression>
 			<output>false</output>
 		</test>
+		<test name="ProperlyIncludesNullLeft">
+			<expression>null properly includes {2}</expression>
+			<output>false</output>
+		</test>
 	</group>
 	<group name="ProperlyIncludedIn">
 		<test name="ProperIncludedInEmptyAndEmpty">
@@ -740,11 +744,9 @@
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }</expression>
 			<output>false</output>
 		</test>
-		<!-- the following expression is going to the ProperIn ELM -->
 		<test name="ProperlyIncludedInNullLeft">
 			<expression>null properly included in {2}</expression>
 			<output>false</output>
-			<!-- TODO: fix Engine bug: evaluate not implemented for class ProperIn -->
 		</test>
 		<test name="ProperlyIncludedInNulRight">
 			<expression>{'s', 'u', 'n'} properly included in null</expression>

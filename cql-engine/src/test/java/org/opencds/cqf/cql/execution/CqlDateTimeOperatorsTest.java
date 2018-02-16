@@ -128,9 +128,6 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeAfterMonthFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef("DateTimeAfterMonthNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
-
         result = context.resolveExpressionRef("DateTimeAfterDayTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
