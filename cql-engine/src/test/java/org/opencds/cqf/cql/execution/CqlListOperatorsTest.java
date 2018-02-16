@@ -646,6 +646,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ProperIncludesTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperlyIncludesNullLeft").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
