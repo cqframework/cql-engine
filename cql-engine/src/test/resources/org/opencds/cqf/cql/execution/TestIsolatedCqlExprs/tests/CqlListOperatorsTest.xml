@@ -701,10 +701,6 @@
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }</expression>
 			<output>false</output>
 		</test>
-		<test name="ProperlyIncludesNullLeft">
-			<expression>null properly includes {2}</expression>
-			<output>false</output>
-		</test>
 	</group>
 	<group name="ProperlyIncludedIn">
 		<test name="ProperIncludedInEmptyAndEmpty">
@@ -742,10 +738,6 @@
 		</test>
 		<test name="ProperIncludedInTimeFalse">
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }</expression>
-			<output>false</output>
-		</test>
-		<test name="ProperlyIncludedInNullLeft">
-			<expression>null properly included in {2}</expression>
 			<output>false</output>
 		</test>
 		<test name="ProperlyIncludedInNulRight">

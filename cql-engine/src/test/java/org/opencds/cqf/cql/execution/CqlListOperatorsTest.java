@@ -646,9 +646,6 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ProperIncludesTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
-
-        result = context.resolveExpressionRef("ProperlyIncludesNullLeft").getExpression().evaluate(context);
-        assertThat(result, is(false));
     }
 
     /**
@@ -719,9 +716,11 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("ProperIncludedInDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        // TODO: fix test - going to ProperIn - not implemented
-//        result = context.resolveExpressionRef("ProperlyIncludedInNullLeft").getExpression().evaluate(context);
-//        assertThat(result, is(true));
+        result = context.resolveExpressionRef("ProperIncludedInTimeTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ProperIncludedInTimeFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("ProperlyIncludedInNulRight").getExpression().evaluate(context);
         assertThat(result, is(false));

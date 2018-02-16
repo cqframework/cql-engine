@@ -222,8 +222,6 @@ define ProperIncludedInDateTimeTrue: {DateTime(2012, 5, 10), DateTime(2014, 12, 
 define ProperIncludedInDateTimeFalse: {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
 define ProperIncludedInTimeTrue: { @T15:59:59.999, @T20:59:59.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
 define ProperIncludedInTimeFalse: { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
-// the following expression is going to the ProperIn ELM
-// define ProperlyIncludedInNullLeft: null properly included in {2}
 define ProperlyIncludedInNulRight: {'s', 'u', 'n'} properly included in null
 
 //SingletonFrom
