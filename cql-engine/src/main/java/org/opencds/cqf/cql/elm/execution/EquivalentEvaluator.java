@@ -106,7 +106,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         else if (left instanceof DateTime && right instanceof DateTime) {
             DateTime leftDT = (DateTime)left;
             DateTime rightDT = (DateTime)right;
-            if (leftDT.getPartial().size() != rightDT.getPartial().size()) { return false; }
+            if (leftDT.getPartial().size() != rightDT.getPartial().size()) { return null; }
 
             for (int i = 0; i < leftDT.getPartial().size(); ++i) {
                 if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
@@ -119,7 +119,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         else if (left instanceof Time && right instanceof Time) {
             Time leftT = (Time)left;
             Time rightT = (Time)right;
-            if (leftT.getPartial().size() != rightT.getPartial().size()) { return false; }
+            if (leftT.getPartial().size() != rightT.getPartial().size()) { return null; }
 
             for (int i = 0; i < leftT.getPartial().size(); ++i) {
                 if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {

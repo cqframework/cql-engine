@@ -27,7 +27,7 @@ If either or both arguments are null, the result is null.
  */
 public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
 
-    public static Object sameAs(Object left, Object right, String precision) {
+    public static Boolean sameAs(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }

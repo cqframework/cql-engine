@@ -35,7 +35,7 @@ If either or both arguments are null, the result is null.
  */
 public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
 
-    public static Object after(Object left, Object right, String precision) {
+    public static Boolean after(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }
@@ -69,12 +69,23 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
                 // check level of precision
                 if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
 
+                    // get the precision of the uncertain DateTime/Time value
                     if (Uncertainty.isUncertain(leftTemporal, precision)) {
-                        return GreaterEvaluator.greater(((List) Uncertainty.getHighLowList(leftTemporal, precision)).get(0), rightTemporal);
+                        idx = leftTemporal.getPartial().size() - 1;
                     } else if (Uncertainty.isUncertain(rightTemporal, precision)) {
-                        return GreaterEvaluator.greater(leftTemporal, ((List) Uncertainty.getHighLowList(rightTemporal, precision)).get(1));
+                        idx = rightTemporal.getPartial().size() - 1;
                     }
 
+                    // if not equal do After to that precision
+                    if (leftTemporal instanceof DateTime && !SameAsEvaluator.sameAs(leftTemporal, rightTemporal, DateTime.getUnit(idx))) {
+                         return after(leftTemporal, rightTemporal, DateTime.getUnit(idx));
+                    }
+
+                    else if (leftTemporal instanceof Time && !SameAsEvaluator.sameAs(leftTemporal, rightTemporal, Time.getUnit(idx))) {
+                        return after(leftTemporal, rightTemporal, Time.getUnit(idx));
+                    }
+
+                    // else null
                     return null;
                 }
 

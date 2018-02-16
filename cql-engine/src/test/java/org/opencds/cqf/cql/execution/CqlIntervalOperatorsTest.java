@@ -1030,6 +1030,58 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.ProperContainsEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void TestProperContains() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TimeProperContainsTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TimeProperContainsFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TimeProperContainsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TimeProperContainsPrecisionTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TimeProperContainsPrecisionFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TimeProperContainsPrecisionNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.ProperInEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void TestProperIn() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("TimeProperInTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TimeProperInFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TimeProperInNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("TimeProperInPrecisionTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TimeProperInPrecisionFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("TimeProperInPrecisionNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
      */
     @Test
