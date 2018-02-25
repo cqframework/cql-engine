@@ -81,6 +81,10 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TupleEqJohnJohn").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        // TODO - this test should actually throw a translation error, but due to a bug in the translator it isn't - remove once bug is resolved
+        result = context.resolveExpressionRef("TupleEqJohnJohnFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
         result = context.resolveExpressionRef("TupleEqJohnJane").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -546,6 +550,10 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("EquivTupleJohnJohn").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        // TODO - this test should actually throw a translation error, but due to a bug in the translator it isn't - remove once bug is resolved
+        result = context.resolveExpressionRef("EquivTupleJohnJohnFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("EquivTupleJohnJane").getExpression().evaluate(context);
         assertThat(result, is(false));

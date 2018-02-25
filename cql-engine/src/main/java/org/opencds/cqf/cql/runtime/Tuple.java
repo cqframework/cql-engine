@@ -37,6 +37,10 @@ public class Tuple {
     HashMap<String, Object> leftMap = getElements();
     HashMap<String, Object> rightMap = other.getElements();
 
+    if (leftMap.size() != rightMap.size()) {
+      return false;
+    }
+
     for (String key : rightMap.keySet()) {
       if (leftMap.containsKey(key)) {
         Boolean equal = EqualEvaluator.equal(rightMap.get(key), leftMap.get(key));
