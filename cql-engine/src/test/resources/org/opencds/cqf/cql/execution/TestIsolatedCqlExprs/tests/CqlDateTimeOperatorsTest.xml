@@ -119,6 +119,10 @@
 			<expression>DateTime(2004, 12, 11) after day of DateTime(2004, 10, 10)</expression>
 			<output>true</output>
 		</test>
+		<test name="DateTimeAfterDayTrue2">
+			<expression>DateTime(2004, 12, 09) after day of DateTime(2003, 10, 10)</expression>
+			<output>true</output>
+		</test>
 		<test name="DateTimeAfterDayFalse">
 			<expression>DateTime(2004, 10, 9) after day of DateTime(2004, 10, 10)</expression>
 			<output>false</output>
@@ -224,6 +228,10 @@
 		</test>
 		<test name="DateTimeBeforeDayTrue">
 			<expression>DateTime(2004, 10, 1) before day of DateTime(2004, 10, 10)</expression>
+			<output>true</output>
+		</test>
+		<test name="DateTimeBeforeDayTrue2">
+			<expression>DateTime(2003, 10, 11) before day of DateTime(2004, 10, 10)</expression>
 			<output>true</output>
 		</test>
 		<test name="DateTimeBeforeDayFalse">

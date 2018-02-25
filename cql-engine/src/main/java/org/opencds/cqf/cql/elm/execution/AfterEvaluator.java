@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.Instant;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -63,7 +64,7 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
                 precision = "millisecond";
             }
 
-            int idx = DateTime.getFieldIndex(precision);
+            int idx = leftTemporal.getIsDateTime() ? DateTime.getFieldIndex(precision) : Time.getFieldIndex(precision);
 
             if (idx != -1) {
                 // check level of precision
@@ -90,15 +91,29 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
                 }
 
                 if (leftTemporal.getTimezone().getID().equals(rightTemporal.getTimezone().getID())) {
-                    if (leftTemporal instanceof Time) {
-                        idx -= 3;
+                    for (int i = 0; i < idx; i++) {
+                        if (leftTemporal.getPartial().getValue(i) < rightTemporal.getPartial().getValue(i)) {
+                            return false;
+                        }
+                        else if (leftTemporal.getPartial().getValue(i) > rightTemporal.getPartial().getValue(i)) {
+                            return true;
+                        }
                     }
                     return leftTemporal.getPartial().getValue(idx) > rightTemporal.getPartial().getValue(idx);
                 }
 
                 else {
-                    return leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx))
-                            > rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(idx));
+                    Instant leftInstant = leftTemporal.getJodaDateTime().toInstant();
+                    Instant rightInstant = rightTemporal.getJodaDateTime().toInstant();
+                    for (int i = 0; i < idx; i++) {
+                        if (leftInstant.get(DateTime.getField(i)) < rightInstant.get(DateTime.getField(i))) {
+                            return false;
+                        }
+                        else if (leftInstant.get(DateTime.getField(i)) > rightInstant.get(DateTime.getField(i))) {
+                            return true;
+                        }
+                    }
+                    return leftInstant.get(DateTime.getField(idx)) > rightInstant.get(DateTime.getField(idx));
                 }
             }
         }
