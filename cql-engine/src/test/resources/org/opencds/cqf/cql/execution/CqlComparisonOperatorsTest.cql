@@ -25,6 +25,8 @@ define QuantityEqCM1CM1 : 1'cm' = 1'cm'
 define QuantityEqCM1M01 : 1'cm' = 0.01'm'
 define QuantityEqDiffPrecision: 2.0'cm' = 2.00'cm'
 define TupleEqJohnJohn: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John' }
+define TupleEqJohnJohnFalse: Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } = Tuple { Id : 1, Name : 'John' }
+define TupleEqJohnJohnFalse2: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' }
 define TupleEqJohnJane: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'Jane' }
 define TupleEqJohn1John2: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 2, Name : 'John' }
 define TupleEqDateTimeTrue: Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) } = Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) }
@@ -175,6 +177,8 @@ define EquivFloat1Int2              : 1.0 ~ 2
 define EquivEqCM1CM1                : 1'cm' ~ 1'cm'
 define EquivEqCM1M01                : 1'cm' ~ 0.01'm'
 define EquivTupleJohnJohn           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }
+define EquivTupleJohnJohnFalse      : Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } ~ Tuple { Id : 1, Name : 'John' }
+define EquivTupleJohnJohnFalse2     : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' }
 define EquivTupleJohnJane           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }
 define EquivTupleJohn1John2         : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }
 define EquivListEmptyEmpty          : {} ~ {}

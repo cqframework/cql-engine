@@ -85,6 +85,11 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         else if (left instanceof Tuple) {
             HashMap<String, Object> leftMap = ((Tuple)left).getElements();
             HashMap<String, Object> rightMap = ((Tuple)right).getElements();
+
+            if (leftMap.size() != rightMap.size()) {
+                return false;
+            }
+
             for (String key : rightMap.keySet()) {
                 if (leftMap.containsKey(key)) {
                     Object areKeyValsSame = equivalent(rightMap.get(key), leftMap.get(key));
