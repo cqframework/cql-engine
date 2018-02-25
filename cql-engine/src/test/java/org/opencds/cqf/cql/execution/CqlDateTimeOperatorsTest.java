@@ -131,6 +131,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeAfterDayTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("DateTimeAfterDayTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         result = context.resolveExpressionRef("DateTimeAfterDayFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -209,6 +212,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("DateTimeBeforeDayTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("DateTimeBeforeDayTrue2").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeBeforeDayFalse").getExpression().evaluate(context);
