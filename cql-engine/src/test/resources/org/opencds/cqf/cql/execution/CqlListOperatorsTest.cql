@@ -85,6 +85,7 @@ define FirstTime: First({ @T15:59:59.999, @T20:59:59.999 })
 //In
 define InNullEmpty: null in {}
 define InNullAnd1Null: null in { 1, null }
+define GithubIssue71: null in { 1, 2, 3, null }
 define In1Null: 1 in null
 define In1And12: 1 in { 1, 2 }
 define In3And12: 3 in { 1, 2 }
