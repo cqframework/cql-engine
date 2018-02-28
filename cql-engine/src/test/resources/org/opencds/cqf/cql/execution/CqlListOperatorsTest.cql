@@ -9,6 +9,8 @@ define simpleSortAsc: simpleList sL sort asc
 define simpleSortDesc: simpleList sL sort desc
 define simpleSortStringAsc: simpleListString sls sort asc
 define simpleSortStringDesc: simpleListString sls sort desc
+define SortWithNullAsc: ({ 1, 2, 3, null }) A sort asc
+define SortWithNullDesc: ({ 1, 2, 3, null }) A sort desc
 
 //Contains
 define ContainsABNullHasNull: { 'a', 'b', null } contains null
@@ -83,6 +85,7 @@ define FirstTime: First({ @T15:59:59.999, @T20:59:59.999 })
 //In
 define InNullEmpty: null in {}
 define InNullAnd1Null: null in { 1, null }
+define GithubIssue71: null in { 1, 2, 3, null }
 define In1Null: 1 in null
 define In1And12: 1 in { 1, 2 }
 define In3And12: 3 in { 1, 2 }

@@ -247,6 +247,14 @@
 			<expression>Interval[null, 5] contains 10</expression>
 			<output>false</output>
 		</test>
+		<test name="TestNullElement3">
+			<expression>Interval[5, null] contains 10</expression>
+			<output>true</output>
+		</test>
+		<test name="TestNullElement4">
+			<expression>Interval[null, 11] contains 10</expression>
+			<output>true</output>
+		</test>
 		<test name="IntegerIntervalContainsTrue">
 			<expression>Interval[1, 10] contains 5</expression>
 			<output>true</output>

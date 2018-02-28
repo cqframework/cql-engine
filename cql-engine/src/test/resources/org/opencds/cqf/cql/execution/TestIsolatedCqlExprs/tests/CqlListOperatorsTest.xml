@@ -25,11 +25,19 @@
 			<expression>({'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}) sls sort desc</expression>
 			<output>{'zebra', 'iguana', 'back', 'alligator', 'aardvark', 'Wolf', 'Armadillo'}</output>
 		</test>
+		<test name="SortWithNullAsc">
+			<expression>({ 1, 2, 3, null }) A sort asc</expression>
+			<output>{null, 1, 2, 3}</output>
+		</test>
+		<test name="SortWithNullDesc">
+			<expression>({ 1, 2, 3, null }) A sort desc</expression>
+			<output>{3, 2, 1, null}</output>
+		</test>
 	</group>
 	<group name="Contains">
 		<test name="ContainsABNullHasNull">
 			<expression>{ 'a', 'b', null } contains null</expression>
-			<output>null</output>
+			<output>true</output>
 		</test>
 		<test name="ContainsNullFirst">
 			<expression>{ null, 'b', 'c' } contains 'a'</expression>
@@ -258,11 +266,15 @@
 	<group name="In">
 		<test name="InNullEmpty">
 			<expression>null in {}</expression>
-			<output>null</output>
+			<output>false</output>
 		</test>
 		<test name="InNullAnd1Null">
 			<expression>null in { 1, null }</expression>
-			<output>null</output>
+			<output>true</output>
+		</test>
+		<test name="GithubIssue71">
+			<expression>null in { 1, 2, 3, null }</expression>
+			<output>true</output>
 		</test>
 		<test name="In1Null">
 			<expression>1 in null</expression>

@@ -245,6 +245,12 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TestNullElement2").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef("TestNullElement3").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("TestNullElement4").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         result = context.resolveExpressionRef("IntegerIntervalContainsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
