@@ -34,10 +34,6 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
     public static Boolean in(Object left, Object right, String precision) {
 
-        if (left == null) {
-            return null;
-        }
-
         if (right == null) {
             return false;
         }
@@ -65,6 +61,10 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
         }
 
         else if (right instanceof Interval) {
+            if (left == null) {
+                return null;
+            }
+
             Object rightStart = ((Interval) right).getStart();
             Object rightEnd = ((Interval) right).getEnd();
 
