@@ -604,6 +604,21 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("EquivTime10A10P").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("EquivStringDiffCaseTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("EquivStringDiffCaseFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("EquivStringLocaleTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("EquivStringLocaleTrue2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("EquivStringLocaleFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**

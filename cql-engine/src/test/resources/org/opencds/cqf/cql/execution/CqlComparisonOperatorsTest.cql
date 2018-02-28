@@ -193,6 +193,11 @@ define EquivDateTimeTodayToday      : Today() ~ Today()
 define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 days
 define EquivTime10A10A              : @T10:00:00.000 ~ @T10:00:00.000
 define EquivTime10A10P              : @T10:00:00.000 ~ @T22:00:00.000
+define EquivStringDiffCaseTrue      : 'abel' ~ 'Abel'
+define EquivStringDiffCaseFalse     : 'abel' ~ 'Avel'
+define EquivStringLocaleTrue        : 'ß' ~ Upper('ß')
+define EquivStringLocaleTrue2       : 'ä' ~ 'Ä'
+define EquivStringLocaleFalse       : 'Ö' ~ 'Ä'
 
 //Not Equal
 define SimpleNotEqTrueTrue : true != true

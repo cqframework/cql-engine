@@ -6,8 +6,10 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.runtime.Tuple;
 
+import java.text.Collator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 
 /*
 *** NOTES FOR CLINICAL OPERATORS ***
@@ -51,7 +53,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return false;
         }
 
-        if (left instanceof Iterable) {
+        if (left instanceof Iterable && right instanceof Iterable) {
             Iterator leftIterator = ((Iterable)left).iterator();
             Iterator rightIterator = ((Iterable)right).iterator();
 
@@ -74,7 +76,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return true;
         }
 
-        else if (left instanceof Interval) {
+        else if (left instanceof Interval && right instanceof Interval) {
             Object startEquivalence = equivalent(((Interval) left).getStart(), ((Interval) right).getStart());
             Object endEquivalence = equivalent(((Interval) left).getEnd(), ((Interval) right).getEnd());
             return (startEquivalence == null && endEquivalence == null)
@@ -82,7 +84,20 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
                     && (Boolean) startEquivalence && (Boolean) endEquivalence);
         }
 
-        else if (left instanceof Tuple) {
+        else if (left instanceof String && right instanceof String) {
+            // locale and case insensitive
+            for (Locale locale : Collator.getAvailableLocales()) {
+                Collator collator = Collator.getInstance(locale);
+                collator.setStrength(Collator.PRIMARY);
+                if (collator.compare(left, right) == 0) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        else if (left instanceof Tuple && right instanceof Tuple) {
             HashMap<String, Object> leftMap = ((Tuple)left).getElements();
             HashMap<String, Object> rightMap = ((Tuple)right).getElements();
 

@@ -725,6 +725,26 @@
 			<expression>@T10:00:00.000 ~ @T22:00:00.000</expression>
 			<output>false</output>
 		</test>
+		<test name="EquivStringDiffCaseTrue">
+			<expression>'abel' ~ 'Abel'</expression>
+			<output>true</output>
+		</test>
+		<test name="EquivStringDiffCaseFalse">
+			<expression>'abel' ~ 'Avel'</expression>
+			<output>false</output>
+		</test>
+		<test name="EquivStringLocaleTrue">
+			<expression>'ß' ~ Upper('ß')</expression>
+			<output>true</output>
+		</test>
+		<test name="EquivStringLocaleTrue2">
+			<expression>'ä' ~ 'Ä'</expression>
+			<output>true</output>
+		</test>
+		<test name="EquivStringLocaleFalse">
+			<expression>'Ö' ~ 'Ä'</expression>
+			<output>false</output>
+		</test>
 	</group>
 	<group name="Not Equal">
 		<test name="SimpleNotEqTrueTrue">
