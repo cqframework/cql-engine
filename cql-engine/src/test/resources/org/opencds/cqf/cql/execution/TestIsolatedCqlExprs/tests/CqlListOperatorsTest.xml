@@ -25,6 +25,14 @@
 			<expression>({'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}) sls sort desc</expression>
 			<output>{'zebra', 'iguana', 'back', 'alligator', 'aardvark', 'Wolf', 'Armadillo'}</output>
 		</test>
+		<test name="SortWithNullAsc">
+			<expression>({ 1, 2, 3, null }) A sort asc</expression>
+			<output>{null, 1, 2, 3}</output>
+		</test>
+		<test name="SortWithNullDesc">
+			<expression>({ 1, 2, 3, null }) A sort desc</expression>
+			<output>{3, 2, 1, null}</output>
+		</test>
 	</group>
 	<group name="Contains">
 		<test name="ContainsABNullHasNull">

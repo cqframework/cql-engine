@@ -26,11 +26,17 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("simpleSortDesc").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(6, 5, 4, 2, 1, 1)));
 
-//        result = context.resolveExpressionRef("simpleSortStringAsc").getExpression().evaluate(context);
-//        assertThat(result, is(Arrays.asList(1, 1, 2, 4, 5, 6)));
-//
-//        result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
-//        assertThat(result, is(Arrays.asList(6, 5, 4, 2, 1, 1)));
+        result = context.resolveExpressionRef("simpleSortStringAsc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList("Armadillo", "Wolf", "aardvark", "alligator", "back", "iguana", "zebra")));
+
+        result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList("zebra", "iguana", "back", "alligator", "aardvark", "Wolf", "Armadillo")));
+
+        result = context.resolveExpressionRef("SortWithNullAsc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(null, 1, 2, 3)));
+
+        result = context.resolveExpressionRef("SortWithNullDesc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(3, 2, 1, null)));
     }
 
     /**
