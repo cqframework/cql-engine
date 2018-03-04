@@ -563,30 +563,45 @@
 		<test name="DateTimeDurationBetweenUncertainInterval">
 			<expression>days between DateTime(2014, 1, 15) and DateTime(2014, 2)</expression>
 			<output>Interval[ 17, 44 ]</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Integer,interval<System.Integer>). -->
+			<!-- TODO: How to handle the fact the question is resulting in an
+			undertainty interval and that CQL/ELM seem to provide no direct way of
+			selecting the same value, conceptually an implementation internal;
+			currently Equivalent() results in null from comparing with an Interval. -->
 		</test>
 		<test name="DateTimeDurationBetweenUncertainInterval2">
 			<expression>months between DateTime(2005) and DateTime(2006, 5)</expression>
 			<output>Interval[ 5, 16 ]</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Integer,interval<System.Integer>). -->
+			<!-- TODO: How to handle the fact the question is resulting in an
+			undertainty interval and that CQL/ELM seem to provide no direct way of
+			selecting the same value, conceptually an implementation internal;
+			currently Equivalent() results in null from comparing with an Interval. -->
 		</test>
 		<test name="DateTimeDurationBetweenUncertainAdd">
 			<expression>(days between DateTime(2014, 1, 15) and DateTime(2014, 2))
 				+ (days between DateTime(2014, 1, 15) and DateTime(2014, 2))</expression>
 			<output>Interval[ 34, 88 ]</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Integer,interval<System.Integer>). -->
+			<!-- TODO: How to handle the fact the question is resulting in an
+			undertainty interval and that CQL/ELM seem to provide no direct way of
+			selecting the same value, conceptually an implementation internal;
+			currently Equivalent() results in null from comparing with an Interval. -->
 		</test>
 		<test name="DateTimeDurationBetweenUncertainSubtract">
 			<expression>(days between DateTime(2014, 1, 15) and DateTime(2014, 2))
 				- (months between DateTime(2005) and DateTime(2006, 5))</expression>
 			<output>Interval[ 12, 28 ]</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Integer,interval<System.Integer>). -->
+			<!-- TODO: How to handle the fact the question is resulting in an
+			undertainty interval and that CQL/ELM seem to provide no direct way of
+			selecting the same value, conceptually an implementation internal;
+			currently Equivalent() results in null from comparing with an Interval. -->
 		</test>
 		<test name="DateTimeDurationBetweenUncertainMultiply">
 			<expression>(days between DateTime(2014, 1, 15) and DateTime(2014, 2))
 				* (days between DateTime(2014, 1, 15) and DateTime(2014, 2))</expression>
 			<output>Interval[ 289, 1936 ]</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Integer,interval<System.Integer>). -->
+			<!-- TODO: How to handle the fact the question is resulting in an
+			undertainty interval and that CQL/ELM seem to provide no direct way of
+			selecting the same value, conceptually an implementation internal;
+			currently Equivalent() results in null from comparing with an Interval. -->
 		</test>
 		<test name="DateTimeDurationBetweenUncertainDiv">
 			<expression invalid="true">(days between DateTime(2014, 1, 15) and DateTime(2014, 2))
@@ -695,10 +710,10 @@
 			<expression>Now() = Now()</expression>
 			<output>true</output>
 		</test>
-		<test name="Issue34A">
+		<!-- <test name="Issue34A">
 			<expression>Now()</expression>
 			<output>Now()</output>
-		</test>
+		</test> TODO: Replace this with Java-native test as with original. -->
 	</group>
 	<group name="SameAs">
 		<test name="DateTimeSameAsYearTrue">

@@ -238,11 +238,11 @@
 		</test>
 		<test name="SplitABNull">
 			<expression>Split('a,b', null)</expression>
-			<output>'a,b'</output>
+			<output>{'a,b'}</output>
 		</test>
 		<test name="SplitABDash">
 			<expression>Split('a,b', '-')</expression>
-			<output>'a,b'</output>
+			<output>{'a,b'}</output>
 		</test>
 		<test name="SplitABComma">
 			<expression>Split('a,b', ',')</expression>

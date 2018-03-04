@@ -1389,12 +1389,10 @@
 		<test name="DateTimeWidth">
 			<expression>width of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]</expression>
 			<output>20 days</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.DateTime,System.Quantity) -->
 		</test>
 		<test name="TimeWidth">
 			<expression>width of Interval[@T05:59:59.999, @T15:59:59.999]</expression>
 			<output>36000000 milliseconds</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Time,System.Quantity) -->
 		</test>
 	</group>
 	<group name="Interval">

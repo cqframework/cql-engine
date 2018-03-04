@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.ArrayList;
@@ -12,13 +11,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBException;
 
 import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.execution.tests.Expression;
 import org.opencds.cqf.cql.execution.tests.Group;
 import org.opencds.cqf.cql.execution.tests.Output;
 import org.opencds.cqf.cql.execution.tests.Tests;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.testng.annotations.Test;
 
 /**
@@ -49,28 +48,6 @@ public class TestIsolatedCqlExprs {
         return fileNames.toArray();
     }
 
-    private Library translate(String cql) {
-        ArrayList<String> errors = new ArrayList<>();
-
-        String elm_xml = CqlToElmLib.maybe_cql_to_elm_xml(cql, errors);
-
-        if (elm_xml == null) {
-            throw new IllegalArgumentException(errors.toString());
-        }
-
-        Library library = null;
-        try {
-            library = CqlLibraryReader.read(new ByteArrayInputStream(
-                elm_xml.getBytes(StandardCharsets.UTF_8)));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
-            e.printStackTrace();
-        }
-
-        return library;
-    }
-
     private void runIsolatedCqlExprTest(org.opencds.cqf.cql.execution.tests.Test test) {
         Expression testQ = test.getExpression();
         if (testQ == null) {
@@ -83,25 +60,48 @@ public class TestIsolatedCqlExprs {
 
         Boolean expectInvalid = testQ.isInvalid() != null && testQ.isInvalid();
 
+        // If the test expression is invalid, expect an error during
+        // translation or evaluation and fail if we don't get one;
+        // otherwise fail if we do get one.
+        String cqlLibQ = "library TestQ define Q: " + cqlExprQ;
+        ArrayList<String> errorsQ = new ArrayList<>();
+        String elmLibQ = CqlToElmLib.maybe_cql_to_elm_xml(cqlLibQ, errorsQ);
+        if (elmLibQ == null) {
+            if (expectInvalid) {
+                return;
+            }
+            else {
+                throw new RuntimeException("Test question CQL failed to translate to ELM in Translator: " + errorsQ.toString());
+            }
+        }
+        Library libraryQ;
         try {
-            // If the test expression is invalid, expect an error during
-            // translation or evaluation and fail if we don't get one;
-            // otherwise fail if we do get one.
-            String cqlLibQ = "library TestQ define Q: " + cqlExprQ;
-            Library libraryQ = translate(cqlLibQ);
-            Context contextQ = new Context(libraryQ);
-            contextQ.resolveExpressionRef("Q").getExpression().evaluate(contextQ);
+            libraryQ = CqlLibraryReader.read(new ByteArrayInputStream(
+                elmLibQ.getBytes(StandardCharsets.UTF_8)));
         }
         catch (Exception e) {
             if (expectInvalid) {
                 return;
             }
             else {
-                throw new RuntimeException("Unexpected exception thrown for test question: " + e.toString());
+                throw new RuntimeException("Test question translated but ELM failed to parse in Engine: " + e.toString());
+            }
+        }
+        Object resultQ;
+        try {
+            Context contextQ = new Context(libraryQ);
+            resultQ = contextQ.resolveExpressionRef("Q").getExpression().evaluate(contextQ);
+        }
+        catch (Exception e) {
+            if (expectInvalid) {
+                return;
+            }
+            else {
+                throw new RuntimeException("Test question parsed but evaluation failed in Engine: " + e.toString());
             }
         }
         if (expectInvalid) {
-            throw new RuntimeException("Expected exception not thrown for test question.");
+            throw new RuntimeException("Test question didn't fail to translate/parse/evaluate as expected.");
         }
 
         List<Output> testA = test.getOutput();
@@ -113,28 +113,44 @@ public class TestIsolatedCqlExprs {
             throw new RuntimeException("Test has not exactly one answer (output).");
         }
 
+        String cqlLibA = "library TestA define A: " + cqlExprA;
+        ArrayList<String> errorsA = new ArrayList<>();
+        String elmLibA = CqlToElmLib.maybe_cql_to_elm_xml(cqlLibA, errorsA);
+        if (elmLibA == null) {
+            throw new RuntimeException("Test answer CQL failed to translate to ELM in Translator: " + errorsA.toString());
+        }
+        Library libraryA;
         try {
-            String cqlLibA = "library TestA define A: " + cqlExprA;
-            Library libraryA = translate(cqlLibA);
+            libraryA = CqlLibraryReader.read(new ByteArrayInputStream(
+                elmLibA.getBytes(StandardCharsets.UTF_8)));
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Test answer translated but ELM failed to parse in Engine: " + e.toString());
+        }
+        Object resultA;
+        try {
             Context contextA = new Context(libraryA);
-            contextA.resolveExpressionRef("A").getExpression().evaluate(contextA);
+            resultA = contextA.resolveExpressionRef("A").getExpression().evaluate(contextA);
         }
         catch (Exception e) {
-            throw new RuntimeException("Unexpected exception thrown for test answer: " + e.toString());
+            throw new RuntimeException("Test answer parsed but evaluation failed in Engine: " + e.toString());
         }
 
-        Object result;
+        Object resultC;
         try {
-            String cqlLibE = "library TestE define E: Equivalent(("+cqlExprQ+"),("+cqlExprA+"))";
-            Library libraryE = translate(cqlLibE);
-            Context contextE = new Context(libraryE);
-            result = contextE.resolveExpressionRef("E").getExpression().evaluate(contextE);
+            resultC = EquivalentEvaluator.equivalent(resultQ, resultA);
         }
         catch (Exception e) {
-            throw new RuntimeException("Unexpected exception thrown for test comparison: " + e.toString());
+            throw new RuntimeException("Test comparison evaluation failed in Engine: " + e.toString());
         }
 
-        if ((Boolean)result != true) {
+        if (resultC == null) {
+            throw new RuntimeException("Test comparison of actual and expected answers resulted in an uncertainty/null value in Engine.");
+        }
+        if (!(resultC instanceof Boolean)) {
+            throw new RuntimeException("Equivalent() had an internal error resulting in a value that is neither Boolean nor null.");
+        }
+        if ((Boolean)resultC != true) {
             throw new RuntimeException("Actual test answer is not equivalent to expected test answer.");
         }
     }

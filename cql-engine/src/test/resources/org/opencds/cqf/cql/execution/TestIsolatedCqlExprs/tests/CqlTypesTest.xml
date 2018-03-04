@@ -102,7 +102,10 @@
 		<test name="DateTimeUncertain">
 			<expression>days between DateTime(2015, 2, 10) and DateTime(2015, 3)</expression>
 			<output>Interval [ 19, 49 ]</output>
-			<!-- TODO: Fix Translator bug: Could not resolve call to operator Equivalent with signature (System.Integer,interval<System.Integer>). -->
+			<!-- TODO: How to handle the fact the question is resulting in an
+			undertainty interval and that CQL/ELM seem to provide no direct way of
+			selecting the same value, conceptually an implementation internal;
+			currently Equivalent() results in null from comparing with an Interval. -->
 		</test>
 		<test name="DateTimeMin">
 			<expression>DateTime(0001, 1, 1, 0, 0, 0, 0)</expression>
