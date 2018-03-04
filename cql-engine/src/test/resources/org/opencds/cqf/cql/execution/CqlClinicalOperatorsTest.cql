@@ -14,7 +14,7 @@ define AgeYears: Patient.AgeInYears()*/
 //AgeAt
 
 //CalculateAge
-// define CalculateAgeYears: CalculateAgeInYears(DateTime(2000, 1, 1))
+define CalculateAgeYears: CalculateAgeInYears(DateTime(2000, 1, 1))
 define CalculateAgeMonths: CalculateAgeInMonths(DateTime(2000, 1, 1))
 define CalculateAgeDays: CalculateAgeInDays(DateTime(2000, 1, 1))
 define CalculateAgeHours: CalculateAgeInHours(DateTime(2000, 1, 1, 0))

@@ -39,11 +39,10 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     public void testCalculateAge() throws JAXBException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Context context = new Context(library);
         DateTime now = context.getEvaluationDateTime();
-        // TODO: fix this -- translation error
-        // Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
-        // assertThat(result, is(16));
+        Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
+        assertThat(result, is((CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "year"))));
 
-        Object result = context.resolveExpressionRef("CalculateAgeMonths").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("CalculateAgeMonths").getExpression().evaluate(context);
         assertThat(result, is((CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "month"))));
 
         result = context.resolveExpressionRef("CalculateAgeDays").getExpression().evaluate(context);

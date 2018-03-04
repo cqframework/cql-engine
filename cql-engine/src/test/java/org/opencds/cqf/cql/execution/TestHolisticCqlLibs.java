@@ -90,7 +90,12 @@ public class TestHolisticCqlLibs {
             }
         }
 
-        for (ExpressionDef statement : library.getStatements().getDef())
+        Library.Statements statements = library.getStatements();
+        if (statements == null) {
+            throw new RuntimeException("Test library parsed but didn't declare any statements.");
+        }
+
+        for (ExpressionDef statement : statements.getDef())
         {
             if (!(statement instanceof ExpressionDefEvaluator))
             {

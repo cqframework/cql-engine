@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
-	<!-- This whole test set at large depends on features the test framework
-	doesn't currently have, and so hasn't been ported.
-	A small subset could have been ported, but wasn't, as yet. -->
-</tests>
