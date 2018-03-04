@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
+	<group name="Code">
+		<test name="CodeLiteral">
+			<expression>
+				codesystem "LOINC": 'http://loinc.org'
+
+				define private CodeLiteral: Code '8480-6' from "LOINC" display 'Systolic blood pressure'
+
+				define private CodeLiteral_A: Code { code: '8480-6', system: 'http://loinc.org', display: 'Systolic blood pressure' }
+
+				define public CodeLiteral_C: Equivalent(CodeLiteral,CodeLiteral_A)
+			</expression>
+		</test>
+	</group>
+	<group name="Concept">
+		<test name="ConceptTest">
+			<expression>
+				codesystem "LOINC": 'http://loinc.org'
+
+				define private ConceptTest: Concept { Code '66071002' from "LOINC", Code 'B18.1' from "LOINC"} display 'Type B viral hepatitis'
+
+				define private ConceptTest_A:
+					Concept {
+						codes: {
+							Code { code: '66071002', system: 'http://loinc.org' },
+							Code { code: 'B18.1', system: 'http://loinc.org' }
+						},
+						display: 'Type B viral hepatitis'
+					}
+
+				define public ConceptTest_C: Equivalent(ConceptTest,ConceptTest_A)
+			</expression>
+		</test>
+	</group>
+	<group name="Interval">
+		<test name="Issue33">
+			<expression>
+				define private TestDateTime1: @2017-12-20T11:00:00
+
+				define private function ToDate(Value DateTime):
+					DateTime(year from Value, month from Value, day from Value, 0, 0, 0, 0, timezone from Value)
+
+				define private function CalendarDayOf(Value DateTime):
+					Interval[Value, ToDate((Value + 1 day)))
+
+				define private Issue33: CalendarDayOf(TestDateTime1)
+
+				define private Issue33_A: Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]
+
+				define public Issue33_C: Equivalent(Issue33,Issue33_A)
+			</expression>
+		</test>
+	</group>
+</tests>
