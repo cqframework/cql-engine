@@ -7,29 +7,28 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
 
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.elm.execution.ExpressionDefEvaluator;
 import org.opencds.cqf.cql.execution.tests.Expression;
 import org.opencds.cqf.cql.execution.tests.Group;
-import org.opencds.cqf.cql.execution.tests.Output;
 import org.opencds.cqf.cql.execution.tests.Tests;
 
 import org.testng.annotations.Test;
 
 /**
- * Created by Darren on 2018 Jan 16.
+ * Created by Darren on 2018 Mar 3.
  */
-public class TestIsolatedCqlExprs {
+public class TestHolisticCqlLibs {
 
     private Tests loadTestsFile(String testsFilePath) {
         try {
-            InputStream testsFileRaw = TestIsolatedCqlExprs.class.getResourceAsStream(testsFilePath);
+            InputStream testsFileRaw = TestHolisticCqlLibs.class.getResourceAsStream(testsFilePath);
             return JAXB.unmarshal(testsFileRaw, Tests.class);
         }
         catch (Exception e) {
@@ -40,7 +39,7 @@ public class TestIsolatedCqlExprs {
     private Object[] loadResourceDirFileNameList(String resourceDirPath) {
         /* TODO: Should return String[] but how to do the cast that doesn't die at runtime. */
         ByteArrayInputStream fileNamesRaw
-            = (ByteArrayInputStream)TestIsolatedCqlExprs.class.getResourceAsStream(resourceDirPath);
+            = (ByteArrayInputStream)TestHolisticCqlLibs.class.getResourceAsStream(resourceDirPath);
         if (fileNamesRaw == null) {
             // The directory is empty / contains no files.
             return new Object[] {};
@@ -50,117 +49,94 @@ public class TestIsolatedCqlExprs {
         return fileNames.toArray();
     }
 
-    private void runIsolatedCqlExprTest(org.opencds.cqf.cql.execution.tests.Test test) {
+    private void runHolisticCqlLibTest(org.opencds.cqf.cql.execution.tests.Test test) {
         Expression testQ = test.getExpression();
         if (testQ == null) {
-            throw new RuntimeException("Test has no question (expression).");
+            throw new RuntimeException("Test has no library definition (expression).");
         }
-        String cqlExprQ = testQ.getValue();
-        if (cqlExprQ == null || cqlExprQ.equals("")) {
-            throw new RuntimeException("Test has no question (expression).");
+        String libCql = testQ.getValue();
+        if (libCql == null || libCql.equals("")) {
+            throw new RuntimeException("Test has no library definition (expression).");
         }
 
         Boolean expectInvalid = testQ.isInvalid() != null && testQ.isInvalid();
 
+        // Note that we are not using "test" child node "output" yet for anything.
+
         // If the test expression is invalid, expect an error during
         // translation or evaluation and fail if we don't get one;
         // otherwise fail if we do get one.
-        String cqlLibQ = "library TestQ define Q: " + cqlExprQ;
-        ArrayList<String> errorsQ = new ArrayList<>();
-        String elmLibQ = CqlToElmLib.maybe_cql_to_elm_xml(cqlLibQ, errorsQ);
-        if (elmLibQ == null) {
+        ArrayList<String> errors = new ArrayList<>();
+        String libElm = CqlToElmLib.maybe_cql_to_elm_xml(libCql, errors);
+        if (libElm == null) {
             if (expectInvalid) {
                 return;
             }
             else {
-                throw new RuntimeException("Test question CQL failed to translate to ELM in Translator: " + errorsQ.toString());
+                throw new RuntimeException("Test library CQL failed to translate to ELM in Translator: " + errors.toString());
             }
         }
-        Library libraryQ;
+        Library library;
         try {
-            libraryQ = CqlLibraryReader.read(new ByteArrayInputStream(
-                elmLibQ.getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (Exception e) {
-            if (expectInvalid) {
-                return;
-            }
-            else {
-                throw new RuntimeException("Test question translated but ELM failed to parse in Engine: " + e.toString());
-            }
-        }
-        Object resultQ;
-        try {
-            Context contextQ = new Context(libraryQ);
-            resultQ = contextQ.resolveExpressionRef("Q").getExpression().evaluate(contextQ);
+            library = CqlLibraryReader.read(new ByteArrayInputStream(
+                libElm.getBytes(StandardCharsets.UTF_8)));
         }
         catch (Exception e) {
             if (expectInvalid) {
                 return;
             }
             else {
-                throw new RuntimeException("Test question parsed but evaluation failed in Engine: " + e.toString());
+                throw new RuntimeException("Test library translated but ELM failed to parse in Engine: " + e.toString());
             }
         }
-        if (expectInvalid) {
-            throw new RuntimeException("Test question didn't fail to translate/parse/evaluate as expected.");
-        }
 
-        List<Output> testA = test.getOutput();
-        if (testA.size() != 1) {
-            throw new RuntimeException("Test has not exactly one answer (output).");
-        }
-        String cqlExprA = testA.get(0).getValue();
-        if (cqlExprA == null || cqlExprA.equals("")) {
-            throw new RuntimeException("Test has not exactly one answer (output).");
-        }
+        for (ExpressionDef statement : library.getStatements().getDef())
+        {
+            if (!(statement instanceof ExpressionDefEvaluator))
+            {
+                // This skips over any FunctionDef statements for starters.
+                continue;
+            }
+            if (!statement.getAccessLevel().value().equals("Public"))
+            {
+                // Note: It appears that Java interns the string "Public"
+                // since using != here also seems to work.
+                continue;
+            }
 
-        String cqlLibA = "library TestA define A: " + cqlExprA;
-        ArrayList<String> errorsA = new ArrayList<>();
-        String elmLibA = CqlToElmLib.maybe_cql_to_elm_xml(cqlLibA, errorsA);
-        if (elmLibA == null) {
-            throw new RuntimeException("Test answer CQL failed to translate to ELM in Translator: " + errorsA.toString());
-        }
-        Library libraryA;
-        try {
-            libraryA = CqlLibraryReader.read(new ByteArrayInputStream(
-                elmLibA.getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Test answer translated but ELM failed to parse in Engine: " + e.toString());
-        }
-        Object resultA;
-        try {
-            Context contextA = new Context(libraryA);
-            resultA = contextA.resolveExpressionRef("A").getExpression().evaluate(contextA);
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Test answer parsed but evaluation failed in Engine: " + e.toString());
-        }
+            String stmtName = statement.getName();
 
-        Object resultC;
-        try {
-            resultC = EquivalentEvaluator.equivalent(resultQ, resultA);
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Test comparison evaluation failed in Engine: " + e.toString());
-        }
+            Object result;
+            try
+            {
+                Context context = new Context(library);
+                result = statement.evaluate(context);
+            }
+            catch (Exception e) {
+                if (expectInvalid) {
+                    continue;
+                }
+                else {
+                    throw new RuntimeException("Test library parsed but evaluation of statement named ["
+                        + stmtName + "] failed in Engine: " + e.toString());
+                }
+            }
+            if (expectInvalid) {
+                throw new RuntimeException("Test library statement named ["
+                    + stmtName + "] didn't fail to translate/parse/evaluate as expected.");
+            }
 
-        if (resultC == null) {
-            throw new RuntimeException("Test comparison of actual and expected answers resulted in an uncertainty/null value in Engine.");
-        }
-        if (!(resultC instanceof Boolean)) {
-            throw new RuntimeException("Equivalent() had an internal error resulting in a value that is neither Boolean nor null.");
-        }
-        if ((Boolean)resultC != true) {
-            throw new RuntimeException("Actual test answer is not equivalent to expected test answer.");
+            if (!(result instanceof Boolean && (Boolean)result == true)) {
+                throw new RuntimeException("Test library statement named ["
+                    + stmtName + "] evaluation resulted in something that is not the expected Boolean true value.");
+            }
         }
     }
 
     @Test
-    public void testIsolatedCqlExprs() {
-        // Load Test cases from org/opencds/cqf/cql/execution/TestIsolatedCqlExprs/tests/*.xml
-        String testsDirPath = "TestIsolatedCqlExprs/tests";
+    public void testHolisticCqlLibs() {
+        // Load Test cases from org/opencds/cqf/cql/execution/TestHolisticCqlLibs/tests/*.xml
+        String testsDirPath = "TestHolisticCqlLibs/tests";
         Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
         Integer padWidth = Arrays.stream(testsFileNames)
             .map(f -> ((String)f).length()).reduce(0, (x,y) -> x > y ? x : y);
@@ -178,7 +154,7 @@ public class TestIsolatedCqlExprs {
                     testCounter += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
-                        runIsolatedCqlExprTest(test);
+                        runHolisticCqlLibTest(test);
                         passCounter += 1;
                         System.out.println(String.format("Test %s passed.", test.getName()));
                     }
@@ -193,7 +169,7 @@ public class TestIsolatedCqlExprs {
             System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
         }
         System.out.println("==================================================");
-        System.out.println("TestIsolatedCqlExprs Results Summary:");
+        System.out.println("TestHolisticCqlLibs Results Summary:");
         System.out.println(" * Each file's passed/total test count:");
         for (String fileResult : fileResults) {
             System.out.println("   * " + fileResult);
