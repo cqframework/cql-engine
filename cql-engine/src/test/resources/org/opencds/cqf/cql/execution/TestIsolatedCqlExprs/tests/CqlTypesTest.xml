@@ -50,38 +50,6 @@
 			<output>false</output>
 		</test>
 	</group>
-	<group name="Code">
-		<!-- REPLACED BY TestHolisticCqlLibs : CqlTypesTest.xml
-		<test name="CodeLiteral">
-			<expression>Code { code: '8480-6', system: 'http://loinc.org', display: 'Systolic blood pressure' }</expression>
-			<output>Code { code: '8480-6', system: 'http://loinc.org', display: 'Systolic blood pressure' }</output>
-		</test>
-		-->
-	</group>
-	<group name="Concept">
-		<!-- REPLACED BY TestHolisticCqlLibs : CqlTypesTest.xml
-		<test name="ConceptTest">
-			<expression>
-				Concept {
-					codes: {
-						Code { code: '66071002', system: 'http://loinc.org' },
-						Code { code: 'B18.1', system: 'http://loinc.org' }
-					},
-					display: 'Type B viral hepatitis'
-				}
-			</expression>
-			<output>
-				Concept {
-					codes: {
-						Code { code: '66071002', system: 'http://loinc.org' },
-						Code { code: 'B18.1', system: 'http://loinc.org' }
-					},
-					display: 'Type B viral hepatitis'
-				}
-			</output>
-		</test>
-		-->
-	</group>
 	<group name="DateTime">
 		<test name="DateTimeNull">
 			<expression>DateTime(null)</expression>
@@ -155,40 +123,6 @@
 		</test>
 	</group>
 	<group name="Interval">
-		<!-- REPLACED BY TestHolisticCqlLibs : Issue33.xml
-		<test name="Issue33">
-			<expression>
-				Interval[
-					@2017-12-20T11:00:00,
-					DateTime(
-						year from (@2017-12-20T11:00:00 + 1 day),
-						month from (@2017-12-20T11:00:00 + 1 day),
-						day from (@2017-12-20T11:00:00 + 1 day),
-						0, 0, 0, 0,
-						timezone from (@2017-12-20T11:00:00 + 1 day)
-					)
-				)
-			</expression>
-			<output>Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]</output>
-		</test>
-		-->
-		<!-- REPLACED BY TestIsolatedCqlExprs : Issue39.xml
-		<test name="Issue39">
-			<expression>
-				Interval[
-					@2017-12-20T11:00:00,
-					DateTime(
-					year from (@2017-12-20T11:00:00 + 1 day),
-					month from (@2017-12-20T11:00:00 + 1 day),
-					day from (@2017-12-20T11:00:00 + 1 day),
-					0, 0, 0, 0,
-					timezone from (@2017-12-20T11:00:00 + 1 day)
-					)
-				) ~ Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]
-			</expression>
-			<output>true</output>
-		</test>
-		-->
 	</group>
 	<group name="Quantity">
 		<test name="QuantityTest">

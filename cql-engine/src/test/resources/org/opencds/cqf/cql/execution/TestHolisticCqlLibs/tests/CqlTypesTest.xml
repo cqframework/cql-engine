@@ -33,25 +33,4 @@
 			</expression>
 		</test>
 	</group>
-	<group name="Interval">
-		<!-- REPLACED BY TestHolisticCqlLibs : Issue33.xml
-		<test name="Issue33">
-			<expression>
-				define private TestDateTime1: @2017-12-20T11:00:00
-
-				define private function ToDate(Value DateTime):
-					DateTime(year from Value, month from Value, day from Value, 0, 0, 0, 0, timezone from Value)
-
-				define private function CalendarDayOf(Value DateTime):
-					Interval[Value, ToDate((Value + 1 day)))
-
-				define private Issue33: CalendarDayOf(TestDateTime1)
-
-				define private Issue33_A: Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]
-
-				define public Issue33_C: Equivalent(Issue33,Issue33_A)
-			</expression>
-		</test>
-		-->
-	</group>
 </tests>
