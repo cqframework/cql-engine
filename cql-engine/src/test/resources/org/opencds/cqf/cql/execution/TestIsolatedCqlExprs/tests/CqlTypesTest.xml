@@ -51,12 +51,15 @@
 		</test>
 	</group>
 	<group name="Code">
+		<!-- REPLACED BY TestHolisticCqlLibs : CqlTypesTest.xml
 		<test name="CodeLiteral">
 			<expression>Code { code: '8480-6', system: 'http://loinc.org', display: 'Systolic blood pressure' }</expression>
 			<output>Code { code: '8480-6', system: 'http://loinc.org', display: 'Systolic blood pressure' }</output>
 		</test>
+		-->
 	</group>
 	<group name="Concept">
+		<!-- REPLACED BY TestHolisticCqlLibs : CqlTypesTest.xml
 		<test name="ConceptTest">
 			<expression>
 				Concept {
@@ -77,6 +80,7 @@
 				}
 			</output>
 		</test>
+		-->
 	</group>
 	<group name="DateTime">
 		<test name="DateTimeNull">
@@ -151,6 +155,7 @@
 		</test>
 	</group>
 	<group name="Interval">
+		<!-- REPLACED BY TestHolisticCqlLibs : Issue33.xml
 		<test name="Issue33">
 			<expression>
 				Interval[
@@ -166,6 +171,8 @@
 			</expression>
 			<output>Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]</output>
 		</test>
+		-->
+		<!-- REPLACED BY TestIsolatedCqlExprs : Issue39.xml
 		<test name="Issue39">
 			<expression>
 				Interval[
@@ -181,6 +188,7 @@
 			</expression>
 			<output>true</output>
 		</test>
+		-->
 	</group>
 	<group name="Quantity">
 		<test name="QuantityTest">

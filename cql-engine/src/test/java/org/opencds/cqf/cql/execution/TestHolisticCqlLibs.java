@@ -145,6 +145,8 @@ public class TestHolisticCqlLibs {
         Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
         Integer padWidth = Arrays.stream(testsFileNames)
             .map(f -> ((String)f).length()).reduce(0, (x,y) -> x > y ? x : y);
+        int testCounterAllFiles = 0;
+        int passCounterAllFiles = 0;
         ArrayList<String> fileResults = new ArrayList<>();
         ArrayList<String> failedTests = new ArrayList<>();
         for (Object testsFileName : testsFileNames) {
@@ -157,10 +159,12 @@ public class TestHolisticCqlLibs {
                 System.out.println(String.format("Running test group %s...", group.getName()));
                 for (org.opencds.cqf.cql.execution.tests.Test test : group.getTest()) {
                     testCounter += 1;
+                    testCounterAllFiles += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
                         runHolisticCqlLibTest(test);
                         passCounter += 1;
+                        passCounterAllFiles += 1;
                         System.out.println(String.format("Test %s passed.", test.getName()));
                     }
                     catch (Exception e) {
@@ -175,6 +179,7 @@ public class TestHolisticCqlLibs {
         }
         System.out.println("==================================================");
         System.out.println("TestHolisticCqlLibs Results Summary:");
+        System.out.println(" * Summary passed/total test count: "+passCounterAllFiles+"/"+testCounterAllFiles);
         System.out.println(" * Each file's passed/total test count:");
         for (String fileResult : fileResults) {
             System.out.println("   * " + fileResult);

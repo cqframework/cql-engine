@@ -34,6 +34,7 @@
 		</test>
 	</group>
 	<group name="Interval">
+		<!-- REPLACED BY TestHolisticCqlLibs : Issue33.xml
 		<test name="Issue33">
 			<expression>
 				define private TestDateTime1: @2017-12-20T11:00:00
@@ -51,5 +52,6 @@
 				define public Issue33_C: Equivalent(Issue33,Issue33_A)
 			</expression>
 		</test>
+		-->
 	</group>
 </tests>

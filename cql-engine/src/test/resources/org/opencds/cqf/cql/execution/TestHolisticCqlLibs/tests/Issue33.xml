@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
+	<!-- TEST FILE WITH RESPECT TO: https://github.com/DBCG/cql_engine/issues/33 -->
+	<group name="Issue33">
+		<test name="Issue33">
+			<expression>
+				define private TestDateTime1: @2017-12-20T11:00:00
+
+				define private function ToDate(Value DateTime):
+					DateTime(year from Value, month from Value, day from Value, 0, 0, 0, 0, timezone from Value)
+
+				define private function CalendarDayOf(Value DateTime):
+					Interval[Value, ToDate((Value + 1 day)))
+
+				define private Issue33: CalendarDayOf(TestDateTime1)
+
+				define private Issue33_A: Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]
+
+				define public Issue33_C: Equivalent(Issue33,Issue33_A)
+			</expression>
+		</test>
+	</group>
+</tests>
