@@ -3,6 +3,7 @@
 	<!-- TODO: Go through this file and flesh out or correct
 	all the bounds checking against the CQL spec. -->
 	<group name="Any">
+		<!-- REPLACED BY TestIsolatedCqlExprs : ValueLiteralsAndSelectors.xml
 		<test name="AnyInteger">
 			<expression>5</expression>
 			<output>5</output>
@@ -11,6 +12,7 @@
 			<expression>5.0</expression>
 			<output>5.0</output>
 		</test>
+		-->
 		<test name="AnyQuantity">
 			<expression>5.0 'g'</expression>
 			<output>5.0'g'</output>
@@ -41,6 +43,7 @@
 		</test>
 	</group>
 	<group name="Boolean">
+		<!-- REPLACED BY TestIsolatedCqlExprs : ValueLiteralsAndSelectors.xml
 		<test name="BooleanTestTrue">
 			<expression>true</expression>
 			<output>true</output>
@@ -49,6 +52,7 @@
 			<expression>false</expression>
 			<output>false</output>
 		</test>
+		-->
 	</group>
 	<group name="DateTime">
 		<test name="DateTimeNull">
@@ -89,6 +93,7 @@
 		</test>
 	</group>
 	<group name="Decimal">
+		<!-- REPLACED BY TestIsolatedCqlExprs : ValueLiteralsAndSelectors.xml
 		<test name="DecimalUpperBoundExcept">
 			<expression>10000000000000000000000000000000000.00000000</expression>
 			<output>10000000000000000000000000000000000.00000000</output>
@@ -105,22 +110,21 @@
 			<expression>3.14159265</expression>
 			<output>3.14159265</output>
 		</test>
+		-->
 	</group>
 	<group name="Integer">
+		<!-- REPLACED BY TestIsolatedCqlExprs : ValueLiteralsAndSelectors.xml
 		<test name="IntegerUpperBoundExcept">
 			<expression invalid="true">2147483649</expression>
-			<!-- TODO: Have a nicer error of our own rather than internal Java exception. -->
-			<!-- EXPECT: java.lang.NumberFormatException: For input string: "2147483649" -->
 		</test>
 		<test name="IntegerLowerBoundExcept">
 			<expression invalid="true">-2147483649</expression>
-			<!-- TODO: Have a nicer error of our own rather than internal Java exception. -->
-			<!-- EXPECT: java.lang.NumberFormatException: For input string: "2147483649" -->
 		</test>
 		<test name="IntegerProper">
 			<expression>5000</expression>
 			<output>5000</output>
 		</test>
+		-->
 	</group>
 	<group name="Interval">
 	</group>
