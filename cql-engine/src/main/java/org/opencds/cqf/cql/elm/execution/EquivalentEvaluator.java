@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Time;
@@ -132,6 +133,10 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
                 }
             }
             return true;
+        }
+
+        else if (left instanceof Code) {
+            return ((Code) left).equivalent((Code) right);
         }
 
         return EqualEvaluator.equal(left, right);

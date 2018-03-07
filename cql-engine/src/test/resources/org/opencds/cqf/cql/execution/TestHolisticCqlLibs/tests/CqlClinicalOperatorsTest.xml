@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
 	<!-- TODO: This whole test set needs an overhaul.  There are gaps.  Some tests fail.  And so on. -->
+	<!-- Also, these could all probably be reformatted for TestIsolatedCqlExprs. -->
 	<group name="Age">
 		<test name="Age">
 			<expression>
@@ -130,6 +131,39 @@
 				define CodeEquivalentNullFalse: Equivalent(Code2 ~ Code3, false)
 				define ConceptEquivalentNullTrue: Equivalent(Concept3 ~ Concept3, true)
 				define ConceptEquivalentNullFalse: Equivalent(Concept2 ~ Concept3, false)
+			</expression>
+		</test>
+	</group>
+	<group name="CodeAttrsCompare">
+		<!-- The document "CTO Errata Letter-CQL R1.2.pdf" dated 2017-10-14,
+		section "Code Equivalence Semantics - STU Comment 1431",
+		prescribes that Equivalent(Code,Code) should ignore "version" attributes,
+		as it already ignores "display" attributes;
+		but Equal(Code,Code) should still respect both.
+		See also CQL spec section 9.5.3 Equivalent.
+		See also http://www.hl7.org/dstucomments/showdetail_comment.cfm?commentid=1431 -->
+		<test name="CodeAttrsCompare">
+			<expression>
+				// TODO: Revisit later to test all combinations of the 4 attributes being same or different.
+				define private C0000: Code { code: 'ABC', display: 'Code ABC', system: 'http://example.com', version: '2017-01' }
+				define private C0000b: Code { code: 'ABC', display: 'Code ABC', system: 'http://example.com', version: '2017-01' }
+				define private C0001: Code { code: 'ABC', display: 'Code ABC', system: 'http://example.com', version: '2017-05' }
+				define private C0010: Code { code: 'ABC', display: 'Code ABC', system: 'http://another.example.com', version: '2017-01' }
+				define private C0100: Code { code: 'ABC', display: 'Var Desc', system: 'http://example.com', version: '2017-01' }
+				define private C1000: Code { code: 'CBA', display: 'Code ABC', system: 'http://example.com', version: '2017-01' }
+				define private C0101: Code { code: 'ABC', display: 'Var Desc', system: 'http://example.com', version: '2017-05' }
+				define CodeAllSameAttrsEqualTrue: Equivalent(C0000 = C0000b, true)
+				define CodeAllSameAttrsEquivTrue: Equivalent(C0000 ~ C0000b, true)
+				define CodeDiffVersionEqualFalse: Equivalent(C0000 = C0001, false)
+				define CodeDiffVersionEquivTrue : Equivalent(C0000 ~ C0001, true)
+				define CodeDiffSystemEqualFalse : Equivalent(C0000 = C0010, false)
+				define CodeDiffSystemEquivFalse : Equivalent(C0000 ~ C0010, false)
+				define CodeDiffDisplayEqualFalse: Equivalent(C0000 = C0100, false)
+				define CodeDiffDisplayEquivTrue : Equivalent(C0000 ~ C0100, true)
+				define CodeDiffCodeEqualFalse   : Equivalent(C0000 = C1000, false)
+				define CodeDiffCodeEquivFalse   : Equivalent(C0000 ~ C1000, false)
+				define CodeDiffDispVerEqualFalse: Equivalent(C0000 = C0101, false)
+				define CodeDiffDispVerEquivTrue : Equivalent(C0000 ~ C0101, true)
 			</expression>
 		</test>
 	</group>
