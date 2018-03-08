@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.runtime;
 
 import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
 
@@ -119,6 +120,18 @@ public class Interval {
                 && this.getLowClosed() == other.getLowClosed()
                 && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
                 && this.getHighClosed() == other.getHighClosed();
+    }
+
+    public Boolean equivalent(Interval other) {
+        Object startEquivalence = EquivalentEvaluator.equivalent(this.getStart(), other.getStart());
+        Object endEquivalence = EquivalentEvaluator.equivalent(this.getEnd(), other.getEnd());
+        return (startEquivalence == null && endEquivalence == null)
+                || (startEquivalence != null && endEquivalence != null
+                && (Boolean) startEquivalence && (Boolean) endEquivalence);
+    }
+
+    public Boolean similar(Interval other, Value.SimilarityMode mode) {
+        return mode.equals(Value.SimilarityMode.EQUAL) ? this.equal(other) : this.equivalent(other);
     }
 
     /*

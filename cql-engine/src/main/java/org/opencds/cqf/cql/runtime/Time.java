@@ -93,4 +93,20 @@ public class Time extends BaseTemporal {
 
         return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
     }
+
+    // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
+    public Boolean equivalent(Time other) {
+        if (this.getPartial().size() != other.getPartial().size()) { return null; }
+
+        for (int i = 0; i < this.getPartial().size(); ++i) {
+            if (this.getPartial().getValue(i) != other.getPartial().getValue(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public Boolean similar(Time other, Value.SimilarityMode mode) {
+        return mode.equals(Value.SimilarityMode.EQUAL) ? this.equal(other) : this.equivalent(other);
+    }
 }
