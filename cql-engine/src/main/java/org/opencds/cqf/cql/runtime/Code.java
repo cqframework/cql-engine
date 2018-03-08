@@ -55,7 +55,7 @@ public class Code {
 
     public Boolean equal(Code other) {
         return this.getCode().equals(other.getCode())
-                && ((this.getVersion() == null && other.getDisplay() == null)
+                && ((this.getDisplay() == null && other.getDisplay() == null)
                 || (this.getDisplay() != null && this.getDisplay().equals(other.getDisplay())))
                 && ((this.getSystem() == null && other.getSystem() == null)
                 || (this.getSystem() != null && this.getSystem().equals(other.getSystem())))
