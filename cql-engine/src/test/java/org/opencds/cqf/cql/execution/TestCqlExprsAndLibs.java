@@ -12,9 +12,11 @@ import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
 
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.elm.execution.ExpressionDefEvaluator;
 import org.opencds.cqf.cql.execution.tests.Expression;
 import org.opencds.cqf.cql.execution.tests.Group;
 import org.opencds.cqf.cql.execution.tests.Output;
@@ -25,11 +27,11 @@ import org.testng.annotations.Test;
 /**
  * Created by Darren on 2018 Jan 16.
  */
-public class TestIsolatedCqlExprs {
+public class TestCqlExprsAndLibs {
 
     private Tests loadTestsFile(String testsFilePath) {
         try {
-            InputStream testsFileRaw = TestIsolatedCqlExprs.class.getResourceAsStream(testsFilePath);
+            InputStream testsFileRaw = TestCqlExprsAndLibs.class.getResourceAsStream(testsFilePath);
             return JAXB.unmarshal(testsFileRaw, Tests.class);
         }
         catch (Exception e) {
@@ -40,7 +42,7 @@ public class TestIsolatedCqlExprs {
     private Object[] loadResourceDirFileNameList(String resourceDirPath) {
         /* TODO: Should return String[] but how to do the cast that doesn't die at runtime. */
         ByteArrayInputStream fileNamesRaw
-            = (ByteArrayInputStream)TestIsolatedCqlExprs.class.getResourceAsStream(resourceDirPath);
+            = (ByteArrayInputStream)TestCqlExprsAndLibs.class.getResourceAsStream(resourceDirPath);
         if (fileNamesRaw == null) {
             // The directory is empty / contains no files.
             return new Object[] {};
@@ -50,17 +52,103 @@ public class TestIsolatedCqlExprs {
         return fileNames.toArray();
     }
 
-    private void runIsolatedCqlExprTest(org.opencds.cqf.cql.execution.tests.Test test) {
+    private void runTestFile(org.opencds.cqf.cql.execution.tests.Test test) {
         Expression testQ = test.getExpression();
         if (testQ == null) {
-            throw new RuntimeException("Test has no question (expression).");
+            throw new RuntimeException("Test has no question or library definition (expression).");
         }
-        String cqlExprQ = testQ.getValue();
-        if (cqlExprQ == null || cqlExprQ.equals("")) {
-            throw new RuntimeException("Test has no question (expression).");
+        String cqlExprQOrLibCql = testQ.getValue();
+        if (cqlExprQOrLibCql == null || cqlExprQOrLibCql.equals("")) {
+            throw new RuntimeException("Test has no question or library definition (expression).");
         }
 
         Boolean expectInvalid = testQ.isInvalid() != null && testQ.isInvalid();
+
+        if (cqlExprQOrLibCql.matches("(?s).*?\\bdefine\\s+[a-zA-Z_\"].+")) {
+            // If we get here, assume this "test" node defines a CQL library.
+            String libCql = cqlExprQOrLibCql;
+
+            // Note that we are not using "test" child node "output" yet for anything.
+
+            // If the test expression is invalid, expect an error during
+            // translation or evaluation and fail if we don't get one;
+            // otherwise fail if we do get one.
+            ArrayList<String> errors = new ArrayList<>();
+            String libElm = CqlToElmLib.maybe_cql_to_elm_xml(libCql, errors);
+            if (libElm == null) {
+                if (expectInvalid) {
+                    return;
+                }
+                else {
+                    throw new RuntimeException("Test library CQL failed to translate to ELM in Translator: " + errors.toString());
+                }
+            }
+            Library library;
+            try {
+                library = CqlLibraryReader.read(new ByteArrayInputStream(
+                    libElm.getBytes(StandardCharsets.UTF_8)));
+            }
+            catch (Exception e) {
+                if (expectInvalid) {
+                    return;
+                }
+                else {
+                    throw new RuntimeException("Test library translated but ELM failed to parse in Engine: " + e.toString());
+                }
+            }
+
+            Library.Statements statements = library.getStatements();
+            if (statements == null) {
+                throw new RuntimeException("Test library parsed but didn't declare any statements.");
+            }
+
+            for (ExpressionDef statement : statements.getDef())
+            {
+                if (!(statement instanceof ExpressionDefEvaluator))
+                {
+                    // This skips over any FunctionDef statements for starters.
+                    continue;
+                }
+                if (!statement.getAccessLevel().value().equals("Public"))
+                {
+                    // Note: It appears that Java interns the string "Public"
+                    // since using != here also seems to work.
+                    continue;
+                }
+
+                String stmtName = statement.getName();
+
+                Object result;
+                try
+                {
+                    Context context = new Context(library);
+                    result = statement.evaluate(context);
+                }
+                catch (Exception e) {
+                    if (expectInvalid) {
+                        continue;
+                    }
+                    else {
+                        throw new RuntimeException("Test library parsed but evaluation of statement named ["
+                            + stmtName + "] failed in Engine: " + e.toString());
+                    }
+                }
+                if (expectInvalid) {
+                    throw new RuntimeException("Test library statement named ["
+                        + stmtName + "] didn't fail to translate/parse/evaluate as expected.");
+                }
+
+                if (!(result instanceof Boolean && (Boolean)result == true)) {
+                    throw new RuntimeException("Test library statement named ["
+                        + stmtName + "] evaluation resulted in something that is not the expected Boolean true value.");
+                }
+            }
+
+            return;
+        }
+
+        // If we get here, assume this "test" node defines a CQL expression question/answer pair.
+        String cqlExprQ = cqlExprQOrLibCql;
 
         // If the test expression is invalid, expect an error during
         // translation or evaluation and fail if we don't get one;
@@ -158,9 +246,9 @@ public class TestIsolatedCqlExprs {
     }
 
     @Test
-    public void testIsolatedCqlExprs() {
-        // Load Test cases from org/opencds/cqf/cql/execution/TestIsolatedCqlExprs/tests/*.xml
-        String testsDirPath = "TestIsolatedCqlExprs/tests";
+    public void testCqlExprsAndLibs() {
+        // Load Test cases from org/opencds/cqf/cql/execution/TestCqlExprsAndLibs/tests/*.xml
+        String testsDirPath = "TestCqlExprsAndLibs/tests";
         Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
         Integer padWidth = Arrays.stream(testsFileNames)
             .map(f -> ((String)f).length()).reduce(0, (x,y) -> x > y ? x : y);
@@ -181,7 +269,7 @@ public class TestIsolatedCqlExprs {
                     testCounterAllFiles += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
-                        runIsolatedCqlExprTest(test);
+                        runTestFile(test);
                         passCounter += 1;
                         passCounterAllFiles += 1;
                         System.out.println(String.format("Test %s passed.", test.getName()));
@@ -197,7 +285,7 @@ public class TestIsolatedCqlExprs {
             System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
         }
         System.out.println("==================================================");
-        System.out.println("TestIsolatedCqlExprs Results Summary:");
+        System.out.println("TestCqlExprsAndLibs Results Summary:");
         System.out.println(" * Summary passed/total test count: "+passCounterAllFiles+"/"+testCounterAllFiles);
         System.out.println(" * Each file's passed/total test count:");
         for (String fileResult : fileResults) {
