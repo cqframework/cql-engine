@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -52,7 +53,22 @@ public class TestCqlExprsAndLibs {
         return fileNames.toArray();
     }
 
-    private void runTestFile(org.opencds.cqf.cql.execution.tests.Test test) {
+    private TestCollection loadAllTestFiles()
+    {
+        TestCollection testCollection = new TestCollection();
+        // Load Test cases from org/opencds/cqf/cql/execution/TestCqlExprsAndLibs/tests/*.xml
+        String testsDirPath = "TestCqlExprsAndLibs/tests";
+        Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
+        for (Object testsFileName : testsFileNames)
+        {
+            String testsFilePath = testsDirPath + "/" + testsFileName;
+            Tests tests = loadTestsFile(testsFilePath);
+            testCollection.addTestFileHierarchy((String)testsFilePath, tests);
+        }
+        return testCollection;
+    }
+
+    private void runTestNode(org.opencds.cqf.cql.execution.tests.Test test) {
         Expression testQ = test.getExpression();
         if (testQ == null) {
             throw new RuntimeException("Test has no question or library definition (expression).");
@@ -247,19 +263,20 @@ public class TestCqlExprsAndLibs {
 
     @Test
     public void testCqlExprsAndLibs() {
-        // Load Test cases from org/opencds/cqf/cql/execution/TestCqlExprsAndLibs/tests/*.xml
-        String testsDirPath = "TestCqlExprsAndLibs/tests";
-        Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
-        Integer padWidth = Arrays.stream(testsFileNames)
+        System.out.println("Loading all tests.");
+        TestCollection testCollection = loadAllTestFiles();
+        System.out.println("Evaluating all tests.");
+        HashMap<String, Tests> testHierarchy = testCollection.getTestHierarchy();
+        Object[] testsFilePaths = testHierarchy.keySet().stream().sorted().toArray();
+        Integer padWidth = Arrays.stream(testsFilePaths)
             .map(f -> ((String)f).length()).reduce(0, (x,y) -> x > y ? x : y);
         int testCounterAllFiles = 0;
         int passCounterAllFiles = 0;
         ArrayList<String> fileResults = new ArrayList<>();
         ArrayList<String> failedTests = new ArrayList<>();
-        for (Object testsFileName : testsFileNames) {
-            String testsFilePath = testsDirPath + "/" + testsFileName;
+        for (Object testsFilePath : testsFilePaths) {
             System.out.println(String.format("Running test file %s...", testsFilePath));
-            Tests tests = loadTestsFile(testsFilePath);
+            Tests tests = testHierarchy.get(testsFilePath);
             int testCounter = 0;
             int passCounter = 0;
             for (Group group : tests.getGroup()) {
@@ -269,19 +286,19 @@ public class TestCqlExprsAndLibs {
                     testCounterAllFiles += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
-                        runTestFile(test);
+                        runTestNode(test);
                         passCounter += 1;
                         passCounterAllFiles += 1;
                         System.out.println(String.format("Test %s passed.", test.getName()));
                     }
                     catch (Exception e) {
-                        failedTests.add(testsFileName + " -> " + group.getName() + " -> " + test.getName());
+                        failedTests.add(testsFilePath + " -> " + group.getName() + " -> " + test.getName());
                         System.out.println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
                     }
                 }
                 //System.out.println(String.format("Finished test group %s.", group.getName()));
             }
-            fileResults.add(String.format("%-"+padWidth.toString()+"s %3d/%3d", testsFileName, passCounter, testCounter));
+            fileResults.add(String.format("%-"+padWidth.toString()+"s %3d/%3d", testsFilePath, passCounter, testCounter));
             System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
         }
         System.out.println("==================================================");
