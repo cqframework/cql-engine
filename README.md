@@ -40,7 +40,7 @@ After the Engine is built, this is the most direct way to execute any CQL
 or ELM file:
 
 ```
-java -jar ./cql-engine/build/libs/cql-engine-all-1.2.37-SNAPSHOT.jar filename
+java -jar ./cql-engine/build/libs/cql-engine-all-1.2.38-SNAPSHOT.jar filename
 ```
 
 A simple wrapper script exists for the above so you can say this instead:
