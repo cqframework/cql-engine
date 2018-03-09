@@ -14,21 +14,20 @@ import org.opencds.cqf.cql.elm.execution.ExpressionDefEvaluator;
  */
 public class CqlRunnerLib
 {
-    public static void perform(String maybe_cql_or_elm_sc, ArrayList<String> errors)
+    public static void perform(String maybeCqlOrElm, ArrayList<String> errors)
     {
         Library library = null;
         try
         {
             // First try and parse the input as ELM.
             library = CqlLibraryReader.read(new ByteArrayInputStream(
-                maybe_cql_or_elm_sc.getBytes(StandardCharsets.UTF_8)));
+                maybeCqlOrElm.getBytes(StandardCharsets.UTF_8)));
         }
         catch (Exception e1)
         {
             // Parsing the input as ELM failed; try and parse it as CQL.
-            String elm_xml = CqlToElmLib.maybe_cql_to_elm_xml(
-                maybe_cql_or_elm_sc, errors);
-            if (elm_xml == null)
+            String elm = CqlToElmLib.maybeCqlToElm(maybeCqlOrElm, errors);
+            if (elm == null)
             {
                 errors.add("The source code failed to parse either as ELM or as CQL.");
                 errors.add("The prior errors were during the attempt to parse as CQL.");
@@ -39,7 +38,7 @@ public class CqlRunnerLib
             try
             {
                 library = CqlLibraryReader.read(new ByteArrayInputStream(
-                    elm_xml.getBytes(StandardCharsets.UTF_8)));
+                    elm.getBytes(StandardCharsets.UTF_8)));
             }
             catch (Exception e2)
             {

@@ -13,13 +13,12 @@ import org.cqframework.cql.elm.tracking.TrackBack;
  */
 public class CqlToElmLib
 {
-    public static String maybe_cql_to_elm_xml(String maybe_cql_source_code)
+    public static String maybeCqlToElm(String maybeCql)
     {
-        return maybe_cql_to_elm_xml(maybe_cql_source_code, null);
+        return maybeCqlToElm(maybeCql, null);
     }
 
-    public static String maybe_cql_to_elm_xml(String maybe_cql_source_code,
-        ArrayList<String> errors)
+    public static String maybeCqlToElm(String maybeCql, ArrayList<String> errors)
     {
         ModelManager modelManager = new ModelManager();
         LibraryManager libraryManager = new LibraryManager(modelManager);
@@ -28,33 +27,33 @@ public class CqlToElmLib
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
 
         CqlTranslator translator = CqlTranslator.fromText(
-            maybe_cql_source_code, modelManager, libraryManager,
+            maybeCql, modelManager, libraryManager,
             options.toArray(new CqlTranslator.Options[options.size()]));
 
         if (translator.getErrors().size() > 0)
         {
             if (errors != null)
             {
-                collect_errors(errors, translator.getErrors());
+                collectErrors(errors, translator.getErrors());
             }
             return null;
         }
 
-        String elm_xml = translator.toXml();
+        String elm = translator.toXml();
 
         if (translator.getErrors().size() > 0)
         {
             if (errors != null)
             {
-                collect_errors(errors, translator.getErrors());
+                collectErrors(errors, translator.getErrors());
             }
             return null;
         }
 
-        return elm_xml;
+        return elm;
     }
 
-    public static void collect_errors(ArrayList<String> errors,
+    private static void collectErrors(ArrayList<String> errors,
         Iterable<CqlTranslatorException> exceptions)
     {
         errors.add("Translation of CQL to ELM failed due to errors:");

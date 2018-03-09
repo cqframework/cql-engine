@@ -74,7 +74,7 @@ public class TestCqlExprsAndLibs {
             // translation or evaluation and fail if we don't get one;
             // otherwise fail if we do get one.
             ArrayList<String> errors = new ArrayList<>();
-            String libElm = CqlToElmLib.maybe_cql_to_elm_xml(libCql, errors);
+            String libElm = CqlToElmLib.maybeCqlToElm(libCql, errors);
             if (libElm == null) {
                 if (expectInvalid) {
                     return;
@@ -155,7 +155,7 @@ public class TestCqlExprsAndLibs {
         // otherwise fail if we do get one.
         String cqlLibQ = "library TestQ define Q: " + cqlExprQ;
         ArrayList<String> errorsQ = new ArrayList<>();
-        String elmLibQ = CqlToElmLib.maybe_cql_to_elm_xml(cqlLibQ, errorsQ);
+        String elmLibQ = CqlToElmLib.maybeCqlToElm(cqlLibQ, errorsQ);
         if (elmLibQ == null) {
             if (expectInvalid) {
                 return;
@@ -205,7 +205,7 @@ public class TestCqlExprsAndLibs {
 
         String cqlLibA = "library TestA define A: " + cqlExprA;
         ArrayList<String> errorsA = new ArrayList<>();
-        String elmLibA = CqlToElmLib.maybe_cql_to_elm_xml(cqlLibA, errorsA);
+        String elmLibA = CqlToElmLib.maybeCqlToElm(cqlLibA, errorsA);
         if (elmLibA == null) {
             throw new RuntimeException("Test answer CQL failed to translate to ELM in Translator: " + errorsA.toString());
         }

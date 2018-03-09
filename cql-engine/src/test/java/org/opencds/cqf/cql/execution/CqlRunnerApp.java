@@ -18,13 +18,13 @@ public class CqlRunnerApp
     {
         if (args.length != 1)
         {
-            // TODO: Review whether host_executable_path reflects actual
+            // TODO: Review whether hostExecutablePath reflects actual
             // main program invocation syntax or not, and accounts for
             // the varied host operating systems or compiled vs debugged.
-            String host_executable_path = CqlRunnerApp.class
+            String hostExecutablePath = CqlRunnerApp.class
                 .getProtectionDomain().getCodeSource().getLocation().getPath();
             System.out.println(
-                "Usage: " + host_executable_path + " <source_code_file_path>");
+                "Usage: " + hostExecutablePath + " <sourceCodeFilePath>");
             return;
         }
 
@@ -33,39 +33,39 @@ public class CqlRunnerApp
         // If the user-specified file path is absolute, toAbsolutePath()
         // will just use that as the final path; otherwise it is taken
         // as relative to the host executable's current working directory.
-        Path source_code_file_path = FileSystems.getDefault()
+        Path sourceCodeFilePath = FileSystems.getDefault()
             .getPath(args[0]).toAbsolutePath().normalize();
 
-        if (!Files.exists(source_code_file_path)
-            || !Files.isRegularFile(source_code_file_path))
+        if (!Files.exists(sourceCodeFilePath)
+            || !Files.isRegularFile(sourceCodeFilePath))
         {
             System.out.println("The requested source code providing file"
-                + " [" + source_code_file_path + "] doesn't exist.");
+                + " [" + sourceCodeFilePath + "] doesn't exist.");
             return;
         }
 
-        if (!Files.isReadable(source_code_file_path))
+        if (!Files.isReadable(sourceCodeFilePath))
         {
             System.out.println("The requested source code providing file"
-                + " [" + source_code_file_path + "] couldn't be read"
+                + " [" + sourceCodeFilePath + "] couldn't be read"
                 + " due to lack of permissions.");
             return;
         }
 
-        byte[] source_code_file_content;
+        byte[] sourceCodeFileContent;
         try
         {
-            source_code_file_content = Files.readAllBytes(source_code_file_path);
+            sourceCodeFileContent = Files.readAllBytes(sourceCodeFilePath);
         }
         catch (Exception e)
         {
             System.out.println("The requested source code providing file"
-                + " [" + source_code_file_path + "] couldn't be read:"
+                + " [" + sourceCodeFilePath + "] couldn't be read:"
                 + "\n" + e.toString());
             return;
         }
 
-        String source_code_text;
+        String sourceCodeText;
         try
         {
             // TODO: Try other charsets if decoding as UTF-8 doesn't work.
@@ -73,24 +73,24 @@ public class CqlRunnerApp
             CharsetDecoder cd = StandardCharsets.UTF_8.newDecoder();
             cd.onMalformedInput(CodingErrorAction.REPORT);
             cd.onUnmappableCharacter(CodingErrorAction.REPORT);
-            source_code_text = cd.decode(ByteBuffer.wrap(source_code_file_content)).toString();
+            sourceCodeText = cd.decode(ByteBuffer.wrap(sourceCodeFileContent)).toString();
         }
         catch (Exception e)
         {
             System.out.println("The requested source code providing file"
-                + " [" + source_code_file_path + "] was not (UTF-8) character data:"
+                + " [" + sourceCodeFilePath + "] was not (UTF-8) character data:"
                 + "\n" + e.toString());
             return;
         }
 
-        // Try to interpret the source_code_text as CQL or ELM and execute it.
+        // Try to interpret the sourceCodeText as CQL or ELM and execute it.
         ArrayList<String> errors = new ArrayList<>();
-        CqlRunnerLib.perform(source_code_text, errors);
+        CqlRunnerLib.perform(sourceCodeText, errors);
 
         if (errors.size() > 0)
         {
             System.out.println("The requested source code providing file"
-                + " [" + source_code_file_path + "] was character data"
+                + " [" + sourceCodeFilePath + "] was character data"
                 + " but couldn't be executed as CQL or ELM source code:"
                 + "\n" + String.join("\n", errors));
             return;
