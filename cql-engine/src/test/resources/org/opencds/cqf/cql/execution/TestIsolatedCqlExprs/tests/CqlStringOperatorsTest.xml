@@ -64,7 +64,7 @@
 			<expression>Indexer('a', null)</expression>
 			<output>null</output>
 		</test>
-		<test name="IndexerNull1">
+		<test name="IndexerNull1String">
 			<expression>Indexer(null as String, 1)</expression>
 			<output>null</output>
 			<!-- cast is required due to ambiguity with Indexer(String) and Indexer(List&lt;Any&gt;) -->
@@ -109,12 +109,12 @@
 		</test>
 	</group>
 	<group name="Length">
-		<test name="LengthNull">
+		<test name="LengthNullString">
 			<expression>Length(null as String)</expression>
 			<output>0</output>
 			<!-- cast is required due to ambiguity with Length(String) and Length(List&lt;Any&gt;) -->
 		</test>
-		<test name="LengthEmpty">
+		<test name="LengthEmptyString">
 			<expression>Length('')</expression>
 			<output>0</output>
 		</test>

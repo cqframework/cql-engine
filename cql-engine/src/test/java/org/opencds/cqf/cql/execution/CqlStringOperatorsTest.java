@@ -82,7 +82,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("IndexerANull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("IndexerNull1").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IndexerNull1String").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IndexerAB0").getExpression().evaluate(context);
@@ -159,10 +159,10 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     public void testLength() throws JAXBException {
         Context context = new Context(library);
 
-        Object result = context.resolveExpressionRef("LengthNull").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("LengthNullString").getExpression().evaluate(context);
         assertThat(result, is(0));
 
-        result = context.resolveExpressionRef("LengthEmpty").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LengthEmptyString").getExpression().evaluate(context);
         assertThat(result, is(0));
 
         result = context.resolveExpressionRef("LengthA").getExpression().evaluate(context);

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
 	<group name="if-then-else">
-		<test name="IfTrue1">
+		<test name="IfTrue1H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -11,7 +11,7 @@
 				define public C: Equivalent(Q,A)
 			</expression>
 		</test>
-		<test name="IfFalse1">
+		<test name="IfFalse1H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -21,7 +21,7 @@
 				define public C: Equivalent(Q,A)
 			</expression>
 		</test>
-		<test name="IfNull1">
+		<test name="IfNull1H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -33,7 +33,7 @@
 		</test>
 	</group>
 	<group name="standard case">
-		<test name="StandardCase1">
+		<test name="StandardCase1H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -48,7 +48,7 @@
 				define public C: Equivalent(Q,A)
 			</expression>
 		</test>
-		<test name="StandardCase2">
+		<test name="StandardCase2H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -63,7 +63,7 @@
 				define public C: Equivalent(Q,A)
 			</expression>
 		</test>
-		<test name="StandardCase3">
+		<test name="StandardCase3H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -80,7 +80,7 @@
 		</test>
 	</group>
 	<group name="selected case">
-		<test name="SelectedCase1">
+		<test name="SelectedCase1H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -95,7 +95,7 @@
 				define public C: Equivalent(Q,A)
 			</expression>
 		</test>
-		<test name="SelectedCase2">
+		<test name="SelectedCase2H">
 			<expression>
 				define private x: 5
 				define private y: 10
@@ -110,7 +110,7 @@
 				define public C: Equivalent(Q,A)
 			</expression>
 		</test>
-		<test name="SelectedCase3">
+		<test name="SelectedCase3H">
 			<expression>
 				define private x: 5
 				define private y: 10

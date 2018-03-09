@@ -52,8 +52,8 @@ define EqualTimeFalse: { @T15:59:59.999, @T20:59:59.999, @T20:59:59.999 } = { @T
 define ExceptEmptyListAndEmptyList: Except({}, {})
 define Except1234And23: { 1, 2, 3, 4 } except { 2, 3 }
 define Except23And1234: { 2, 3 } except { 1, 2, 3, 4 }
-define ExceptDateTime: { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }
-define ExceptTime: { @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } except { @T20:59:59.999, @T12:59:59.999 }
+define ExceptDateTimeList: { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }
+define ExceptTimeList: { @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } except { @T20:59:59.999, @T12:59:59.999 }
 define ExceptNullRight: { 1, 4 } except null
 
 //Exists
@@ -120,7 +120,7 @@ define IncludedInTimeFalse: @T16:59:59.999 included in { @T02:29:15.156, @T15:59
 define IncludedInNullRight: {'s', 'a', 'm'} included in null
 
 //Indexer
-define IndexerNull1 :    (null as List<System.Any>)[1] // Cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
+define IndexerNull1List :    (null as List<System.Any>)[1] // Cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
 define Indexer0Of12 :    { 1, 2 }[0]
 define Indexer1Of12 :    { 1, 2 }[1]
 define Indexer2Of12 :    { 1, 2 }[2]
@@ -154,13 +154,13 @@ define LastDateTime: Last({DateTime(2012, 5, 10), DateTime(2014, 12, 10)})
 define LastTime: Last({ @T15:59:59.999, @T20:59:59.999 })
 
 //Length
-define LengthEmpty: Length({})
+define LengthEmptyList: Length({})
 define LengthNull1: Length({null, 1})
 define Length1Null: Length({1, null})
 define Length12: Length({1, 2})
 define LengthDateTime: Length({DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)})
 define LengthTime: Length({ @T15:59:59.999, @T20:59:59.999, @T15:59:59.999, @T20:59:59.999, @T15:59:59.999, @T20:59:59.999 })
-define LengthNull: Length(null as String)
+define LengthNullList: Length(null as String)
 
 //Equivalent
 define EquivalentEmptyAndEmpty          : {} ~ {}

@@ -386,7 +386,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Except12").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 2, true)));
 
-        result = context.resolveExpressionRef("ExceptDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptDateTimeInterval").getExpression().evaluate(context);
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 5})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 6})));
 
@@ -394,7 +394,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(((DateTime)((Interval)result).getStart()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 13})));
         assertThat(((DateTime)((Interval)result).getEnd()).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 16})));
 
-        result = context.resolveExpressionRef("ExceptTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptTimeInterval").getExpression().evaluate(context);
         assertThat(((Time)((Interval)result).getStart()).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 59, 59, 999})));
         assertThat(((Time)((Interval)result).getEnd()).getPartial(), is(new Partial(Time.getFields(4), new int[] {8, 59, 59, 998})));
 
@@ -449,7 +449,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeInNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("Issue32").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("Issue32Interval").getExpression().evaluate(context);
         assertThat(result, is(true));
     }
 

@@ -966,7 +966,7 @@
 			<expression>@2017-12-20T11:00:00.000 on or after @2017-12-20T11:00:00.000</expression>
 			<output>true</output>
 		</test>
-		<test name="Issue32">
+		<test name="Issue32DateTime">
 			<expression>@2017-12-21T02:00:00.0 same or after @2017-12-20T11:00:00.0</expression>
 			<output>true</output>
 		</test>

@@ -174,11 +174,11 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Except23And1234").getExpression().evaluate(context);
         assertThat(result, is(Collections.emptyList()));
 
-        result = context.resolveExpressionRef("ExceptDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptDateTimeList").getExpression().evaluate(context);
         assertThat(((DateTime)((List)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
         assertThat(((List)result).size(), is(1));
 
-        result = context.resolveExpressionRef("ExceptTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ExceptTimeList").getExpression().evaluate(context);
         assertThat(((Time)((List)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
         assertThat(((List)result).size(), is(1));
 
@@ -394,7 +394,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     public void testIndexer() throws JAXBException {
         Context context = new Context(library);
 
-        Object result = context.resolveExpressionRef("IndexerNull1").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("IndexerNull1List").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("Indexer0Of12").getExpression().evaluate(context);
@@ -509,7 +509,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     public void testLength() throws JAXBException {
         Context context = new Context(library);
 
-        Object result = context.resolveExpressionRef("LengthEmpty").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("LengthEmptyList").getExpression().evaluate(context);
         assertThat(result, is(0));
 
         result = context.resolveExpressionRef("LengthNull1").getExpression().evaluate(context);
@@ -527,7 +527,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("LengthTime").getExpression().evaluate(context);
         assertThat(result, is(6));
 
-        result = context.resolveExpressionRef("LengthNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LengthNullList").getExpression().evaluate(context);
         assertThat(result, is(0));
     }
 

@@ -122,9 +122,9 @@ define DecimalIntervalExcept1to3: DecimalIntervalTest except DecimalIntervalTest
 define DecimalIntervalExceptNull: Interval[1.0, 10.0] except Interval[3.0, 7.0]
 define QuantityIntervalExcept1to4: QuantityIntervalTest except QuantityIntervalTest3
 define Except12: Interval[1, 4] except Interval[3, 6]
-define ExceptDateTime: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] except Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 15)]
+define ExceptDateTimeInterval: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] except Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 15)]
 define ExceptDateTime2: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 16)] except Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 12)]
-define ExceptTime: Interval[@T05:59:59.999, @T10:59:59.999] except Interval[@T08:59:59.999, @T10:59:59.999]
+define ExceptTimeInterval: Interval[@T05:59:59.999, @T10:59:59.999] except Interval[@T08:59:59.999, @T10:59:59.999]
 define ExceptTime2: Interval[@T08:59:59.999, @T11:59:59.999] except Interval[@T05:59:59.999, @T10:59:59.999]
 
 //In
@@ -144,7 +144,7 @@ define TimeInNull: null in Interval[@T05:59:59.999, @T10:59:59.999]
 
 define TestPeriod1: Interval[@2017-12-20T11:00:00, @2017-12-21T21:00:00]
 define TestPeriod2: Interval[@2017-12-20T10:30:00, @2017-12-20T12:00:00]
-define Issue32: TestPeriod2 starts 1 day or less on or after day of start of TestPeriod1
+define Issue32Interval: TestPeriod2 starts 1 day or less on or after day of start of TestPeriod1
 
 //Includes
 define TestIncludesNull: IntegerIntervalTest includes null

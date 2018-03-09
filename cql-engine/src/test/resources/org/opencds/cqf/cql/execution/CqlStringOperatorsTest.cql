@@ -25,7 +25,7 @@ define EndsWithFalse: EndsWith('Chris Schuler is the man!!', 'n!')
 //Indexer
 define IndexerNullNull : Indexer(null as String, null) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
 define IndexerANull : Indexer('a', null)
-define IndexerNull1 : Indexer(null as String, 1) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
+define IndexerNull1String : Indexer(null as String, 1) // cast is required due to ambiguity with Indexer(String) and Indexer(List<Any>)
 define IndexerAB0 : Indexer('ab', 0)
 define IndexerAB1 : Indexer('ab', 1)
 define IndexerAB2 : Indexer('ab', 2)
@@ -39,8 +39,8 @@ define LastPositionOf1: LastPositionOf('hi', 'Ohio is the place to be!')
 define LastPositionOf2: LastPositionOf('hi', 'Say hi to Ohio!')
 
 //Length
-define LengthNull : Length(null as String) // cast is required due to ambiguity with Length(String) and Length(List<Any>)
-define LengthEmpty : Length('')
+define LengthNullString : Length(null as String) // cast is required due to ambiguity with Length(String) and Length(List<Any>)
+define LengthEmptyString : Length('')
 define LengthA : Length('a')
 define LengthAB : Length('ab')
 
