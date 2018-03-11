@@ -120,8 +120,8 @@
 			</expression>
 		</test>
 	</group>
-	<group name="Equivalent Part Deux">
-		<test name="Equivalent Part Deux">
+	<group name="EquivalentPartDeux">
+		<test name="EquivalentPartDeux">
 			<expression>
 				// TODO: These throw translator errors
 				define Code3: Code null from "LOINC" display 'Systolic blood pressure'

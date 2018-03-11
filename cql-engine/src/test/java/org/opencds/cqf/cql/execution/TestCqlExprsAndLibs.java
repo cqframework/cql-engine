@@ -1,26 +1,17 @@
 package org.opencds.cqf.cql.execution;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Stream;
-
-import javax.xml.bind.JAXB;
 
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.elm.execution.ExpressionDefEvaluator;
-import org.opencds.cqf.cql.execution.tests.Expression;
 import org.opencds.cqf.cql.execution.tests.Group;
-import org.opencds.cqf.cql.execution.tests.Output;
 import org.opencds.cqf.cql.execution.tests.Tests;
 
 import org.testng.annotations.Test;
@@ -30,55 +21,13 @@ import org.testng.annotations.Test;
  */
 public class TestCqlExprsAndLibs {
 
-    private Tests loadTestsFile(String testsFilePath) {
-        try {
-            InputStream testsFileRaw = TestCqlExprsAndLibs.class.getResourceAsStream(testsFilePath);
-            return JAXB.unmarshal(testsFileRaw, Tests.class);
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("Couldn't load tests file ["+testsFilePath+"]: " + e.toString());
-        }
-    }
-
-    private Object[] loadResourceDirFileNameList(String resourceDirPath) {
-        /* TODO: Should return String[] but how to do the cast that doesn't die at runtime. */
-        ByteArrayInputStream fileNamesRaw
-            = (ByteArrayInputStream)TestCqlExprsAndLibs.class.getResourceAsStream(resourceDirPath);
-        if (fileNamesRaw == null) {
-            // The directory is empty / contains no files.
-            return new Object[] {};
-        }
-        Stream<String> fileNames = new BufferedReader(
-            new InputStreamReader(fileNamesRaw, StandardCharsets.UTF_8)).lines();
-        return fileNames.toArray();
-    }
-
-    private TestCollection loadAllTestFiles()
-    {
-        TestCollection testCollection = new TestCollection();
-        // Load Test cases from org/opencds/cqf/cql/execution/TestCqlExprsAndLibs/tests/*.xml
-        String testsDirPath = "TestCqlExprsAndLibs/tests";
-        Object[] testsFileNames = loadResourceDirFileNameList(testsDirPath);
-        for (Object testsFileName : testsFileNames)
-        {
-            String testsFilePath = testsDirPath + "/" + testsFileName;
-            Tests tests = loadTestsFile(testsFilePath);
-            testCollection.addTestFileHierarchy((String)testsFilePath, tests);
-        }
-        return testCollection;
-    }
-
-    private void runTestNode(org.opencds.cqf.cql.execution.tests.Test test) {
-        Expression testQ = test.getExpression();
-        if (testQ == null) {
+    private static void runTestNode(TestDefinition test) {
+        if (!test.hasExpressionText()) {
             throw new RuntimeException("Test has no question or library definition (expression).");
         }
-        String cqlExprQOrLibCql = testQ.getValue();
-        if (cqlExprQOrLibCql == null || cqlExprQOrLibCql.equals("")) {
-            throw new RuntimeException("Test has no question or library definition (expression).");
-        }
+        String cqlExprQOrLibCql = test.getExpressionText();
 
-        Boolean expectInvalid = testQ.isInvalid() != null && testQ.isInvalid();
+        Boolean expectInvalid = test.isInvalid();
 
         if (cqlExprQOrLibCql.matches("(?s).*?\\bdefine\\s+[a-zA-Z_\"].+")) {
             // If we get here, assume this "test" node defines a CQL library.
@@ -210,14 +159,10 @@ public class TestCqlExprsAndLibs {
             throw new RuntimeException("Test question didn't fail to translate/parse/evaluate as expected.");
         }
 
-        List<Output> testA = test.getOutput();
-        if (testA.size() != 1) {
+        if (!test.hasSingularOutputText()) {
             throw new RuntimeException("Test has not exactly one answer (output).");
         }
-        String cqlExprA = testA.get(0).getValue();
-        if (cqlExprA == null || cqlExprA.equals("")) {
-            throw new RuntimeException("Test has not exactly one answer (output).");
-        }
+        String cqlExprA = test.getSingularOutputText();
 
         String cqlLibA = "library TestA define A: " + cqlExprA;
         ArrayList<String> errorsA = new ArrayList<>();
@@ -263,18 +208,22 @@ public class TestCqlExprsAndLibs {
 
     @Test
     public void testCqlExprsAndLibs() {
-        System.out.println("Loading all tests.");
-        TestCollection testCollection = loadAllTestFiles();
+        TestCollection testCollection = new TestCollection();
+        // Gather Test cases from org/opencds/cqf/cql/execution/TestCqlExprsAndLibs/tests/*.xml
+        String testsDirPath = "TestCqlExprsAndLibs/tests";
+        System.out.println("Gathering all tests.");
+        TestDefinitionSourceProvider.gatherTestsFromJavaResourceXmlFiles(
+            testCollection, TestCqlExprsAndLibs.class, testsDirPath);
         System.out.println("Evaluating all tests.");
         HashMap<String, Tests> testHierarchy = testCollection.getTestHierarchy();
-        Object[] testsFilePaths = testHierarchy.keySet().stream().sorted().toArray();
+        String[] testsFilePaths = testHierarchy.keySet().stream().sorted().toArray(String[]::new);
         Integer padWidth = Arrays.stream(testsFilePaths)
-            .map(f -> ((String)f).length()).reduce(0, (x,y) -> x > y ? x : y);
+            .map(f -> f.length()).reduce(0, (x,y) -> x > y ? x : y);
         int testCounterAllFiles = 0;
         int passCounterAllFiles = 0;
         ArrayList<String> fileResults = new ArrayList<>();
         ArrayList<String> failedTests = new ArrayList<>();
-        for (Object testsFilePath : testsFilePaths) {
+        for (String testsFilePath : testsFilePaths) {
             System.out.println(String.format("Running test file %s...", testsFilePath));
             Tests tests = testHierarchy.get(testsFilePath);
             int testCounter = 0;
@@ -286,7 +235,7 @@ public class TestCqlExprsAndLibs {
                     testCounterAllFiles += 1;
                     try {
                         //System.out.println(String.format("Running test %s...", test.getName()));
-                        runTestNode(test);
+                        runTestNode(testCollection.getTestDefinition(test.getName()));
                         passCounter += 1;
                         passCounterAllFiles += 1;
                         System.out.println(String.format("Test %s passed.", test.getName()));

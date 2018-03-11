@@ -103,7 +103,7 @@ public class CqlRunnerApp
         }
     }
 
-    public static void perform(String maybeCqlOrElm, ArrayList<String> errors)
+    private static void perform(String maybeCqlOrElm, ArrayList<String> errors)
     {
         Library library = null;
         try
