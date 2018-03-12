@@ -8,7 +8,6 @@ import org.opencds.cqf.cql.elm.execution.LessOrEqualEvaluator;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.Iterator;
 
 /*
 *** NOTES FOR CLINICAL OPERATORS ***
@@ -107,28 +106,7 @@ public class Value {
 
         // List
         if (left instanceof Iterable) {
-            Iterator leftIterator = ((Iterable)left).iterator();
-            Iterator rightIterator = ((Iterable)right).iterator();
-
-            while (leftIterator.hasNext()) {
-                Object leftObject = leftIterator.next();
-                if (rightIterator.hasNext()) {
-                    Object rightObject = rightIterator.next();
-                    Boolean elementSimilar = similar(leftObject, rightObject, mode);
-                    if (elementSimilar == null || !elementSimilar) {
-                        return elementSimilar;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
-
-            if (rightIterator.hasNext()) {
-                return rightIterator.next() == null ? null : false;
-            }
-
-            return true;
+            return CqlList.similar((Iterable)left, (Iterable)right, mode);
         }
 
         if (left instanceof Interval) {

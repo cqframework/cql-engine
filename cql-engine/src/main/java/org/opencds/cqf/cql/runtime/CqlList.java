@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -21,6 +22,31 @@ public class CqlList {
     private static Expression expression;
 
     private static String path;
+
+    public static Boolean similar(Iterable left, Iterable right, Value.SimilarityMode mode) {
+        Iterator leftIterator = left.iterator();
+        Iterator rightIterator = right.iterator();
+
+        while (leftIterator.hasNext()) {
+            Object leftObject = leftIterator.next();
+            if (rightIterator.hasNext()) {
+                Object rightObject = rightIterator.next();
+                Boolean elementSimilar = Value.similar(leftObject, rightObject, mode);
+                if (elementSimilar == null || !elementSimilar) {
+                    return elementSimilar;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        if (rightIterator.hasNext()) {
+            return rightIterator.next() == null ? null : false;
+        }
+
+        return true;
+    }
 
     public static Integer compareTo(Object comparandOne, Object comparandTwo) {
         if (comparandOne instanceof Integer) {
