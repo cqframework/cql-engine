@@ -112,7 +112,7 @@ public class TestCqlExprsAndLibs {
 
         Object resultQ;
         try {
-            resultQ = context.resolveExpressionRef(test.getName() + "Q").getExpression().evaluate(context);
+            resultQ = context.resolveExpressionRef(test.getNameWithHash() + "Q").getExpression().evaluate(context);
         }
         catch (Exception e) {
             if (test.expectsCqlTranslationFail()) {
@@ -132,7 +132,7 @@ public class TestCqlExprsAndLibs {
 
         Object resultA;
         try {
-            resultA = context.resolveExpressionRef(test.getName() + "A").getExpression().evaluate(context);
+            resultA = context.resolveExpressionRef(test.getNameWithHash() + "A").getExpression().evaluate(context);
         }
         catch (Exception e) {
             throw new RuntimeException("Test answer parsed but evaluation failed in Engine: " + e.toString());

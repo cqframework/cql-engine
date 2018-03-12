@@ -11,6 +11,7 @@ public class TestDefinition
 
     private Test testNode;
     private MainFormat mainFormat;
+    private String testNameWithHash;
     private String normalizedLibCql;
 
     public TestDefinition(Test testNode)
@@ -29,6 +30,8 @@ public class TestDefinition
         }
         this.testNode = testNode;
 
+        testNameWithHash = testName + "_" + Math.abs(testName.hashCode());
+
         if (!hasExpressionText())
         {
             return;
@@ -39,10 +42,10 @@ public class TestDefinition
 
         if (mainFormat.equals(MainFormat.EXPRESSION_PAIR))
         {
-            normalizedLibCql = "define public " + testName + "Q: " + getExpressionText() + "\n";
+            normalizedLibCql = "define public " + testNameWithHash + "Q: " + getExpressionText() + "\n";
             if (hasSingularOutputText())
             {
-                normalizedLibCql += "define public " + testName + "A: " + getSingularOutputText() + "\n";
+                normalizedLibCql += "define public " + testNameWithHash + "A: " + getSingularOutputText() + "\n";
             }
         }
         else
@@ -96,6 +99,11 @@ public class TestDefinition
     public MainFormat getMainFormat()
     {
         return mainFormat;
+    }
+
+    public String getNameWithHash()
+    {
+        return testNameWithHash;
     }
 
     public String getNormalizedLibCql()
