@@ -7,23 +7,48 @@ import org.opencds.cqf.cql.execution.tests.Test;
  */
 public class TestDefinition
 {
+    public enum MainFormat { EXPRESSION_PAIR, LIBRARY }
+
     private Test testNode;
+    private MainFormat mainFormat;
+    private String normalizedLibCql;
 
     public TestDefinition(Test testNode)
     {
-        String name = testNode.getName();
-        if (name == null || name.equals(""))
+        String testName = testNode.getName();
+        if (testName == null || testName.equals(""))
         {
             throw new IllegalArgumentException(
                 "A test definition must have a defined and nonempty name attribute.");
         }
-        if (!name.matches("[A-Za-z_][A-Za-z0-9_]*"))
+        if (!testName.matches("[A-Za-z_][A-Za-z0-9_]*"))
         {
             throw new IllegalArgumentException(
                 "A test definition name attribute must match the pattern"
-                + " \"[A-Za-z_][A-Za-z_0-9]*\": " + name);
+                + " \"[A-Za-z_][A-Za-z_0-9]*\": " + testName);
         }
         this.testNode = testNode;
+
+        if (!hasExpressionText())
+        {
+            return;
+        }
+
+        mainFormat = getExpressionText().matches("(?s).*?\\bdefine\\s+[a-zA-Z_\"].+")
+            ? MainFormat.LIBRARY : MainFormat.EXPRESSION_PAIR;
+
+        if (mainFormat.equals(MainFormat.EXPRESSION_PAIR))
+        {
+            normalizedLibCql = "define public " + testName + "Q: " + getExpressionText() + "\n";
+            if (hasSingularOutputText())
+            {
+                normalizedLibCql += "define public " + testName + "A: " + getSingularOutputText() + "\n";
+            }
+        }
+        else
+        {
+            normalizedLibCql = getExpressionText();
+        }
     }
 
     public Test getDefinition()
@@ -48,13 +73,6 @@ public class TestDefinition
         return hasExpressionText() ? testNode.getExpression().getValue() : null;
     }
 
-    public Boolean isInvalid()
-    {
-        return testNode.getExpression() != null
-            && testNode.getExpression().isInvalid() != null
-            && testNode.getExpression().isInvalid();
-    }
-
     public Boolean hasSingularOutputText()
     {
         return testNode.getOutput() != null
@@ -66,5 +84,22 @@ public class TestDefinition
     public String getSingularOutputText()
     {
         return hasSingularOutputText() ? testNode.getOutput().get(0).getValue() : null;
+    }
+
+    public Boolean expectsCqlTranslationFail()
+    {
+        return testNode.getExpression() != null
+            && testNode.getExpression().isInvalid() != null
+            && testNode.getExpression().isInvalid();
+    }
+
+    public MainFormat getMainFormat()
+    {
+        return mainFormat;
+    }
+
+    public String getNormalizedLibCql()
+    {
+        return normalizedLibCql;
     }
 }

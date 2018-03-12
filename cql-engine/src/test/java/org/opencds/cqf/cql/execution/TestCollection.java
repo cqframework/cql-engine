@@ -1,8 +1,9 @@
 package org.opencds.cqf.cql.execution;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+
+import javax.management.openmbean.KeyAlreadyExistsException;
 
 import org.opencds.cqf.cql.execution.tests.Tests;
 
@@ -19,7 +20,7 @@ public class TestCollection
         String testName = definition.getName();
         if (definitions.containsKey(testName))
         {
-            throw new IllegalArgumentException(
+            throw new KeyAlreadyExistsException(
                 "Every test must have a distinct unqualified name: " + testName);
         }
         definitions.put(testName, definition);

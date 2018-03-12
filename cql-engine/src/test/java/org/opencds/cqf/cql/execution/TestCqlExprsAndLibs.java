@@ -23,44 +23,41 @@ public class TestCqlExprsAndLibs {
 
     private static void runTestNode(TestDefinition test) {
         if (!test.hasExpressionText()) {
-            throw new RuntimeException("Test has no question or library definition (expression).");
+            throw new RuntimeException("Test has no library/Q+A definition (expression).");
         }
-        String cqlExprQOrLibCql = test.getExpressionText();
 
-        Boolean expectInvalid = test.isInvalid();
+        String libCql = test.getNormalizedLibCql();
 
-        if (cqlExprQOrLibCql.matches("(?s).*?\\bdefine\\s+[a-zA-Z_\"].+")) {
-            // If we get here, assume this "test" node defines a CQL library.
-            String libCql = cqlExprQOrLibCql;
-
-            // Note that we are not using "test" child node "output" yet for anything.
-
-            // If the test expression is invalid, expect an error during
-            // translation or evaluation and fail if we don't get one;
-            // otherwise fail if we do get one.
-            ArrayList<String> errors = new ArrayList<>();
-            String libElm = CqlToElmLib.maybeCqlToElm(libCql, errors);
-            if (libElm == null) {
-                if (expectInvalid) {
-                    return;
-                }
-                else {
-                    throw new RuntimeException("Test library CQL failed to translate to ELM in Translator: " + errors.toString());
-                }
+        ArrayList<String> errors = new ArrayList<>();
+        String libElm = CqlToElmLib.maybeCqlToElm(libCql, errors);
+        if (libElm == null) {
+            if (test.expectsCqlTranslationFail()) {
+                return;
             }
-            Library library;
-            try {
-                library = CqlLibraryReader.read(new ByteArrayInputStream(
-                    libElm.getBytes(StandardCharsets.UTF_8)));
+            else {
+                throw new RuntimeException("Test library/Q+A CQL failed to translate to ELM in Translator: " + errors.toString());
             }
-            catch (Exception e) {
-                if (expectInvalid) {
-                    return;
-                }
-                else {
-                    throw new RuntimeException("Test library translated but ELM failed to parse in Engine: " + e.toString());
-                }
-            }
+        }
+
+        Library library;
+        try {
+            library = CqlLibraryReader.read(new ByteArrayInputStream(
+                libElm.getBytes(StandardCharsets.UTF_8)));
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Test library/Q+A translated but ELM failed to parse in Engine: " + e.toString());
+        }
+
+        Context context;
+        try
+        {
+            context = new Context(library);
+        }
+        catch (Exception e) {
+            throw new RuntimeException("Test library/Q+A parsed but AST association with Engine Context failed: " + e.toString());
+        }
+
+        if (test.getMainFormat().equals(TestDefinition.MainFormat.LIBRARY)) {
 
             Library.Statements statements = library.getStatements();
             if (statements == null) {
@@ -86,11 +83,10 @@ public class TestCqlExprsAndLibs {
                 Object result;
                 try
                 {
-                    Context context = new Context(library);
                     result = statement.evaluate(context);
                 }
                 catch (Exception e) {
-                    if (expectInvalid) {
+                    if (test.expectsCqlTranslationFail()) {
                         continue;
                     }
                     else {
@@ -98,7 +94,7 @@ public class TestCqlExprsAndLibs {
                             + stmtName + "] failed in Engine: " + e.toString());
                     }
                 }
-                if (expectInvalid) {
+                if (test.expectsCqlTranslationFail()) {
                     throw new RuntimeException("Test library statement named ["
                         + stmtName + "] didn't fail to translate/parse/evaluate as expected.");
                 }
@@ -112,76 +108,31 @@ public class TestCqlExprsAndLibs {
             return;
         }
 
-        // If we get here, assume this "test" node defines a CQL expression question/answer pair.
-        String cqlExprQ = cqlExprQOrLibCql;
+        // If we get here, test.getMainFormat().equals(TestDefinition.MainFormat.EXPRESSION_PAIR)
 
-        // If the test expression is invalid, expect an error during
-        // translation or evaluation and fail if we don't get one;
-        // otherwise fail if we do get one.
-        String cqlLibQ = "library TestQ define Q: " + cqlExprQ;
-        ArrayList<String> errorsQ = new ArrayList<>();
-        String elmLibQ = CqlToElmLib.maybeCqlToElm(cqlLibQ, errorsQ);
-        if (elmLibQ == null) {
-            if (expectInvalid) {
-                return;
-            }
-            else {
-                throw new RuntimeException("Test question CQL failed to translate to ELM in Translator: " + errorsQ.toString());
-            }
-        }
-        Library libraryQ;
-        try {
-            libraryQ = CqlLibraryReader.read(new ByteArrayInputStream(
-                elmLibQ.getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (Exception e) {
-            if (expectInvalid) {
-                return;
-            }
-            else {
-                throw new RuntimeException("Test question translated but ELM failed to parse in Engine: " + e.toString());
-            }
-        }
         Object resultQ;
         try {
-            Context contextQ = new Context(libraryQ);
-            resultQ = contextQ.resolveExpressionRef("Q").getExpression().evaluate(contextQ);
+            resultQ = context.resolveExpressionRef(test.getName() + "Q").getExpression().evaluate(context);
         }
         catch (Exception e) {
-            if (expectInvalid) {
+            if (test.expectsCqlTranslationFail()) {
                 return;
             }
             else {
                 throw new RuntimeException("Test question parsed but evaluation failed in Engine: " + e.toString());
             }
         }
-        if (expectInvalid) {
+        if (test.expectsCqlTranslationFail()) {
             throw new RuntimeException("Test question didn't fail to translate/parse/evaluate as expected.");
         }
 
         if (!test.hasSingularOutputText()) {
             throw new RuntimeException("Test has not exactly one answer (output).");
         }
-        String cqlExprA = test.getSingularOutputText();
 
-        String cqlLibA = "library TestA define A: " + cqlExprA;
-        ArrayList<String> errorsA = new ArrayList<>();
-        String elmLibA = CqlToElmLib.maybeCqlToElm(cqlLibA, errorsA);
-        if (elmLibA == null) {
-            throw new RuntimeException("Test answer CQL failed to translate to ELM in Translator: " + errorsA.toString());
-        }
-        Library libraryA;
-        try {
-            libraryA = CqlLibraryReader.read(new ByteArrayInputStream(
-                elmLibA.getBytes(StandardCharsets.UTF_8)));
-        }
-        catch (Exception e) {
-            throw new RuntimeException("Test answer translated but ELM failed to parse in Engine: " + e.toString());
-        }
         Object resultA;
         try {
-            Context contextA = new Context(libraryA);
-            resultA = contextA.resolveExpressionRef("A").getExpression().evaluate(contextA);
+            resultA = context.resolveExpressionRef(test.getName() + "A").getExpression().evaluate(context);
         }
         catch (Exception e) {
             throw new RuntimeException("Test answer parsed but evaluation failed in Engine: " + e.toString());
