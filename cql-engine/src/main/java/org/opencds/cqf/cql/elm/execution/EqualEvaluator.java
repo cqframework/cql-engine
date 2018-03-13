@@ -47,7 +47,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
 
         // mismatched types not allowed
         if (!left.getClass().equals(right.getClass())) {
-            return null;
+            return false;
         }
 
         else if (left instanceof Boolean) {

@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
+import org.opencds.cqf.cql.elm.execution.IntersectEvaluator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +43,16 @@ public class Concept {
         return this;
     }
 
-    public Boolean equal(Concept other) {
-        for (Code code : this.getCodes()) {
-            if (!InEvaluator.in(code, other.getCodes(), null)) {
-                return false;
-            }
-        }
+    public Boolean equivalent(Concept other) {
+        List intersection = (List) IntersectEvaluator.intersect(this.codes, other.codes);
+        return intersection != null && !intersection.isEmpty();
+    }
 
-        return true;
+    public Boolean equal(Concept other) {
+        Boolean codesAreEqual = EqualEvaluator.equal(this.codes, other.codes);
+        Boolean displayIsEqual = EqualEvaluator.equal(this.display, other.display);
+        return (codesAreEqual == null || displayIsEqual == null) ? null : codesAreEqual && displayIsEqual;
+
     }
 
     @Override

@@ -1,10 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Tuple;
+import org.opencds.cqf.cql.runtime.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,7 +48,19 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return false;
         }
 
-        if (left instanceof Iterable) {
+        if (!left.getClass().equals(right.getClass())) {
+            return false;
+        }
+
+        if (left instanceof Code) {
+            return ((Code) left).equivalent((Code) right);
+        }
+
+        else if (left instanceof Concept) {
+            return ((Concept) left).equivalent((Concept) right);
+        }
+
+        else if (left instanceof Iterable) {
             Iterator leftIterator = ((Iterable)left).iterator();
             Iterator rightIterator = ((Iterable)right).iterator();
 
@@ -60,18 +69,14 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
                 if (rightIterator.hasNext()) {
                     Object rightObject = rightIterator.next();
                     Boolean elementEquivalent = equivalent(leftObject, rightObject);
-                    if (elementEquivalent == null || !elementEquivalent) {
-                        return elementEquivalent;
+                    if (!elementEquivalent) {
+                        return false;
                     }
                 }
                 else { return false; }
             }
 
-            if (rightIterator.hasNext()) {
-                return rightIterator.next() == null ? null : false;
-            }
-
-            return true;
+            return !rightIterator.hasNext();
         }
 
         else if (left instanceof Interval) {
@@ -93,10 +98,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             for (String key : rightMap.keySet()) {
                 if (leftMap.containsKey(key)) {
                     Object areKeyValsSame = equivalent(rightMap.get(key), leftMap.get(key));
-                    if (areKeyValsSame == null) {
-                        return null;
-                    }
-                    else if (!(Boolean) areKeyValsSame) {
+                    if (!(Boolean) areKeyValsSame) {
                         return false;
                     }
                 }
@@ -111,7 +113,9 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         else if (left instanceof DateTime && right instanceof DateTime) {
             DateTime leftDT = (DateTime)left;
             DateTime rightDT = (DateTime)right;
-            if (leftDT.getPartial().size() != rightDT.getPartial().size()) { return null; }
+            if (leftDT.getPartial().size() != rightDT.getPartial().size()) {
+                return false;
+            }
 
             for (int i = 0; i < leftDT.getPartial().size(); ++i) {
                 if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
@@ -124,7 +128,9 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         else if (left instanceof Time && right instanceof Time) {
             Time leftT = (Time)left;
             Time rightT = (Time)right;
-            if (leftT.getPartial().size() != rightT.getPartial().size()) { return null; }
+            if (leftT.getPartial().size() != rightT.getPartial().size()) {
+                return false;
+            }
 
             for (int i = 0; i < leftT.getPartial().size(); ++i) {
                 if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {

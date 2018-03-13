@@ -69,7 +69,10 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CodeLiteral").getExpression().evaluate(context);
-        Assert.assertTrue(((Code) result).equal(new Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure")));
+        Assert.assertTrue(((Code) result).equal(new Code().withCode("8480-6").withSystem("http://loinc.org").withVersion("1.0").withDisplay("Systolic blood pressure")));
+
+        result = context.resolveExpressionRef("CodeLiteral2").getExpression().evaluate(context);
+        Assert.assertTrue(((Code) result).equal(new Code().withCode("1234-5").withSystem("http://example.org").withVersion("1.05").withDisplay("Test Code")));
     }
 
     /**
@@ -80,7 +83,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ConceptTest").getExpression().evaluate(context);
-        Assert.assertTrue(((Concept) result).equal(new Concept().withCodes(Arrays.asList(new Code().withCode("66071002").withSystem("http://loinc.org"), new Code().withCode("B18.1").withSystem("http://loinc.org"))).withDisplay("Type B viral hepatitis")));
+        Assert.assertTrue(((Concept) result).equal(new Concept().withCodes(Arrays.asList(new Code().withCode("8480-6").withSystem("http://loinc.org").withVersion("1.0").withDisplay("Systolic blood pressure"), new Code().withCode("1234-5").withSystem("http://example.org").withVersion("1.05").withDisplay("Test Code"))).withDisplay("Type B viral hepatitis")));
     }
 
     /**

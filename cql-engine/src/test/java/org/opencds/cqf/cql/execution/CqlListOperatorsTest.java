@@ -548,19 +548,19 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("EquivalentABCAnd123").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("Equivalent123AndABC").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("Equivalent123AndString123").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("EquivalentDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("EquivalentDateTimeNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("EquivalentDateTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -569,7 +569,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("EquivalentTimeNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("EquivalentTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -592,13 +592,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("NotEqualABCAnd123").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("NotEqual123AndABC").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("NotEqual123AndString123").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("NotEqualDateTimeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -668,7 +668,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ProperContainsTimeNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
     }
 
     /**
@@ -688,7 +688,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ProperInTimeNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
     }
 
     /**
