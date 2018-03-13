@@ -50,8 +50,19 @@ public class CqlList {
         throw new IllegalArgumentException("Type is not comparable");
     }
 
+    public static Integer nullCheck(Object comparandOne, Object comparandTwo) {
+        if (comparandOne == null && comparandTwo == null) return 0;
+        else if (comparandOne == null) return -1;
+        else if (comparandTwo == null) return 1;
+        else return null;
+    }
+
     public static Comparator<Object> valueSort = new Comparator<Object>() {
         public int compare(Object comparandOne, Object comparandTwo) {
+            if (nullCheck(comparandOne, comparandTwo) != null) {
+                return nullCheck(comparandOne, comparandTwo);
+            }
+
             return compareTo(comparandOne, comparandTwo);
         }
     };
@@ -75,9 +86,9 @@ public class CqlList {
                 context.pop();
             }
 
-            if (comparandOne == null && comparandTwo == null) return 0;
-            else if (comparandOne == null) return 1;
-            else if (comparandTwo == null) return -1;
+            if (nullCheck(comparandOne, comparandTwo) != null) {
+                return nullCheck(comparandOne, comparandTwo);
+            }
 
             return compareTo(comparandOne, comparandTwo);
         }

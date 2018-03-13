@@ -9,6 +9,8 @@ define simpleSortAsc: simpleList sL sort asc
 define simpleSortDesc: simpleList sL sort desc
 define simpleSortStringAsc: simpleListString sls sort asc
 define simpleSortStringDesc: simpleListString sls sort desc
+define SortWithNullAsc: ({ 1, 2, 3, null }) A sort asc
+define SortWithNullDesc: ({ 1, 2, 3, null }) A sort desc
 
 //Contains
 define ContainsABNullHasNull: { 'a', 'b', null } contains null
