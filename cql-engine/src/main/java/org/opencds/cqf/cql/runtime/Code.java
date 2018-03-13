@@ -55,10 +55,18 @@ public class Code {
 
     public Boolean equal(Code other) {
         return this.getCode().equals(other.getCode())
+                && ((this.getDisplay() == null && other.getDisplay() == null)
+                || (this.getDisplay() != null && this.getDisplay().equals(other.getDisplay())))
                 && ((this.getSystem() == null && other.getSystem() == null)
                 || (this.getSystem() != null && this.getSystem().equals(other.getSystem())))
                 && ((this.getVersion() == null && other.getVersion() == null)
                 || (this.getVersion() != null && this.getVersion().equals(other.getVersion())));
+    }
+
+    public Boolean equivalent(Code other) {
+        return this.getCode().equals(other.getCode())
+                && ((this.getSystem() == null && other.getSystem() == null)
+                || (this.getSystem() != null && this.getSystem().equals(other.getSystem())));
     }
 
     @Override

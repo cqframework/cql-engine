@@ -58,6 +58,35 @@ define CodeEquivalentNullFalse: Code2 ~ Code3
 define ConceptEquivalentNullTrue: Concept3 ~ Concept3
 define ConceptEquivalentNullFalse: Concept2 ~ Concept3*/
 
+// CodeAttrsCompare
+/* The document "CTO Errata Letter-CQL R1.2.pdf" dated 2017-10-14,
+section "Code Equivalence Semantics - STU Comment 1431",
+prescribes that Equivalent(Code,Code) should ignore "version" attributes,
+as it already ignores "display" attributes;
+but Equal(Code,Code) should still respect both.
+See also CQL spec section 9.5.3 Equivalent.
+See also http://www.hl7.org/dstucomments/showdetail_comment.cfm?commentid=1431 */
+// TODO: Revisit later to test all combinations of the 4 attributes being same or different.
+define private C0000: Code { code: 'ABC', display: 'Code ABC', system: 'http://example.com', version: '2017-01' }
+define private C0000b: Code { code: 'ABC', display: 'Code ABC', system: 'http://example.com', version: '2017-01' }
+define private C0001: Code { code: 'ABC', display: 'Code ABC', system: 'http://example.com', version: '2017-05' }
+define private C0010: Code { code: 'ABC', display: 'Code ABC', system: 'http://another.example.com', version: '2017-01' }
+define private C0100: Code { code: 'ABC', display: 'Var Desc', system: 'http://example.com', version: '2017-01' }
+define private C1000: Code { code: 'CBA', display: 'Code ABC', system: 'http://example.com', version: '2017-01' }
+define private C0101: Code { code: 'ABC', display: 'Var Desc', system: 'http://example.com', version: '2017-05' }
+define CodeAllSameAttrsEqualTrue: C0000 = C0000b
+define CodeAllSameAttrsEquivTrue: C0000 ~ C0000b
+define CodeDiffVersionEqualFalse: C0000 = C0001
+define CodeDiffVersionEquivTrue : C0000 ~ C0001
+define CodeDiffSystemEqualFalse : C0000 = C0010
+define CodeDiffSystemEquivFalse : C0000 ~ C0010
+define CodeDiffDisplayEqualFalse: C0000 = C0100
+define CodeDiffDisplayEquivTrue : C0000 ~ C0100
+define CodeDiffCodeEqualFalse   : C0000 = C1000
+define CodeDiffCodeEquivFalse   : C0000 ~ C1000
+define CodeDiffDispVerEqualFalse: C0000 = C0101
+define CodeDiffDispVerEquivTrue : C0000 ~ C0101
+
 //In (Codesystem) --> MOVED TO FHIR ENGINE
 // TODO: additional tests once terminology provider is running
 /*define InCodeSystemStringNull: '66071002' in "LOINC"

@@ -154,6 +154,48 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         // assertThat(result, is(false));
     }
 
+    @Test
+    public void testCodeAttrsCompare() throws JAXBException {
+        Context context = new Context(library);
+        Object result;
+
+        result = context.resolveExpressionRef("CodeAllSameAttrsEqualTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("CodeAllSameAttrsEquivTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("CodeDiffVersionEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffVersionEquivTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("CodeDiffSystemEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffSystemEquivFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffDisplayEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffDisplayEquivTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("CodeDiffCodeEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffCodeEquivFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffDispVerEqualFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeDiffDispVerEquivTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+    }
+
     /**
      * {@link org.opencds.cqf.cql.elm.execution.InCodeSystemEvaluator#evaluate(Context)}
      */

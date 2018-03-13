@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Time;
@@ -13,8 +14,8 @@ import java.util.Iterator;
 *** NOTES FOR CLINICAL OPERATORS ***
 ~(left Code, right Code) Boolean
 
-The ~ operator for Code values returns true if the code, system, and version elements are equivalent.
-  The display element is ignored for the purposes of determining Code equivalence.
+The ~ operator for Code values returns true if the code and system elements are equivalent.
+  The display and version elements are ignored for the purposes of determining Code equivalence.
 For Concept values, equivalence is defined as a non-empty intersection of the codes in each Concept.
   The display element is ignored for the purposes of determining Concept equivalence.
 Note that this operator will always return true or false, even if either or both of its arguments are null,
@@ -132,6 +133,10 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
                 }
             }
             return true;
+        }
+
+        else if (left instanceof Code) {
+            return ((Code) left).equivalent((Code) right);
         }
 
         return EqualEvaluator.equal(left, right);
