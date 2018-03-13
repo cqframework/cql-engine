@@ -139,27 +139,25 @@ public class DateTime extends BaseTemporal {
     }
 
     public Boolean equal(DateTime other) {
-        if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
-            return null;
-        }
-
-        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
-    }
-
-    // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
-    public Boolean equivalent(DateTime other) {
-        if (this.getPartial().size() != other.getPartial().size()) { return null; }
-
-        for (int i = 0; i < this.getPartial().size(); ++i) {
-            if (this.getPartial().getValue(i) != other.getPartial().getValue(i)) {
-                return false;
-            }
-        }
-        return true;
+        return this.similar(other, Value.SimilarityMode.EQUAL);
     }
 
     public Boolean similar(DateTime other, Value.SimilarityMode mode) {
-        return mode.equals(Value.SimilarityMode.EQUAL) ? this.equal(other) : this.equivalent(other);
+        if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
+            return null;
+        }
+        if (mode.equals(Value.SimilarityMode.EQUAL)) {
+            return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
+        }
+        else {
+            // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
+            for (int i = 0; i < this.getPartial().size(); ++i) {
+                if (this.getPartial().getValue(i) != other.getPartial().getValue(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     @Override

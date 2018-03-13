@@ -116,22 +116,23 @@ public class Interval {
     }
 
     public Boolean equal(Interval other) {
-        return this.getLow() != null && EqualEvaluator.equal(this.getStart(), other.getStart())
-                && this.getLowClosed() == other.getLowClosed()
-                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
-                && this.getHighClosed() == other.getHighClosed();
-    }
-
-    public Boolean equivalent(Interval other) {
-        Object startEquivalence = EquivalentEvaluator.equivalent(this.getStart(), other.getStart());
-        Object endEquivalence = EquivalentEvaluator.equivalent(this.getEnd(), other.getEnd());
-        return (startEquivalence == null && endEquivalence == null)
-                || (startEquivalence != null && endEquivalence != null
-                && (Boolean) startEquivalence && (Boolean) endEquivalence);
+        return this.similar(other, Value.SimilarityMode.EQUAL);
     }
 
     public Boolean similar(Interval other, Value.SimilarityMode mode) {
-        return mode.equals(Value.SimilarityMode.EQUAL) ? this.equal(other) : this.equivalent(other);
+        if (mode.equals(Value.SimilarityMode.EQUAL)) {
+            return this.getLow() != null && EqualEvaluator.equal(this.getStart(), other.getStart())
+                && this.getLowClosed() == other.getLowClosed()
+                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
+                && this.getHighClosed() == other.getHighClosed();
+        }
+        else {
+            Object startEquivalence = EquivalentEvaluator.equivalent(this.getStart(), other.getStart());
+            Object endEquivalence = EquivalentEvaluator.equivalent(this.getEnd(), other.getEnd());
+            return (startEquivalence == null && endEquivalence == null)
+                || (startEquivalence != null && endEquivalence != null
+                && (Boolean) startEquivalence && (Boolean) endEquivalence);
+        }
     }
 
     /*
