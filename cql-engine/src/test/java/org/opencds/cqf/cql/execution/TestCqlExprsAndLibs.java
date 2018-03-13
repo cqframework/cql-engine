@@ -160,11 +160,12 @@ public class TestCqlExprsAndLibs {
     @Test
     public void testCqlExprsAndLibs() {
         TestCollection testCollection = new TestCollection();
-        // Gather Test cases from org/opencds/cqf/cql/execution/TestCqlExprsAndLibs/tests/*.xml
-        String testsDirPath = "TestCqlExprsAndLibs/tests";
+        // Gather Test cases from org/opencds/cqf/cql/execution/[TestIsolatedCqlExprs|TestHolisticCqlLibs]/tests/*.xml
         System.out.println("Gathering all tests.");
         TestDefinitionSourceProvider.gatherTestsFromJavaResourceXmlFiles(
-            testCollection, TestCqlExprsAndLibs.class, testsDirPath);
+            testCollection, TestCqlExprsAndLibs.class, "TestIsolatedCqlExprs/tests");
+        TestDefinitionSourceProvider.gatherTestsFromJavaResourceXmlFiles(
+            testCollection, TestCqlExprsAndLibs.class, "TestHolisticCqlLibs/tests");
         System.out.println("Evaluating all tests.");
         HashMap<String, Tests> testHierarchy = testCollection.getTestHierarchy();
         String[] testsFilePaths = testHierarchy.keySet().stream().sorted().toArray(String[]::new);

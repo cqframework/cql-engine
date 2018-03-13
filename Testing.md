@@ -12,10 +12,11 @@ such that the very definition of a valid CQL implementation is one that
 passes all of the tests in the suite; but that is not an official plan.)
 
 At present the validation suite itself is comprised entirely of the set of
-XML files in this sub-directory of the project:
+XML files in these sub-directories of the project:
 
 ```
-./cql-engine/src/test/resources/org/opencds/cqf/cql/execution/TestCqlExprsAndLibs
+./cql-engine/src/test/resources/org/opencds/cqf/cql/execution/TestIsolatedCqlExprs
+./cql-engine/src/test/resources/org/opencds/cqf/cql/execution/TestHolisticCqlLibs
 ```
 
 Those files are intended to be moved to a more convenient and non-buried
