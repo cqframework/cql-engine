@@ -1,11 +1,15 @@
 package org.opencds.cqf.cql.runtime;
 
+import javax.annotation.Nonnull;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+
 import java.math.BigDecimal;
 
 /**
  * Created by Bryn on 4/15/2016.
  */
-public class Quantity {
+public class Quantity implements CqlType, Comparable<Quantity> {
 
     public Quantity() {
         this.value = new BigDecimal("0.0");
@@ -36,12 +40,22 @@ public class Quantity {
         return this;
     }
 
-    public Integer compareTo(Quantity other) {
+    @Override
+    public int compareTo(@Nonnull Quantity other) {
         return this.getValue().compareTo(other.getValue());
     }
 
-    public Boolean equal(Quantity other) {
-        return value.compareTo(other.getValue()) == 0 && ((unit == null && other.getUnit() == null) || unit.equals(other.getUnit()));
+    @Override
+    public Boolean equivalent(Object other) {
+        return EquivalentEvaluator.equivalent(this.getValue(), ((Quantity) other).getValue())
+                && EquivalentEvaluator.equivalent(this.getUnit(), ((Quantity) other).getUnit());
+    }
+
+    @Override
+    public Boolean equal(Object other) {
+        Boolean valueEqual = EqualEvaluator.equal(this.getValue(), ((Quantity) other).getValue());
+        Boolean unitEqual = EqualEvaluator.equal(this.getUnit(), ((Quantity) other).getUnit());
+        return valueEqual == null || unitEqual == null ? null : valueEqual && unitEqual;
     }
 
     @Override

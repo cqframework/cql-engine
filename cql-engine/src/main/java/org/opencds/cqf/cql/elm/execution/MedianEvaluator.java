@@ -47,7 +47,7 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
                 return null;
             }
 
-            values = CqlList.sortList(values);
+            values.sort(new CqlList().valueSort);
 
             if (values.size() % 2 != 0) {
                 return values.get(values.size() / 2);

@@ -45,7 +45,7 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
                 return null;
             }
 
-            values = CqlList.sortList(values);
+            values.sort(new CqlList().valueSort);
 
             int max = 0;
             for (int i = 0; i < values.size(); ++i) {

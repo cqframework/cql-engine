@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by Bryn on 4/15/2016.
  */
-public class Concept {
+public class Concept implements CqlType {
     private String display;
     public String getDisplay() {
         return display;
@@ -43,14 +43,14 @@ public class Concept {
         return this;
     }
 
-    public Boolean equivalent(Concept other) {
-        List intersection = (List) IntersectEvaluator.intersect(this.codes, other.codes);
+    public Boolean equivalent(Object other) {
+        List intersection = (List) IntersectEvaluator.intersect(this.codes, ((Concept) other).codes);
         return intersection != null && !intersection.isEmpty();
     }
 
-    public Boolean equal(Concept other) {
-        Boolean codesAreEqual = EqualEvaluator.equal(this.codes, other.codes);
-        Boolean displayIsEqual = EqualEvaluator.equal(this.display, other.display);
+    public Boolean equal(Object other) {
+        Boolean codesAreEqual = EqualEvaluator.equal(this.codes, ((Concept) other).codes);
+        Boolean displayIsEqual = EqualEvaluator.equal(this.display, ((Concept) other).display);
         return (codesAreEqual == null || displayIsEqual == null) ? null : codesAreEqual && displayIsEqual;
 
     }

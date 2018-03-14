@@ -4,7 +4,6 @@ import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
@@ -12,7 +11,7 @@ import java.util.TimeZone;
 /**
  * Created by Chris Schuler on 6/20/2016
  */
-public class DateTime extends BaseTemporal {
+public class DateTime extends BaseTemporal implements CqlType {
 
     public DateTime(Partial partial) {
         this.timezone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
@@ -136,18 +135,5 @@ public class DateTime extends BaseTemporal {
             }
         }
         return dt;
-    }
-
-    public Boolean equal(DateTime other) {
-        if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
-            return null;
-        }
-
-        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
-    }
-
-    @Override
-    public String toString() {
-        return this.getPartial().toString();
     }
 }

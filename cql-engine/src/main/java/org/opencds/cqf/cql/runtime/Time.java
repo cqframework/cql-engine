@@ -13,7 +13,7 @@ import java.util.TimeZone;
 /**
  * Created by Chris Schuler on 6/16/2016
  */
-public class Time extends BaseTemporal {
+public class Time extends BaseTemporal implements CqlType {
 
     public Time(Partial partial) {
         this.timezone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
@@ -84,13 +84,5 @@ public class Time extends BaseTemporal {
             dt.setPartial(dt.getPartial().with(getField(i), getField(i).getField(null).getMinimumValue()));
         }
         return dt;
-    }
-
-    public Boolean equal(Time other) {
-        if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
-            return null;
-        }
-
-        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
     }
 }
