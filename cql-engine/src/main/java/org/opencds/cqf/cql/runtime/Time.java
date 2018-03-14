@@ -1,13 +1,9 @@
 package org.opencds.cqf.cql.runtime;
 
 import org.joda.time.*;
-import org.joda.time.DateTime;
 
-import java.math.BigDecimal;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+
 import java.util.TimeZone;
 
 /**
@@ -87,10 +83,24 @@ public class Time extends BaseTemporal {
     }
 
     public Boolean equal(Time other) {
+        return this.similar(other, EqualEvaluator.SimilarityMode.EQUAL);
+    }
+
+    public Boolean similar(Time other, EqualEvaluator.SimilarityMode mode) {
         if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
             return null;
         }
-
-        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
+        if (mode.equals(EqualEvaluator.SimilarityMode.EQUAL)) {
+            return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
+        }
+        else {
+            // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
+            for (int i = 0; i < this.getPartial().size(); ++i) {
+                if (this.getPartial().getValue(i) != other.getPartial().getValue(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 }

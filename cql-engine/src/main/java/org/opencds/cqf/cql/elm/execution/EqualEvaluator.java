@@ -3,8 +3,9 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import org.apache.commons.lang3.NotImplementedException;
+
 import java.math.BigDecimal;
-import java.util.Iterator;
 
 /*
 *** NOTES FOR CLINICAL OPERATORS ***
@@ -36,9 +37,15 @@ If either argument is null, or contains null elements, the result is null.
  */
 public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
 
+    public enum SimilarityMode { EQUAL, EQUIVALENT }
+
     public static Boolean equal(Object left, Object right) {
+        return EqualEvaluator.similar(left, right, SimilarityMode.EQUAL);
+    }
+
+    public static Boolean similar(Object left, Object right, SimilarityMode mode) {
         if (left == null || right == null) {
-            return null;
+            return mode.equals(SimilarityMode.EQUAL) ? null : (left == null && right == null);
         }
 
         if (left instanceof Uncertainty && right instanceof Integer) {
@@ -47,6 +54,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
 
         // mismatched types not allowed
         if (!left.getClass().equals(right.getClass())) {
+            // Note: Either (or both) input Java Object might be invalid, not representing any CQL value.
             return null;
         }
 
@@ -58,6 +66,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return left.equals(right);
         }
 
+        // Decimal
         else if (left instanceof BigDecimal) {
             return ((BigDecimal) left).compareTo((BigDecimal) right) == 0;
         }
@@ -79,51 +88,32 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         }
 
         else if (left instanceof DateTime) {
-            return ((DateTime) left).equal((DateTime) right);
+            return ((DateTime) left).similar((DateTime) right, mode);
         }
 
         else if (left instanceof Time) {
-            return ((Time) left).equal((Time) right);
+            return ((Time) left).similar((Time) right, mode);
         }
 
         else if (left instanceof Interval) {
-            return ((Interval) left).equal((Interval) right);
+            return ((Interval) left).similar((Interval) right, mode);
         }
 
         else if (left instanceof Tuple) {
-            return ((Tuple) left).equal((Tuple) right);
+            return ((Tuple) left).similar((Tuple) right, mode);
         }
 
         else if (left instanceof Uncertainty) {
             return ((Uncertainty) left).equal(right);
         }
 
+        // List
         else if (left instanceof Iterable) {
-            Iterator leftIterator = ((Iterable)left).iterator();
-            Iterator rightIterator = ((Iterable)right).iterator();
-
-            while (leftIterator.hasNext()) {
-                Object leftObject = leftIterator.next();
-                if (rightIterator.hasNext()) {
-                    Object rightObject = rightIterator.next();
-                    Boolean elementEquals = equal(leftObject, rightObject);
-                    if (elementEquals == null || !elementEquals) {
-                        return elementEquals;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
-
-            if (rightIterator.hasNext()) {
-                return rightIterator.next() == null ? null : false;
-            }
-
-            return true;
+            return CqlList.similar((Iterable)left, (Iterable)right, mode);
         }
 
-        return left.equals(right);
+        // Note: Either (or both) input Java Object might be invalid, not representing any CQL value.
+        throw new NotImplementedException(String.format("Equal and Equivalent are not implemented for type %s", left.getClass().getName()));
     }
 
     @Override

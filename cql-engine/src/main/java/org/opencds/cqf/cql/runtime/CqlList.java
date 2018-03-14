@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.runtime;
 import org.cqframework.cql.elm.execution.ByColumn;
 import org.cqframework.cql.elm.execution.ByExpression;
 import org.cqframework.cql.elm.execution.Expression;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
 
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -21,6 +23,31 @@ public class CqlList {
     private static Expression expression;
 
     private static String path;
+
+    public static Boolean similar(Iterable left, Iterable right, EqualEvaluator.SimilarityMode mode) {
+        Iterator leftIterator = left.iterator();
+        Iterator rightIterator = right.iterator();
+
+        while (leftIterator.hasNext()) {
+            Object leftObject = leftIterator.next();
+            if (rightIterator.hasNext()) {
+                Object rightObject = rightIterator.next();
+                Boolean elementSimilar = EqualEvaluator.similar(leftObject, rightObject, mode);
+                if (elementSimilar == null || !elementSimilar) {
+                    return elementSimilar;
+                }
+            }
+            else {
+                return false;
+            }
+        }
+
+        if (rightIterator.hasNext()) {
+            return rightIterator.next() == null ? null : false;
+        }
+
+        return true;
+    }
 
     public static Integer compareTo(Object comparandOne, Object comparandTwo) {
         if (comparandOne instanceof Integer) {

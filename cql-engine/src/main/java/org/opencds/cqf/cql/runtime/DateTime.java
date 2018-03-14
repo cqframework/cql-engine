@@ -4,7 +4,8 @@ import org.joda.time.DateTimeFieldType;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 
-import java.math.BigDecimal;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.TimeZone;
@@ -139,11 +140,25 @@ public class DateTime extends BaseTemporal {
     }
 
     public Boolean equal(DateTime other) {
+        return this.similar(other, EqualEvaluator.SimilarityMode.EQUAL);
+    }
+
+    public Boolean similar(DateTime other, EqualEvaluator.SimilarityMode mode) {
         if (this.getPartial().size() != other.getPartial().size()) { // Uncertainty
             return null;
         }
-
-        return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
+        if (mode.equals(EqualEvaluator.SimilarityMode.EQUAL)) {
+            return other.getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
+        }
+        else {
+            // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
+            for (int i = 0; i < this.getPartial().size(); ++i) {
+                if (this.getPartial().getValue(i) != other.getPartial().getValue(i)) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     @Override

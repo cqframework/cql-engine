@@ -115,10 +115,23 @@ public class Interval {
     }
 
     public Boolean equal(Interval other) {
-        return this.getLow() != null && EqualEvaluator.equal(this.getStart(), other.getStart())
+        return this.similar(other, EqualEvaluator.SimilarityMode.EQUAL);
+    }
+
+    public Boolean similar(Interval other, EqualEvaluator.SimilarityMode mode) {
+        Boolean startSimilarity = EqualEvaluator.similar(this.getStart(), other.getStart(), mode);
+        Boolean endSimilarity = EqualEvaluator.similar(this.getEnd(), other.getEnd(), mode);
+        if (mode.equals(EqualEvaluator.SimilarityMode.EQUAL)) {
+            return this.getLow() != null && startSimilarity
                 && this.getLowClosed() == other.getLowClosed()
-                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
+                && this.getHigh() != null && endSimilarity
                 && this.getHighClosed() == other.getHighClosed();
+        }
+        else {
+            return (startSimilarity == null && endSimilarity == null)
+                || (startSimilarity != null && endSimilarity != null
+                && startSimilarity && endSimilarity);
+        }
     }
 
     /*
