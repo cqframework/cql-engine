@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.runtime;
 
 import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
 
@@ -116,22 +115,22 @@ public class Interval {
     }
 
     public Boolean equal(Interval other) {
-        return this.similar(other, Value.SimilarityMode.EQUAL);
+        return this.similar(other, EqualEvaluator.SimilarityMode.EQUAL);
     }
 
-    public Boolean similar(Interval other, Value.SimilarityMode mode) {
-        if (mode.equals(Value.SimilarityMode.EQUAL)) {
-            return this.getLow() != null && EqualEvaluator.equal(this.getStart(), other.getStart())
+    public Boolean similar(Interval other, EqualEvaluator.SimilarityMode mode) {
+        Boolean startSimilarity = EqualEvaluator.similar(this.getStart(), other.getStart(), mode);
+        Boolean endSimilarity = EqualEvaluator.similar(this.getEnd(), other.getEnd(), mode);
+        if (mode.equals(EqualEvaluator.SimilarityMode.EQUAL)) {
+            return this.getLow() != null && startSimilarity
                 && this.getLowClosed() == other.getLowClosed()
-                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
+                && this.getHigh() != null && endSimilarity
                 && this.getHighClosed() == other.getHighClosed();
         }
         else {
-            Object startEquivalence = EquivalentEvaluator.equivalent(this.getStart(), other.getStart());
-            Object endEquivalence = EquivalentEvaluator.equivalent(this.getEnd(), other.getEnd());
-            return (startEquivalence == null && endEquivalence == null)
-                || (startEquivalence != null && endEquivalence != null
-                && (Boolean) startEquivalence && (Boolean) endEquivalence);
+            return (startSimilarity == null && endSimilarity == null)
+                || (startSimilarity != null && endSimilarity != null
+                && startSimilarity && endSimilarity);
         }
     }
 

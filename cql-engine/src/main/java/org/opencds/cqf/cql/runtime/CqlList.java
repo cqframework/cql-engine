@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.runtime;
 import org.cqframework.cql.elm.execution.ByColumn;
 import org.cqframework.cql.elm.execution.ByExpression;
 import org.cqframework.cql.elm.execution.Expression;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
 
@@ -23,7 +24,7 @@ public class CqlList {
 
     private static String path;
 
-    public static Boolean similar(Iterable left, Iterable right, Value.SimilarityMode mode) {
+    public static Boolean similar(Iterable left, Iterable right, EqualEvaluator.SimilarityMode mode) {
         Iterator leftIterator = left.iterator();
         Iterator rightIterator = right.iterator();
 
@@ -31,7 +32,7 @@ public class CqlList {
             Object leftObject = leftIterator.next();
             if (rightIterator.hasNext()) {
                 Object rightObject = rightIterator.next();
-                Boolean elementSimilar = Value.similar(leftObject, rightObject, mode);
+                Boolean elementSimilar = EqualEvaluator.similar(leftObject, rightObject, mode);
                 if (elementSimilar == null || !elementSimilar) {
                     return elementSimilar;
                 }

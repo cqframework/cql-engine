@@ -34,10 +34,10 @@ public class Tuple {
   }
 
   public Boolean equal(Tuple other) {
-    return this.similar(other, Value.SimilarityMode.EQUAL);
+    return this.similar(other, EqualEvaluator.SimilarityMode.EQUAL);
   }
 
-  public Boolean similar(Tuple other, Value.SimilarityMode mode) {
+  public Boolean similar(Tuple other, EqualEvaluator.SimilarityMode mode) {
     HashMap<String, Object> leftMap = getElements();
     HashMap<String, Object> rightMap = other.getElements();
 
@@ -47,7 +47,7 @@ public class Tuple {
 
     for (String key : rightMap.keySet()) {
       if (leftMap.containsKey(key)) {
-        Boolean similar = Value.similar(rightMap.get(key), leftMap.get(key), mode);
+        Boolean similar = EqualEvaluator.similar(rightMap.get(key), leftMap.get(key), mode);
         if (similar == null) { return null; }
         else if (!similar) { return false; }
       }
