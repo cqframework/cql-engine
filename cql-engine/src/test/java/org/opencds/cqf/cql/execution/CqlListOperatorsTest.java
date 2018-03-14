@@ -26,11 +26,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("simpleSortDesc").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(6, 5, 4, 2, 1, 1)));
 
-//        result = context.resolveExpressionRef("simpleSortStringAsc").getExpression().evaluate(context);
-//        assertThat(result, is(Arrays.asList(1, 1, 2, 4, 5, 6)));
-//
-//        result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
-//        assertThat(result, is(Arrays.asList(6, 5, 4, 2, 1, 1)));
+        result = context.resolveExpressionRef("simpleSortStringAsc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList("Armadillo", "Wolf", "aardvark", "alligator", "back", "iguana", "zebra")));
+
+        result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList("zebra", "iguana", "back", "alligator", "aardvark", "Wolf", "Armadillo")));
+
+        result = context.resolveExpressionRef("SortDatesAsc").getExpression().evaluate(context);
+        assertThat(result.toString(), is("[2012-01-01, 2012-01-01T12, 2012-10-05, 2012-10-05T10]"));
+
+        result = context.resolveExpressionRef("SortDatesDesc").getExpression().evaluate(context);
+        String s = result.toString();
+        assertThat(result.toString(), is("[2012-10-05T10, 2012-10-05, 2012-01-01T12, 2012-01-01]"));
     }
 
     /**

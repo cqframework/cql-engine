@@ -9,6 +9,9 @@ define simpleSortAsc: simpleList sL sort asc
 define simpleSortDesc: simpleList sL sort desc
 define simpleSortStringAsc: simpleListString sls sort asc
 define simpleSortStringDesc: simpleListString sls sort desc
+define ListOfDates: { DateTime(2012, 10, 5, 10), DateTime(2012, 1, 1), DateTime(2012, 1, 1, 12), DateTime(2012, 10, 5) }
+define SortDatesAsc: ListOfDates lod sort asc
+define SortDatesDesc: ListOfDates lod sort desc
 
 //Contains
 define ContainsABNullHasNull: { 'a', 'b', null } contains null

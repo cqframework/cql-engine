@@ -632,30 +632,6 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TupleNotEqJohn1John2").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        result = context.resolveExpressionRef("ListNotEqEmptyEmpty").getExpression().evaluate(context);
-        assertThat(result, is(false));
-
-        result = context.resolveExpressionRef("ListNotEqABCABC").getExpression().evaluate(context);
-        assertThat(result, is(false));
-
-        result = context.resolveExpressionRef("ListNotEqABCAB").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
-        result = context.resolveExpressionRef("ListNotEqABC123").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
-        result = context.resolveExpressionRef("ListNotEq123ABC").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
-        result = context.resolveExpressionRef("ListNotEq123String123").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
-        result = context.resolveExpressionRef("IntervalNotEq1To101To10").getExpression().evaluate(context);
-        assertThat(result, is(false));
-
-        result = context.resolveExpressionRef("IntervalNotEq1To101To5").getExpression().evaluate(context);
-        assertThat(result, is(true));
-
         result = context.resolveExpressionRef("DateTimeNotEqTodayToday").getExpression().evaluate(context);
         assertThat(result, is(false));
 

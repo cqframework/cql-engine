@@ -4,23 +4,16 @@ codesystem "LOINC": 'http://loinc.org'
 
 valueset "Feeding Intention-Breast": '2.16.840.1.113762.1.4.1045.29'
 
-context Population
-
-//Age
-/*define PatientExpression: Patient { Name: 'Patrick', DOB: @2014-01-01 }
 context Patient
-define AgeYears: Patient.AgeInYears()*/
-
-//AgeAt
 
 //CalculateAge
-// define CalculateAgeYears: CalculateAgeInYears(DateTime(2000, 1, 1))
-define CalculateAgeMonths: CalculateAgeInMonths(DateTime(2000, 1, 1))
-define CalculateAgeDays: CalculateAgeInDays(DateTime(2000, 1, 1))
-define CalculateAgeHours: CalculateAgeInHours(DateTime(2000, 1, 1, 0))
-define CalculateAgeMinutes: CalculateAgeInMinutes(DateTime(2000, 1, 1, 0, 0))
-define CalculateAgeSeconds: CalculateAgeInSeconds(DateTime(2000, 1, 1, 0, 0, 0))
-define CalculateAgeUncertain: CalculateAgeInMonths(DateTime(2000))
+define CalculateAgeYears: CalculateAgeInYears(DateTime(2010, 1, 1))
+define CalculateAgeMonths: CalculateAgeInMonths(DateTime(2010, 1, 1))
+define CalculateAgeDays: CalculateAgeInDays(DateTime(2010, 1, 1))
+define CalculateAgeHours: CalculateAgeInHours(DateTime(2010, 1, 1, 1))
+define CalculateAgeMinutes: CalculateAgeInMinutes(DateTime(2010, 1, 1, 0, 0))
+define CalculateAgeSeconds: CalculateAgeInSeconds(DateTime(2010, 1, 1, 0, 0, 0))
+define CalculateAgeUncertain: CalculateAgeInMonths(DateTime(2010))
 
 //CalculateAgeAt
 define CalculateAgeAtYears: CalculateAgeInYearsAt(DateTime(2000, 1, 1), DateTime(2017, 1, 1))

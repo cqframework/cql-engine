@@ -93,12 +93,10 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
                 if (byItem instanceof ByExpression) {
                     result.sort(new CqlList(context, alias, ((ByExpression)byItem).getExpression()).expressionSort);
-                    return;
                 }
 
                 else if (byItem instanceof ByColumn) {
                     result.sort(new CqlList(context, ((ByColumn)byItem).getPath()).columnSort);
-                    return;
                 }
 
                 else {
