@@ -19,17 +19,12 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
     @Test
     public void testAge() throws JAXBException {
-        Context context = new Context(library);
-
-        // Object result = context.resolveExpressionRef("AgeYears").getExpression().evaluate(context);
-        // assertThat(result, is(2));
+        // Tests in the fhir engine
     }
 
     @Test
     public void testAgeAt() throws JAXBException {
-        Context context = new Context(library);
-
-        Object result;
+        // Tests in the fhir engine
     }
 
     /**
@@ -37,30 +32,28 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testCalculateAge() throws JAXBException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Context context = new Context(library);
-        DateTime now = context.getEvaluationDateTime();
-        Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
-        assertThat(result, is((CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "year"))));
+        Context context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2016, 1, 1, 0, 0, 0, 0})));
+
+         Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
+         assertThat(result, is(6));
 
         result = context.resolveExpressionRef("CalculateAgeMonths").getExpression().evaluate(context);
-        assertThat(result, is((CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "month"))));
+        assertThat(result, is(72));
 
         result = context.resolveExpressionRef("CalculateAgeDays").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(3), new int[] {2000, 1, 1})), now, "day")));
+        assertThat(result, is(2191));
 
         result = context.resolveExpressionRef("CalculateAgeHours").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(4), new int[] {2000, 1, 1, 0})), now, "hour")));
+        assertThat(result, is(52583));
 
         result = context.resolveExpressionRef("CalculateAgeMinutes").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(5), new int[] {2000, 1, 1, 0, 0})), now, "minute")));
+        assertThat(result, is(3155040));
 
         result = context.resolveExpressionRef("CalculateAgeSeconds").getExpression().evaluate(context);
-        assertThat(result, is(CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(6), new int[] {2000, 1, 1, 0, 0, 0})), now, "second")));
+        assertThat(result, is(189302400));
 
         result = context.resolveExpressionRef("CalculateAgeUncertain").getExpression().evaluate(context);
-        Integer low = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(2), new int[] {2000, 12})), now, "month");
-        Integer high = (Integer)CalculateAgeAtEvaluator.calculateAgeAt(new DateTime(new Partial(DateTime.getFields(2), new int[] {2000, 1})), now, "month");
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(low, true, high, true)));
+        assertThat(result.toString(), is(new Uncertainty().withUncertaintyInterval(new Interval(61, true, 72, true)).toString()));
     }
 
     /**
@@ -97,17 +90,30 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testEqual() throws JAXBException {
         Context context = new Context(library);
-        Object result = context.resolveExpressionRef("CodeEqualTrue").getExpression().evaluate(context);
+
+        Object result = context.resolveExpressionRef("Issue70A").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("Issue70B").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("CodeEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("CodeEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeEqualNullVersion").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("ConceptEqualTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ConceptEqualFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ConceptEqualNullDisplay").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("CodeEqualNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -139,19 +145,6 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ConceptEquivalentNull").getExpression().evaluate(context);
         assertThat(result, is(false));
-
-        // TODO: Fix these -- figure out if Codes are allowed null components
-        // result = context.resolveExpressionRef("CodeEquivalentNullTrue").getExpression().evaluate(context);
-        // assertThat(result, is(true));
-        //
-        // result = context.resolveExpressionRef("CodeEquivalentNullFalse").getExpression().evaluate(context);
-        // assertThat(result, is(false));
-        //
-        // result = context.resolveExpressionRef("ConceptEquivalentNullTrue").getExpression().evaluate(context);
-        // assertThat(result, is(true));
-        //
-        // result = context.resolveExpressionRef("ConceptEquivalentNullFalse").getExpression().evaluate(context);
-        // assertThat(result, is(false));
     }
 
     /**

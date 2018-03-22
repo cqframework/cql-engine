@@ -96,7 +96,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CodeToConcept1").getExpression().evaluate(context);
-        Assert.assertTrue(((Concept) result).equal(new Concept().withCode(new Code().withCode("8480-6").withSystem("http://loinc.org").withDisplay("Systolic blood pressure"))));
+        Assert.assertTrue(((Concept) result).equivalent(new Concept().withCode(new Code().withCode("8480-6"))));
     }
 
     /**

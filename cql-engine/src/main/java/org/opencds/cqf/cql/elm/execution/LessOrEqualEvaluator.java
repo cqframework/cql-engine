@@ -47,12 +47,12 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
       }
 
       else if (left instanceof DateTime && right instanceof DateTime) {
-          Integer i = ((DateTime) left).compareTo((DateTime) right);
+          Integer i = ((DateTime) left).compare((DateTime) right, false);
           return i == null ? null : i <= 0;
       }
 
       else if (left instanceof Time && right instanceof Time) {
-          Integer i = ((Time) left).compareTo((Time) right);
+          Integer i = ((Time) left).compare((Time) right, false);
           return i == null ? null : i <= 0;
       }
 

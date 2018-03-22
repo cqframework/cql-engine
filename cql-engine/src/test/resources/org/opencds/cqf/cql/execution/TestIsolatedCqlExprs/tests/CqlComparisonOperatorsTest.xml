@@ -108,41 +108,6 @@
 			<expression>Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.540 }</expression>
 			<output>false</output>
 		</test>
-		<test name="ListEqEmptyEmpty">
-			<expression>{} = {}</expression>
-			<output>true</output>
-		</test>
-		<test name="ListEqABCABC">
-			<expression>{ 'a', 'b', 'c' } = { 'a', 'b', 'c' }</expression>
-			<output>true</output>
-		</test>
-		<test name="ListEqABCAB">
-			<expression>{ 'a', 'b', 'c' } = { 'a', 'b' }</expression>
-			<output>false</output>
-		</test>
-		<test name="ListEqABC123">
-			<expression>{ 'a', 'b', 'c' } = { 1, 2, 3 }</expression>
-			<output>false</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="ListEq123ABC">
-			<expression>{ 1, 2, 3 } = { 'a', 'b', 'c' }</expression>
-			<output>false</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="ListEq123String123">
-			<expression>{ 1, 2, 3 } = { '1', '2', '3' }</expression>
-			<output>false</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="IntervalEq1To101To10">
-			<expression>Interval[1, 10] = Interval[1, 10]</expression>
-			<output>true</output>
-		</test>
-		<test name="IntervalEq1To101To5">
-			<expression>Interval[1, 10] = Interval[1, 5]</expression>
-			<output>false</output>
-		</test>
 		<test name="DateTimeEqTodayToday">
 			<expression>Today() = Today()</expression>
 			<output>true</output>
@@ -666,47 +631,16 @@
 			<expression>Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }</expression>
 			<output>true</output>
 		</test>
+		<test name="EquivTupleJohnJohnWithNulls">
+			<expression>Tuple { Id : 1, Name : 'John', Position: null } ~ Tuple { Id : 1, Name : 'John', Position: null }</expression>
+			<output>true</output>
+		</test>
 		<test name="EquivTupleJohnJane">
 			<expression>Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }</expression>
 			<output>false</output>
 		</test>
 		<test name="EquivTupleJohn1John2">
 			<expression>Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }</expression>
-			<output>false</output>
-		</test>
-		<test name="EquivListEmptyEmpty">
-			<expression>{} ~ {}</expression>
-			<output>true</output>
-		</test>
-		<test name="EquivListABCABC">
-			<expression>{ 'a', 'b', 'c' } ~ { 'a', 'b', 'c' }</expression>
-			<output>true</output>
-		</test>
-		<test name="EquivListABCAB">
-			<expression>{ 'a', 'b', 'c' } ~ { 'a', 'b' }</expression>
-			<output>false</output>
-		</test>
-		<test name="EquivListABC123">
-			<expression>{ 'a', 'b', 'c' } ~ { 1, 2, 3 }</expression>
-			<output>false</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="EquivList123ABC">
-			<expression>{ 1, 2, 3 } ~ { 'a', 'b', 'c' }</expression>
-			<output>false</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="EquivList123String123">
-			<expression>{ 1, 2, 3 } ~  { '1', '2', '3' }</expression>
-			<output>false</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="EquivInterval1To101To10">
-			<expression>Interval[1, 10] ~ Interval[1, 10]</expression>
-			<output>true</output>
-		</test>
-		<test name="EquivInterval1To101To5">
-			<expression>Interval[1, 10] ~ Interval[1, 5]</expression>
 			<output>false</output>
 		</test>
 		<test name="EquivDateTimeTodayToday">
@@ -806,41 +740,6 @@
 		</test>
 		<test name="TupleNotEqJohn1John2">
 			<expression>Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'John' }</expression>
-			<output>true</output>
-		</test>
-		<test name="ListNotEqEmptyEmpty">
-			<expression>{} != {}</expression>
-			<output>false</output>
-		</test>
-		<test name="ListNotEqABCABC">
-			<expression>{ 'a', 'b', 'c' } != { 'a', 'b', 'c' }</expression>
-			<output>false</output>
-		</test>
-		<test name="ListNotEqABCAB">
-			<expression>{ 'a', 'b', 'c' } != { 'a', 'b' }</expression>
-			<output>true</output>
-		</test>
-		<test name="ListNotEqABC123">
-			<expression>{ 'a', 'b', 'c' } != { 1, 2, 3 }</expression>
-			<output>true</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="ListNotEq123ABC">
-			<expression>{ 1, 2, 3 } != { 'a', 'b', 'c' }</expression>
-			<output>true</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="ListNotEq123String123">
-			<expression>{ 1, 2, 3 } != { '1', '2', '3' }</expression>
-			<output>true</output>
-			<!-- TODO: make Translator resolve isolated Equivalent operator signatures -->
-		</test>
-		<test name="IntervalNotEq1To101To10">
-			<expression>Interval[1, 10] != Interval[1, 10]</expression>
-			<output>false</output>
-		</test>
-		<test name="IntervalNotEq1To101To5">
-			<expression>Interval[1, 10] != Interval[1, 5]</expression>
 			<output>true</output>
 		</test>
 		<test name="DateTimeNotEqTodayToday">

@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd">
 	<group name="Sort">
-		<test name="simpleList">
-			<expression>{4, 5, 1, 6, 2, 1}</expression>
-			<output>{4, 5, 1, 6, 2, 1}</output>
-		</test>
-		<test name="simpleListString">
-			<expression>{'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}</expression>
-			<output>{'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}</output>
-		</test>
 		<test name="simpleSortAsc">
 			<expression>({4, 5, 1, 6, 2, 1}) sL sort asc</expression>
 			<output>{1, 1, 2, 4, 5, 6}</output>
@@ -24,6 +16,14 @@
 		<test name="simpleSortStringDesc">
 			<expression>({'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}) sls sort desc</expression>
 			<output>{'zebra', 'iguana', 'back', 'alligator', 'aardvark', 'Wolf', 'Armadillo'}</output>
+		</test>
+		<test name="SortDatesAsc">
+			<expression>({ DateTime(2012, 10, 5, 10), DateTime(2012, 1, 1), DateTime(2012, 1, 1, 12), DateTime(2012, 10, 5) }) S sort asc</expression>
+			<output>{DateTime(2012, 1, 1), DateTime(2012, 1, 1, 12), DateTime(2012, 10, 5), DateTime(2012, 10, 5, 10)}</output>
+		</test>
+		<test name="SortDatesDesc">
+			<expression>({ DateTime(2012, 10, 5, 10), DateTime(2012, 1, 1), DateTime(2012, 1, 1, 12), DateTime(2012, 10, 5) }) S sort desc</expression>
+			<output>{DateTime(2012, 10, 5, 10), DateTime(2012, 10, 5), DateTime(2012, 1, 1, 12), DateTime(2012, 1, 1)}</output>
 		</test>
 	</group>
 	<group name="Contains">

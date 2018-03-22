@@ -20,10 +20,11 @@ define BooleanTestTrue: true
 define BooleanTestFalse: false
 
 //Code
-define CodeLiteral: Code '8480-6' from "LOINC" display 'Systolic blood pressure'
+define CodeLiteral: Code { code: '8480-6', system: 'http://loinc.org', version: '1.0', display: 'Systolic blood pressure' }
+define CodeLiteral2: Code { code: '1234-5', system: 'http://example.org', version: '1.05', display: 'Test Code' }
 
 //Concept
-define ConceptTest: Concept { Code '66071002' from "LOINC", Code 'B18.1' from "LOINC"} display 'Type B viral hepatitis'
+define ConceptTest: Concept { codes: { CodeLiteral, CodeLiteral2 }, display: 'Type B viral hepatitis' }
 
 //DateTime
 define DateTimeNull: DateTime(null)

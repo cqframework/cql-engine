@@ -12,8 +12,6 @@ import org.opencds.cqf.cql.runtime.Tuple;
 
 import java.util.*;
 
-import static org.opencds.cqf.cql.runtime.CqlList.ensureIterable;
-
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -21,6 +19,18 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
     private boolean shouldInclude;
     private Deque<AliasList> multiQueryStack;
+
+    public Iterable<Object> ensureIterable(Object source) {
+        if (source instanceof Iterable) {
+            return (Iterable<Object>) source;
+        }
+        else {
+            ArrayList<Object> sourceList = new ArrayList<>();
+            if (source != null)
+                sourceList.add(source);
+            return sourceList;
+        }
+    }
 
     /**
      * Resolves let clause using a for-each operation to introduce a Tuple element for each defined expression.
@@ -82,23 +92,19 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
             for (org.cqframework.cql.elm.execution.SortByItem byItem : sortClause.getBy()) {
 
                 if (byItem instanceof ByExpression) {
-                    CqlList.sortByExpression(result, context, (ByExpression)byItem, alias);
-                    return;
+                    result.sort(new CqlList(context, alias, ((ByExpression)byItem).getExpression()).expressionSort);
                 }
 
                 else if (byItem instanceof ByColumn) {
-                    CqlList.sortByColumn(result, context, (ByColumn)byItem);
-                    return;
+                    result.sort(new CqlList(context, ((ByColumn)byItem).getPath()).columnSort);
+                }
+
+                else {
+                    result.sort(new CqlList().valueSort);
                 }
 
                 String direction = byItem.getDirection().value();
-
-                if (direction == null || direction.equals("asc") || direction.equals("ascending")) {
-                    java.util.Collections.sort(result, CqlList.valueSort);
-                }
-
-                else if (direction.equals("desc") || direction.equals("descending")) {
-                    java.util.Collections.sort(result, CqlList.valueSort);
+                if (direction.equals("desc") || direction.equals("descending")) {
                     java.util.Collections.reverse(result);
                 }
             }
@@ -114,7 +120,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 // assuming list
                 Object sourceObject = source.getExpression().evaluate(context);
                 Iterable<Object> sourceData = ensureIterable(sourceObject);
-                List target = new ArrayList<>();
+                List<Object> target = new ArrayList<>();
                 sourceData.forEach(target::add);
                 multiQueryStack.addFirst(new AliasList(source.getAlias()).withBase(target));
             }

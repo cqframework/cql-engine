@@ -1,9 +1,6 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.opencds.cqf.cql.elm.execution.DurationBetweenEvaluator;
-import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
-import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
-import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
+import org.opencds.cqf.cql.elm.execution.*;
 
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
@@ -12,7 +9,7 @@ import java.util.Date;
 /**
  * Created by Bryn on 4/15/2016.
  */
-public class Interval {
+public class Interval implements CqlType {
 
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {
         this.low = low;
@@ -114,13 +111,6 @@ public class Interval {
         }
     }
 
-    public Boolean equal(Interval other) {
-        return this.getLow() != null && EqualEvaluator.equal(this.getStart(), other.getStart())
-                && this.getLowClosed() == other.getLowClosed()
-                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), other.getEnd())
-                && this.getHighClosed() == other.getHighClosed();
-    }
-
     /*
     Returns the ending point of an interval.
 
@@ -138,6 +128,20 @@ public class Interval {
         else {
             return high == null ? Value.maxValue(pointType) : high;
         }
+    }
+
+    @Override
+    public Boolean equivalent(Object other) {
+        return EquivalentEvaluator.equivalent(this.getStart(), ((Interval) other).getStart())
+                && EquivalentEvaluator.equivalent(this.getEnd(), ((Interval) other).getEnd());
+    }
+
+    @Override
+    public Boolean equal(Object other) {
+        return this.getLow() != null && EqualEvaluator.equal(this.getStart(), ((Interval) other).getStart())
+                && this.getLowClosed() == ((Interval) other).getLowClosed()
+                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), ((Interval) other).getEnd())
+                && this.getHighClosed() == ((Interval) other).getHighClosed();
     }
 
     @Override

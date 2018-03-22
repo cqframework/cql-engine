@@ -1,9 +1,12 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+
 /**
  * Created by Bryn on 4/15/2016.
  */
-public class Code {
+public class Code implements CqlType {
 
     private String code;
     public String getCode() {
@@ -53,12 +56,18 @@ public class Code {
         return this;
     }
 
-    public Boolean equal(Code other) {
-        return this.getCode().equals(other.getCode())
-                && ((this.getSystem() == null && other.getSystem() == null)
-                || (this.getSystem() != null && this.getSystem().equals(other.getSystem())))
-                && ((this.getVersion() == null && other.getVersion() == null)
-                || (this.getVersion() != null && this.getVersion().equals(other.getVersion())));
+    public Boolean equivalent(Object other) {
+        return EquivalentEvaluator.equivalent(this.getCode(), ((Code) other).getCode())
+                && EquivalentEvaluator.equivalent(this.getSystem(), ((Code) other).getSystem());
+    }
+
+    public Boolean equal(Object other) {
+        Boolean codeIsEqual = EqualEvaluator.equal(this.getCode(), ((Code) other).getCode());
+        Boolean systemIsEqual = EqualEvaluator.equal(this.getSystem(), ((Code) other).getSystem());
+        Boolean versionIsEqual = EqualEvaluator.equal(this.getVersion(), ((Code) other).getVersion());
+        Boolean displayIsEqual = EqualEvaluator.equal(this.getDisplay(), ((Code) other).getDisplay());
+        return (codeIsEqual == null || systemIsEqual == null || versionIsEqual == null || displayIsEqual == null)
+                ? null : codeIsEqual && systemIsEqual && versionIsEqual && displayIsEqual;
     }
 
     @Override

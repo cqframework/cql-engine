@@ -4,6 +4,7 @@ import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.TimeZone;
@@ -11,7 +12,7 @@ import java.util.TimeZone;
 /**
  * Created by Christopher Schuler on 6/11/2017.
  */
-public abstract class BaseTemporal {
+public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> {
 
     protected Partial partial;
     DateTimeZone timezone;
@@ -112,10 +113,13 @@ public abstract class BaseTemporal {
         return dt;
     }
 
-    public BigDecimal getTimezoneOffset() {
+    public String getUtcOffsetString() {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("ZZ");
-        String dtz = dtf.withZone(timezone).print(0);
-        String[] parts = dtz.split(":");
+        return dtf.withZone(timezone).print(0);
+    }
+
+    public BigDecimal getTimezoneOffset() {
+        String[] parts = getUtcOffsetString().split(":");
         if (Integer.parseInt(parts[1]) == 0) {
             return new BigDecimal(parts[0] + "." + parts[1]);
         }
@@ -133,40 +137,6 @@ public abstract class BaseTemporal {
 
     public org.joda.time.DateTime getJodaDateTime() {
         return jodaDateTime;
-    }
-
-    public Integer compareTo(BaseTemporal other) {
-        boolean differentPrecisions = this.getPartial().size() != other.getPartial().size();
-
-        int size;
-        if (differentPrecisions) {
-            size = this.getPartial().size() > other.getPartial().size() ? other.getPartial().size() : this.getPartial().size();
-        }
-        else {
-            size = this.getPartial().size();
-        }
-
-        if (!isDateTime) {
-            size += 3;
-        }
-
-        Instant left = this.jodaDateTime.toInstant();
-        Instant right = other.jodaDateTime.toInstant();
-
-        for (int i = 0; i < size; ++i) {
-            if (left.get(DateTime.getField(i)) > right.get(DateTime.getField(i))) {
-                return 1;
-            }
-            else if (left.get(DateTime.getField(i)) < right.get(DateTime.getField(i))) {
-                return -1;
-            }
-        }
-
-        if (differentPrecisions) {
-            return null;
-        }
-
-        return 0;
     }
 
     public static Partial truncatePartial(BaseTemporal temporal, int index) {
@@ -200,6 +170,67 @@ public abstract class BaseTemporal {
             int minuteOffset = new BigDecimal("60").multiply(offset.remainder(BigDecimal.ONE)).intValue();
             return DateTimeZone.forOffsetHoursMinutes(offset.intValue(), minuteOffset);
         }
+    }
+
+    public Integer compare(BaseTemporal other, Boolean forSort) {
+        boolean differentPrecisions = this.getPartial().size() != other.getPartial().size();
+
+        int size;
+        if (differentPrecisions) {
+            size = this.getPartial().size() > other.getPartial().size() ? other.getPartial().size() : this.getPartial().size();
+        }
+        else {
+            size = this.getPartial().size();
+        }
+
+        if (!isDateTime) {
+            size += 3;
+        }
+
+        Instant left = this.jodaDateTime.toInstant();
+        Instant right = other.jodaDateTime.toInstant();
+
+        for (int i = 0; i < size; ++i) {
+            if (left.get(DateTime.getField(i)) > right.get(DateTime.getField(i))) {
+                return 1;
+            }
+            else if (left.get(DateTime.getField(i)) < right.get(DateTime.getField(i))) {
+                return -1;
+            }
+        }
+
+        if (differentPrecisions) {
+            return forSort ? (this.getPartial().size() > other.getPartial().size() ? 1 : -1) : null;
+        }
+
+        return 0;
+    }
+
+    // for list sorting
+    @Override
+    public int compareTo(@Nonnull BaseTemporal other) {
+        return this.compare(other, true);
+    }
+
+    @Override
+    public Boolean equivalent(Object other) {
+        if (this.getPartial().size() != ((BaseTemporal) other).getPartial().size()) {
+            return false;
+        }
+        for (int i = 0; i < this.getPartial().size(); ++i) {
+            if (this.getPartial().getValue(i) != ((BaseTemporal) other).getPartial().getValue(i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Boolean equal(Object other) {
+        if (this.getPartial().size() != ((BaseTemporal) other).getPartial().size()) { // Uncertainty
+            return null;
+        }
+        return ((BaseTemporal) other).getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
     }
 
     @Override

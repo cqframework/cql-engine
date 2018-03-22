@@ -1,7 +1,5 @@
 library TypeOperator version '1'
 
-codesystem "LOINC": 'http://loinc.org'
-
 context Population
 
 //As
@@ -25,7 +23,7 @@ define StringIsInteger: '5' is Integer
 define StringNoToBoolean: ToBoolean('NO')
 
 //ToConcept
-define CodeToConcept1: ToConcept(Code '8480-6' from "LOINC" display 'Systolic blood pressure')
+define CodeToConcept1: ToConcept(Code { code: '8480-6' })
 
 //ToDateTime
 define ToDateTime1: ToDateTime('2014-01-01')

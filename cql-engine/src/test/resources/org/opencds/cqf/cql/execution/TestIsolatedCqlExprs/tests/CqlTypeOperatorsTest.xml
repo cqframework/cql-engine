@@ -58,10 +58,10 @@
 	</group>
 	<group name="ToConcept">
 		<test name="CodeToConcept1">
-			<expression>ToConcept(Code { code: '8480-6', system: 'http://loinc.org', version: null, display: 'Systolic blood pressure' })</expression>
+			<expression>ToConcept(Code { code: '8480-6' })</expression>
 			<output>
 				Concept {
-					codes: Code { code: '8480-6', system: 'http://loinc.org', version: null, display: 'Systolic blood pressure' }
+					codes: Code { code: '8480-6' }
 				}
 			</output>
 		</test>

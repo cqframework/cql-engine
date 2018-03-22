@@ -1,10 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Tuple;
+import org.opencds.cqf.cql.runtime.*;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -51,87 +48,16 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return false;
         }
 
+        if (!left.getClass().equals(right.getClass())) {
+            return false;
+        }
+
         if (left instanceof Iterable) {
-            Iterator leftIterator = ((Iterable)left).iterator();
-            Iterator rightIterator = ((Iterable)right).iterator();
-
-            while (leftIterator.hasNext()) {
-                Object leftObject = leftIterator.next();
-                if (rightIterator.hasNext()) {
-                    Object rightObject = rightIterator.next();
-                    Boolean elementEquivalent = equivalent(leftObject, rightObject);
-                    if (elementEquivalent == null || !elementEquivalent) {
-                        return elementEquivalent;
-                    }
-                }
-                else { return false; }
-            }
-
-            if (rightIterator.hasNext()) {
-                return rightIterator.next() == null ? null : false;
-            }
-
-            return true;
+            return CqlList.equivalent((Iterable) left, (Iterable) right);
         }
 
-        else if (left instanceof Interval) {
-            Object startEquivalence = equivalent(((Interval) left).getStart(), ((Interval) right).getStart());
-            Object endEquivalence = equivalent(((Interval) left).getEnd(), ((Interval) right).getEnd());
-            return (startEquivalence == null && endEquivalence == null)
-                    || (startEquivalence != null && endEquivalence != null
-                    && (Boolean) startEquivalence && (Boolean) endEquivalence);
-        }
-
-        else if (left instanceof Tuple) {
-            HashMap<String, Object> leftMap = ((Tuple)left).getElements();
-            HashMap<String, Object> rightMap = ((Tuple)right).getElements();
-
-            if (leftMap.size() != rightMap.size()) {
-                return false;
-            }
-
-            for (String key : rightMap.keySet()) {
-                if (leftMap.containsKey(key)) {
-                    Object areKeyValsSame = equivalent(rightMap.get(key), leftMap.get(key));
-                    if (areKeyValsSame == null) {
-                        return null;
-                    }
-                    else if (!(Boolean) areKeyValsSame) {
-                        return false;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        // Do not want to call the equals method for DateTime or Time - returns null if missing elements...
-        else if (left instanceof DateTime && right instanceof DateTime) {
-            DateTime leftDT = (DateTime)left;
-            DateTime rightDT = (DateTime)right;
-            if (leftDT.getPartial().size() != rightDT.getPartial().size()) { return null; }
-
-            for (int i = 0; i < leftDT.getPartial().size(); ++i) {
-                if (leftDT.getPartial().getValue(i) != rightDT.getPartial().getValue(i)) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        else if (left instanceof Time && right instanceof Time) {
-            Time leftT = (Time)left;
-            Time rightT = (Time)right;
-            if (leftT.getPartial().size() != rightT.getPartial().size()) { return null; }
-
-            for (int i = 0; i < leftT.getPartial().size(); ++i) {
-                if (leftT.getPartial().getValue(i) != rightT.getPartial().getValue(i)) {
-                    return false;
-                }
-            }
-            return true;
+        else if (left instanceof CqlType) {
+            return ((CqlType) left).equivalent(right);
         }
 
         return EqualEvaluator.equal(left, right);

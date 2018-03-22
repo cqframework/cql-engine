@@ -11,7 +11,7 @@ define SimpleEqTrueFalse : true = false
 define SimpleEqFalseFalse : false = false
 define SimpleEqFalseTrue : false = true
 define SimpleEqNullNull : null = null
-/*define SimpleEqTrueNull : true = null*/
+define SimpleEqTrueNull : true = null
 define SimpleEqNullTrue : null = true
 define SimpleEqInt1Int1 : 1 = 1
 define SimpleEqInt1Int2 : 1 = 2
@@ -33,14 +33,6 @@ define TupleEqDateTimeTrue: Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0,
 define TupleEqDateTimeFalse: Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 0, 0, 0, 0) } = Tuple { dateId: 1, Date: DateTime(2012, 10, 5, 5, 0, 0, 0) }
 define TupleEqTimeTrue: Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.541 }
 define TupleEqTimeFalse: Tuple { timeId: 55, TheTime: @T05:15:15.541 } = Tuple { timeId: 55, TheTime: @T05:15:15.540 }
-define ListEqEmptyEmpty : {} = {}
-define ListEqABCABC : { 'a', 'b', 'c' } = { 'a', 'b', 'c' }
-define ListEqABCAB : { 'a', 'b', 'c' } = { 'a', 'b' }
-define ListEqABC123: { 'a', 'b', 'c' } = { 1, 2, 3 }
-define ListEq123ABC: { 1, 2, 3 } = { 'a', 'b', 'c' }
-define ListEq123String123:  { 1, 2, 3 } = { '1', '2', '3' }
-define IntervalEq1To101To10: Interval[1, 10] = Interval[1, 10]
-define IntervalEq1To101To5: Interval[1, 10] = Interval[1, 5]
 define DateTimeEqTodayToday: Today() = Today()
 define DateTimeEqTodayYesterday: Today() = Today() - 1 days
 define DateTimeEqJanJan: DateTime(2014, 1, 5, 5, 0, 0, 0, 0) = DateTime(2014, 1, 5, 5, 0, 0, 0, 0)
@@ -164,7 +156,7 @@ define EquivTrueFalse               : true ~ false
 define EquivFalseFalse              : false ~ false
 define EquivFalseTrue               : false ~ true
 define EquivNullNull                : null ~ null
-//define EquivTrueNull                : true ~ null
+define EquivTrueNull                : true ~ null
 define EquivNullTrue                : null ~ true
 define EquivInt1Int1                : 1 ~ 1
 define EquivInt1Int2                : 1 ~ 2
@@ -177,18 +169,11 @@ define EquivFloat1Int2              : 1.0 ~ 2
 define EquivEqCM1CM1                : 1'cm' ~ 1'cm'
 define EquivEqCM1M01                : 1'cm' ~ 0.01'm'
 define EquivTupleJohnJohn           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }
+define EquivTupleJohnJohnWithNulls  : Tuple { Id : 1, Name : 'John', Position: null } ~ Tuple { Id : 1, Name : 'John', Position: null }
 define EquivTupleJohnJohnFalse      : Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } ~ Tuple { Id : 1, Name : 'John' }
 define EquivTupleJohnJohnFalse2     : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' }
 define EquivTupleJohnJane           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }
 define EquivTupleJohn1John2         : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }
-define EquivListEmptyEmpty          : {} ~ {}
-define EquivListABCABC              : { 'a', 'b', 'c' } ~ { 'a', 'b', 'c' }
-define EquivListABCAB               : { 'a', 'b', 'c' } ~ { 'a', 'b' }
-define EquivListABC123              : { 'a', 'b', 'c' } ~ { 1, 2, 3 }
-define EquivList123ABC              : { 1, 2, 3 } ~ { 'a', 'b', 'c' }
-define EquivList123String123        : { 1, 2, 3 } ~  { '1', '2', '3' }
-define EquivInterval1To101To10      : Interval[1, 10] ~ Interval[1, 10]
-define EquivInterval1To101To5       : Interval[1, 10] ~ Interval[1, 5]
 define EquivDateTimeTodayToday      : Today() ~ Today()
 define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 days
 define EquivTime10A10A              : @T10:00:00.000 ~ @T10:00:00.000
@@ -200,7 +185,7 @@ define SimpleNotEqTrueFalse : true != false
 define SimpleNotEqFalseFalse : false != false
 define SimpleNotEqFalseTrue : false != true
 define SimpleNotEqNullNull : null != null
-// define SimpleNotEqTrueNull : true != null
+define SimpleNotEqTrueNull : true != null
 define SimpleNotEqNullTrue : null != true
 define SimpleNotEqInt1Int1 : 1 != 1
 define SimpleNotEqInt1Int2 : 1 != 2
@@ -215,14 +200,6 @@ define QuantityNotEqCM1M01 : 1'cm' != 0.01'm'
 define TupleNotEqJohnJohn: Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 1, Name : 'John' }
 define TupleNotEqJohnJane: Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'Jane' }
 define TupleNotEqJohn1John2: Tuple{ Id : 1, Name : 'John' } != Tuple{ Id : 2, Name : 'John' }
-define ListNotEqEmptyEmpty : {} != {}
-define ListNotEqABCABC : { 'a', 'b', 'c' } != { 'a', 'b', 'c' }
-define ListNotEqABCAB : { 'a', 'b', 'c' } != { 'a', 'b' }
-define ListNotEqABC123: { 'a', 'b', 'c' } != { 1, 2, 3 }
-define ListNotEq123ABC: { 1, 2, 3 } != { 'a', 'b', 'c' }
-define ListNotEq123String123:  { 1, 2, 3 } != { '1', '2', '3' }
-define IntervalNotEq1To101To10: Interval[1, 10] != Interval[1, 10]
-define IntervalNotEq1To101To5: Interval[1, 10] != Interval[1, 5]
 define DateTimeNotEqTodayToday: Today() != Today()
 define DateTimeNotEqTodayYesterday: Today() != Today() - 1 days
 define TimeNotEq10A10A: @T10:00:00.000 != @T10:00:00.000

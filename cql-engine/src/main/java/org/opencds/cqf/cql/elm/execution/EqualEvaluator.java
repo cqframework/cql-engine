@@ -41,20 +41,15 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return null;
         }
 
-        if (left instanceof Uncertainty && right instanceof Integer) {
+        if (left instanceof Uncertainty && (right instanceof Integer || right instanceof Uncertainty)) {
             return ((Uncertainty) left).equal(right);
         }
 
-        // mismatched types not allowed
         if (!left.getClass().equals(right.getClass())) {
-            return null;
+            return false;
         }
 
-        else if (left instanceof Boolean) {
-            return left.equals(right);
-        }
-
-        else if (left instanceof Integer) {
+        else if (left instanceof Boolean || left instanceof Integer || left instanceof String) {
             return left.equals(right);
         }
 
@@ -62,65 +57,12 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return ((BigDecimal) left).compareTo((BigDecimal) right) == 0;
         }
 
-        else if (left instanceof String) {
-            return left.equals(right);
-        }
-
-        else if (left instanceof Quantity) {
-            return ((Quantity) left).equal((Quantity) right);
-        }
-
-        else if (left instanceof Code) {
-            return ((Code) left).equal((Code) right);
-        }
-
-        else if (left instanceof Concept) {
-            return ((Concept) left).equal((Concept) right);
-        }
-
-        else if (left instanceof DateTime) {
-            return ((DateTime) left).equal((DateTime) right);
-        }
-
-        else if (left instanceof Time) {
-            return ((Time) left).equal((Time) right);
-        }
-
-        else if (left instanceof Interval) {
-            return ((Interval) left).equal((Interval) right);
-        }
-
-        else if (left instanceof Tuple) {
-            return ((Tuple) left).equal((Tuple) right);
-        }
-
-        else if (left instanceof Uncertainty) {
-            return ((Uncertainty) left).equal(right);
-        }
-
         else if (left instanceof Iterable) {
-            Iterator leftIterator = ((Iterable)left).iterator();
-            Iterator rightIterator = ((Iterable)right).iterator();
+            return CqlList.equal((Iterable) left, (Iterable) right);
+        }
 
-            while (leftIterator.hasNext()) {
-                Object leftObject = leftIterator.next();
-                if (rightIterator.hasNext()) {
-                    Object rightObject = rightIterator.next();
-                    Boolean elementEquals = equal(leftObject, rightObject);
-                    if (elementEquals == null || !elementEquals) {
-                        return elementEquals;
-                    }
-                }
-                else {
-                    return false;
-                }
-            }
-
-            if (rightIterator.hasNext()) {
-                return rightIterator.next() == null ? null : false;
-            }
-
-            return true;
+        else if (left instanceof CqlType) {
+            return ((CqlType) left).equal(right);
         }
 
         return left.equals(right);
