@@ -157,7 +157,7 @@ public class TestIsolatedCqlExprs {
         }
     }
 
-    //@Test
+    @Test
     public void testIsolatedCqlExprs() {
         // Load Test cases from org/opencds/cqf/cql/execution/TestIsolatedCqlExprs/tests/*.xml
         String testsDirPath = "TestIsolatedCqlExprs/tests";
