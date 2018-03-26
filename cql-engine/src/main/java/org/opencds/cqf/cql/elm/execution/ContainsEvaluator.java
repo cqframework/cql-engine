@@ -20,7 +20,7 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
 
     public static Object contains(Object left, Object right) {
         if (left == null) {
-            return false;
+            return null;
         }
 
         if (left instanceof Interval) {
@@ -30,8 +30,13 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
                 Object leftStart = leftInterval.getStart();
                 Object leftEnd = leftInterval.getEnd();
 
-                return (GreaterOrEqualEvaluator.greaterOrEqual(right, leftStart)
-                        && LessOrEqualEvaluator.lessOrEqual(right, leftEnd));
+                Boolean greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(right, leftStart);
+                Boolean lessOrEqual = LessOrEqualEvaluator.lessOrEqual(right, leftEnd);
+                if (greaterOrEqual == null || lessOrEqual == null) {
+                    return null;
+                }
+
+                return greaterOrEqual && lessOrEqual;
             }
             return null;
         }

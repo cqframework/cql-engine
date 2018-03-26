@@ -128,16 +128,19 @@ define ExceptTimeInterval: Interval[@T05:59:59.999, @T10:59:59.999] except Inter
 define ExceptTime2: Interval[@T08:59:59.999, @T11:59:59.999] except Interval[@T05:59:59.999, @T10:59:59.999]
 
 //In
-define TestInNull: 5 in NullInterval
+define TestInNull: 5 in null
+define TestInNullEnd: 5 in Interval[1, null]
+define TestNullIn: null in Interval[1, 4]
 define IntegerIntervalInTrue: 5 in IntegerIntervalTest
 define IntegerIntervalInFalse: 500 in IntegerIntervalTest
 define DecimalIntervalInTrue: 9.0 in DecimalIntervalTest
 define DecimalIntervalInFalse: -2.0 in DecimalIntervalTest
 define QuantityIntervalInTrue: 1.0 'g' in QuantityIntervalTest
 define QuantityIntervalInFalse: 55.0 'g' in QuantityIntervalTest
-define DateTimeInTrue: DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeInFalse: DateTime(2012, 1, 17) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeInNullTrue: DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), null]
+define DateTimeInTrue: DateTime(2012, 1, 7) in day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
+define DateTimeInNullPrecision: DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
+define DateTimeInFalse: DateTime(2012, 1, 17) in day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
+define DateTimeInNullTrue: DateTime(2012, 1, 7) in day of Interval[DateTime(2012, 1, 5), null]
 define TimeInTrue: @T07:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
 define TimeInFalse: @T17:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
 define TimeInNull: null in Interval[@T05:59:59.999, @T10:59:59.999]
