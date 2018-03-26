@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.Expression;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.math.BigDecimal;
@@ -42,7 +43,18 @@ public class NegateEvaluator extends org.cqframework.cql.elm.execution.Negate {
 
     @Override
     public Object evaluate(Context context) {
-        Object source = getOperand().evaluate(context);
+        Expression operand = getOperand();
+
+        // Special case to handle literals of the minimum Integer value
+        // since usual implementation would try to cast 2147483648 as a
+        // signed 32 bit signed integer and throw
+        // java.lang.NumberFormatException: For input string: "2147483648".
+        if (operand instanceof LiteralEvaluator && ((LiteralEvaluator)operand).getValue().equals("2147483648"))
+        {
+            return Integer.MIN_VALUE;
+        }
+
+        Object source = operand.evaluate(context);
 
         return context.logTrace(this.getClass(), negate(source), source);
     }

@@ -263,7 +263,6 @@
 		<test name="IntegerMinValue">
 			<expression>minimum Integer</expression>
 			<output>-2147483648</output>
-			<!-- TODO: make Engine parse -2147483648 holistically not as a negated positive -->
 		</test>
 		<test name="DecimalMinValue">
 			<expression>minimum Decimal</expression>

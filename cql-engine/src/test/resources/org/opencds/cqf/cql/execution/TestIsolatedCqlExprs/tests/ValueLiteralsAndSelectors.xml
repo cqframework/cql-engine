@@ -100,7 +100,6 @@
 		<test name="IntegerNeg2Pow31IntegerMinValue">
 			<expression>-2147483648</expression>
 			<output>-Power(2,30)-Power(2,30)</output>
-			<!-- TODO: Fix evaluation failed in Engine: java.lang.NumberFormatException: For input string: "2147483648" -->
 		</test>
 		<test name="Integer2Pow31ToInf1">
 			<expression invalid="true">2147483649</expression>
