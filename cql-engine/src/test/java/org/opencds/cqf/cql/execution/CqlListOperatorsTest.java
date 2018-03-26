@@ -38,6 +38,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("SortDatesDesc").getExpression().evaluate(context);
         String s = result.toString();
         assertThat(result.toString(), is("[2012-10-05T10, 2012-10-05, 2012-01-01T12, 2012-01-01]"));
+
+        result = context.resolveExpressionRef("SortIntWithNullAsc1").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(null, 1, 2, 3)));
+
+        result = context.resolveExpressionRef("SortIntWithNullAsc2").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(null, 1, 2, 3)));
+
+        result = context.resolveExpressionRef("SortIntWithNullDesc1").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(3, 2, 1, null)));
+
+        result = context.resolveExpressionRef("SortIntWithNullDesc2").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(3, 2, 1, null)));
     }
 
     /**
