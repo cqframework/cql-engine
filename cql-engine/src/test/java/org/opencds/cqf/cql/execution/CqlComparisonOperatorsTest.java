@@ -510,6 +510,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("EquivStringAStringB").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef("EquivStringIgnoreCase").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         result = context.resolveExpressionRef("EquivFloat1Float1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
