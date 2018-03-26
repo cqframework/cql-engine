@@ -48,7 +48,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ContainsABNullHasNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("ContainsNullFirst").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -283,10 +283,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("GithubIssue71").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
         assertThat(result, is(false));
