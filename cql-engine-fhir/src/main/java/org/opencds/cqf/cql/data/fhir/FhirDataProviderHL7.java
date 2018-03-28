@@ -14,7 +14,6 @@ import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -233,17 +232,13 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
 
     @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
-        if (target instanceof DateTimeType) {
-            return new Date();
+        if (target instanceof DateTimeType || target instanceof DateType) {
+            DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
+            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getPartial().toString());
+            return dt.toDate();
         }
-        else if (target instanceof DateType) {
-            return new Date();
-        }
-        else if (target instanceof TimeType) {
-            if (value instanceof Time) {
-                return ((Time) value).getPartial().toString();
-            }
-            return new Date();
+        else if (target instanceof TimeType && value instanceof Time) {
+            return ((Time) value).getPartial().toString();
         }
         else {
             return value;
