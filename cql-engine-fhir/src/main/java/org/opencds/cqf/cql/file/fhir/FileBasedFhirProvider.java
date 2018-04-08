@@ -180,7 +180,7 @@ public class FileBasedFhirProvider extends BaseDataProviderStu3 {
                     if (date != null && InEvaluator.in(date, expanded, null)) {
                         results.add(res);
                     }
-                    else if (dateInterval != null && (Boolean) IncludesEvaluator.includes(expanded, dateInterval)) {
+                    else if (dateInterval != null && (Boolean) IncludesEvaluator.includes(expanded, dateInterval, "day")) {
                         results.add(res);
                     }
                     else {
@@ -202,7 +202,7 @@ public class FileBasedFhirProvider extends BaseDataProviderStu3 {
                     Interval highLowDtInterval = new Interval(lowDt, true, highDt, true);
 
                     // Now the Includes operation
-                    if ((Boolean)IncludesEvaluator.includes(expanded, highLowDtInterval)) {
+                    if ((Boolean)IncludesEvaluator.includes(expanded, highLowDtInterval, "day")) {
                         results.add(res);
                     }
                     else {

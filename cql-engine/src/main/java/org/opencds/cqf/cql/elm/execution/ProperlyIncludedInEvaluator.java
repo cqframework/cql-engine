@@ -33,15 +33,16 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
-    public static Object properlyIncudedIn(Object left, Object right) {
-        return ProperlyIncludesEvaluator.properlyIncludes(right, left);
+    public static Object properlyIncudedIn(Object left, Object right, String precision) {
+        return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
     }
 
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), properlyIncudedIn(left, right), left, right);
+        return context.logTrace(this.getClass(), properlyIncudedIn(left, right, precision), left, right, precision);
     }
 }

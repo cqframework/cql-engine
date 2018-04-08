@@ -154,8 +154,8 @@ define DecimalIntervalIncludesTrue: DecimalIntervalTest includes DecimalInterval
 define DecimalIntervalIncludesFalse: DecimalIntervalTest includes DecimalIntervalTest2
 define QuantityIntervalIncludesTrue: QuantityIntervalTest includes QuantityIntervalTest3
 define QuantityIntervalIncludesFalse: QuantityIntervalTest includes QuantityIntervalTest2
-define DateTimeIncludesTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
-define DateTimeIncludesFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)]
+define DateTimeIncludesTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes day of Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
+define DateTimeIncludesFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] includes day of Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)]
 define TimeIncludesTrue: Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T06:59:59.999, @T09:59:59.999]
 define TimeIncludesFalse: Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T04:59:59.999, @T09:59:59.999]
 
@@ -167,8 +167,8 @@ define DecimalIntervalIncludedInTrue: DecimalIntervalTest3 included in DecimalIn
 define DecimalIntervalIncludedInFalse: DecimalIntervalTest2 included in DecimalIntervalTest
 define QuantityIntervalIncludedInTrue: QuantityIntervalTest3 included in QuantityIntervalTest
 define QuantityIntervalIncludedInFalse: QuantityIntervalTest2 included in QuantityIntervalTest
-define DateTimeIncludedInTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeIncludedInFalse: Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)] included in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
+define DateTimeIncludedInTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] included in day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
+define DateTimeIncludedInFalse: Interval[DateTime(2012, 1, 4), DateTime(2012, 1, 14)] included in day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
 define TimeIncludedInTrue: Interval[@T06:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]
 define TimeIncludedInFalse: Interval[@T04:59:59.999, @T09:59:59.999] included in Interval[@T05:59:59.999, @T10:59:59.999]
 define DateTimeIncludedInNull:
@@ -325,8 +325,8 @@ define DecimalIntervalProperlyIncludesTrue: DecimalIntervalTest properly include
 define DecimalIntervalProperlyIncludesFalse: DecimalIntervalTest properly includes DecimalIntervalTest4
 define QuantityIntervalProperlyIncludesTrue: QuantityIntervalTest properly includes QuantityIntervalTest3
 define QuantityIntervalProperlyIncludesFalse: QuantityIntervalTest properly includes QuantityIntervalTest4
-define DateTimeProperlyIncludesTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)]
-define DateTimeProperlyIncludesFalse: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)]
+define DateTimeProperlyIncludesTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes day of Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)]
+define DateTimeProperlyIncludesFalse: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] properly includes day of Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)]
 define TimeProperlyIncludesTrue: Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T21:59:59.998]
 define TimeProperlyIncludesFalse: Interval[@T12:00:00.000, @T21:59:59.999] properly includes Interval[@T12:01:01.000, @T22:00:00.000]
 
@@ -354,8 +354,8 @@ define DecimalIntervalProperlyIncludedInTrue: DecimalIntervalTest3 properly incl
 define DecimalIntervalProperlyIncludedInFalse: DecimalIntervalTest4 properly included in DecimalIntervalTest
 define QuantityIntervalProperlyIncludedInTrue: QuantityIntervalTest3 properly included in QuantityIntervalTest
 define QuantityIntervalProperlyIncludedInFalse: QuantityIntervalTest properly included in QuantityIntervalTest4
-define DateTimeProperlyIncludedInTrue: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)] properly included in Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define DateTimeProperlyIncludedInFalse: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)] properly included in Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
+define DateTimeProperlyIncludedInTrue: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 27)] properly included in day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
+define DateTimeProperlyIncludedInFalse: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)] properly included in day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
 define TimeProperlyIncludedInTrue: Interval[@T12:01:01.000, @T21:59:59.998] properly included in Interval[@T12:00:00.000, @T21:59:59.999]
 define TimeProperlyIncludedInFalse: Interval[@T12:01:01.000, @T22:00:00.000] properly included in Interval[@T12:00:00.000, @T21:59:59.999]
 

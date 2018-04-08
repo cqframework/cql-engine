@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Interval;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -27,7 +26,7 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Includes {
 
-    public static Object includes(Object left, Object right) {
+    public static Object includes(Object left, Object right, String precision) {
 
         if (left == null) {
             return false;
@@ -38,7 +37,7 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
         }
 
         try {
-            return IncludedInEvaluator.included(right, left);
+            return IncludedInEvaluator.includedIn(right, left, precision);
         }
         catch (IllegalArgumentException e) {
             throw new IllegalArgumentException(String.format("Cannot Includes arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -49,7 +48,8 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() != null ? getPrecision().value() : null;;
 
-        return context.logTrace(this.getClass(), includes(left, right), left, right);
+        return context.logTrace(this.getClass(), includes(left, right, precision), left, right, precision);
     }
 }
