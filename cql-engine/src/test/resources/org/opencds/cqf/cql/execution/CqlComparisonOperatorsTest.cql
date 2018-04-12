@@ -162,6 +162,7 @@ define EquivInt1Int1                : 1 ~ 1
 define EquivInt1Int2                : 1 ~ 2
 define EquivStringAStringA          : 'a' ~ 'a'
 define EquivStringAStringB          : 'a' ~ 'b'
+define EquivStringIgnoreCase        : 'Abel' ~ 'abel'
 define EquivFloat1Float1            : 1.0 ~ 1.0
 define EquivFloat1Float2            : 1.0 ~ 2.0
 define EquivFloat1Int1              : 1.0 ~ 1

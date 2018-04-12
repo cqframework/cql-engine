@@ -60,6 +60,10 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((CqlType) left).equivalent(right);
         }
 
+        else if (left instanceof String) {
+            return ((String) left).equalsIgnoreCase((String) right);
+        }
+
         return EqualEvaluator.equal(left, right);
     }
 
