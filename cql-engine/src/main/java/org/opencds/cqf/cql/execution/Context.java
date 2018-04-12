@@ -292,13 +292,14 @@ public class Context {
         }
         else {
             // TODO: This doesn't allow for tuple-distinguished overloads....
-            return Tuple.class;
+            return org.opencds.cqf.cql.runtime.Tuple.class;
         }
     }
 
     public Class resolveType(Object value) {
         if (value == null) {
-            return Object.class;
+//            return Object.class;
+            return null;
         }
 
         String packageName = value.getClass().getPackage().getName();
@@ -306,6 +307,10 @@ public class Context {
         // May not be necessary, idea is to sync with the use of List.class for ListTypeSpecifiers in the resolveType above
         if (value instanceof Iterable) {
             return List.class;
+        }
+
+        if (value instanceof Tuple) {
+            return org.opencds.cqf.cql.runtime.Tuple.class;
         }
 
         // Primitives should just use the type
@@ -327,45 +332,71 @@ public class Context {
     }
 
     private boolean isType(Class argumentType, Class operandType) {
-        return operandType.isAssignableFrom(argumentType);
+        return argumentType == null || operandType.isAssignableFrom(argumentType);
     }
 
+    private FunctionDef resolveFunctionRef(FunctionDef functionDef, String name, Iterable<Object> arguments) {
+        java.util.Iterator<OperandDef> operandIterator = functionDef.getOperand().iterator();
+        java.util.Iterator<Object> argumentIterator = arguments.iterator();
+        boolean isMatch = true;
+        while (operandIterator.hasNext()) {
+            if (argumentIterator.hasNext()) {
+                OperandDef operandDef = operandIterator.next();
+                Object argument = argumentIterator.next();
+                // TODO: This is actually wrong, but to fix this would require preserving type information in the ELM....
+                isMatch = isType(resolveType(argument), resolveOperandType(operandDef));
+            }
+            else {
+                isMatch = false;
+            }
+            if (!isMatch) {
+                break;
+            }
+        }
+        if (isMatch && !argumentIterator.hasNext()) {
+            return functionDef;
+        }
+
+        return null;
+    }
+
+    private Map<String, List<FunctionDef>> functionCache = new HashMap<>();
     // TODO: Could use some caching here, and potentially some better type resolution structures
     public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
-        String str = "";
-        String str2 = "";
-        for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
-            //str += expressionDef.getName() + " ";
-            if (expressionDef instanceof FunctionDef) {
-                FunctionDef functionDef = (FunctionDef)expressionDef;
-                //str2 += functionDef.getName() + " ";
-                if (functionDef.getName().equals(name)) {
-                    java.util.Iterator<OperandDef> operandIterator = functionDef.getOperand().iterator();
-                    java.util.Iterator<Object> argumentIterator = arguments.iterator();
-                    boolean isMatch = true;
-                    while (operandIterator.hasNext()) {
-                        if (argumentIterator.hasNext()) {
-                            OperandDef operandDef = operandIterator.next();
-                            Object argument = argumentIterator.next();
-                            // TODO: This is actually wrong, but to fix this would require preserving type information in the ELM....
-                            isMatch = isType(resolveType(argument), resolveOperandType(operandDef));
+        FunctionDef ret = null;
+        if (functionCache.containsKey(name)) {
+            for (FunctionDef functionDef : functionCache.get(name)) {
+                if ((ret = resolveFunctionRef(functionDef, name, arguments)) != null) {
+                    break;
+                }
+            }
+        }
+        else {
+            // this logic adds all function defs with the specified name to the cache
+            for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
+                if (expressionDef.getName().equals(name)) {
+                    if (expressionDef instanceof FunctionDef) {
+                        FunctionDef candidate = resolveFunctionRef((FunctionDef) expressionDef, name, arguments);
+                        if (candidate != null) {
+                            ret = candidate;
+                        }
+                        if (functionCache.containsKey(name)) {
+                            functionCache.get(name).add((FunctionDef) expressionDef);
                         }
                         else {
-                            isMatch = false;
+                            List<FunctionDef> functionDefs = new ArrayList<>();
+                            functionDefs.add((FunctionDef) expressionDef);
+                            functionCache.put(name, functionDefs);
                         }
-                        if (!isMatch) {
-                            break;
-                        }
-                    }
-                    if (isMatch) {
-                        return functionDef;
                     }
                 }
             }
         }
+        if (ret != null) {
+            return ret;
+        }
         throw new IllegalArgumentException(String.format("Could not resolve call to operator '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
-        //throw new IllegalArgumentException(String.format("Name: %s,\nExpDef: %s,\nFunDef: %s.", name, str, str2));
     }
 
     private ParameterDef resolveParameterRef(String name) {
