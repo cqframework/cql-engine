@@ -10,6 +10,8 @@ import ca.uhn.fhir.model.primitive.*;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.apache.commons.lang3.EnumUtils;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.ISODateTimeFormat;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -148,17 +150,13 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
 
     @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
-        if (target instanceof DateTimeDt) {
-            return new Date();
+        if (target instanceof DateTimeDt || target instanceof DateDt) {
+            DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
+            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getPartial().toString());
+            return dt.toDate();
         }
-        else if (target instanceof DateDt) {
-            return new Date();
-        }
-        else if (target instanceof TimeDt) {
-            if (value instanceof Time) {
-                return ((Time) value).getPartial().toString();
-            }
-            return new Date();
+        else if (target instanceof TimeDt && value instanceof Time) {
+            return ((Time) value).getPartial().toString();
         }
         else {
             return value;

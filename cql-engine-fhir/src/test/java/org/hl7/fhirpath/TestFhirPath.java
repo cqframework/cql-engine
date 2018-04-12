@@ -21,6 +21,7 @@ import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.Tests;
+import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderDstu2;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderHL7;
@@ -31,6 +32,8 @@ import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -302,6 +305,8 @@ public class TestFhirPath {
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
+        Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 18, 8, 0}));
+        Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 19, 8, 0}));
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
@@ -326,6 +331,9 @@ public class TestFhirPath {
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
+        // TODO - millis shouldn't be populated - issue with DateTime.fromJavaDate(Date date)
+        Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(), new Partial(DateTime.getFields(7), new int[] {2017, 5, 6, 18, 8, 0, 0}));
+        Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(), new Partial(DateTime.getFields(7), new int[] {2017, 5, 6, 19, 8, 0, 0}));
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);

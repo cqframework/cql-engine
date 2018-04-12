@@ -7,7 +7,6 @@ import org.joda.time.format.ISODateTimeFormat;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Time;
 
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -89,17 +88,13 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
 
     @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
-        if (target instanceof DateTimeType) {
-            return new Date(); // TODO: Why is this so hard?
+        if (target instanceof DateTimeType || target instanceof DateType) {
+            DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
+            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getPartial().toString());
+            return dt.toDate();
         }
-        else if (target instanceof DateType) {
-            return new Date();
-        }
-        else if (target instanceof TimeType) {
-            if (value instanceof Time) {
-                return ((Time) value).getPartial().toString();
-            }
-            return new Date();
+        else if (target instanceof TimeType && value instanceof Time) {
+            return ((Time) value).getPartial().toString();
         }
         else {
             return value;
