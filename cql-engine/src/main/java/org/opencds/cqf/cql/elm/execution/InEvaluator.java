@@ -10,11 +10,14 @@ import org.opencds.cqf.cql.runtime.Time;
 *** NOTES FOR INTERVAL ***
 in(point T, argument Interval<T>) Boolean
 
-The in operator for intervals returns true if the given point is greater than or equal to the starting point of the interval,
-  and less than or equal to the ending point of the interval.
-For open interval boundaries, exclusive comparison operators are used.
-For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true.
+The in operator for intervals returns true if the given point is greater than or equal to the
+    starting point of the interval, and less than or equal to the ending point of the interval.
+    For open interval boundaries, exclusive comparison operators are used.
+    For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true.
+If precision is specified and the point type is a date/time type, comparisons used in the
+    operation are performed at the specified precision.
 If either argument is null, the result is null.
+
 */
 
 /*
@@ -22,9 +25,11 @@ If either argument is null, the result is null.
 in(element T, argument List<T>) Boolean
 
 The in operator for lists returns true if the given element is in the given list.
-This operator uses the notion of equivalence to determine whether or not the element being searched for is equivalent to any element in the list.
-  In particular this means that if the list contains a null, and the element being searched for is null, the result will be true.
-If either argument is null, the result is null.
+This operator uses the notion of equivalence to determine whether or not the element being searched for
+    is equivalent to any element in the list. In particular this means that if the list contains a null,
+    and the element being searched for is null, the result will be true.
+If the left argument is null, the result is null. If the right argument is null, the result is false.
+
 */
 
 /**
@@ -34,33 +39,16 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
 
     public static Boolean in(Object left, Object right, String precision) {
 
-        if (left == null) {
+        if (right == null) {
             return null;
         }
 
-        if (right == null) {
-            return false;
-        }
-
         if (right instanceof Iterable) {
-            boolean nullSwitch = false;
-
             for (Object element : (Iterable) right) {
-                Boolean equiv = EquivalentEvaluator.equivalent(left, element);
-
-                if (equiv == null) {
-                    nullSwitch = true;
-                }
-
-                else if (equiv) {
+                if (EquivalentEvaluator.equivalent(left, element)) {
                     return true;
                 }
             }
-
-            if (nullSwitch) {
-                return null;
-            }
-
             return false;
         }
 
@@ -76,17 +64,25 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
                 return true;
             }
 
-            else if (rightStart == null || rightEnd == null) {
+            else if (rightStart == null || rightEnd == null || left == null) {
                 return null;
             }
 
-            else if (precision != null && rightStart instanceof BaseTemporal) {
-                return (Boolean) SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision)
-                        && (Boolean) SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
+            else if (rightStart instanceof BaseTemporal) {
+                Boolean sameOrAfter = SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision);
+                Boolean sameOrBefore = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
+                if (sameOrAfter == null || sameOrBefore == null) {
+                    return null;
+                }
+                return sameOrAfter && sameOrBefore;
             }
 
-            return (GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart)
-                    && LessOrEqualEvaluator.lessOrEqual(left, rightEnd));
+            Boolean greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart);
+            Boolean lessOrEqual = LessOrEqualEvaluator.lessOrEqual(left, rightEnd);
+            if (greaterOrEqual == null || lessOrEqual == null) {
+                return null;
+            }
+            return greaterOrEqual && lessOrEqual;
         }
 
         throw new IllegalArgumentException(String.format("Cannot In arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
