@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
 import javax.jws.Oneway;
@@ -34,7 +35,7 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
 
-    public static Object properlyIncludes(Object left, Object right) {
+    public static Object properlyIncludes(Object left, Object right, String precision) {
         if (left == null) {
             return false;
         }
@@ -52,17 +53,34 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
             Object rightStart = rightInterval.getStart();
             Object rightEnd = rightInterval.getEnd();
 
-            return (GreaterEvaluator.greater(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd))
-                    && LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart)
-                    && GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd)
-            );
+            Boolean greater = GreaterEvaluator.greater(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd));
+
+            if (leftStart instanceof BaseTemporal) {
+                Boolean sameOrBefore = SameOrBeforeEvaluator.sameOrBefore(leftStart, rightStart, precision);
+                Boolean sameOrAfter = SameOrAfterEvaluator.sameOrAfter(leftEnd, rightEnd, precision);
+
+                if (greater == null || sameOrBefore == null || sameOrAfter == null) {
+                    return null;
+                }
+
+                return greater && sameOrBefore && sameOrAfter;
+            }
+
+            Boolean lessOrEqual = LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart);
+            Boolean greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd);
+
+            if (greater == null || lessOrEqual == null || greaterOrEqual == null) {
+                return null;
+            }
+
+            return (greater && lessOrEqual && greaterOrEqual);
         }
 
         else if (left instanceof Iterable) {
             List leftArr = (List) left;
             List rightArr = (List) right;
 
-            Object includes = IncludesEvaluator.includes(leftArr, rightArr);
+            Object includes = IncludesEvaluator.includes(leftArr, rightArr, precision);
 
             if (includes == null) {
                 return null;
@@ -78,7 +96,8 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), properlyIncludes(left, right), left, right);
+        return context.logTrace(this.getClass(), properlyIncludes(left, right, precision), left, right, precision);
     }
 }

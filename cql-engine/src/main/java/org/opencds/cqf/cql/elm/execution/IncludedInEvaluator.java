@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
 /*
@@ -28,7 +29,16 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
-    public static Object included(Object left, Object right) {
+    public static Object includedIn(Object left, Object right, String precision) {
+
+        if (left == null) {
+            return true;
+        }
+
+        if (right == null) {
+            return false;
+        }
+
         if (left instanceof Interval) {
             Object leftStart = ((Interval)left).getStart();
             Object leftEnd = ((Interval)left).getEnd();
@@ -39,6 +49,13 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
                     || rightStart == null || rightEnd == null)
             {
                 return null;
+            }
+
+            if (leftStart instanceof BaseTemporal) {
+                return AndEvaluator.and(
+                        SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
+                        SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
+                );
             }
 
             return AndEvaluator.and(
@@ -49,7 +66,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
 
         else if (left instanceof Iterable) {
             for (Object element : (Iterable)left) {
-                Object in = InEvaluator.in(element, (Iterable)right, null);
+                Object in = InEvaluator.in(element, right, precision);
 
                 if (in == null) continue;
 
@@ -58,46 +75,6 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
                 }
             }
             return true;
-        }
-
-        throw new IllegalArgumentException();
-    }
-
-    public static Object includedIn(Object left, Object right) {
-
-        if (left == null) {
-            return true;
-        }
-
-        if (right == null) {
-            return false;
-        }
-
-        try {
-            return included(left, right);
-        }
-        catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-        }
-    }
-
-    public static Object includedIn(Object left, Object right, String precision) {
-        if (left instanceof Interval) {
-            Object leftStart = ((Interval)left).getStart();
-            Object leftEnd = ((Interval)left).getEnd();
-            Object rightStart = ((Interval)right).getStart();
-            Object rightEnd = ((Interval)right).getEnd();
-
-            if (leftStart == null || leftEnd == null
-                    || rightStart == null || rightEnd == null)
-            {
-                return null;
-            }
-
-            return AndEvaluator.and(
-                    SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
-                    SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
-            );
         }
 
         throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -109,10 +86,6 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        if (precision != null) {
-            return context.logTrace(this.getClass(), includedIn(left, right, precision), left, right, precision);
-        }
-
-        return context.logTrace(this.getClass(), includedIn(left, right), left, right);
+        return context.logTrace(this.getClass(), includedIn(left, right, precision), left, right, precision);
     }
 }
