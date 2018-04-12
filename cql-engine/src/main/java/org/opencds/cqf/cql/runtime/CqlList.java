@@ -69,8 +69,8 @@ public class CqlList {
 
     public int compareTo(Object left, Object right) {
         if (left == null && right == null) return 0;
-        else if (left == null) return 1;
-        else if (right == null) return -1;
+        else if (left == null) return -1;
+        else if (right == null) return 1;
 
         try {
             return ((Comparable) left).compareTo(right);
