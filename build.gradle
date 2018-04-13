@@ -3,7 +3,7 @@ allprojects {
     apply plugin: 'eclipse'
 
     group = 'org.opencds.cqf'
-    version = '1.2.38-SNAPSHOT'
+    version = '1.2.20'
 }
 
 subprojects {
@@ -89,13 +89,18 @@ subprojects {
         options.addStringOption('Xdoclint:none', '-quiet')
     }
 
+    task javadocJar(type: Jar) {
+        classifier = 'javadoc'
+        from javadoc
+    }
+
     task sourcesJar(type: Jar) {
         classifier = 'sources'
         from sourceSets.main.allSource
     }
 
     artifacts {
-        archives sourcesJar
+        archives javadocJar, sourcesJar
     }
 }
 
