@@ -50,8 +50,8 @@ define IntegerLowerBoundExcept: -2147483649*/
 define IntegerProper: 5000
 
 //Quantity
-define QuantityTest: 150.2 'lbs'
-define QuantityTest2: 2.5589 'eskimo kisses'
+define QuantityTest: 150.2 '[lb_av]'
+define QuantityTest2: 2.5589 '{eskimo kisses}'
 define QuantityFractionalTooBig: 5.999999999 'g'
 
 //String

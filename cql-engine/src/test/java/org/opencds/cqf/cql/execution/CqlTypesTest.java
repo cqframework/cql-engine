@@ -166,10 +166,10 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("QuantityTest").getExpression().evaluate(context);
-        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("150.2")).withUnit("lbs")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("150.2")).withUnit("[lb_av]")));
 
         result = context.resolveExpressionRef("QuantityTest2").getExpression().evaluate(context);
-        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("2.5589")).withUnit("eskimo kisses")));
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("2.5589")).withUnit("{eskimo kisses}")));
 
         // NOTE: This should also return an error as the fractional precision is greater than 8
         result = context.resolveExpressionRef("QuantityFractionalTooBig").getExpression().evaluate(context);
