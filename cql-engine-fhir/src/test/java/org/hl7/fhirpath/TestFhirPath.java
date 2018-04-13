@@ -17,6 +17,9 @@ import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
+import org.fhir.ucum.UcumEssenceService;
+import org.fhir.ucum.UcumException;
+import org.fhir.ucum.UcumService;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
@@ -115,20 +118,21 @@ public class TestFhirPath {
         return libraryLoader;
     }
 
-    private Library translate(String cql) {
-            ArrayList<CqlTranslator.Options> options = new ArrayList<>();
-            options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-            CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), options.toArray(new CqlTranslator.Options[options.size()]));
-            if (translator.getErrors().size() > 0) {
-                ArrayList<String> errors = new ArrayList<>();
-                for (CqlTranslatorException error : translator.getErrors()) {
-                    TrackBack tb = error.getLocator();
-                    String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
-                            tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
-                    errors.add(lines + error.getMessage());
-                }
-                throw new IllegalArgumentException(errors.toString());
+    private Library translate(String cql) throws UcumException {
+        ArrayList<CqlTranslator.Options> options = new ArrayList<>();
+        options.add(CqlTranslator.Options.EnableDateRangeOptimization);
+        UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+        CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
+        if (translator.getErrors().size() > 0) {
+            ArrayList<String> errors = new ArrayList<>();
+            for (CqlTranslatorException error : translator.getErrors()) {
+                TrackBack tb = error.getLocator();
+                String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
+                        tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
+                errors.add(lines + error.getMessage());
             }
+            throw new IllegalArgumentException(errors.toString());
+        }
 
         Library library = null;
         try {
@@ -179,7 +183,7 @@ public class TestFhirPath {
         return EqualEvaluator.equal(expectedResult, actualResult);
     }
 
-    private void runStu3Test(org.hl7.fhirpath.tests.Test test) {
+    private void runStu3Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
         String resourceFilePath = "stu3/input/" + test.getInputfile();
         Resource resource = loadResourceFile(resourceFilePath);
         String cql = String.format("library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
@@ -295,7 +299,7 @@ public class TestFhirPath {
 
     // TODO: Resolve Error: Could not load model information for model FHIR, version 3.0.0 because version 1.0.2 is already loaded
     @Test
-    public void testFhirHelpersStu3() {
+    public void testFhirHelpersStu3() throws UcumException {
         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
         Library library = translate(cql);
         Context context = new Context(library);
@@ -321,7 +325,7 @@ public class TestFhirPath {
     }
 
     //@Test
-    public void testFhirHelpersDstu2() {
+    public void testFhirHelpersDstu2() throws UcumException {
         String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
         Library library = translate(cql);
         Context context = new Context(library);
@@ -348,7 +352,7 @@ public class TestFhirPath {
     }
 
     //@Test
-    public void testFhirHelpersHL7() {
+    public void testFhirHelpersHL7() throws UcumException {
         String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
         Library library = translate(cql);
         Context context = new Context(library);
