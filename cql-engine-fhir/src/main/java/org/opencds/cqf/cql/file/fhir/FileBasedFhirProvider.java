@@ -63,8 +63,8 @@ public class FileBasedFhirProvider extends BaseDataProviderStu3 {
             throw new InvalidPathException(path, "Invalid path!");
         }
         this.path = Paths.get(path);
-        this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3")
-                : new FhirTerminologyProvider().withEndpoint(endpoint);
+        this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false)
+                : new FhirTerminologyProvider().setEndpoint(endpoint, false);
         setFhirContext(FhirContext.forDstu3());
     }
 
