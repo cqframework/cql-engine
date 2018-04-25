@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.terminology.fhir;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
@@ -23,27 +24,27 @@ import java.util.ArrayList;
  * Created by Bryn on 8/15/2016.
  */
 public class FhirTerminologyProvider implements TerminologyProvider {
+
     private String endpoint;
+    private FhirContext fhirContext;
+    private IGenericClient fhirClient;
     public String getEndpoint() {
         return endpoint;
     }
-    public void setEndpoint(String endpoint) {
+    public FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
         this.endpoint = endpoint;
         fhirContext = FhirContext.forDstu3();
+        if (!validation) {
+            fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+        }
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
 
         if (userName != null && password != null) {
             BasicAuthInterceptor basicAuth = new BasicAuthInterceptor(userName, password);
             fhirClient.registerInterceptor(basicAuth);
         }
-    }
-    public FhirTerminologyProvider withEndpoint(String endpoint) {
-        setEndpoint(endpoint);
         return this;
     }
-
-    private FhirContext fhirContext;
-    private IGenericClient fhirClient;
 
     // TODO: Obviously don't want to do this, just a quick-fix for now
     private String userName;
@@ -70,9 +71,6 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
     @Override
     public boolean in(Code code, ValueSetInfo valueSet) throws ResourceNotFoundException {
-        // Implement as ValueSet/$validate-code
-        // http://hl7.org/fhir/2016Sep/valueset-operations.html#validate-code
-
         // Potential problems:
         // ValueSetInfo void of id --> want .ontype() instead
         Parameters respParam;
@@ -102,8 +100,6 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
     @Override
     public Iterable<Code> expand(ValueSetInfo valueSet) throws ResourceNotFoundException {
-      // TODO: Implement as ValueSet/$expand
-      // http://hl7.org/fhir/2016Sep/valueset-operations.html#expand
       Parameters respParam = fhirClient
         .operation()
         .onInstance(new IdType("ValueSet", valueSet.getId()))
@@ -126,8 +122,6 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
     @Override
     public Code lookup(Code code, CodeSystemInfo codeSystem) throws ResourceNotFoundException {
-      // TODO: Implement as CodeSystem/$lookup
-      // http://hl7.org/fhir/2016Sep/codesystem-operations.html#lookup
       Parameters respParam = fhirClient
             .operation()
             .onType(CodeSystem.class)

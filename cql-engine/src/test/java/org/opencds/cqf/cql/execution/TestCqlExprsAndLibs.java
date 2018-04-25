@@ -157,7 +157,7 @@ public class TestCqlExprsAndLibs {
         }
     }
 
-    @Test
+    //@Test
     public void testCqlExprsAndLibs() {
         TestCollection testCollection = new TestCollection();
         // Gather Test cases from org/opencds/cqf/cql/execution/[TestIsolatedCqlExprs|TestHolisticCqlLibs]/tests/*.xml

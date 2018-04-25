@@ -12,7 +12,7 @@ import static org.testng.AssertJUnit.assertTrue;
 public class TestCodeRef extends FhirExecutionTestBase {
 
     private FhirTerminologyProvider terminologyProvider =
-            new FhirTerminologyProvider().withEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+            new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false);
 
     @Test
     public void CodeRefTest1() {
