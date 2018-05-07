@@ -81,7 +81,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
                     codes = terminologyProvider.expand(valueSetInfo);
                 }
                 else {
-                    params.append(String.format("%s:in=%s", convertPathToSearchParam(codePath), URLEncode(valueSet)));
+                    params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), URLEncode(valueSet)));
                 }
             }
 
@@ -99,13 +99,13 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
 
                     codeList.append(URLEncode(code.getCode()));
                 }
-                params.append(String.format("%s=%s", convertPathToSearchParam(codePath), codeList.toString()));
+                params.append(String.format("%s=%s", convertPathToSearchParam(dataType, codePath), codeList.toString()));
             }
         }
 
         if (dateRange != null) {
             if (dateRange.getLow() != null) {
-                String lowDatePath = convertPathToSearchParam(dateLowPath != null ? dateLowPath : datePath);
+                String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
                 if (lowDatePath == null || lowDatePath.equals("")) {
                     throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
                 }
@@ -117,7 +117,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
             }
 
             if (dateRange.getHigh() != null) {
-                String highDatePath = convertPathToSearchParam(dateHighPath != null ? dateHighPath : datePath);
+                String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
                 if (highDatePath == null || highDatePath.equals("")) {
                     throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
                 }

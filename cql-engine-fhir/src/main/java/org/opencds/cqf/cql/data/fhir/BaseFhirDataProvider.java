@@ -34,6 +34,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
     protected abstract String resolveClassName(String typeName);
     protected abstract Object fromJavaPrimitive(Object value, Object target);
     protected abstract Object toJavaPrimitive(Object result, Object source);
+    protected abstract String convertPathToSearchParam(String type, String path);
 
     // getters & setters
     public FhirContext getFhirContext() {
@@ -89,11 +90,6 @@ public abstract class BaseFhirDataProvider implements DataProvider {
                 return "subject";
             default: return "patient";
         }
-    }
-
-    protected String convertPathToSearchParam(String codePath) {
-        if (codePath.startsWith("date") && codePath.endsWith("value")) return "date";
-        return codePath.replace('.', '-');
     }
 
     // Resolutions
