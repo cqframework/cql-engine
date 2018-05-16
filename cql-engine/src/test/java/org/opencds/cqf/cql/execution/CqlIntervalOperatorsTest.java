@@ -1168,6 +1168,12 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         } catch (RuntimeException re) {
             // pass
         }
+
+        result = context.resolveExpressionRef("NullStartInterval").getExpression().evaluate(context);
+        Assert.assertTrue(result.toString().equals("Interval(null, 2018-06-15]"));
+
+        result = context.resolveExpressionRef("NullEndInterval").getExpression().evaluate(context);
+        Assert.assertTrue(result.toString().equals("Interval[2018-06-15, null)"));
     }
 
     /**
