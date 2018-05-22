@@ -3,10 +3,7 @@ package org.opencds.cqf.cql.terminology.fhir;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
-import ca.uhn.fhir.rest.gclient.IQuery;
-import ca.uhn.fhir.rest.gclient.StringClientParam;
 import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
@@ -26,14 +23,13 @@ import java.util.ArrayList;
 public class FhirTerminologyProvider implements TerminologyProvider {
 
     private String endpoint;
-    private FhirContext fhirContext;
     private IGenericClient fhirClient;
     public String getEndpoint() {
         return endpoint;
     }
     public FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
         this.endpoint = endpoint;
-        fhirContext = FhirContext.forDstu3();
+        FhirContext fhirContext = FhirContext.forDstu3();
         if (!validation) {
             fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
         }
@@ -73,19 +69,8 @@ public class FhirTerminologyProvider implements TerminologyProvider {
     public boolean in(Code code, ValueSetInfo valueSet) throws ResourceNotFoundException {
         // Potential problems:
         // ValueSetInfo void of id --> want .ontype() instead
-        try {
-            URL url = new URL(valueSet.getId());
-            Bundle searchResults = fhirClient.search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(url.toString())).returnBundle(Bundle.class).execute();
-            if (searchResults.hasEntry()) {
-                if (searchResults.getEntryFirstRep().hasResource()) {
-                    valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
-                }
-            }
-            else {
-                return false;
-            }
-        } catch (MalformedURLException e) {
-            // continue
+        if (resolveByUrl(valueSet) == null) {
+            return false;
         }
 
         Parameters respParam;
@@ -115,19 +100,8 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
     @Override
     public Iterable<Code> expand(ValueSetInfo valueSet) throws ResourceNotFoundException {
-        try {
-            URL url = new URL(valueSet.getId());
-            Bundle searchResults = fhirClient.search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(url.toString())).returnBundle(Bundle.class).execute();
-            if (searchResults.hasEntry()) {
-                if (searchResults.getEntryFirstRep().hasResource()) {
-                    valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
-                }
-            }
-            else {
-                return Collections.emptyList();
-            }
-        } catch (MalformedURLException e) {
-            // continue
+        if (resolveByUrl(valueSet) == null) {
+            return Collections.emptyList();
         }
         Parameters respParam = fhirClient
                 .operation()
@@ -161,5 +135,24 @@ public class FhirTerminologyProvider implements TerminologyProvider {
 
         return code.withSystem(codeSystem.getId())
                 .withDisplay(((StringType)respParam.getParameter().get(1).getValue()).getValue());
+    }
+
+    private Boolean resolveByUrl(ValueSetInfo valueSet) {
+        try {
+            URL url = new URL(valueSet.getId());
+            Bundle searchResults = fhirClient.search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(url.toString())).returnBundle(Bundle.class).execute();
+            if (searchResults.hasEntry()) {
+                if (searchResults.getEntryFirstRep().hasResource()) {
+                    valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
+                }
+            }
+            else {
+                return null;
+            }
+        } catch (MalformedURLException e) {
+            // continue
+        }
+
+        return true;
     }
 }
