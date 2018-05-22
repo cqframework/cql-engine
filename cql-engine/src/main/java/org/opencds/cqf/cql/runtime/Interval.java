@@ -146,6 +146,14 @@ public class Interval implements CqlType {
 
     @Override
     public String toString() {
-        return String.format("Interval [ %s, %s ]", getStart().toString(), getEnd().toString());
+        if (getStart() == null) {
+
+        }
+        return String.format("Interval%s%s, %s%s",
+                getLowClosed() ? "[" : "(",
+                getStart() == null ? "null" : getStart().toString(),
+                getEnd() == null ? "null" : getEnd().toString(),
+                getHighClosed() ? "]" : ")"
+        );
     }
 }

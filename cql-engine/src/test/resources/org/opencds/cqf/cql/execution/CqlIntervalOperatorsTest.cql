@@ -424,3 +424,5 @@ define TimeIntervalTest: Interval[@T00:00:00.000, @T23:59:59.599]
 define CollapseIntervalTestInteger: {IntegerIntervalTest, IntegerIntervalTest2, IntegerIntervalTest3}
 define InvalidIntegerInterval: Interval[5, 3]
 define InvalidIntegerIntervalA: Interval[5, 5)
+define NullStartInterval: Interval(null, @2018-06-15]
+define NullEndInterval: Interval[@2018-06-15, null)
