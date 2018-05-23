@@ -56,13 +56,13 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
             case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
                     .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
                     .with(DateTimeFieldType.dayOfMonth(), value.getDay()), zone);
-            case MINUTE: new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth())
+            case MINUTE: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
                     .with(DateTimeFieldType.dayOfMonth(), value.getDay())
                     .with(DateTimeFieldType.hourOfDay(), value.getHour())
                     .with(DateTimeFieldType.minuteOfHour(), value.getMinute()), zone);
-            case SECOND: new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth())
+            case SECOND: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
                     .with(DateTimeFieldType.dayOfMonth(), value.getDay())
                     .with(DateTimeFieldType.hourOfDay(), value.getHour())
                     .with(DateTimeFieldType.minuteOfHour(), value.getMinute())
