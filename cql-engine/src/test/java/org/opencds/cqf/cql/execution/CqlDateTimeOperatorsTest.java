@@ -44,6 +44,12 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeAddMonthsOverflow").evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2006, 3, 10})));
 
+        result = context.resolveExpressionRef("DateTimeAddThreeWeeks").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2018, 5, 23})));
+
+        result = context.resolveExpressionRef("DateTimeAddYearInWeeks").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2019, 5, 23})));
+
         result = context.resolveExpressionRef("DateTimeAdd5Days").evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 15})));
 
@@ -893,6 +899,12 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("DateTimeSubtractMonthsUnderflow").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2004, 11, 10})));
+
+        result = context.resolveExpressionRef("DateTimeSubtractThreeWeeks").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2018, 5, 2})));
+
+        result = context.resolveExpressionRef("DateTimeSubtractYearInWeeks").evaluate(context);
+        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2017, 5, 23})));
 
         result = context.resolveExpressionRef("DateTimeSubtract5Days").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 5})));

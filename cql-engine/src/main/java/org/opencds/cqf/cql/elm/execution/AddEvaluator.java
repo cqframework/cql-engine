@@ -25,7 +25,7 @@ If either argument is null, the result is null.
 
 The add (+) operator returns the value of the given date/time, incremented by the time-valued quantity,
   respecting variable length periods for calendar years and months.
-For DateTime values, the quantity unit must be one of: years, months, days, hours, minutes, seconds, or milliseconds.
+For DateTime values, the quantity unit must be one of: years, months, weeks, days, hours, minutes, seconds, or milliseconds.
 For Time values, the quantity unit must be one of: hours, minutes, seconds, or milliseconds.
 The operation is performed by attempting to derive the highest granularity precision first, working down successive
   granularities to the granularity of the time-valued quantity. For example, the following addition:
@@ -40,118 +40,129 @@ If either argument is null, the result is null.
 */
 
 /**
- * Created by Bryn on 5/25/2016 
+ * Created by Bryn on 5/25/2016
  */
 public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
 
-  private static final int YEAR_RANGE_MAX = 9999;
+    private static final int YEAR_RANGE_MAX = 9999;
 
-  public static Object add(Object left, Object right) {
+    public static Object add(Object left, Object right) {
 
-    if (left == null || right == null) {
-        return null;
-    }
-
-    if (left instanceof Integer && right instanceof Integer) {
-      return (Integer)left + (Integer)right;
-    }
-
-    else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-      return Value.verifyPrecision(((BigDecimal)left).add((BigDecimal)right));
-    }
-
-    else if (left instanceof Quantity && right instanceof Quantity) {
-      return new Quantity().withValue((((Quantity)left).getValue()).add(((Quantity)right).getValue())).withUnit(((Quantity)left).getUnit());
-    }
-
-    // +(DateTime, Quantity)
-    else if (left instanceof DateTime && right instanceof Quantity) {
-      DateTime dt = (DateTime)left;
-      DateTime ret = new DateTime(dt.getPartial(), dt.getTimezone());
-      String unit = ((Quantity)right).getUnit();
-      int value = ((Quantity)right).getValue().intValue();
-
-      int idx = DateTime.getFieldIndex(unit);
-
-      if (idx != -1) {
-        int startSize = ret.getPartial().size();
-        // check that the Partial has the precision specified
-        if (startSize < idx + 1) {
-          // expand the Partial to the proper precision
-          for (int i = startSize; i < idx + 1; ++i) {
-            ret.setPartial(ret.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
-          }
+        if (left == null || right == null) {
+            return null;
         }
-        // do the addition
-        ret.setPartial(ret.getPartial().property(DateTime.getField(idx)).addToCopy(value));
-        // truncate to original precision
-        for (int i = idx; i >= startSize; --i) {
-          ret.setPartial(ret.getPartial().without(DateTime.getField(i)));
+
+        if (left instanceof Integer && right instanceof Integer) {
+            return (Integer)left + (Integer)right;
         }
-      }
 
-      else {
-        throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
-      }
-
-      if (ret.getPartial().getValue(0) > YEAR_RANGE_MAX) {
-        throw new ArithmeticException("The date time addition results in a year greater than the accepted range.");
-      }
-
-      return ret;
-    }
-
-    // +(Uncertainty, Uncertainty)
-    else if (left instanceof Uncertainty && right instanceof Uncertainty) {
-      Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
-      Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
-      return new Uncertainty().withUncertaintyInterval(new Interval(add(leftInterval.getStart(), rightInterval.getStart()), true, add(leftInterval.getEnd(), rightInterval.getEnd()), true));
-    }
-
-    // +(Time, Quantity)
-    else if (left instanceof Time && right instanceof Quantity) {
-      Time time = (Time)left;
-      Time ret = new Time(time.getPartial(), time.getTimezone());
-      String unit = ((Quantity)right).getUnit();
-      int value = ((Quantity)right).getValue().intValue();
-
-      int idx = Time.getFieldIndex(unit);
-
-      if (idx != -1) {
-        int startSize = ret.getPartial().size();
-        // check that the Partial has the precision specified
-        if (startSize < idx + 1) {
-          // expand the Partial to the proper precision
-          for (int i = startSize; i < idx + 1; ++i) {
-            ret.setPartial(ret.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
-          }
+        else if (left instanceof BigDecimal && right instanceof BigDecimal) {
+            return Value.verifyPrecision(((BigDecimal)left).add((BigDecimal)right));
         }
-        // do the addition
-        ret.setPartial(ret.getPartial().property(Time.getField(idx)).addToCopy(value));
-        // truncate to original precision
-        for (int i = idx; i >= startSize; --i) {
-          ret.setPartial(ret.getPartial().without(Time.getField(i)));
+
+        else if (left instanceof Quantity && right instanceof Quantity) {
+            return new Quantity().withValue((((Quantity)left).getValue()).add(((Quantity)right).getValue())).withUnit(((Quantity)left).getUnit());
         }
-      }
 
-      else {
-        throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
-      }
-      return ret;
+        // +(DateTime, Quantity)
+        else if (left instanceof DateTime && right instanceof Quantity) {
+            DateTime dt = (DateTime)left;
+            DateTime ret = new DateTime(dt.getPartial(), dt.getTimezone());
+            String unit = ((Quantity)right).getUnit();
+            int value = ((Quantity)right).getValue().intValue();
+
+            int idx = DateTime.getFieldIndex(unit);
+
+            // TODO - duplicate code here (same in SubtractEvaluator) - consolidate during migration to Java Date
+            if (idx == 7) {
+                idx = 2;
+                int years = 0;
+                if (value >= 52) {
+                    years = (value / 52);
+                    value -= years * 52 ;
+                }
+                value = value * 7 + (years * 365);
+            }
+
+            if (idx != -1) {
+                int startSize = ret.getPartial().size();
+                // check that the Partial has the precision specified
+                if (startSize < idx + 1) {
+                    // expand the Partial to the proper precision
+                    for (int i = startSize; i < idx + 1; ++i) {
+                        ret.setPartial(ret.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+                    }
+                }
+                // do the addition
+                ret.setPartial(ret.getPartial().property(DateTime.getField(idx)).addToCopy(value));
+                // truncate to original precision
+                for (int i = idx; i >= startSize; --i) {
+                    ret.setPartial(ret.getPartial().without(DateTime.getField(i)));
+                }
+            }
+
+            else {
+                throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
+            }
+
+            if (ret.getPartial().getValue(0) > YEAR_RANGE_MAX) {
+                throw new ArithmeticException("The date time addition results in a year greater than the accepted range.");
+            }
+
+            return ret;
+        }
+
+        // +(Uncertainty, Uncertainty)
+        else if (left instanceof Uncertainty && right instanceof Uncertainty) {
+            Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
+            Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
+            return new Uncertainty().withUncertaintyInterval(new Interval(add(leftInterval.getStart(), rightInterval.getStart()), true, add(leftInterval.getEnd(), rightInterval.getEnd()), true));
+        }
+
+        // +(Time, Quantity)
+        else if (left instanceof Time && right instanceof Quantity) {
+            Time time = (Time)left;
+            Time ret = new Time(time.getPartial(), time.getTimezone());
+            String unit = ((Quantity)right).getUnit();
+            int value = ((Quantity)right).getValue().intValue();
+
+            int idx = Time.getFieldIndex(unit);
+
+            if (idx != -1) {
+                int startSize = ret.getPartial().size();
+                // check that the Partial has the precision specified
+                if (startSize < idx + 1) {
+                    // expand the Partial to the proper precision
+                    for (int i = startSize; i < idx + 1; ++i) {
+                        ret.setPartial(ret.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
+                    }
+                }
+                // do the addition
+                ret.setPartial(ret.getPartial().property(Time.getField(idx)).addToCopy(value));
+                // truncate to original precision
+                for (int i = idx; i >= startSize; --i) {
+                    ret.setPartial(ret.getPartial().without(Time.getField(i)));
+                }
+            }
+
+            else {
+                throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
+            }
+            return ret;
+        }
+
+        else if (left instanceof String && right instanceof String) {
+            return ((String) left).concat((String) right);
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
-    else if (left instanceof String && right instanceof String) {
-      return ((String) left).concat((String) right);
+    @Override
+    public Object evaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+
+        return context.logTrace(this.getClass(), add(left, right), left, right);
     }
-
-    throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-  }
-
-  @Override
-  public Object evaluate(Context context) {
-    Object left = getOperand().get(0).evaluate(context);
-    Object right = getOperand().get(1).evaluate(context);
-
-    return context.logTrace(this.getClass(), add(left, right), left, right);
-  }
 }

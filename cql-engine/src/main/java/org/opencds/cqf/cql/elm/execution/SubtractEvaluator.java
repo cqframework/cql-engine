@@ -24,7 +24,7 @@ If either argument is null, the result is null.
 
 The subtract (-) operator returns the value of the given date/time, decremented by the time-valued quantity,
   respecting variable length periods for calendar years and months.
-For DateTime values, the quantity unit must be one of: years, months, days, hours, minutes, seconds, or milliseconds.
+For DateTime values, the quantity unit must be one of: years, months, weeks, days, hours, minutes, seconds, or milliseconds.
 For Time values, the quantity unit must be one of: hours, minutes, seconds, or milliseconds.
 The operation is performed by attempting to derive the highest granularity precision first, working down successive
   granularities to the granularity of the time-valued quantity. For example, the following subtraction:
@@ -69,6 +69,16 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
             int value = ((Quantity)right).getValue().intValue();
 
             int idx = DateTime.getFieldIndex(unit);
+
+            if (idx == 7) {
+                idx = 2;
+                int years = 0;
+                if (value >= 52) {
+                    years = (value / 52);
+                    value -= years * 52 ;
+                }
+                value = value * 7 + (years * 365);
+            }
 
             if (idx != -1) {
                 int startSize = ret.getPartial().size();
