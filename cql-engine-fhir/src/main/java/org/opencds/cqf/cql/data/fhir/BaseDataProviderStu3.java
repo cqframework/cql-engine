@@ -15,57 +15,11 @@ import java.util.TimeZone;
 public class BaseDataProviderStu3 extends BaseFhirDataProvider {
 
     protected DateTime toDateTime(DateTimeType value) {
-        // NOTE: month is 0-indexed, hence the +1
-        Partial partial = new Partial();
-        DateTimeZone zone;
-        if (value.getTimeZone() == null) {
-            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
-        }
-        else {
-            zone = DateTimeZone.forTimeZone(value.getTimeZone());
-        }
-        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear()), zone);
-            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1), zone);
-            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.getDay()), zone);
-            case SECOND: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.getDay())
-                    .with(DateTimeFieldType.hourOfDay(), value.getHour())
-                    .with(DateTimeFieldType.minuteOfHour(), value.getMinute())
-                    .with(DateTimeFieldType.secondOfMinute(), value.getSecond()), zone);
-            case MILLI: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.getDay())
-                    .with(DateTimeFieldType.hourOfDay(), value.getHour())
-                    .with(DateTimeFieldType.minuteOfHour(), value.getMinute())
-                    .with(DateTimeFieldType.secondOfMinute(), value.getSecond())
-                    .with(DateTimeFieldType.millisOfSecond(), value.getMillis()), zone);
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
-        }
+        return resolveDateTime(value);
     }
 
     protected DateTime toDateTime(BaseDateTimeType value) {
-        Partial partial = new Partial();
-        DateTimeZone zone;
-        if (value.getTimeZone() == null) {
-            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
-        }
-        else {
-            zone = DateTimeZone.forTimeZone(value.getTimeZone());
-        }
-        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear()), zone);
-            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1), zone);
-            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
-                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.getDay()), zone);
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
-        }
+        return resolveDateTime(value);
     }
 
     protected Time toTime(TimeType value) {
@@ -84,6 +38,44 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
                 .with(DateTimeFieldType.minuteOfHour(), value.getMinute())
                 .with(DateTimeFieldType.secondOfMinute(), value.getSecond())
                 .with(DateTimeFieldType.millisOfSecond(), value.getMillis()), zone);
+    }
+
+    public DateTime resolveDateTime(BaseDateTimeType value) {
+        Partial partial = new Partial();
+        DateTimeZone zone;
+        if (value.getTimeZone() == null) {
+            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
+        }
+        else {
+            zone = DateTimeZone.forTimeZone(value.getTimeZone());
+        }
+        switch (value.getPrecision()) {
+            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear()), zone);
+            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1), zone);
+            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.getDay()), zone);
+            case MINUTE: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.getDay())
+                    .with(DateTimeFieldType.hourOfDay(), value.getHour())
+                    .with(DateTimeFieldType.minuteOfHour(), value.getMinute()), zone);
+            case SECOND: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.getDay())
+                    .with(DateTimeFieldType.hourOfDay(), value.getHour())
+                    .with(DateTimeFieldType.minuteOfHour(), value.getMinute())
+                    .with(DateTimeFieldType.secondOfMinute(), value.getSecond()), zone);
+            case MILLI: return new DateTime(partial.with(DateTimeFieldType.year(), value.getYear())
+                    .with(DateTimeFieldType.monthOfYear(), value.getMonth() + 1)
+                    .with(DateTimeFieldType.dayOfMonth(), value.getDay())
+                    .with(DateTimeFieldType.hourOfDay(), value.getHour())
+                    .with(DateTimeFieldType.minuteOfHour(), value.getMinute())
+                    .with(DateTimeFieldType.secondOfMinute(), value.getSecond())
+                    .with(DateTimeFieldType.millisOfSecond(), value.getMillis()), zone);
+            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        }
     }
 
     @Override
