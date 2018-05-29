@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.data.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
@@ -72,6 +73,20 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
         Object result = context.resolveExpressionRef("testDateType").getExpression().evaluate(context);
         Assert.assertTrue(result != null);
+    }
+
+    @Test
+    public void testList() {
+        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir.hl7.de:8080/baseDstu3");
+        FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "List", null, null, null, null, null, null, null, null);
+        List<ListResource> lists = new ArrayList<>();
+        int resultCount = 0;
+        for (Object o : results) {
+            lists.add((ListResource)o);
+            resultCount++;
+        }
+
+        assertTrue(lists.size() == resultCount);
     }
 
     @Test
