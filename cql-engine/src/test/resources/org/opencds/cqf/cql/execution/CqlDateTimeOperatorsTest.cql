@@ -7,6 +7,8 @@ define DateTimeAdd5Years: DateTime(2005, 10, 10) + 5 years
 define DateTimeAddInvalidYears: DateTime(2005, 10, 10) + 8000 years
 define DateTimeAdd5Months: DateTime(2005, 5, 10) + 5 months
 define DateTimeAddMonthsOverflow: DateTime(2005, 5, 10) + 10 months
+define DateTimeAddThreeWeeks: DateTime(2018, 5, 2) + 3 weeks
+define DateTimeAddYearInWeeks: DateTime(2018, 5, 23) + 52 weeks
 define DateTimeAdd5Days: DateTime(2005, 5, 10) + 5 days
 define DateTimeAddDaysOverflow: DateTime(2016, 6, 10) + 21 days
 define DateTimeAdd5Hours: DateTime(2005, 5, 10, 5) + 5 hours
@@ -306,6 +308,8 @@ define DateTimeSubtract5Years: DateTime(2005, 10, 10) - 5 years
 define DateTimeSubtractInvalidYears: DateTime(2005, 10, 10) - 2005 years
 define DateTimeSubtract5Months: DateTime(2005, 6, 10) - 5 months
 define DateTimeSubtractMonthsUnderflow: DateTime(2005, 5, 10) - 6 months
+define DateTimeSubtractThreeWeeks: DateTime(2018, 5, 23) - 3 weeks
+define DateTimeSubtractYearInWeeks: DateTime(2018, 5, 23) - 52 weeks
 define DateTimeSubtract5Days: DateTime(2005, 5, 10) - 5 days
 define DateTimeSubtractDaysUnderflow: DateTime(2016, 6, 10) - 11 days
 define DateTimeSubtract5Hours: DateTime(2005, 5, 10, 10) - 5 hours
