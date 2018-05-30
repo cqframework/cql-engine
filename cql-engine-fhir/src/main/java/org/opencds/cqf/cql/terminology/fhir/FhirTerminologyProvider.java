@@ -33,6 +33,7 @@ public class FhirTerminologyProvider implements TerminologyProvider {
         if (!validation) {
             fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
         }
+        fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 10000);
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
 
         if (userName != null && password != null) {
@@ -137,7 +138,7 @@ public class FhirTerminologyProvider implements TerminologyProvider {
                 .withDisplay(((StringType)respParam.getParameter().get(1).getValue()).getValue());
     }
 
-    private Boolean resolveByUrl(ValueSetInfo valueSet) {
+    public Boolean resolveByUrl(ValueSetInfo valueSet) {
         try {
             URL url = new URL(valueSet.getId());
             Bundle searchResults = fhirClient.search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(url.toString())).returnBundle(Bundle.class).execute();
