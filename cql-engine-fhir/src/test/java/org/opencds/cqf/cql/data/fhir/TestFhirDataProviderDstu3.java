@@ -2,19 +2,19 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.ListResource;
-import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.*;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
@@ -73,6 +73,34 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
         Object result = context.resolveExpressionRef("testDateType").getExpression().evaluate(context);
         Assert.assertTrue(result != null);
+    }
+
+    @Test
+    public void testPostSearch() {
+        Context context = new Context(library);
+
+        String patientId = "post-search-example";
+        Patient patient = new Patient();
+
+        dstu3Provider.fhirClient.update().resource(patient).withId(patientId).execute();
+
+        MedicationRequest request = new MedicationRequest();
+        request.setIntent(MedicationRequest.MedicationRequestIntent.ORDER)
+                .setStatus(MedicationRequest.MedicationRequestStatus.ACTIVE)
+                .setMedication(new CodeableConcept().addCoding(new Coding().setCode("1049502").setSystem("http://www.nlm.nih.gov/research/umls/rxnorm")))
+                .setSubject(new Reference("Patient/" + patientId))
+                .setAuthoredOn(new Date());
+
+        dstu3Provider.fhirClient.update().resource(request).withId(patientId).execute();
+
+        dstu3Provider.setSearchUsingPOST(true);
+        dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        context.enterContext("Patient");
+        context.setContextValue("Patient", patientId);
+
+        Object result = context.resolveExpressionRef("Active Ambulatory Opioid Rx").getExpression().evaluate(context);
+        Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
     }
 
     @Test

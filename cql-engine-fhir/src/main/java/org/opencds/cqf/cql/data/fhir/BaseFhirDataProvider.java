@@ -28,6 +28,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
     protected String endpoint;
     protected TerminologyProvider terminologyProvider;
     protected boolean expandValueSets;
+    protected boolean searchUsingPOST;
     protected IGenericClient fhirClient;
 
     // Abstract methods
@@ -42,6 +43,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
     }
     public void setFhirContext(FhirContext fhirContext) {
         this.fhirContext = fhirContext;
+        fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 10000);
     }
 
     public String getEndpoint() {
@@ -66,6 +68,15 @@ public abstract class BaseFhirDataProvider implements DataProvider {
     }
     public BaseFhirDataProvider setExpandValueSets(boolean expandValueSets) {
         this.expandValueSets = expandValueSets;
+        return this;
+    }
+
+    public boolean isSearchUsingPOST() {
+        return searchUsingPOST;
+    }
+    public BaseFhirDataProvider setSearchUsingPOST (boolean searchUsingPOST) {
+        this.searchUsingPOST = searchUsingPOST;
+        expandValueSets = true;
         return this;
     }
 
