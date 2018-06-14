@@ -8,6 +8,7 @@ import org.hl7.fhir.dstu3.model.Period;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
+import org.opencds.cqf.cql.data.fhir.FhirDataProviderStu3;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
 import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
 import org.opencds.cqf.cql.runtime.Code;
@@ -54,18 +55,18 @@ How do I use it?
       - etc...
 */
 
-public class FileBasedFhirProvider extends BaseDataProviderStu3 {
+public class FileBasedFhirProvider extends FhirDataProviderStu3 {
 
     private Path path;
 
     public FileBasedFhirProvider (String path, String endpoint) {
+        super();
         if (path.isEmpty()) {
             throw new InvalidPathException(path, "Invalid path!");
         }
         this.path = Paths.get(path);
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false)
                 : new FhirTerminologyProvider().setEndpoint(endpoint, false);
-        setFhirContext(FhirContext.forDstu3());
     }
 
     private URL pathToModelJar;
