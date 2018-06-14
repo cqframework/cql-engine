@@ -2,6 +2,9 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * Created by Bryn on 5/25/2016.
  */
@@ -18,9 +21,18 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
             }
 
             Object result = this.getExpression().evaluate(context);
+
+            // append list results to evaluatedResources list
+            if (result instanceof List) {
+                if (!context.getEvaluatedResources().containsKey(getName())) {
+                    context.getEvaluatedResources().put(getName(), (List) result);
+                }
+            }
+
             if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(this.getName())) {
                 context.addExpressionToCache(this.getName(), result);
             }
+
             return result;
         }
         finally {

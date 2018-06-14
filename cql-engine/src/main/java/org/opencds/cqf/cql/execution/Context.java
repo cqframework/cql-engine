@@ -22,6 +22,18 @@ public class Context {
         }
     };
 
+    private Map<String, List<Object> > evaluatedResources = new HashMap<>();
+    public Map<String, List<Object> > getEvaluatedResources() {
+        return evaluatedResources;
+    }
+    public List<Object> getEvaluatedResourcesList() {
+        List<Object> ret = new ArrayList<>();
+        for (List<Object> list : evaluatedResources.values()) {
+            ret.addAll(list);
+        }
+        return ret;
+    }
+
     private Map<String, Object> parameters = new HashMap<>();
     private Stack<String> currentContext = new Stack<>();
     private Map<String, Object> contextValues = new HashMap<>();
