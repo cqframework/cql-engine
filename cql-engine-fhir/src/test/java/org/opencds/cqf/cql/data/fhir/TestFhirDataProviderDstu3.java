@@ -129,6 +129,12 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
             size++;
         assertTrue(size == 1);
 
+        results = provider.retrieve("Patient", "123", "Condition", null, "code", null, "end-of-life-conditions", null, null, null, null);
+        size = 0;
+        for (Object o : results)
+            size++;
+        assertTrue(size == 1);
+
         /*
             Commented out by Darren D  per Chris S' instruction.
             Test failure on DD machine not reproduced by CS.

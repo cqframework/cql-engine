@@ -22,8 +22,12 @@ import java.util.ArrayList;
  */
 public class FhirTerminologyProvider implements TerminologyProvider {
 
-    private String endpoint;
     private IGenericClient fhirClient;
+    public IGenericClient getFhirClient() {
+        return fhirClient;
+    }
+
+    private String endpoint;
     public String getEndpoint() {
         return endpoint;
     }

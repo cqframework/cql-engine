@@ -1,10 +1,7 @@
 package org.opencds.cqf.cql.file.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import org.hl7.fhir.dstu3.model.CodeableConcept;
-import org.hl7.fhir.dstu3.model.Coding;
-import org.hl7.fhir.dstu3.model.DateTimeType;
-import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.*;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
@@ -336,14 +333,36 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
     }
 
     public boolean checkCodeMembership(Object codeObj, String vsId) {
+        ValueSet valueSet = ((FhirTerminologyProvider) this.terminologyProvider).getFhirClient().read().resource(ValueSet.class).withId(vsId).execute();
         Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
-        for (Coding code : conceptCodes) {
-            if (terminologyProvider.in(new Code()
-                            .withCode(code.getCodeElement().getValue())
-                            .withSystem(code.getSystem()),
-                    new ValueSetInfo().withId(vsId)))
-            {
-                return true;
+        boolean needsExpand = false;
+        if (valueSet != null && valueSet.hasCompose() && valueSet.getCompose().hasInclude()) {
+            for (ValueSet.ConceptSetComponent include : valueSet.getCompose().getInclude()) {
+                if (include.hasFilter() || include.hasValueSet()) {
+                    needsExpand = true;
+                    continue;
+                }
+                for (Coding code : conceptCodes) {
+                    if (code.getSystem().equals(include.getSystem())) {
+                        for (ValueSet.ConceptReferenceComponent concept : include.getConcept()) {
+                            if (code.getCode().equals(concept.getCode())) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (needsExpand) {
+            for (Coding code : conceptCodes) {
+                if (terminologyProvider.in(
+                        new Code()
+                                .withCode(code.getCodeElement().getValue())
+                                .withSystem(code.getSystem()),
+                        new ValueSetInfo().withId(vsId)))
+                {
+                    return true;
+                }
             }
         }
         return false;
