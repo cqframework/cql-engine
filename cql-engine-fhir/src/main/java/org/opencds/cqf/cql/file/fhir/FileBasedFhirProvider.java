@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.file.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.joda.time.DateTimeZone;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
@@ -23,6 +24,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -333,11 +335,25 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
     }
 
     public boolean checkCodeMembership(Object codeObj, String vsId) {
-        ValueSet valueSet = ((FhirTerminologyProvider) this.terminologyProvider).getFhirClient().read().resource(ValueSet.class).withId(vsId).execute();
+        FhirTerminologyProvider terminologyProvider = (FhirTerminologyProvider) this.terminologyProvider;
+        ValueSetInfo valueSet = new ValueSetInfo().withId(vsId);
+        ValueSet vs;
+        if (vsId.startsWith("http")) {
+            Bundle bundle = (Bundle) terminologyProvider.getFhirClient().search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(vsId)).execute();
+            if (bundle.hasEntry() && bundle.getEntryFirstRep().hasResource()) {
+                vs = (ValueSet) bundle.getEntryFirstRep().getResource();
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            vs = terminologyProvider.getFhirClient().read().resource(ValueSet.class).withId(vsId).execute();
+        }
         Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
         boolean needsExpand = false;
-        if (valueSet != null && valueSet.hasCompose() && valueSet.getCompose().hasInclude()) {
-            for (ValueSet.ConceptSetComponent include : valueSet.getCompose().getInclude()) {
+        if (valueSet != null && vs.hasCompose() && vs.getCompose().hasInclude()) {
+            for (ValueSet.ConceptSetComponent include : vs.getCompose().getInclude()) {
                 if (include.hasFilter() || include.hasValueSet()) {
                     needsExpand = true;
                     continue;
