@@ -9,6 +9,11 @@
         "system": "http://snomed.info/sct",
         "code": "94398002",
         "display": "Secondary malignant neoplasm of lymph nodes of upper limb (disorder)"
+      },
+      {
+        "system": "http://snomed.info/sct",
+        "code": "00000000",
+        "display": "Made Up Code"
       }
     ],
     "text": "Secondary malignant neoplasm of lymph nodes of upper limb (disorder)"
