@@ -22,7 +22,7 @@ define ContainsABNullHasNull: { 'a', 'b', null } contains null
 define ContainsNullFirst: { null, 'b', 'c' } contains 'a'
 define ContainsABCHasA: { 'a', 'b', 'c' } contains 'a'
 define ContainsJan2012True: { DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 1, 1) } contains DateTime(2012, 1, 1)
-define ContainsJan2012False: { DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 1) } contains DateTime(2012, 1, 1)
+define ContainsJan2012False: { DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 1, 1) } contains DateTime(2012, 1, 1, 0)
 define ContainsTimeTrue: { @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T05:59:59.999
 define ContainsTimeFalse: { @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T08:59:59.999
 define ContainsNullLeft: null contains 'a'

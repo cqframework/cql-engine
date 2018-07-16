@@ -69,14 +69,17 @@ define TimeCollapse2: collapse { Interval[@T01:59:59.999, @T10:59:59.999], Inter
 define TestContainsNull: IntegerIntervalTest contains null
 define TestNullElement1: null contains 5
 define TestNullElement2: Interval[null, 5] contains 10
+define TestNullElementTrue: Interval[null, 12] contains 10
 define IntegerIntervalContainsTrue: IntegerIntervalTest contains 5
 define IntegerIntervalContainsFalse: IntegerIntervalTest contains 25
 define DecimalIntervalContainsTrue: DecimalIntervalTest contains 8.0
 define DecimalIntervalContainsFalse: DecimalIntervalTest contains 255.0
 define QuantityIntervalContainsTrue: QuantityIntervalTest contains 2.0 'g'
 define QuantityIntervalContainsFalse: QuantityIntervalTest contains 100.0 'g'
-define DateTimeContainsTrue: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 10)
-define DateTimeContainsFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 16)
+define DateTimeContainsNull: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 10)
+define DateTimeContainsTrue: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains day of DateTime(2012, 1, 10)
+define DateTimeContainsFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains day of DateTime(2012, 1, 16)
+define TimeContainsNull: Interval[@T01:59:59, @T10:59:59] contains @T05:59:59
 define TimeContainsTrue: Interval[@T01:59:59.999, @T10:59:59.999] contains @T05:59:59.999
 define TimeContainsFalse: Interval[@T01:59:59.999, @T10:59:59.999] contains @T15:59:59.999
 
