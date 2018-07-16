@@ -98,8 +98,9 @@ define DecimalIntervalEndsTrue: DecimalIntervalTest3 ends DecimalIntervalTest
 define DecimalIntervalEndsFalse: DecimalIntervalTest2 ends DecimalIntervalTest
 define QuantityIntervalEndsTrue: QuantityIntervalTest3 ends QuantityIntervalTest
 define QuantityIntervalEndsFalse: QuantityIntervalTest2 ends QuantityIntervalTest
-define DateTimeEndsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)]
-define DateTimeEndsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 16)]
+define DateTimeEndsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends day of Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)]
+define DateTimeEndsNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)]
+define DateTimeEndsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] ends day of Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 16)]
 define TimeEndsTrue: Interval[@T05:59:59.999, @T10:59:59.999] ends Interval[@T01:59:59.999, @T10:59:59.999]
 define TimeEndsFalse: Interval[@T05:59:59.999, @T10:59:59.999] ends Interval[@T01:59:59.999, @T11:59:59.999]
 
