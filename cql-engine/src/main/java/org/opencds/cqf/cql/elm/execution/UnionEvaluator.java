@@ -54,9 +54,11 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
                 precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
             }
 
-            if (!OverlapsEvaluator.overlaps((Interval) left, (Interval) right)
-                    && !MeetsEvaluator.meets(left, right, precision))
-            {
+            Boolean overlapsOrMeets = OrEvaluator.or(
+                    OverlapsEvaluator.overlaps(left, right, precision),
+                    MeetsEvaluator.meets(left, right, precision)
+            );
+            if (overlapsOrMeets == null || !overlapsOrMeets) {
                 return null;
             }
 

@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
 import java.util.ArrayList;
@@ -39,14 +40,26 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
 
-            if (!OverlapsEvaluator.overlaps(leftInterval, rightInterval)) { return null; }
-
             Object leftStart = leftInterval.getStart();
             Object leftEnd = leftInterval.getEnd();
             Object rightStart = rightInterval.getStart();
             Object rightEnd = rightInterval.getEnd();
 
-            if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null)
+            {
+                return null;
+            }
+
+            String precision = null;
+            if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
+                precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
+            }
+
+            Boolean overlaps = OverlapsEvaluator.overlaps(leftInterval, rightInterval, precision);
+            if (overlaps == null || !overlaps) {
+                return null;
+            }
 
             Object max = GreaterEvaluator.greater(leftStart, rightStart) ? leftStart : rightStart;
             Object min = LessEvaluator.less(leftEnd, rightEnd) ? leftEnd : rightEnd;
@@ -66,6 +79,7 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
             }
             return result;
         }
+
         throw new IllegalArgumentException(String.format("Cannot Intersect arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 

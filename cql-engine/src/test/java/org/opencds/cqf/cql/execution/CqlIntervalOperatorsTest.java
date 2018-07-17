@@ -911,6 +911,9 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeOverlapsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("DateTimeOverlapsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
         result = context.resolveExpressionRef("DateTimeOverlapsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -952,6 +955,9 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeOverlapsBeforeTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("DateTimeOverlapsBeforeNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
         result = context.resolveExpressionRef("DateTimeOverlapsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -992,6 +998,9 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("DateTimeOverlapsAfterTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("DateTimeOverlapsAfterNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("DateTimeOverlapsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
