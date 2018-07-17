@@ -14,7 +14,7 @@ If both arguments are false, the result is false. Otherwise, the result is null.
  */
 public class OrEvaluator extends org.cqframework.cql.elm.execution.Or {
 
-    public static Object or(Boolean left, Boolean right) {
+    public static Boolean or(Boolean left, Boolean right) {
         if (left == null || right == null) {
             if ((left != null && left) || (right != null && right)) {
                 return true;

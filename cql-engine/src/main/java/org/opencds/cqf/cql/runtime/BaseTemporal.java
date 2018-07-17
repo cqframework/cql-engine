@@ -172,6 +172,15 @@ public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> 
         }
     }
 
+    public static String getHighestPrecision(BaseTemporal ... values) {
+        int max = 6;
+        for (BaseTemporal baseTemporal : values) {
+            max = baseTemporal.partial.size() - 1;
+        }
+
+        return values[0] instanceof DateTime ? DateTime.getUnit(max) : Time.getUnit(max);
+    }
+
     public Integer compare(BaseTemporal other, Boolean forSort) {
         boolean differentPrecisions = this.getPartial().size() != other.getPartial().size();
 

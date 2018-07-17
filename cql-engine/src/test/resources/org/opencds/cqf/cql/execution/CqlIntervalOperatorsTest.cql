@@ -57,6 +57,7 @@ define TestCollapseNull: collapse {Interval(null, null)}
 define IntegerIntervalCollapse: collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }
 define IntegerIntervalCollapse2: collapse { Interval[1,2], Interval[3,7], Interval[10,19], Interval[7,10] }
 define IntegerIntervalCollapse3: collapse { Interval[4,6], Interval[7,8] }
+define IntegerIntervalCollapse4: collapse { Interval[4,6], Interval[4,5], Interval[8,10] }
 define DecimalIntervalCollapse: collapse { Interval[1.0,5.0], Interval[3.0,7.0], Interval[12.0,19.0], Interval[7.0,10.0] }
 define DecimalIntervalCollapse2: collapse { Interval[4.0,6.0], Interval[6.00000001,8.0] }
 define QuantityIntervalCollapse: collapse { Interval[1.0 'g',5.0 'g'], Interval[3.0 'g',7.0 'g'], Interval[12.0 'g',19.0 'g'], Interval[7.0 'g',10.0 'g'] }
@@ -216,8 +217,9 @@ define DecimalIntervalMeetsTrue: Interval[3.01, 5.00000001] meets Interval[5.000
 define DecimalIntervalMeetsFalse: Interval[3.01, 5.00000001] meets Interval[5.5, 8.50]
 define QuantityIntervalMeetsTrue: Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.00000002 'g', 8.50 'g']
 define QuantityIntervalMeetsFalse: Interval[3.01 'g', 5.00000001 'g'] meets Interval[5.5 'g', 8.50 'g']
-define DateTimeMeetsTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
-define DateTimeMeetsFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]
+define DateTimeMeetsTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
+define DateTimeMeetsNull: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
+define DateTimeMeetsFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets day of Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]
 define TimeMeetsTrue: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:00:00.000, @T19:59:59.999]
 define TimeMeetsFalse: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:12:00.000, @T19:59:59.999]
 
@@ -229,10 +231,11 @@ define DecimalIntervalMeetsBeforeTrue: Interval[3.50000001, 5.00000011] meets be
 define DecimalIntervalMeetsBeforeFalse: Interval[8.01, 15.00000001] meets before Interval[15.00000000, 18.50]
 define QuantityIntervalMeetsBeforeTrue: Interval[3.50000001 'g', 5.00000011 'g'] meets before Interval[5.00000012 'g', 8.50 'g']
 define QuantityIntervalMeetsBeforeFalse: Interval[8.01 'g', 15.00000001 'g'] meets before Interval[15.00000000 'g', 18.50 'g']
-define DateTimeMeetsBeforeTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
-define DateTimeMeetsBeforeFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]
-define TimeMeetsBeforeTrue: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:00:00.000, @T19:59:59.999]
-define TimeMeetsBeforeFalse: Interval[@T04:59:59.999, @T09:59:59.999] meets Interval[@T10:12:00.000, @T19:59:59.999]
+define DateTimeMeetsBeforeTrue: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets before day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
+define DateTimeMeetsBeforeNull: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets before Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)]
+define DateTimeMeetsBeforeFalse: Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)] meets before day of Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)]
+define TimeMeetsBeforeTrue: Interval[@T04:59:59.999, @T09:59:59.999] meets before Interval[@T10:00:00.000, @T19:59:59.999]
+define TimeMeetsBeforeFalse: Interval[@T04:59:59.999, @T09:59:59.999] meets before Interval[@T10:12:00.000, @T19:59:59.999]
 
 //MeetsAfter
 define TestMeetsAfterNull: Interval(null, 5] meets after Interval[11, null)
@@ -242,8 +245,9 @@ define DecimalIntervalMeetsAfterTrue: Interval[55.00000123, 128.032156] meets af
 define DecimalIntervalMeetsAfterFalse: Interval[55.00000124, 150.222222] meets after Interval[12.00258, 55.00000122]
 define QuantityIntervalMeetsAfterTrue: Interval[55.00000123 'g', 128.032156 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']
 define QuantityIntervalMeetsAfterFalse: Interval[55.00000124 'g', 150.222222 'g'] meets after Interval[12.00258 'g', 55.00000122 'g']
-define DateTimeMeetsAfterTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)] meets Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
-define DateTimeMeetsAfterFalse: Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)] meets Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
+define DateTimeMeetsAfterTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)] meets after day of Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
+define DateTimeMeetsAfterNull: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 25)] meets after Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
+define DateTimeMeetsAfterFalse: Interval[DateTime(2012, 1, 20), DateTime(2012, 1, 25)] meets after day of Interval[DateTime(2012, 1, 7), DateTime(2012, 1, 14)]
 define TimeMeetsAfterTrue: Interval[@T10:00:00.000, @T19:59:59.999] meets Interval[@T04:59:59.999, @T09:59:59.999]
 define TimeMeetsAfterFalse: Interval[@T10:12:00.000, @T19:59:59.999] meets Interval[@T04:59:59.999, @T09:59:59.999]
 

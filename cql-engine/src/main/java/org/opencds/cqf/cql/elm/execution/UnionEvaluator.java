@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
             return null;
         }
 
-        if (left instanceof Interval) {
+        if (left instanceof Interval && right instanceof Interval) {
             Object leftStart = ((Interval) left).getStart();
             Object leftEnd = ((Interval) left).getEnd();
             Object rightStart = ((Interval) right).getStart();
@@ -48,8 +49,13 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
                 return null;
             }
 
+            String precision = null;
+            if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
+                precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
+            }
+
             if (!OverlapsEvaluator.overlaps((Interval) left, (Interval) right)
-                    && !MeetsEvaluator.meets((Interval) left, (Interval) right))
+                    && !MeetsEvaluator.meets(left, right, precision))
             {
                 return null;
             }

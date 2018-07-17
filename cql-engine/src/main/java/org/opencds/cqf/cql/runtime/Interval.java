@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.runtime;
 
 import org.opencds.cqf.cql.elm.execution.*;
 
+import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -9,7 +10,7 @@ import java.util.Date;
 /**
  * Created by Bryn on 4/15/2016.
  */
-public class Interval implements CqlType {
+public class Interval implements CqlType, Comparable<Interval> {
 
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {
         this.low = low;
@@ -128,6 +129,15 @@ public class Interval implements CqlType {
         else {
             return high == null ? Value.maxValue(pointType) : high;
         }
+    }
+
+    @Override
+    public int compareTo(@Nonnull Interval other) {
+        CqlList cqlList = new CqlList();
+        if (cqlList.compareTo(getStart(), other.getStart()) == 0) {
+            return cqlList.compareTo(getEnd(), other.getEnd());
+        }
+        return cqlList.compareTo(getStart(), other.getStart());
     }
 
     @Override

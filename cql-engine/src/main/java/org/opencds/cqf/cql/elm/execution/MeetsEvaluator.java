@@ -1,16 +1,19 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Value;
 
 /*
-meets(left Interval<T>, right Interval<T>) Boolean
+meets _precision_ (left Interval<T>, right Interval<T>) Boolean
 
 The meets operator returns true if the first interval ends immediately before the second interval starts,
-  or if the first interval starts immediately after the second interval ends.
-In other words, if the ending point of the first interval is equal to the predecessor of the starting point of the second,
-  or if the starting point of the first interval is equal to the successor of the ending point of the second.
+    or if the first interval starts immediately after the second interval ends.
+    In other words, if the ending point of the first interval is equal to the predecessor of the starting point of the second,
+    or if the starting point of the first interval is equal to the successor of the ending point of the second.
+This operator uses the semantics described in the Start and End operators to determine interval boundaries.
+If precision is specified and the point type is a date/time type, comparisons used in the operation are performed at the specified precision.
 If either argument is null, the result is null.
 */
 
@@ -19,33 +22,27 @@ If either argument is null, the result is null.
  */
 public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
 
-    public static Boolean meets(Interval left, Interval right) {
+    public static Boolean meets(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }
 
-        Object leftStart = left.getStart();
-        Object leftEnd = left.getEnd();
-        Object rightStart = right.getStart();
-        Object rightEnd = right.getEnd();
-
-        if (leftStart == null || leftEnd == null
-                || rightStart == null || rightEnd == null)
-        {
-            return null;
+        if (left instanceof Interval && right instanceof Interval) {
+            return OrEvaluator.or(
+                        MeetsBeforeEvaluator.meetsBefore(left, right, precision),
+                        MeetsAfterEvaluator.meetsAfter(left, right, precision)
+            );
         }
 
-        return (GreaterEvaluator.greater(rightStart, leftEnd))
-                ? EqualEvaluator.equal(rightStart, Value.successor(leftEnd))
-                : EqualEvaluator.equal(leftStart, Value.successor(rightEnd)
-        );
+        throw new IllegalArgumentException(String.format("Cannot Meets arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
     public Object evaluate(Context context) {
-        Interval left = (Interval)getOperand().get(0).evaluate(context);
-        Interval right = (Interval)getOperand().get(1).evaluate(context);
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), meets(left, right), left, right);
+        return context.logTrace(this.getClass(), meets(left, right, precision), left, right, precision);
     }
 }
