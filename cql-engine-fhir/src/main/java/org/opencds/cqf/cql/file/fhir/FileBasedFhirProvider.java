@@ -25,6 +25,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 /*
@@ -230,40 +231,56 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
                             results.add(res);
                     }
                 }
-                else if (codes != null) {
+                else if (codes != null && codes.iterator().hasNext()) {
+                    boolean codeMatch = false;
                     for (Code code : codes) {
+                        if (codeMatch) break;
                         Object resCodes = resolvePath(res, codePath);
                         if (resCodes instanceof Iterable) {
                             for (Object codeObj : (Iterable)resCodes) {
                                 Iterable<Coding> conceptCodes = ((CodeableConcept)codeObj).getCoding();
-                                for (Coding c : conceptCodes) {
-                                    if (c.getCodeElement().getValue().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
-                                    {
-                                        if (results.indexOf(res) == -1)
-                                            results.add(res);
-                                    }
-                                    else if (results.indexOf(res) != -1)
-                                        results.remove(res);
+                                if (isCodeMatch(code, conceptCodes)) {
+                                    codeMatch = true;
+                                    break;
                                 }
                             }
                         }
                         else if (resCodes instanceof CodeableConcept) {
-                            for (Coding c : ((CodeableConcept)resCodes).getCoding()) {
-                                if (c.getCodeElement().getValue().equals(code.getCode()) && c.getSystem().equals(code.getSystem()))
-                                {
-                                    if (results.indexOf(res) == -1)
-                                        results.add(res);
-                                }
-                                else if (results.indexOf(res) != -1)
-                                    results.remove(res);
+                            if (isCodeMatch(code, ((CodeableConcept)resCodes).getCoding())) {
+                                codeMatch = true;
+                                break;
                             }
                         }
+                        else if (resCodes instanceof Coding) {
+                            if (isCodeMatch(code, Collections.singletonList((Coding) resCodes))) {
+                                codeMatch = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (codeMatch && results.indexOf(res) == -1) {
+                        results.add(res);
+                    }
+                    else if (!codeMatch && results.indexOf(res) != -1) {
+                        results.remove(res);
                     }
                 }
             }
         } // end of filtering for each loop
 
         return results;
+    }
+
+    private boolean isCodeMatch(Code code, Iterable<Coding> codes) {
+        for (Coding coding : codes) {
+            if (coding.getCodeElement().getValue().equals(code.getCode())
+                    && coding.getSystem().equals(code.getSystem()))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // If Patient context without patient id, get the first patient
