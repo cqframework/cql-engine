@@ -47,14 +47,15 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
                     continue;
                 }
 
-                if (GreaterEvaluator.greater(value, max)) {
+                Boolean greater = GreaterEvaluator.greater(value, max);
+                if (greater != null && greater) {
                     max = value;
                 }
             }
             return max;
         }
 
-        return null;
+        throw new IllegalArgumentException(String.format("Cannot perform Max operation with arguments of type '%s'.", source.getClass().getName()));
     }
 
     @Override

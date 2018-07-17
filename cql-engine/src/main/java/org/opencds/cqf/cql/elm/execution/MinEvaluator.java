@@ -17,49 +17,49 @@ If the source is null, the result is null.
 */
 
 /**
-* Created by Chris Schuler on 6/13/2016
-*/
+ * Created by Chris Schuler on 6/13/2016
+ */
 public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
 
-  public static Object min(Object source) {
-    if (source == null) {
-      return null;
-    }
-
-    if (source instanceof Iterable) {
-      Iterable element = (Iterable)source;
-      Iterator itr = element.iterator();
-
-      if (!itr.hasNext()) { // empty list
-        return null;
-      }
-
-      Object min = itr.next();
-      while (min == null && itr.hasNext()) {
-        min = itr.next();
-      }
-      while (itr.hasNext()) {
-        Object value = itr.next();
-
-        if (value == null) { // skip null
-          continue;
+    public static Object min(Object source) {
+        if (source == null) {
+            return null;
         }
 
-        if (LessEvaluator.less(value, min)) {
-          min = value;
+        if (source instanceof Iterable) {
+            Iterable element = (Iterable)source;
+            Iterator itr = element.iterator();
+
+            if (!itr.hasNext()) { // empty list
+                return null;
+            }
+
+            Object min = itr.next();
+            while (min == null && itr.hasNext()) {
+                min = itr.next();
+            }
+            while (itr.hasNext()) {
+                Object value = itr.next();
+
+                if (value == null) { // skip null
+                    continue;
+                }
+
+                Boolean less = LessEvaluator.less(value, min);
+                if (less != null && less) {
+                    min = value;
+                }
+            }
+            return min;
         }
 
-      }
-      return min;
+        throw new IllegalArgumentException(String.format("Cannot perform Min operation with arguments of type '%s'.", source.getClass().getName()));
     }
 
-    throw new IllegalArgumentException(String.format("Cannot perform Min operation with arguments of type '%s'.", source.getClass().getName()));
-  }
+    @Override
+    public Object evaluate(Context context) {
+        Object source = getSource().evaluate(context);
 
-  @Override
-  public Object evaluate(Context context) {
-    Object source = getSource().evaluate(context);
-
-    return context.logTrace(this.getClass(), min(source), source);
-  }
+        return context.logTrace(this.getClass(), min(source), source);
+    }
 }

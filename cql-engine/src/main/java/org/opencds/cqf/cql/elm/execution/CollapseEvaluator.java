@@ -1,10 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /*
@@ -22,7 +20,7 @@ If the argument is null, the result is null.
  */
 public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collapse {
 
-    public static Object collapse(Iterable<Object> list) {
+    public static Object collapse(Iterable list) {
 
         if (list == null) {
             return null;
@@ -43,41 +41,20 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
             return null;
         }
 
-        intervals.sort((o1, o2) -> {
-            if (o1.getStart() instanceof Integer || o1.getStart() instanceof DateTime || o1.getStart() instanceof Time) {
-
-                if (LessEvaluator.less(o1.getStart(), o2.getStart())) {
-                    return -1;
-                }
-
-                else if (EqualEvaluator.equal(o1.getStart(), o2.getStart())) {
-                    return 0;
-                }
-
-                else if (GreaterEvaluator.greater(o1.getStart(), o2.getStart())) {
-                    return 1;
-                }
-            }
-
-            else if (o1.getStart() instanceof BigDecimal) {
-                return ((BigDecimal) o1.getStart()).compareTo((BigDecimal) o2.getStart());
-            }
-
-            else if (o1.getStart() instanceof Quantity) {
-                return (((Quantity) o1.getStart()).getValue().compareTo(((Quantity) o2.getStart()).getValue()));
-            }
-
-            throw new IllegalArgumentException(String.format("Cannot Collapse arguments of type '%s' and '%s'.", o1.getClass().getName(), o1.getClass().getName()));
-        });
+        intervals.sort(new CqlList().valueSort);
 
         for (int i = 0; i < intervals.size(); ++i) {
             if ((i+1) < intervals.size()) {
-                if (OverlapsEvaluator.overlaps(intervals.get(i), intervals.get(i+1))) {
-                    intervals.set(i, new Interval((intervals.get(i)).getStart(), true, (intervals.get(i+1)).getEnd(), true));
-                    intervals.remove(i+1);
-                    i -= 1;
+                Boolean merge = OrEvaluator.or(
+                        GreaterOrEqualEvaluator.greaterOrEqual(intervals.get(i).getEnd(), intervals.get(i+1).getStart()),
+                        EqualEvaluator.equal(Value.successor(intervals.get(i).getEnd()), intervals.get(i+1).getStart())
+                );
+
+                if (merge == null) {
+                    continue;
                 }
-                else if ((Boolean) MeetsBeforeEvaluator.meetsBefore(intervals.get(i), intervals.get(i+1))) {
+
+                if (merge) {
                     intervals.set(i, new Interval((intervals.get(i)).getStart(), true, (intervals.get(i+1)).getEnd(), true));
                     intervals.remove(i+1);
                     i -= 1;
@@ -90,7 +67,7 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
 
     @Override
     public Object evaluate(Context context) {
-        Iterable<Object> list = (Iterable<Object>)getOperand().evaluate(context);
+        Iterable list = (Iterable)getOperand().evaluate(context);
 
         return context.logTrace(this.getClass(), collapse(list), list);
     }
