@@ -141,6 +141,15 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
             size++;
         assertTrue(size == 1);
 
+        List<Code> codes = new ArrayList<>();
+        Code code = new Code().withSystem("http://snomed.info/sct").withCode("94398002");
+        codes.add(code);
+        results = provider.retrieve("Patient", "123", "Condition", null, "code", codes, null, null, null, null, null);
+        size = 0;
+        for (Object o : results)
+            size++;
+        assertTrue(size == 1);
+
         /*
             Commented out by Darren D  per Chris S' instruction.
             Test failure on DD machine not reproduced by CS.
