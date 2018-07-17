@@ -251,6 +251,12 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
                                 break;
                             }
                         }
+                        else if (resCodes instanceof Coding) {
+                            if (isCodeMatch(code, Collections.singletonList((Coding) resCodes))) {
+                                codeMatch = true;
+                                break;
+                            }
+                        }
                     }
                     if (codeMatch && results.indexOf(res) == -1) {
                         results.add(res);
