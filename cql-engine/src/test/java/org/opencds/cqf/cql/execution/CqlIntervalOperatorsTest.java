@@ -1264,6 +1264,9 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeStartsTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("DateTimeStartsNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
         result = context.resolveExpressionRef("DateTimeStartsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 

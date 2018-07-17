@@ -388,8 +388,9 @@ define DecimalIntervalStartsTrue: DecimalIntervalTest3 starts DecimalIntervalTes
 define DecimalIntervalStartsFalse: DecimalIntervalTest starts DecimalIntervalTest3
 define QuantityIntervalStartsTrue: QuantityIntervalTest3 starts QuantityIntervalTest4
 define QuantityIntervalStartsFalse: QuantityIntervalTest starts QuantityIntervalTest3
-define DateTimeStartsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 27)]
-define DateTimeStartsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 6), DateTime(2012, 1, 27)]
+define DateTimeStartsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 27)]
+define DateTimeStartsNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 27)]
+define DateTimeStartsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] starts day of Interval[DateTime(2012, 1, 6), DateTime(2012, 1, 27)]
 define TimeStartsTrue: Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T05:59:59.999, @T17:59:59.999]
 define TimeStartsFalse: Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T04:59:59.999, @T17:59:59.999]
 
