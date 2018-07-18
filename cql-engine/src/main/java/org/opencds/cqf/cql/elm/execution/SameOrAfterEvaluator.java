@@ -77,13 +77,13 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
             return onOrAfter(left, right, precision);
         }
 
-        if (precision == null) {
-            precision = "millisecond";
-        }
-
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
             BaseTemporal leftTemporal = (BaseTemporal) left;
             BaseTemporal rightTemporal = (BaseTemporal) right;
+
+            if (precision == null) {
+                precision = BaseTemporal.getHighestPrecision(leftTemporal, rightTemporal);
+            }
 
             int idx = DateTime.getFieldIndex(precision);
 

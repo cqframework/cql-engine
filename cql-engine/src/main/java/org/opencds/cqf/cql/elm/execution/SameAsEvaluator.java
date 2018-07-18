@@ -32,13 +32,13 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
             return null;
         }
 
-        if (precision == null) {
-            precision = "millisecond";
-        }
-
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
             BaseTemporal leftTemporal = (BaseTemporal) left;
             BaseTemporal rightTemporal = (BaseTemporal) right;
+
+            if (precision == null) {
+                precision = BaseTemporal.getHighestPrecision(leftTemporal, rightTemporal);
+            }
 
             int idx = DateTime.getFieldIndex(precision);
 
