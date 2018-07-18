@@ -61,7 +61,7 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
             BaseTemporal rightTemporal = (BaseTemporal) right;
 
             if (precision == null) {
-                precision = "millisecond";
+                precision = BaseTemporal.getHighestPrecision(leftTemporal, rightTemporal);
             }
 
             int idx = leftTemporal.getIsDateTime() ? DateTime.getFieldIndex(precision) : Time.getFieldIndex(precision);
