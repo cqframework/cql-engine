@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.execution;
 
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -218,6 +219,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("SumTest1").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("20.0")));
+
+        result = context.resolveExpressionRef("SumTestQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("15.0")).withUnit("ml")));
 
         result = context.resolveExpressionRef("SumTestNull").getExpression().evaluate(context);
         assertThat(result, is(1));
