@@ -53,8 +53,12 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
         else if (operand instanceof Time) {
             return ((Time)operand).getPartial().toString();
         }
+        // This is not standard - adding for test suite
+        else {
+            return operand.toString();
+        }
 
-        throw new IllegalArgumentException(String.format("Cannot ToString a value of type %s.", operand.getClass().getName()));
+//        throw new IllegalArgumentException(String.format("Cannot ToString a value of type %s.", operand.getClass().getName()));
     }
 
     @Override

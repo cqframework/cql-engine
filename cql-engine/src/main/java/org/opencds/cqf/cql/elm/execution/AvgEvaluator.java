@@ -18,66 +18,46 @@ Avg(argument List<Quantity>) Quantity
 */
 
 /**
-* Created by Chris Schuler on 6/13/2016
-*/
+ * Created by Chris Schuler on 6/13/2016
+ */
 public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
 
-  public static Object avg(Object src) {
+    public static Object avg(Object source) {
 
-    if (src == null) {
-      return null;
-    }
-
-    BigDecimal avg = new BigDecimal(0);
-    int size = 0;
-
-    if (src instanceof Iterable) {
-      Iterable<Object> element = (Iterable<Object>)src;
-      Iterator<Object> itr = element.iterator();
-
-      if (!itr.hasNext()) { // empty list
-        return null;
-      }
-
-      while (itr.hasNext()) {
-        Object value = itr.next();
-
-        if (value == null) {
-          continue;
+        if (source == null) {
+            return null;
         }
 
-        ++size;
+        if (source instanceof Iterable) {
+            Iterable elements = (Iterable) source;
+            Object avg = null;
+            int size = 1;
 
-        if (value instanceof BigDecimal) {
-          avg = avg.add((BigDecimal)value);
+            for (Object element : elements) {
+                if (element == null) {
+                    continue;
+                }
+
+                if (avg == null) {
+                    avg = element;
+                }
+                else {
+                    ++size;
+                    avg = AddEvaluator.add(avg, element);
+                }
+            }
+
+            return DivideEvaluator.divide(avg, new BigDecimal(size));
         }
 
-        else if (value instanceof Quantity) {
-          avg = avg.add(((Quantity)value).getValue());
-        }
-
-        else {
-          throw new IllegalArgumentException(String.format("Cannot Average arguments of type '%s'.", value.getClass().getName()));
-        }
-      }
+        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Avg operation.", source.getClass().getName()));
     }
 
-    else { // TODO: maybe throw exception here?
-      return null;
+    @Override
+    public Object evaluate(Context context) {
+
+        Object src = getSource().evaluate(context);
+
+        return context.logTrace(this.getClass(), avg(src), src);
     }
-
-    if (size == 0) { // all elements null
-      return null;
-    }
-
-    return Value.verifyPrecision((BigDecimal) DivideEvaluator.divide(avg, new BigDecimal(size)));
-  }
-
-  @Override
-  public Object evaluate(Context context) {
-
-    Object src = getSource().evaluate(context);
-
-    return context.logTrace(this.getClass(), avg(src), src);
-  }
 }

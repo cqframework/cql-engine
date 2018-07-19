@@ -63,7 +63,8 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
                 }
             }
         }
-        return null;
+
+        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Median operation.", source.getClass().getName()));
     }
 
     @Override

@@ -25,14 +25,13 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
         }
 
         if (source instanceof Iterable) {
-            Iterable<Object> element = (Iterable<Object>)source;
-            Iterator<Object> itr = element.iterator();
+            Iterable element = (Iterable)source;
+            Iterator itr = element.iterator();
 
             if (!itr.hasNext()) { // empty list
                 return null;
             }
 
-            Object mode = new Object();
             ArrayList<Object> values = new ArrayList<>();
             while (itr.hasNext()) {
                 Object value = itr.next();
@@ -48,8 +47,15 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
             values.sort(new CqlList().valueSort);
 
             int max = 0;
+            Object mode = new Object();
             for (int i = 0; i < values.size(); ++i) {
-                int count = (values.lastIndexOf(values.get(i)) - i) + 1;
+                int count = 0;
+                for (int j = i; j < values.size(); ++j) {
+                    Boolean equal = EqualEvaluator.equal(values.get(i), values.get(j));
+                    if (equal != null && equal) {
+                        ++count;
+                    }
+                }
                 if (count > max) {
                     mode = values.get(i);
                     max = count;

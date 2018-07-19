@@ -49,6 +49,7 @@ define MinTestTime: Min({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })
 //Mode
 define ModeTestInteger: Mode({ 2, 1, 8, 2, 9, 1, 9, 9 })
 define ModeTestDateTime: Mode({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6), DateTime(2012, 9, 5) })
+define ModeTestDateTime2: Mode({ DateTime(2012, 10, 5), DateTime(2012, 10, 5), DateTime(2012, 10, 6), DateTime(2012, 9, 5) })
 define ModeTestTime: Mode({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999, @T05:59:59.999 })
 
 //PopulationStdDev

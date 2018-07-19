@@ -37,7 +37,9 @@ public class CqlTestSuite {
                 if (expression instanceof FunctionDef) {
                     continue;
                 }
-                expression.evaluate(context);
+                if (expression.getName().startsWith("test")) {
+                    System.out.println(expression.evaluate(context));
+                }
             }
         }
     }
