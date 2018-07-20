@@ -231,3 +231,249 @@ define test_any_true_fwn: TestMessage(not any_true_fwn, 'any_true_fwn', ToString
   End Aggregate Tests
 ***********************
 */
+
+
+/*
+**************************
+  Start Arithmetic Tests
+**************************
+*/
+
+define Ten: 10
+define Eleven: 11
+
+// Add
+define OnePlusTwo: 1 + 2
+define AddMultiple: 1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 + 9 + 10
+define AddVariables: Ten + Eleven
+
+define test_OnePlusTwo: TestMessage(OnePlusTwo = 3, 'OnePlusTwo', ToString(3), ToString(OnePlusTwo))
+define test_AddMultiple: TestMessage(AddMultiple = 55, 'AddMultiple', ToString(55), ToString(AddMultiple))
+define test_AddVariables: TestMessage(AddVariables = 21, 'AddVariables', ToString(21), ToString(AddVariables))
+
+// Subtract
+define FiveMinusTwo: 5 - 2
+define SubtractMultiple: 100 - 50 - 25 - 10
+define SubtractVariables: Eleven - Ten
+
+define test_FiveMinusTwo: TestMessage(FiveMinusTwo = 3, 'FiveMinusTwo', ToString(3), ToString(FiveMinusTwo))
+define test_SubtractMultiple: TestMessage(SubtractMultiple = 15, 'SubtractMultiple', ToString(15), ToString(SubtractMultiple))
+define test_SubtractVariables: TestMessage(SubtractVariables = 1, 'SubtractVariables', ToString(1), ToString(SubtractVariables))
+
+// Multiply
+define FiveTimesTwo: 5 * 2
+define MultiplyMultiple: 1 * 2 * 3 * 4 * 5
+define MultiplyVariables: Eleven * Ten
+
+define test_FiveTimesTwo: TestMessage(FiveTimesTwo = 10, 'FiveTimesTwo', ToString(10), ToString(FiveTimesTwo))
+define test_MultiplyMultiple: TestMessage(MultiplyMultiple = 120, 'MultiplyMultiple', ToString(120), ToString(MultiplyMultiple))
+define test_MultiplyVariables: TestMessage(MultiplyVariables = 110, 'MultiplyVariables', ToString(110), ToString(MultiplyVariables))
+
+// Divide
+define Hundred: 100
+define Four: 4
+define TenDividedByTwo: 10 / 2
+define TenDividedByFour: 10 / 4
+define DivideMultiple: 1000 / 4 / 10 / 5
+define DivideVariables: Hundred / Four
+
+define test_TenDividedByTwo: TestMessage(TenDividedByTwo = 5, 'TenDividedByTwo', ToString(5), ToString(TenDividedByTwo))
+define test_TenDividedByFour: TestMessage(TenDividedByFour = 2.5, 'TenDividedByFour', ToString(2.5), ToString(TenDividedByFour))
+define test_DivideMultiple: TestMessage(DivideMultiple = 5, 'DivideMultiple', ToString(5), ToString(DivideMultiple))
+define test_DivideVariables: TestMessage(DivideVariables = 25, 'DivideVariables', ToString(25), ToString(DivideVariables))
+
+// Negate
+define NegativeOne: -1
+
+define test_NegativeOne: TestMessage(NegativeOne = -1, 'NegativeOne', ToString(-1), ToString(NegativeOne))
+
+// MathPrecedence
+define Mixed: 1 + 5 * 10 - 15 / 3
+define Parenthetical: (1 + 5) * (10 - 15) / 3
+
+define test_Mixed: TestMessage(Mixed = 46, 'Mixed', ToString(46), ToString(Mixed))
+define test_Parenthetical: TestMessage(Parenthetical = -10, 'Parenthetical', ToString(-10), ToString(Parenthetical))
+
+// Power
+define Pow: 3 ^ 4
+
+define test_Pow: TestMessage(Pow = 81, 'Pow', ToString(81), ToString(Pow))
+
+// MinValue
+define MinInteger: minimum Integer
+define MinDecimal: minimum Decimal
+define MinDateTime: minimum  DateTime
+define MinTime: minimum Time
+// TODO - add to error tests
+// define MinWrongType: minimum Quantity
+
+define test_MinInteger: TestMessage(MinInteger = -2147483648, 'MinInteger', ToString(-2147483648), ToString(MinInteger))
+define test_MinDecimal: TestMessage(MinDecimal = -9999999999999999999999999999.99999999, 'MinDecimal', ToString(-9999999999999999999999999999.99999999), ToString(MinDecimal))
+define test_MinDateTime: TestMessage(MinDateTime = @0001-01-01T00:00:00.000, 'MinDateTime', ToString(@0001-01-01T00:00:00.000), ToString(MinDateTime))
+define test_MinTime: TestMessage(MinTime = @T00:00:00.000, 'MinTime', ToString(@T00:00:00.000), ToString(MinTime))
+
+// MaxValue
+define MaxInteger: maximum Integer
+define MaxDecimal: maximum Decimal
+define MaxDateTime: maximum DateTime
+define MaxTime: maximum Time
+// TODO - add to error tests
+// define MaxWrongType: maximum Quantity
+
+define test_MaxInteger: TestMessage(MaxInteger = 2147483647, 'MaxInteger', ToString(2147483647), ToString(MaxInteger))
+define test_MaxDecimal: TestMessage(MaxDecimal = 9999999999999999999999999999.99999999, 'MaxDecimal', ToString(9999999999999999999999999999.99999999), ToString(MaxDecimal))
+define test_MaxDateTime: TestMessage(MaxDateTime = @9999-12-31T23:59:59.999, 'MaxDateTime', ToString(@9999-12-31T23:59:59.999), ToString(MaxDateTime))
+define test_MaxTime: TestMessage(MaxTime = @T23:59:59.999, 'MaxTime', ToString(@T23:59:59.999), ToString(MaxTime))
+
+// TruncatedDivide
+define TruncDivide: 10 div 3
+define TruncDivideEven: 9 div 3
+
+define test_TruncDivide: TestMessage(TruncDivide = 3, 'TruncDivide', ToString(3), ToString(TruncDivide))
+define test_TruncDivideEven: TestMessage(TruncDivideEven = 3, 'TruncDivideEven', ToString(3), ToString(TruncDivideEven))
+
+// Modulo
+define Mod: 3 mod 2
+
+define test_Mod: TestMessage(Mod = 1, 'Mod', ToString(1), ToString(Mod))
+
+// Ceiling
+define Ceil: Ceiling(10.1)
+define CeilEven: Ceiling(10)
+
+define test_Ceil: TestMessage(Ceil = 11, 'Ceil', ToString(11), ToString(Ceil))
+define test_CeilEven: TestMessage(CeilEven = 10, 'CeilEven', ToString(10), ToString(CeilEven))
+
+// Floor
+define Floor: Floor(10.1)
+define FloorEven: Floor(10)
+
+define test_Floor: TestMessage(Floor = 10, 'Floor', ToString(10), ToString(Floor))
+define test_FloorEven: TestMessage(FloorEven = 10, 'FloorEven', ToString(10), ToString(FloorEven))
+
+// Truncate
+define Trunc: Truncate(10.1)
+define TruncEven: Truncate(10)
+
+define test_Trunc: TestMessage(Trunc = 10, 'Trunc', ToString(10), ToString(Trunc))
+define test_TruncEven: TestMessage(TruncEven = 10, 'TruncEven', ToString(10), ToString(TruncEven))
+
+// Abs
+define AbsPos: Abs(10)
+define AbsNeg: Abs(-10)
+define AbsZero: Abs(0)
+
+define test_AbsPos: TestMessage(AbsPos = 10, 'AbsPos', ToString(10), ToString(AbsPos))
+define test_AbsNeg: TestMessage(AbsNeg = 10, 'AbsNeg', ToString(10), ToString(AbsNeg))
+define test_AbsZero: TestMessage(AbsZero = 0, 'AbsZero', ToString(0), ToString(AbsZero))
+
+// Round
+define RoundUp: Round(4.56)
+define RoundUp_percent: Round(4.56,1)
+define RoundDown: Round(4.49)
+define RoundDown_percent: Round(4.43,1)
+
+define test_RoundUp: TestMessage(RoundUp = 5, 'RoundUp', ToString(5), ToString(RoundUp))
+define test_RoundUp_percent: TestMessage(RoundUp_percent = 4.6, 'RoundUp_percent', ToString(4.6), ToString(RoundUp_percent))
+define test_RoundDown: TestMessage(RoundDown = 4, 'RoundDown', ToString(4), ToString(RoundDown))
+define test_RoundDown_percent: TestMessage(RoundDown_percent = 4.4, 'RoundDown_percent', ToString(4.4), ToString(RoundDown_percent))
+
+// Ln
+define ln: Ln(4)
+
+define test_ln: TestMessage(ln = 1.38629436, 'ln', ToString(1.38629436), ToString(ln))
+
+// Log
+define log: Log(10000,10)
+
+define test_log: TestMessage(log = 4, 'log', ToString(4), ToString(log))
+
+// Successor
+define successor_Is: successor of 2
+define successor_Rs: successor of 2.2
+define successor_y_date: successor of DateTime(2015)
+define successor_ym_date: successor of DateTime(2015,01)
+define successor_ymd_date: successor of DateTime(2015,01,01)
+define successor_ymdh_date: successor of DateTime(2015,01,01,0)
+define successor_ymdhm_date: successor of DateTime(2015,01,01,0,0)
+define successor_ymdhms_date: successor of DateTime(2015,01,01,0,0,0)
+define successor_ymdhmsm_date: successor of  DateTime(2015,01,01,0,0,0,0)
+// TODO - add to error tests
+// define successor_max_date: successor of DateTime(9999,12,31,23,59,59,999)
+// define successor_ofr: successor of 2147483647
+
+define test_successor_Is: TestMessage(successor_Is = 3, 'successor_Is', ToString(3), ToString(successor_Is))
+define test_successor_Rs: TestMessage(successor_Rs = 2.20000001, 'successor_Rs', ToString(2.20000001), ToString(successor_Rs))
+define test_successor_y_date: TestMessage(successor_y_date = DateTime(2016), 'successor_y_date', ToString(DateTime(2016)), ToString(successor_y_date))
+define test_successor_ym_date: TestMessage(successor_ym_date = DateTime(2015, 2), 'successor_ym_date', ToString(DateTime(2015, 2)), ToString(successor_ym_date))
+define test_successor_ymd_date: TestMessage(successor_ymd_date = DateTime(2015, 1, 2), 'successor_ymd_date', ToString(DateTime(2015, 1, 2)), ToString(successor_ymd_date))
+define test_successor_ymdh_date: TestMessage(successor_ymdh_date = DateTime(2015, 1, 1, 1), 'successor_ymdh_date', ToString(DateTime(2015, 1, 1, 1)), ToString(successor_ymdh_date))
+define test_successor_ymdhm_date: TestMessage(successor_ymdhm_date = DateTime(2015, 1, 1, 0, 1), 'successor_ymdhm_date', ToString(DateTime(2015, 1, 1, 0, 1)), ToString(successor_ymdhm_date))
+define test_successor_ymdhms_date: TestMessage(successor_ymdhms_date = DateTime(2015, 1, 1, 0, 0, 1), 'successor_ymdhms_date', ToString(DateTime(2015, 1, 1, 0, 0, 1)), ToString(successor_ymdhms_date))
+define test_successor_ymdhmsm_date: TestMessage(successor_ymdhmsm_date = DateTime(2015, 1, 1, 0, 0, 0, 1), 'successor_ymdhmsm_date', ToString(DateTime(2015, 1, 1, 0, 0, 0, 1)), ToString(successor_ymdhmsm_date))
+
+// Predecessor
+define predecessor_Is: predecessor of 2
+define predecessor_Rs: predecessor of 2.2
+define predecessor_y_date: predecessor of DateTime(2015)
+define predecessor_ym_date: predecessor of DateTime(2015,01)
+define predecessor_ymd_date: predecessor of DateTime(2015,01,01)
+define predecessor_ymdh_date: predecessor of DateTime(2015,01,01,0)
+define predecessor_ymdhm_date: predecessor of DateTime(2015,01,01,0,0)
+define predecessor_ymdhms_date: predecessor of DateTime(2015,01,01,0,0,0)
+define predecessor_ymdhmsm_date: predecessor of DateTime(2015,01,01,0,0,0,0)
+// TODO - add to error tests
+// define predecessor_min_date: predecessor of DateTime(0001,01,01,0,0,0,0)
+// define predecessor_ufr: predecessor of -2147483648
+
+define test_predecessor_Is: TestMessage(predecessor_Is = 1, 'predecessor_Is', ToString(1), ToString(predecessor_Is))
+define test_predecessor_Rs: TestMessage(predecessor_Rs = 2.19999999, 'predecessor_Rs', ToString(2.19999999), ToString(predecessor_Rs))
+define test_predecessor_y_date: TestMessage(predecessor_y_date = DateTime(2014), 'predecessor_y_date', ToString(DateTime(2014)), ToString(predecessor_y_date))
+define test_predecessor_ym_date: TestMessage(predecessor_ym_date = DateTime(2014, 12), 'predecessor_ym_date', ToString(DateTime(2014, 12)), ToString(predecessor_ym_date))
+define test_predecessor_ymd_date: TestMessage(predecessor_ymd_date = DateTime(2014, 12, 31), 'predecessor_ymd_date', ToString(DateTime(2014, 12, 31)), ToString(predecessor_ymd_date))
+define test_predecessor_ymdh_date: TestMessage(predecessor_ymdh_date = DateTime(2014, 12, 31, 23), 'predecessor_ymdh_date', ToString(DateTime(2014, 12, 31, 23)), ToString(predecessor_ymdh_date))
+define test_predecessor_ymdhm_date: TestMessage(predecessor_ymdhm_date = DateTime(2014, 12, 31, 23, 59), 'predecessor_ymdhm_date', ToString(DateTime(2014, 12, 31, 23, 59)), ToString(predecessor_ymdhm_date))
+define test_predecessor_ymdhms_date: TestMessage(predecessor_ymdhms_date = DateTime(2014, 12, 31, 23, 59, 59), 'predecessor_ymdhms_date', ToString(DateTime(2014, 12, 31, 23, 59, 59)), ToString(predecessor_ymdhms_date))
+define test_predecessor_ymdhmsm_date: TestMessage(predecessor_ymdhmsm_date = DateTime(2014, 12, 31, 23, 59, 59, 999), 'predecessor_ymdhmsm_date', ToString(DateTime(2014, 12, 31, 23, 59, 59, 999)), ToString(predecessor_ymdhmsm_date))
+
+// Quantity
+define quantity_days_10: 10 days
+define quantity_QL10Days: Quantity{value: 10, unit: 'days'}
+define quantity_QL10Min : Quantity{value: 10, unit: 'min' }
+define quantity_Jan1_2000: DateTime(2000, 1, 1)
+
+define quantity_add_q_q : quantity_days_10 + quantity_QL10Days
+define quantity_add_d_q : quantity_Jan1_2000 + quantity_days_10
+define quantity_sub_q_q : quantity_days_10 - quantity_QL10Days
+define quantity_sub_d_q : quantity_Jan1_2000 - quantity_days_10
+// TODO - implement for Quantity
+// define quantity_add_q_q_diff : quantity_QL10Days + quantity_QL10Min
+// define quantity_sub_q_q_diff : quantity_QL10Days - quantity_QL10Min
+// define quantity_div_q_q : quantity_days_10 / QL10Days
+// define quantity_mul_q_q : 2 'm' * 10 'm'
+// define quantity_mul_q_q_diff : 2 'm' * 10 '/d'
+// define quantity_MultiplyUcum: (5 'm' * 25 'km') = 125000 'm2'
+// define quantity_DivideUcum: (20 'm2' / 5 'm') = 4 'm'
+// define quantity_AddUcum: (5 'm' + 5 'km') = 5005 'm'
+// define quantity_SubtractUcum: (25 'km' - 5 'm') = 24995 'm'
+define quantity_div_q_d : quantity_days_10 / 2
+define quantity_mul_q_d : quantity_days_10 * 2
+define quantity_mul_d_q : 2 * quantity_QL10Days
+define quantity_neg : - quantity_days_10
+define quantity_abs : Abs(quantity_neg)
+
+define test_quantity_add_q_q: TestMessage(quantity_add_q_q = 20 days, 'quantity_add_q_q', ToString(20 days), ToString(quantity_add_q_q))
+define test_quantity_add_d_q: TestMessage(quantity_add_d_q = DateTime(2000, 1, 11), 'quantity_add_d_q', ToString(DateTime(2000, 1, 11)), ToString(quantity_add_d_q))
+define test_quantity_sub_q_q: TestMessage(quantity_sub_q_q = 0 days, 'quantity_sub_q_q', ToString(0 days), ToString(quantity_sub_q_q))
+define test_quantity_sub_d_q: TestMessage(quantity_sub_d_q = DateTime(1999, 12, 22), 'quantity_sub_d_q', ToString(DateTime(1999, 12, 22)), ToString(quantity_sub_d_q))
+define test_quantity_div_q_d: TestMessage(quantity_div_q_d = 5 days, 'quantity_div_q_d', ToString(5 days), ToString(quantity_div_q_d))
+define test_quantity_mul_q_d: TestMessage(quantity_mul_q_d = 20 days, 'quantity_mul_q_d', ToString(20 days), ToString(quantity_mul_q_d))
+define test_quantity_mul_d_q: TestMessage(quantity_mul_d_q = 20 days, 'quantity_mul_d_q', ToString(20 days), ToString(quantity_mul_d_q))
+define test_quantity_neg: TestMessage(quantity_neg = -10 days, 'quantity_neg', ToString(-10 days), ToString(quantity_neg))
+define test_quantity_abs: TestMessage(quantity_abs = 10 days, 'quantity_abs', ToString(10 days), ToString(quantity_abs))
+
+/*
+************************
+  End Arithmetic Tests
+************************
+*/

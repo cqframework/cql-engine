@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /*
@@ -26,10 +28,10 @@ public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
             Double value = Math.log(((BigDecimal)left).doubleValue());
 
             if (base == 0) {
-                return new BigDecimal(value);
+                return Value.verifyPrecision(new BigDecimal(value));
             }
 
-            return new BigDecimal(value / base);
+            return Value.verifyPrecision(new BigDecimal(value / base));
         }
 
         throw new IllegalArgumentException(String.format("Cannot perform Log operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
