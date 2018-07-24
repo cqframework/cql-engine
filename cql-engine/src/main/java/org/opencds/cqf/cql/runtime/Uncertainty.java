@@ -60,7 +60,7 @@ public class Uncertainty {
         return bt instanceof DateTime ? isUncertain((DateTime) bt, precision) : isUncertain((Time) bt, precision);
     }
 
-    public static Uncertainty resolveUncertaintyWithFunction(BaseTemporal leftTemporal, BaseTemporal rightTemporal,
+    public static Interval resolveUncertaintyWithFunction(BaseTemporal leftTemporal, BaseTemporal rightTemporal,
                                                              String precision, Object theClass, Method method, int index)
             throws InvocationTargetException, IllegalAccessException
     {
@@ -70,25 +70,19 @@ public class Uncertainty {
                 ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) leftTemporal, precision);
                 Object[] lowParams = {highLow.get(1), rightTemporal, index, true};
                 Object[] highParams = {highLow.get(0), rightTemporal, index, true};
-                return new Uncertainty()
-                        .withUncertaintyInterval(
-                                new Interval(
-                                        method.invoke(theClass, lowParams), true,
-                                        method.invoke(theClass, highParams), true
-                                )
-                        );
+                return new Interval(
+                        method.invoke(theClass, lowParams), true,
+                        method.invoke(theClass, highParams), true
+                ).setUncertain(true);
             }
             else {
                 ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) leftTemporal, precision);
                 Object[] lowParams = {highLow.get(1), rightTemporal, index, false};
                 Object[] highParams = {highLow.get(0), rightTemporal, index, false};
-                return new Uncertainty()
-                        .withUncertaintyInterval(
-                                new Interval(
-                                        method.invoke(theClass, lowParams), true,
-                                        method.invoke(theClass, highParams), true
-                                )
-                        );
+                return new Interval(
+                        method.invoke(theClass, lowParams), true,
+                        method.invoke(theClass, highParams), true
+                ).setUncertain(true);
             }
         }
 
@@ -97,25 +91,19 @@ public class Uncertainty {
                 ArrayList<DateTime> highLow = Uncertainty.getHighLowList((DateTime) rightTemporal, precision);
                 Object[] lowParams = {leftTemporal, highLow.get(0), index, true};
                 Object[] highParams = {leftTemporal, highLow.get(1), index, true};
-                return new Uncertainty()
-                        .withUncertaintyInterval(
-                                new Interval(
-                                        method.invoke(theClass, lowParams), true,
-                                        method.invoke(theClass, highParams), true
-                                )
-                        );
+                return new Interval(
+                        method.invoke(theClass, lowParams), true,
+                        method.invoke(theClass, highParams), true
+                ).setUncertain(true);
             }
             else {
                 ArrayList<Time> highLow = Uncertainty.getHighLowList((Time) rightTemporal, precision);
                 Object[] lowParams = {leftTemporal, highLow.get(0), index, false};
                 Object[] highParams = {leftTemporal, highLow.get(1), index, false};
-                return new Uncertainty()
-                        .withUncertaintyInterval(
-                                new Interval(
-                                        method.invoke(theClass, lowParams), true,
-                                        method.invoke(theClass, highParams), true
-                                )
-                        );
+                return new Interval(
+                        method.invoke(theClass, lowParams), true,
+                        method.invoke(theClass, highParams), true
+                ).setUncertain(true);
             }
         }
         return null;
@@ -150,6 +138,9 @@ public class Uncertainty {
             DateTime high = new DateTime(uncertain.getPartial(), uncertain.getTimezone());
 
             int idx = DateTime.getFieldIndex(precision);
+            if (idx == 7) {
+                idx = 2;
+            }
             if (idx == -1) { idx = DateTime.getFieldIndex(precision); }
             if (idx != -1) {
                 // expand the high and low date times with respective max and min values

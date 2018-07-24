@@ -40,7 +40,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
                     unit += c;
                 }
 
-                else if (c == ' ') {
+                else if (c == ' ' || c == '\'') {
                     continue;
                 }
 
@@ -48,7 +48,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
                     throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
                 }
             }
-            return new Quantity().withValue(new BigDecimal(number)).withUnit(unit.toLowerCase());
+            return new Quantity().withValue(new BigDecimal(number)).withUnit(unit);
         }
 
         throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String values.", operand.getClass().getName()));

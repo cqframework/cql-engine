@@ -71,18 +71,12 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
             else if (rightStart instanceof BaseTemporal) {
                 Boolean sameOrAfter = SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision);
                 Boolean sameOrBefore = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
-                if (sameOrAfter == null || sameOrBefore == null) {
-                    return null;
-                }
-                return sameOrAfter && sameOrBefore;
+                return AndEvaluator.and(sameOrAfter, sameOrBefore);
             }
 
             Boolean greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart);
             Boolean lessOrEqual = LessOrEqualEvaluator.lessOrEqual(left, rightEnd);
-            if (greaterOrEqual == null || lessOrEqual == null) {
-                return null;
-            }
-            return greaterOrEqual && lessOrEqual;
+            return AndEvaluator.and(greaterOrEqual, lessOrEqual);
         }
 
         throw new IllegalArgumentException(String.format("Cannot In arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));

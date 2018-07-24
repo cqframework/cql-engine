@@ -73,12 +73,6 @@ public class Time extends BaseTemporal implements CqlType {
         throw new IllegalArgumentException("Invalid index for Time unit request.");
     }
 
-    public static Time getTimeOfDay() {
-        org.joda.time.DateTime dt = org.joda.time.DateTime.now();
-        int [] values = { dt.hourOfDay().get(), dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
-        return new Time(new Partial(fields, values), dt.getZone());
-    }
-
     public static Time expandPartialMin(Time dt, int size) {
         for (int i = dt.getPartial().size(); i < size; ++i) {
             dt.setPartial(dt.getPartial().with(getField(i), getField(i).getField(null).getMinimumValue()));

@@ -68,14 +68,23 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
                 // check level of precision
                 if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
 
+                    // get the precision of the uncertain DateTime/Time value
                     if (Uncertainty.isUncertain(leftTemporal, precision)) {
-                        return LessEvaluator.less(((List) Uncertainty.getHighLowList(leftTemporal, precision)).get(0), rightTemporal);
+                        idx = leftTemporal.getPartial().size() - 1;
+                    } else if (Uncertainty.isUncertain(rightTemporal, precision)) {
+                        idx = rightTemporal.getPartial().size() - 1;
                     }
 
-                    else if (Uncertainty.isUncertain(rightTemporal, precision)) {
-                        return LessEvaluator.less(leftTemporal, ((List)Uncertainty.getHighLowList(rightTemporal, precision)).get(1));
+                    // if not equal do After to that precision
+                    if (leftTemporal instanceof DateTime && !SameAsEvaluator.sameAs(leftTemporal, rightTemporal, DateTime.getUnit(idx))) {
+                        return before(leftTemporal, rightTemporal, DateTime.getUnit(idx));
                     }
 
+                    else if (leftTemporal instanceof Time && !SameAsEvaluator.sameAs(leftTemporal, rightTemporal, Time.getUnit(idx))) {
+                        return before(leftTemporal, rightTemporal, Time.getUnit(idx));
+                    }
+
+                    // else null
                     return null;
                 }
 

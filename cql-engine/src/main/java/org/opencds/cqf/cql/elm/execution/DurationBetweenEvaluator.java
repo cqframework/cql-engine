@@ -103,7 +103,7 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
             if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
                 DurationBetweenEvaluator evaluator = new DurationBetweenEvaluator();
                 Method method = evaluator.getClass().getMethod("between", BaseTemporal.class, BaseTemporal.class, int.class, boolean.class);
-                return resolveUncertaintyWithFunction(leftTemporal, rightTemporal, precision, evaluator, method, index);
+                return resolveUncertaintyWithFunction(leftTemporal, rightTemporal, precision, evaluator, method, weeks ? 7 : index);
             }
 
             if (weeks) {

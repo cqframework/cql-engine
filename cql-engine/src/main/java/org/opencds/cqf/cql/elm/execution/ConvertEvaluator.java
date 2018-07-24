@@ -11,16 +11,16 @@ The result of the operator is the value of the argument converted to the target 
   Note that use of this operator may result in a run-time exception being thrown if there is no valid
     conversion from the actual value to the target type.
 The following table lists the conversions supported in CQL:
-From\To	  Boolean	  Integer	  Decimal	  Quantity	String	Datetime	Time	Code	Concept
-Boolean	    N/A	      -	        -	          -	   Explicit	   -	      -	    -	     -
-Integer	     -	     N/A	   Implicit	      -	   Explicit	   -	      -	    -	     -
-Decimal	     -	      -	       N/A	        -	   Explicit	   - 	      -	    -	     -
-Quantity	   -	      -	        -	         N/A	 Explicit	   -	      -	    -	     -
-String	  Explicit Explicit	 Explicit	  Explicit	 N/A	  Explicit Explicit	-	     -
-Datetime	   -	      -	        -	          -	   Explicit	  N/A	      -	    -	     -
-Time	       -	      -	        -	          -	   Explicit	   -	     N/A	  -	     -
-Code	       -	      -	        -	          -	      -	       -	      -	   N/A	Implicit
-Concept	     -	      -	        -	          -	      -	       -	      -	    -	    N/A
+From\To	  Boolean	  Integer	  Decimal	  Quantity	String	 Datetime	 Time	 Code	Concept
+Boolean	    N/A	        -	        -	         -	   Explicit	    -	      -	      -	      -
+Integer	     -	       N/A	     Implicit	     -	   Explicit	    -	      -	      -	      -
+Decimal	     -	        -	       N/A	         -	   Explicit	    - 	      -	      -	      -
+Quantity	 -	        -	        -	         N/A   Explicit	    -	      -	      -	      -
+String	  Explicit   Explicit	 Explicit	  Explicit	 N/A	 Explicit   Explicit  -	      -
+Datetime	 -	        -	        -	          -	   Explicit	   N/A	      -	      -	      -
+Time	     -	        -	        -	          -	   Explicit	    -	     N/A	  -	      -
+Code	     -	        -	        -	          -	      -	        -	      -	     N/A   Implicit
+Concept	     -	        -	        -	          -	      -	        -	      -	      -	     N/A
 
 For conversions between date/time and string values, ISO-8601 standard format is used:
 yyyy-MM-ddThh:mm:ss.fff(Z | +/- hh:mm)

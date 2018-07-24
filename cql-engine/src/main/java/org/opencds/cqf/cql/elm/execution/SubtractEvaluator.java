@@ -108,10 +108,10 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
             return ret;
         }
 
-        else if (left instanceof Uncertainty && right instanceof Uncertainty) {
-            Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
-            Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
-            return new Uncertainty().withUncertaintyInterval(new Interval(subtract(leftInterval.getStart(), rightInterval.getStart()), true, subtract(leftInterval.getEnd(), rightInterval.getEnd()), true));
+        else if (left instanceof Interval && right instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+            Interval rightInterval = (Interval)right;
+            return new Interval(subtract(leftInterval.getStart(), rightInterval.getStart()), true, subtract(leftInterval.getEnd(), rightInterval.getEnd()), true);
         }
 
         // -(Time, Quantity)

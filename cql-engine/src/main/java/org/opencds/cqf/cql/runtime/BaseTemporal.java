@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.runtime;
 import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.opencds.cqf.cql.elm.execution.SameAsEvaluator;
 
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
@@ -173,12 +174,33 @@ public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> 
     }
 
     public static String getHighestPrecision(BaseTemporal ... values) {
-        int max = 6;
+        int max = -1;
         for (BaseTemporal baseTemporal : values) {
-            max = baseTemporal.partial.size() - 1;
+            if (baseTemporal.partial.size() - 1 > max) {
+                max = baseTemporal.partial.size() - 1;
+            }
+        }
+
+        if (max == -1) {
+            max = 6;
         }
 
         return values[0] instanceof DateTime ? DateTime.getUnit(max) : Time.getUnit(max);
+    }
+
+    public static String getLowestPrecision(BaseTemporal ... values) {
+        int min = 999;
+        for (BaseTemporal baseTemporal : values) {
+            if (baseTemporal.partial.size() - 1 < min) {
+                min = baseTemporal.partial.size() - 1;
+            }
+        }
+
+        if (min == 999) {
+            min = 0;
+        }
+
+        return values[0] instanceof DateTime ? DateTime.getUnit(min) : Time.getUnit(min);
     }
 
     public Integer compare(BaseTemporal other, Boolean forSort) {
@@ -236,10 +258,13 @@ public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> 
 
     @Override
     public Boolean equal(Object other) {
-        if (this.getPartial().size() != ((BaseTemporal) other).getPartial().size()) { // Uncertainty
-            return null;
+        Boolean isSame = SameAsEvaluator.sameAs(this, other, getLowestPrecision(this, (BaseTemporal) other));
+        if (isSame != null && isSame) {
+            if (this.getPartial().size() != ((BaseTemporal) other).getPartial().size()) { // Uncertainty
+                return null;
+            }
         }
-        return ((BaseTemporal) other).getJodaDateTime().toInstant().compareTo(this.getJodaDateTime().toInstant()) == 0;
+        return isSame;
     }
 
     @Override

@@ -464,19 +464,23 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(-788));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainInterval").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(17, true, 44, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(17));
+        Assert.assertTrue(((Interval)result).getEnd().equals(44));
 
         // result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainInterval2").getExpression().evaluate(context);
         // assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(5, true, 17, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainAdd").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(34, true, 88, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(34));
+        Assert.assertTrue(((Interval)result).getEnd().equals(88));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainSubtract").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(12, true, 28, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(12));
+        Assert.assertTrue(((Interval)result).getEnd().equals(28));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainMultiply").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(289, true, 1936, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(289));
+        Assert.assertTrue(((Interval)result).getEnd().equals(1936));
 
         try {
             result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainDiv").getExpression().evaluate(context);

@@ -298,6 +298,9 @@ public class Context {
             return List.class;
             //return resolveType(((ListTypeSpecifier)typeSpecifier).getElementType());
         }
+        else if (typeSpecifier instanceof IntervalTypeSpecifier) {
+            return org.opencds.cqf.cql.runtime.Interval.class;
+        }
         else if (typeSpecifier instanceof ChoiceTypeSpecifier) {
             // TODO: This doesn't allow for choice-distinguished overloads...
             return Object.class;

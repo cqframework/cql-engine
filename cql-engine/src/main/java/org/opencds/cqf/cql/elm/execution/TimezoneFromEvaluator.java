@@ -17,6 +17,10 @@ NOTE: this is within the purview of DateTimeComponentFrom
 public class TimezoneFromEvaluator extends org.cqframework.cql.elm.execution.TimezoneFrom {
 
     public static Object timezoneFrom(Object operand) {
+        if (operand == null) {
+            return null;
+        }
+
         if (operand instanceof DateTime) {
             return ((DateTime)operand).getTimezoneOffset();
         }

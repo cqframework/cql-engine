@@ -17,14 +17,14 @@ If the source is null, the result is null.
  */
 public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue {
 
-    public static Object allTrue(Object src) {
+    public static Boolean allTrue(Object src) {
         if (src == null) {
-            return true;
+            return null;
         }
 
-        if(src instanceof Iterable) {
-            Iterable<Object> element = (Iterable<Object>)src;
-            Iterator<Object> elemsItr = element.iterator();
+        if (src instanceof Iterable) {
+            Iterable element = (Iterable)src;
+            Iterator elemsItr = element.iterator();
 
             if (!elemsItr.hasNext()) { // empty list
                 return true;
@@ -36,24 +36,27 @@ public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue 
                 if (exp == null) { // skip null
                     continue;
                 }
-                Boolean boolVal = (Boolean) exp;
 
-                if (Boolean.FALSE == boolVal) return false;
+                if (exp instanceof Boolean) {
+                    Boolean boolVal = (Boolean) exp;
+
+                    if (!boolVal) {
+                        return false;
+                    }
+                }
+                else {
+                    throw new IllegalArgumentException(String.format("Cannot perform AllTrue operator on List with type %s", exp.getClass().getSimpleName()));
+                }
             }
+            return true;
         }
 
-        else {
-            return null;
-        }
-
-        return true;
+        throw new IllegalArgumentException(String.format("Cannot perform AllTrue operator on type %s", src.getClass().getSimpleName()));
     }
 
     @Override
     public Object evaluate(Context context) {
-
         Object src = getSource().evaluate(context);
-
         return context.logTrace(this.getClass(), allTrue(src), src);
     }
 }

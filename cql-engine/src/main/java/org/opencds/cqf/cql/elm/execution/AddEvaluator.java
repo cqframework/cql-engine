@@ -113,10 +113,10 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         }
 
         // +(Uncertainty, Uncertainty)
-        else if (left instanceof Uncertainty && right instanceof Uncertainty) {
-            Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
-            Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
-            return new Uncertainty().withUncertaintyInterval(new Interval(add(leftInterval.getStart(), rightInterval.getStart()), true, add(leftInterval.getEnd(), rightInterval.getEnd()), true));
+        else if (left instanceof Interval && right instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+            Interval rightInterval = (Interval)right;
+            return new Interval(add(leftInterval.getStart(), rightInterval.getStart()), true, add(leftInterval.getEnd(), rightInterval.getEnd()), true);
         }
 
         // +(Time, Quantity)

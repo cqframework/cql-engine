@@ -89,12 +89,15 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
             if (idx != -1) {
                 // check level of precision
                 if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
-                    return null;
+                    Boolean isLessOrEqual = LessOrEqualEvaluator.lessOrEqual(leftTemporal, rightTemporal);
+                    if (isLessOrEqual == null || leftTemporal.getPartial().size() == rightTemporal.getPartial().size()) {
+                        return null;
+                    }
+                    return isLessOrEqual;
                 }
 
                 Instant leftInstant = leftTemporal.getJodaDateTime().toInstant();
                 Instant rightInstant = rightTemporal.getJodaDateTime().toInstant();
-
                 for (int i = 0; i < idx + 1; ++i) {
                     if (leftInstant.get(DateTime.getField(i)) < rightInstant.get(DateTime.getField(i)))
                     {

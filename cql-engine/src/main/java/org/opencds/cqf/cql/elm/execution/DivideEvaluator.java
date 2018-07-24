@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Value;
 
@@ -26,43 +27,50 @@ If either argument is null, the result is null.
  */
 public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
 
-  private static BigDecimal divideHelper(BigDecimal left, BigDecimal right) {
-    if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
-      return null;
+    private static BigDecimal divideHelper(BigDecimal left, BigDecimal right) {
+        if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
+            return null;
+        }
+
+        try {
+            return Value.verifyPrecision(left.divide(right));
+        } catch (ArithmeticException e) {
+            return left.divide(right, 8, RoundingMode.FLOOR);
+        }
     }
 
-    try {
-      return Value.verifyPrecision(left.divide(right));
-    } catch (ArithmeticException e) {
-      return left.divide(right, 8, RoundingMode.FLOOR);
+    public static Object divide(Object left, Object right) {
+
+        if (left == null || right == null) {
+            return null;
+        }
+
+        if (left instanceof BigDecimal && right instanceof BigDecimal) {
+            return divideHelper((BigDecimal) left, (BigDecimal) right);
+        }
+
+        else if (left instanceof Quantity && right instanceof Quantity) {
+            BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue());
+            return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity) left).getUnit());
+        }
+
+        else if (left instanceof Quantity && right instanceof BigDecimal) {
+            BigDecimal value = divideHelper(((Quantity) left).getValue(), (BigDecimal) right);
+            return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity)left).getUnit());
+        }
+
+        else if (left instanceof Interval && right instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+            Interval rightInterval = (Interval)right;
+
+            return new Interval(divide(leftInterval.getStart(), rightInterval.getStart()), true, divide(leftInterval.getEnd(), rightInterval.getEnd()), true);
+        }
+
+        throw new IllegalArgumentException(
+                String.format("Cannot Divide arguments of type '%s' and '%s'.",
+                        left.getClass().getName(), right.getClass().getName())
+        );
     }
-  }
-
-  public static Object divide(Object left, Object right) {
-
-    if (left == null || right == null) {
-        return null;
-    }
-
-    if (left instanceof BigDecimal && right instanceof BigDecimal) {
-      return divideHelper((BigDecimal) left, (BigDecimal) right);
-    }
-
-    else if (left instanceof Quantity && right instanceof Quantity) {
-      BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue());
-      return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity) left).getUnit());
-    }
-
-    else if (left instanceof Quantity && right instanceof BigDecimal) {
-      BigDecimal value = divideHelper(((Quantity) left).getValue(), (BigDecimal) right);
-      return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity)left).getUnit());
-    }
-
-    throw new IllegalArgumentException(
-            String.format("Cannot Divide arguments of type '%s' and '%s'.",
-                    left.getClass().getName(), right.getClass().getName())
-    );
-  }
 
     @Override
     public Object evaluate(Context context) {

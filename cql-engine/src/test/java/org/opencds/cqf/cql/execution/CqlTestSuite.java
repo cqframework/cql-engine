@@ -11,7 +11,10 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.testng.annotations.BeforeClass;
+import org.joda.time.Partial;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
@@ -26,19 +29,21 @@ import static org.hamcrest.Matchers.is;
 
 public class CqlTestSuite {
 
+    final static Logger logger = LoggerFactory.getLogger(CqlTestSuite.class);
+
     // TODO - test value suites
 
     @Test
     public void testMainSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlTestSuite.cql");
-        Context context = new Context(library);
+        Context context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2018, 1, 1, 7, 0, 0, 0})));
         if (library.getStatements() != null) {
             for (ExpressionDef expression : library.getStatements().getDef()) {
                 if (expression instanceof FunctionDef) {
                     continue;
                 }
                 if (expression.getName().startsWith("test")) {
-                    System.out.println(expression.evaluate(context));
+                    logger.info((String) expression.evaluate(context));
                 }
             }
         }
@@ -68,6 +73,8 @@ public class CqlTestSuite {
 
         assertThat(translator.getErrors().size(), is(0));
 
-        return CqlLibraryReader.read(new StringReader(translator.toXml()));
+        String xml = translator.toXml();
+
+        return CqlLibraryReader.read(new StringReader(xml));
     }
 }

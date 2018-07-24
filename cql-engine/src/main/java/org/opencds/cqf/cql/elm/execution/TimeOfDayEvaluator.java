@@ -17,6 +17,6 @@ public class TimeOfDayEvaluator extends org.cqframework.cql.elm.execution.TimeOf
 
     @Override
     public Object evaluate(Context context) {
-        return context.logTrace(this.getClass(), Time.getTimeOfDay());
+        return context.logTrace(this.getClass(), TimeFromEvaluator.timeFrom(context.getEvaluationDateTime()));
     }
 }

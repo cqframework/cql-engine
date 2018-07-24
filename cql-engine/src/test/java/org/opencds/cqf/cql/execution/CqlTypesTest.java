@@ -117,7 +117,8 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2015, 2, 10})));
 
         result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(19, true, 49, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(19));
+        Assert.assertTrue(((Interval)result).getEnd().equals(49));
 
         result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
         assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));

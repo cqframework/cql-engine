@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.joda.time.LocalDate;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -18,15 +17,29 @@ NOTE: this is within the purview of DateTimeComponentFrom
 public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFrom {
 
     public static Object dateFrom(Object operand) {
-
         if (operand == null) {
             return null;
         }
 
         if (operand instanceof DateTime) {
             int year = ((DateTime)operand).getJodaDateTime().getYear();
-            int month = ((DateTime)operand).getJodaDateTime().getMonthOfYear();
-            int day = ((DateTime)operand).getJodaDateTime().getDayOfMonth();
+
+            int month;
+            if (((DateTime)operand).getPartial().size() > 1) {
+                month = ((DateTime)operand).getJodaDateTime().getMonthOfYear();
+            }
+            else {
+                return new DateTime(new Partial(DateTime.getFields(1), new int[]{year}), ((DateTime)operand).getTimezone());
+            }
+
+            int day;
+            if (((DateTime)operand).getPartial().size() > 2) {
+                day = ((DateTime)operand).getJodaDateTime().getDayOfMonth();
+            }
+            else {
+                return new DateTime(new Partial(DateTime.getFields(2), new int[]{year, month}), ((DateTime)operand).getTimezone());
+            }
+
             return new DateTime(new Partial(DateTime.getFields(3), new int[]{year, month, day}), ((DateTime)operand).getTimezone());
         }
 

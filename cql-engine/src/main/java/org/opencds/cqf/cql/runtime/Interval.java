@@ -5,6 +5,7 @@ import org.opencds.cqf.cql.elm.execution.*;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 /**
@@ -93,6 +94,15 @@ public class Interval implements CqlType, Comparable<Interval> {
 
     private Type pointType;
 
+    private boolean uncertain = false;
+    public boolean isUncertain() {
+        return uncertain;
+    }
+    public Interval setUncertain(boolean uncertain) {
+        this.uncertain = uncertain;
+        return this;
+    }
+
     /*
     Returns the starting point of the interval.
 
@@ -148,10 +158,26 @@ public class Interval implements CqlType, Comparable<Interval> {
 
     @Override
     public Boolean equal(Object other) {
-        return this.getLow() != null && EqualEvaluator.equal(this.getStart(), ((Interval) other).getStart())
-                && this.getLowClosed() == ((Interval) other).getLowClosed()
-                && this.getHigh() != null && EqualEvaluator.equal(this.getEnd(), ((Interval) other).getEnd())
-                && this.getHighClosed() == ((Interval) other).getHighClosed();
+        if (other instanceof Interval) {
+            if (isUncertain()) {
+                if (IntersectEvaluator.intersect(this, other) != null) {
+                    return null;
+                }
+            }
+
+            Interval otherInterval = (Interval) other;
+            return AndEvaluator.and(
+                    EqualEvaluator.equal(this.getStart(), otherInterval.getStart()),
+                    EqualEvaluator.equal(this.getEnd(), otherInterval.getEnd())
+            );
+
+        }
+
+        if (other instanceof Integer) {
+            return equal(new Interval(other, true, other, true));
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot perform equal operation on types: '%s' and '%s'", this.getClass().getName(), other.getClass().getName()));
     }
 
     @Override

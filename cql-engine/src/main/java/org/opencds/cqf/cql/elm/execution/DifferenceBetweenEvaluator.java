@@ -116,7 +116,7 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
             if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
                 DifferenceBetweenEvaluator evaluator = new DifferenceBetweenEvaluator();
                 Method method = evaluator.getClass().getMethod("between", BaseTemporal.class, BaseTemporal.class, int.class, boolean.class);
-                return resolveUncertaintyWithFunction(leftTemporal, rightTemporal, precision, evaluator, method, index);
+                return resolveUncertaintyWithFunction(leftTemporal, rightTemporal, precision, evaluator, method, weeks ? 7 : index);
             }
 
             // truncate Partial

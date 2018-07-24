@@ -65,10 +65,10 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
     }
 
     // *(Uncertainty, Uncertainty)
-    else if (left instanceof Uncertainty && right instanceof Uncertainty) {
-      Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
-      Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
-      return new Uncertainty().withUncertaintyInterval(new Interval(multiply(leftInterval.getStart(), rightInterval.getStart()), true, multiply(leftInterval.getEnd(), rightInterval.getEnd()), true));
+    else if (left instanceof Interval && right instanceof Interval) {
+      Interval leftInterval = (Interval)left;
+      Interval rightInterval = (Interval)right;
+      return new Interval(multiply(leftInterval.getStart(), rightInterval.getStart()), true, multiply(leftInterval.getEnd(), rightInterval.getEnd()), true);
     }
 
     throw new IllegalArgumentException(String.format("Cannot Multiply arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));

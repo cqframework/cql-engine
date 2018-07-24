@@ -81,7 +81,8 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(521683200));
 
         result = context.resolveExpressionRef("CalculateAgeAtUncertain").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(187, true, 198, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(187));
+        Assert.assertTrue(((Interval)result).getEnd().equals(198));
     }
 
     /**

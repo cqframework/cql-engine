@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.joda.time.Instant;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -45,12 +46,17 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
             if (idx != -1) {
                 // check level of precision
                 if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
-                    return null;
+                    Boolean isEqual = leftTemporal.equal(rightTemporal);
+                    if (isEqual == null || leftTemporal.getPartial().size() == rightTemporal.getPartial().size()) {
+                        return null;
+                    }
+                    return isEqual;
                 }
 
+                Instant jodaLeft = leftTemporal.getJodaDateTime().toInstant();
+                Instant jodaRight = rightTemporal.getJodaDateTime().toInstant();
                 for (int i = 0; i < idx + 1; ++i) {
-                    if (leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i))
-                            != rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i)))
+                    if (jodaLeft.get(DateTime.getField(i)) != jodaRight.get(DateTime.getField(i)))
                     {
                         return false;
                     }
@@ -71,7 +77,7 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-        String precision = getPrecision().value();
+        String precision = getPrecision() == null ? null : getPrecision().value();
 
         return context.logTrace(this.getClass(), sameAs(left, right, precision), left, right, precision);
     }

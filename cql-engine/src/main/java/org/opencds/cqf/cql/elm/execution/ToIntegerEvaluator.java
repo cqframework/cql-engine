@@ -29,7 +29,11 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
                 return Integer.parseInt((String) operand);
             }
             catch (NumberFormatException nfe) {
-                throw new NumberFormatException("Unable to convert given string to Integer");
+                try {
+                    return (int) Double.parseDouble((String) operand);
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Unable to convert given string to Integer");
+                }
             }
         }
         throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Boolean - use String values.", operand.getClass().getName()));

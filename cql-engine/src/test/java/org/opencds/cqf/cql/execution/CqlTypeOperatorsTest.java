@@ -187,7 +187,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is("18.55"));
 
         result = context.resolveExpressionRef("Quantity5D5CMToString").getExpression().evaluate(context);
-        assertThat(result, is("5.5cm"));
+        assertThat(result, is("5.5 'cm'"));
 
         result = context.resolveExpressionRef("BooleanTrueToString").getExpression().evaluate(context);
         assertThat(result, is("true"));
