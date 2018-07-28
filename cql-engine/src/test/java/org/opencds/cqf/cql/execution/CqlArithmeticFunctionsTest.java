@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.execution;
 
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -235,35 +236,35 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testLn() throws JAXBException {
-      Context context = new Context(library);
-      Object result;
+        Context context = new Context(library);
+        Object result;
 
-      result = context.resolveExpressionRef("LnNull").getExpression().evaluate(context);
-      assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef("LnNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-      try {
-        result = context.resolveExpressionRef("Ln0").getExpression().evaluate(context);
-      } catch (ArithmeticException ae) {
-        assertThat(ae.getMessage(), is("Results in negative infinity"));
-      }
+        try {
+            result = context.resolveExpressionRef("Ln0").getExpression().evaluate(context);
+        } catch (ArithmeticException ae) {
+            assertThat(ae.getMessage(), is("Results in negative infinity"));
+        }
 
-      try {
-        result = context.resolveExpressionRef("LnNeg0").getExpression().evaluate(context);
-      } catch (ArithmeticException ae) {
-        assertThat(ae.getMessage(), is("Results in negative infinity"));
-      }
+        try {
+            result = context.resolveExpressionRef("LnNeg0").getExpression().evaluate(context);
+        } catch (ArithmeticException ae) {
+            assertThat(ae.getMessage(), is("Results in negative infinity"));
+        }
 
-      result = context.resolveExpressionRef("Ln1").getExpression().evaluate(context);
-      assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0)));
+        result = context.resolveExpressionRef("Ln1").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0)));
 
-      result = context.resolveExpressionRef("LnNeg1").getExpression().evaluate(context);
-      assertThat(result, is(nullValue()));
+        result = context.resolveExpressionRef("LnNeg1").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-      result = context.resolveExpressionRef("Ln1000").getExpression().evaluate(context);
-      assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"))));
+        result = context.resolveExpressionRef("Ln1000").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"))));
 
-      result = context.resolveExpressionRef("Ln1000D").getExpression().evaluate(context);
-      assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("6.90775527")));
+        result = context.resolveExpressionRef("Ln1000D").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("6.90775527")));
     }
 
     /**
@@ -276,15 +277,14 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(Integer.MAX_VALUE));
 
         result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
-        Assert.assertTrue(((BigDecimal) result).compareTo((BigDecimal) Value.maxValue(BigDecimal.class)) == 0);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("9999999999999999999999999999.99999999")) == 0);
 
-        // OBSOLETE: QuantityMaxValue
-
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeMaxValue").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 9999, 12, 31, 23, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeMaxValue").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 999)));
     }
 
     /**
@@ -297,15 +297,14 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(Integer.MIN_VALUE));
 
         result = context.resolveExpressionRef("DecimalMinValue").getExpression().evaluate(context);
-        Assert.assertTrue(((BigDecimal) result).compareTo((BigDecimal) Value.minValue(BigDecimal.class)) == 0);
+        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("-9999999999999999999999999999.99999999")) == 0);
 
-        // OBSOLETE: QuantityMinValue
-
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeMinValue").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1, 1, 1, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeMinValue").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 0, 0, 0, 0)));
     }
 
     /**
@@ -421,31 +420,32 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(0));
 
         result = context.resolveExpressionRef("PredecessorOf1D").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Value.predecessor(new BigDecimal(1.0))));
+        assertThat((BigDecimal)result, comparesEqualTo((new BigDecimal("0.99999999"))));
 
         result = context.resolveExpressionRef("PredecessorOf101D").getExpression().evaluate(context);
-        assertThat(result, is(Value.predecessor(new BigDecimal("1.01"))));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.00999999")));
 
-        result = context.resolveExpressionRef("PredecessorOf1QCM").getExpression().evaluate(context);
-        Assert.assertTrue(new BigDecimal("0.99999999").compareTo(((Quantity) result).getValue()) == 0);
-        Assert.assertEquals("cm", ((Quantity) result).getUnit());
+//        result = context.resolveExpressionRef("PredecessorOf1QCM").getExpression().evaluate(context);
+//        Assert.assertTrue(new BigDecimal("0.99999999").compareTo(((Quantity) result).getValue()) == 0);
+//        Assert.assertEquals("cm", ((Quantity) result).getUnit());
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("PredecessorOfJan12000").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {1999, 12, 31})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1999, 12, 31)));
 
         result = context.resolveExpressionRef("PredecessorOfNoon").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {11, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 11, 59, 59, 999)));
 
         try {
-         result = context.resolveExpressionRef("PredecessorUnderflowDt").getExpression().evaluate(context);
+            result = context.resolveExpressionRef("PredecessorUnderflowDt").getExpression().evaluate(context);
         } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the predecessor operation precedes the minimum value allowed for the type"));
+            assertThat(re.getMessage(), is("The year: 0 falls below the accepted bounds of 0001-9999."));
         }
 
         try {
-         result = context.resolveExpressionRef("PredecessorUnderflowT").getExpression().evaluate(context);
+            result = context.resolveExpressionRef("PredecessorUnderflowT").getExpression().evaluate(context);
         } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the predecessor operation precedes the minimum value allowed for the type"));
+            assertThat(re.getMessage(), is("The result of the successor operation preceeds the minimum value allowed for the Time type"));
         }
     }
 
@@ -469,8 +469,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("PowerNeg2To2").getExpression().evaluate(context);
         assertThat(result, is(4));
 
-       result = context.resolveExpressionRef("Power2ToNeg2").getExpression().evaluate(context);
-       assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("0.25")));
+        result = context.resolveExpressionRef("Power2ToNeg2").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("0.25")));
 
         result = context.resolveExpressionRef("Power2DTo2D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(4d)));
@@ -582,28 +582,31 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(2));
 
         result = context.resolveExpressionRef("SuccessorOf1D").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo((BigDecimal)Value.successor(new BigDecimal(1.0))));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.00000001")));
 
-       result = context.resolveExpressionRef("SuccessorOf101D").getExpression().evaluate(context);
-       assertThat(result, is(Value.successor(new BigDecimal("1.01"))));
+        result = context.resolveExpressionRef("SuccessorOf101D").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.01000001")));
 
-       result = context.resolveExpressionRef("SuccessorOfJan12000").getExpression().evaluate(context);
-       assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2000, 1, 2})));
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
+        result = context.resolveExpressionRef("SuccessorOfJan12000").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2000, 1, 2)));
 
-       result = context.resolveExpressionRef("SuccessorOfNoon").getExpression().evaluate(context);
-       assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {12, 0, 0, 1})));
+        result = context.resolveExpressionRef("SuccessorOfNoon").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 12, 0, 0, 1)));
 
-       try {
-         result = context.resolveExpressionRef("SuccessorOverflowDt").getExpression().evaluate(context);
-       } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for the type"));
-       }
+        try {
+            result = context.resolveExpressionRef("SuccessorOverflowDt").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (RuntimeException re) {
+            assertThat(re.getMessage(), is("The year: 10000 falls above the accepted bounds of 0001-9999."));
+        }
 
-       try {
-         result = context.resolveExpressionRef("SuccessorOverflowT").getExpression().evaluate(context);
-       } catch (RuntimeException re) {
-         assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for the type"));
-       }
+        try {
+            result = context.resolveExpressionRef("SuccessorOverflowT").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (RuntimeException re) {
+            assertThat(re.getMessage(), is("The result of the successor operation exceeds the maximum value allowed for the Time type"));
+        }
     }
 
     /**

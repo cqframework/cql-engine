@@ -47,7 +47,7 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
             if ((i+1) < intervals.size()) {
                 Boolean merge = OrEvaluator.or(
                         GreaterOrEqualEvaluator.greaterOrEqual(intervals.get(i).getEnd(), intervals.get(i+1).getStart()),
-                        EqualEvaluator.equal(Value.successor(intervals.get(i).getEnd()), intervals.get(i+1).getStart())
+                        EqualEvaluator.equal(SuccessorEvaluator.successor(intervals.get(i).getEnd()), intervals.get(i+1).getStart())
                 );
 
                 if (merge == null) {

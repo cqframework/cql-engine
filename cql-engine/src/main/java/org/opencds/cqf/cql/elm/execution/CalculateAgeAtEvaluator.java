@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Precision;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -30,7 +31,7 @@ public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.C
             return null;
         }
 
-        return DurationBetweenEvaluator.durationBetween(birthDate, asOf, precision);
+        return DurationBetweenEvaluator.duration(birthDate, asOf, Precision.fromString(precision));
     }
 
     @Override

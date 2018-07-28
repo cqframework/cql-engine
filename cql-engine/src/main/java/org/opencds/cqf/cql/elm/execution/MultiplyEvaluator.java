@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 import org.opencds.cqf.cql.runtime.Value;
 
 import java.math.BigDecimal;

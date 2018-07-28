@@ -1,9 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
 
 /*
 meets _precision_ (left Interval<T>, right Interval<T>) Boolean
@@ -43,6 +41,6 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), meets(left, right, precision), left, right, precision);
+        return meets(left, right, precision);
     }
 }

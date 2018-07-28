@@ -94,6 +94,6 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
             }
         }
 
-        return context.logTrace(this.getClass(), contains(left, right, precision), left, right, precision);
+        return contains(left, right, precision);
     }
 }

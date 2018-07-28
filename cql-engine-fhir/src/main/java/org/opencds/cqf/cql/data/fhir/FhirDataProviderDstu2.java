@@ -152,11 +152,11 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
     protected Object fromJavaPrimitive(Object value, Object target) {
         if (target instanceof DateTimeDt || target instanceof DateDt) {
             DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
-            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getPartial().toString());
+            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getDateTime().toString());
             return dt.toDate();
         }
         else if (target instanceof TimeDt && value instanceof Time) {
-            return ((Time) value).getPartial().toString();
+            return ((Time) value).getTime().toString();
         }
         else {
             return value;

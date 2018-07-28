@@ -55,69 +55,12 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
         }
 
         else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
-            BaseTemporal leftTemporal = (BaseTemporal) left;
-            BaseTemporal rightTemporal = (BaseTemporal) right;
-
             if (precision == null) {
                 precision = "millisecond";
             }
 
-            int idx = leftTemporal.getIsDateTime() ? DateTime.getFieldIndex(precision) : Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
-
-                    // get the precision of the uncertain DateTime/Time value
-                    if (Uncertainty.isUncertain(leftTemporal, precision)) {
-                        idx = leftTemporal.getPartial().size() - 1;
-                    } else if (Uncertainty.isUncertain(rightTemporal, precision)) {
-                        idx = rightTemporal.getPartial().size() - 1;
-                    }
-
-                    // if not equal do After to that precision
-                    if (leftTemporal instanceof DateTime && !SameAsEvaluator.sameAs(leftTemporal, rightTemporal, DateTime.getUnit(idx))) {
-                        return before(leftTemporal, rightTemporal, DateTime.getUnit(idx));
-                    }
-
-                    else if (leftTemporal instanceof Time && !SameAsEvaluator.sameAs(leftTemporal, rightTemporal, Time.getUnit(idx))) {
-                        return before(leftTemporal, rightTemporal, Time.getUnit(idx));
-                    }
-
-                    // else null
-                    return null;
-                }
-
-                if (leftTemporal.getTimezone().getID().equals(rightTemporal.getTimezone().getID())) {
-                    for (int i = 0; i < idx; i++) {
-                        if (leftTemporal.getPartial().getValue(i) > rightTemporal.getPartial().getValue(i)) {
-                            return false;
-                        }
-                        else if (leftTemporal.getPartial().getValue(i) < rightTemporal.getPartial().getValue(i)) {
-                            return true;
-                        }
-                    }
-                    return leftTemporal.getPartial().getValue(idx) < rightTemporal.getPartial().getValue(idx);
-                }
-
-                else {
-                    Instant leftInstant = leftTemporal.getJodaDateTime().toInstant();
-                    Instant rightInstant = rightTemporal.getJodaDateTime().toInstant();
-                    for (int i = 0; i < idx; i++) {
-                        if (leftInstant.get(DateTime.getField(i)) > rightInstant.get(DateTime.getField(i))) {
-                            return false;
-                        }
-                        else if (leftInstant.get(DateTime.getField(i)) < rightInstant.get(DateTime.getField(i))) {
-                            return true;
-                        }
-                    }
-                    return leftInstant.get(DateTime.getField(idx)) < rightInstant.get(DateTime.getField(idx));
-                }
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+            Integer result = ((BaseTemporal) left).compareToPrecision((BaseTemporal) right, Precision.fromString(precision));
+            return result == null ? null : result < 0;
         }
 
         throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));

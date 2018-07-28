@@ -62,90 +62,29 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         }
 
         // -(DateTime, Quantity)
-        else if (left instanceof DateTime && right instanceof Quantity) {
-            DateTime dt = (DateTime)left;
-            DateTime ret = new DateTime(dt.getPartial(), dt.getTimezone());
-            String unit = ((Quantity)right).getUnit();
-            int value = ((Quantity)right).getValue().intValue();
+        else if (left instanceof BaseTemporal && right instanceof Quantity) {
+            Precision precision = Precision.fromString(((Quantity) right).getUnit());
+            int valueToSubtract = ((Quantity) right).getValue().intValue();
 
-            int idx = DateTime.getFieldIndex(unit);
-
-            if (idx == 7) {
-                idx = 2;
-                int years = 0;
-                if (value >= 52) {
-                    years = (value / 52);
-                    value -= years * 52 ;
+            // +(DateTime, Quantity)
+            if (left instanceof DateTime) {
+                if (precision == Precision.WEEK) {
+                    valueToSubtract = TemporalHelper.weeksToDays(valueToSubtract);
+                    precision = Precision.DAY;
                 }
-                value = value * 7 + (years * 365);
+
+                return new DateTime(((DateTime) left).getDateTime().minus(valueToSubtract, precision.toChronoUnit()), ((DateTime) left).getPrecision());
             }
-
-            if (idx != -1) {
-                int startSize = ret.getPartial().size();
-                // check that the Partial has the precision specified
-                if (startSize < idx + 1) {
-                    // expand the Partial to the proper precision
-                    for (int i = startSize; i < idx + 1; ++i) {
-                        ret.setPartial(ret.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
-                    }
-                }
-
-                // do the subtraction
-                ret.setPartial(ret.getPartial().property(DateTime.getField(idx)).addToCopy(-value));
-                // truncate to original precision
-                for (int i = idx; i >= startSize; --i) {
-                    ret.setPartial(ret.getPartial().without(DateTime.getField(i)));
-                }
-            }
-
+            // +(Time, Quantity)
             else {
-                throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
+                return new Time(((Time) left).getTime().minus(valueToSubtract, precision.toChronoUnit()), ((Time) left).getPrecision());
             }
-            if (ret.getPartial().getValue(0) < YEAR_RANGE_MIN) {
-                throw new ArithmeticException("The date time addition results in a year less than the accepted range.");
-            }
-
-            return ret;
         }
 
         else if (left instanceof Interval && right instanceof Interval) {
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
             return new Interval(subtract(leftInterval.getStart(), rightInterval.getStart()), true, subtract(leftInterval.getEnd(), rightInterval.getEnd()), true);
-        }
-
-        // -(Time, Quantity)
-        else if (left instanceof Time && right instanceof Quantity) {
-            Time t = (Time)left;
-            Time ret = new Time(t.getPartial(), t.getTimezone());
-            String unit = ((Quantity)right).getUnit();
-            int value = ((Quantity)right).getValue().intValue();
-
-            int idx = Time.getFieldIndex(unit);
-
-            if (idx != -1) {
-                int startSize = ret.getPartial().size();
-                // check that the Partial has the precision specified
-                if (startSize < idx + 1) {
-                    // expand the Partial to the proper precision
-                    for (int i = startSize; i < idx + 1; ++i) {
-                        ret.setPartial(ret.getPartial().with(Time.getField(i), Time.getField(i).getField(null).getMinimumValue()));
-                    }
-                }
-
-                // do the subtraction
-                ret.setPartial(ret.getPartial().property(Time.getField(idx)).addToCopy(-value));
-                // truncate to original precision
-                for (int i = idx; i >= startSize; --i) {
-                    ret.setPartial(ret.getPartial().without(Time.getField(i)));
-                }
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration unit: %s", unit));
-            }
-
-            return ret;
         }
 
         throw new IllegalArgumentException(String.format("Cannot Subtract arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -156,6 +95,6 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), subtract(left, right), left, right);
+        return subtract(left, right);
     }
 }

@@ -29,7 +29,7 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
-    public static Object includedIn(Object left, Object right, String precision) {
+    public static Boolean includedIn(Object left, Object right, String precision) {
 
         if (left == null) {
             return true;
@@ -86,6 +86,6 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), includedIn(left, right, precision), left, right, precision);
+        return includedIn(left, right, precision);
     }
 }

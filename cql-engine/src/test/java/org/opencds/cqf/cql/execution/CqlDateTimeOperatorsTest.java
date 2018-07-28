@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -28,91 +27,93 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         // simple cache test -- watching behavior while stepping through tests
         context.setExpressionCaching(true);
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("DateTimeAdd5Years").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2010, 10, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2010, 10, 10)));
 
         try {
             context.resolveExpressionRef("DateTimeAddInvalidYears").evaluate(context);
+            Assert.fail();
         }
-        catch (ArithmeticException ae) {
-            assertThat(ae.getMessage(), is("The date time addition results in a year greater than the accepted range."));
+        catch (IllegalArgumentException ae) {
+            // pass
         }
 
         result = context.resolveExpressionRef("DateTimeAdd5Months").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 10, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 10, 10)));
 
         result = context.resolveExpressionRef("DateTimeAddMonthsOverflow").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2006, 3, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2006, 3, 10)));
 
         result = context.resolveExpressionRef("DateTimeAddThreeWeeks").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2018, 5, 23})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2018, 5, 23)));
 
         result = context.resolveExpressionRef("DateTimeAddYearInWeeks").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2019, 5, 23})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2019, 5, 23)));
 
         result = context.resolveExpressionRef("DateTimeAdd5Days").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 15})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 15)));
 
         result = context.resolveExpressionRef("DateTimeAddDaysOverflow").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 7, 1})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 7, 1)));
 
         result = context.resolveExpressionRef("DateTimeAdd5Hours").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 10)));
 
         result = context.resolveExpressionRef("DateTimeAddHoursOverflow").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 11, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 11, 0)));
 
         result = context.resolveExpressionRef("DateTimeAdd5Minutes").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5, 10)));
 
         result = context.resolveExpressionRef("DateTimeAddMinutesOverflow").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 6, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 6, 0)));
 
         result = context.resolveExpressionRef("DateTimeAdd5Seconds").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5, 5, 10)));
 
         result = context.resolveExpressionRef("DateTimeAddSecondsOverflow").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 6, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 5, 6, 0)));
 
         result = context.resolveExpressionRef("DateTimeAdd5Milliseconds").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5, 5, 5, 10)));
 
         result = context.resolveExpressionRef("DateTimeAddMillisecondsOverflow").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 6, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 5, 5, 6, 0)));
 
         result = context.resolveExpressionRef("DateTimeAddLeapYear").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2013, 2, 28})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2013, 2, 28)));
 
         result = context.resolveExpressionRef("DateTimeAdd2YearsByMonths").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016)));
 
         result = context.resolveExpressionRef("DateTimeAdd2YearsByDays").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016)));
 
         result = context.resolveExpressionRef("DateTimeAdd2YearsByDaysRem5Days").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2016})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016)));
 
         result = context.resolveExpressionRef("TimeAdd5Hours").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeAdd1Minute").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 59, 999)));
 
         result = context.resolveExpressionRef("TimeAdd1Second").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 0, 999)));
 
         result = context.resolveExpressionRef("TimeAdd1Millisecond").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeAdd5Hours1Minute").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {21, 0, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 21, 0, 59, 999)));
 
         // checking access ordering and returning correct result
         result = context.resolveExpressionRef("TimeAdd1Second").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {16, 0, 0, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 0, 999)));
 
         result = context.resolveExpressionRef("TimeAdd5hoursByMinute").evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
     }
 
     /**
@@ -288,26 +289,27 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testDateTime() throws JAXBException {
         Context context = new Context(library);
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("DateTimeYear").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2003})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003)));
 
         result = context.resolveExpressionRef("DateTimeMonth").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(2), new int[] {2003, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003, 10)));
 
         result = context.resolveExpressionRef("DateTimeDay").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2003, 10, 29})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003, 10, 29)));
 
         result = context.resolveExpressionRef("DateTimeHour").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2003, 10, 29, 20})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003, 10, 29, 20)));
 
         result = context.resolveExpressionRef("DateTimeMinute").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2003, 10, 29, 20, 50})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003, 10, 29, 20, 50)));
 
         result = context.resolveExpressionRef("DateTimeSecond").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2003, 10, 29, 20, 50, 33})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003, 10, 29, 20, 50, 33)));
 
         result = context.resolveExpressionRef("DateTimeMillisecond").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2003, 10, 29, 20, 50, 33, 955})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2003, 10, 29, 20, 50, 33, 955)));
     }
 
     /**
@@ -342,10 +344,11 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(955));
 
         result = context.resolveExpressionRef("DateTimeComponentFromTimezone").getExpression().evaluate(context);
-        assertThat(result, is(new BigDecimal("1.00")));
+        assertThat(result, is(new BigDecimal("1.0")));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeComponentFromDate").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2003, 10, 29})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal("1.0"), 2003, 10, 29)));
 
         result = context.resolveExpressionRef("TimeComponentFromHour").getExpression().evaluate(context);
         assertThat(result, is(23));
@@ -432,7 +435,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(45));
 
         result = context.resolveExpressionRef("DifferenceInDaysAA").getExpression().evaluate(context);
-        assertThat(result, is(1));
+        assertThat(result, is(0));
     }
 
     /**
@@ -467,8 +470,10 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(((Interval)result).getStart().equals(17));
         Assert.assertTrue(((Interval)result).getEnd().equals(44));
 
-        // result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainInterval2").getExpression().evaluate(context);
-        // assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(5, true, 17, true)));
+        result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainInterval2").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)result).getStart().equals(5));
+        Assert.assertTrue(((Interval)result).getEnd().equals(16));
+//        assertThat(((Uncertainty)result).getUncertaintyInterval(), is(new Interval(5, true, 17, true)));
 
         result = context.resolveExpressionRef("DateTimeDurationBetweenUncertainAdd").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).getStart().equals(34));
@@ -558,10 +563,11 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("DateTimeNow").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999}), DateTimeZone.forOffsetHours(-7)));
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
+        context = new Context(library, new DateTime(offset, 2016, 6, 10, 5, 5, 4, 999));
         result = context.resolveExpressionRef("Issue34A").getExpression().evaluate(context);
-        assertThat(((DateTime) result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999})));
-        assertThat(((DateTime) result).getTimezoneOffset(), is(new BigDecimal("-7.00")));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 5, 5, 4, 999)));
+        Assert.assertTrue(((DateTime) result).getDateTime().getOffset().equals(TemporalHelper.getDefaultZoneOffset()));
     }
 
     /**
@@ -889,80 +895,83 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testSubtract() throws JAXBException {
         Context context = new Context(library);
+
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("DateTimeSubtract5Years").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2000, 10, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2000, 10, 10)));
 
         try {
             context.resolveExpressionRef("DateTimeSubtractInvalidYears").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
-            assertThat(ae.getMessage(), is("The date time addition results in a year less than the accepted range."));
+            Assert.fail();
+        } catch (IllegalArgumentException ae) {
+            // fail
         }
 
         result = context.resolveExpressionRef("DateTimeSubtract5Months").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 1, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 1, 10)));
 
         result = context.resolveExpressionRef("DateTimeSubtractMonthsUnderflow").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2004, 11, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2004, 11, 10)));
 
         result = context.resolveExpressionRef("DateTimeSubtractThreeWeeks").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2018, 5, 2})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2018, 5, 2)));
 
         result = context.resolveExpressionRef("DateTimeSubtractYearInWeeks").evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2017, 5, 23})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2017, 5, 23)));
 
         result = context.resolveExpressionRef("DateTimeSubtract5Days").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2005, 5, 5})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 5)));
 
         result = context.resolveExpressionRef("DateTimeSubtractDaysUnderflow").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 5, 30})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 5, 30)));
 
         result = context.resolveExpressionRef("DateTimeSubtract5Hours").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2005, 5, 10, 5})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5)));
 
         result = context.resolveExpressionRef("DateTimeSubtractHoursUnderflow").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(4), new int[] {2016, 6, 9, 23})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 9, 23)));
 
         result = context.resolveExpressionRef("DateTimeSubtract5Minutes").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2005, 5, 10, 5, 5})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5, 5)));
 
         result = context.resolveExpressionRef("DateTimeSubtractMinutesUnderflow").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2016, 6, 10, 4, 59})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 4, 59)));
 
         result = context.resolveExpressionRef("DateTimeSubtract5Seconds").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2005, 5, 10, 5, 5, 5})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5, 5, 5)));
 
         result = context.resolveExpressionRef("DateTimeSubtractSecondsUnderflow").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(6), new int[] {2016, 6, 10, 5, 4, 59})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 5, 4, 59)));
 
         result = context.resolveExpressionRef("DateTimeSubtract5Milliseconds").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2005, 5, 10, 5, 5, 5, 5})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2005, 5, 10, 5, 5, 5, 5)));
 
         result = context.resolveExpressionRef("DateTimeSubtractMillisecondsUnderflow").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10, 5, 5, 4, 999)));
 
         result = context.resolveExpressionRef("DateTimeSubtract2YearsAsMonths").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2012})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012)));
 
         result = context.resolveExpressionRef("DateTimeSubtract2YearsAsMonthsRem1").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(1), new int[] {2011})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2011)));
 
         result = context.resolveExpressionRef("TimeSubtract5Hours").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract1Minute").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 58, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 58, 59, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract1Second").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 58, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 58, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract1Millisecond").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 58, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 58, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract5Hours1Minute").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 58, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 58, 59, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract5hoursByMinute").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 59, 59, 999)));
     }
 
     /**
@@ -972,8 +981,9 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testTime() throws JAXBException {
         Context context = new Context(library);
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("TimeTest2").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 999)));
     }
 
     /**
@@ -1006,10 +1016,11 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeAddTodayTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2016, 6, 10, 5, 5, 4, 999}), DateTimeZone.forOffsetHours(-7)));
+        context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2016, 6, 10, 5, 5, 4, 999));
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("Issue34B").getExpression().evaluate(context);
-        assertThat(((DateTime) result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2016, 6, 10})));
-        assertThat(((DateTime) result).getTimezoneOffset(), is(new BigDecimal("-7.00")));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 6, 10)));
+        Assert.assertTrue(((DateTime) result).getDateTime().getOffset().equals(TemporalHelper.getDefaultZoneOffset()));
     }
 
 }

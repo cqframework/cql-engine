@@ -1,11 +1,15 @@
 package org.opencds.cqf.cql.execution;
 
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
+import java.math.BigDecimal;
 import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -42,17 +46,18 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("CoalesceLastList").getExpression().evaluate(context);
         assertThat(result, is(Collections.singletonList("a")));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeCoalesce").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 18})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("DateTimeListCoalesce").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 18})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("TimeCoalesce").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 15, 33, 556})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 5, 15, 33, 556)));
 
         result = context.resolveExpressionRef("TimeListCoalesce").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {5, 15, 33, 556})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 5, 15, 33, 556)));
     }
 
     /**

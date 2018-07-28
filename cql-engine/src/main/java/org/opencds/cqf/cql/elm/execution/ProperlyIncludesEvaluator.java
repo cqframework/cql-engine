@@ -3,9 +3,8 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Precision;
 
-import javax.jws.Oneway;
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -53,40 +52,32 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
             Object rightStart = rightInterval.getStart();
             Object rightEnd = rightInterval.getEnd();
 
-            Boolean greater = GreaterEvaluator.greater(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd));
-
             if (leftStart instanceof BaseTemporal) {
+                if (precision == null) {
+                    precision = "millisecond";
+                }
+                Boolean greater = GreaterEvaluator.greater(
+                        DurationBetweenEvaluator.duration(leftStart, leftEnd, Precision.fromString(precision)),
+                        DurationBetweenEvaluator.duration(rightStart, rightEnd, Precision.fromString(precision))
+                );
                 Boolean sameOrBefore = SameOrBeforeEvaluator.sameOrBefore(leftStart, rightStart, precision);
                 Boolean sameOrAfter = SameOrAfterEvaluator.sameOrAfter(leftEnd, rightEnd, precision);
 
-                if (greater == null || sameOrBefore == null || sameOrAfter == null) {
-                    return null;
-                }
-
-                return greater && sameOrBefore && sameOrAfter;
+                return AndEvaluator.and(greater, AndEvaluator.and(sameOrBefore, sameOrAfter));
             }
 
+            Boolean greater = GreaterEvaluator.greater(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd));
             Boolean lessOrEqual = LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart);
             Boolean greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd);
 
-            if (greater == null || lessOrEqual == null || greaterOrEqual == null) {
-                return null;
-            }
-
-            return (greater && lessOrEqual && greaterOrEqual);
+            return AndEvaluator.and(greater, AndEvaluator.and(lessOrEqual, greaterOrEqual));
         }
 
         else if (left instanceof Iterable) {
             List leftArr = (List) left;
             List rightArr = (List) right;
 
-            Object includes = IncludesEvaluator.includes(leftArr, rightArr, precision);
-
-            if (includes == null) {
-                return null;
-            }
-
-            return (Boolean)includes && leftArr.size() > rightArr.size();
+            return AndEvaluator.and(IncludesEvaluator.includes(leftArr, rightArr, precision), leftArr.size() > rightArr.size());
         }
 
         throw new IllegalArgumentException(String.format("Cannot perform ProperlyIncludes operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
@@ -98,6 +89,6 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), properlyIncludes(left, right, precision), left, right, precision);
+        return properlyIncludes(left, right, precision);
     }
 }

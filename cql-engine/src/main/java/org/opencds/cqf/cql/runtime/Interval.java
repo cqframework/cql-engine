@@ -1,11 +1,13 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.elm.execution.*;
+import org.opencds.cqf.cql.execution.Context;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.util.Arrays;
+import java.time.OffsetDateTime;
 import java.util.Date;
 
 /**
@@ -37,8 +39,7 @@ public class Interval implements CqlType, Comparable<Interval> {
 
         // Special case for measure processing - MeasurementPeriod is a java date
         if (low instanceof Date && high instanceof Date) {
-            if (GreaterEvaluator.greater(DateTime.fromJavaDate((Date) getStart()), DateTime.fromJavaDate((Date) getEnd())))
-            {
+            if (((Date) low).after((Date) high)) {
                 throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
             }
         }
@@ -57,19 +58,7 @@ public class Interval implements CqlType, Comparable<Interval> {
             return SubtractEvaluator.subtract(end, start);
         }
 
-        else if (start instanceof DateTime) {
-            return new Quantity()
-                .withValue(new BigDecimal(DurationBetweenEvaluator.between(((DateTime)start).getJodaDateTime(), ((DateTime)end).getJodaDateTime(), ((DateTime)start).getPartial().size() - 1)))
-                .withUnit(DateTime.getUnit(((DateTime)start).getPartial().size() - 1));
-        }
-
-        else if (start instanceof Time) {
-            return new Quantity()
-                .withValue(new BigDecimal(DurationBetweenEvaluator.between(((Time)start).getJodaDateTime(), ((Time)end).getJodaDateTime(), ((Time)start).getPartial().size() + 2)))
-                .withUnit(Time.getUnit(((Time)start).getPartial().size() - 1));
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot getIntervalSize argument of type '%s'.", start.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform width operator with argument of type '%s'.", start.getClass().getName()));
     }
 
     private Object low;
@@ -115,10 +104,10 @@ public class Interval implements CqlType, Comparable<Interval> {
      */
     public Object getStart() {
         if (!lowClosed) {
-            return Value.successor(low);
+            return SuccessorEvaluator.successor(low);
         }
         else {
-            return low == null ? Value.minValue(pointType) : low;
+            return low == null ? MinValueEvaluator.minValue(pointType.getTypeName()) : low;
         }
     }
 
@@ -134,10 +123,10 @@ public class Interval implements CqlType, Comparable<Interval> {
      */
     public Object getEnd() {
         if (!highClosed) {
-            return Value.predecessor(high);
+            return PredecessorEvaluator.predecessor(high);
         }
         else {
-            return high == null ? Value.maxValue(pointType) : high;
+            return high == null ? MaxValueEvaluator.maxValue(pointType.getTypeName()) : high;
         }
     }
 

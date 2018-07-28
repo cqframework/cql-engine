@@ -2,12 +2,12 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.joda.time.DateTimeZone;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.DateTime;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.ArrayList;
 import org.joda.time.Partial;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
 
 /*
@@ -29,22 +29,22 @@ public class TimeEvaluator extends org.cqframework.cql.elm.execution.Time {
             return null;
         }
 
-        Integer hour = (Integer)this.getHour().evaluate(context);
-        Integer minute = (this.getMinute() == null) ? null : (Integer)this.getMinute().evaluate(context);
-        Integer second = (this.getSecond() == null) ? null : (Integer)this.getSecond().evaluate(context);
-        Integer millis = (this.getMillisecond() == null) ? null : (Integer)this.getMillisecond().evaluate(context);
-
-        DateTimeZone timeZone =
-                BaseTemporal.resolveDateTimeZone(
-                        this.getTimezoneOffset() != null
-                                ? (BigDecimal) this.getTimezoneOffset().evaluate(context)
-                                : null);
-
-        if (BaseTemporal.formatCheck(new ArrayList<>(Arrays.asList(hour, minute, second, millis)))) {
-            int [] values = DateTime.getValues(hour, minute, second, millis);
-            return new Time(new Partial(Time.getFields(values.length), values), timeZone);
+        BigDecimal offset;
+        if (this.getTimezoneOffset() == null) {
+            offset = TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        else {
+            offset = (BigDecimal) this.getTimezoneOffset().evaluate(context);
         }
 
-        throw new IllegalArgumentException("Time format is invalid");
+        return new Time(
+                offset,
+                TemporalHelper.cleanArray(
+                        (Integer)this.getHour().evaluate(context),
+                        this.getMinute() == null ? null : (Integer)this.getMinute().evaluate(context),
+                        this.getSecond() == null ? null : (Integer)this.getSecond().evaluate(context),
+                        this.getMillisecond() == null ? null : (Integer)this.getMillisecond().evaluate(context)
+                )
+        ).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
     }
 }

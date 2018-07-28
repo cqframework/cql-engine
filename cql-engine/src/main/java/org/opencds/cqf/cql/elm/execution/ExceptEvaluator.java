@@ -37,23 +37,32 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
             Object rightStart = ((Interval)right).getStart();
             Object rightEnd = ((Interval)right).getEnd();
 
-            if (leftStart == null || leftEnd == null || rightStart == null || rightEnd == null) { return null; }
+            if (leftStart == null || leftEnd == null
+                    || rightStart == null || rightEnd == null)
+            {
+                return null;
+            }
 
-            if (GreaterEvaluator.greater(rightStart, leftEnd)) { return left; }
+            if (GreaterEvaluator.greater(rightStart, leftEnd)) {
+                return left;
+            }
 
-            else if (LessEvaluator.less(leftStart, rightStart)
-                    && GreaterEvaluator.greater(leftEnd, rightEnd)) { return null; }
+            else if (AndEvaluator.and(LessEvaluator.less(leftStart, rightStart), GreaterEvaluator.greater(leftEnd, rightEnd)))
+            {
+                return null;
+            }
 
             // left interval starts before right interval
-            if ((LessEvaluator.less(leftStart, rightStart) && LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd))) {
-                Object min = LessEvaluator.less(Value.predecessor(rightStart), leftEnd) ? Value.predecessor(rightStart) : leftEnd;
+            if (AndEvaluator.and(LessEvaluator.less(leftStart, rightStart), LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)))
+            {
+                Object min = LessEvaluator.less(PredecessorEvaluator.predecessor(rightStart), leftEnd) ? PredecessorEvaluator.predecessor(rightStart) : leftEnd;
                 return new Interval(leftStart, true, min, true);
             }
+
             // right interval starts before left interval
-            else if (GreaterEvaluator.greater(leftEnd, rightEnd)
-                    && GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart))
+            else if (AndEvaluator.and(GreaterEvaluator.greater(leftEnd, rightEnd), GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart)))
             {
-                Object max = GreaterEvaluator.greater(Value.successor(rightEnd), leftStart) ? Value.successor(rightEnd) : leftStart;
+                Object max = GreaterEvaluator.greater(SuccessorEvaluator.successor(rightEnd), leftStart) ? SuccessorEvaluator.successor(rightEnd) : leftStart;
                 return new Interval(max, true, leftEnd, true);
             }
 
@@ -77,10 +86,9 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
 
     @Override
     public Object evaluate(Context context) {
-
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), except(left, right), left, right);
+        return except(left, right);
     }
 }

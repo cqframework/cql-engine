@@ -29,11 +29,11 @@ public class MeetsBeforeEvaluator extends org.cqframework.cql.elm.execution.Meet
             Object rightStart = ((Interval) right).getStart();
 
             if (leftEnd instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
-                return SameAsEvaluator.sameAs(Value.successor(leftEnd), rightStart, precision);
+                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(leftEnd), rightStart, precision);
             }
 
             else {
-                return EqualEvaluator.equal(Value.successor(leftEnd), rightStart);
+                return EqualEvaluator.equal(SuccessorEvaluator.successor(leftEnd), rightStart);
             }
         }
 
@@ -46,6 +46,6 @@ public class MeetsBeforeEvaluator extends org.cqframework.cql.elm.execution.Meet
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), meetsBefore(left, right, precision), left, right, precision);
+        return meetsBefore(left, right, precision);
     }
 }

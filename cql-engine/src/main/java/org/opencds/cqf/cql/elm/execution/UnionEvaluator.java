@@ -89,6 +89,6 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), union(left, right), left, right);
+        return union(left, right);
     }
 }

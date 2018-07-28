@@ -1,12 +1,13 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
+import java.time.format.DateTimeParseException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -26,8 +27,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("CastAsQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("45.5")).withUnit("g")));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("AsDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 1, 1})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
     }
 
     /**
@@ -44,21 +46,22 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is("5"));
 
         try {
-          context.resolveExpressionRef("StringToIntegerError").getExpression().evaluate(context);
+            context.resolveExpressionRef("StringToIntegerError").getExpression().evaluate(context);
         } catch (NumberFormatException nfe) {
-          assertThat(nfe.getMessage(), is("Unable to convert given string to Integer"));
+            assertThat(nfe.getMessage(), is("Unable to convert given string to Integer"));
         }
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("StringToDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 1, 1})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
 
         result = context.resolveExpressionRef("StringToTime").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 14, 30, 0, 0)));
 
         try {
-          context.resolveExpressionRef("StringToDateTimeMalformed").getExpression().evaluate(context);
-        } catch (IllegalArgumentException iae) {
-          assertThat(iae.getMessage(), is("Invalid format: \"2014/01/01\" is malformed at \"/01/01\""));
+            context.resolveExpressionRef("StringToDateTimeMalformed").getExpression().evaluate(context);
+        } catch (DateTimeParseException iae) {
+
         }
     }
 
@@ -104,37 +107,39 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testToDateTime() throws JAXBException {
-      // TODO: Fix timezone tests
+        // TODO: Fix timezone tests
         Context context = new Context(library);
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("ToDateTime1").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 1, 1})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTime2").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(5), new int[] {2014, 1, 1, 12, 5})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 12, 5)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTime3").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTime4").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal("1.5"), 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("1.5")));
 
         result = context.resolveExpressionRef("ToDateTime5").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal("-1.25"), 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-1.25")));
 
         result = context.resolveExpressionRef("ToDateTime6").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2014, 1, 1, 12, 5, 5, 955})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal(0), 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         try {
-          context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
-        } catch (IllegalArgumentException iae) {
-          assertThat(iae.getMessage(), is("Invalid format: \"2014/01/01T12:05:05.955\" is malformed at \"/01/01T12:05:05.955\""));
+            context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (DateTimeParseException iae) {
+            // pass
         }
 
     }
@@ -198,29 +203,31 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testToTime() throws JAXBException {
-      // TODO: fix timezone tests
+        // TODO: fix timezone tests
         Context context = new Context(library);
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("ToTime1").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 14, 30, 0, 0)));
         // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToTime2").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal("5.5"), 14, 30, 0, 0)));
         // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("5.5")));
 
         result = context.resolveExpressionRef("ToTime3").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal("-5.75"), 14, 30, 0, 0)));
         // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-5.75")));
 
         result = context.resolveExpressionRef("ToTime4").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {14, 30, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal(0), 14, 30, 0, 0)));
         // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         try {
-          context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
-        } catch (IllegalArgumentException iae) {
-          assertThat(iae.getMessage(), is("Invalid format: \"T14-30-00.0\" is malformed at \"-30-00.0\""));
+            context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
+            Assert.fail();
+        } catch (DateTimeParseException iae) {
+            // pass
         }
     }
 }

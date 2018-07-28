@@ -1,17 +1,10 @@
 package org.opencds.cqf.cql.file.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.*;
-import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Partial;
-import org.opencds.cqf.cql.data.fhir.BaseDataProviderStu3;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderStu3;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
 import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
-import org.opencds.cqf.cql.runtime.Code;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
@@ -23,9 +16,10 @@ import java.net.URL;
 import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Instant;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 /*
@@ -149,8 +143,8 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
                 // Expand Interval DateTimes to avoid InEvalutor returning null
                 // TODO: account for possible null for high or low? - No issues with this yet...
                 Interval expanded = new Interval(
-                        DateTime.expandPartialMin((DateTime)dateRange.getLow(), 7), true,
-                        DateTime.expandPartialMin((DateTime)dateRange.getHigh(), 7), true
+                        ((DateTime)dateRange.getLow()).expandPartialMin(Precision.MILLISECOND), true,
+                        ((DateTime)dateRange.getHigh()).expandPartialMin(Precision.MILLISECOND), true
                 );
                 if (datePath != null) {
                     if (dateHighPath != null || dateLowPath != null) {
@@ -402,18 +396,17 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
     }
 
     public DateTime toDateTime(DateTimeType hapiDt) {
-        // TODO: do we want 0 to be the default value if null?
-        int year = hapiDt.getYear() == null ? 0 : hapiDt.getYear();
+        int year = hapiDt.getYear() == null ? 1 : hapiDt.getYear();
         // months in HAPI are zero-indexed -- don't want that, hence the plus one
-        int month = hapiDt.getMonth() == null ? 0 : hapiDt.getMonth() + 1;
-        int day = hapiDt.getDay() == null ? 0 : hapiDt.getDay();
+        int month = hapiDt.getMonth() == null ? 1 : hapiDt.getMonth() + 1;
+        int day = hapiDt.getDay() == null ? 1 : hapiDt.getDay();
         int hour = hapiDt.getHour() == null ? 0 : hapiDt.getHour();
         int minute = hapiDt.getMinute() == null ? 0 : hapiDt.getMinute();
         int sec = hapiDt.getSecond() == null ? 0 : hapiDt.getSecond();
         int millis = hapiDt.getMillis() == null ? 0 : hapiDt.getMillis();
         if (hapiDt.getTimeZone() == null) {
-            return new DateTime(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}));
+            return new DateTime(TemporalHelper.zoneToOffset(ZoneOffset.systemDefault().getRules().getOffset(Instant.now())), year, month, day, hour, minute, sec, millis);
         }
-        return new DateTime(new Partial(DateTime.getFields(7), new int[] {year, month, day, hour, minute, sec, millis}), DateTimeZone.forTimeZone(hapiDt.getTimeZone()));
+        return new DateTime(TemporalHelper.zoneToOffset(ZoneOffset.of(hapiDt.getTimeZone().getID())), year, month, day, hour, minute, sec, millis);
     }
 }

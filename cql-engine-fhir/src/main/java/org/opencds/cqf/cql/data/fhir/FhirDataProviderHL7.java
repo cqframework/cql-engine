@@ -4,17 +4,14 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.hl7.fhir.instance.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.joda.time.*;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
-import org.opencds.cqf.cql.runtime.Code;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
-import java.util.TimeZone;
 
 /**
  * Created by Christopher Schuler on 6/19/2017.
@@ -153,92 +150,67 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
         return cleanBundle;
     }
 
-    protected DateTime toDateTime(DateTimeType value) {
-        // NOTE: month is 0-indexed, hence the +1
-        Partial partial = new Partial();
-
-        DateTimeZone zone;
-        if (value.getTimeZone() == null) {
-            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
-            value.setTimeZone(zone.toTimeZone());
-        }
-        else {
-            zone = DateTimeZone.forTimeZone(value.getTimeZone());
-        }
-
-        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR)), zone);
-            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
-                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1), zone);
-            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
-                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH)), zone);
-            case SECOND: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
-                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH))
-                    .with(DateTimeFieldType.hourOfDay(), value.toCalendar().get(Calendar.HOUR))
-                    .with(DateTimeFieldType.minuteOfHour(), value.toCalendar().get(Calendar.MINUTE))
-                    .with(DateTimeFieldType.secondOfMinute(), value.toCalendar().get(Calendar.SECOND)), zone);
-            case MILLI: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
-                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1)
-                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH))
-                    .with(DateTimeFieldType.hourOfDay(), value.toCalendar().get(Calendar.HOUR))
-                    .with(DateTimeFieldType.minuteOfHour(), value.toCalendar().get(Calendar.MINUTE))
-                    .with(DateTimeFieldType.secondOfMinute(), value.toCalendar().get(Calendar.SECOND))
-                    .with(DateTimeFieldType.millisOfSecond(), value.toCalendar().get(Calendar.MILLISECOND)), zone);
+    protected DateTime toDateTime(BaseDateTimeType value, TemporalPrecisionEnum precision) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(value.getValue());
+        switch (precision) {
+            case YEAR: return new DateTime(
+                    TemporalHelper.zoneToOffset(ZoneOffset.of(value.getTimeZone().getID())),
+                    calendar.get(Calendar.YEAR)
+            );
+            case MONTH: return new DateTime(
+                    TemporalHelper.zoneToOffset(ZoneOffset.of(value.getTimeZone().getID())),
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH)
+            );
+            case DAY: return new DateTime(
+                    TemporalHelper.zoneToOffset(ZoneOffset.of(value.getTimeZone().getID())),
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)
+            );
+            case MINUTE: return new DateTime(
+                    TemporalHelper.zoneToOffset(ZoneOffset.of(value.getTimeZone().getID())),
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE)
+            );
+            case SECOND: return new DateTime(
+                    TemporalHelper.zoneToOffset(ZoneOffset.of(value.getTimeZone().getID())),
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)
+            );
+            case MILLI: return new DateTime(
+                    TemporalHelper.zoneToOffset(ZoneOffset.of(value.getTimeZone().getID())),
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
+                    calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND)
+            );
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
+    }
+
+    protected DateTime toDateTime(DateTimeType value) {
+        return toDateTime(value, value.getPrecision());
     }
 
     protected DateTime toDateTime(DateType value) {
-        Partial partial = new Partial();
-        DateTimeZone zone;
-        if (value.getTimeZone() == null) {
-            zone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
-        }
-        else {
-            zone = DateTimeZone.forTimeZone(value.getTimeZone());
-        }        switch (value.getPrecision()) {
-            case YEAR: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR)), zone);
-            case MONTH: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
-                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 1), zone);
-            case DAY: return new DateTime(partial.with(DateTimeFieldType.year(), value.toCalendar().get(Calendar.YEAR))
-                    .with(DateTimeFieldType.monthOfYear(), value.toCalendar().get(Calendar.MONTH) + 11)
-                    .with(DateTimeFieldType.dayOfMonth(), value.toCalendar().get(Calendar.DAY_OF_MONTH)), zone);
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
-        }
+        return toDateTime(value, value.getPrecision());
     }
 
     protected Time toTime(TimeType value) {
-        DateTimeFormatter dtf = ISODateTimeFormat.timeParser();
-        ReadablePartial partial = new LocalTime(dtf.parseMillis(value.getValue()));
-        return new Time(new Partial(partial), dtf.getZone());
+        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ISO_TIME;
+        return new Time(OffsetTime.from(formatter.parse(value.getValue())), Precision.MILLISECOND);
     }
 
     protected DateTime toDateTime(InstantType value) {
-        // TODO: Timezone support
-        return toDateTime(value.getValue());
-//        Calendar calendar = value.toCalendar();
-//        return new DateTime(
-//                value.toCalendar().get(Calendar.YEAR),
-//                value.toCalendar().get(Calendar.MONTH) + 1,
-//                value.toCalendar().get(Calendar.DAY_OF_MONTH),
-//                value.toCalendar().get(Calendar.HOUR),
-//                value.toCalendar().get(Calendar.MINUTE),
-//                value.toCalendar().get(Calendar.SECOND),
-//                value.toCalendar().get(Calendar.MILLISECOND)
-//        );
+        return toDateTime(value, value.getPrecision());
     }
 
     @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
         if (target instanceof DateTimeType || target instanceof DateType) {
             DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
-            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getPartial().toString());
+            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getDateTime().toString());
             return dt.toDate();
         }
         else if (target instanceof TimeType && value instanceof Time) {
-            return ((Time) value).getPartial().toString();
+            return ((Time) value).getTime().toString();
         }
         else {
             return value;

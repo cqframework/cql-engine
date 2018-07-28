@@ -1,8 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Precision;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
 
 /*
@@ -21,38 +22,38 @@ public class TimeFromEvaluator extends org.cqframework.cql.elm.execution.TimeFro
 
         if (operand instanceof DateTime) {
             int hour;
-            if (((DateTime)operand).getPartial().size() > 3) {
-                hour = ((DateTime)operand).getJodaDateTime().getHourOfDay();
+            if (((DateTime)operand).getPrecision().toDateTimeIndex() > 2) {
+                hour = ((DateTime)operand).getDateTime().getHour();
             }
             else {
                 return null;
             }
 
             int minute;
-            if (((DateTime)operand).getPartial().size() > 4) {
-                minute = ((DateTime)operand).getJodaDateTime().getMinuteOfHour();
+            if (((DateTime)operand).getPrecision().toDateTimeIndex() > 3) {
+                minute = ((DateTime)operand).getDateTime().getMinute();
             }
             else {
-                return new Time(new Partial(Time.getFields(1), new int[]{hour}), ((DateTime)operand).getTimezone());
+                return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour);
             }
 
             int second;
-            if (((DateTime)operand).getPartial().size() > 5) {
-                second = ((DateTime)operand).getJodaDateTime().getSecondOfMinute();
+            if (((DateTime)operand).getPrecision().toDateTimeIndex() > 4) {
+                second = ((DateTime)operand).getDateTime().getSecond();
             }
             else {
-                return new Time(new Partial(Time.getFields(2), new int[]{hour, minute}), ((DateTime)operand).getTimezone());
+                return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute);
             }
 
             int millisecond;
-            if (((DateTime)operand).getPartial().size() > 6) {
-                millisecond = ((DateTime)operand).getJodaDateTime().getMillisOfSecond();
+            if (((DateTime)operand).getPrecision().toDateTimeIndex() > 5) {
+                millisecond = ((DateTime)operand).getDateTime().get(Precision.MILLISECOND.toChronoField());
             }
             else {
-                return new Time(new Partial(Time.getFields(3), new int[]{hour, minute, second}), ((DateTime)operand).getTimezone());
+                return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute, second);
             }
 
-            return new Time(new Partial(Time.getFields(4), new int[]{hour, minute, second, millisecond}), ((DateTime)operand).getTimezone());
+            return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute, second, millisecond);
         }
 
         throw new IllegalArgumentException(String.format("Cannot TimeFrom arguments of type '%s'.", operand.getClass().getName()));

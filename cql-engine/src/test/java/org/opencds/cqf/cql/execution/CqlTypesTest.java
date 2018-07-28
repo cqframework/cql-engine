@@ -1,12 +1,13 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -29,11 +30,12 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("AnyQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("AnyDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 4, 4})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 4, 4)));
 
         result = context.resolveExpressionRef("AnyTime").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {9, 0, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 9, 0, 0, 0)));
 
         result = context.resolveExpressionRef("AnyInterval").getExpression().evaluate(context);
         Assert.assertTrue(((Interval) result).equal(new Interval(2, true, 7, true)));
@@ -98,33 +100,36 @@ public class CqlTypesTest extends CqlExecutionTestBase {
 
         try {
             context.resolveExpressionRef("DateTimeUpperBoundExcept").getExpression().evaluate(context);
+            Assert.fail();
         }
-        catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), is("The year: 10000 falls above the accepted bounds of 0001-9999."));
+        catch (DateTimeParseException e) {
+            // pass
         }
 
         try {
             context.resolveExpressionRef("DateTimeLowerBoundExcept").getExpression().evaluate(context);
+            Assert.fail();
         }
         catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), is("The year: 0 falls below the accepted bounds of 0001-9999."));
+            // pass
         }
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeProper").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {2016, 7, 7, 6, 25, 33, 910})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 7, 7, 6, 25, 33, 910)));
 
         result = context.resolveExpressionRef("DateTimeIncomplete").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2015, 2, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2015, 2, 10)));
 
         result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).getStart().equals(19));
         Assert.assertTrue(((Interval)result).getEnd().equals(49));
 
         result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {0001, 1, 1, 0, 0, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1, 1, 1, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("DateTimeMax").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(7), new int[] {9999, 12, 31, 23, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 9999, 12, 31, 23, 59, 59, 999)));
     }
 
     @Test
@@ -195,13 +200,15 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     @Test
     public void testTime() throws JAXBException {
         Context context = new Context(library);
+
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("TimeProper").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 25, 12, 863})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 25, 12, 863)));
 
         result = context.resolveExpressionRef("TimeAllMax").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {23, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeAllMin").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {0, 0, 0, 0})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 0, 0, 0, 0)));
     }
 }

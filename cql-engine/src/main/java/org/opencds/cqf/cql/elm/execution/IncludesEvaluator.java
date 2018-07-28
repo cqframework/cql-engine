@@ -26,7 +26,7 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Includes {
 
-    public static Object includes(Object left, Object right, String precision) {
+    public static Boolean includes(Object left, Object right, String precision) {
 
         if (left == null) {
             return false;
@@ -50,6 +50,6 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;;
 
-        return context.logTrace(this.getClass(), includes(left, right, precision), left, right, precision);
+        return includes(left, right, precision);
     }
 }

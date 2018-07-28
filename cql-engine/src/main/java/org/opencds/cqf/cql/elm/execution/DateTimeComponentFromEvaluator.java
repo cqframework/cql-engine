@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.runtime.Time;
 
 /*
@@ -33,37 +34,26 @@ public class DateTimeComponentFromEvaluator extends org.cqframework.cql.elm.exec
             throw new IllegalArgumentException("Precision must be specified.");
         }
 
+        Precision p = Precision.fromString(precision);
+
         if (operand instanceof DateTime) {
             DateTime dateTime = (DateTime)operand;
-            int idx = DateTime.getFieldIndex(precision);
 
-            if (idx != -1) {
-                // check level of precision
-                if (idx + 1 > dateTime.getPartial().size()) {
-                    return null;
-                }
-                return dateTime.getPartial().getValue(idx);
+            if (p.toDateTimeIndex() > dateTime.getPrecision().toDateTimeIndex()) {
+                return null;
             }
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+
+            return dateTime.getDateTime().get(p.toChronoField());
         }
 
         else if (operand instanceof Time) {
             Time time = (Time)operand;
 
-            int idx = Time.getFieldIndex(precision);
+            if (p.toTimeIndex() > time.getPrecision().toTimeIndex()) {
+                return null;
+            }
 
-            if (idx != -1) {
-                // check level of precision
-                if (idx + 1 > time.getPartial().size()) {
-                    return null;
-                }
-                return time.getPartial().getValue(idx);
-            }
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+            return time.getTime().get(p.toChronoField());
         }
 
         throw new IllegalArgumentException(String.format("Cannot DateTimeComponentFrom arguments of type '%s'.", operand.getClass().getName()));
@@ -74,6 +64,6 @@ public class DateTimeComponentFromEvaluator extends org.cqframework.cql.elm.exec
         Object operand = getOperand().evaluate(context);
         String precision = getPrecision().value();
 
-        return context.logTrace(this.getClass(), dateTimeComponentFrom(operand, precision), operand);
+        return dateTimeComponentFrom(operand, precision);
     }
 }

@@ -2,9 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Time;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -88,6 +86,6 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), in(left, right, precision), left, right);
+        return in(left, right, precision);
     }
 }

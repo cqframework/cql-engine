@@ -1009,7 +1009,7 @@ define DateFrom_Date: date from IdesOfMarch
 define DateFrom_ImpreciseDate: date from DateTime(2000)
 define DateFrom_NullDate: date from (null as DateTime)
 
-define test_DateFrom_Date: TestMessage(DateFrom_Date same day as @2000-03-15T00:00:00.000+01:00, 'DateFrom_Date', ToString(@2000-03-15T00:00:00.000), ToString(DateFrom_Date))
+define test_DateFrom_Date: TestMessage(DateFrom_Date same day as DateTime(2000, 3, 15, null, null, null, null, 1.0), 'DateFrom_Date', ToString(DateTime(2000, 3, 15, null, null, null, null, 1.0)), ToString(DateFrom_Date))
 define test_DateFrom_ImpreciseDate: TestMessage(DateFrom_ImpreciseDate = @2000, 'DateFrom_ImpreciseDate', ToString(@2000), ToString(DateFrom_ImpreciseDate))
 define test_DateFrom_NullDate: TestMessage(DateFrom_NullDate is null, 'DateFrom_NullDate', 'null', ToString(DateFrom_NullDate))
 

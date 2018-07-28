@@ -51,6 +51,6 @@ public class OverlapsAfterEvaluator extends org.cqframework.cql.elm.execution.Ov
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), overlapsAfter(left, right, precision), left, right, precision);
+        return overlapsAfter(left, right, precision);
     }
 }

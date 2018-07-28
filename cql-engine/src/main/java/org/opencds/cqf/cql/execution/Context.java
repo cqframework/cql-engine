@@ -4,9 +4,12 @@ import org.cqframework.cql.elm.execution.*;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.data.SystemDataProvider;
+import org.opencds.cqf.cql.runtime.Precision;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import javax.xml.namespace.QName;
+import java.time.OffsetDateTime;
 import java.util.*;
 import java.util.List;
 
@@ -48,8 +51,8 @@ public class Context {
     private TraceExecution trace = new TraceExecution();
     private boolean enableTraceLogging = false;
 
-    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime =
-            org.opencds.cqf.cql.runtime.DateTime.fromJavaDate(new Date(System.currentTimeMillis()));
+    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime = 
+            new org.opencds.cqf.cql.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
 
     public Context(Library library) {
         init(library);

@@ -77,10 +77,10 @@ define DecimalIntervalContainsTrue: DecimalIntervalTest contains 8.0
 define DecimalIntervalContainsFalse: DecimalIntervalTest contains 255.0
 define QuantityIntervalContainsTrue: QuantityIntervalTest contains 2.0 'g'
 define QuantityIntervalContainsFalse: QuantityIntervalTest contains 100.0 'g'
-define DateTimeContainsNull: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 10)
+define DateTimeContainsNull: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains DateTime(2012, 1, 15)
 define DateTimeContainsTrue: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains day of DateTime(2012, 1, 10)
 define DateTimeContainsFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)] contains day of DateTime(2012, 1, 16)
-define TimeContainsNull: Interval[@T01:59:59, @T10:59:59] contains @T05:59:59
+define TimeContainsNull: Interval[@T01:59:59, @T10:59:59] contains @T01:59:59
 define TimeContainsTrue: Interval[@T01:59:59.999, @T10:59:59.999] contains @T05:59:59.999
 define TimeContainsFalse: Interval[@T01:59:59.999, @T10:59:59.999] contains @T15:59:59.999
 
@@ -143,7 +143,7 @@ define DecimalIntervalInFalse: -2.0 in DecimalIntervalTest
 define QuantityIntervalInTrue: 1.0 'g' in QuantityIntervalTest
 define QuantityIntervalInFalse: 55.0 'g' in QuantityIntervalTest
 define DateTimeInTrue: DateTime(2012, 1, 7) in day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
-define DateTimeInNullPrecision: DateTime(2012, 1, 7) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
+define DateTimeInNullPrecision: DateTime(2012, 1, 5) in Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
 define DateTimeInFalse: DateTime(2012, 1, 17) in day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)]
 define DateTimeInNullTrue: DateTime(2012, 1, 7) in day of Interval[DateTime(2012, 1, 5), null]
 define TimeInTrue: @T07:59:59.999 in Interval[@T05:59:59.999, @T10:59:59.999]
@@ -292,7 +292,7 @@ define DecimalIntervalOverlapsFalse: DecimalIntervalTest overlaps DecimalInterva
 define QuantityIntervalOverlapsTrue: QuantityIntervalTest overlaps QuantityIntervalTest3
 define QuantityIntervalOverlapsFalse: QuantityIntervalTest overlaps QuantityIntervalTest2
 define DateTimeOverlapsTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define DateTimeOverlapsNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
+define DateTimeOverlapsNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] overlaps Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
 define DateTimeOverlapsFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps day of Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)]
 define TimeOverlapsTrue: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T12:00:00.000, @T21:59:59.999]
 define TimeOverlapsFalse: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T20:00:00.000, @T21:59:59.999]
@@ -306,7 +306,7 @@ define DecimalIntervalOverlapsBeforeFalse: DecimalIntervalTest3 overlaps before 
 define QuantityIntervalOverlapsBeforeTrue: QuantityIntervalTest overlaps before QuantityIntervalTest3
 define QuantityIntervalOverlapsBeforeFalse: QuantityIntervalTest3 overlaps before QuantityIntervalTest
 define DateTimeOverlapsBeforeTrue: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps before day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
-define DateTimeOverlapsBeforeNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps before Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
+define DateTimeOverlapsBeforeNull: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 15)] overlaps before Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
 define DateTimeOverlapsBeforeFalse: Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)] overlaps before day of Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)]
 define TimeOverlapsBeforeTrue: Interval[@T10:00:00.000, @T19:59:59.999] overlaps before Interval[@T12:00:00.000, @T21:59:59.999]
 define TimeOverlapsBeforeFalse: Interval[@T10:00:00.000, @T19:59:59.999] overlaps before Interval[@T20:00:00.000, @T21:59:59.999]
@@ -320,7 +320,7 @@ define DecimalIntervalOverlapsAfterFalse: DecimalIntervalTest3 overlaps after De
 define QuantityIntervalOverlapsAfterTrue: QuantityIntervalTest4 overlaps after QuantityIntervalTest
 define QuantityIntervalOverlapsAfterFalse: QuantityIntervalTest3 overlaps after QuantityIntervalTest
 define DateTimeOverlapsAfterTrue: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] overlaps after day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
-define DateTimeOverlapsAfterNull: Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)] overlaps after Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
+define DateTimeOverlapsAfterNull: Interval[DateTime(2012, 1, 25), DateTime(2012, 1, 28)] overlaps after Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
 define DateTimeOverlapsAfterFalse: Interval[DateTime(2012, 1, 26), DateTime(2012, 1, 28)] overlaps after day of Interval[DateTime(2012, 1, 5), DateTime(2012, 1, 25)]
 define TimeOverlapsAfterTrue: Interval[@T12:00:00.000, @T21:59:59.999] overlaps after Interval[@T10:00:00.000, @T19:59:59.999]
 define TimeOverlapsAfterFalse: Interval[@T20:00:00.000, @T21:59:59.999] overlaps after Interval[@T10:00:00.000, @T19:59:59.999]
