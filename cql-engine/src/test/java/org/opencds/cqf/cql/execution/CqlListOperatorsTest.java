@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
@@ -308,13 +307,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("In1And12").getExpression().evaluate(context);
         assertThat(result, is(true));

@@ -47,15 +47,15 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
             if (isLeftUncertain) {
                 Interval leftUncertainInterval = ((BaseTemporal) left).getUncertaintyInterval(precision);
                 return new Interval(
-                        duration(leftUncertainInterval.getEnd(), right, precision), true,
-                        duration(leftUncertainInterval.getStart(), right, precision), true
+                        duration(leftUncertainInterval.getEnd(), right, isWeeks ? Precision.WEEK : precision), true,
+                        duration(leftUncertainInterval.getStart(), right, isWeeks ? Precision.WEEK : precision), true
                 ).setUncertain(true);
             }
             if (isRightUncertain) {
                 Interval rightUncertainInterval = ((BaseTemporal) right).getUncertaintyInterval(precision);
                 return new Interval(
-                        duration(left, rightUncertainInterval.getStart(), precision), true,
-                        duration(left, rightUncertainInterval.getEnd(), precision), true
+                        duration(left, rightUncertainInterval.getStart(), isWeeks ? Precision.WEEK : precision), true,
+                        duration(left, rightUncertainInterval.getEnd(), isWeeks ? Precision.WEEK : precision), true
                 ).setUncertain(true);
             }
 

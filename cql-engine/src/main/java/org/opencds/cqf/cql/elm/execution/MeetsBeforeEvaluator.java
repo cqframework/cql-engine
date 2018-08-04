@@ -1,9 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.runtime.*;
 
 /*
 meets before _precision_ (left Interval<T>, right Interval<T>) Boolean
@@ -25,16 +23,28 @@ public class MeetsBeforeEvaluator extends org.cqframework.cql.elm.execution.Meet
         }
 
         if (left instanceof Interval && right instanceof Interval) {
+            Boolean isLeftStartGreater = GreaterEvaluator.greater(((Interval) left).getStart(), ((Interval) right).getEnd());
+            if (isLeftStartGreater != null && isLeftStartGreater) {
+                return false;
+            }
+
             Object leftEnd = ((Interval) left).getEnd();
             Object rightStart = ((Interval) right).getStart();
 
-            if (leftEnd instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
-                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(leftEnd), rightStart, precision);
+            Boolean isIn = InEvaluator.in(leftEnd, right, precision);
+            if (isIn != null && isIn) {
+                return false;
+            }
+            isIn = InEvaluator.in(((Interval) left).getStart(), right, precision);
+            if (isIn != null && isIn) {
+                return false;
+            }
+            isIn = InEvaluator.in(leftEnd, right, precision);
+            if (isIn != null && isIn) {
+                return false;
             }
 
-            else {
-                return EqualEvaluator.equal(SuccessorEvaluator.successor(leftEnd), rightStart);
-            }
+            return MeetsEvaluator.meetsOperation(leftEnd, rightStart, precision);
         }
 
         throw new IllegalArgumentException(String.format("Cannot MeetsBefore arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));

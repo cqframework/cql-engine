@@ -53,15 +53,15 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
             if (isLeftUncertain) {
                 Interval leftUncertainInterval = ((BaseTemporal) left).getUncertaintyInterval(precision);
                 return new Interval(
-                        difference(leftUncertainInterval.getEnd(), right, precision), true,
-                        difference(leftUncertainInterval.getStart(), right, precision), true
+                        difference(leftUncertainInterval.getEnd(), right, isWeeks ? Precision.WEEK : precision), true,
+                        difference(leftUncertainInterval.getStart(), right, isWeeks ? Precision.WEEK : precision), true
                 ).setUncertain(true);
             }
             if (isRightUncertain) {
                 Interval rightUncertainInterval = ((BaseTemporal) right).getUncertaintyInterval(precision);
                 return new Interval(
-                        difference(left, rightUncertainInterval.getStart(), precision), true,
-                        difference(left, rightUncertainInterval.getEnd(), precision), true
+                        difference(left, rightUncertainInterval.getStart(), isWeeks ? Precision.WEEK : precision), true,
+                        difference(left, rightUncertainInterval.getEnd(), isWeeks ? Precision.WEEK : precision), true
                 ).setUncertain(true);
             }
 

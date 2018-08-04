@@ -53,7 +53,7 @@ define TimeBeforeTrue: Interval[@T15:59:59.999, @T20:59:59.999] before @T22:59:5
 define TimeBeforeFalse: Interval[@T15:59:59.999, @T20:59:59.999] before @T10:59:59.999
 
 //Collapse
-define TestCollapseNull: collapse {Interval(null, null)}
+define TestCollapseNull: collapse null as List<Interval<Integer>>
 define IntegerIntervalCollapse: collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }
 define IntegerIntervalCollapse2: collapse { Interval[1,2], Interval[3,7], Interval[10,19], Interval[7,10] }
 define IntegerIntervalCollapse3: collapse { Interval[4,6], Interval[7,8] }
@@ -119,8 +119,7 @@ define TimeEqualTrue: Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:5
 define TimeEqualFalse: Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:59:59.999, @T10:58:59.999]
 
 //Except
-define NullInterval: Interval[null, null]
-define TestExceptNull: NullInterval except NullInterval
+define TestExceptNull: null as Interval<Integer> except null as Interval<Integer>
 define IntegerIntervalExcept1to3: IntegerIntervalTest except IntegerIntervalTest4
 define IntegerIntervalExceptNull: Interval[1, 10] except Interval[3, 7]
 define DecimalIntervalExcept1to3: DecimalIntervalTest except DecimalIntervalTest3
@@ -133,7 +132,7 @@ define ExceptTimeInterval: Interval[@T05:59:59.999, @T10:59:59.999] except Inter
 define ExceptTime2: Interval[@T08:59:59.999, @T11:59:59.999] except Interval[@T05:59:59.999, @T10:59:59.999]
 
 //In
-define TestInNull: 5 in null
+define TestInNull: 5 in null as Interval<Integer>
 define TestInNullEnd: 5 in Interval[1, null]
 define TestNullIn: null in Interval[1, 4]
 define IntegerIntervalInTrue: 5 in IntegerIntervalTest
@@ -238,7 +237,7 @@ define TimeMeetsBeforeTrue: Interval[@T04:59:59.999, @T09:59:59.999] meets befor
 define TimeMeetsBeforeFalse: Interval[@T04:59:59.999, @T09:59:59.999] meets before Interval[@T10:12:00.000, @T19:59:59.999]
 
 //MeetsAfter
-define TestMeetsAfterNull: Interval(null, 5] meets after Interval[11, null)
+define TestMeetsAfterNull: Interval(null, 15] meets after Interval[11, null)
 define IntegerIntervalMeetsAfterTrue: IntegerIntervalTest2 meets after IntegerIntervalTest
 define IntegerIntervalMeetsAfterFalse: IntegerIntervalTest3 meets after IntegerIntervalTest
 define DecimalIntervalMeetsAfterTrue: Interval[55.00000123, 128.032156] meets after Interval[12.00258, 55.00000122]
@@ -284,7 +283,7 @@ define TestOnOrBeforeDecimalFalse: 1.6667 on or before Interval[1.666, 2.5000000
 define TestOnOrBeforeQuantityTrue: 1.666 'mg' on or before Interval[1.666 'mg', 2.50000000 'mg']
 
 //Overlaps
-define TestOverlapsNull: NullInterval overlaps IntegerIntervalTest
+define TestOverlapsNull: null as Interval<Integer> overlaps IntegerIntervalTest
 define IntegerIntervalOverlapsTrue: IntegerIntervalTest overlaps IntegerIntervalTest4
 define IntegerIntervalOverlapsFalse: IntegerIntervalTest overlaps IntegerIntervalTest2
 define DecimalIntervalOverlapsTrue: DecimalIntervalTest overlaps DecimalIntervalTest3
@@ -298,7 +297,7 @@ define TimeOverlapsTrue: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Inter
 define TimeOverlapsFalse: Interval[@T10:00:00.000, @T19:59:59.999] overlaps Interval[@T20:00:00.000, @T21:59:59.999]
 
 //OverlapsBefore
-define TestOverlapsBeforeNull: NullInterval overlaps before IntegerIntervalTest
+define TestOverlapsBeforeNull: null as Interval<Integer> overlaps before IntegerIntervalTest
 define IntegerIntervalOverlapsBeforeTrue: IntegerIntervalTest overlaps before IntegerIntervalTest4
 define IntegerIntervalOverlapsBeforeFalse: IntegerIntervalTest4 overlaps before IntegerIntervalTest
 define DecimalIntervalOverlapsBeforeTrue: DecimalIntervalTest overlaps before DecimalIntervalTest3
@@ -312,7 +311,7 @@ define TimeOverlapsBeforeTrue: Interval[@T10:00:00.000, @T19:59:59.999] overlaps
 define TimeOverlapsBeforeFalse: Interval[@T10:00:00.000, @T19:59:59.999] overlaps before Interval[@T20:00:00.000, @T21:59:59.999]
 
 //OverlapsAfter
-define TestOverlapsAfterNull: NullInterval overlaps after IntegerIntervalTest
+define TestOverlapsAfterNull: null as Interval<Integer> overlaps after IntegerIntervalTest
 define IntegerIntervalOverlapsAfterTrue: IntegerIntervalTest5 overlaps after IntegerIntervalTest
 define IntegerIntervalOverlapsAfterFalse: IntegerIntervalTest4 overlaps after IntegerIntervalTest
 define DecimalIntervalOverlapsAfterTrue: DecimalIntervalTest4 overlaps after DecimalIntervalTest
@@ -332,7 +331,7 @@ define TestPointFromDecimal: point from Interval[1.0, 1.0]
 define TestPointFromQuantity: point from Interval[1.0 'cm', 1.0 'cm']
 
 //ProperlyIncludes
-define TestProperlyIncludesNull: NullInterval properly includes IntegerIntervalTest
+define TestProperlyIncludesNull: null as Interval<Integer> properly includes IntegerIntervalTest
 define IntegerIntervalProperlyIncludesTrue: IntegerIntervalTest properly includes IntegerIntervalTest4
 define IntegerIntervalProperlyIncludesFalse: IntegerIntervalTest properly includes IntegerIntervalTest5
 define DecimalIntervalProperlyIncludesTrue: DecimalIntervalTest properly includes DecimalIntervalTest3
@@ -361,7 +360,7 @@ define TimeProperInPrecisionFalse: @T12:00:00 properly included in second of Int
 define TimeProperInPrecisionNull: @T12:00:00 properly included in millisecond of Interval[@T12:00:00.001, @T21:59:59.999]
 
 //ProperlyIncludedIn
-define TestProperlyIncludedInNull: IntegerIntervalTest properly included in NullInterval
+define TestProperlyIncludedInNull: IntegerIntervalTest properly included in null as Interval<Integer>
 define IntegerIntervalProperlyIncludedInTrue: IntegerIntervalTest4 properly included in IntegerIntervalTest
 define IntegerIntervalProperlyIncludedInFalse: IntegerIntervalTest5 properly included in IntegerIntervalTest
 define DecimalIntervalProperlyIncludedInTrue: DecimalIntervalTest3 properly included in DecimalIntervalTest
@@ -381,7 +380,7 @@ define DateTimeIntervalStart: start of DateTimeIntervalTest
 define TimeIntervalStart: start of TimeIntervalTest
 
 //Starts
-define TestStartsNull: NullInterval starts IntegerIntervalTest
+define TestStartsNull: null as Interval<Integer> starts IntegerIntervalTest
 define IntegerIntervalStartsTrue: IntegerIntervalTest4 starts IntegerIntervalTest5
 define IntegerIntervalStartsFalse: IntegerIntervalTest starts IntegerIntervalTest4
 define DecimalIntervalStartsTrue: DecimalIntervalTest3 starts DecimalIntervalTest4
@@ -395,7 +394,7 @@ define TimeStartsTrue: Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[
 define TimeStartsFalse: Interval[@T05:59:59.999, @T15:59:59.999] starts Interval[@T04:59:59.999, @T17:59:59.999]
 
 //Union
-define TestUnionNull: NullInterval union IntegerIntervalTest
+define TestUnionNull: null as Interval<Integer> union IntegerIntervalTest
 define IntegerIntervalUnion1To15: IntegerIntervalTest union IntegerIntervalTest5
 define IntegerIntervalUnionNull: IntegerIntervalTest union IntegerIntervalTest3
 define DecimalIntervalUnion1To15: DecimalIntervalTest union DecimalIntervalTest4

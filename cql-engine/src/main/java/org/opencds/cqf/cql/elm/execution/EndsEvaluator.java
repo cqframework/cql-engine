@@ -20,7 +20,7 @@ If either argument is null, the result is null.
  */
 public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
 
-    public static Object ends(Object left, Object right, String precision) {
+    public static Boolean ends(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }

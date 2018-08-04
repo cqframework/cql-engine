@@ -42,6 +42,10 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
         if (type.endsWith("Time")) {
             return new Time(TemporalHelper.getDefaultOffset(), 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
         }
+        // NOTE: Quantity max is not standard
+        if (type.endsWith("Quantity")) {
+            return new Quantity().withValue(Value.MAX_DECIMAL).withUnit("1");
+        }
 
         throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
     }

@@ -134,7 +134,7 @@ public class DateTime extends BaseTemporal {
     public DateTime expandPartialMax(Precision thePrecision) {
         OffsetDateTime odt = this.getDateTime().plusYears(0);
         for (int i = this.getPrecision().toDateTimeIndex() + 1; i < 7; ++i) {
-            if (i >= thePrecision.toDateTimeIndex()) {
+            if (i <= thePrecision.toDateTimeIndex()) {
                 odt = odt.with(
                         Precision.fromDateTimeIndex(i).toChronoField(),
                         odt.range(Precision.fromDateTimeIndex(i).toChronoField()).getMaximum()

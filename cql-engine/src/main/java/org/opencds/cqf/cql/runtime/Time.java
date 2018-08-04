@@ -22,6 +22,11 @@ public class Time extends BaseTemporal {
         return this;
     }
 
+    public Time withPrecision(Precision precision) {
+        this.precision = precision;
+        return this;
+    }
+
     public Time(OffsetTime time, Precision precision) {
         this.time = time;
         this.precision = precision;
@@ -97,7 +102,7 @@ public class Time extends BaseTemporal {
     public Time expandPartialMax(Precision thePrecision) {
         OffsetTime ot = this.getTime().plusHours(0);
         for (int i = this.getPrecision().toTimeIndex() + 1; i < 4; ++i) {
-            if (i >= thePrecision.toTimeIndex()) {
+            if (i <= thePrecision.toTimeIndex()) {
                 ot = ot.with(
                         Precision.fromTimeIndex(i).toChronoField(),
                         ot.range(Precision.fromTimeIndex(i).toChronoField()).getMaximum()

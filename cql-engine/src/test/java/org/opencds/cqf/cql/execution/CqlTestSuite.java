@@ -11,7 +11,6 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.slf4j.Logger;
@@ -32,9 +31,9 @@ public class CqlTestSuite {
 
     final static Logger logger = LoggerFactory.getLogger(CqlTestSuite.class);
 
-    // TODO - test value suites
+    // TODO - test value suites and error suites
 
-    //@Test
+    @Test
     public void testMainSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlTestSuite.cql");
         Context context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2018, 1, 1, 7, 0, 0, 0));

@@ -41,6 +41,10 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
         if (type.endsWith("Time")) {
             return new Time(TemporalHelper.getDefaultOffset(), 0, 0, 0, 0).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
         }
+        // NOTE: Quantity min is not standard
+        if (type.endsWith("Quantity")) {
+            return new Quantity().withValue(Value.MIN_DECIMAL).withUnit("1");
+        }
 
         throw new NotImplementedException(String.format("The Minimum operator is not implemented for type %s", type));
     }

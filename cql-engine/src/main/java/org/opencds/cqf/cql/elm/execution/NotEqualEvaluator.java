@@ -21,11 +21,16 @@ The not equal operator is a shorthand for invocation of logical negation (not) o
  */
 public class NotEqualEvaluator extends org.cqframework.cql.elm.execution.NotEqual {
 
+    public static Boolean notEqual(Object left, Object right) {
+        Boolean result = EqualEvaluator.equal(left, right);
+        return result == null ? null : !result;
+    }
+
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), !EqualEvaluator.equal(left, right), left, right);
+        return notEqual(left, right);
     }
 }

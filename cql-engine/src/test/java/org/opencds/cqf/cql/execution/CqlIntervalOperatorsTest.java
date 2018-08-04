@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
@@ -1040,7 +1039,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TestProperlyIncludesNull").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalProperlyIncludesTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -1133,7 +1132,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TestProperlyIncludedInNull").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalProperlyIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));

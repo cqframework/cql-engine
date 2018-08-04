@@ -1,10 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.joda.time.Instant;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
-
-import java.util.List;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -43,19 +40,20 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
 
         // (Interval, Interval)
         if (left instanceof Interval && right instanceof Interval) {
-            return GreaterEvaluator.greater(((Interval)left).getStart(), ((Interval)right).getEnd());
+            return after(((Interval)left).getStart(), ((Interval)right).getEnd(), precision);
         }
 
         // (Interval, Point)
         else if (left instanceof Interval) {
-            return GreaterEvaluator.greater(((Interval)left).getStart(), right);
+            return after(((Interval)left).getStart(), right, precision);
         }
 
         // (Point, Interval)
         else if (right instanceof Interval) {
-            return GreaterEvaluator.greater(left, ((Interval)right).getEnd());
+            return after(left, ((Interval)right).getEnd(), precision);
         }
 
+        // (DateTime, DateTime) or (Time, Time)
         else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
             if (precision == null) {
                 precision = "millisecond";
@@ -65,7 +63,9 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
             return result == null ? null : result > 0;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot After arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        return GreaterEvaluator.greater(left, right);
+
+//        throw new IllegalArgumentException(String.format("Cannot After arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override

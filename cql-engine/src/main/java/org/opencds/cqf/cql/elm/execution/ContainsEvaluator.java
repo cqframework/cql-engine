@@ -5,12 +5,14 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
+import java.util.Arrays;
+
 /*
 contains(argument List<T>, element T) Boolean
 
 The contains operator for lists returns true if the given element is in the list.
-This operator uses the notion of equivalence to determine whether or not the element being searched for is equivalent to any element
-    in the list. In particular this means that if the list contains a null, and the element being searched for is null, the result will be true.
+This operator uses the notion of equivalence to determine whether or not the element being searched for is equivalent to any element in the list.
+    In particular this means that if the list contains a null, and the element being searched for is null, the result will be true.
 If the list argument is null, the result is false.
 
 contains _precision_ (argument Interval<T>, point T) Boolean
@@ -27,55 +29,11 @@ If either argument is null, the result is null.
 public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contains {
 
     public static Object contains(Object left, Object right, String precision) {
-        if (left instanceof Interval) {
-            return intervalContains((Interval) left, right, precision);
+        try {
+            return InEvaluator.in(right, left, precision);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", left.getClass().getName()));
         }
-
-        else if (left instanceof Iterable) {
-            return listContains((Iterable) left, right);
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", left.getClass().getName()));
-    }
-
-    private static Object intervalContains(Interval left, Object right, String precision) {
-        if (left == null || right == null) {
-            return null;
-        }
-
-        if (right instanceof BaseTemporal) {
-            Boolean pointSameOrAfterStart ;
-            if (left.getStart() == null) {
-                pointSameOrAfterStart = true;
-            }
-            else {
-                pointSameOrAfterStart = SameOrAfterEvaluator.sameOrAfter(right, left.getStart(), precision);
-            }
-
-            Boolean pointSamedOrBeforeEnd;
-            if (left.getEnd() == null) {
-                pointSamedOrBeforeEnd = true;
-            }
-            else {
-                pointSamedOrBeforeEnd = SameOrBeforeEvaluator.sameOrBefore(right, left.getEnd(), precision);
-            }
-
-            return AndEvaluator.and(pointSameOrAfterStart, pointSamedOrBeforeEnd);
-        }
-        else {
-            return AndEvaluator.and(
-                    left.getStart() == null ? true : GreaterOrEqualEvaluator.greaterOrEqual(right, left.getStart()),
-                    left.getEnd() == null ? true : LessOrEqualEvaluator.lessOrEqual(right, left.getEnd())
-            );
-        }
-    }
-
-    private static Object listContains(Iterable left, Object right) {
-        if (left == null) {
-            return false;
-        }
-
-        return InEvaluator.in(right, left, null);
     }
 
     @Override
@@ -87,10 +45,10 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         // null left operand case
         if (getOperand().get(0) instanceof AsEvaluator) {
             if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return context.logTrace(this.getClass(), intervalContains((Interval) left, right, precision), left, right, precision);
+                return InEvaluator.intervalIn(right, (Interval) left, precision);
             }
             else {
-                return context.logTrace(this.getClass(), listContains((Iterable) left, right), left, right);
+                return InEvaluator.listIn(right, (Iterable) left);
             }
         }
 

@@ -43,15 +43,15 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
         }
 
         if (left instanceof Interval && right instanceof Interval) {
-            return LessEvaluator.less(((Interval)left).getStart(), ((Interval)right).getEnd());
+            return before(((Interval)left).getEnd(), ((Interval)right).getStart(), precision);
         }
 
         else if (left instanceof Interval) {
-            return LessEvaluator.less(((Interval)left).getEnd(), right);
+            return before(((Interval)left).getEnd(), right, precision);
         }
 
         else if (right instanceof Interval) {
-            return LessEvaluator.less(left, ((Interval)right).getStart());
+            return before(left, ((Interval)right).getStart(), precision);
         }
 
         else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
@@ -63,7 +63,9 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
             return result == null ? null : result < 0;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        return LessEvaluator.less(left, right);
+
+//        throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
