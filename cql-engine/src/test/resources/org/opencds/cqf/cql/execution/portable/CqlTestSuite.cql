@@ -50,6 +50,31 @@ define function toString(value Quantity):
     then 'null'
   else ToString(value)
 
+define function toString(value Tuple{a Integer}):
+  if value is null
+    then 'null'
+  else 'Tuple{ a: ' + ToString(value.a) + ' }'
+
+define function toString(value Tuple{hello String}):
+  if value is null
+    then 'null'
+  else 'Tuple{ hello: ' + value.hello + ' }'
+
+define function toString(value Tuple{a Integer, b String}):
+  if value is null
+    then 'null'
+  else 'Tuple{ a: ' + ToString(value.a) + ', b: ' + value.b + ' }'
+
+define function toString(value Tuple{a Integer, b Integer, c Integer}):
+  if value is null
+    then 'null'
+  else 'Tuple{ a: ' + ToString(value.a) + ', b: ' + ToString(value.b) + ', c: ' + ToString(value.c) + ' }'
+
+define function toString(value List<Integer>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
 define function toString(value Interval<Integer>):
   if value is null
     then 'null'
@@ -66,6 +91,26 @@ define function toString(value List<Interval<Integer>>):
   else Combine((value V return toString(V)), ', ')
 
 define function toString(value List<Interval<DateTime>>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Tuple{a Integer}>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Tuple{hello String}>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Tuple{a Integer, b String}>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Tuple{a Integer, b Integer, c Integer}>):
   if value is null
     then 'null'
   else Combine((value V return toString(V)), ', ')
@@ -3086,7 +3131,333 @@ define test_DtIvlCollapse_DateTimeCollapseImpreciseBoundary: TestMessage(DtIvlCo
 *********************
 */
 
-// TODO
+// Exists
+define Exists_EmptyList: exists (List<Integer>{})
+define Exists_FullList: exists ({ 1, 2, 3 })
+
+define test_Exists_EmptyList: TestMessage(not Exists_EmptyList, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
+define test_Exists_FullList: TestMessage(Exists_FullList, 'Exists_FullList', toString(true), toString(Exists_FullList))
+
+// Equal
+define Equal_EqualIntList: {1, 2, 3} = {1, 2, 3}
+define Equal_UnequalIntList: {1, 2, 3} = {1, 2}
+define Equal_ReverseIntList: {1, 2, 3} = {3, 2, 1}
+define Equal_EqualStringList: {'hello', 'world'} = {'hello', 'world'}
+define Equal_UnequalStringList: {'hello', 'world'} = {'foo', 'bar'}
+define Equal_EqualTupleList: List<Any>{ Tuple{a: 1, b: Tuple{c: 1}}, Tuple{x: 'y', z: 2} } = List<Any>{ Tuple{a: 1, b: Tuple{c: 1}}, Tuple{x: 'y', z: 2} }
+define Equal_UnequalTupleList: List<Any>{ Tuple{a: 1, b: Tuple{c: 1}}, Tuple{x: 'y', z: 2} } = List<Any>{ Tuple{a: 1, b: Tuple{c: -1}}, Tuple{x: 'y', z: 2} }
+define Equal_FirstListHasNull: {'hello', 'world', (null as String)} = {'hello', 'world'}
+define Equal_SecondListHasNull: {'hello', 'world'} = {'hello', 'world', (null as String)}
+define Equal_BothListsHaveNull: List<Integer>{(null as Integer)} = List<Integer>{(null as Integer)}
+
+define test_Equal_EqualIntList: TestMessage(Equal_EqualIntList, 'Equal_EqualIntList', toString(true), toString(Equal_EqualIntList))
+define test_Equal_UnequalIntList: TestMessage(not Equal_UnequalIntList, 'Equal_UnequalIntList', toString(false), toString(Equal_UnequalIntList))
+define test_Equal_ReverseIntList: TestMessage(not Equal_ReverseIntList, 'Equal_ReverseIntList', toString(false), toString(Equal_ReverseIntList))
+define test_Equal_EqualStringList: TestMessage(Equal_EqualStringList, 'Equal_EqualStringList', toString(true), toString(Equal_EqualStringList))
+define test_Equal_UnequalStringList: TestMessage(not Equal_UnequalStringList, 'Equal_UnequalStringList', toString(false), toString(Equal_UnequalStringList))
+define test_Equal_EqualTupleList: TestMessage(Equal_EqualTupleList, 'Equal_EqualTupleList', toString(true), toString(Equal_EqualTupleList))
+define test_Equal_UnequalTupleList: TestMessage(not Equal_UnequalTupleList, 'Equal_UnequalTupleList', toString(false), toString(Equal_UnequalTupleList))
+define test_Equal_FirstListHasNull: TestMessage(Equal_FirstListHasNull is null, 'Equal_FirstListHasNull', 'null', toString(Equal_FirstListHasNull))
+define test_Equal_SecondListHasNull: TestMessage(Equal_SecondListHasNull is null, 'Equal_SecondListHasNull', 'null', toString(Equal_SecondListHasNull))
+define test_Equal_BothListsHaveNull: TestMessage(Equal_BothListsHaveNull is null, 'Equal_BothListsHaveNull', 'null', toString(Equal_BothListsHaveNull))
+
+// NotEqual
+define NotEqual_EqualIntList: {1, 2, 3} != {1, 2, 3}
+define NotEqual_UnequalIntList: {1, 2, 3} != {1, 2}
+define NotEqual_ReverseIntList: {1, 2, 3} != {3, 2, 1}
+define NotEqual_EqualStringList: {'hello', 'world'} != {'hello', 'world'}
+define NotEqual_UnequalStringList: {'hello', 'world'} != {'foo', 'bar'}
+define NotEqual_EqualTupleList: List<Any>{ Tuple{a: 1, b: Tuple{c: 1}}, Tuple{x: 'y', z: 2} } != List<Any>{ Tuple{a: 1, b: Tuple{c: 1}}, Tuple{x: 'y', z: 2} }
+define NotEqual_UnequalTupleList: List<Any>{ Tuple{a: 1, b: Tuple{c: 1}}, Tuple{x: 'y', z: 2} } != List<Any>{ Tuple{a: 1, b: Tuple{c: -1}}, Tuple{x: 'y', z: 2} }
+
+define test_NotEqual_EqualIntList: TestMessage(not NotEqual_EqualIntList, 'NotEqual_EqualIntList', toString(false), toString(NotEqual_EqualIntList))
+define test_NotEqual_UnequalIntList: TestMessage(NotEqual_UnequalIntList, 'NotEqual_UnequalIntList', toString(true), toString(NotEqual_UnequalIntList))
+define test_NotEqual_ReverseIntList: TestMessage(NotEqual_ReverseIntList, 'NotEqual_ReverseIntList', toString(true), toString(NotEqual_ReverseIntList))
+define test_NotEqual_EqualStringList: TestMessage(not NotEqual_EqualStringList, 'NotEqual_EqualStringList', toString(false), toString(NotEqual_EqualStringList))
+define test_NotEqual_UnequalStringList: TestMessage(NotEqual_UnequalStringList, 'NotEqual_UnequalStringList', toString(true), toString(NotEqual_UnequalStringList))
+define test_NotEqual_EqualTupleList: TestMessage(not NotEqual_EqualTupleList, 'NotEqual_EqualTupleList', toString(false), toString(NotEqual_EqualTupleList))
+define test_NotEqual_UnequalTupleList: TestMessage(NotEqual_UnequalTupleList, 'NotEqual_UnequalTupleList', toString(true), toString(NotEqual_UnequalTupleList))
+
+// Union
+define Union_OneToTen: {1, 2, 3, 4, 5} union {6, 7, 8, 9, 10}
+define Union_OneToFiveOverlapped: {1, 2, 3, 4} union {3, 4, 5}
+define Union_OneToFiveOverlappedWithNulls: {1, null, 2, 3, 4} union {3, 4, 5, null}
+define Union_Disjoint: {1, 2} union {4, 5}
+define Union_NestedToFifteen: {1, 2, 3} union {4, 5, 6} union {7 ,8 , 9} union {10, 11, 12} union {13, 14, 15}
+define Union_NullUnion: null union {1, 2, 3}
+define Union_UnionNull: {1, 2, 3} union null
+
+define test_Union_OneToTen: TestMessage(Union_OneToTen = {1,2,3,4,5,6,7,8,9,10}, 'Union_OneToTen', toString({1,2,3,4,5,6,7,8,9,10}), toString(Union_OneToTen))
+define test_Union_OneToFiveOverlapped: TestMessage(Union_OneToFiveOverlapped = {1,2,3,4,5}, 'Union_OneToFiveOverlapped', toString({1,2,3,4,5}), toString(Union_OneToFiveOverlapped))
+define test_Union_OneToFiveOverlappedWithNulls: TestMessage(Union_OneToFiveOverlappedWithNulls ~ {1,null,2,3,4,5}, 'Union_OneToFiveOverlappedWithNulls', toString({1,null,2,3,4,5}), toString(Union_OneToFiveOverlappedWithNulls))
+define test_Union_Disjoint: TestMessage(Union_Disjoint = {1,2,4,5}, 'Union_Disjoint', toString({1,2,4,5}), toString(Union_Disjoint))
+define test_Union_NestedToFifteen: TestMessage(Union_NestedToFifteen = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}, 'Union_NestedToFifteen', toString({1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}), toString(Union_NestedToFifteen))
+define test_Union_NullUnion: TestMessage(Union_NullUnion is null, 'Union_NullUnion', 'null', toString(Union_NullUnion))
+define test_Union_UnionNull: TestMessage(Union_UnionNull is null, 'Union_UnionNull', 'null', toString(Union_UnionNull))
+
+// Except
+define Except_ExceptThreeFour: {1, 2, 3, 4, 5} except {3, 4}
+define Except_ThreeFourExcept: {3, 4} except {1, 2, 3, 4, 5}
+define Except_ExceptFiveThree: {1, 2, 3, 4, 5} except {5, 3}
+define Except_ExceptNoOp: {1, 2, 3, 4, 5} except {6, 7, 8, 9, 10}
+define Except_ExceptEverything: {1, 2, 3, 4, 5} except {1, 2, 3, 4, 5}
+define Except_SomethingExceptNothing: {1, 2, 3, 4, 5} except List<Integer>{}
+define Except_NothingExceptSomething: List<Integer>{} except {1, 2, 3, 4, 5}
+define Except_ExceptTuples: {Tuple{a: 1}, Tuple{a: 2}, Tuple{a: 3}} except {Tuple{a: 2}}
+define Except_ExceptNull: {1, 2, 3, 4, 5} except null
+define Except_NullExcept: null except {1, 2, 3, 4, 5}
+
+define test_Except_ExceptThreeFour: TestMessage(Except_ExceptThreeFour = {1,2,5}, 'Except_ExceptThreeFour', toString({1,2,5}), toString(Except_ExceptThreeFour))
+define test_Except_ThreeFourExcept: TestMessage(Except_ThreeFourExcept = List<Integer>{}, 'Except_ThreeFourExcept', toString(List<Integer>{}), toString(Except_ThreeFourExcept))
+define test_Except_ExceptFiveThree: TestMessage(Except_ExceptFiveThree = {1,2,4}, 'Except_ExceptFiveThree', toString({1,2,4}), toString(Except_ExceptFiveThree))
+define test_Except_ExceptNoOp: TestMessage(Except_ExceptNoOp = {1,2,3,4,5}, 'Except_ExceptNoOp', toString({1,2,3,4,5}), toString(Except_ExceptNoOp))
+define test_Except_ExceptEverything: TestMessage(Except_ExceptEverything = List<Integer>{}, 'Except_ExceptEverything', toString(List<Integer>{}), toString(Except_ExceptEverything))
+define test_Except_SomethingExceptNothing: TestMessage(Except_SomethingExceptNothing = {1,2,3,4,5}, 'Except_SomethingExceptNothing', toString({1,2,3,4,5}), toString(Except_SomethingExceptNothing))
+define test_Except_NothingExceptSomething: TestMessage(Except_NothingExceptSomething = List<Integer>{}, 'Except_NothingExceptSomething', toString(List<Integer>{}), toString(Except_NothingExceptSomething))
+define test_Except_ExceptTuples: TestMessage(Except_ExceptTuples = {Tuple{a: 1}, Tuple{a: 3}}, 'Except_ExceptTuples', toString({Tuple{a: 1}, Tuple{a: 3}}), toString(Except_ExceptTuples))
+define test_Except_ExceptNull: TestMessage(Except_ExceptNull = {1,2,3,4,5}, 'Except_ExceptNull', toString({1,2,3,4,5}), toString(Except_ExceptNull))
+define test_Except_NullExcept: TestMessage(Except_NullExcept is null, 'Except_NullExcept', 'null', toString(Except_NullExcept))
+
+// Intersect
+define Intersect_NoIntersection: {1, 2, 3} intersect {4, 5, 6}
+define Intersect_IntersectOnFive: {4, 5, 6} intersect {1, 3, 5, 7}
+define Intersect_IntersectOnEvens: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} intersect {0, 2, 4, 6, 8, 10, 12}
+define Intersect_IntersectOnAll: {1, 2, 3, 4, 5} intersect {5, 4, 3, 2, 1}
+define Intersect_NestedIntersects: {1, 2, 3, 4, 5} intersect {2, 3, 4, 5, 6} intersect {3, 4, 5, 6, 7} intersect {4, 5, 6, 7, 8}
+define Intersect_IntersectTuples: {Tuple{a:1, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}} intersect {Tuple{a:2, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}, Tuple{a:5, b:'e'}}
+define Intersect_NullIntersect: null intersect {1, 2, 3}
+define Intersect_IntersectNull: {1, 2, 3} intersect null
+
+define test_Intersect_NoIntersection: TestMessage(Intersect_NoIntersection = List<Integer>{}, 'Intersect_NoIntersection', toString(List<Integer>{}), toString(Intersect_NoIntersection))
+define test_Intersect_IntersectOnFive: TestMessage(Intersect_IntersectOnFive = {5}, 'Intersect_IntersectOnFive', toString({5}), toString(Intersect_IntersectOnFive))
+define test_Intersect_IntersectOnEvens: TestMessage(Intersect_IntersectOnEvens = {2,4,6,8,10}, 'Intersect_IntersectOnEvens', toString({2,4,6,8,10}), toString(Intersect_IntersectOnEvens))
+define test_Intersect_IntersectOnAll: TestMessage(Intersect_IntersectOnAll = {1,2,3,4,5}, 'Intersect_IntersectOnAll', toString({1,2,3,4,5}), toString(Intersect_IntersectOnAll))
+define test_Intersect_NestedIntersects: TestMessage(Intersect_NestedIntersects = {4,5}, 'Intersect_NestedIntersects', toString({4,5}), toString(Intersect_NestedIntersects))
+define test_Intersect_IntersectTuples: TestMessage(Intersect_IntersectTuples = {Tuple{a: 1, b:'c'}, Tuple{a: 2, b:'c'}}, 'Intersect_IntersectTuples', toString({Tuple{a: 1, b:'c'}, Tuple{a: 2, b: 'c'}}), toString(Intersect_IntersectTuples))
+define test_Intersect_NullIntersect: TestMessage(Intersect_NullIntersect is null, 'Intersect_NullIntersect', 'null', toString(Intersect_NullIntersect))
+define test_Intersect_IntersectNull: TestMessage(Intersect_IntersectNull is null, 'Intersect_IntersectNull', 'null', toString(Intersect_IntersectNull))
+
+// IndexOf
+define IndexOf_IndexOfSecond: IndexOf({'a', 'b', 'c', 'd'}, 'b')
+define IndexOf_IndexOfThirdTuple: IndexOf({Tuple{a: 1}, Tuple{a: 2}, Tuple{a: 3}}, Tuple{a: 3})
+define IndexOf_MultipleMatches: IndexOf({'a', 'b', 'c', 'd', 'd', 'e', 'd'}, 'd')
+define IndexOf_ItemNotFound: IndexOf({'a', 'b', 'c'}, 'd')
+define IndexOf_NullList: IndexOf(null, 'a')
+define IndexOf_NullItem: IndexOf({'a', 'b', 'c'}, null)
+define IndexOf_ListCode: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
+define IndexOf_ListWrongCode: IndexOf({Code{code: 'M', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
+define IndexOf_ListWrongCodeSystem: IndexOf({Code{code: 'F', system: '1.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
+
+define test_IndexOf_IndexOfSecond: TestMessage(IndexOf_IndexOfSecond = 1, 'IndexOf_IndexOfSecond', toString(1), toString(IndexOf_IndexOfSecond))
+define test_IndexOf_IndexOfThirdTuple: TestMessage(IndexOf_IndexOfThirdTuple = 2, 'IndexOf_IndexOfThirdTuple', toString(2), toString(IndexOf_IndexOfThirdTuple))
+define test_IndexOf_MultipleMatches: TestMessage(IndexOf_MultipleMatches = 3, 'IndexOf_MultipleMatches', toString(3), toString(IndexOf_MultipleMatches))
+define test_IndexOf_ItemNotFound: TestMessage(IndexOf_ItemNotFound = -1, 'IndexOf_ItemNotFound', toString(-1), toString(IndexOf_ItemNotFound))
+define test_IndexOf_NullList: TestMessage(IndexOf_NullList is null, 'IndexOf_NullList', 'null', toString(IndexOf_NullList))
+define test_IndexOf_NullItem: TestMessage(IndexOf_NullItem = -1, 'IndexOf_NullItem', toString(-1), toString(IndexOf_NullItem))
+define test_IndexOf_ListCode: TestMessage(IndexOf_ListCode = 0, 'IndexOf_ListCode', toString(0), toString(IndexOf_ListCode))
+define test_IndexOf_ListWrongCode: TestMessage(IndexOf_ListWrongCode = -1, 'IndexOf_ListWrongCode', toString(-1), toString(IndexOf_ListWrongCode))
+define test_IndexOf_ListWrongCodeSystem: TestMessage(IndexOf_ListWrongCodeSystem = -1, 'IndexOf_ListWrongCodeSystem', toString(-1), toString(IndexOf_ListWrongCodeSystem))
+
+// Indexer
+define Indexer_SecondItem: {'a', 'b', 'c', 'd'}[1]
+define Indexer_ZeroIndex: {'a', 'b', 'c', 'd'}[0]
+define Indexer_OutOfBounds: {'a', 'b', 'c', 'd'}[100]
+define Indexer_NullList: (null as List<String>)[1]
+define Indexer_NullIndexer: {'a', 'b', 'c', 'd'}[null]
+
+define test_Indexer_SecondItem: TestMessage(Indexer_SecondItem = 'b', 'Indexer_SecondItem', 'b', Indexer_SecondItem)
+define test_Indexer_ZeroIndex: TestMessage(Indexer_ZeroIndex = 'a', 'Indexer_ZeroIndex', 'a', Indexer_ZeroIndex)
+define test_Indexer_OutOfBounds: TestMessage(Indexer_OutOfBounds is null, 'Indexer_OutOfBounds', 'null', Indexer_OutOfBounds)
+define test_Indexer_NullList: TestMessage(Indexer_NullList is null, 'Indexer_NullList', 'null', Indexer_NullList)
+define test_Indexer_NullIndexer: TestMessage(Indexer_NullIndexer is null, 'Indexer_NullIndexer', 'null', Indexer_NullIndexer)
+
+// In
+define In_IsIn: 4 in { 3, 4, 5 }
+define In_IsNotIn: 4 in { 3, 5, 6 }
+define In_TupleIsIn: Tuple{a: 1, b: 'c'} in {Tuple{a:1, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}}
+define In_TupleIsNotIn: Tuple{a: 1, b: 'c'} in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define In_NullIn: null in {1, 2, null, 3}
+define In_InNull: 1 in null as List<Integer>
+define In_NullNotIn: null in {1, 2, 3}
+
+define test_In_IsIn: TestMessage(In_IsIn, 'In_IsIn', toString(true), toString(In_IsIn))
+define test_In_IsNotIn: TestMessage(not In_IsNotIn, 'In_IsNotIn', toString(false), toString(In_IsNotIn))
+define test_In_TupleIsIn: TestMessage(In_TupleIsIn, 'In_TupleIsIn', toString(true), toString(In_TupleIsIn))
+define test_In_TupleIsNotIn: TestMessage(not In_TupleIsNotIn, 'In_TupleIsNotIn', toString(false), toString(In_TupleIsNotIn))
+define test_In_NullIn: TestMessage(In_NullIn, 'In_NullIn', toString(true), toString(In_NullIn))
+define test_In_InNull: TestMessage(not In_InNull, 'In_InNull', toString(false), toString(In_InNull))
+define test_In_NullNotIn: TestMessage(not In_NullNotIn, 'In_NullNotIn', toString(false), toString(In_NullNotIn))
+
+// Contains
+define Contains_IsIn: { 3, 4, 5 } contains 4
+define Contains_IsNotIn: { 3, 5, 6 } contains 4
+define Contains_TupleIsIn: {Tuple{a:1, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}} contains Tuple{a: 1, b: 'c'}
+define Contains_TupleIsNotIn: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} contains Tuple{a: 1, b: 'c'}
+define Contains_InNull: (null as List<Integer>) contains 1
+define Contains_NullIn: {1, 2, null, 3} contains null
+define Contains_NullNotIn: {1, 2, 3} contains null
+
+define test_Contains_IsIn: TestMessage(Contains_IsIn, 'Contains_IsIn', toString(true), toString(Contains_IsIn))
+define test_Contains_IsNotIn: TestMessage(not Contains_IsNotIn, 'Contains_IsNotIn', toString(false), toString(Contains_IsNotIn))
+define test_Contains_TupleIsIn: TestMessage(Contains_TupleIsIn, 'Contains_TupleIsIn', toString(true), toString(Contains_TupleIsIn))
+define test_Contains_TupleIsNotIn: TestMessage(not Contains_TupleIsNotIn, 'Contains_TupleIsNotIn', toString(false), toString(Contains_TupleIsNotIn))
+define test_Contains_NullIn: TestMessage(Contains_NullIn, 'Contains_NullIn', toString(true), toString(Contains_NullIn))
+define test_Contains_InNull: TestMessage(not Contains_InNull, 'Contains_InNull', toString(false), toString(Contains_InNull))
+define test_Contains_NullNotIn: TestMessage(not Contains_NullNotIn, 'Contains_NullNotIn', toString(false), toString(Contains_NullNotIn))
+
+// Includes
+define Includes_IsIncluded: {1, 2, 3, 4, 5} includes {2, 3, 4}
+define Includes_IsIncludedReversed: {1, 2, 3, 4, 5} includes {4, 3, 2}
+define Includes_IsSame: {1, 2, 3, 4, 5} includes {1, 2, 3, 4, 5}
+define Includes_IsNotIncluded: {1, 2, 3, 4, 5} includes {4, 5, 6}
+define Includes_TuplesIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} includes {Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define Includes_TuplesNotIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} includes {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}}
+define Includes_NullIncluded: {1, 2, 3, 4, 5} includes null as List<Integer>
+define Includes_NullIncludes: null includes {1, 2, 3, 4, 5}
+
+define test_Includes_IsIncluded: TestMessage(Includes_IsIncluded, 'Includes_IsIncluded', toString(true), toString(Includes_IsIncluded))
+define test_Includes_IsIncludedReversed: TestMessage(Includes_IsIncludedReversed, 'Includes_IsIncludedReversed', toString(true), toString(Includes_IsIncludedReversed))
+define test_Includes_IsSame: TestMessage(Includes_IsSame, 'Includes_IsSame', toString(true), toString(Includes_IsSame))
+define test_Includes_IsNotIncluded: TestMessage(not Includes_IsNotIncluded, 'Includes_IsNotIncluded', toString(false), toString(Includes_IsNotIncluded))
+define test_Includes_TuplesIncluded: TestMessage(Includes_TuplesIncluded, 'Includes_TuplesIncluded', toString(true), toString(Includes_TuplesIncluded))
+define test_Includes_TuplesNotIncluded: TestMessage(not Includes_TuplesNotIncluded, 'Includes_TuplesNotIncluded', toString(false), toString(Includes_TuplesNotIncluded))
+define test_Includes_NullIncluded: TestMessage(Includes_NullIncluded, 'Includes_NullIncluded', toString(true), toString(Includes_NullIncluded))
+define test_Includes_NullIncludes: TestMessage(not Includes_NullIncludes, 'Includes_NullIncludes', toString(false), toString(Includes_NullIncludes))
+
+// IncludedIn
+define IncludedIn_IsIncluded: {2, 3, 4} included in {1, 2, 3, 4, 5}
+define IncludedIn_IsIncludedReversed: {4, 3, 2} included in {1, 2, 3, 4, 5}
+define IncludedIn_IsSame: {1, 2, 3, 4, 5} included in {1, 2, 3, 4, 5}
+define IncludedIn_IsNotIncluded: {4, 5, 6} included in {1, 2, 3, 4, 5}
+define IncludedIn_TuplesIncluded: {Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} included in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define IncludedIn_TuplesNotIncluded: {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}} included in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define IncludedIn_NullIncludes: {1, 2, 3, 4, 5} included in null
+define IncludedIn_NullIncluded: null as List<Integer> included in {1, 2, 3, 4, 5}
+
+define test_IncludedIn_IsIncluded: TestMessage(IncludedIn_IsIncluded, 'IncludedIn_IsIncluded', toString(true), toString(IncludedIn_IsIncluded))
+define test_IncludedIn_IsIncludedReversed: TestMessage(IncludedIn_IsIncludedReversed, 'IncludedIn_IsIncludedReversed', toString(true), toString(IncludedIn_IsIncludedReversed))
+define test_IncludedIn_IsSame: TestMessage(IncludedIn_IsSame, 'IncludedIn_IsSame', toString(true), toString(IncludedIn_IsSame))
+define test_IncludedIn_IsNotIncluded: TestMessage(not IncludedIn_IsNotIncluded, 'IncludedIn_IsNotIncluded', toString(false), toString(IncludedIn_IsNotIncluded))
+define test_IncludedIn_TuplesIncluded: TestMessage(IncludedIn_TuplesIncluded, 'IncludedIn_TuplesIncluded', toString(true), toString(IncludedIn_TuplesIncluded))
+define test_IncludedIn_TuplesNotIncluded: TestMessage(not IncludedIn_TuplesNotIncluded, 'IncludedIn_TuplesNotIncluded', toString(false), toString(IncludedIn_TuplesNotIncluded))
+define test_IncludedIn_NullIncludes: TestMessage(not IncludedIn_NullIncludes, 'IncludedIn_NullIncludes', toString(false), toString(IncludedIn_NullIncludes))
+define test_IncludedIn_NullIncluded: TestMessage(IncludedIn_NullIncluded, 'IncludedIn_NullIncluded', toString(true), toString(IncludedIn_NullIncluded))
+
+// ProperIncludes
+define ProperIncludes_IsIncluded: {1, 2, 3, 4, 5} properly includes {2, 3, 4, 5}
+define ProperIncludes_IsIncludedReversed: {1, 2, 3, 4, 5} properly includes {5, 4, 3, 2}
+define ProperIncludes_IsSame: {1, 2, 3, 4, 5} properly includes {1, 2, 3, 4, 5}
+define ProperIncludes_IsNotIncluded: {1, 2, 3, 4, 5} properly includes {3, 4, 5, 6}
+define ProperIncludes_TuplesIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} properly includes {Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define ProperIncludes_TuplesNotIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} properly includes {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}}
+define ProperIncludes_NullIncluded: {1, 2, 3, 4, 5} properly includes null as List<Integer>
+define ProperIncludes_NullIncludes: null properly includes {1, 2, 3, 4, 5}
+
+define test_ProperIncludes_IsIncluded: TestMessage(ProperIncludes_IsIncluded, 'ProperIncludes_IsIncluded', toString(true), toString(ProperIncludes_IsIncluded))
+define test_ProperIncludes_IsIncludedReversed: TestMessage(ProperIncludes_IsIncludedReversed, 'ProperIncludes_IsIncludedReversed', toString(true), toString(ProperIncludes_IsIncludedReversed))
+define test_ProperIncludes_IsSame: TestMessage(not ProperIncludes_IsSame, 'ProperIncludes_IsSame', toString(false), toString(ProperIncludes_IsSame))
+define test_ProperIncludes_IsNotIncluded: TestMessage(not ProperIncludes_IsNotIncluded, 'ProperIncludes_IsNotIncluded', toString(false), toString(ProperIncludes_IsNotIncluded))
+define test_ProperIncludes_TuplesIncluded: TestMessage(ProperIncludes_TuplesIncluded, 'ProperIncludes_TuplesIncluded', toString(true), toString(ProperIncludes_TuplesIncluded))
+define test_ProperIncludes_TuplesNotIncluded: TestMessage(not ProperIncludes_TuplesNotIncluded, 'ProperIncludes_TuplesNotIncluded', toString(false), toString(ProperIncludes_TuplesNotIncluded))
+define test_ProperIncludes_NullIncludes: TestMessage(not ProperIncludes_NullIncludes, 'ProperIncludes_NullIncludes', toString(false), toString(ProperIncludes_NullIncludes))
+define test_ProperIncludes_NullIncluded: TestMessage(ProperIncludes_NullIncluded, 'ProperIncludes_NullIncluded', toString(true), toString(ProperIncludes_NullIncluded))
+
+// ProperIncludedIn
+define ProperIncludedIn_IsIncluded: {2, 3, 4} properly included in {1, 2, 3, 4, 5}
+define ProperIncludedIn_IsIncludedReversed: {4, 3, 2} properly included in {1, 2, 3, 4, 5}
+define ProperIncludedIn_IsSame: {1, 2, 3, 4, 5} properly included in {1, 2, 3, 4, 5}
+define ProperIncludedIn_IsNotIncluded: {4, 5, 6} properly included in {1, 2, 3, 4, 5}
+define ProperIncludedIn_TuplesIncluded: {Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} properly included in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define ProperIncludedIn_TuplesNotIncluded: {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}} properly included in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
+define ProperIncludedIn_NullIncludes: {1, 2, 3, 4, 5} properly included in null as List<Integer>
+define ProperIncludedIn_NullIncluded: (null as List<Integer>) properly included in {1, 2, 3, 4, 5}
+
+define test_ProperIncludedIn_IsIncluded: TestMessage(ProperIncludedIn_IsIncluded, 'ProperIncludedIn_IsIncluded', toString(true), toString(ProperIncludedIn_IsIncluded))
+define test_ProperIncludedIn_IsIncludedReversed: TestMessage(ProperIncludedIn_IsIncludedReversed, 'ProperIncludedIn_IsIncludedReversed', toString(true), toString(ProperIncludedIn_IsIncludedReversed))
+define test_ProperIncludedIn_IsSame: TestMessage(not ProperIncludedIn_IsSame, 'ProperIncludedIn_IsSame', toString(false), toString(ProperIncludedIn_IsSame))
+define test_ProperIncludedIn_IsNotIncluded: TestMessage(not ProperIncludedIn_IsNotIncluded, 'ProperIncludedIn_IsNotIncluded', toString(false), toString(ProperIncludedIn_IsNotIncluded))
+define test_ProperIncludedIn_TuplesIncluded: TestMessage(ProperIncludedIn_TuplesIncluded, 'ProperIncludedIn_TuplesIncluded', toString(true), toString(ProperIncludedIn_TuplesIncluded))
+define test_ProperIncludedIn_TuplesNotIncluded: TestMessage(not ProperIncludedIn_TuplesNotIncluded, 'ProperIncludedIn_TuplesNotIncluded', toString(false), toString(ProperIncludedIn_TuplesNotIncluded))
+define test_ProperIncludedIn_NullIncludes: TestMessage(not ProperIncludedIn_NullIncludes, 'ProperIncludedIn_NullIncludes', toString(false), toString(ProperIncludedIn_NullIncludes))
+define test_ProperIncludedIn_NullIncluded: TestMessage(ProperIncludedIn_NullIncluded, 'ProperIncludedIn_NullIncluded', toString(true), toString(ProperIncludedIn_NullIncluded))
+
+// Flatten
+define Flatten_ListOfLists: flatten { {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {9, 8, 7, 6, 5}, {4}, {3, 2, 1} }
+define Flatten_NullValue: flatten null
+
+define test_Flatten_ListOfLists: TestMessage(Flatten_ListOfLists = {1,2,3,4,5,6,7,8,9,9,8,7,6,5,4,3,2,1}, 'Flatten_ListOfLists', toString({1,2,3,4,5,6,7,8,9,9,8,7,6,5,4,3,2,1}), toString(Flatten_ListOfLists))
+define test_Flatten_NullValue: TestMessage(Flatten_NullValue is null, 'Flatten_NullValue', 'null', toString(Flatten_NullValue))
+
+// Distinct
+define Distinct_LotsOfDups: distinct {1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5, 4, 3, 2, 1}
+define Distinct_NoDups: distinct {2, 4, 6, 8, 10}
+define Distinct_DupsTuples: distinct { Tuple{ hello: 'world' }, Tuple{ hello: 'cleveland' }, Tuple{ hello: 'world' }, Tuple{ hello: 'dolly' } }
+define Distinct_NoDupsTuples: distinct { Tuple{ hello: 'world' }, Tuple{ hello: 'cleveland' } }
+define Distinct_DuplicateNulls: distinct {null, 1, 2, null, 3, 4, 5, null}
+
+define test_Distinct_LotsOfDups: TestMessage(Distinct_LotsOfDups = {1,2,3,4,5}, 'Distinct_LotsOfDups', toString({1,2,3,4,5}), toString(Distinct_LotsOfDups))
+define test_Distinct_NoDups: TestMessage(Distinct_NoDups = {2,4,6,8,10}, 'Distinct_NoDups', toString({2,4,6,8,10}), toString(Distinct_NoDups))
+define test_Distinct_DupsTuples: TestMessage(Distinct_DupsTuples = { Tuple{ hello: 'world' }, Tuple{ hello: 'cleveland' }, Tuple{ hello: 'dolly' } }, 'Distinct_DupsTuples', toString({ Tuple{ hello: 'world' }, Tuple{ hello: 'cleveland' }, Tuple{ hello: 'dolly' } }), toString(Distinct_DupsTuples))
+define test_Distinct_NoDupsTuples: TestMessage(Distinct_NoDupsTuples = { Tuple{ hello: 'world' }, Tuple{ hello: 'cleveland' } }, 'Distinct_NoDupsTuples', toString({ Tuple{ hello: 'world' }, Tuple{ hello: 'cleveland' } }), toString(Distinct_NoDupsTuples))
+define test_Distinct_DuplicateNulls: TestMessage(Distinct_DuplicateNulls ~ {null,1,2,3,4,5}, 'Distinct_DuplicateNulls', toString({null,1,2,3,4,5}), toString(Distinct_DuplicateNulls))
+
+// First
+define First_Numbers: First({1, 2, 3, 4})
+define First_Letters: First({'a', 'b', 'c'})
+define First_Lists: First({{'a','b','c'},{'d','e','f'}})
+define First_Tuples: First({ Tuple{a: 1, b: 2, c: 3}, Tuple{a: 24, b: 25, c: 26} })
+define First_Unordered: First({3, 1, 4, 2})
+define First_Empty: First(List<Integer>{})
+define First_NullValue: First(null as List<Integer>)
+
+define test_First_Numbers: TestMessage(First_Numbers = 1, 'First_Numbers', toString(1), toString(First_Numbers))
+define test_First_Letters: TestMessage(First_Letters = 'a', 'First_Letters', 'a', First_Letters)
+define test_First_Lists: TestMessage(First_Lists = {'a','b','c'}, 'First_Lists', Combine({'a','b','c'}, ', '), Combine(First_Lists, ', '))
+define test_First_Tuples: TestMessage(First_Tuples = Tuple{a: 1, b: 2, c: 3}, 'First_Tuples', toString(Tuple{a: 1, b: 2, c: 3}), toString(First_Tuples))
+define test_First_Unordered: TestMessage(First_Unordered = 3, 'First_Unordered', toString(3), toString(First_Unordered))
+define test_First_Empty: TestMessage(First_Empty is null, 'First_Empty', 'null', toString(First_Empty))
+define test_First_NullValue: TestMessage(First_NullValue is null, 'First_NullValue', 'null', toString(First_NullValue))
+
+// Last
+define Last_Numbers: Last({1, 2, 3, 4})
+define Last_Letters: Last({'a', 'b', 'c'})
+define Last_Lists: Last({{'a','b','c'},{'d','e','f'}})
+define Last_Tuples: Last({ Tuple{a: 1, b: 2, c: 3}, Tuple{a: 24, b: 25, c: 26} })
+define Last_Unordered: Last({3, 1, 4, 2})
+define Last_Empty: Last(List<Integer>{})
+define Last_NullValue: Last(null as List<Integer>)
+
+define test_Last_Numbers: TestMessage(Last_Numbers = 4, 'Last_Numbers', toString(4), toString(Last_Numbers))
+define test_Last_Letters: TestMessage(Last_Letters = 'c', 'Last_Letters', 'c', Last_Letters)
+define test_Last_Lists: TestMessage(Last_Lists = {'d','e','f'}, 'Last_Lists', Combine({'d','e','f'}, ', '), Combine(Last_Lists, ', '))
+define test_Last_Tuples: TestMessage(Last_Tuples = Tuple{a: 24, b: 25, c: 26}, 'Last_Tuples', toString(Tuple{a: 24, b: 25, c: 26}), toString(Last_Tuples))
+define test_Last_Unordered: TestMessage(Last_Unordered = 2, 'Last_Unordered', toString(2), toString(Last_Unordered))
+define test_Last_Empty: TestMessage(Last_Empty is null, 'Last_Empty', 'null', toString(Last_Empty))
+define test_Last_NullValue: TestMessage(Last_NullValue is null, 'Last_NullValue', 'null', toString(Last_NullValue))
+
+// Length
+define Length_Numbers: Length({2, 4, 6, 8, 10})
+define Length_Lists: Length({ {1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 11, 12}})
+define Length_Tuples: Length({ Tuple{a: 1, b: 2, c: 3}, Tuple{a: 24, b: 25, c: 26} })
+define Length_Empty: Length(List<Integer>{})
+define Length_NullValue: Length(null as List<Integer>)
+
+define test_Length_Numbers: TestMessage(Length_Numbers = 5, 'Length_Numbers', toString(5), toString(Length_Numbers))
+define test_Length_Lists: TestMessage(Length_Lists = 4, 'Length_Lists', toString(4), toString(Length_Lists))
+define test_Length_Tuples: TestMessage(Length_Tuples = 2, 'Length_Tuples', toString(2), toString(Length_Tuples))
+define test_Length_Empty: TestMessage(Length_Empty = 0, 'Length_Empty', toString(0), toString(Length_Empty))
+define test_Length_NullValue: TestMessage(Length_NullValue = 0, 'Length_NullValue', toString(0), toString(Length_NullValue))
+
+// ToList
+define ToList_FiveInFive: 5 in 5 // CQL-to-ELM will promote the second 5 to a list via ToList
+define ToList_FourInFive: 4 in 5 // CQL-to-ELM will promote the 5 to a list via ToList
+// TODO - the following expression is throwing the error:
+// Call to operator Length(System.Integer) is ambiguous with: - Length(list<list<System.Integer>>) - Length(list<System.Integer>)
+// define ToList_LengthOfNull: Length(null as Integer) // CQL-to-ELM will promote the null to a list via ToList
+
+define test_ToList_FiveInFive: TestMessage(ToList_FiveInFive, 'ToList_FiveInFive', toString(true), toString(ToList_FiveInFive))
+define test_ToList_FourInFive: TestMessage(not ToList_FourInFive, 'ToList_FourInFive', toString(false), toString(ToList_FourInFive))
+// define test_ToList_LengthOfNull: TestMessage(ToList_LengthOfNull = 0, 'ToList_LengthOfNull', toString(0), toString(ToList_LengthOfNull))
 
 /*
 *******************

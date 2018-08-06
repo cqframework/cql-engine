@@ -111,6 +111,9 @@ public class CqlList {
                     return elementEquals;
                 }
             }
+            else if (leftObject == null) {
+                return null;
+            }
             else {
                 return false;
             }

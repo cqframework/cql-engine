@@ -307,7 +307,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -877,13 +877,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(Collections.emptyList()));
 
         result = context.resolveExpressionRef("UnionListNullAndListNull").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(null, null)));
+        assertThat(result, is(Collections.singletonList(null)));
 
         result = context.resolveExpressionRef("Union123AndEmpty").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
 
         result = context.resolveExpressionRef("Union123And2").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(1, 2, 3, 2)));
+        assertThat(result, is(Arrays.asList(1, 2, 3)));
 
         result = context.resolveExpressionRef("Union123And4").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));

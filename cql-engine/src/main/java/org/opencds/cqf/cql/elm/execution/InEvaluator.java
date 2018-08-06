@@ -123,10 +123,6 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
             }
         }
 
-        if (left == null) {
-            return null;
-        }
-
         return false;
     }
 
