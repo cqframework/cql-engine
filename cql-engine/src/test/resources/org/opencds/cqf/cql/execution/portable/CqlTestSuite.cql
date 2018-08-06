@@ -7,7 +7,7 @@ codesystem "SNOMED-CT": 'http://snomed.info/sct'
     This test suite is meant to serve as a comprehensive, portable test suite for Any implementation of a CQL execution engine.
 
     There are 3 components of this suite (of which this file is one):
-      1. Type/value tests
+      1. Optional Internal Type/value tests
       2. Valid operator tests (this file)
       3. Invalid operator tests (All these tests result in a runtime error)
 
@@ -50,6 +50,16 @@ define function toString(value Quantity):
     then 'null'
   else ToString(value)
 
+define function toString(value Code):
+  if value is null
+    then 'null'
+  else 'Code { code: ' + value.code + ' system: ' + value.system + ' version: ' + value.version + ' display: ' + value.display + ' }'
+
+define function toString(value Concept):
+  if value is null
+    then 'null'
+  else 'Concept { ' + toString(value.codes) + ' display: ' + value.display + ' }'
+
 define function toString(value Tuple{a Integer}):
   if value is null
     then 'null'
@@ -84,6 +94,11 @@ define function toString(value Interval<DateTime>):
   if value is null
     then 'null'
   else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
+
+define function toString(value List<Code>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
 
 define function toString(value List<Interval<Integer>>):
   if value is null
@@ -162,7 +177,7 @@ define test_Min_has_null: TestMessage(Min_has_null = -1, 'Min_has_null', toStrin
 define test_Min_empty: TestMessage(Min_empty is null, 'Min_empty', 'null', toString(Min_empty))
 define test_Min_not_null_q: TestMessage(Min_not_null_q = 0 'ml', 'Min_not_null_q', toString(0 'ml'), toString(Min_not_null_q))
 define test_Min_has_null_q: TestMessage(Min_has_null_q = -1 'ml', 'Min_has_null_q', toString(-1 'ml'), toString(Min_has_null_q))
-// TODO - this behavior has yet to be implemented for Quantity - this test will succeed by accident (add better)
+// TODO - this behavior has yet to be implemented for Quantity - this test will succeed by accident
 // define test_Min_q_diff_units: TestMessage(Min_q_diff_units = 0 'ml', 'Min_q_diff_units', toString(0 'ml'), toString(Min_q_diff_units))
 
 // Max
@@ -913,19 +928,8 @@ define hepB_Concept: Concept { codes: { hepB_Code } }
 define FromCode_codeConcept: convert hepB_Code to Concept
 define FromCode_codeCode: convert hepB_Code to Code
 
-// Utility Functions
-// define function toString(concept Concept):
-//   'Concept { codes: { ' + toString(concept.codes) + ' }' + (if concept.display is not null then ', display: ' + concept.display else '') + ' }'
-
-define function toString(code Code):
-  'Code { code: ' + code.code + ', system: ' + code.system + (if code.display is not null then ', display: ' + code.display else '') + ' }'
-
-define function toString(codes List<Code>):
-  codes c return toString(c)
-
 define test_FromCode_codeCode: TestMessage(FromCode_codeCode ~ hepB_Code, 'FromCode_codeCode', toString(hepB_Code), toString(FromCode_codeCode))
-// TODO - fix
-// define test_FromCode_codeConcept: TestMessage(FromCode_codeConcept = hepB_Concept, 'FromCode_codeConcept', toString(hepB_Concept), toString(FromCode_codeConcept))
+define test_FromCode_codeConcept: TestMessage(FromCode_codeConcept ~ hepB_Concept, 'FromCode_codeConcept', toString(hepB_Concept), toString(FromCode_codeConcept))
 
 // ToDecimal
 define ToDecimal_NoSign: ToDecimal('0.0')

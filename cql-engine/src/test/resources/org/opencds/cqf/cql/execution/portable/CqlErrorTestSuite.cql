@@ -5,7 +5,7 @@ library CqlErrorTestSuite version '1'
     This test suite is meant to serve as a comprehensive, portable test suite for Any implementation of a CQL execution engine.
 
     There are 3 components of this suite (of which this file is one):
-      1. Type/value tests
+      1. Optional Internal Type/value tests
       2. Valid operator tests
       3. Invalid operator tests (All these tests result in a runtime error) (this file)
 
