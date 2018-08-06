@@ -3471,7 +3471,77 @@ define test_ToList_FourInFive: TestMessage(not ToList_FourInFive, 'ToList_FourIn
 ************************
 */
 
-// TODO
+// And
+define And_TT: true and true
+define And_TF: true and false
+define And_TN: true and null
+define And_FF: false and false
+define And_FT: false and true
+define And_FN: false and null
+define And_NN: null and null
+define And_NT: null and true
+define And_NF: null and false
+
+define test_And_TT: TestMessage(And_TT, 'And_TT', toString(true), toString(And_TT))
+define test_And_TF: TestMessage(not And_TF, 'And_TF', toString(false), toString(And_TF))
+define test_And_TN: TestMessage(And_TN is null, 'And_TN', 'null', toString(And_TN))
+define test_And_FF: TestMessage(not And_FF, 'And_FF', toString(false), toString(And_FF))
+define test_And_FT: TestMessage(not And_FT, 'And_FT', toString(false), toString(And_FT))
+define test_And_FN: TestMessage(not And_FN, 'And_FN', toString(false), toString(And_FN))
+define test_And_NN: TestMessage(And_NN is null, 'And_NN', 'null', toString(And_NN))
+define test_And_NT: TestMessage(And_NT is null, 'And_NT', 'null', toString(And_NT))
+define test_And_NF: TestMessage(not And_NF, 'And_NF', toString(false), toString(And_NF))
+
+// Or
+define Or_TT: true or true
+define Or_TF: true or false
+define Or_TN: true or null
+define Or_FF: false or false
+define Or_FT: false or true
+define Or_FN: false or null
+define Or_NN: null or null
+define Or_NT: null or true
+define Or_NF: null or false
+
+define test_Or_TT: TestMessage(Or_TT, 'Or_TT', toString(true), toString(Or_TT))
+define test_Or_TF: TestMessage(Or_TF, 'Or_TF', toString(true), toString(Or_TF))
+define test_Or_TN: TestMessage(Or_TN, 'Or_TN', toString(true), toString(Or_TN))
+define test_Or_FF: TestMessage(not Or_FF, 'Or_FF', toString(false), toString(Or_FF))
+define test_Or_FT: TestMessage(Or_FT, 'Or_FT', toString(true), toString(Or_FT))
+define test_Or_FN: TestMessage(Or_FN is null, 'Or_FN', 'null', toString(Or_FN))
+define test_Or_NN: TestMessage(Or_NN is null, 'Or_NN', 'null', toString(Or_NN))
+define test_Or_NT: TestMessage(Or_NT, 'Or_NT', toString(true), toString(Or_NT))
+define test_Or_NF: TestMessage(Or_NF is null, 'Or_NF', 'null', toString(Or_NF))
+
+// XOr
+define XOr_TT: true xor true
+define XOr_TF: true xor false
+define XOr_TN: true xor null
+define XOr_FF: false xor false
+define XOr_FT: false xor true
+define XOr_FN: false xor null
+define XOr_NN: null xor null
+define XOr_NT: null xor true
+define XOr_NF: null xor false
+
+define test_XOr_TT: TestMessage(not XOr_TT, 'XOr_TT', toString(false), toString(XOr_TT))
+define test_XOr_TF: TestMessage(XOr_TF, 'XOr_TF', toString(true), toString(XOr_TF))
+define test_XOr_TN: TestMessage(XOr_TN is null, 'XOr_TN', 'null', toString(XOr_TN))
+define test_XOr_FF: TestMessage(not XOr_FF, 'XOr_FF', toString(false), toString(XOr_FF))
+define test_XOr_FT: TestMessage(XOr_FT, 'XOr_FT', toString(true), toString(XOr_FT))
+define test_XOr_FN: TestMessage(XOr_FN is null, 'XOr_FN', 'null', toString(XOr_FN))
+define test_XOr_NN: TestMessage(XOr_NN is null, 'XOr_NN', 'null', toString(XOr_NN))
+define test_XOr_NT: TestMessage(XOr_NT is null, 'XOr_NT', 'null', toString(XOr_NT))
+define test_XOr_NF: TestMessage(XOr_NF is null, 'XOr_NF', 'null', toString(XOr_NF))
+
+// Not
+define Not_NotTrue: not true
+define Not_NotFalse: not false
+define Not_NotNull: not null
+
+define test_Not_NotTrue: TestMessage(not Not_NotTrue, 'Not_NotTrue', toString(false), toString(Not_NotTrue))
+define test_Not_NotFalse: TestMessage(Not_NotFalse, 'Not_NotFalse', toString(true), toString(Not_NotFalse))
+define test_Not_NotNull: TestMessage(Not_NotNull is null, 'Not_NotNull', 'null', toString(Not_NotNull))
 
 /*
 **********************
@@ -3485,7 +3555,56 @@ define test_ToList_FourInFive: TestMessage(not ToList_FourInFive, 'ToList_FourIn
 **************************
 */
 
-// TODO
+// IsNull
+define Nil: null
+define One: 1
+define IsNull_NullIsNull: null is null
+define IsNull_NullVarIsNull: Nil is null
+define IsNull_StringIsNull: '' is null
+define IsNull_NonNullVarIsNull: One is null
+
+define test_IsNull_NullIsNull: TestMessage(IsNull_NullIsNull, 'IsNull_NullIsNull', toString(true), toString(IsNull_NullIsNull))
+define test_IsNull_NullVarIsNull: TestMessage(IsNull_NullVarIsNull, 'IsNull_NullVarIsNull', toString(true), toString(IsNull_NullVarIsNull))
+define test_IsNull_StringIsNull: TestMessage(not IsNull_StringIsNull, 'IsNull_StringIsNull', toString(false), toString(IsNull_StringIsNull))
+define test_IsNull_NonNullVarIsNull: TestMessage(not IsNull_NonNullVarIsNull, 'IsNull_NonNullVarIsNull', toString(false), toString(IsNull_NonNullVarIsNull))
+
+// Coalesce
+define ListWithNull: List{null, null, 'One', null, 'Two'}
+define ListA: List{null, null, 3}
+define Coalesce_NullNullHelloNullWorld: Coalesce(null, null, 'Hello', null, 'World')
+define Coalesce_FooNullNullBar: Coalesce('Foo', null, null, 'Bar')
+define Coalesce_AllNull: Coalesce(null, null, null)
+define Coalesce_ListArgStartsWithNull: Coalesce(List{null, null, 'One', null, 'Two'})
+define Coalesce_ListArgAllNull: Coalesce(List{null, null, null, null})
+define Coalesce_ListExpressionRef: Coalesce(ListWithNull)
+// define Coalesce_RetrieveAsList: Coalesce([Encounter])
+define Coalesce_UnionAsList: Coalesce(ListA union ListWithNull)
+
+define test_Coalesce_NullNullHelloNullWorld: TestMessage(Coalesce_NullNullHelloNullWorld = 'Hello', 'Coalesce_NullNullHelloNullWorld', 'Hello', Coalesce_NullNullHelloNullWorld)
+define test_Coalesce_FooNullNullBar: TestMessage(Coalesce_FooNullNullBar = 'Foo', 'Coalesce_FooNullNullBar', 'Foo', Coalesce_FooNullNullBar)
+define test_Coalesce_AllNull: TestMessage(Coalesce_AllNull is null, 'Coalesce_AllNull', 'null', Coalesce_AllNull)
+define test_Coalesce_ListArgStartsWithNull: TestMessage(Coalesce_ListArgStartsWithNull = 'One', 'Coalesce_ListArgStartsWithNull', 'One', Coalesce_ListArgStartsWithNull)
+define test_Coalesce_ListArgAllNull: TestMessage(Coalesce_ListArgAllNull is null, 'Coalesce_ListArgAllNull', 'null', Coalesce_ListArgAllNull)
+define test_Coalesce_ListExpressionRef: TestMessage(Coalesce_ListExpressionRef = 'One', 'Coalesce_ListExpressionRef', 'One', Coalesce_ListExpressionRef)
+define test_Coalesce_UnionAsList: TestMessage(Coalesce_UnionAsList = 3, 'Coalesce_UnionAsList', toString(3), toString(Coalesce_UnionAsList))
+
+// IsTrue
+define IsTrue_TrueIsTrue: true is true
+define IsTrue_FalseIsTrue: false is true
+define IsTrue_NullIsTrue: null is true
+
+define test_IsTrue_TrueIsTrue: TestMessage(IsTrue_TrueIsTrue, 'IsTrue_TrueIsTrue', toString(true), toString(IsTrue_TrueIsTrue))
+define test_IsTrue_FalseIsTrue: TestMessage(not IsTrue_FalseIsTrue, 'IsTrue_FalseIsTrue', toString(false), toString(IsTrue_FalseIsTrue))
+define test_IsTrue_NullIsTrue: TestMessage(not IsTrue_NullIsTrue, 'IsTrue_NullIsTrue', toString(false), toString(IsTrue_NullIsTrue))
+
+// IsFalse
+define IsFalse_TrueIsFalse: true is false
+define IsFalse_FalseIsFalse: false is false
+define IsFalse_NullIsFalse: null is false
+
+define test_IsFalse_TrueIsFalse: TestMessage(not IsFalse_TrueIsFalse, 'IsFalse_TrueIsFalse', toString(false), toString(IsFalse_TrueIsFalse))
+define test_IsFalse_FalseIsFalse: TestMessage(IsFalse_FalseIsFalse, 'IsFalse_FalseIsFalse', toString(true), toString(IsFalse_FalseIsFalse))
+define test_IsFalse_NullIsFalse: TestMessage(not IsFalse_NullIsFalse, 'IsFalse_NullIsFalse', toString(false), toString(IsFalse_NullIsFalse))
 
 /*
 ************************
