@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.elm.execution.MaxValueEvaluator;
+import org.opencds.cqf.cql.elm.execution.MinValueEvaluator;
+
 import javax.xml.namespace.QName;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,5 +45,18 @@ public class Value {
         }
 
         throw new IllegalArgumentException("Invalid type for Successor/Predecessor operator " + clazz.getName());
+    }
+
+    public static BigDecimal validateDecimal(BigDecimal ret) {
+        if (ret.compareTo((BigDecimal) MaxValueEvaluator.maxValue("Decimal")) > 0) {
+            throw new IllegalArgumentException("Decimal exceeds the maximum value allowed");
+        }
+        else if (ret.compareTo((BigDecimal) MinValueEvaluator.minValue("Decimal")) < 0) {
+            throw new IllegalArgumentException("Decimal precedes the minimum value allowed");
+        }
+        else if (ret.precision() > 8) {
+            throw new IllegalArgumentException("Decimal exceeds the level of precision allowed");
+        }
+        return ret;
     }
 }

@@ -156,9 +156,6 @@ define Min_empty: Min(List<Integer>{})
 define Min_not_null_q: Min({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml',0 'ml'})
 define Min_has_null_q: Min({1 'ml',null,-1 'ml',null,2 'ml'})
 define Min_q_diff_units: Min({1 'ml',2 'dl',3 'l',4 'l',5 'l',0 'ml'})
-// TODO - move to error suite and implement for Quantity
-// define Min_q_throw1: Min({1 'ml',2 'm',3 'ml',4 'ml',5 'ml',0 'ml'})
-// define Min_q_throw2: Min({1 ,2 'ml',3 'ml',4 'ml',5 'ml',0 'ml'})
 
 define test_Min_not_null: TestMessage(Min_not_null = 0, 'Min_not_null', toString(0), toString(Min_not_null))
 define test_Min_has_null: TestMessage(Min_has_null = -1, 'Min_has_null', toString(-1), toString(Min_has_null))
@@ -175,9 +172,6 @@ define Max_empty: Max(List<Integer>{})
 define Max_not_null_q: Max({10 'ml',1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define Max_has_null_q: Max({1 'ml',null,null,2 'ml'})
 define Max_q_diff_units: Max({10 'ml',1 'ml',2 'ml',3 'ml',4 'ml',5 'l'})
-// TODO - move to error suite and implement for Quantity
-// define Max_q_throw1: Max({10 'ml',1 'm',2 'ml',3 'ml',4 'ml',5 'ml'})
-// define Max_q_throw2: Max({10 ,1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 
 define test_Max_not_null: TestMessage(Max_not_null = 10, 'Max_not_null', toString(10), toString(Max_not_null))
 define test_Max_has_null: TestMessage(Max_has_null = 2, 'Max_has_null', toString(2), toString(Max_has_null))
@@ -194,8 +188,6 @@ define Avg_empty: Avg(List<Integer>{})
 define Avg_not_null_q: Avg({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define Avg_has_null_q: Avg({1 'ml',null,null,2 'ml'})
 define Avg_q_diff_units: Avg({1 'ml',0.002 'l',0.03 'dl',4 'ml',5 'ml'})
-// TODO - move to error suite and implement for Quantity
-// define Avg_q_throw1: Avg({1 'ml',0.002 'm',0.03 'dl',4 'ml',5 'ml'})
 
 define test_Avg_not_null: TestMessage(Avg_not_null = 3.0, 'Avg_not_null', toString(3.0), toString(Avg_not_null))
 define test_Avg_has_null: TestMessage(Avg_has_null = 1.5, 'Avg_has_null', toString(1.5), toString(Avg_has_null))
@@ -218,9 +210,6 @@ define Median_has_null_q: Median({1 'ml',null,null,2 'ml'})
 define Median_dup_vals_even_q: Median({3 'ml',1 'ml',2 'ml',2 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define Median_dup_vals_odd_q:  Median({3 'ml',1 'ml',2 'ml',2 'ml',2 'ml',3 'ml',4 'ml',5 'ml',6 'ml'})
 define Median_q_diff_units: Median({5 'ml',0.001 'l',0.02 'dl',3 'ml',4 'ml',6 'ml'})
-// TODO - move to error suite and implement for Quantity
-// define Median_q_throw1: Median({5 'ml',0.001 'l',0.22 'dl',3 'm',4 'h',6 'ml'})
-// define Median_q_throw2: Median({5 ,1 ,2 ,3 ,4 'ml',6 'ml'})
 
 define test_Median_odd: TestMessage(Median_odd = 3, 'Median_odd', toString(3), toString(Median_odd))
 define test_Median_even: TestMessage(Median_even = 3.5, 'Median_even', toString(3.5), toString(Median_even))
@@ -252,9 +241,6 @@ define test_Mode_empty: TestMessage(Mode_empty is null, 'Mode_empty', 'null', to
 define Variance_v: Variance({1,2,3,4,5})
 define Variance_v_q: Variance({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define Variance_q_diff_units: Variance({1.0 'ml',0.002 'l',0.003 'l',0.04 'dl',5.0 'ml'})
-// TODO - move to error suite and implement for Quantity
-// define Variance_q_throw1: Variance({1.0 'm',2.0 'l',3.0 'h',4.0 'ml',5.0 'ml'})
-// define Variance_q_throw2: Variance({1.0 ,2.0 ,3.0 ,4.0 'ml',5.0 'ml'})
 
 define test_Variance_v: TestMessage(Variance_v = 2.5, 'Variance_v', toString(2.5), toString(Variance_v))
 define test_Variance_v_q: TestMessage(Variance_v_q = 2.5 'ml', 'Variance_v_q', toString(2.5 'ml'), toString(Variance_v_q))
@@ -265,9 +251,6 @@ define test_Variance_v_q: TestMessage(Variance_v_q = 2.5 'ml', 'Variance_v_q', t
 define PopulationVariance_v: PopulationVariance({1.0,2.0,3.0,4.0,5.0})
 define PopulationVariance_v_q: PopulationVariance({1.0 'ml',2.0 'ml',3.0 'ml',4.0 'ml',5.0 'ml'})
 define PopulationVariance_q_diff_units: PopulationVariance({1.0 'ml',0.002 'l',0.003 'l',0.04 'dl',5.0 'ml'})
-// TODO - move to error suite and implement for Quantity
-// define PopulationVariance_q_throw1: PopulationVariance({1.0 'm',2.0 'l',3.0 'h',4.0 'ml',5.0 'ml'})
-// define PopulationVariance_q_throw2: PopulationVariance({1.0 ,2.0 ,3.0 ,4.0 'ml',5.0 'ml'})
 
 define test_PopulationVariance_v: TestMessage(PopulationVariance_v = 2.0, 'PopulationVariance_v', toString(2.0), toString(PopulationVariance_v))
 define test_PopulationVariance_v_q: TestMessage(PopulationVariance_v_q = 2.0 'ml', 'PopulationVariance_v_q', toString(2.0 'ml'), toString(PopulationVariance_v_q))
@@ -278,9 +261,6 @@ define test_PopulationVariance_v_q: TestMessage(PopulationVariance_v_q = 2.0 'ml
 define Std: StdDev({1,2,3,4,5})
 define Std_q: StdDev({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define Std_q_diff_units: StdDev({1 'ml', 0.002 'l',3 'ml',4 'ml', 0.05 'dl'})
-// TODO - move to error suite and implement for Quantity
-// define Std_sq_throw1: StdDev({1 'ml',2 'ml',3 'ml',4 'ml',5 'm'})
-// define Std_q_throw2: StdDev({1 ,2 ,3 ,4 'ml',5 })
 
 define test_Std: TestMessage(Std = 1.58113883, 'Std', toString(1.58113883), toString(Std))
 define test_Std_q: TestMessage(Std_q = 1.58113883 'ml', 'Std_q', toString(1.58113883 'ml'), toString(Std_q))
@@ -291,9 +271,6 @@ define test_Std_q: TestMessage(Std_q = 1.58113883 'ml', 'Std_q', toString(1.5811
 define PopulationStd: PopulationStdDev({1,2,3,4,5})
 define PopulationStd_q: PopulationStdDev({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define PopulationStd_q_diff_units: PopulationStdDev({1 'ml', 0.002 'l',3 'ml',4 'ml', 0.05 'dl'})
-// TODO - move to error suite and implement for Quantity
-// define PopulationStd_q_throw1: PopulationStdDev({1 'ml',2 'ml',3 'ml',4 'ml',5 'm'})
-// define PopulationStd_q_throw2: PopulationStdDev({1 ,2 ,3 ,4 'ml',5 })
 
 define test_PopulationStd: TestMessage(PopulationStd = 1.41421356, 'PopulationStd', toString(1.41421356), toString(PopulationStd))
 define test_PopulationStd_q: TestMessage(PopulationStd_q = 1.41421356 'ml', 'PopulationStd_q', toString(1.41421356 'ml'), toString(PopulationStd_q))
@@ -401,8 +378,6 @@ define MinInteger: minimum Integer
 define MinDecimal: minimum Decimal
 define MinDateTime: minimum  DateTime
 define MinTime: minimum Time
-// TODO - add to error tests
-// define MinWrongType: minimum Quantity
 
 define test_MinInteger: TestMessage(MinInteger = -2147483648, 'MinInteger', toString(-2147483648), toString(MinInteger))
 define test_MinDecimal: TestMessage(MinDecimal = -9999999999999999999999999999.99999999, 'MinDecimal', toString(-9999999999999999999999999999.99999999), toString(MinDecimal))
@@ -414,8 +389,6 @@ define MaxInteger: maximum Integer
 define MaxDecimal: maximum Decimal
 define MaxDateTime: maximum DateTime
 define MaxTime: maximum Time
-// TODO - add to error tests
-// define MaxWrongType: maximum Quantity
 
 define test_MaxInteger: TestMessage(MaxInteger = 2147483647, 'MaxInteger', toString(2147483647), toString(MaxInteger))
 define test_MaxDecimal: TestMessage(MaxDecimal = 9999999999999999999999999999.99999999, 'MaxDecimal', toString(9999999999999999999999999999.99999999), toString(MaxDecimal))
@@ -495,9 +468,6 @@ define Successor_ymdh_date: successor of DateTime(2015,01,01,0)
 define Successor_ymdhm_date: successor of DateTime(2015,01,01,0,0)
 define Successor_ymdhms_date: successor of DateTime(2015,01,01,0,0,0)
 define Successor_ymdhmsm_date: successor of  DateTime(2015,01,01,0,0,0,0)
-// TODO - add to error tests
-// define Successor_max_date: successor of DateTime(9999,12,31,23,59,59,999)
-// define Successor_ofr: successor of 2147483647
 
 define test_Successor_Is: TestMessage(Successor_Is = 3, 'Successor_Is', toString(3), toString(Successor_Is))
 define test_Successor_Rs: TestMessage(Successor_Rs = 2.20000001, 'Successor_Rs', toString(2.20000001), toString(Successor_Rs))
@@ -519,9 +489,6 @@ define Predecessor_ymdh_date: predecessor of DateTime(2015,01,01,0)
 define Predecessor_ymdhm_date: predecessor of DateTime(2015,01,01,0,0)
 define Predecessor_ymdhms_date: predecessor of DateTime(2015,01,01,0,0,0)
 define Predecessor_ymdhmsm_date: predecessor of DateTime(2015,01,01,0,0,0,0)
-// TODO - add to error tests
-// define Predecessor_min_date: predecessor of DateTime(0001,01,01,0,0,0,0)
-// define Predecessor_ufr: predecessor of -2147483648
 
 define test_Predecessor_Is: TestMessage(Predecessor_Is = 1, 'Predecessor_Is', toString(1), toString(Predecessor_Is))
 define test_Predecessor_Rs: TestMessage(Predecessor_Rs = 2.19999999, 'Predecessor_Rs', toString(2.19999999), toString(Predecessor_Rs))
@@ -615,10 +582,6 @@ define Equal_ALtB_Quantity: 5 'm' = 6 'm'
 // define Equal_AGtB_Quantity_diff: 5 'm' = 5 'cm'
 // define Equal_AEqB_Quantity_diff: 5 'm' = 500 'cm'
 // define Equal_ALtB_Quantity_diff: 5 'm' = 5 'km'
-// TODO - implement and add to error tests
-// define Equal_AGtB_Quantity_incompatible: 5 'Cel' = 4 'm'
-// define Equal_AEqB_Quantity_incompatible: 5 'Cel' = 5 'm'
-// define Equal_ALtB_Quantity_incompatible: 5 'Cel' = 40 'm'
 
 define test_Equal_AGtB_Int: TestMessage(not Equal_AGtB_Int, 'Equal_AGtB_Int', toString(false), toString(Equal_AGtB_Int))
 define test_Equal_AEqB_Int: TestMessage(Equal_AEqB_Int, 'Equal_AEqB_Int', toString(true), toString(Equal_AEqB_Int))
@@ -654,10 +617,6 @@ define NotEqual_ALtB_Quantity: 5 'm' != 6 'm'
 define NotEqual_AGtB_Quantity_diff: 5 'm' != 5 'cm'
 define NotEqual_AEqB_Quantity_diff: 5 'm' != 500 'cm'
 define NotEqual_ALtB_Quantity_diff: 5 'm' != 5 'km'
-// TODO - implement and add to error tests
-define NotEqual_AGtB_Quantity_incompatible: 5 'Cel' != 4 'm'
-define NotEqual_AEqB_Quantity_incompatible: 5 'Cel' != 5 'm'
-define NotEqual_ALtB_Quantity_incompatible: 5 'Cel' != 40 'm'
 
 define test_NotEqual_AGtB_Int: TestMessage(NotEqual_AGtB_Int, 'NotEqual_AGtB_Int', toString(true), toString(NotEqual_AGtB_Int))
 define test_NotEqual_AEqB_Int: TestMessage(not NotEqual_AEqB_Int, 'NotEqual_AEqB_Int', toString(false), toString(NotEqual_AEqB_Int))
@@ -692,6 +651,8 @@ define Equivalent_SameTuplesNull: Tuple{a: null} ~ Tuple{a : null}
 define Equivalent_DifferentTuples: Tuple{a: 'a', b: 'b'} ~ Tuple{a: 'x', b: 'b'}
 define Equivalent_SameNestedTuples: Tuple{a: 'a', b: Tuple{c: 'c'}} ~ Tuple{a: 'a', b: Tuple{c: 'c'}}
 define Equivalent_SameNestedTuplesNull: Tuple{a: 'a', b: Tuple{c: null}} ~ Tuple{a: 'a', b: Tuple{c: null}}
+define Equivalent_TupleAndNullList: {a: '1'} ~ {null}
+define Equivalent_NullListAndTuple: {null} ~ {a: '1'}
 
 define test_Equivalent_EmptyTuples: TestMessage(Equivalent_EmptyTuples, 'Equivalent_EmptyTuples', toString(true), toString(Equivalent_EmptyTuples))
 define test_Equivalent_SameTuples: TestMessage(Equivalent_SameTuples, 'Equivalent_SameTuples', toString(true), toString(Equivalent_SameTuples))
@@ -699,6 +660,8 @@ define test_Equivalent_SameTuplesNull: TestMessage(Equivalent_SameTuplesNull, 'E
 define test_Equivalent_DifferentTuples: TestMessage(not Equivalent_DifferentTuples, 'Equivalent_DifferentTuples', toString(false), toString(Equivalent_DifferentTuples))
 define test_Equivalent_SameNestedTuples: TestMessage(Equivalent_SameNestedTuples, 'Equivalent_SameNestedTuples', toString(true), toString(Equivalent_SameNestedTuples))
 define test_Equivalent_SameNestedTuplesNull: TestMessage(Equivalent_SameNestedTuplesNull, 'Equivalent_SameNestedTuplesNull', toString(true), toString(Equivalent_SameNestedTuplesNull))
+define test_Equivalent_TupleAndNullList: TestMessage(not Equivalent_TupleAndNullList, 'Equivalent_TupleAndNullList', toString(false), toString(Equivalent_TupleAndNullList))
+define test_Equivalent_NullListAndTuple: TestMessage(not Equivalent_NullListAndTuple, 'Equivalent_NullListAndTuple', toString(false), toString(Equivalent_NullListAndTuple))
 
 // List Equivalence
 define Equivalent_EmptyLists: { } ~ { }
@@ -732,12 +695,6 @@ define test_Equivalent_IntervalDifferentStarts: TestMessage(not Equivalent_Inter
 define test_Equivalent_IntervalDifferentEndings: TestMessage(not Equivalent_IntervalDifferentEndings, 'Equivalent_IntervalDifferentEndings', toString(false), toString(Equivalent_IntervalDifferentEndings))
 define test_Equivalent_SameIntervals: TestMessage(Equivalent_SameIntervals, 'Equivalent_SameIntervals', toString(true), toString(Equivalent_SameIntervals))
 
-// TODO - add to errors test
-// define Equivalent_TupleAndList: {a: '1'} ~ {'1'}
-// define Equivalent_ListAndTuple: {'1'} ~ {a: '1'}
-// define Equivalent_TupleAndNullList: {a: '1'} ~ {null}
-// define Equivalent_NullListAndTuple: {null} ~ {a: '1'}
-
 // Less
 define Less_AGtB_Int: 5 < 4
 define Less_AEqB_Int: 5 < 5
@@ -749,10 +706,6 @@ define Less_ALtB_Quantity: 5 'm' < 6 'm'
 // define Less_AGtB_Quantity_diff: 5 'm' < 5 'cm'
 // define Less_AEqB_Quantity_diff: 5 'm' < 500 'cm'
 // define Less_ALtB_Quantity_diff: 5 'm' < 5 'km'
-// TODO - implement and add to error tests
-// define Less_AGtB_Quantity_incompatible: 5 'Cel' < 4 'm'
-// define Less_AEqB_Quantity_incompatible: 5 'Cel' < 5 'm'
-// define Less_ALtB_Quantity_incompatible: 5 'Cel' < 40 'm'
 
 define test_Less_AGtB_Int: TestMessage(not Less_AGtB_Int, 'Less_AGtB_Int', toString(false), toString(Less_AGtB_Int))
 define test_Less_AEqB_Int: TestMessage(not Less_AEqB_Int, 'Less_AEqB_Int', toString(false), toString(Less_AEqB_Int))
@@ -772,10 +725,6 @@ define LessOrEqual_ALtB_Quantity: 5 'm' <= 6 'm'
 // define AGtB_Quantity_diff: 5 'm' <= 4 'm'
 // define AEqB_Quantity_diff: 5 'm' <= 500 'cm'
 // define ALtB_Quantity_diff: 5 'm' <= 5 'km'
-// TODO - implement and add to error tests
-// define AGtB_Quantity_incompatible: 5 'Cel' <= 4 'm'
-// define AEqB_Quantity_incompatible: 5 'Cel' <= 5 'm'
-// define ALtB_Quantity_incompatible: 5 'Cel' <= 40 'm'
 
 define test_LessOrEqual_AGtB_Int: TestMessage(not LessOrEqual_AGtB_Int, 'LessOrEqual_AGtB_Int', toString(false), toString(LessOrEqual_AGtB_Int))
 define test_LessOrEqual_AEqB_Int: TestMessage(LessOrEqual_AEqB_Int, 'LessOrEqual_AEqB_Int', toString(true), toString(LessOrEqual_AEqB_Int))
@@ -819,11 +768,6 @@ define GreaterOrEqual_ALtB_Quantity: 5 'm' >= 6 'm'
 // define AEqB_Quantity_diff: 5 'm' >= 500 'cm'
 // define ALtB_Quantity_diff: 5 'm' >= 5 'km'
 // define DivideUcum: (100 'mg' / 2 '[lb_av]') > 49 'mg/[lb_av]'
-// TODO - implement and add to error tests
-// define AGtB_Quantity_incompatible: 5 'Cel' >= 4 'm'
-// define AEqB_Quantity_incompatible: 5 'Cel' >= 5 'm'
-// define ALtB_Quantity_incompatible: 5 'Cel' >= 40 'm'
-// define DivideUcum_incompatible: (100 '[nmi_i]' / 2 'h') > 49 'mg/[lb_av]'
 
 define test_GreaterOrEqual_AGtB_Int: TestMessage(GreaterOrEqual_AGtB_Int, 'GreaterOrEqual_AGtB_Int', toString(true), toString(GreaterOrEqual_AGtB_Int))
 define test_GreaterOrEqual_AEqB_Int: TestMessage(GreaterOrEqual_AEqB_Int, 'GreaterOrEqual_AEqB_Int', toString(true), toString(GreaterOrEqual_AEqB_Int))
@@ -901,9 +845,6 @@ define FromString_negQuantityStr: convert '-10 \'A\'' to Quantity
 define FromString_quantityStrDecimal: convert '10.0 \'mA\'' to Quantity
 define FromString_dateStr: convert '2015-01-02' to DateTime
 define FromString_timeStr: convert 'T12:30:00.000' to Time
-// TODO - add to error tests
-// define FromString_decimalInvalid: convert 'abc' to Decimal
-// define FromString_integerInvalid: convert 'abc' to Integer
 
 define test_FromString_stringStr: TestMessage(FromString_stringStr = 'str', 'FromString_stringStr', 'str', FromString_stringStr)
 define test_FromString_stringNull: TestMessage(FromString_stringNull is null, 'FromString_stringNull', 'null', FromString_stringNull)
@@ -991,11 +932,6 @@ define ToDecimal_NoSign: ToDecimal('0.0')
 define ToDecimal_PositiveSign: ToDecimal('+1.1')
 define ToDecimal_NegativeSign: ToDecimal('-1.1')
 define ToDecimal_NullDecimal: ToDecimal((null as String))
-// TODO - add to error tests
-// define ToDecimal_TooLargeDec: ToDecimal('444444444444444444444444444444')
-// define ToDecimal_TooSmallDec: ToDecimal('-444444444444444444444444444444')
-// define ToDecimal_TooPrecise: ToDecimal('.444444444')
-// define ToDecimal_WrongFormat: ToDecimal('+.1')
 
 define test_ToDecimal_NoSign: TestMessage(ToDecimal_NoSign = 0.0, 'ToDecimal_NoSign', toString(0.0), toString(ToDecimal_NoSign))
 define test_ToDecimal_PositiveSign: TestMessage(ToDecimal_PositiveSign = 1.1, 'ToDecimal_PositiveSign', toString(1.1), toString(ToDecimal_PositiveSign))
@@ -1006,9 +942,6 @@ define test_ToDecimal_NullDecimal: TestMessage(ToDecimal_NullDecimal is null, 'T
 define ToInteger_NoSign: ToInteger('12345')
 define ToInteger_PositiveSign: ToInteger('+12345')
 define ToInteger_NegativeSign: ToInteger('-12345')
-// TODO - add to error tests
-// define ToInteger_TooLargeInt: ToInteger('2147483648')
-// define ToInteger_TooSmallInt: ToInteger('-2147483649')
 
 define test_ToInteger_NoSign: TestMessage(ToInteger_NoSign = 12345, 'ToInteger_NoSign', toString(12345), toString(ToInteger_NoSign))
 define test_ToInteger_PositiveSign: TestMessage(ToInteger_PositiveSign = 12345, 'ToInteger_PositiveSign', toString(12345), toString(ToInteger_PositiveSign))
@@ -1016,18 +949,11 @@ define test_ToInteger_NegativeSign: TestMessage(ToInteger_NegativeSign = -12345,
 
 // ToQuantity
 define ToQuantity_NullArg: ToQuantity((null as String))
-// TODO - add to error tests
-// define ToQuantity_WrongFormatQuantity: ToQuantity('abc')
-// define ToQuantity_TooLargeQuantity: ToQuantity('444444444444444444444444444444 \'\'')
-// define ToQuantity_TooSmallQuantity: ToQuantity('-444444444444444444444444444444 \'\'')
 
 define test_ToQuantity_NullArg: TestMessage(ToQuantity_NullArg is null, 'ToQuantity_NullArg', 'null', toString(ToQuantity_NullArg))
 
 // ToTime
 define ToTime_NullArgTime: ToTime((null as String))
-// TODO - add to error tests
-// define ToTime_IncorrectFormatTime: ToTime('10:00PM')
-// define ToTime_InvalidTime: ToTime('25:99.000+00.00')
 
 define test_ToTime_NullArgTime: TestMessage(ToTime_NullArgTime is null, 'ToTime_NullArgTime', 'null', toString(ToTime_NullArgTime))
 
@@ -1489,21 +1415,14 @@ define DifferenceBetween_HoursBetween: difference in hours between NewYear2013 a
 define DifferenceBetween_MinutesBetween: difference in minutes between NewYear2013 and NewYear2014
 define DifferenceBetween_SecondsBetween: difference in seconds between NewYear2013 and NewYear2014
 define DifferenceBetween_SecondsBetweenReversed: difference in seconds between NewYear2014 and NewYear2013
-// TODO - move to error tests
-// define DifferenceBetween_MillisecondsBetween: difference in milliseconds between NewYear2013 and NewYear2014
-// define DifferenceBetween_MillisecondsBetweenReversed: difference in milliseconds between NewYear2014 and NewYear2013
 define DifferenceBetween_YearsBetweenUncertainty: difference in years between NewYear2014 and January2014
 define DifferenceBetween_MonthsBetweenUncertainty: difference in months between NewYear2014 and January2014
-// TODO - add to values tests for internal validation
 define DifferenceBetween_WeeksBetweenUncertainty: difference in weeks between NewYear2014 and January2014
 define DifferenceBetween_DaysBetweenUncertainty: difference in days between NewYear2014 and January2014
 define DifferenceBetween_HoursBetweenUncertainty: difference in hours between NewYear2014 and January2014
 define DifferenceBetween_MinutesBetweenUncertainty: difference in minutes between NewYear2014 and January2014
 define DifferenceBetween_SecondsBetweenUncertainty: difference in seconds between NewYear2014 and January2014
 define DifferenceBetween_SecondsBetweenReversedUncertainty: difference in seconds between January2014 and NewYear2014
-// TODO - move to error tests
-// define DifferenceBetween_MillisecondsBetweenUncertainty: difference in milliseconds between NewYear2014 and January2014
-// define DifferenceBetween_MillisecondsBetweenReversedUncertainty: difference in milliseconds between January2014 and NewYear2014
 define DifferenceBetween_HoursBetween1and3CrossingSpringDST: difference in hours between DateTime(2017, 3, 12, 1, 0, 0, 0, -5.0) and DateTime(2017, 3, 12, 3, 0, 0, 0, -4.0)
 define DifferenceBetween_HoursBetween1and3CrossingFallDST: difference in hours between DateTime(2017, 11, 5, 1, 0, 0, 0, -4.0) and DateTime(2017, 11, 5, 3, 0, 0, 0, -5.0)
 
@@ -1582,21 +1501,15 @@ define DurationBetween_HoursBetween: hours between DecTen2013 and JanOne2015
 define DurationBetween_MinutesBetween: minutes between DecTen2013 and JanOne2015
 define DurationBetween_SecondsBetween: seconds between DecTen2013 and JanOne2015
 define DurationBetween_SecondsBetweenReversed: seconds between JanOne2015 and DecTen2013
-// TODO - move to error tests
-// define DurationBetween_MillisecondsBetween: milliseconds between DecTen2013 and JanOne2015
-// define DurationBetween_MillisecondsBetweenReversed: milliseconds between JanOne2015 and DecTen2013
+// TODO - ms between tests
 define DurationBetween_YearsBetweenUncertainty: years between JanOne2015 and January2015
 define DurationBetween_MonthsBetweenUncertainty: months between JanOne2015 and January2015
-// TODO - add to values tests for internal validation
 define DurationBetween_WeeksBetweenUncertainty: weeks between JanOne2015 and January2015
 define DurationBetween_DaysBetweenUncertainty: days between JanOne2015 and January2015
 define DurationBetween_HoursBetweenUncertainty: hours between JanOne2015 and January2015
 define DurationBetween_MinutesBetweenUncertainty: minutes between JanOne2015 and January2015
 define DurationBetween_SecondsBetweenUncertainty: seconds between JanOne2015 and January2015
 define DurationBetween_SecondsBetweenReversedUncertainty: seconds between January2015 and JanOne2015
-// TODO - move to error tests
-// define DurationBetween_MillisecondsBetweenUncertainty: milliseconds between JanOne2015 and January2015
-// define DurationBetween_MillisecondsBetweenReversedUncertainty: milliseconds between January2015 and JanOne2015
 define DurationBetween_HoursBetween1and3CrossingSpringDST: hours between DateTime(2017, 3, 12, 1, 0, 0, 0, -5.0) and DateTime(2017, 3, 12, 3, 0, 0, 0, -4.0)
 define DurationBetween_HoursBetween1and3CrossingFallDST: hours between DateTime(2017, 11, 5, 1, 0, 0, 0, -4.0) and DateTime(2017, 11, 5, 3, 0, 0, 0, -5.0)
 
@@ -1608,6 +1521,7 @@ define test_DurationBetween_HoursBetween: TestMessage(DurationBetween_HoursBetwe
 define test_DurationBetween_MinutesBetween: TestMessage(DurationBetween_MinutesBetween = 556529, 'DurationBetween_MinutesBetween', toString(556529), toString(DurationBetween_MinutesBetween))
 define test_DurationBetween_SecondsBetween: TestMessage(DurationBetween_SecondsBetween = 33391769, 'DurationBetween_SecondsBetween', toString(33391769), toString(DurationBetween_SecondsBetween))
 define test_DurationBetween_SecondsBetweenReversed: TestMessage(DurationBetween_SecondsBetweenReversed = -33391769, 'DurationBetween_SecondsBetweenReversed', toString(-33391769), toString(DurationBetween_SecondsBetweenReversed))
+// TODO - ms between tests
 define test_DurationBetween_YearsBetweenUncertainty: TestMessage(DurationBetween_YearsBetweenUncertainty = 0, 'DurationBetween_YearsBetweenUncertainty', toString(0), toString(DurationBetween_YearsBetweenUncertainty))
 define test_DurationBetween_MonthsBetweenUncertainty: TestMessage(DurationBetween_MonthsBetweenUncertainty = 0, 'DurationBetween_MonthsBetweenUncertainty', toString(0), toString(DurationBetween_MonthsBetweenUncertainty))
 define test_DurationBetween_WeeksBetweenUncertainty: TestMessage(DurationBetween_WeeksBetweenUncertainty > -1 and (DurationBetween_WeeksBetweenUncertainty > 0) is null and DurationBetween_WeeksBetweenUncertainty < 5 and (DurationBetween_WeeksBetweenUncertainty < 4) is null, 'DurationBetween_WeeksBetweenUncertainty', toString(true), toString(DurationBetween_WeeksBetweenUncertainty > -1 and (DurationBetween_WeeksBetweenUncertainty > 0) is null and DurationBetween_WeeksBetweenUncertainty < 5 and (DurationBetween_WeeksBetweenUncertainty < 4) is null))
@@ -1618,7 +1532,6 @@ define test_DurationBetween_SecondsBetweenUncertainty: TestMessage(DurationBetwe
 define test_DurationBetween_SecondsBetweenReversedUncertainty: TestMessage(DurationBetween_SecondsBetweenReversedUncertainty > -2678400 and (DurationBetween_SecondsBetweenReversedUncertainty > -2678399) is null and DurationBetween_SecondsBetweenReversedUncertainty < 1 and (DurationBetween_SecondsBetweenReversedUncertainty < 0) is null, 'DurationBetween_SecondsBetweenReversedUncertainty', toString(true), toString(DurationBetween_SecondsBetweenReversedUncertainty > -2592001 and (DurationBetween_SecondsBetweenReversedUncertainty > -2592000) is null and DurationBetween_SecondsBetweenReversedUncertainty < 1 and (DurationBetween_SecondsBetweenReversedUncertainty < 0) is null))
 define test_DurationBetween_HoursBetween1and3CrossingSpringDST: TestMessage(DurationBetween_HoursBetween1and3CrossingSpringDST = 1, 'DurationBetween_HoursBetween1and3CrossingSpringDST', toString(1), toString(DurationBetween_HoursBetween1and3CrossingSpringDST))
 define test_DurationBetween_HoursBetween1and3CrossingFallDST: TestMessage(DurationBetween_HoursBetween1and3CrossingFallDST = 3, 'DurationBetween_HoursBetween1and3CrossingFallDST', toString(3), toString(DurationBetween_HoursBetween1and3CrossingFallDST))
-
 
 // DateMath
 define June15th2013: DateTime(2013, 6, 15, 0, 0, 0, 0)

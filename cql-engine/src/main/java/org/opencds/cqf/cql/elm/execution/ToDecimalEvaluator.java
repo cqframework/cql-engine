@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /*
@@ -37,7 +39,16 @@ public class ToDecimalEvaluator extends org.cqframework.cql.elm.execution.ToDeci
 
         if (operand instanceof String) {
             try {
-                return new BigDecimal((String)operand);
+                if (((String) operand).contains(".")) {
+                    String[] decimalSplit = ((String) operand).split("\\.");
+                    if ((decimalSplit[0].contains("-") || decimalSplit[0].contains("+")) && decimalSplit[0].length() == 1) {
+                        throw new IllegalArgumentException("Invalid String representation of Decimal");
+                    }
+                    else if (decimalSplit[0].length() == 0) {
+                        throw new IllegalArgumentException("Invalid String representation of Decimal");
+                    }
+                }
+                return Value.validateDecimal(new BigDecimal((String)operand));
             }
             catch (NumberFormatException nfe) {
                 throw new IllegalArgumentException("Unable to convert given string to Decimal");

@@ -53,6 +53,22 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
     @Override
     public Object evaluate(Context context) {
         String type = getValueType().getLocalPart();
-        return maxValue(type);
+        if (type == null) {
+            return null;
+        }
+
+        if (type.endsWith("Integer")) {
+            return Value.MAX_INT;
+        }
+        if (type.endsWith("Decimal")) {
+            return Value.MAX_DECIMAL;
+        }
+        if (type.endsWith("DateTime")) {
+            return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        if (type.endsWith("Time")) {
+            return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
     }
 }

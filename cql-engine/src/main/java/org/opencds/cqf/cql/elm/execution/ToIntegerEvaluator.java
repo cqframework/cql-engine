@@ -30,7 +30,14 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
             }
             catch (NumberFormatException nfe) {
                 try {
-                    return (int) Double.parseDouble((String) operand);
+                    Double ret = Double.parseDouble((String) operand);
+                    if (ret > (Integer) MaxValueEvaluator.maxValue("Integer")) {
+                        throw new IllegalArgumentException("Integer exceeds the maximum value allowed");
+                    }
+                    else if (ret < (Integer) MinValueEvaluator.minValue("Integer")) {
+                        throw new IllegalArgumentException("Integer precedes the minimum value allowed");
+                    }
+                    return ret.intValue();
                 } catch (NumberFormatException e) {
                     throw new NumberFormatException("Unable to convert given string to Integer");
                 }

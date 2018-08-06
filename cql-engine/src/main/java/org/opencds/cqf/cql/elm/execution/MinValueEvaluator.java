@@ -52,6 +52,23 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
     @Override
     public Object evaluate(Context context) {
         String type = this.getValueType().getLocalPart();
-        return minValue(type);
+        if (type == null) {
+            return null;
+        }
+
+        if (type.endsWith("Integer")) {
+            return Value.MIN_INT;
+        }
+        if (type.endsWith("Decimal")) {
+            return Value.MIN_DECIMAL;
+        }
+        if (type.endsWith("DateTime")) {
+            return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        if (type.endsWith("Time")) {
+            return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+
+        throw new NotImplementedException(String.format("The Minimum operator is not implemented for type %s", type));
     }
 }

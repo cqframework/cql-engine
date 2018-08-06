@@ -15,6 +15,7 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
@@ -44,6 +45,25 @@ public class CqlTestSuite {
                 }
                 if (expression.getName().startsWith("test")) {
                     logger.info((String) expression.evaluate(context));
+                }
+            }
+        }
+    }
+
+    @Test
+    public void testErrorSuite() throws IOException, JAXBException, UcumException {
+        Library library = translate("portable/CqlErrorTestSuite.cql");
+        Context context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2018, 1, 1, 7, 0, 0, 0));
+        if (library.getStatements() != null) {
+            for (ExpressionDef expression : library.getStatements().getDef()) {
+                try {
+                    expression.evaluate(context);
+                    logger.error("Test " + expression.getName() + " should result in an error");
+                    Assert.fail();
+                }
+                catch (Exception e) {
+                    // pass
+                    logger.info(expression.getName() + " TEST PASSED");
                 }
             }
         }

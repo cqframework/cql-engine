@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /*
@@ -48,7 +50,8 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
                     throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
                 }
             }
-            return new Quantity().withValue(new BigDecimal(number)).withUnit(unit);
+
+            return new Quantity().withValue(Value.validateDecimal(new BigDecimal(number))).withUnit(unit);
         }
 
         throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String values.", operand.getClass().getName()));
