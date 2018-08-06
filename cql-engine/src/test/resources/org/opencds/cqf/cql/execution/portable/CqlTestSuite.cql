@@ -3660,7 +3660,151 @@ define test_IsFalse_NullIsFalse: TestMessage(not IsFalse_NullIsFalse, 'IsFalse_N
 **********************
 */
 
-// TODO
+// Concat
+define Hello: 'Hello'
+define World: 'World'
+define Concat_HelloWorld: 'Hello' + 'World'
+define Concat_Sentence: 'The' + ' ' + 'quick' + ' ' + 'brown' + ' ' + 'fox' + ' ' + 'jumps' + ' '
+                  + 'over' + ' ' + 'the' + ' ' + 'lazy' + ' ' + 'dog.'
+define Concat_ConcatNull: 'Hello' + null
+define Concat_HelloWorldVariables: Hello + World
+
+define test_Concat_HelloWorld: TestMessage(Concat_HelloWorld = 'HelloWorld', 'Concat_HelloWorld', 'HelloWorld', Concat_HelloWorld)
+define test_Concat_Sentence: TestMessage(Concat_Sentence = 'The quick brown fox jumps over the lazy dog.', 'Concat_Sentence', 'The quick brown fox jumps over the lazy dog.', Concat_Sentence)
+define test_Concat_ConcatNull: TestMessage(Concat_ConcatNull is null, 'Concat_ConcatNull', 'null', Concat_ConcatNull)
+define test_Concat_HelloWorldVariables: TestMessage(Concat_HelloWorldVariables = 'HelloWorld', 'Concat_HelloWorldVariables', 'HelloWorld', Concat_HelloWorldVariables)
+
+// Combine
+define Combine_NoSeparator: Combine({ 'abc', 'def', 'ghi', 'jkl' })
+define Combine_Separator: Combine({ 'abc', 'def', 'ghi', 'jkl' }, ';')
+define Combine_CombineNull: Combine(null, ';')
+define Combine_CombineNullItem: Combine({ 'abc', 'def', null, 'jkl' }, ';')
+
+define test_Combine_NoSeparator: TestMessage(Combine_NoSeparator = 'abcdefghijkl', 'Combine_NoSeparator', 'abcdefghijkl', Combine_NoSeparator)
+define test_Combine_Separator: TestMessage(Combine_Separator = 'abc;def;ghi;jkl', 'Combine_Separator', 'abc;def;ghi;jkl', Combine_Separator)
+define test_Combine_CombineNull: TestMessage(Combine_CombineNull is null, 'Combine_CombineNull', 'null', Combine_CombineNull)
+define test_Combine_CombineNullItem: TestMessage(Combine_CombineNullItem is null, 'Combine_CombineNullItem', 'null', Combine_CombineNullItem)
+
+// Split
+define Split_CommaSeparated: Split('a,b,c,,1,2,3', ',')
+define Split_SeparatorNotUsed: Split('a,b,c,,1,2,3', ';')
+define Split_SeparateNull: Split(null, ',')
+define Split_SeparateUsingNull: Split('a,b,c', null)
+
+define test_Split_CommaSeparated: TestMessage(Split_CommaSeparated = { 'a','b','c','','1','2','3' }, 'Split_CommaSeparated', Combine({ 'a','b','c','','1','2','3' }, ','), Combine(Split_CommaSeparated, ','))
+define test_Split_SeparatorNotUsed: TestMessage(Split_SeparatorNotUsed = { 'a,b,c,,1,2,3' }, 'Split_SeparatorNotUsed', Combine({ 'a,b,c,,1,2,3' }, ','), Combine(Split_SeparatorNotUsed, ','))
+define test_Split_SeparateNull: TestMessage(Split_SeparateNull is null, 'Split_SeparateNull', 'null', Split_SeparateNull)
+define test_Split_SeparateUsingNull: TestMessage(Split_SeparateUsingNull = 'a,b,c', 'Split_SeparateUsingNull', 'a,b,c', Split_SeparateUsingNull)
+
+// Length
+define Length_ElevenLetters: Length('Hello World')
+define Length_NullString: Length(null as String)
+
+define test_Length_ElevenLetters: TestMessage(Length_ElevenLetters = 11, 'Length_ElevenLetters', toString(11), toString(Length_ElevenLetters))
+define test_Length_NullString: TestMessage(Length_NullString is null, 'Length_NullString', 'null', toString(Length_NullString))
+
+// Upper
+define Upper_LowerC: Upper('abcdefg123')
+define Upper_UpperC: Upper('ABCDEFG123')
+define Upper_CamelC: Upper('aBcDeFg123')
+define Upper_NullString: Upper(null)
+
+define test_Upper_LowerC: TestMessage(Upper_LowerC = 'ABCDEFG123', 'Upper_LowerC', 'ABCDEFG123', Upper_LowerC)
+define test_Upper_UpperC: TestMessage(Upper_UpperC = 'ABCDEFG123', 'Upper_UpperC', 'ABCDEFG123', Upper_UpperC)
+define test_Upper_CamelC: TestMessage(Upper_CamelC = 'ABCDEFG123', 'Upper_CamelC', 'ABCDEFG123', Upper_CamelC)
+define test_Upper_NullString: TestMessage(Upper_NullString is null, 'Upper_NullString', 'null', Upper_NullString)
+
+// Lower
+define Lower_LowerC: Lower('abcdefg123')
+define Lower_UpperC: Lower('ABCDEFG123')
+define Lower_CamelC: Lower('aBcDeFg123')
+define Lower_NullString: Lower(null)
+
+define test_Lower_LowerC: TestMessage(Lower_LowerC = 'abcdefg123', 'Lower_LowerC', 'abcdefg123', Lower_LowerC)
+define test_Lower_UpperC: TestMessage(Lower_UpperC = 'abcdefg123', 'Lower_UpperC', 'abcdefg123', Lower_UpperC)
+define test_Lower_CamelC: TestMessage(Lower_CamelC = 'abcdefg123', 'Lower_CamelC', 'abcdefg123', Lower_CamelC)
+define test_Lower_NullString: TestMessage(Lower_NullString is null, 'Lower_NullString', 'null', Lower_NullString)
+
+// Indexer
+define Indexer_HelloWorldSix: 'HelloWorld'[6]
+define Indexer_HelloWorldZero: 'HelloWorld'[0]
+define Indexer_HelloWorldTwenty: 'HelloWorld'[20]
+define Indexer_NullString: (null as String)[4]
+define Indexer_NullIndex: 'HelloWorld'[null]
+
+define test_Indexer_HelloWorldSix: TestMessage(Indexer_HelloWorldSix = 'o', 'Indexer_HelloWorldSix', 'o', Indexer_HelloWorldSix)
+define test_Indexer_HelloWorldZero: TestMessage(Indexer_HelloWorldZero = 'H', 'Indexer_HelloWorldZero', 'H', Indexer_HelloWorldZero)
+define test_Indexer_HelloWorldTwenty: TestMessage(Indexer_HelloWorldTwenty is null, 'Indexer_HelloWorldTwenty', 'null', Indexer_HelloWorldTwenty)
+define test_Indexer_NullString: TestMessage(Indexer_NullString is null, 'Indexer_NullString', 'null', Indexer_NullString)
+define test_Indexer_NullIndex: TestMessage(Indexer_NullIndex is null, 'Indexer_NullIndex', 'null', Indexer_NullIndex)
+
+// PositionOf
+define PositionOf_found: PositionOf('cde', 'abcdefg')
+define PositionOf_notFound: PositionOf('fgh', 'abcdefg')
+define PositionOf_nullPattern: PositionOf(null, 'abcdefg')
+define PositionOf_nullString: PositionOf('cde', null)
+
+define test_PositionOf_found: TestMessage(PositionOf_found = 2, 'PositionOf_found', toString(2), toString(PositionOf_found))
+define test_PositionOf_notFound: TestMessage(PositionOf_notFound = -1, 'PositionOf_notFound', toString(-1), toString(PositionOf_notFound))
+define test_PositionOf_nullPattern: TestMessage(PositionOf_nullPattern is null, 'PositionOf_nullPattern', 'null', toString(PositionOf_nullPattern))
+define test_PositionOf_nullString: TestMessage(PositionOf_nullString is null, 'PositionOf_nullString', 'null', toString(PositionOf_nullString))
+
+// Substring
+define Substring_World: Substring('HelloWorld', 5)
+define Substring_Or: Substring('HelloWorld', 7, 2)
+define Substring_ZeroLength: Substring('HelloWorld', 7, 0)
+define Substring_StartTooLow: Substring('HelloWorld', -1)
+define Substring_StartZero: Substring('HelloWorld', 0)
+define Substring_TooMuchLength: Substring('HelloWorld', 7, 25)
+define Substring_NegativeLength: Substring('HelloWorld', 7, -1)
+define Substring_NullString: Substring(null, 5)
+define Substring_NullStart: Substring('HelloWorld', null)
+
+define test_Substring_World: TestMessage(Substring_World = 'World', 'Substring_World', 'World', Substring_World)
+define test_Substring_Or: TestMessage(Substring_Or = 'rl', 'Substring_Or', 'rl', Substring_Or)
+define test_Substring_ZeroLength: TestMessage(Substring_ZeroLength = '', 'Substring_ZeroLength', '', Substring_ZeroLength)
+define test_Substring_StartTooLow: TestMessage(Substring_StartTooLow is null, 'Substring_StartTooLow', 'null', Substring_StartTooLow)
+define test_Substring_StartZero: TestMessage(Substring_StartZero = 'HelloWorld', 'Substring_StartZero', 'HelloWorld', Substring_StartZero)
+define test_Substring_TooMuchLength: TestMessage(Substring_TooMuchLength = 'rld', 'Substring_TooMuchLength', 'rld', Substring_TooMuchLength)
+define test_Substring_NegativeLength: TestMessage(Substring_NegativeLength = '', 'Substring_NegativeLength', '', Substring_NegativeLength)
+define test_Substring_NullString: TestMessage(Substring_NullString is null, 'Substring_NullString', 'null', Substring_NullString)
+define test_Substring_NullStart: TestMessage(Substring_NullStart is null, 'Substring_NullStart', 'null', Substring_NullStart)
+
+// StartsWith
+define StartsWith_FooBarStartsWithFoo: StartsWith('FooBar', 'Foo')
+define StartsWith_FooBarStartsWithBar: StartsWith('FooBar', 'Bar')
+define StartsWith_FooBarStartsWithBlank: StartsWith('FooBar', '')
+define StartsWith_BlankStartsWithFoo: StartsWith('', 'Foo')
+define StartsWith_StartsWithNull: StartsWith('FooBar', null)
+define StartsWith_StartsWithNullAsString: StartsWith('FooBar', null as String)
+define StartsWith_NullStartsWith: StartsWith(null, 'Foo')
+define StartsWith_NullAsStringStartsWith: StartsWith(null as String, 'Foo')
+
+define test_StartsWith_FooBarStartsWithFoo: TestMessage(StartsWith_FooBarStartsWithFoo, 'StartsWith_FooBarStartsWithFoo', toString(true), toString(StartsWith_FooBarStartsWithFoo))
+define test_StartsWith_FooBarStartsWithBar: TestMessage(not StartsWith_FooBarStartsWithBar, 'StartsWith_FooBarStartsWithBar', toString(false), toString(StartsWith_FooBarStartsWithBar))
+define test_StartsWith_FooBarStartsWithBlank: TestMessage(StartsWith_FooBarStartsWithBlank, 'StartsWith_FooBarStartsWithBlank', toString(true), toString(StartsWith_FooBarStartsWithBlank))
+define test_StartsWith_StartsWithNull: TestMessage(StartsWith_StartsWithNull is null, 'StartsWith_StartsWithNull', 'null', toString(StartsWith_StartsWithNull))
+define test_StartsWith_StartsWithNullAsString: TestMessage(StartsWith_StartsWithNullAsString is null, 'StartsWith_StartsWithNullAsString', 'null', toString(StartsWith_StartsWithNullAsString))
+define test_StartsWith_NullStartsWith: TestMessage(StartsWith_NullStartsWith is null, 'StartsWith_NullStartsWith', 'null', toString(StartsWith_NullStartsWith))
+define test_StartsWith_NullAsStringStartsWith: TestMessage(StartsWith_NullAsStringStartsWith is null, 'StartsWith_NullAsStringStartsWith', 'null', toString(StartsWith_NullAsStringStartsWith))
+
+// EndsWith
+define EndsWith_FooBarEndsWithBar: EndsWith('FooBar', 'Bar')
+define EndsWith_FooBarEndsWithFoo: EndsWith('FooBar', 'Foo')
+define EndsWith_FooBarEndsWithBlank: EndsWith('FooBar', '')
+define EndsWith_BlankEndsWithFoo: EndsWith('', 'Foo')
+define EndsWith_EndsWithNull: EndsWith('FooBar', null)
+define EndsWith_EndsWithNullAsString: EndsWith('FooBar', null as String)
+define EndsWith_NullEndsWith: EndsWith(null as String, 'Foo')
+define EndsWith_NullAsStringEndsWith: EndsWith(null as String, 'Foo')
+
+define test_EndsWith_FooBarEndsWithBar: TestMessage(EndsWith_FooBarEndsWithBar, 'EndsWith_FooBarEndsWithBar', toString(true), toString(EndsWith_FooBarEndsWithBar))
+define test_EndsWith_FooBarEndsWithFoo: TestMessage(not EndsWith_FooBarEndsWithFoo, 'EndsWith_FooBarEndsWithFoo', toString(false), toString(EndsWith_FooBarEndsWithFoo))
+define test_EndsWith_BlankEndsWithFoo: TestMessage(not EndsWith_BlankEndsWithFoo, 'EndsWith_BlankEndsWithFoo', toString(false), toString(EndsWith_BlankEndsWithFoo))
+define test_EndsWith_EndsWithNull: TestMessage(EndsWith_EndsWithNull is null, 'EndsWith_EndsWithNull', 'null', toString(EndsWith_EndsWithNull))
+define test_EndsWith_EndsWithNullAsString: TestMessage(EndsWith_EndsWithNullAsString is null, 'EndsWith_EndsWithNullAsString', 'null', toString(EndsWith_EndsWithNullAsString))
+define test_EndsWith_NullEndsWith: TestMessage(EndsWith_NullEndsWith is null, 'EndsWith_NullEndsWith', 'null', toString(EndsWith_NullEndsWith))
+define test_EndsWith_NullAsStringEndsWith: TestMessage(EndsWith_NullAsStringEndsWith is null, 'EndsWith_NullAsStringEndsWith', 'null', toString(EndsWith_NullAsStringEndsWith))
 
 /*
 ********************

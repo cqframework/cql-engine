@@ -40,7 +40,7 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
             }
 
             if (endIndex < startIndex) {
-                return null;
+                endIndex = startIndex;
             }
 
             return string.substring(startIndex, endIndex);
