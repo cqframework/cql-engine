@@ -16,15 +16,3 @@ generateSources {
         }
     }
 }
-
-task fatJar(type: Jar) {
-    manifest {
-        attributes 'Implementation-Title': 'Gradle Jar File Example',
-            'Implementation-Version': version,
-            'Main-Class': 'org.opencds.cqf.cql.execution.CqlRunnerApp'
-    }
-    baseName = project.name + '-all'
-    from { configurations.testCompile.collect { it.isDirectory() ? it : zipTree(it) } }
-    from sourceSets.test.output+sourceSets.test.allSource
-    with jar
-}

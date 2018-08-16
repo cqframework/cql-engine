@@ -129,7 +129,6 @@ public class SystemDataProvider implements DataProvider {
             case "Tuple": return Tuple.class;
             case "DateTime": return DateTime.class;
             case "Time": return Time.class;
-            case "Uncertainty": return Uncertainty.class;
             default:
                 try {
                     return Class.forName(String.format("%s.%s", getPackageName(), typeName));

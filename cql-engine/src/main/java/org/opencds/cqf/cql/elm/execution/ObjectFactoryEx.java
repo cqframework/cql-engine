@@ -427,6 +427,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public TimeOfDay createTimeOfDay() { return new TimeOfDayEvaluator(); }
 
     @Override
+    public TimeFrom createTimeFrom() { return new TimeFromEvaluator(); }
+
+    @Override
     public TimezoneFrom createTimezoneFrom() { return new TimezoneFromEvaluator(); }
 
     @Override

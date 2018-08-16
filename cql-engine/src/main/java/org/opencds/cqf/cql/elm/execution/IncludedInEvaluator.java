@@ -1,26 +1,32 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 /*
 *** NOTES FOR INTERVAL ***
-included in(left Interval<T>, right Interval<T>) Boolean
+included in _precision_ (left Interval<T>, right Interval<T>) Boolean
 
 The included in operator for intervals returns true if the first interval is completely included in the second.
-  More precisely, if the starting point of the first interval is greater than or equal to the starting point of the second interval,
-    and the ending point of the first interval is less than or equal to the ending point of the second interval.
+    More precisely, if the starting point of the first interval is greater than or equal to the starting point
+    of the second interval, and the ending point of the first interval is less than or equal to the ending point
+    of the second interval.
 This operator uses the semantics described in the Start and End operators to determine interval boundaries.
+If precision is specified and the point type is a date/time type, comparisons used in the operation are performed at the specified precision.
 If either argument is null, the result is null.
-Note that during is a synonym for included in and may be used to invoke the same operation wherever included in may appear.
+Note that during is a synonym for included in and may be used to invoke the same operation whever included in may appear.
 
 *** NOTES FOR LIST ***
 included in(left List<T>, right list<T>) Boolean
 
-The included in operator for lists returns true if every element of the first list is in the second list.
+he included in operator for lists returns true if every element of the first list is in the second list.
 This operator uses the notion of equivalence to determine whether or not two elements are the same.
-If either argument is null, the result is null.
+If the left argument is null, the result is true, else if the right argument is null, the result is false.
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
@@ -29,55 +35,78 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
-    public static Object includedIn(Object left, Object right, String precision) {
+    public static Boolean includedIn(Object left, Object right, String precision) {
+        if (left instanceof Interval && right instanceof Interval) {
+            return intervalIncludedIn((Interval) left, (Interval) right, precision);
+        }
+        if (left instanceof Iterable && right instanceof Iterable) {
+            return listIncludedIn((Iterable) left, (Iterable) right);
+        }
 
-        if (left == null) {
+        throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+    }
+
+    public static Boolean intervalIncludedIn(Interval left, Interval right, String precision) {
+        if (left == null || right == null) {
+            return null;
+        }
+
+        Object leftStart = left.getStart();
+        Object leftEnd = left.getEnd();
+        Object rightStart = right.getStart();
+        Object rightEnd = right.getEnd();
+
+        Boolean boundaryCheck =
+                AndEvaluator.and(
+                        InEvaluator.intervalIn(leftStart, right, precision),
+                        InEvaluator.intervalIn(leftEnd, right, precision)
+                );
+
+        if (boundaryCheck != null && boundaryCheck) {
             return true;
         }
 
+        if (leftStart instanceof BaseTemporal || leftEnd instanceof BaseTemporal
+                || rightStart instanceof BaseTemporal || rightEnd instanceof BaseTemporal)
+        {
+            if (AnyTrueEvaluator.anyTrue(Arrays.asList(BeforeEvaluator.before(leftStart, rightStart, precision), AfterEvaluator.after(leftEnd, rightEnd, precision))))
+            {
+                return false;
+            }
+            return AndEvaluator.and(
+                    SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
+                    SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
+            );
+        }
+
+        if (AnyTrueEvaluator.anyTrue(Arrays.asList(LessEvaluator.less(leftStart, rightStart), GreaterEvaluator.greater(leftEnd, rightEnd))))
+        {
+            return false;
+        }
+        return AndEvaluator.and(
+                GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart),
+                LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)
+        );
+    }
+
+    public static Boolean listIncludedIn(Iterable left, Iterable right) {
+        if (left == null) {
+            return true;
+        }
         if (right == null) {
             return false;
         }
 
-        if (left instanceof Interval) {
-            Object leftStart = ((Interval)left).getStart();
-            Object leftEnd = ((Interval)left).getEnd();
-            Object rightStart = ((Interval)right).getStart();
-            Object rightEnd = ((Interval)right).getEnd();
+        for (Object element : left) {
+            Object in = InEvaluator.listIn(element, right);
 
-            if (leftStart == null || leftEnd == null
-                    || rightStart == null || rightEnd == null)
-            {
-                return null;
+            if (in == null) continue;
+
+            if (!(Boolean) in) {
+                return false;
             }
-
-            if (leftStart instanceof BaseTemporal) {
-                return AndEvaluator.and(
-                        SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
-                        SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
-                );
-            }
-
-            return AndEvaluator.and(
-                    GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart),
-                    LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)
-            );
         }
-
-        else if (left instanceof Iterable) {
-            for (Object element : (Iterable)left) {
-                Object in = InEvaluator.in(element, right, precision);
-
-                if (in == null) continue;
-
-                if (!(Boolean) in) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        return true;
     }
 
     @Override
@@ -86,6 +115,25 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), includedIn(left, right, precision), left, right, precision);
+        // null left operand case
+        if (getOperand().get(0) instanceof AsEvaluator) {
+            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+                return intervalIncludedIn((Interval) left, (Interval) right, precision);
+            }
+            else {
+                return listIncludedIn((Iterable) left, (Iterable) right);
+            }
+        }
+        // null right operand case
+        if (getOperand().get(1) instanceof AsEvaluator) {
+            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+                return intervalIncludedIn((Interval) left, (Interval) right, precision);
+            }
+            else {
+                return listIncludedIn((Iterable) left, (Iterable) right);
+            }
+        }
+
+        return includedIn(left, right, precision);
     }
 }

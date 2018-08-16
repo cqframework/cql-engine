@@ -2,9 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Uncertainty;
+import org.opencds.cqf.cql.runtime.Precision;
 
 /*
 same precision as(left DateTime, right DateTime) Boolean
@@ -37,31 +35,8 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
         }
 
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
-            BaseTemporal leftTemporal = (BaseTemporal) left;
-            BaseTemporal rightTemporal = (BaseTemporal) right;
-
-            int idx = DateTime.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
-                    return null;
-                }
-
-                for (int i = 0; i < idx + 1; ++i) {
-                    if (leftTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i))
-                            != rightTemporal.getJodaDateTime().toInstant().get(DateTime.getField(i)))
-                    {
-                        return false;
-                    }
-                }
-
-                return true;
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+            Integer result = ((BaseTemporal) left).compareToPrecision((BaseTemporal) right, Precision.fromString(precision));
+            return result == null ? null : result == 0;
         }
 
         throw new IllegalArgumentException(String.format("Cannot perform SameAs operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -71,8 +46,8 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-        String precision = getPrecision().value();
+        String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), sameAs(left, right, precision), left, right, precision);
+        return sameAs(left, right, precision);
     }
 }

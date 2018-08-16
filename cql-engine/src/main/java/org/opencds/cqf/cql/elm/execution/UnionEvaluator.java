@@ -21,8 +21,8 @@ If either argument is null, the result is null.
 union(left List<T>, right List<T>) List<T>
 
 The union operator for lists returns a list with all elements from both arguments.
-Note that duplicates are not eliminated during this process, if an element appears once in both sources,
-  that element will be present twice in the resulting list.
+    Note that duplicates are eliminated during this process; if an element appears in both sources,
+    that element will only appear once in the resulting list.
 If either argument is null, the result is null.
 Note that the union operator can also be invoked with the symbolic operator (|).
 */
@@ -78,7 +78,7 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
             for (Object rightElement : (Iterable)right) {
                 result.add(rightElement);
             }
-            return result;
+            return DistinctEvaluator.distinct(result);
         }
 
         throw new IllegalArgumentException(String.format("Cannot Union arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
@@ -89,6 +89,6 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), union(left, right), left, right);
+        return union(left, right);
     }
 }

@@ -1,12 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.elm.execution.DateFromEvaluator;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.opencds.cqf.cql.elm.execution.CalculateAgeAtEvaluator;
-import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 import org.joda.time.Partial;
 import javax.xml.bind.JAXBException;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +30,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testCalculateAge() throws JAXBException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        Context context = new Context(library, new DateTime(new Partial(DateTime.getFields(7), new int[] {2016, 1, 1, 0, 0, 0, 0})));
+        Context context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2016, 1, 1, 0, 0, 0, 0));
 
          Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
          assertThat(result, is(6));
@@ -53,7 +51,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(189302400));
 
         result = context.resolveExpressionRef("CalculateAgeUncertain").getExpression().evaluate(context);
-        assertThat(result.toString(), is(new Uncertainty().withUncertaintyInterval(new Interval(61, true, 72, true)).toString()));
+        assertThat(result.toString(), is((new Interval(61, true, 72, true)).toString()));
     }
 
     /**
@@ -81,7 +79,8 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(521683200));
 
         result = context.resolveExpressionRef("CalculateAgeAtUncertain").getExpression().evaluate(context);
-        Assert.assertTrue(((Uncertainty)result).getUncertaintyInterval().equal(new Interval(187, true, 198, true)));
+        Assert.assertTrue(((Interval)result).getStart().equals(187));
+        Assert.assertTrue(((Interval)result).getEnd().equals(198));
     }
 
     /**

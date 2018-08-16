@@ -1,9 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.runtime.*;
 
 /*
 meets _precision_ (left Interval<T>, right Interval<T>) Boolean
@@ -22,12 +20,61 @@ If either argument is null, the result is null.
  */
 public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
 
+    public static Boolean meetsOperation(Object left, Object right, String precision) {
+        if (left == null && right == null) {
+            return null;
+        }
+        Object maxValue = MaxValueEvaluator.maxValue(left != null ? left.getClass().getName() : right.getClass().getName());
+        if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+            Boolean isMax = SameAsEvaluator.sameAs(left, maxValue, precision);
+            if (isMax != null && isMax) {
+                return false;
+            }
+            if (precision == null && ((BaseTemporal) left).isUncertain(Precision.MILLISECOND)) {
+                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(left), right, "millisecond");
+            }
+            else if (precision != null && ((BaseTemporal) left).isUncertain(Precision.fromString(precision))) {
+                return SameAsEvaluator.sameAs(left, right, precision);
+            }
+
+            if (precision == null) {
+                precision = "millisecond";
+            }
+
+            if (left instanceof DateTime && right instanceof DateTime) {
+                DateTime dt = new DateTime(((DateTime) left).getDateTime().plus(1, Precision.fromString(precision).toChronoUnit()), ((BaseTemporal) left).getPrecision());
+                return SameAsEvaluator.sameAs(dt, right, precision);
+            }
+            else if (left instanceof Time) {
+                Time t = new Time(((Time) left).getTime().plus(1, Precision.fromString(precision).toChronoUnit()), ((BaseTemporal) left).getPrecision());
+                return SameAsEvaluator.sameAs(t, right, precision);
+            }
+        }
+        Boolean isMax = EqualEvaluator.equal(left, maxValue);
+        if (isMax != null && isMax) {
+            return false;
+        }
+        return EqualEvaluator.equal(SuccessorEvaluator.successor(left), right);
+    }
+
     public static Boolean meets(Object left, Object right, String precision) {
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof Interval && right instanceof Interval) {
+            Object leftStart = ((Interval) left).getStart();
+            Object leftEnd = ((Interval) left).getEnd();
+
+            Boolean in = InEvaluator.in(leftStart, right, precision);
+            if (in != null && in) {
+                return false;
+            }
+            in = InEvaluator.in(leftEnd, right, precision);
+            if (in != null && in) {
+                return false;
+            }
+
             return OrEvaluator.or(
                         MeetsBeforeEvaluator.meetsBefore(left, right, precision),
                         MeetsAfterEvaluator.meetsAfter(left, right, precision)
@@ -43,6 +90,6 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), meets(left, right, precision), left, right, precision);
+        return meets(left, right, precision);
     }
 }

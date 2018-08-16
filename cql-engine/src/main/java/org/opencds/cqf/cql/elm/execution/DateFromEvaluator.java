@@ -1,9 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.joda.time.LocalDate;
 import org.joda.time.Partial;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Precision;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 
 /*
 date from(argument DateTime) DateTime
@@ -17,26 +18,29 @@ NOTE: this is within the purview of DateTimeComponentFrom
  */
 public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFrom {
 
-    public static Object dateFrom(Object operand) {
-
+    public static DateTime dateFrom(Object operand) {
         if (operand == null) {
             return null;
         }
 
         if (operand instanceof DateTime) {
-            int year = ((DateTime)operand).getJodaDateTime().getYear();
-            int month = ((DateTime)operand).getJodaDateTime().getMonthOfYear();
-            int day = ((DateTime)operand).getJodaDateTime().getDayOfMonth();
-            return new DateTime(new Partial(DateTime.getFields(3), new int[]{year, month, day}), ((DateTime)operand).getTimezone());
+            if (((DateTime) operand).getPrecision().toDateTimeIndex() < 1) {
+                return new DateTime(((DateTime) operand).getDateTime().plusYears(0), Precision.YEAR).expandPartialMinFromPrecision(Precision.YEAR);
+            }
+            else if (((DateTime) operand).getPrecision().toDateTimeIndex() < 2) {
+                return new DateTime(((DateTime) operand).getDateTime().plusYears(0), Precision.MONTH).expandPartialMinFromPrecision(Precision.MONTH);
+            }
+            else {
+                return new DateTime(((DateTime) operand).getDateTime().plusYears(0), Precision.DAY).expandPartialMinFromPrecision(Precision.DAY);
+            }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot DateFrom arguments of type '%s'.", operand.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot perform DateFrom with argument of type '%s'.", operand.getClass().getName()));
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
-        return context.logTrace(this.getClass(), dateFrom(operand), operand);
+        return dateFrom(operand);
     }
 }

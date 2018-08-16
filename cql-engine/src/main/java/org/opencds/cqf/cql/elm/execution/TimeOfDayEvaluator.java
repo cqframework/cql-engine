@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Time;
 
 /*
 TimeOfDay() Time
@@ -17,6 +16,6 @@ public class TimeOfDayEvaluator extends org.cqframework.cql.elm.execution.TimeOf
 
     @Override
     public Object evaluate(Context context) {
-        return context.logTrace(this.getClass(), Time.getTimeOfDay());
+        return context.logTrace(this.getClass(), TimeFromEvaluator.timeFrom(context.getEvaluationDateTime()));
     }
 }

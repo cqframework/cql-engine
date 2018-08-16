@@ -160,7 +160,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LengthNullString").getExpression().evaluate(context);
-        assertThat(result, is(0));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("LengthEmptyString").getExpression().evaluate(context);
         assertThat(result, is(0));

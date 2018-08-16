@@ -167,7 +167,7 @@ define Length1Null: Length({1, null})
 define Length12: Length({1, 2})
 define LengthDateTime: Length({DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)})
 define LengthTime: Length({ @T15:59:59.999, @T20:59:59.999, @T15:59:59.999, @T20:59:59.999, @T15:59:59.999, @T20:59:59.999 })
-define LengthNullList: Length(null as String)
+define LengthNullList: Length(null as List<String>)
 
 //Equivalent
 define EquivalentEmptyAndEmpty          : {} ~ {}

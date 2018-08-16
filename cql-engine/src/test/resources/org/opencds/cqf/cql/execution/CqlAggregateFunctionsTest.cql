@@ -49,6 +49,7 @@ define MinTestTime: Min({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })
 //Mode
 define ModeTestInteger: Mode({ 2, 1, 8, 2, 9, 1, 9, 9 })
 define ModeTestDateTime: Mode({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6), DateTime(2012, 9, 5) })
+define ModeTestDateTime2: Mode({ DateTime(2012, 10, 5), DateTime(2012, 10, 5), DateTime(2012, 10, 6), DateTime(2012, 9, 5) })
 define ModeTestTime: Mode({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999, @T05:59:59.999 })
 
 //PopulationStdDev
@@ -62,6 +63,7 @@ define StdDevTest1: StdDev({ 1.0, 2.0, 3.0, 4.0, 5.0 })
 
 //Sum
 define SumTest1: Sum({ 6.0, 2.0, 3.0, 4.0, 5.0 })
+define SumTestQuantity: Sum({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define SumTestNull: Sum({ null, 1, null })
 
 //Variance

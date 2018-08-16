@@ -1,12 +1,14 @@
 package org.opencds.cqf.cql.execution;
 
-import org.eclipse.persistence.jpa.jpql.Assert;
-import org.joda.time.Partial;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,12 +34,18 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("zebra", "iguana", "back", "alligator", "aardvark", "Wolf", "Armadillo")));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("SortDatesAsc").getExpression().evaluate(context);
-        assertThat(result.toString(), is("[2012-01-01, 2012-01-01T12, 2012-10-05, 2012-10-05T10]"));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), new DateTime(offset, 2012, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), new DateTime(offset, 2012, 1, 1, 12)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), new DateTime(offset, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), new DateTime(offset, 2012, 10, 5, 10)));
 
         result = context.resolveExpressionRef("SortDatesDesc").getExpression().evaluate(context);
-        String s = result.toString();
-        assertThat(result.toString(), is("[2012-10-05T10, 2012-10-05, 2012-01-01T12, 2012-01-01]"));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), new DateTime(offset, 2012, 10, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), new DateTime(offset, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), new DateTime(offset, 2012, 1, 1, 12)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), new DateTime(offset, 2012, 1, 1)));
 
         result = context.resolveExpressionRef("SortIntWithNullAsc1").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(null, 1, 2, 3)));
@@ -125,14 +133,15 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DistinctABCABC").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("a", "b", "c")));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DistinctDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)((List)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 10, 5})));
-        assertThat(((DateTime)((List)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 1, 1})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2012, 1, 1)));
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("DistinctTime").getExpression().evaluate(context);
-        assertThat(((Time)((List)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
-        assertThat(((Time)((List)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
         assertThat(((List)result).size(), is(2));
     }
 
@@ -193,12 +202,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Except23And1234").getExpression().evaluate(context);
         assertThat(result, is(Collections.emptyList()));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("ExceptDateTimeList").getExpression().evaluate(context);
-        assertThat(((DateTime)((List)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 5, 10)));
         assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("ExceptTimeList").getExpression().evaluate(context);
-        assertThat(((Time)((List)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
         assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("ExceptNullRight").getExpression().evaluate(context);
@@ -250,14 +260,15 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("FlattenList12And34").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("FlattenDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)((List)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
-        assertThat(((DateTime)((List)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2014, 12, 10)));
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("FlattenTime").getExpression().evaluate(context);
-        assertThat(((Time)((List)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
-        assertThat(((Time)((List)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
         assertThat(((List)result).size(), is(2));
     }
 
@@ -280,11 +291,12 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("First12").getExpression().evaluate(context);
         assertThat(result, is(1));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("FirstDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("FirstTime").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 59, 999)));
     }
 
     /**
@@ -301,7 +313,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("In1And12").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -428,11 +440,12 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("IndexerNeg1Of12").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("IndexerDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("IndexerTime").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 59, 999)));
     }
 
 
@@ -484,14 +497,15 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Intersect23And1234").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(2, 3)));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("IntersectDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)((ArrayList)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
-        assertThat(((DateTime)((ArrayList)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2014, 12, 10)));
         assertThat(((ArrayList)result).size(), is(2));
 
         result = context.resolveExpressionRef("IntersectTime").getExpression().evaluate(context);
-        assertThat(((Time)((ArrayList)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
-        assertThat(((Time)((ArrayList)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
         assertThat(((ArrayList)result).size(), is(2));
     }
 
@@ -514,11 +528,12 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Last12").getExpression().evaluate(context);
         assertThat(result, is(2));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("LastDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 12, 10)));
 
         result = context.resolveExpressionRef("LastTime").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
     }
 
     /**
@@ -771,11 +786,12 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
             assertThat(ex, isA(IllegalArgumentException.class));
         }
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("SingletonFromDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)result).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("SingletonFromTime").getExpression().evaluate(context);
-        assertThat(((Time)result).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 59, 999)));
     }
 
     /**
@@ -861,28 +877,29 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(Collections.emptyList()));
 
         result = context.resolveExpressionRef("UnionListNullAndListNull").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(null, null)));
+        assertThat(result, is(Collections.singletonList(null)));
 
         result = context.resolveExpressionRef("Union123AndEmpty").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
 
         result = context.resolveExpressionRef("Union123And2").getExpression().evaluate(context);
-        assertThat(result, is(Arrays.asList(1, 2, 3, 2)));
+        assertThat(result, is(Arrays.asList(1, 2, 3)));
 
         result = context.resolveExpressionRef("Union123And4").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("UnionDateTime").getExpression().evaluate(context);
-        assertThat(((DateTime)((List)result).get(0)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2001, 9, 11})));
-        assertThat(((DateTime)((List)result).get(1)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2012, 5, 10})));
-        assertThat(((DateTime)((List)result).get(2)).getPartial(), is(new Partial(DateTime.getFields(3), new int[] {2014, 12, 10})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2001, 9, 11)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(2), new DateTime(offset, 2014, 12, 10)));
         assertThat(((List)result).size(), is(3));
 
         result = context.resolveExpressionRef("UnionTime").getExpression().evaluate(context);
-        assertThat(((Time)((List)result).get(0)).getPartial(), is(new Partial(Time.getFields(4), new int[] {15, 59, 59, 999})));
-        assertThat(((Time)((List)result).get(1)).getPartial(), is(new Partial(Time.getFields(4), new int[] {20, 59, 59, 999})));
-        assertThat(((Time)((List)result).get(2)).getPartial(), is(new Partial(Time.getFields(4), new int[] {12, 59, 59, 999})));
-        assertThat(((Time)((List)result).get(3)).getPartial(), is(new Partial(Time.getFields(4), new int[] {10, 59, 59, 999})));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(2), new Time(offset, 12, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(3), new Time(offset, 10, 59, 59, 999)));
         assertThat(((List)result).size(), is(4));
     }
 }

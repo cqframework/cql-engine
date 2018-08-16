@@ -29,7 +29,18 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
                 return Integer.parseInt((String) operand);
             }
             catch (NumberFormatException nfe) {
-                throw new NumberFormatException("Unable to convert given string to Integer");
+                try {
+                    Double ret = Double.parseDouble((String) operand);
+                    if (ret > (Integer) MaxValueEvaluator.maxValue("Integer")) {
+                        throw new IllegalArgumentException("Integer exceeds the maximum value allowed");
+                    }
+                    else if (ret < (Integer) MinValueEvaluator.minValue("Integer")) {
+                        throw new IllegalArgumentException("Integer precedes the minimum value allowed");
+                    }
+                    return ret.intValue();
+                } catch (NumberFormatException e) {
+                    throw new NumberFormatException("Unable to convert given string to Integer");
+                }
             }
         }
         throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Boolean - use String values.", operand.getClass().getName()));

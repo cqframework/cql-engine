@@ -27,42 +27,22 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
         }
 
         if (source instanceof Iterable) {
-            Iterable element = (Iterable)source;
-            Iterator itr = element.iterator();
-
-            if (!itr.hasNext()) { // empty list
-                return null;
-            }
-
-            Object sum = itr.next();
-            while (sum == null) {
-                sum = itr.next();
-            }
-
-            if (sum instanceof Integer) {
-                while (itr.hasNext()) {
-                    Integer next = (Integer)itr.next();
-                    if (next != null) { sum = (Integer)sum + next; }
+            Iterable elements = (Iterable)source;
+            Object sum = null;
+            for (Object element : elements) {
+                if (element == null) {
+                    continue;
                 }
-                return sum;
-            }
-            else if (sum instanceof BigDecimal) {
-                while (itr.hasNext()) {
-                    BigDecimal next = (BigDecimal)itr.next();
-                    if (next != null) { sum = ((BigDecimal)sum).add(next); }
+
+                if (sum == null) {
+                    sum = element;
                 }
-                return sum;
-            }
-            else if (sum instanceof Quantity) {
-                while (itr.hasNext()) {
-                    BigDecimal next = ((Quantity)itr.next()).getValue();
-                    if (next != null) {
-                        sum = (((Quantity)sum).getValue()).add(next);
-                    }
+                else {
+                    sum = AddEvaluator.add(sum, element);
                 }
-                return new Quantity().withValue(((Quantity)sum).getValue()).withUnit(((Quantity)sum).getUnit());
             }
-            throw new IllegalArgumentException(String.format("Cannot Sum arguments of type '%s'.", sum.getClass().getName()));
+
+            return sum;
         }
         throw new IllegalArgumentException(String.format("Invalid instance '%s' for Sum operation.", source.getClass().getName()));
     }

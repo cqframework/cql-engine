@@ -61,11 +61,11 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
           return ((String) left).compareTo((String) right) >= 0;
       }
 
-      else if (left instanceof Uncertainty && right instanceof Integer) {
-          if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval(), null)) {
-              return null;
-          }
-          return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) >= 0;
+      // Uncertainty comparisons for difference/duration between
+      else if ((left instanceof Interval && right instanceof Integer)
+                    || (left instanceof Integer && right instanceof Interval))
+      {
+          return GreaterEvaluator.greater(left, right);
       }
 
       throw new IllegalArgumentException(

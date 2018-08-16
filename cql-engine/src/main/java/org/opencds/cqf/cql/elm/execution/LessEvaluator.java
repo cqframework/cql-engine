@@ -60,11 +60,19 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
             return ((String) left).compareTo((String) right) < 0;
         }
 
-        else if (left instanceof Uncertainty && right instanceof Integer) {
-            if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval(), null)) {
+        // Uncertainty comparisons for difference/duration between
+        else if (left instanceof Interval && right instanceof Integer) {
+            if (InEvaluator.in(right,  left, null)) {
                 return null;
             }
-            return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) < 0;
+            return ((Integer)((Interval) left).getEnd()).compareTo((Integer) right) < 0;
+        }
+
+        else if (left instanceof Integer && right instanceof Interval) {
+            if (InEvaluator.in(left, right, null)) {
+                return null;
+            }
+            return ((Integer) left).compareTo((Integer)((Interval) right).getStart()) < 0;
         }
 
         throw new IllegalArgumentException(

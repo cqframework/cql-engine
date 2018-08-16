@@ -41,8 +41,12 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return null;
         }
 
-        if (left instanceof Uncertainty && (right instanceof Integer || right instanceof Uncertainty)) {
-            return ((Uncertainty) left).equal(right);
+        if (left instanceof Interval && right instanceof Integer) {
+            return ((Interval) left).equal(right);
+        }
+
+        if (right instanceof Interval && left instanceof Integer) {
+            return ((Interval) right).equal(left);
         }
 
         if (!left.getClass().equals(right.getClass())) {
@@ -53,15 +57,15 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return left.equals(right);
         }
 
-        else if (left instanceof BigDecimal) {
+        else if (left instanceof BigDecimal && right instanceof BigDecimal) {
             return ((BigDecimal) left).compareTo((BigDecimal) right) == 0;
         }
 
-        else if (left instanceof Iterable) {
+        else if (left instanceof Iterable && right instanceof Iterable) {
             return CqlList.equal((Iterable) left, (Iterable) right);
         }
 
-        else if (left instanceof CqlType) {
+        else if (left instanceof CqlType && right instanceof CqlType) {
             return ((CqlType) left).equal(right);
         }
 

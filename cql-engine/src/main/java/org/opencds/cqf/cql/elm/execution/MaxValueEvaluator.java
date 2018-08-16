@@ -2,11 +2,9 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.runtime.*;
 
+import javax.xml.namespace.QName;
 import java.math.BigDecimal;
 
 /*
@@ -26,21 +24,51 @@ For any other type, attempting to invoke maximum results in an error.
  */
 public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValue {
 
-    public static Object maximum(String type) {
-        switch (type) {
-            case "Integer": return Value.maxValue(Integer.class);
-            case "Decimal": return Value.maxValue(BigDecimal.class);
-            case "Quantity": return Value.maxValue(Quantity.class);
-            case "DateTime": return Value.maxValue(DateTime.class);
-            case "Time": return Value.maxValue(Time.class);
-            default: throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
+    public static Object maxValue(String type) {
+        if (type == null) {
+            return null;
         }
+
+        if (type.endsWith("Integer")) {
+            return Value.MAX_INT;
+        }
+        if (type.endsWith("Decimal")) {
+            return Value.MAX_DECIMAL;
+        }
+        // TODO - the temporal types are slightly limited here ... using system defaults for timezone instead of what's specified for evaluation
+        if (type.endsWith("DateTime")) {
+            return new DateTime(TemporalHelper.getDefaultOffset(), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+        }
+        if (type.endsWith("Time")) {
+            return new Time(TemporalHelper.getDefaultOffset(), 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+        }
+        // NOTE: Quantity max is not standard
+        if (type.endsWith("Quantity")) {
+            return new Quantity().withValue(Value.MAX_DECIMAL).withUnit("1");
+        }
+
+        throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
     }
 
     @Override
     public Object evaluate(Context context) {
         String type = getValueType().getLocalPart();
+        if (type == null) {
+            return null;
+        }
 
-        return context.logTrace(this.getClass(), maximum(type), type);
+        if (type.endsWith("Integer")) {
+            return Value.MAX_INT;
+        }
+        if (type.endsWith("Decimal")) {
+            return Value.MAX_DECIMAL;
+        }
+        if (type.endsWith("DateTime")) {
+            return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        if (type.endsWith("Time")) {
+            return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
     }
 }

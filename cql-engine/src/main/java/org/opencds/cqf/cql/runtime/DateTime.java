@@ -1,139 +1,253 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.joda.time.DateTimeFieldType;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Partial;
-
-import java.util.Arrays;
+import javax.annotation.Nonnull;
+import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.TimeZone;
 
-/**
- * Created by Chris Schuler on 6/20/2016
- */
-public class DateTime extends BaseTemporal implements CqlType {
+public class DateTime extends BaseTemporal {
 
-    public DateTime(Partial partial) {
-        this.timezone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
-        this.isDateTime = true;
-        setPartial(partial);
+    private OffsetDateTime dateTime;
+    public OffsetDateTime getDateTime() {
+        return dateTime;
+    }
+    public void setDateTime(OffsetDateTime dateTime) {
+        if (dateTime.getYear() < 1) {
+            throw new IllegalArgumentException(String.format("The year: %d falls below the accepted bounds of 0001-9999.", dateTime.getYear()));
+        }
+
+        if (dateTime.getYear() > 9999) {
+            throw new IllegalArgumentException(String.format("The year: %d falls above the accepted bounds of 0001-9999.", dateTime.getYear()));
+        }
+        this.dateTime = dateTime;
+    }
+    public DateTime withDateTime(OffsetDateTime dateTime) {
+        setDateTime(dateTime);
+        return this;
     }
 
-    public DateTime(Partial partial, DateTimeZone timezone) {
-        this.timezone = timezone;
-        this.isDateTime = true;
-        setPartial(partial);
+    public OffsetDateTime getDateTimeWithEvaluationOffset() {
+        return this.dateTime.withOffsetSameInstant(evaluationOffset);
     }
 
-    protected static final DateTimeFieldType[] fields = new DateTimeFieldType[] {
-            DateTimeFieldType.year(),
-            DateTimeFieldType.monthOfYear(),
-            DateTimeFieldType.dayOfMonth(),
-            DateTimeFieldType.hourOfDay(),
-            DateTimeFieldType.minuteOfHour(),
-            DateTimeFieldType.secondOfMinute(),
-            DateTimeFieldType.millisOfSecond(),
-    };
-
-    public static DateTimeFieldType[] getFields(int numFields) {
-        DateTimeFieldType[] ret = new DateTimeFieldType[numFields];
-        System.arraycopy(fields, 0, ret, 0, numFields);
-        return ret;
+    public DateTime withEvaluationOffset(ZoneOffset evaluationOffset) {
+        this.evaluationOffset = evaluationOffset;
+        return this;
     }
 
-    public static DateTimeFieldType getField(int idx) {
-        return fields[idx];
+    public DateTime withPrecision(Precision precision) {
+        this.precision = precision;
+        return this;
     }
 
-    public static int getFieldIndex(String dateTimeElement) {
-        dateTimeElement = dateTimeElement.toLowerCase();
-
-        if (dateTimeElement.startsWith("year")) {
-            return 0;
-        }
-        else if (dateTimeElement.startsWith("month")) {
-            return 1;
-        }
-        else if (dateTimeElement.startsWith("day")) {
-            return 2;
-        }
-        else if (dateTimeElement.startsWith("hour")) {
-            return 3;
-        }
-        else if (dateTimeElement.startsWith("minute")) {
-            return 4;
-        }
-        else if (dateTimeElement.startsWith("second")) {
-            return 5;
-        }
-        else if (dateTimeElement.startsWith("millisecond")) {
-            return 6;
-        }
-        else if (dateTimeElement.startsWith("week")) {
-            return 7;
-        }
-
-        return -1;
+    public DateTime(OffsetDateTime dateTime, Precision precision) {
+        setDateTime(dateTime);
+        this.precision = precision;
     }
 
-    public static String getUnit(int idx) {
-        switch (idx) {
-            case 0: return "years";
-            case 1: return "months";
-            case 2: return "days";
-            case 3: return "hours";
-            case 4: return "minutes";
-            case 5: return "seconds";
-            case 6: return "milliseconds";
-        }
-        throw new IllegalArgumentException("Invalid index for DateTime unit request.");
-    }
-
-    public static int[] getValues(Integer... values) {
-        int count = 0;
-        int[] temp = new int[7];
-        for (Integer value : values) {
-            if (value != null) {
-                temp[count] = value;
-                ++count;
+    public DateTime(String dateString, ZoneOffset offset) {
+        int size = 0;
+        if (dateString.contains("T")) {
+            String[] datetimeSplit = dateString.split("T");
+            size += datetimeSplit[0].split("-").length;
+            String[] tzSplit = dateString.contains("Z") ? dateString.split("Z") : datetimeSplit[1].split("[+-]");
+            size += tzSplit[0].split(":").length;
+            if (tzSplit[0].contains(".")) {
+                ++size;
+            }
+            precision = Precision.fromDateTimeIndex(size - 1);
+            if (tzSplit.length == 1 && !dateString.contains("Z")) {
+                dateString = TemporalHelper.autoCompleteDateTimeString(dateString, precision);
+                dateString += offset.getId();
             }
         }
-        return Arrays.copyOf(temp, count);
-    }
-
-    public static DateTime fromJavaDate(Date date) {
-        if (date == null) {
-            return null;
+        else {
+            size += dateString.split("-").length;
+            precision = Precision.fromDateTimeIndex(size - 1);
+            dateString = TemporalHelper.autoCompleteDateTimeString(dateString, precision);
+            dateString += ZoneOffset.systemDefault().getRules().getStandardOffset(Instant.now()).getId();
         }
-        return fromJodaDateTime(new org.joda.time.DateTime(date));
+
+        setDateTime(OffsetDateTime.parse(dateString));
     }
 
-    public static DateTime fromJodaDateTime(org.joda.time.DateTime dt) {
-        int [] values = { dt.year().get(), dt.monthOfYear().get(), dt.dayOfMonth().get(), dt.hourOfDay().get(),
-                dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
-        return new DateTime(new Partial(fields, values), dt.getZone());
-    }
-
-    public static DateTime expandPartialMin(DateTime dt, int size) {
-        for (int i = dt.getPartial().size(); i < size; ++i) {
-            dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+    public DateTime(BigDecimal offset, int ... dateElements) {
+        if (dateElements.length == 0) {
+            throw new IllegalArgumentException("DateTime must include a year");
         }
-        return dt;
-    }
 
-    public static DateTime expandPartialMax(DateTime dt, int size, int maxPrecision) {
-        for (int i = dt.getPartial().size(); i < size; ++i) {
-            // only want to max values up to the missing precision
-            if (i > maxPrecision) {
-                dt.setPartial(dt.getPartial().with(DateTime.getField(i), DateTime.getField(i).getField(null).getMinimumValue()));
+        StringBuilder dateString = new StringBuilder();
+        String[] stringElements = TemporalHelper.normalizeDateTimeElements(dateElements);
+
+        for (int i = 0; i < stringElements.length; ++i) {
+            if (i == 0) {
+                dateString.append(stringElements[i]);
+                continue;
             }
-            else if (i == 2) {
-                dt.setPartial(dt.getPartial().with(getField(i), dt.getPartial().getChronology().dayOfMonth().getMaximumValue(dt.getPartial())));
+            else if (i < 3) {
+                dateString.append("-");
+            }
+            else if (i == 3) {
+                dateString.append("T");
+            }
+            else if (i < 6) {
+                dateString.append(":");
+            }
+            else if (i == 6) {
+                dateString.append(".");
+            }
+            dateString.append(stringElements[i]);
+        }
+
+        precision = Precision.fromDateTimeIndex(stringElements.length - 1);
+        dateString = new StringBuilder().append(TemporalHelper.autoCompleteDateTimeString(dateString.toString(), precision));
+
+        if (offset == null) {
+            dateString.append(ZoneOffset.systemDefault().getRules().getStandardOffset(Instant.now()).getId());
+        }
+        else {
+            dateString.append(ZoneOffset.ofHoursMinutes(offset.intValue(), new BigDecimal("60").multiply(offset.remainder(BigDecimal.ONE)).intValue()).getId());
+        }
+
+        setDateTime(OffsetDateTime.parse(dateString.toString()));
+    }
+
+    public DateTime expandPartialMinFromPrecision(Precision thePrecision) {
+        OffsetDateTime odt = this.getDateTime().plusYears(0);
+        for (int i = thePrecision.toDateTimeIndex() + 1; i < 7; ++i) {
+            odt = odt.with(
+                    Precision.fromDateTimeIndex(i).toChronoField(),
+                    odt.range(Precision.fromDateTimeIndex(i).toChronoField()).getMinimum()
+            );
+        }
+        return new DateTime(odt, this.precision).withEvaluationOffset(this.evaluationOffset);
+    }
+
+    public DateTime expandPartialMin(Precision thePrecision) {
+        OffsetDateTime odt = this.getDateTime().plusYears(0);
+        return new DateTime(odt, thePrecision == null ? Precision.MILLISECOND : thePrecision).withEvaluationOffset(this.evaluationOffset);
+    }
+
+    public DateTime expandPartialMax(Precision thePrecision) {
+        OffsetDateTime odt = this.getDateTime().plusYears(0);
+        for (int i = this.getPrecision().toDateTimeIndex() + 1; i < 7; ++i) {
+            if (i <= thePrecision.toDateTimeIndex()) {
+                odt = odt.with(
+                        Precision.fromDateTimeIndex(i).toChronoField(),
+                        odt.range(Precision.fromDateTimeIndex(i).toChronoField()).getMaximum()
+                );
             }
             else {
-                dt.setPartial(dt.getPartial().with(getField(i), DateTime.getField(i).getField(null).getMaximumValue()));
+                odt = odt.with(
+                        Precision.fromDateTimeIndex(i).toChronoField(),
+                        odt.range(Precision.fromDateTimeIndex(i).toChronoField()).getMinimum()
+                );
             }
         }
-        return dt;
+        return new DateTime(odt, thePrecision == null ? Precision.MILLISECOND : thePrecision).withEvaluationOffset(this.evaluationOffset);
+    }
+
+    @Override
+    public boolean isUncertain(Precision thePrecision) {
+        if (thePrecision == Precision.WEEK) {
+            thePrecision = Precision.DAY;
+        }
+
+        return this.precision.toDateTimeIndex() < thePrecision.toDateTimeIndex();
+    }
+
+    @Override
+    public Interval getUncertaintyInterval(Precision thePrecision) {
+        DateTime start = expandPartialMin(thePrecision);
+        DateTime end = expandPartialMax(thePrecision).expandPartialMinFromPrecision(thePrecision);
+        return new Interval(start, true, end, true);
+    }
+
+    @Override
+    public Integer compare(BaseTemporal other, boolean forSort) {
+        boolean differentPrecisions = this.getPrecision() != other.getPrecision();
+
+        if (differentPrecisions) {
+            Integer result = this.compareToPrecision(other, Precision.getHighestDateTimePrecision(this.precision, other.precision));
+            if (result == null && forSort) {
+                return this.precision.toDateTimeIndex() > other.precision.toDateTimeIndex() ? 1 : -1;
+            }
+            return result;
+        }
+        else {
+            return compareToPrecision(other, this.precision);
+        }
+    }
+
+    @Override
+    public Integer compareToPrecision(BaseTemporal other, Precision thePrecision) {
+        boolean leftMeetsPrecisionRequirements = this.precision.toDateTimeIndex() >= thePrecision.toDateTimeIndex();
+        boolean rightMeetsPrecisionRequirements = other.precision.toDateTimeIndex() >= thePrecision.toDateTimeIndex();
+
+        // adjust dates to evaluation offset
+        OffsetDateTime leftDateTime = this.getDateTimeWithEvaluationOffset();
+        OffsetDateTime rightDateTime = ((DateTime) other).getDateTimeWithEvaluationOffset();
+
+        if (!leftMeetsPrecisionRequirements || !rightMeetsPrecisionRequirements) {
+            thePrecision = Precision.getLowestDateTimePrecision(this.precision, other.precision);
+        }
+
+        for (int i = 0; i < thePrecision.toDateTimeIndex() + 1; ++i) {
+            int leftComp = leftDateTime.get(Precision.getDateTimeChronoFieldFromIndex(i));
+            int rightComp = rightDateTime.get(Precision.getDateTimeChronoFieldFromIndex(i));
+            if (leftComp > rightComp) {
+                return 1;
+            }
+            else if (leftComp < rightComp) {
+                return -1;
+            }
+        }
+
+        if (leftMeetsPrecisionRequirements && rightMeetsPrecisionRequirements) {
+            return 0;
+        }
+
+        return null;
+    }
+
+    @Override
+    public int compareTo(@Nonnull BaseTemporal other) {
+        return this.compare(other, true);
+    }
+
+    @Override
+    public Boolean equivalent(Object other) {
+        Integer comparison = compare((BaseTemporal) other, false);
+        return comparison != null && comparison == 0;
+    }
+
+    @Override
+    public Boolean equal(Object other) {
+        Integer comparison = compare((BaseTemporal) other, false);
+        return comparison == null ? null : comparison == 0;
+    }
+
+    @Override
+    public String toString() {
+        switch (precision) {
+            case YEAR: return String.format("%04d", dateTime.getYear());
+            case MONTH: return String.format("%04d-%02d", dateTime.getYear(), dateTime.getMonthValue());
+            case DAY: return String.format("%04d-%02d-%02d", dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth());
+            case HOUR: return String.format("%04d-%02d-%02dT%02d", dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), dateTime.getHour());
+            case MINUTE: return String.format("%04d-%02d-%02dT%02d:%02d", dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), dateTime.getHour(), dateTime.getMinute());
+            case SECOND: return String.format("%04d-%02d-%02dT%02d:%02d:%02d", dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond());
+            default: return String.format("%04d-%02d-%02dT%02d:%02d:%02d.%03d", dateTime.getYear(), dateTime.getMonthValue(), dateTime.getDayOfMonth(), dateTime.getHour(), dateTime.getMinute(), dateTime.getSecond(), dateTime.get(precision.toChronoField()));
+        }
+    }
+
+    // conversion functions
+
+    public static DateTime fromJavaDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return new DateTime(OffsetDateTime.ofInstant(calendar.toInstant(), calendar.getTimeZone().toZoneId()), Precision.MILLISECOND);
     }
 }

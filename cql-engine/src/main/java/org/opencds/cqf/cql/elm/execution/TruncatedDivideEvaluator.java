@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Uncertainty;
 
 import java.math.BigDecimal;
 
@@ -41,17 +40,11 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
             return ((BigDecimal)left).divideAndRemainder((BigDecimal)right)[0];
         }
 
-        else if (left instanceof Uncertainty && right instanceof Uncertainty) {
-            Interval leftInterval = ((Uncertainty)left).getUncertaintyInterval();
-            Interval rightInterval = ((Uncertainty)right).getUncertaintyInterval();
+        else if (left instanceof Interval && right instanceof Interval) {
+            Interval leftInterval = (Interval)left;
+            Interval rightInterval = (Interval)right;
 
-            if (EqualEvaluator.equal(rightInterval.getStart(), 0)
-                    || EqualEvaluator.equal(rightInterval.getEnd(), 0))
-            {
-                return null;
-            }
-
-            return new Uncertainty().withUncertaintyInterval(new Interval(div(leftInterval.getStart(), rightInterval.getStart()), true, div(leftInterval.getEnd(), rightInterval.getEnd()), true));
+            return new Interval(div(leftInterval.getStart(), rightInterval.getStart()), true, div(leftInterval.getEnd(), rightInterval.getEnd()), true);
         }
 
         throw new IllegalArgumentException(String.format("Cannot Div arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));

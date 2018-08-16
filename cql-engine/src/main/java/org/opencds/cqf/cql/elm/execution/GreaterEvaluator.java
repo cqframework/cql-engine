@@ -1,10 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.Uncertainty;
+import org.opencds.cqf.cql.runtime.*;
 
 import java.math.BigDecimal;
 
@@ -64,11 +61,19 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
             return ((String) left).compareTo((String) right) > 0;
         }
 
-        else if (left instanceof Uncertainty && right instanceof Integer) {
-            if (InEvaluator.in(right, ((Uncertainty) left).getUncertaintyInterval(), null)) {
+        // Uncertainty comparisons for difference/duration between
+        else if (left instanceof Interval && right instanceof Integer) {
+            if (InEvaluator.in(right, left, null)) {
                 return null;
             }
-            return ((Integer)((Uncertainty) left).getUncertaintyInterval().getStart()).compareTo((Integer) right) > 0;
+            return ((Integer)((Interval) left).getStart()).compareTo((Integer) right) > 0;
+        }
+
+        else if (left instanceof Integer && right instanceof Interval) {
+            if (InEvaluator.in(left, right, null)) {
+                return null;
+            }
+            return ((Integer) left).compareTo((Integer)((Interval) right).getEnd()) > 0;
         }
 
         throw new IllegalArgumentException(

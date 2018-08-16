@@ -43,75 +43,29 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
         }
 
         if (left instanceof Interval && right instanceof Interval) {
-            return LessEvaluator.less(((Interval)left).getStart(), ((Interval)right).getEnd());
+            return before(((Interval)left).getEnd(), ((Interval)right).getStart(), precision);
         }
 
         else if (left instanceof Interval) {
-            return LessEvaluator.less(((Interval)left).getEnd(), right);
+            return before(((Interval)left).getEnd(), right, precision);
         }
 
         else if (right instanceof Interval) {
-            return LessEvaluator.less(left, ((Interval)right).getStart());
+            return before(left, ((Interval)right).getStart(), precision);
         }
 
         else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
-            BaseTemporal leftTemporal = (BaseTemporal) left;
-            BaseTemporal rightTemporal = (BaseTemporal) right;
-
             if (precision == null) {
                 precision = "millisecond";
             }
 
-            int idx = leftTemporal.getIsDateTime() ? DateTime.getFieldIndex(precision) : Time.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
-
-                    if (Uncertainty.isUncertain(leftTemporal, precision)) {
-                        return LessEvaluator.less(((List) Uncertainty.getHighLowList(leftTemporal, precision)).get(0), rightTemporal);
-                    }
-
-                    else if (Uncertainty.isUncertain(rightTemporal, precision)) {
-                        return LessEvaluator.less(leftTemporal, ((List)Uncertainty.getHighLowList(rightTemporal, precision)).get(1));
-                    }
-
-                    return null;
-                }
-
-                if (leftTemporal.getTimezone().getID().equals(rightTemporal.getTimezone().getID())) {
-                    for (int i = 0; i < idx; i++) {
-                        if (leftTemporal.getPartial().getValue(i) > rightTemporal.getPartial().getValue(i)) {
-                            return false;
-                        }
-                        else if (leftTemporal.getPartial().getValue(i) < rightTemporal.getPartial().getValue(i)) {
-                            return true;
-                        }
-                    }
-                    return leftTemporal.getPartial().getValue(idx) < rightTemporal.getPartial().getValue(idx);
-                }
-
-                else {
-                    Instant leftInstant = leftTemporal.getJodaDateTime().toInstant();
-                    Instant rightInstant = rightTemporal.getJodaDateTime().toInstant();
-                    for (int i = 0; i < idx; i++) {
-                        if (leftInstant.get(DateTime.getField(i)) > rightInstant.get(DateTime.getField(i))) {
-                            return false;
-                        }
-                        else if (leftInstant.get(DateTime.getField(i)) < rightInstant.get(DateTime.getField(i))) {
-                            return true;
-                        }
-                    }
-                    return leftInstant.get(DateTime.getField(idx)) < rightInstant.get(DateTime.getField(idx));
-                }
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+            Integer result = ((BaseTemporal) left).compareToPrecision((BaseTemporal) right, Precision.fromString(precision));
+            return result == null ? null : result < 0;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        return LessEvaluator.less(left, right);
+
+//        throw new IllegalArgumentException(String.format("Cannot Before arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override

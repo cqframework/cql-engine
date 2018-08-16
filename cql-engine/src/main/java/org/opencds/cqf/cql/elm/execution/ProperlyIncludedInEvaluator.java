@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -22,9 +23,10 @@ Note that during is a synonym for included in.
 *** NOTES FOR LIST ***
 properly included in(left List<T>, right list<T>) Boolean
 
-The properly included in operator for lists returns true if every element of the first list is in the second list and the first list is strictly smaller than the second list.
+The properly included in operator for lists returns true if every element of the first list is in the second list and the
+    first list is strictly smaller than the second list.
 This operator uses the notion of equivalence to determine whether or not two elements are the same.
-If either argument is null, the result is null.
+If the left argument is null, the result is true if the right argument is not empty. Otherwise, if the right argument is null, the result is false.
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
@@ -34,7 +36,11 @@ Note that the order of elements does not matter for the purposes of determining 
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
     public static Object properlyIncudedIn(Object left, Object right, String precision) {
-        return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
+        try {
+            return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(String.format("Cannot ProperlyIncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        }
     }
 
     @Override
@@ -43,6 +49,25 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), properlyIncudedIn(left, right, precision), left, right, precision);
+        // null left operand case
+        if (getOperand().get(0) instanceof AsEvaluator) {
+            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+                return ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, (Interval) left, precision);
+            }
+            else {
+                return ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, (Iterable) left);
+            }
+        }
+        // null right operand case
+        if (getOperand().get(1) instanceof AsEvaluator) {
+            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+                return ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, (Interval) left, precision);
+            }
+            else {
+                return ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, (Iterable) left);
+            }
+        }
+
+        return properlyIncudedIn(left, right, precision);
     }
 }

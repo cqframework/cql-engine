@@ -23,21 +23,52 @@ For any other type, attempting to invoke minimum results in an error.
  */
 public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValue {
 
-    public static Object minimum(String type) {
-        switch (type) {
-            case "Integer": return Value.minValue(Integer.class);
-            case "Decimal": return Value.minValue(BigDecimal.class);
-            case "Quantity": return Value.minValue(Quantity.class);
-            case "DateTime": return Value.minValue(DateTime.class);
-            case "Time": return Value.minValue(Time.class);
-            default: throw new NotImplementedException(String.format("MinValue not implemented for type %s", type));
+    public static Object minValue(String type) {
+        if (type == null) {
+            return null;
         }
+
+        if (type.endsWith("Integer")) {
+            return Value.MIN_INT;
+        }
+        if (type.endsWith("Decimal")) {
+            return Value.MIN_DECIMAL;
+        }
+        // TODO - the temporal types are slightly limited here ... using system defaults for timezone instead of what's specified for evaluation
+        if (type.endsWith("DateTime")) {
+            return new DateTime(TemporalHelper.getDefaultOffset(), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+        }
+        if (type.endsWith("Time")) {
+            return new Time(TemporalHelper.getDefaultOffset(), 0, 0, 0, 0).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+        }
+        // NOTE: Quantity min is not standard
+        if (type.endsWith("Quantity")) {
+            return new Quantity().withValue(Value.MIN_DECIMAL).withUnit("1");
+        }
+
+        throw new NotImplementedException(String.format("The Minimum operator is not implemented for type %s", type));
     }
 
     @Override
     public Object evaluate(Context context) {
         String type = this.getValueType().getLocalPart();
+        if (type == null) {
+            return null;
+        }
 
-        return context.logTrace(this.getClass(), minimum(type), type);
+        if (type.endsWith("Integer")) {
+            return Value.MIN_INT;
+        }
+        if (type.endsWith("Decimal")) {
+            return Value.MIN_DECIMAL;
+        }
+        if (type.endsWith("DateTime")) {
+            return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        if (type.endsWith("Time")) {
+            return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+
+        throw new NotImplementedException(String.format("The Minimum operator is not implemented for type %s", type));
     }
 }

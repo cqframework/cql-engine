@@ -1,32 +1,33 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Precision;
 
-import javax.jws.Oneway;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.StreamSupport;
 
 /*
 *** NOTES FOR INTERVAL ***
-properly includes(left Interval<T>, right Interval<T>) Boolean
+properly includes _precision_ (left Interval<T>, right Interval<T>) Boolean
 
-The properly includes operator for intervals returns true if the first interval completely includes the second and the
-  first interval is strictly larger than the second.
-  More precisely, if the starting point of the first interval is less than or equal to the starting point of the second interval,
-    and the ending point of the first interval is greater than or equal to the ending point of the second interval,
-      and they are not the same interval.
+The properly includes operator for intervals returns true if the first interval completely includes the second
+    and the first interval is strictly larger than the second. More precisely, if the starting point of the first interval
+    is less than or equal to the starting point of the second interval, and the ending point of the first interval is
+    greater than or equal to the ending point of the second interval, and they are not the same interval.
 This operator uses the semantics described in the Start and End operators to determine interval boundaries.
+If precision is specified and the point type is a date/time type, comparisons used in the operation are performed at the specified precision.
 If either argument is null, the result is null.
 
 *** NOTES FOR LIST ***
 properly includes(left List<T>, right List<T>) Boolean
 
-The properly includes operator for lists returns true if the first list contains every element of the second list,
-  and the first list is strictly larger than the second list.
+The properly includes operator for lists returns true if the first list contains every element of the second list, a
+    nd the first list is strictly larger than the second list.
 This operator uses the notion of equivalence to determine whether or not two elements are the same.
-If either argument is null, the result is null.
+If the left argument is null, the result is false, else if the right argument is null, the result is true if the left argument is not empty.
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
@@ -35,61 +36,62 @@ Note that the order of elements does not matter for the purposes of determining 
  */
 public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
 
-    public static Object properlyIncludes(Object left, Object right, String precision) {
+    public static Boolean properlyIncludes(Object left, Object right, String precision) {
+        if (left instanceof Interval && right instanceof Interval) {
+            return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
+        }
+        if (left instanceof Iterable && right instanceof Iterable) {
+            return listProperlyIncludes((Iterable) left, (Iterable) right);
+        }
+
+        throw new IllegalArgumentException(String.format("Cannot perform ProperlyIncludes operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
+    }
+
+    public static Boolean intervalProperlyIncludes(Interval left, Interval right, String precision) {
+        if (left == null || right == null) {
+            return null;
+        }
+
+        Object leftStart = left.getStart();
+        Object leftEnd = left.getEnd();
+        Object rightStart = right.getStart();
+        Object rightEnd = right.getEnd();
+
+        if (leftStart instanceof BaseTemporal || leftEnd instanceof BaseTemporal
+                || rightStart instanceof BaseTemporal || rightEnd instanceof BaseTemporal) {
+            Boolean isSame = AndEvaluator.and(
+                    SameAsEvaluator.sameAs(leftStart, rightStart, precision),
+                    SameAsEvaluator.sameAs(leftEnd, rightEnd, precision)
+            );
+            return AndEvaluator.and(
+                    IncludedInEvaluator.intervalIncludedIn(right, left, precision),
+                    isSame == null ? null : !isSame
+            );
+        }
+        return AndEvaluator.and(
+                IncludedInEvaluator.intervalIncludedIn(right, left, precision),
+                NotEqualEvaluator.notEqual(left, right)
+        );
+    }
+
+    public static Boolean listProperlyIncludes(Iterable left, Iterable right) {
         if (left == null) {
             return false;
         }
 
+        int leftCount = (int) StreamSupport.stream(((Iterable<?>) left).spliterator(), false).count();
+
         if (right == null) {
-            return true;
+            return leftCount > 0;
         }
 
-        if (left instanceof Interval) {
-            Interval leftInterval = (Interval)left;
-            Interval rightInterval = (Interval)right;
-
-            Object leftStart = leftInterval.getStart();
-            Object leftEnd = leftInterval.getEnd();
-            Object rightStart = rightInterval.getStart();
-            Object rightEnd = rightInterval.getEnd();
-
-            Boolean greater = GreaterEvaluator.greater(Interval.getSize(leftStart, leftEnd), Interval.getSize(rightStart, rightEnd));
-
-            if (leftStart instanceof BaseTemporal) {
-                Boolean sameOrBefore = SameOrBeforeEvaluator.sameOrBefore(leftStart, rightStart, precision);
-                Boolean sameOrAfter = SameOrAfterEvaluator.sameOrAfter(leftEnd, rightEnd, precision);
-
-                if (greater == null || sameOrBefore == null || sameOrAfter == null) {
-                    return null;
-                }
-
-                return greater && sameOrBefore && sameOrAfter;
-            }
-
-            Boolean lessOrEqual = LessOrEqualEvaluator.lessOrEqual(leftStart, rightStart);
-            Boolean greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(leftEnd, rightEnd);
-
-            if (greater == null || lessOrEqual == null || greaterOrEqual == null) {
-                return null;
-            }
-
-            return (greater && lessOrEqual && greaterOrEqual);
-        }
-
-        else if (left instanceof Iterable) {
-            List leftArr = (List) left;
-            List rightArr = (List) right;
-
-            Object includes = IncludesEvaluator.includes(leftArr, rightArr, precision);
-
-            if (includes == null) {
-                return null;
-            }
-
-            return (Boolean)includes && leftArr.size() > rightArr.size();
-        }
-
-        throw new IllegalArgumentException(String.format("Cannot perform ProperlyIncludes operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
+        return AndEvaluator.and(
+                IncludedInEvaluator.listIncludedIn(right, left),
+                NotEqualEvaluator.notEqual(
+                        leftCount,
+                        (int) StreamSupport.stream(((Iterable<?>) right).spliterator(), false).count()
+                )
+        );
     }
 
     @Override
@@ -98,6 +100,25 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), properlyIncludes(left, right, precision), left, right, precision);
+        // null left operand case
+        if (getOperand().get(0) instanceof AsEvaluator) {
+            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+                return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
+            }
+            else {
+                return listProperlyIncludes((Iterable) left, (Iterable) right);
+            }
+        }
+        // null right operand case
+        if (getOperand().get(1) instanceof AsEvaluator) {
+            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+                return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
+            }
+            else {
+                return listProperlyIncludes((Iterable) left, (Iterable) right);
+            }
+        }
+
+        return properlyIncludes(left, right, precision);
     }
 }

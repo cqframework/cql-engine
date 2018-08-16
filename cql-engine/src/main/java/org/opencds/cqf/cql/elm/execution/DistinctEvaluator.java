@@ -20,7 +20,7 @@ If the argument is null, the result is null.
  */
 public class DistinctEvaluator extends org.cqframework.cql.elm.execution.Distinct {
 
-    public static List<Object> distinct(Iterable<Object> source) {
+    public static List<Object> distinct(Iterable source) {
         List<Object> result = new ArrayList<>();
         for (Object element : source) {
             Object in = InEvaluator.in(element, result, null);
@@ -38,6 +38,6 @@ public class DistinctEvaluator extends org.cqframework.cql.elm.execution.Distinc
     public Object evaluate(Context context) {
         Object value = this.getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), distinct((Iterable<Object>)value), value);
+        return distinct((Iterable)value);
     }
 }

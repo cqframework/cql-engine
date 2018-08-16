@@ -1,88 +1,207 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.joda.time.*;
-import org.joda.time.DateTime;
-
+import javax.annotation.Nonnull;
 import java.math.BigDecimal;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
-import java.util.TimeZone;
+import java.time.Instant;
+import java.time.OffsetTime;
+import java.time.ZoneOffset;
 
-/**
- * Created by Chris Schuler on 6/16/2016
- */
-public class Time extends BaseTemporal implements CqlType {
+public class Time extends BaseTemporal {
 
-    public Time(Partial partial) {
-        this.timezone = DateTimeZone.forOffsetMillis(TimeZone.getDefault().getRawOffset());
-        this.isDateTime = false;
-        setPartial(partial);
+    private OffsetTime time;
+    public OffsetTime getTime() {
+        return time;
+    }
+    public Time withTime(OffsetTime time) {
+        this.time = time;
+        return this;
     }
 
-    public Time(Partial partial, DateTimeZone timezone) {
-        this.timezone = timezone;
-        this.isDateTime = false;
-        setPartial(partial);
+    public Time withEvaluationOffset(ZoneOffset evaluationOffset) {
+        this.evaluationOffset = evaluationOffset;
+        return this;
     }
 
-    protected static final DateTimeFieldType[] fields = new DateTimeFieldType[] {
-            DateTimeFieldType.hourOfDay(),
-            DateTimeFieldType.minuteOfHour(),
-            DateTimeFieldType.secondOfMinute(),
-            DateTimeFieldType.millisOfSecond(),
-    };
-
-    public static DateTimeFieldType[] getFields(int numFields) {
-        DateTimeFieldType[] ret = new DateTimeFieldType[numFields];
-        System.arraycopy(fields, 0, ret, 0, numFields);
-        return ret;
+    public Time withPrecision(Precision precision) {
+        this.precision = precision;
+        return this;
     }
 
-    public static DateTimeFieldType getField(int idx) {
-        return fields[idx];
+    public Time(OffsetTime time, Precision precision) {
+        this.time = time;
+        this.precision = precision;
     }
 
-    public static int getFieldIndex(String dateTimeElement) {
-        dateTimeElement = dateTimeElement.toLowerCase();
+    public Time(String dateString, ZoneOffset offset) {
+        dateString = dateString.replace("T", "");
+        String[] tzSplit = dateString.contains("Z") ? dateString.split("Z") : dateString.split("[+-]");
+        int size = tzSplit[0].split(":").length;
+        if (tzSplit[0].contains(".")) {
+            ++size;
+        }
+        precision = Precision.fromTimeIndex(size - 1);
+        if (tzSplit.length == 1 && !dateString.contains("Z")) {
+            dateString = TemporalHelper.autoCompleteDateTimeString(dateString, precision);
+            dateString += offset.getId();
+        }
 
-        if (dateTimeElement.startsWith("hour")) {
+        time = OffsetTime.parse(dateString);
+    }
+
+    public Time(BigDecimal offset, int ... timeElements) {
+        if (timeElements.length == 0) {
+            throw new IllegalArgumentException("Time must include an hour");
+        }
+
+        StringBuilder timeString = new StringBuilder();
+        String[] stringElements = TemporalHelper.normalizeTimeElements(timeElements);
+
+        for (int i = 0; i < stringElements.length; ++i) {
+            if (i == 0) {
+                timeString.append(stringElements[i]);
+                continue;
+            }
+            else if (i < 3) {
+                timeString.append(":");
+            }
+            else if (i == 3) {
+                timeString.append(".");
+            }
+            timeString.append(stringElements[i]);
+        }
+
+        precision = Precision.fromTimeIndex(stringElements.length - 1);
+        timeString = new StringBuilder().append(TemporalHelper.autoCompleteDateTimeString(timeString.toString(), precision));
+
+        if (offset == null) {
+            timeString.append(ZoneOffset.systemDefault().getRules().getStandardOffset(Instant.now()).getId());
+        }
+        else {
+            timeString.append(ZoneOffset.ofHoursMinutes(offset.intValue(), new BigDecimal("60").multiply(offset.remainder(BigDecimal.ONE)).intValue()).getId());
+        }
+
+        time = OffsetTime.parse(timeString.toString());
+    }
+
+    public Time expandPartialMinFromPrecision(Precision thePrecision) {
+        OffsetTime ot = this.time.plusHours(0);
+        for (int i = thePrecision.toTimeIndex() + 1; i < 4; ++i) {
+            ot = ot.with(
+                    Precision.fromTimeIndex(i).toChronoField(),
+                    ot.range(Precision.fromTimeIndex(i).toChronoField()).getMinimum()
+            );
+        }
+        return new Time(ot, this.precision).withEvaluationOffset(this.evaluationOffset);
+    }
+
+    public Time expandPartialMin(Precision thePrecision) {
+        OffsetTime ot = this.getTime().plusHours(0);
+        return new Time(ot, thePrecision == null ? Precision.MILLISECOND : thePrecision).withEvaluationOffset(this.evaluationOffset);
+    }
+
+    public Time expandPartialMax(Precision thePrecision) {
+        OffsetTime ot = this.getTime().plusHours(0);
+        for (int i = this.getPrecision().toTimeIndex() + 1; i < 4; ++i) {
+            if (i <= thePrecision.toTimeIndex()) {
+                ot = ot.with(
+                        Precision.fromTimeIndex(i).toChronoField(),
+                        ot.range(Precision.fromTimeIndex(i).toChronoField()).getMaximum()
+                );
+            }
+            else {
+                ot = ot.with(
+                        Precision.fromTimeIndex(i).toChronoField(),
+                        ot.range(Precision.fromTimeIndex(i).toChronoField()).getMinimum()
+                );
+            }
+        }
+        return new Time(ot, thePrecision == null ? Precision.MILLISECOND : thePrecision).withEvaluationOffset(this.evaluationOffset);
+    }
+
+    @Override
+    public boolean isUncertain(Precision thePrecision) {
+        return this.precision.toTimeIndex() < thePrecision.toTimeIndex();
+    }
+
+    @Override
+    public Interval getUncertaintyInterval(Precision thePrecision) {
+        Time start = expandPartialMin(thePrecision);
+        Time end = expandPartialMax(thePrecision).expandPartialMinFromPrecision(thePrecision);
+        return new Interval(start, true, end, true);
+    }
+
+    @Override
+    public Integer compare(BaseTemporal other, boolean forSort) {
+        boolean differentPrecisions = this.getPrecision() != other.getPrecision();
+
+        Precision thePrecision;
+        if (differentPrecisions) {
+            Integer result = this.compareToPrecision(other, Precision.getHighestTimePrecision(this.precision, other.precision));
+            if (result == null && forSort) {
+                return this.precision.toTimeIndex() > other.precision.toTimeIndex() ? 1 : -1;
+            }
+            return result;
+        }
+        else {
+            return compareToPrecision(other, this.precision);
+        }
+    }
+
+    @Override
+    public Integer compareToPrecision(BaseTemporal other, Precision thePrecision) {
+        boolean leftMeetsPrecisionRequirements = this.precision.toTimeIndex() >= thePrecision.toTimeIndex();
+        boolean rightMeetsPrecisionRequirements = other.precision.toTimeIndex() >= thePrecision.toTimeIndex();
+
+        // adjust dates to evaluation offset
+        OffsetTime leftTime = this.time.withOffsetSameInstant(evaluationOffset);
+        OffsetTime rightTime = ((Time) other).time.withOffsetSameInstant(evaluationOffset);
+
+        if (!leftMeetsPrecisionRequirements || !rightMeetsPrecisionRequirements) {
+            thePrecision = Precision.getLowestTimePrecision(this.precision, other.precision);
+        }
+
+        for (int i = 0; i < thePrecision.toTimeIndex() + 1; ++i) {
+            int leftComp = leftTime.get(Precision.getTimeChronoFieldFromIndex(i));
+            int rightComp = rightTime.get(Precision.getTimeChronoFieldFromIndex(i));
+            if (leftComp > rightComp) {
+                return 1;
+            }
+            else if (leftComp < rightComp) {
+                return -1;
+            }
+        }
+
+        if (leftMeetsPrecisionRequirements && rightMeetsPrecisionRequirements) {
             return 0;
         }
-        else if (dateTimeElement.startsWith("minute")) {
-            return 1;
-        }
-        else if (dateTimeElement.startsWith("second")) {
-            return 2;
-        }
-        else if (dateTimeElement.startsWith("millisecond")) {
-            return 3;
-        }
 
-        return -1;
+        return null;
     }
 
-    public static String getUnit(int idx) {
-        switch (idx) {
-            case 0: return "hours";
-            case 1: return "minutes";
-            case 2: return "seconds";
-            case 3: return "milliseconds";
-        }
-        throw new IllegalArgumentException("Invalid index for Time unit request.");
+    @Override
+    public int compareTo(@Nonnull BaseTemporal other) {
+        return this.compare(other, true);
     }
 
-    public static Time getTimeOfDay() {
-        org.joda.time.DateTime dt = org.joda.time.DateTime.now();
-        int [] values = { dt.hourOfDay().get(), dt.minuteOfHour().get(), dt.secondOfMinute().get(), dt.millisOfSecond().get() };
-        return new Time(new Partial(fields, values), dt.getZone());
+    @Override
+    public Boolean equivalent(Object other) {
+        Integer comparison = compare((BaseTemporal) other, false);
+        return comparison != null && comparison == 0;
     }
 
-    public static Time expandPartialMin(Time dt, int size) {
-        for (int i = dt.getPartial().size(); i < size; ++i) {
-            dt.setPartial(dt.getPartial().with(getField(i), getField(i).getField(null).getMinimumValue()));
+    @Override
+    public Boolean equal(Object other) {
+        Integer comparison = compare((BaseTemporal) other, false);
+        return comparison == null ? null : comparison == 0;
+    }
+
+    @Override
+    public String toString() {
+        switch (precision) {
+            case HOUR: return String.format("%02d", time.getHour());
+            case MINUTE: return String.format("%02d:%02d", time.getHour(), time.getMinute());
+            case SECOND: return String.format("%02d:%02d:%02d", time.getHour(), time.getMinute(), time.getSecond());
+            default: return String.format("%02d:%02d:%02d.%03d", time.getHour(), time.getMinute(), time.getSecond(), time.get(precision.toChronoField()));
         }
-        return dt;
     }
 }

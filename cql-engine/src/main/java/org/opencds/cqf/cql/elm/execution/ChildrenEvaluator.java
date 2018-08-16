@@ -7,6 +7,17 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+
+Children(argument Any) List<Any>
+
+For structured types, the Children operator returns a list of all the values of the elements of the type.
+    List-valued elements are expanded and added to the result individually, rather than as a single list.
+For list types, the result is the same as invoking Children on each element in the list and flattening the resulting lists into a single result.
+If the source is null, the result is null.
+
+*/
+
 /**
  * Created by Christopher Schuler on 6/13/2017.
  */
@@ -33,19 +44,19 @@ public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Childre
     }
 
     private static void addDateTime(List<Object> list, DateTime dateTime) {
-        for (int i = 0; i < dateTime.getPartial().size(); ++i) {
-            list.add(dateTime.getPartial().get(DateTime.getField(i)));
+        for (int i = 0; i < dateTime.getPrecision().toDateTimeIndex() + 1; ++i) {
+            list.add(dateTime.getDateTime().get(Precision.fromDateTimeIndex(i).toChronoField()));
         }
 
-        list.add(dateTime.getTimezoneOffset());
+        list.add(TemporalHelper.zoneToOffset(dateTime.getDateTime().getOffset()));
     }
 
     private static void addTime(List<Object> list, Time time) {
-        for (int i = 0; i < time.getPartial().size(); ++i) {
-            list.add(time.getPartial().get(Time.getField(i)));
+        for (int i = 0; i < time.getPrecision().toTimeIndex() + 1; ++i) {
+            list.add(time.getTime().get(Precision.fromTimeIndex(i).toChronoField()));
         }
 
-        list.add(time.getTimezoneOffset());
+        list.add(TemporalHelper.zoneToOffset(time.getTime().getOffset()));
     }
 
     private static void addList(List<Object> list, List<Object> listToProcess) {

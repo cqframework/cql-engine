@@ -33,29 +33,48 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
             }
         }
 
-        if (intervals.size() == 1) {
+        if (intervals.size() == 1 || intervals.isEmpty()) {
             return intervals;
-        }
-
-        else if (intervals.size() == 0) {
-            return null;
         }
 
         intervals.sort(new CqlList().valueSort);
 
+        String precision = null;
+        if (intervals.get(0).getStart() instanceof BaseTemporal || intervals.get(0).getEnd() instanceof BaseTemporal) {
+            List<BaseTemporal> temporals = new ArrayList<>();
+            for (Interval interval : intervals) {
+                if (interval.getStart() != null) {
+                    temporals.add((BaseTemporal) interval.getStart());
+                }
+                if (interval.getEnd() != null) {
+                    temporals.add((BaseTemporal) interval.getEnd());
+                }
+            }
+            precision = BaseTemporal.getHighestPrecision(temporals.toArray(new BaseTemporal[temporals.size()]));
+        }
+
         for (int i = 0; i < intervals.size(); ++i) {
             if ((i+1) < intervals.size()) {
-                Boolean merge = OrEvaluator.or(
-                        GreaterOrEqualEvaluator.greaterOrEqual(intervals.get(i).getEnd(), intervals.get(i+1).getStart()),
-                        EqualEvaluator.equal(Value.successor(intervals.get(i).getEnd()), intervals.get(i+1).getStart())
+                Boolean doMerge = AnyTrueEvaluator.anyTrue(
+                        Arrays.asList(
+                                OverlapsEvaluator.overlaps(intervals.get(i), intervals.get(i+1), precision),
+                                MeetsEvaluator.meets(intervals.get(i), intervals.get(i+1), precision)
+                        )
                 );
 
-                if (merge == null) {
+                if (doMerge == null) {
                     continue;
                 }
 
-                if (merge) {
-                    intervals.set(i, new Interval((intervals.get(i)).getStart(), true, (intervals.get(i+1)).getEnd(), true));
+                if (doMerge) {
+                    Boolean isNextEndGreater = GreaterEvaluator.greater((intervals.get(i+1)).getEnd(), (intervals.get(i)).getEnd());
+                    intervals.set(
+                            i,
+                            new Interval(
+                                    (intervals.get(i)).getStart(), true,
+                                    isNextEndGreater != null && isNextEndGreater ? (intervals.get(i+1)).getEnd() : (intervals.get(i)).getEnd(), true
+                            )
+                    );
                     intervals.remove(i+1);
                     i -= 1;
                 }

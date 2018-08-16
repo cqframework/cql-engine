@@ -25,8 +25,8 @@ public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
         Integer size = 0;
 
         if (source instanceof Iterable) {
-            Iterable<Object> element = (Iterable<Object>)source;
-            Iterator<Object> itr = element.iterator();
+            Iterable element = (Iterable)source;
+            Iterator itr = element.iterator();
 
             if (!itr.hasNext()) { // empty list
                 return size;
@@ -41,13 +41,11 @@ public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
 
                 ++size;
             }
+
+            return size;
         }
 
-        else {
-            return null;
-        }
-
-        return size;
+        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Count operation.", source.getClass().getName()));
     }
 
     @Override

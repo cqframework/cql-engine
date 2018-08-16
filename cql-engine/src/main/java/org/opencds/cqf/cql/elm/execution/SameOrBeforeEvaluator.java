@@ -39,9 +39,7 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
     public static Boolean onOrBefore(Object left, Object right, String precision) {
         // Interval, Interval
         if (left instanceof Interval && right instanceof Interval) {
-            if (((Interval) left).getStart() instanceof DateTime
-                    || ((Interval) left).getStart() instanceof Time)
-            {
+            if (((Interval) left).getStart() instanceof BaseTemporal) {
                 return sameOrBefore(((Interval) left).getEnd(), ((Interval) right).getStart(), precision);
             }
             return LessOrEqualEvaluator.lessOrEqual(((Interval) left).getEnd(), ((Interval) right).getStart());
@@ -49,7 +47,7 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
 
         // Interval, Point
         else if (left instanceof Interval) {
-            if (right instanceof DateTime || right instanceof Time) {
+            if (right instanceof BaseTemporal) {
                 return sameOrBefore(((Interval) left).getEnd(), right, precision);
             }
             return LessOrEqualEvaluator.lessOrEqual(((Interval) left).getEnd(), right);
@@ -57,7 +55,7 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
 
         // Point, Interval
         else if (right instanceof Interval) {
-            if (left instanceof DateTime || left instanceof Time) {
+            if (left instanceof BaseTemporal) {
                 return sameOrBefore(left, ((Interval) right).getStart(), precision);
             }
             return LessOrEqualEvaluator.lessOrEqual(left, ((Interval) right).getStart());
@@ -81,37 +79,8 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
         }
 
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
-            BaseTemporal leftTemporal = (BaseTemporal) left;
-            BaseTemporal rightTemporal = (BaseTemporal) right;
-
-            int idx = DateTime.getFieldIndex(precision);
-
-            if (idx != -1) {
-                // check level of precision
-                if (Uncertainty.isUncertain(leftTemporal, precision) || Uncertainty.isUncertain(rightTemporal, precision)) {
-                    return null;
-                }
-
-                Instant leftInstant = leftTemporal.getJodaDateTime().toInstant();
-                Instant rightInstant = rightTemporal.getJodaDateTime().toInstant();
-
-                for (int i = 0; i < idx + 1; ++i) {
-                    if (leftInstant.get(DateTime.getField(i)) < rightInstant.get(DateTime.getField(i)))
-                    {
-                        return true;
-                    }
-                    else if (leftInstant.get(DateTime.getField(i)) > rightInstant.get(DateTime.getField(i)))
-                    {
-                        return false;
-                    }
-                }
-
-                return leftInstant.get(DateTime.getField(idx)) <= rightInstant.get(DateTime.getField(idx));
-            }
-
-            else {
-                throw new IllegalArgumentException(String.format("Invalid duration precision: %s", precision));
-            }
+            Integer result = ((BaseTemporal) left).compareToPrecision((BaseTemporal) right, Precision.fromString(precision));
+            return result == null ? null : result == 0 || result < 0;
         }
 
         throw new IllegalArgumentException(String.format("Cannot SameOrBefore arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
@@ -123,6 +92,6 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), sameOrBefore(left, right, precision), left, right, precision);
+        return sameOrBefore(left, right, precision);
     }
 }

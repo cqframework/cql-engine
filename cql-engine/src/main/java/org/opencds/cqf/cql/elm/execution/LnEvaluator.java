@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Value;
 
 import java.math.BigDecimal;
 
@@ -39,7 +40,7 @@ public class LnEvaluator extends org.cqframework.cql.elm.execution.Ln {
                     throw new NumberFormatException();
                 }
             }
-            return retVal;
+            return Value.verifyPrecision(retVal);
         }
 
         throw new IllegalArgumentException(String.format("Cannot perform Natural Log operation with argument of type '%s'.", operand.getClass().getName()));
