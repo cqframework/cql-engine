@@ -1,6 +1,6 @@
 /*
 *
-*   This code is derived by work done by Barry Cassidy from Motive Medical Intelligence
+*   This code is derived from work done by Barry Cassidy from Motive Medical Intelligence
 *   Thank you!
 *
 * */
