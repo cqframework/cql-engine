@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.terminology.fhir;
 
+import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
@@ -14,6 +15,7 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -21,6 +23,18 @@ import java.util.ArrayList;
  * Created by Bryn on 8/15/2016.
  */
 public class FhirTerminologyProvider implements TerminologyProvider {
+
+    private IClientInterceptor headerInjectionInterceptor;
+
+    public FhirTerminologyProvider withInjectedHeader(String headerKey, String headerValue) {
+        this.headerInjectionInterceptor = new HeaderInjectionInterceptor(headerKey, headerValue);
+        return this;
+    }
+
+    public FhirTerminologyProvider withInjectedHeaders(HashMap<String, String> headers) {
+        this.headerInjectionInterceptor = new HeaderInjectionInterceptor(headers);
+        return this;
+    }
 
     private IGenericClient fhirClient;
     public IGenericClient getFhirClient() {
@@ -39,6 +53,10 @@ public class FhirTerminologyProvider implements TerminologyProvider {
         }
         fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 10000);
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
+
+        if (this.headerInjectionInterceptor != null) {
+            fhirClient.registerInterceptor(headerInjectionInterceptor);
+        }
 
         if (userName != null && password != null) {
             BasicAuthInterceptor basicAuth = new BasicAuthInterceptor(userName, password);
