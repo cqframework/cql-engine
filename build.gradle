@@ -113,6 +113,8 @@ configure(subprojects.findAll {it.name in ['cql-engine']}) {
         xjc group: 'com.sun.xml.bind', name: 'jaxb-core', version: '2.2.11'
         xjc group: 'com.sun.xml.bind', name: 'jaxb-xjc', version: '2.2.11'
         xjc group: 'com.sun.xml.bind', name: 'jaxb-impl', version: '2.2.11'
+        xjc group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.11'
+        xjc group: 'javax.activation', name: 'activation', version: '1.1.1'
         xjc group: 'org.jvnet.jaxb2_commons', name: 'jaxb2-basics-ant', version: '0.9.4'
         xjc group: 'org.jvnet.jaxb2_commons', name: 'jaxb2-basics', version: '0.9.4'
         xjc group: 'org.jvnet.jaxb2_commons', name: 'jaxb2-fluent-api', version: '3.0'
