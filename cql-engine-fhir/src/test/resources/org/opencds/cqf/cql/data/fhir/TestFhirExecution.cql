@@ -34,3 +34,6 @@ define "Immunizations in range":
     "Immunizations between January and April" JanApr
         where year from OctDec.date.value = year from JanApr.date.value - 1
         return Union(OctDec, JanApr)
+
+define "Resource Id":
+  [Encounter] E return E.id.value

@@ -102,6 +102,9 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         else if (source instanceof InstantType) {
             return toDateTime((InstantType)source);
         }
+        else if (source instanceof IdType) {
+            return ((IdType) source).getIdPart();
+        }
         else {
             return result;
         }

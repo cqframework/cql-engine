@@ -14,3 +14,6 @@ define testDate:
 define testDecimal:
     [MedicationDispense] MD
         where MD.quantity.value.value >= 15.0
+
+define testID:
+    [Encounter] E return E.id.value
