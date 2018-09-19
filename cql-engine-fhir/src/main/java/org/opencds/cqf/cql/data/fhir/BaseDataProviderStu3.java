@@ -44,25 +44,25 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
             );
             case MONTH: return new DateTime(
                     TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth()
+                    value.getYear(), value.getMonth() + 1
             );
             case DAY: return new DateTime(
                     TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth(), value.getDay()
+                    value.getYear(), value.getMonth() + 1, value.getDay()
             );
             case MINUTE: return new DateTime(
                     TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth(), value.getDay(), value.getHour(),
+                    value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
                     value.getMinute()
             );
             case SECOND: return new DateTime(
                     TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth(), value.getDay(), value.getHour(),
+                    value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
                     value.getMinute(), value.getSecond()
             );
             case MILLI: return new DateTime(
                     TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth(), value.getDay(), value.getHour(),
+                    value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
                     value.getMinute(), value.getSecond(), value.getMillis()
             );
             default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
