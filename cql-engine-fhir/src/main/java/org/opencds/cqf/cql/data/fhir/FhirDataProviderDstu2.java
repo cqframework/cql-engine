@@ -352,7 +352,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
                 accessor = clazz.getMethod(accessorMethodName);
             }
 
-            return mapPrimitive(accessor.invoke(target));
+            return toJavaPrimitive(accessor.invoke(target), target);
 
         } catch (NoSuchMethodException e) {
             if (pathIsChoice(path)) {
@@ -369,18 +369,30 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
         }
     }
 
-    protected Object mapPrimitive(Object target) {
-        if (target instanceof PeriodDt) {
-            PeriodDt period = (PeriodDt) target;
-            return new Interval(DateTime.fromJavaDate(period.getStart()), true, DateTime.fromJavaDate(period.getEnd()), true);
+    @Override
+    protected Object toJavaPrimitive(Object result, Object source) {
+        if (source instanceof IdDt) {
+            return ((IdDt) source).getIdPart();
         }
 
-        else if (target instanceof Date) {
-            return DateTime.fromJavaDate((Date) target);
+        else if (result instanceof Date) {
+            return DateTime.fromJavaDate((Date) result);
         }
 
-        return target;
+        return result;
     }
+
+//    protected Object mapPrimitive(Object target) {
+//        if (target instanceof IdDt) {
+//            return ((IdDt) target).toUnqualified();
+//        }
+//
+//        else if (target instanceof Date) {
+//            return DateTime.fromJavaDate((Date) target);
+//        }
+//
+//        return target;
+//    }
 
     protected ca.uhn.fhir.model.dstu2.resource.Bundle cleanEntry(ca.uhn.fhir.model.dstu2.resource.Bundle bundle, String dataType) {
         List<ca.uhn.fhir.model.dstu2.resource.Bundle.Entry> entry = new ArrayList<>();

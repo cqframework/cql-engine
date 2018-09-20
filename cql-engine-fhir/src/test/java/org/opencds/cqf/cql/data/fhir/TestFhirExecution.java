@@ -36,4 +36,12 @@ public class TestFhirExecution extends FhirExecutionTestBase {
         Object result = context.resolveExpressionRef("Immunizations in range").getExpression().evaluate(context);
         Assert.assertTrue(result != null);
     }
+
+    @Test
+    public void testIdResolution() {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        Object result = context.resolveExpressionRef("Resource Id").getExpression().evaluate(context);
+        Assert.assertTrue(result != null);
+    }
 }
