@@ -1,11 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -49,23 +45,20 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        // null left operand case
-        if (getOperand().get(0) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, (Interval) left, precision);
-            }
-            else {
-                return ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, (Iterable) left);
-            }
+        if (left == null && right == null) {
+            return null;
         }
-        // null right operand case
-        if (getOperand().get(1) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, (Interval) left, precision);
-            }
-            else {
-                return ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, (Iterable) left);
-            }
+
+        if (left == null) {
+            return right instanceof Interval
+                    ? ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
+                    : ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, null);
+        }
+
+        if (right == null) {
+            return left instanceof Interval
+                    ? ProperlyIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
+                    : ProperlyIncludesEvaluator.listProperlyIncludes(null, (Iterable) left);
         }
 
         return properlyIncudedIn(left, right, precision);

@@ -1,12 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 /*
 *** NOTES FOR INTERVAL ***
@@ -115,23 +113,20 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        // null left operand case
-        if (getOperand().get(0) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return intervalIncludedIn((Interval) left, (Interval) right, precision);
-            }
-            else {
-                return listIncludedIn((Iterable) left, (Iterable) right);
-            }
+        if (left == null && right == null) {
+            return null;
         }
-        // null right operand case
-        if (getOperand().get(1) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return intervalIncludedIn((Interval) left, (Interval) right, precision);
-            }
-            else {
-                return listIncludedIn((Iterable) left, (Iterable) right);
-            }
+
+        if (left == null) {
+            return right instanceof Interval
+                    ? intervalIncludedIn(null, (Interval) right, precision)
+                    : listIncludedIn(null, (Iterable) right);
+        }
+
+        if (right == null) {
+            return left instanceof Interval
+                    ? intervalIncludedIn((Interval) left, null, precision)
+                    : listIncludedIn((Iterable) left, null);
         }
 
         return includedIn(left, right, precision);

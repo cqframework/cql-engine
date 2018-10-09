@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -45,23 +44,20 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        // null left operand case
-        if (getOperand().get(0) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return IncludedInEvaluator.intervalIncludedIn((Interval) right, (Interval) left, precision);
-            }
-            else {
-                return IncludedInEvaluator.listIncludedIn((Iterable) right, (Iterable) left);
-            }
+        if (left == null && right == null) {
+            return null;
         }
-        // null right operand case
-        if (getOperand().get(1) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return IncludedInEvaluator.intervalIncludedIn((Interval) right, (Interval) left, precision);
-            }
-            else {
-                return IncludedInEvaluator.listIncludedIn((Iterable) right, (Iterable) left);
-            }
+
+        if (left == null) {
+            return right instanceof Interval
+                    ? IncludedInEvaluator.intervalIncludedIn((Interval) right, null, precision)
+                    : IncludedInEvaluator.listIncludedIn((Iterable) right, null);
+        }
+
+        if (right == null) {
+            return left instanceof Interval
+                    ? IncludedInEvaluator.intervalIncludedIn(null, (Interval) left, precision)
+                    : IncludedInEvaluator.listIncludedIn(null, (Iterable) left);
         }
 
         return includes(left, right, precision);
