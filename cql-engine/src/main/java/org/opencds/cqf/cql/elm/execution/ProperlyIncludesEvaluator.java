@@ -1,12 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Precision;
 
-import java.util.List;
 import java.util.stream.StreamSupport;
 
 /*
@@ -115,25 +112,6 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
                     ? intervalProperlyIncludes((Interval) left, null, precision)
                     : listProperlyIncludes((Iterable) left, null);
         }
-
-//        // null left operand case
-//        if (getOperand().get(0) instanceof AsEvaluator) {
-//            if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-//                return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
-//            }
-//            else {
-//                return listProperlyIncludes((Iterable) left, (Iterable) right);
-//            }
-//        }
-//        // null right operand case
-//        if (getOperand().get(1) instanceof AsEvaluator) {
-//            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-//                return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
-//            }
-//            else {
-//                return listProperlyIncludes((Iterable) left, (Iterable) right);
-//            }
-//        }
 
         return properlyIncludes(left, right, precision);
     }
