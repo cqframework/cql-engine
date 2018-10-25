@@ -55,3 +55,17 @@ such as with this command:
 ```
 chmod 755 ./cql-runner
 ```
+
+## Docker Development
+
+Use the Makefile and Dockerfile to create a docker based intellij development environment for usage on Linux (not currently tested on Mac or Windows). The following command will create the docker image.
+
+```
+make build
+```
+
+Once you have the image, you can run the IDE by using the following command.
+
+```
+make run
+```
