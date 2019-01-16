@@ -8,6 +8,7 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Bryn on 5/25/2016.
@@ -49,7 +50,21 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
             dateRange = (Interval)this.getDateRange().evaluate(context);
         }
 
-        return dataProvider.retrieve(context.getCurrentContext(), context.getCurrentContextValue(), getDataType().getLocalPart(), getTemplateId(),
+
+        Object result = dataProvider.retrieve(context.getCurrentContext(), context.getCurrentContextValue(), getDataType().getLocalPart(), getTemplateId(),
                 getCodeProperty(), codes, valueSet, getDateProperty(), getDateLowProperty(), getDateHighProperty(), dateRange);
+
+        //append list results to evaluatedResources list
+        if (result instanceof List) {
+            if (!context.getEvaluatedResources().containsKey(context.getCurrentContext())) {
+                context.getEvaluatedResources().put(context.getCurrentContext(), (List) result);
+            }
+            else
+            {
+                context.getEvaluatedResources().get(context.getCurrentContext()).addAll((List) result);
+            }
+        }
+
+        return result;
     }
 }
