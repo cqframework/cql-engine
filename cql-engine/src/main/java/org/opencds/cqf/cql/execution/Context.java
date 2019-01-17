@@ -25,16 +25,13 @@ public class Context {
         }
     };
 
-    private Map<String, List<Object> > evaluatedResources = new HashMap<>();
-    public Map<String, List<Object> > getEvaluatedResources() {
+    private List<Object> evaluatedResources = new ArrayList<Object>();
+    public List<Object> getEvaluatedResources() {
         return evaluatedResources;
     }
-    public List<Object> getEvaluatedResourcesList() {
-        List<Object> ret = new ArrayList<>();
-        for (List<Object> list : evaluatedResources.values()) {
-            ret.addAll(list);
-        }
-        return ret;
+
+    public void clearEvaluatedResources() {
+        this.evaluatedResources.clear();
     }
 
     private Map<String, Object> parameters = new HashMap<>();

@@ -7,8 +7,11 @@ import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.cqframework.cql.elm.execution.ValueSetDef;
+
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Bryn on 5/25/2016.
@@ -56,13 +59,12 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
 
         //append list results to evaluatedResources list
         if (result instanceof List) {
-            if (!context.getEvaluatedResources().containsKey(context.getCurrentContext())) {
-                context.getEvaluatedResources().put(context.getCurrentContext(), (List) result);
+            for (Object element : (List)result) {
+                context.getEvaluatedResources().add(element);
             }
-            else
-            {
-                context.getEvaluatedResources().get(context.getCurrentContext()).addAll((List) result);
-            }
+        }
+        else {
+            context.getEvaluatedResources().add(result);
         }
 
         return result;
