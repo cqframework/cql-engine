@@ -8,10 +8,9 @@ import org.opencds.cqf.cql.runtime.Interval;
 import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 
-import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Bryn on 5/25/2016.
