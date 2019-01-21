@@ -21,14 +21,7 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
             }
 
             Object result = this.getExpression().evaluate(context);
-
-            // append list results to evaluatedResources list
-            if (result instanceof List) {
-                if (!context.getEvaluatedResources().containsKey(getName())) {
-                    context.getEvaluatedResources().put(getName(), (List) result);
-                }
-            }
-
+            
             if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(this.getName())) {
                 context.addExpressionToCache(this.getName(), result);
             }
