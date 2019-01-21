@@ -30,8 +30,10 @@ public class Concept implements CqlType {
     }
     public void setCodes(Iterable<Code> codes) {
         this.codes.clear();
-        for (Code code : codes) {
-            this.codes.add(code);
+        if (codes != null) {
+            for (Code code : codes) {
+                this.codes.add(code);
+            }
         }
     }
     public Concept withCodes(Iterable<Code> codes) {
