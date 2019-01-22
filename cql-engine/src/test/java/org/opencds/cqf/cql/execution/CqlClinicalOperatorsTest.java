@@ -5,7 +5,6 @@ import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.joda.time.Partial;
 import javax.xml.bind.JAXBException;
 import java.lang.reflect.InvocationTargetException;
 

@@ -1,2 +1,0 @@
-#!/usr/bin/env bash
-java -jar ./cql-engine/build/libs/cql-engine-all-1.2.37-SNAPSHOT.jar "$@"

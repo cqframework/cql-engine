@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.joda.time.Instant;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 

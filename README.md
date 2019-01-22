@@ -21,37 +21,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-# How to Use
-
-The following commands will build the CQL Evaluation Engine and then
-execute a CQL/ELM file or the CQL engine validation suite against it.
-The syntax is specific to Unix-like operating systems.
-You need to "cd" into the main directory of the project first.
-You need to install Java and Gradle before running the commands.
-
-This is all you need to do to simply build the CQL Evaluation Engine:
-
-```
-gradle fatJar
-```
-
-After the Engine is built, this is the most direct way to execute any CQL
-or ELM file:
-
-```
-java -jar ./cql-engine/build/libs/cql-engine-all-1.2.38-SNAPSHOT.jar filename
-```
-
-A simple wrapper script exists for the above so you can say this instead:
-
-```
-./cql-runner filename
-```
-
-However you have to mark that wrapper script as executable first (once),
-such as with this command:
-
-```
-chmod 755 ./cql-runner
-```

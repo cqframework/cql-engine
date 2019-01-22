@@ -1,15 +1,11 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.Partial;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import java.math.BigDecimal;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class Issue33 extends CqlExecutionTestBase {
     @Test

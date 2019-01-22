@@ -2,8 +2,6 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import org.hl7.fhir.dstu3.model.*;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
@@ -12,7 +10,9 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import java.time.Instant;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -76,9 +76,8 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
     @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
         if (target instanceof DateTimeType || target instanceof DateType) {
-            DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
-            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getDateTime().toString());
-            return dt.toDate();
+            DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
+            return Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
         }
         else if (target instanceof TimeType && value instanceof Time) {
             return ((Time) value).getTime().toString();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cql-engine-fhir</artifactId>
+
+    <parent>
+        <relativePath>../pom.xml</relativePath>
+        <groupId>org.opencds.cqf</groupId>
+        <artifactId>cql_engine</artifactId>
+        <version>1.2.52-SNAPSHOT</version>
+    </parent>
+
+    <properties>
+        <hapi_version>3.4.0</hapi_version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.opencds.cqf</groupId>
+            <artifactId>cql-engine</artifactId>
+            <version>${project_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-base</artifactId>
+            <version>${hapi_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-dstu3</artifactId>
+            <version>${hapi_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-jpaserver-base</artifactId>
+            <version>${hapi_version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.json-simple</groupId>
+            <artifactId>json-simple</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+    </dependencies>
+
+</project>
