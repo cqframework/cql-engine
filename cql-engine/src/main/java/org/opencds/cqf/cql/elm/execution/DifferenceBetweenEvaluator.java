@@ -17,7 +17,7 @@ For DateTime values, precision must be one of: years, months, days, hours, minut
 For Time values, precision must be one of: hours, minutes, seconds, or milliseconds.
 If either argument is null, the result is null.
 
-Additional Complexity: precison elements above the specified precision must also be accounted for (handled by Joda Time).
+Additional Complexity: precision elements above the specified precision must also be accounted for.
 For example:
 days between DateTime(2012, 5, 5) and DateTime(2011, 5, 0) = 365 + 5 = 370 days
 

@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.execution;
 
-import org.joda.time.Partial;
-import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Quantity;
@@ -12,8 +10,6 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.ZoneOffset;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;

@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.data;
 
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.joda.time.Partial;
 
 /**
  * Created by Bryn on 4/15/2016.

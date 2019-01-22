@@ -4,14 +4,15 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.hl7.fhir.instance.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import org.joda.time.format.DateTimeFormatter;
-import org.joda.time.format.ISODateTimeFormat;
 import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
+import java.time.Instant;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Christopher Schuler on 6/19/2017.
@@ -205,9 +206,8 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
     @Override
     protected Object fromJavaPrimitive(Object value, Object target) {
         if (target instanceof DateTimeType || target instanceof DateType) {
-            DateTimeFormatter dtf = ISODateTimeFormat.dateTimeParser();
-            org.joda.time.DateTime dt = dtf.parseDateTime(((DateTime) value).getDateTime().toString());
-            return dt.toDate();
+            DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
+            return Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
         }
         else if (target instanceof TimeType && value instanceof Time) {
             return ((Time) value).getTime().toString();
