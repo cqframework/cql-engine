@@ -8,6 +8,10 @@ public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> 
     public Precision getPrecision() {
         return precision;
     }
+    public BaseTemporal setPrecision(Precision precision) {
+        this.precision = precision;
+        return this;
+    }
 
     ZoneOffset evaluationOffset = TemporalHelper.getDefaultZoneOffset();
     public ZoneOffset getEvaluationOffset() {

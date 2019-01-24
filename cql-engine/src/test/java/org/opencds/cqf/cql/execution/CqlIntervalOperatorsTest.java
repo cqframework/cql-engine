@@ -12,9 +12,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-/**
- * Created by Bryn on 5/1/2016.
- */
 public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
     /**
