@@ -156,7 +156,7 @@ define DifferenceInDaysAA: difference in days between DateTimeEE and DateTimeFF 
 //Duration
 define DateTimeDurationBetweenYear: years between DateTime(2005) and DateTime(2010)
 define DateTimeDurationBetweenYearOffset: years between DateTime(2005, 5) and DateTime(2010, 4)
-define DateTimeDurationBetweenMonth: months between @2014-01-31 and @2014-02-01
+define DateTimeDurationBetweenMonth: months between DateTime(2014, 1, 31) and DateTime(2014, 2, 1)
 define DateTimeDurationBetweenDaysDiffYears: days between DateTime(2010, 10, 12, 12, 5) and DateTime(2008, 8, 15, 8, 8)
 // Uncertainty tests
 define DateTimeDurationBetweenUncertainInterval: days between DateTime(2014, 1, 15) and DateTime(2014, 2)
