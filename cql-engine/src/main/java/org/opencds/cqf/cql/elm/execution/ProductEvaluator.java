@@ -71,8 +71,6 @@ public class ProductEvaluator extends org.cqframework.cql.elm.execution.Product 
 
     @Override
     public Object evaluate(Context context) {
-        List source = (List) getSource().evaluate(context);
-
-        return product(source);
+        return product((Iterable) getSource().evaluate(context));
     }
 }

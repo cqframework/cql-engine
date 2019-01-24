@@ -166,6 +166,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public FunctionRef createFunctionRef() { return new FunctionRefEvaluator(); }
 
     @Override
+    public GeometricMean createGeometricMean() { return new GeometricMeanEvaluator(); }
+
+    @Override
     public Greater createGreater() { return new GreaterEvaluator(); }
 
     @Override

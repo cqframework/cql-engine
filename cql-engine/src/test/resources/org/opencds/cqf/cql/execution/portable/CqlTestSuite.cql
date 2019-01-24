@@ -315,6 +315,20 @@ define test_Product_Nulls: TestMessage(Product_Nulls is null, 'Product_Nulls', '
 define test_Product_Null_List: TestMessage(Product_Null_List is null, 'Product_Null_List', 'null', toString(Product_Null_List))
 define test_Product_Null_Quantity: TestMessage(Product_Null_Quantity is null, 'Product_Null_Quantity', 'null', toString(Product_Null_Quantity))
 
+// GeometricMean
+define GeometricMean_Decimal: GeometricMean({2.0, 8.0, null})
+define GeometricMean_Zero: GeometricMean({2.0, 8.0, 0})
+define GeometricMean_Null: GeometricMean({1, 2, null})
+define GeometricMean_Nulls: GeometricMean({null, null, null})
+define GeometricMean_Null_List: GeometricMean(null as List<Decimal>)
+
+define test_GeometricMean_Decimal: TestMessage(GeometricMean_Decimal = 4.0, 'GeometricMean_Decimal', toString(4.0), toString(GeometricMean_Decimal))
+// TODO: possible issue in translator causing GeometricMean_Zero = 0 to fail (Integer not being implicitly promoted to Decimal)
+define test_GeometricMean_Zero: TestMessage(GeometricMean_Zero = 0.0, 'GeometricMean_Zero', toString(0.0), toString(GeometricMean_Zero))
+define test_GeometricMean_Null: TestMessage(GeometricMean_Null = 1.41421356, 'GeometricMean_Null', toString(1.41421356), toString(GeometricMean_Null))
+define test_GeometricMean_Nulls: TestMessage(GeometricMean_Nulls is null, 'GeometricMean_Nulls', 'null', toString(GeometricMean_Nulls))
+define test_GeometricMean_Null_List: TestMessage(GeometricMean_Null_List is null, 'GeometricMean_Null_List', 'null', toString(GeometricMean_Null_List))
+
 // AllTrue
 define All_True: AllTrue({true,true,true,true})
 define All_True_wn: AllTrue({true,true,null,null,true,true})
