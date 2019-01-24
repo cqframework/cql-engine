@@ -56,7 +56,7 @@ define EqualTimeTrue: { @T15:59:59.999, @T20:59:59.999, @T20:59:59.999 } = { @T1
 define EqualTimeFalse: { @T15:59:59.999, @T20:59:59.999, @T20:59:59.999 } = { @T10:59:59.999, @T20:59:59.999, @T20:59:59.999 }
 
 //Except
-define ExceptEmptyListAndEmptyList: Except({}, {})
+define ExceptEmptyListAndEmptyList: {} except {}
 define Except1234And23: { 1, 2, 3, 4 } except { 2, 3 }
 define Except23And1234: { 2, 3 } except { 1, 2, 3, 4 }
 define ExceptDateTimeList: { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }
