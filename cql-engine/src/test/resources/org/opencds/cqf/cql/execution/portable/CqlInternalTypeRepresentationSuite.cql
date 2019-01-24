@@ -71,7 +71,7 @@ define Structured_TupleA:
   Tuple {
     class: 'Portable CQL Test Suite',
     versionNum: 1.0,
-    date: @2018-07-18,
+    date: DateTime(2018, 7, 18),
     developer: 'Christopher Schuler'
   }
 
