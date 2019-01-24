@@ -9,9 +9,6 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by Christopher on 6/8/2017.
- */
 public class ElmTests {
 
     private Library library;
