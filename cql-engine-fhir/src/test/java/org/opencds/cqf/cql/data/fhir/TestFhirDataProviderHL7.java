@@ -21,7 +21,6 @@ public class TestFhirDataProviderHL7 extends FhirExecutionTestBase {
         context.registerDataProvider("http://hl7.org/fhir", hl7Provider);
     }
 
-//    TODO - DSTU2 endpoint throwing 403 status - fix
 //    @Test
     public void testHL7ProviderRetrieve() {
         FhirBundleCursorHL7 results = (FhirBundleCursorHL7) hl7Provider.retrieve("Patient", "2822", "Encounter", null, "code", null, null, null, null, null, null);

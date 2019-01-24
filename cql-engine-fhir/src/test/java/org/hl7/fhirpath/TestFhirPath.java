@@ -47,6 +47,9 @@ import static org.hamcrest.Matchers.is;
 public class TestFhirPath {
 
     private FhirContext fhirContext = FhirContext.forDstu3();
+    private BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+    //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
+    //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
 
     private Tests loadTestsFile(String testsFilePath) {
         try {
@@ -212,9 +215,6 @@ public class TestFhirPath {
 
             context.registerLibraryLoader(getLibraryLoader());
 
-            BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
-            //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
-            //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
             context.registerDataProvider("http://hl7.org/fhir", provider);
 
             context.setParameter(null, resource.fhirType(), resource);

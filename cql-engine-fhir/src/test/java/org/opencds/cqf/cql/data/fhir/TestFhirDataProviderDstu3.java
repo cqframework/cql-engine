@@ -21,7 +21,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
-    @Test
+    // @Test
     public void testFhirClient() {
         FhirContext fhirContext = FhirContext.forDstu3();
         IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
@@ -30,7 +30,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    @Test
+    // @Test
     public void testDataProviderRetrieve() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
@@ -38,7 +38,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(results.iterator().hasNext());
     }
 
-    @Test
+    // @Test
     public void testPatientRetrieve() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
@@ -53,7 +53,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(patients.size() == resultCount);
     }
 
-    @Test
+    // @Test
     public void testChoiceTypes() {
         Context context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
@@ -101,7 +101,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
     }
 
-    @Test
+    // @Test
     public void testList() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir.hl7.de:8080/baseDstu3");
         FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "List", null, null, null, null, null, null, null, null);
