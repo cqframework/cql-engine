@@ -6,14 +6,13 @@ import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 
 import java.math.BigDecimal;
 
-/**
- * Created by Bryn on 4/15/2016.
- */
 public class Quantity implements CqlType, Comparable<Quantity> {
+
+    private final String DEFAULT_UNIT = "1";
 
     public Quantity() {
         this.value = new BigDecimal("0.0");
-        this.unit = "";
+        this.unit = DEFAULT_UNIT;
     }
 
     private BigDecimal value;
@@ -37,6 +36,10 @@ public class Quantity implements CqlType, Comparable<Quantity> {
     }
     public Quantity withUnit(String unit) {
         setUnit(unit);
+        return this;
+    }
+    public Quantity withDefaultUnit() {
+        setUnit(DEFAULT_UNIT);
         return this;
     }
 
