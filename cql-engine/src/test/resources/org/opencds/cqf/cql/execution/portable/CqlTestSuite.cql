@@ -294,6 +294,27 @@ define test_PopulationStd_q: TestMessage(PopulationStd_q = 1.41421356 'ml', 'Pop
 // TODO - this behavior has yet to be implemented for Quantity
 // define test_PopulationStd_q_diff_units: TestMessage(PopulationStd_q_diff_units = 1.41421356 'ml', 'PopulationStd_q_diff_units', toString(1.41421356 'ml'), toString(PopulationStd_q_diff_units))
 
+// Product
+define Product_Decimal: Product({1.0, 2.0, 3.0, 4.0})
+define Product_Integer: Product({5, 4, 5})
+define Product_Zero: Product({0, 5, 10})
+define Product_Quantity: Product({1.0 'g', 2.0 'g', 3.0 'g', 4.0 'g'})
+define Product_Quantity_Zero: Product({1.0 'g', 2.0 'g', 0 'g'})
+define Product_Null: Product({5, 4, null})
+define Product_Nulls: Product({null as Integer, null, null})
+define Product_Null_List: Product(null as List<Decimal>)
+define Product_Null_Quantity: Product({null as Quantity, null as Quantity, null as Quantity})
+
+define test_Product_Decimal: TestMessage(Product_Decimal = 24.0, 'Product_Decimal', toString(24.0), toString(Product_Decimal))
+define test_Product_Integer: TestMessage(Product_Integer = 100, 'Product_Integer', toString(100), toString(Product_Integer))
+define test_Product_Zero: TestMessage(Product_Zero = 0, 'Product_Zero', toString(0), toString(Product_Zero))
+define test_Product_Quantity: TestMessage(Product_Quantity = 24.0'g', 'Product_Quantity', toString(24.0'g'), toString(Product_Quantity))
+define test_Product_Quantity_Zero: TestMessage(Product_Quantity_Zero = 0'g', 'Product_Quantity_Zero', toString(0'g'), toString(Product_Quantity_Zero))
+define test_Product_Null: TestMessage(Product_Null is null, 'Product_Null', 'null', toString(Product_Null))
+define test_Product_Nulls: TestMessage(Product_Nulls is null, 'Product_Nulls', 'null', toString(Product_Nulls))
+define test_Product_Null_List: TestMessage(Product_Null_List is null, 'Product_Null_List', 'null', toString(Product_Null_List))
+define test_Product_Null_Quantity: TestMessage(Product_Null_Quantity is null, 'Product_Null_Quantity', 'null', toString(Product_Null_Quantity))
+
 // AllTrue
 define All_True: AllTrue({true,true,true,true})
 define All_True_wn: AllTrue({true,true,null,null,true,true})

@@ -343,6 +343,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Predecessor createPredecessor() { return new PredecessorEvaluator(); }
 
     @Override
+    public Product createProduct() { return new ProductEvaluator(); }
+
+    @Override
     public ProperContains createProperContains() { return new ProperContainsEvaluator(); }
 
     @Override
