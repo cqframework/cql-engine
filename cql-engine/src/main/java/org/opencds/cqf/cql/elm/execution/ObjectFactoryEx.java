@@ -94,6 +94,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Count createCount() { return new CountEvaluator(); }
 
     @Override
+    public Date createDate() { return new DateEvaluator(); }
+
+    @Override
     public DateTime createDateTime() { return new DateTimeEvaluator(); }
 
     @Override
