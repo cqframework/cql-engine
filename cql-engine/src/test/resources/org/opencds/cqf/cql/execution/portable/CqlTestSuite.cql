@@ -648,14 +648,20 @@ define Equal_EqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) = DateTim
 define Equal_UneqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) = DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
 define Equal_EqDateTimesTZ: DateTime(2000, 3, 15, 23, 30, 25, 200, +1.0) = DateTime(2000, 3, 16, 2, 30, 25, 200, +4.0)
 define Equal_UneqDateTimesTZ: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) = DateTime(2000, 3, 15, 13, 30, 25, 200, +2.0)
-/* TODO: uncomment once Date is implemented
 define Equal_EqDateTimesOnlyDate: DateTime(2000, 3, 15) = DateTime(2000, 3, 15)
 define Equal_UneqDateTimesOnlyDate: DateTime(2000, 3, 14) = DateTime(2000, 3, 15)
 define Equal_PossiblyEqDateTimesOnlyDateOnOne: DateTime(2000, 3, 13) = DateTime(2000, 3, 13, 13, 43, 32)
 define Equal_UneqDateTimesOnlyDateOnOne: DateTime(2000, 4, 13, 12, 43, 32) = DateTime(2000, 3, 13)
-*/
 define Equal_PossiblyEqualDateTimes: DateTime(2000, 3, 15) = DateTime(2000)
 define Equal_ImpossiblyEqualDateTimes: DateTime(2000, 3, 15) = DateTime(2000, 4)
+/* TODO: uncomment once Date is implemented
+define Equal_DateAndDateTimeEqual: Date(2000, 3, 13) = DateTime(2000, 3, 13)
+define Equal_DateAndDateTimeNotEqual: Date(2000, 3, 13) = DateTime(2000, 3, 12)
+define Equal_DateAndDateTimeUncertainEqual: Date(2000, 3, 13) = DateTime(2000, 3, 13, 2, 4, 23)
+define Equal_DateTimeAndDateEqual: DateTime(2000, 3, 13) = Date(2000, 3, 13)
+define Equal_DateTimeAndDateNotEqual: DateTime(2000, 3, 12) = Date(2000, 3, 13)
+define Equal_DateTimeAndDateUncertainEqual: DateTime(2000, 3, 13, 2, 4, 23) = Date(2000, 3, 13)
+*/
 define Equal_AGtB_Quantity: 5 'm' = 4 'm'
 define Equal_AEqB_Quantity: 5 'm' = 5 'm'
 define Equal_ALtB_Quantity: 5 'm' = 6 'm'
@@ -680,14 +686,20 @@ define test_Equal_EqDateTimes: TestMessage(Equal_EqDateTimes, 'Equal_EqDateTimes
 define test_Equal_UneqDateTimes: TestMessage(not Equal_UneqDateTimes, 'Equal_UneqDateTimes', toString(false), toString(Equal_UneqDateTimes))
 define test_Equal_EqDateTimesTZ: TestMessage(Equal_EqDateTimesTZ, 'Equal_EqDateTimesTZ', toString(true), toString(Equal_EqDateTimesTZ))
 define test_Equal_UneqDateTimesTZ: TestMessage(not Equal_UneqDateTimesTZ, 'Equal_UneqDateTimesTZ', toString(false), toString(Equal_UneqDateTimesTZ))
-/* TODO: uncomment once Date is implemented
 define test_Equal_EqDateTimesOnlyDate: TestMessage(Equal_EqDateTimesOnlyDate, 'Equal_EqDateTimesOnlyDate', toString(true), toString(Equal_EqDateTimesOnlyDate))
 define test_Equal_UneqDateTimesOnlyDate: TestMessage(not Equal_UneqDateTimesOnlyDate, 'Equal_UneqDateTimesOnlyDate', toString(false), toString(Equal_UneqDateTimesOnlyDate))
 define test_Equal_PossiblyEqDateTimesOnlyDateOnOne: TestMessage(Equal_PossiblyEqDateTimesOnlyDateOnOne is null, 'Equal_PossiblyEqDateTimesOnlyDateOnOne', 'null', toString(Equal_PossiblyEqDateTimesOnlyDateOnOne))
 define test_Equal_UneqDateTimesOnlyDateOnOne: TestMessage(not Equal_UneqDateTimesOnlyDateOnOne, 'Equal_UneqDateTimesOnlyDateOnOne', toString(false), toString(Equal_UneqDateTimesOnlyDateOnOne))
-*/
 define test_Equal_PossiblyEqualDateTimes: TestMessage(Equal_PossiblyEqualDateTimes is null, 'Equal_PossiblyEqualDateTimes', 'null', toString(Equal_PossiblyEqualDateTimes))
 define test_Equal_ImpossiblyEqualDateTimes: TestMessage(not Equal_ImpossiblyEqualDateTimes, 'Equal_ImpossiblyEqualDateTimes', toString(false), toString(Equal_ImpossiblyEqualDateTimes))
+/* TODO: uncomment once Date is implemented
+define test_Equal_DateAndDateTimeEqual: TestMessage(not Equal_DateAndDateTimeEqual, 'Equal_DateAndDateTimeEqual', toString(false), toString(Equal_DateAndDateTimeEqual))
+define test_Equal_DateAndDateTimeNotEqual: TestMessage(not Equal_DateAndDateTimeNotEqual, 'Equal_DateAndDateTimeNotEqual', toString(false), toString(Equal_DateAndDateTimeNotEqual))
+define test_Equal_DateAndDateTimeUncertainEqual: TestMessage(not Equal_DateAndDateTimeUncertainEqual, 'Equal_DateAndDateTimeUncertainEqual', toString(false), toString(Equal_DateAndDateTimeUncertainEqual))
+define test_Equal_DateTimeAndDateEqual: TestMessage(not Equal_DateTimeAndDateEqual, 'Equal_DateTimeAndDateEqual', toString(false), toString(Equal_DateTimeAndDateEqual))
+define test_Equal_DateTimeAndDateNotEqual: TestMessage(not Equal_DateTimeAndDateNotEqual, 'Equal_DateTimeAndDateNotEqual', toString(false), toString(Equal_DateTimeAndDateNotEqual))
+define test_Equal_DateTimeAndDateUncertainEqual: TestMessage(not Equal_DateTimeAndDateUncertainEqual, 'Equal_DateTimeAndDateUncertainEqual', toString(false), toString(Equal_DateTimeAndDateUncertainEqual))
+*/
 define test_Equal_AGtB_Quantity: TestMessage(not Equal_AGtB_Quantity, 'Equal_AGtB_Quantity', toString(false), toString(Equal_AGtB_Quantity))
 define test_Equal_AEqB_Quantity: TestMessage(Equal_AEqB_Quantity, 'Equal_AEqB_Quantity', toString(true), toString(Equal_AEqB_Quantity))
 define test_Equal_ALtB_Quantity: TestMessage(not Equal_ALtB_Quantity, 'Equal_ALtB_Quantity', toString(false), toString(Equal_ALtB_Quantity))
@@ -709,13 +721,19 @@ define NotEqual_EqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) != Dat
 define NotEqual_UneqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) != DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
 define NotEqual_EqDateTimesTZ: DateTime(2000, 3, 15, 23, 30, 25, 200, +1.0) != DateTime(2000, 3, 16, 2, 30, 25, 200, +4.0)
 define NotEqual_UneqDateTimesTZ: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) != DateTime(2000, 3, 15, 13, 30, 25, 200, +2.0)
-define NotEqual_PossiblyEqualDateTimes: DateTime(2000, 3, 15) != DateTime(2000)
-define NotEqual_ImpossiblyEqualDateTimes: DateTime(2000, 3, 15) != DateTime(2000, 4)
-/* TODO: uncomment once Date is implemented
 define NotEqual_EqDateTimesOnlyDate: DateTime(2000, 3, 15) != DateTime(2000, 3, 15)
 define NotEqual_UneqDateTimesOnlyDate: DateTime(2000, 3, 14) != DateTime(2000, 3, 15)
 define NotEqual_PossiblyEqDateTimesOnlyDateOnOne: DateTime(2000, 3, 13) != DateTime(2000, 3, 13, 13, 43, 32)
 define NotEqual_UneqDateTimesOnlyDateOnOne: DateTime(2000, 4, 13, 12, 43, 32) != DateTime(2000, 3, 13)
+define NotEqual_PossiblyEqualDateTimes: DateTime(2000, 3, 15) != DateTime(2000)
+define NotEqual_ImpossiblyEqualDateTimes: DateTime(2000, 3, 15) != DateTime(2000, 4)
+/* TODO: uncomment once Date is implemented
+define NotEqual_DateAndDateTimeEqual: Date(2000, 3, 13) != DateTime(2000, 3, 13)
+define NotEqual_DateAndDateTimeNotEqual: Date(2000, 3, 13) != DateTime(2000, 3, 12)
+define NotEqual_DateAndDateTimeUncertainEqual: Date(2000, 3, 13) != DateTime(2000, 3, 13, 2, 4, 23)
+define NotEqual_DateTimeAndDateEqual: DateTime(2000, 3, 13) != Date(2000, 3, 13)
+define NotEqual_DateTimeAndDateNotEqual: DateTime(2000, 3, 12) != Date(2000, 3, 13)
+define NotEqual_DateTimeAndDateUncertainEqual: DateTime(2000, 3, 13, 2, 4, 23) != Date(2000, 3, 13)
 */
 define NotEqual_AGtB_Quantity: 5 'm' != 4 'm'
 define NotEqual_AEqB_Quantity: 5 'm' != 5 'm'
@@ -731,9 +749,9 @@ define test_NotEqual_ALtB_Int: TestMessage(NotEqual_ALtB_Int, 'NotEqual_ALtB_Int
 define test_NotEqual_EqTuples: TestMessage(not NotEqual_EqTuples, 'NotEqual_EqTuples', toString(false), toString(NotEqual_EqTuples))
 define test_NotEqual_UneqTuples: TestMessage(NotEqual_UneqTuples, 'NotEqual_UneqTuples', toString(true), toString(NotEqual_UneqTuples))
 /* TODO: uncomment once this behavior is validated
-define test_NotEqual_TupleDifferentKeys: TestMessage(NotEqual_TupleDifferentKeys, 'NotEqual_TupleDifferentKeys', toString(false), toString(NotEqual_TupleDifferentKeys))
-define test_NotEqual_EqTuplesWithNullFields: TestMessage(not NotEqual_EqTuplesWithNullFields, 'NotEqual_EqTuplesWithNullFields', toString(true), toString(NotEqual_EqTuplesWithNullFields))
-define test_NotEqual_UneqTuplesWithNullFields: TestMessage(NotEqual_UneqTuplesWithNullFields, 'NotEqual_UneqTuplesWithNullFields', toString(false), toString(NotEqual_UneqTuplesWithNullFields))
+define test_NotEqual_TupleDifferentKeys: TestMessage(NotEqual_TupleDifferentKeys, 'NotEqual_TupleDifferentKeys', toString(true), toString(NotEqual_TupleDifferentKeys))
+define test_NotEqual_EqTuplesWithNullFields: TestMessage(not NotEqual_EqTuplesWithNullFields, 'NotEqual_EqTuplesWithNullFields', toString(false), toString(NotEqual_EqTuplesWithNullFields))
+define test_NotEqual_UneqTuplesWithNullFields: TestMessage(NotEqual_UneqTuplesWithNullFields, 'NotEqual_UneqTuplesWithNullFields', toString(true), toString(NotEqual_UneqTuplesWithNullFields))
 define test_NotEqual_UncertTuplesWithNullFieldOnOne: TestMessage(NotEqual_UncertTuplesWithNullFieldOnOne is null, 'NotEqual_UncertTuplesWithNullFieldOnOne', 'null', toString(NotEqual_UncertTuplesWithNullFieldOnOne))
 define test_NotEqual_UncertTuplesWithDiffNullFields: TestMessage(NotEqual_UncertTuplesWithDiffNullFields is null, 'NotEqual_UncertTuplesWithDiffNullFields', 'null', toString(NotEqual_UncertTuplesWithDiffNullFields))
 */
@@ -741,13 +759,19 @@ define test_NotEqual_EqDateTimes: TestMessage(not NotEqual_EqDateTimes, 'NotEqua
 define test_NotEqual_UneqDateTimes: TestMessage(NotEqual_UneqDateTimes, 'NotEqual_UneqDateTimes', toString(true), toString(NotEqual_UneqDateTimes))
 define test_NotEqual_EqDateTimesTZ: TestMessage(not NotEqual_EqDateTimesTZ, 'NotEqual_EqDateTimesTZ', toString(false), toString(NotEqual_EqDateTimesTZ))
 define test_NotEqual_UneqDateTimesTZ: TestMessage(NotEqual_UneqDateTimesTZ, 'NotEqual_UneqDateTimesTZ', toString(true), toString(NotEqual_UneqDateTimesTZ))
-define test_NotEqual_PossiblyEqualDateTimes: TestMessage(NotEqual_PossiblyEqualDateTimes is null, 'NotEqual_PossiblyEqualDateTimes', 'null', toString(NotEqual_PossiblyEqualDateTimes))
-define test_NotEqual_ImpossiblyEqualDateTimes: TestMessage(NotEqual_ImpossiblyEqualDateTimes, 'NotEqual_ImpossiblyEqualDateTimes', toString(true), toString(NotEqual_ImpossiblyEqualDateTimes))
-/* TODO: uncomment once Date is implemented
 define test_NotEqual_EqDateTimesOnlyDate: TestMessage(not NotEqual_EqDateTimesOnlyDate, 'NotEqual_EqDateTimesOnlyDate', toString(true), toString(NotEqual_EqDateTimesOnlyDate))
 define test_NotEqual_UneqDateTimesOnlyDate: TestMessage(NotEqual_UneqDateTimesOnlyDate, 'NotEqual_UneqDateTimesOnlyDate', toString(false), toString(NotEqual_UneqDateTimesOnlyDate))
 define test_NotEqual_PossiblyEqDateTimesOnlyDateOnOne: TestMessage(NotEqual_PossiblyEqDateTimesOnlyDateOnOne is null, 'NotEqual_PossiblyEqDateTimesOnlyDateOnOne', 'null', toString(NotEqual_PossiblyEqDateTimesOnlyDateOnOne))
 define test_NotEqual_UneqDateTimesOnlyDateOnOne: TestMessage(NotEqual_UneqDateTimesOnlyDateOnOne, 'NotEqual_UneqDateTimesOnlyDateOnOne', toString(false), toString(NotEqual_UneqDateTimesOnlyDateOnOne))
+define test_NotEqual_PossiblyEqualDateTimes: TestMessage(NotEqual_PossiblyEqualDateTimes is null, 'NotEqual_PossiblyEqualDateTimes', 'null', toString(NotEqual_PossiblyEqualDateTimes))
+define test_NotEqual_ImpossiblyEqualDateTimes: TestMessage(NotEqual_ImpossiblyEqualDateTimes, 'NotEqual_ImpossiblyEqualDateTimes', toString(true), toString(NotEqual_ImpossiblyEqualDateTimes))
+/* TODO: uncomment once Date is implemented
+define test_NotEqual_DateAndDateTimeEqual: TestMessage(NotEqual_DateAndDateTimeEqual, 'NotEqual_DateAndDateTimeEqual', toString(true), toString(NotEqual_DateAndDateTimeEqual))
+define test_NotEqual_DateAndDateTimeNotEqual: TestMessage(NotEqual_DateAndDateTimeNotEqual, 'NotEqual_DateAndDateTimeNotEqual', toString(true), toString(NotEqual_DateAndDateTimeNotEqual))
+define test_NotEqual_DateAndDateTimeUncertainEqual: TestMessage(NotEqual_DateAndDateTimeUncertainEqual, 'NotEqual_DateAndDateTimeUncertainEqual', toString(true), toString(NotEqual_DateAndDateTimeUncertainEqual))
+define test_NotEqual_DateTimeAndDateEqual: TestMessage(NotEqual_DateTimeAndDateEqual, 'NotEqual_DateTimeAndDateEqual', toString(true), toString(NotEqual_DateTimeAndDateEqual))
+define test_NotEqual_DateTimeAndDateNotEqual: TestMessage(NotEqual_DateTimeAndDateNotEqual, 'NotEqual_DateTimeAndDateNotEqual', toString(true), toString(NotEqual_DateTimeAndDateNotEqual))
+define test_NotEqual_DateTimeAndDateUncertainEqual: TestMessage(NotEqual_DateTimeAndDateUncertainEqual, 'NotEqual_DateTimeAndDateUncertainEqual', toString(true), toString(NotEqual_DateTimeAndDateUncertainEqual))
 */
 define test_NotEqual_AGtB_Quantity: TestMessage(NotEqual_AGtB_Quantity, 'NotEqual_AGtB_Quantity', toString(true), toString(NotEqual_AGtB_Quantity))
 define test_NotEqual_AEqB_Quantity: TestMessage(not NotEqual_AEqB_Quantity, 'NotEqual_AEqB_Quantity', toString(false), toString(NotEqual_AEqB_Quantity))
