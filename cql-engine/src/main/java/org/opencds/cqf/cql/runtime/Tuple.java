@@ -71,9 +71,6 @@ public class Tuple implements CqlType {
                 if (equal == null) { return null; }
                 else if (!equal) { return false; }
             }
-            else if (((Tuple) other).getElements().get(key) == null) {
-                return null;
-            }
             else { return false; }
         }
 

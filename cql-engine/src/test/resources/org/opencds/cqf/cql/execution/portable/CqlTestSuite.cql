@@ -671,11 +671,11 @@ define test_Equal_AEqB_Int: TestMessage(Equal_AEqB_Int, 'Equal_AEqB_Int', toStri
 define test_Equal_ALtB_Int: TestMessage(not Equal_ALtB_Int, 'Equal_ALtB_Int', toString(false), toString(Equal_ALtB_Int))
 define test_Equal_EqTuples: TestMessage(Equal_EqTuples, 'Equal_EqTuples', toString(true), toString(Equal_EqTuples))
 define test_Equal_UneqTuples: TestMessage(not Equal_UneqTuples, 'Equal_UneqTuples', toString(false), toString(Equal_UneqTuples))
-define test_Equal_TupleDifferentKeys: TestMessage(Equal_TupleDifferentKeys is null, 'Equal_TupleDifferentKeys', 'null', toString(Equal_TupleDifferentKeys))
+define test_Equal_TupleDifferentKeys: TestMessage(not Equal_TupleDifferentKeys, 'Equal_TupleDifferentKeys', toString(false), toString(Equal_TupleDifferentKeys))
 define test_Equal_EqTuplesWithNullFields: TestMessage(Equal_EqTuplesWithNullFields, 'Equal_EqTuplesWithNullFields', toString(true), toString(Equal_EqTuplesWithNullFields))
 define test_Equal_UneqTuplesWithNullFields: TestMessage(not Equal_UneqTuplesWithNullFields, 'Equal_UneqTuplesWithNullFields', toString(false), toString(Equal_UneqTuplesWithNullFields))
 define test_Equal_UncertTuplesWithNullFieldOnOne: TestMessage(Equal_UncertTuplesWithNullFieldOnOne is null, 'Equal_UncertTuplesWithNullFieldOnOne', 'null', toString(Equal_UncertTuplesWithNullFieldOnOne))
-define test_Equal_UncertTuplesWithDiffNullFields: TestMessage(Equal_UncertTuplesWithDiffNullFields is null, 'Equal_UncertTuplesWithDiffNullFields', 'null', toString(Equal_UncertTuplesWithDiffNullFields))
+define test_Equal_UncertTuplesWithDiffNullFields: TestMessage(not Equal_UncertTuplesWithDiffNullFields, 'Equal_UncertTuplesWithDiffNullFields', toString(false), toString(Equal_UncertTuplesWithDiffNullFields))
 define test_Equal_EqDateTimes: TestMessage(Equal_EqDateTimes, 'Equal_EqDateTimes', toString(true), toString(Equal_EqDateTimes))
 define test_Equal_UneqDateTimes: TestMessage(not Equal_UneqDateTimes, 'Equal_UneqDateTimes', toString(false), toString(Equal_UneqDateTimes))
 define test_Equal_EqDateTimesTZ: TestMessage(Equal_EqDateTimesTZ, 'Equal_EqDateTimesTZ', toString(true), toString(Equal_EqDateTimesTZ))
@@ -736,11 +736,11 @@ define test_NotEqual_AEqB_Int: TestMessage(not NotEqual_AEqB_Int, 'NotEqual_AEqB
 define test_NotEqual_ALtB_Int: TestMessage(NotEqual_ALtB_Int, 'NotEqual_ALtB_Int', toString(true), toString(NotEqual_ALtB_Int))
 define test_NotEqual_EqTuples: TestMessage(not NotEqual_EqTuples, 'NotEqual_EqTuples', toString(false), toString(NotEqual_EqTuples))
 define test_NotEqual_UneqTuples: TestMessage(NotEqual_UneqTuples, 'NotEqual_UneqTuples', toString(true), toString(NotEqual_UneqTuples))
-define test_NotEqual_TupleDifferentKeys: TestMessage(NotEqual_TupleDifferentKeys is null, 'NotEqual_TupleDifferentKeys', 'null', toString(NotEqual_TupleDifferentKeys))
+define test_NotEqual_TupleDifferentKeys: TestMessage(NotEqual_TupleDifferentKeys, 'NotEqual_TupleDifferentKeys', toString(true), toString(NotEqual_TupleDifferentKeys))
 define test_NotEqual_EqTuplesWithNullFields: TestMessage(not NotEqual_EqTuplesWithNullFields, 'NotEqual_EqTuplesWithNullFields', toString(false), toString(NotEqual_EqTuplesWithNullFields))
 define test_NotEqual_UneqTuplesWithNullFields: TestMessage(NotEqual_UneqTuplesWithNullFields, 'NotEqual_UneqTuplesWithNullFields', toString(true), toString(NotEqual_UneqTuplesWithNullFields))
 define test_NotEqual_UncertTuplesWithNullFieldOnOne: TestMessage(NotEqual_UncertTuplesWithNullFieldOnOne is null, 'NotEqual_UncertTuplesWithNullFieldOnOne', 'null', toString(NotEqual_UncertTuplesWithNullFieldOnOne))
-define test_NotEqual_UncertTuplesWithDiffNullFields: TestMessage(NotEqual_UncertTuplesWithDiffNullFields is null, 'NotEqual_UncertTuplesWithDiffNullFields', 'null', toString(NotEqual_UncertTuplesWithDiffNullFields))
+define test_NotEqual_UncertTuplesWithDiffNullFields: TestMessage(NotEqual_UncertTuplesWithDiffNullFields, 'NotEqual_UncertTuplesWithDiffNullFields', toString(true), toString(NotEqual_UncertTuplesWithDiffNullFields))
 define test_NotEqual_EqDateTimes: TestMessage(not NotEqual_EqDateTimes, 'NotEqual_EqDateTimes', toString(false), toString(NotEqual_EqDateTimes))
 define test_NotEqual_UneqDateTimes: TestMessage(NotEqual_UneqDateTimes, 'NotEqual_UneqDateTimes', toString(true), toString(NotEqual_UneqDateTimes))
 define test_NotEqual_EqDateTimesTZ: TestMessage(not NotEqual_EqDateTimesTZ, 'NotEqual_EqDateTimesTZ', toString(false), toString(NotEqual_EqDateTimesTZ))
@@ -766,11 +766,13 @@ define Equivalent_ANull_BDefined: null ~ 4
 define Equivalent_ADefined_BNull: 5 ~ null
 define Equivalent_ANull_BNull: null ~ null
 define Equivalent_ADefined_BDefined: 3 ~ 3
+define Equivalent_CaseInsensitiveStrings: 'FOO' ~ 'foo'
 
 define test_Equivalent_ANull_BDefined: TestMessage(not Equivalent_ANull_BDefined, 'Equivalent_ANull_BDefined', toString(false), toString(Equivalent_ANull_BDefined))
 define test_Equivalent_ADefined_BNull: TestMessage(not Equivalent_ADefined_BNull, 'Equivalent_ADefined_BNull', toString(false), toString(Equivalent_ADefined_BNull))
 define test_Equivalent_ANull_BNull: TestMessage(Equivalent_ANull_BNull, 'Equivalent_ANull_BNull', toString(true), toString(Equivalent_ANull_BNull))
 define test_Equivalent_ADefined_BDefined: TestMessage(Equivalent_ADefined_BDefined, 'Equivalent_ADefined_BDefined', toString(true), toString(Equivalent_ADefined_BDefined))
+define test_Equivalent_CaseInsensitiveStrings: TestMessage(Equivalent_CaseInsensitiveStrings, 'Equivalent_CaseInsensitiveStrings', toString(true), toString(Equivalent_CaseInsensitiveStrings))
 
 // Tuple Equivalence
 define Equivalent_EmptyTuples: { : } ~ { : }
