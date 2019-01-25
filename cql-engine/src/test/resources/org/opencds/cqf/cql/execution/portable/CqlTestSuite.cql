@@ -364,7 +364,6 @@ define test_Any_True_fwn: TestMessage(not Any_True_fwn, 'Any_True_fwn', toString
 **************************
 */
 
-/*
 define Ten: 10
 define Eleven: 11
 
@@ -403,10 +402,13 @@ define TenDividedByFour: 10 / 4
 define DivideMultiple: 1000 / 4 / 10 / 5
 define DivideVariables: Hundred / Four
 
-define test_TenDividedByTwo: TestMessage(TenDividedByTwo = 5, 'TenDividedByTwo', toString(5), toString(TenDividedByTwo))
+// TODO: possible issue in translator causing TenDividedByTwo = 5 to fail (Integer not being implicitly promoted to Decimal)
+define test_TenDividedByTwo: TestMessage(TenDividedByTwo = 5.0, 'TenDividedByTwo', toString(5.0), toString(TenDividedByTwo))
 define test_TenDividedByFour: TestMessage(TenDividedByFour = 2.5, 'TenDividedByFour', toString(2.5), toString(TenDividedByFour))
-define test_DivideMultiple: TestMessage(DivideMultiple = 5, 'DivideMultiple', toString(5), toString(DivideMultiple))
-define test_DivideVariables: TestMessage(DivideVariables = 25, 'DivideVariables', toString(25), toString(DivideVariables))
+// TODO: possible issue in translator causing DivideMultiple = 5 to fail (Integer not being implicitly promoted to Decimal)
+define test_DivideMultiple: TestMessage(DivideMultiple = 5.0, 'DivideMultiple', toString(5.0), toString(DivideMultiple))
+// TODO: possible issue in translator causing DivideVariables = 25 to fail (Integer not being implicitly promoted to Decimal)
+define test_DivideVariables: TestMessage(DivideVariables = 25.0, 'DivideVariables', toString(25.0), toString(DivideVariables))
 
 // Negate
 define NegativeOne: -1
@@ -417,8 +419,10 @@ define test_NegativeOne: TestMessage(NegativeOne = -1, 'NegativeOne', toString(-
 define Arithmetic_Mixed: 1 + 5 * 10 - 15 / 3
 define Arithmetic_Parenthetical: (1 + 5) * (10 - 15) / 3
 
-define test_Arithmetic_Mixed: TestMessage(Arithmetic_Mixed = 46, 'Arithmetic_Mixed', toString(46), toString(Arithmetic_Mixed))
-define test_Arithmetic_Parenthetical: TestMessage(Arithmetic_Parenthetical = -10, 'Arithmetic_Parenthetical', toString(-10), toString(Arithmetic_Parenthetical))
+// TODO: possible issue in translator causing Arithmetic_Mixed = 46 to fail (Integer not being implicitly promoted to Decimal)
+define test_Arithmetic_Mixed: TestMessage(Arithmetic_Mixed = 46.0, 'Arithmetic_Mixed', toString(46.0), toString(Arithmetic_Mixed))
+// TODO: possible issue in translator causing Arithmetic_Parenthetical = -10 to fail (Integer not being implicitly promoted to Decimal)
+define test_Arithmetic_Parenthetical: TestMessage(Arithmetic_Parenthetical = -10.0, 'Arithmetic_Parenthetical', toString(-10.0), toString(Arithmetic_Parenthetical))
 
 // Power
 define Pow: 3 ^ 4
@@ -428,22 +432,30 @@ define test_Pow: TestMessage(Pow = 81, 'Pow', toString(81), toString(Pow))
 // MinValue
 define MinInteger: minimum Integer
 define MinDecimal: minimum Decimal
+// TODO: uncomment once Date is implemented
+// define MinDate: minimum Date
 define MinDateTime: minimum  DateTime
 define MinTime: minimum Time
 
 define test_MinInteger: TestMessage(MinInteger = -2147483648, 'MinInteger', toString(-2147483648), toString(MinInteger))
 define test_MinDecimal: TestMessage(MinDecimal = -9999999999999999999999999999.99999999, 'MinDecimal', toString(-9999999999999999999999999999.99999999), toString(MinDecimal))
+// TODO: uncomment once Date is implemented
+// define test_MinDate: TestMessage(MinDate = @0001-01-01, 'MinDate', toString(@0001-01-01), toString(MinDate))
 define test_MinDateTime: TestMessage(MinDateTime = @0001-01-01T00:00:00.000, 'MinDateTime', toString(@0001-01-01T00:00:00.000), toString(MinDateTime))
 define test_MinTime: TestMessage(MinTime = @T00:00:00.000, 'MinTime', toString(@T00:00:00.000), toString(MinTime))
 
 // MaxValue
 define MaxInteger: maximum Integer
 define MaxDecimal: maximum Decimal
+// TODO: uncomment once Date is implemented
+// define MaxDate: maximum Date
 define MaxDateTime: maximum DateTime
 define MaxTime: maximum Time
 
 define test_MaxInteger: TestMessage(MaxInteger = 2147483647, 'MaxInteger', toString(2147483647), toString(MaxInteger))
 define test_MaxDecimal: TestMessage(MaxDecimal = 9999999999999999999999999999.99999999, 'MaxDecimal', toString(9999999999999999999999999999.99999999), toString(MaxDecimal))
+// TODO: uncomment once Date is implemented
+// define test_MaxDate: TestMessage(MaxDate = @9999-12-31, 'MaxDate', toString(@9999-12-31), toString(MaxDate))
 define test_MaxDateTime: TestMessage(MaxDateTime = @9999-12-31T23:59:59.999, 'MaxDateTime', toString(@9999-12-31T23:59:59.999), toString(MaxDateTime))
 define test_MaxTime: TestMessage(MaxTime = @T23:59:59.999, 'MaxTime', toString(@T23:59:59.999), toString(MaxTime))
 
@@ -495,9 +507,11 @@ define RoundUp_percent: Round(4.56,1)
 define RoundDown: Round(4.49)
 define RoundDown_percent: Round(4.43,1)
 
-define test_RoundUp: TestMessage(RoundUp = 5, 'RoundUp', toString(5), toString(RoundUp))
+// TODO: possible issue in translator causing RoundUp = 5 to fail (Integer not being implicitly promoted to Decimal)
+define test_RoundUp: TestMessage(RoundUp = 5.0, 'RoundUp', toString(5.0), toString(RoundUp))
 define test_RoundUp_percent: TestMessage(RoundUp_percent = 4.6, 'RoundUp_percent', toString(4.6), toString(RoundUp_percent))
-define test_RoundDown: TestMessage(RoundDown = 4, 'RoundDown', toString(4), toString(RoundDown))
+// TODO: possible issue in translator causing RoundDown = 4 to fail (Integer not being implicitly promoted to Decimal)
+define test_RoundDown: TestMessage(RoundDown = 4.0, 'RoundDown', toString(4.0), toString(RoundDown))
 define test_RoundDown_percent: TestMessage(RoundDown_percent = 4.4, 'RoundDown_percent', toString(4.4), toString(RoundDown_percent))
 
 // Ln
@@ -508,7 +522,8 @@ define test_Ln_Four: TestMessage(Ln_Four = 1.38629436, 'Ln_Four', toString(1.386
 // Log
 define Log_BaseTen: Log(10000,10)
 
-define test_Log_BaseTen: TestMessage(Log_BaseTen = 4, 'Log_BaseTen', toString(4), toString(Log_BaseTen))
+// TODO: possible issue in translator causing Log_BaseTen = 4 to fail (Integer not being implicitly promoted to Decimal)
+define test_Log_BaseTen: TestMessage(Log_BaseTen = 4.0, 'Log_BaseTen', toString(4.0), toString(Log_BaseTen))
 
 // Successor
 define Successor_Is: successor of 2
@@ -587,7 +602,6 @@ define test_Quantity_mul_d_q: TestMessage(Quantity_mul_d_q = 20 days, 'Quantity_
 define test_Quantity_neg: TestMessage(Quantity_neg = -10 days, 'Quantity_neg', toString(-10 days), toString(Quantity_neg))
 define test_Quantity_abs: TestMessage(Quantity_abs = 10 days, 'Quantity_abs', toString(10 days), toString(Quantity_abs))
 
-*/
 
 /*
 ************************
