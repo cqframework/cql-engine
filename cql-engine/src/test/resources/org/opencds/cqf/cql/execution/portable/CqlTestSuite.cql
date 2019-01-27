@@ -1,4 +1,4 @@
-library CqlTestSuite version '1'
+library CqlTestSuite version '2'
 
 codesystem "SNOMED-CT": 'http://snomed.info/sct'
 
@@ -919,8 +919,6 @@ define test_GreaterOrEqual_ALtB_Quantity: TestMessage(not GreaterOrEqual_ALtB_Qu
 ***************************
 */
 
-/*
-
 // If
 define function IfThenElse(var Boolean): if var then 'true return' else 'false return'
 
@@ -952,8 +950,6 @@ define test_Case_Standard_1_2: TestMessage(Case_standard(1, 2) = 'X < Y', 'Case_
 define test_Case_Standard_2_1: TestMessage(Case_standard(2, 1) = 'X > Y', 'Case_standard(2, 1)', 'X > Y', Case_standard(2, 1))
 define test_Case_Standard_1_1: TestMessage(Case_standard(1, 1) = 'X == Y', 'Case_standard(1, 1)', 'X == Y', Case_standard(1, 1))
 
-*/
-
 /*
 *************************
   End Conditional Tests
@@ -966,21 +962,27 @@ define test_Case_Standard_1_1: TestMessage(Case_standard(1, 1) = 'X == Y', 'Case
 **************************
 */
 
-/*
-
 // FromString
 define FromString_stringStr: convert 'str' to String
 define FromString_stringNull: convert null to String
 define FromString_boolTrue: convert 'true' to Boolean
 define FromString_boolFalse: convert 'false' to Boolean
 define FromString_decimalValid: convert '10.2' to Decimal
+define FromString_decimalInvalid: convert 'abc' to Decimal
 define FromString_integerValid: convert '10' to Integer
+define FromString_integerInvalid: convert 'abc' to Integer
 define FromString_integerDropDecimal: convert '10.2' to Integer
 define FromString_quantityStr: convert '10 \'A\'' to Quantity
 define FromString_posQuantityStr: convert '+10 \'A\'' to Quantity
 define FromString_negQuantityStr: convert '-10 \'A\'' to Quantity
 define FromString_quantityStrDecimal: convert '10.0 \'mA\'' to Quantity
-define FromString_dateStr: convert '2015-01-02' to DateTime
+define FromString_dateTimeStr: convert '2015-01-02' to DateTime
+//define FromString_dateStr: convert '2015-01-02' to Date
+define FromString_NullConvert: convert 'foo' to DateTime
+define FromString_ZDateTime: convert '2014-01-01T14:30:00.0Z' to DateTime // January 1st, 2014, 2:30PM UTC
+define FromString_TimezoneDateTime: convert '2014-01-01T14:30:00.0-07:00' to DateTime // January 1st, 2014, 2:30PM Mountain Standard (GMT-7:00)
+define FromString_ZTime: convert 'T14:30:00.0Z' to Time // 2:30PM UTC
+define FromString_TimezoneTime: convert 'T14:30:00.0-07:00' to Time // 2:30PM Mountain Standard (GMT-7:00)
 define FromString_timeStr: convert 'T12:30:00.000' to Time
 
 define test_FromString_stringStr: TestMessage(FromString_stringStr = 'str', 'FromString_stringStr', 'str', FromString_stringStr)
@@ -988,13 +990,21 @@ define test_FromString_stringNull: TestMessage(FromString_stringNull is null, 'F
 define test_FromString_boolTrue: TestMessage(FromString_boolTrue, 'FromString_boolTrue', toString(true), toString(FromString_boolTrue))
 define test_FromString_boolFalse: TestMessage(not FromString_boolFalse, 'FromString_boolFalse', toString(false), toString(FromString_boolFalse))
 define test_FromString_decimalValid: TestMessage(FromString_decimalValid = 10.2, 'FromString_decimalValid', toString(10.2), toString(FromString_decimalValid))
+define test_FromString_decimalInvalid: TestMessage(FromString_decimalInvalid is null, 'FromString_decimalInvalid', 'null', toString(FromString_decimalInvalid))
 define test_FromString_integerValid: TestMessage(FromString_integerValid = 10, 'FromString_integerValid', toString(10), toString(FromString_integerValid))
+define test_FromString_integerInvalid: TestMessage(FromString_integerInvalid is null, 'FromString_integerInvalid', 'null', toString(FromString_integerInvalid))
 define test_FromString_integerDropDecimal: TestMessage(FromString_integerDropDecimal = 10, 'FromString_integerDropDecimal', toString(10), toString(FromString_integerDropDecimal))
 define test_FromString_quantityStr: TestMessage(FromString_quantityStr = 10 'A', 'FromString_quantityStr', toString(10 'A'), toString(FromString_quantityStr))
 define test_FromString_posQuantityStr: TestMessage(FromString_posQuantityStr = 10 'A', 'FromString_posQuantityStr', toString(10 'A'), toString(FromString_posQuantityStr))
 define test_FromString_negQuantityStr: TestMessage(FromString_negQuantityStr = -10 'A', 'FromString_negQuantityStr', toString(-10 'A'), toString(FromString_negQuantityStr))
 define test_FromString_quantityStrDecimal: TestMessage(FromString_quantityStrDecimal = 10.0 'mA', 'FromString_quantityStrDecimal', toString(10.0 'mA'), toString(FromString_quantityStrDecimal))
-define test_FromString_dateStr: TestMessage(FromString_dateStr = @2015-01-02, 'FromString_dateStr', toString(@2015-01-02), toString(FromString_dateStr))
+define test_FromString_dateTimeStr: TestMessage(FromString_dateTimeStr = DateTime(2015, 1, 2), 'FromString_dateTimeStr', toString(DateTime(2015, 1, 2)), toString(FromString_dateTimeStr))
+//define test_FromString_dateStr: TestMessage(FromString_dateStr = Date(2015, 1, 2), 'FromString_dateStr', toString(Date(2015, 1, 2)), toString(FromString_dateStr))
+define test_FromString_NullConvert: TestMessage(FromString_NullConvert is null, 'FromString_NullConvert', 'null', toString(FromString_NullConvert))
+define test_FromString_ZDateTime: TestMessage(FromString_ZDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, 0), 'FromString_ZDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, 0)), toString(FromString_ZDateTime))
+define test_FromString_TimezoneDateTime: TestMessage(FromString_TimezoneDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, -7), 'FromString_TimezoneDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, -7)), toString(FromString_TimezoneDateTime))
+define test_FromString_ZTime: TestMessage(FromString_ZTime = Time(14, 30, 0, 0, 0), 'FromString_ZTime', toString(Time(14, 30, 0, 0, 0)), toString(FromString_ZTime))
+define test_FromString_TimezoneTime: TestMessage(FromString_TimezoneTime = Time(14, 30, 0, 0, -7), 'FromString_TimezoneTime', toString(Time(14, 30, 0, 0, -7)), toString(FromString_TimezoneTime))
 define test_FromString_timeStr: TestMessage(FromString_timeStr = @T12:30:00.000, 'FromString_timeStr', toString(@T12:30:00.000), toString(FromString_timeStr))
 
 // FromInteger
@@ -1031,11 +1041,11 @@ define test_FromBoolean_booleanTrueBool: TestMessage(FromBoolean_booleanTrueBool
 define test_FromBoolean_booleanFalseBool: TestMessage(not FromBoolean_booleanFalseBool, 'FromBoolean_booleanFalseBool', toString(false), toString(FromBoolean_booleanFalseBool))
 
 // FromDateTime
-define FromDateTime_dateStr: convert @2015-01-02 to String
-define FromDateTime_dateDate: convert @2015-01-02 to DateTime
+define FromDateTime_dateStr: convert DateTime(2015, 1, 2) to String
+define FromDateTime_dateDate: convert DateTime(2015, 1, 2) to DateTime
 
 define test_FromDateTime_dateStr: TestMessage(FromDateTime_dateStr = '2015-01-02', 'FromDateTime_dateStr', '2015-01-02', FromDateTime_dateStr)
-define test_FromDateTime_dateDate: TestMessage(FromDateTime_dateDate = @2015-01-02, 'FromDateTime_dateDate', toString(@2015-01-02), toString(FromDateTime_dateDate))
+define test_FromDateTime_dateDate: TestMessage(FromDateTime_dateDate = DateTime(2015, 1, 2), 'FromDateTime_dateDate', toString(DateTime(2015, 1, 2)), toString(FromDateTime_dateDate))
 
 // FromTime
 define FromTime_timeStr: convert @T11:57 to String
@@ -1058,32 +1068,105 @@ define ToDecimal_NoSign: ToDecimal('0.0')
 define ToDecimal_PositiveSign: ToDecimal('+1.1')
 define ToDecimal_NegativeSign: ToDecimal('-1.1')
 define ToDecimal_NullDecimal: ToDecimal((null as String))
+define ToDecimal_TooLargeDec: ToDecimal('444444444444444444444444444444')
+define ToDecimal_TooSmallDec: ToDecimal('-444444444444444444444444444444')
+// TODO: Bonnie has ToDecimal('.444444444'), but the format is invalid
+define ToDecimal_TooPrecise: ToDecimal('0.444444444')
+define ToDecimal_WrongFormat: ToDecimal('+.1')
 
 define test_ToDecimal_NoSign: TestMessage(ToDecimal_NoSign = 0.0, 'ToDecimal_NoSign', toString(0.0), toString(ToDecimal_NoSign))
 define test_ToDecimal_PositiveSign: TestMessage(ToDecimal_PositiveSign = 1.1, 'ToDecimal_PositiveSign', toString(1.1), toString(ToDecimal_PositiveSign))
 define test_ToDecimal_NegativeSign: TestMessage(ToDecimal_NegativeSign = -1.1, 'ToDecimal_NegativeSign', toString(-1.1), toString(ToDecimal_NegativeSign))
 define test_ToDecimal_NullDecimal: TestMessage(ToDecimal_NullDecimal is null, 'ToDecimal_NullDecimal', 'null', toString(ToDecimal_NullDecimal))
+define test_ToDecimal_TooLargeDec: TestMessage(ToDecimal_TooLargeDec is null, 'ToDecimal_TooLargeDec', 'null', toString(ToDecimal_TooLargeDec))
+define test_ToDecimal_TooSmallDec: TestMessage(ToDecimal_TooSmallDec is null, 'ToDecimal_TooSmallDec', 'null', toString(ToDecimal_TooSmallDec))
+define test_ToDecimal_TooPrecise: TestMessage(ToDecimal_TooPrecise = 0.44444444, 'ToDecimal_TooPrecise', toString(0.44444444), toString(ToDecimal_TooPrecise))
+define test_ToDecimal_WrongFormat: TestMessage(ToDecimal_WrongFormat is null, 'ToDecimal_WrongFormat', 'null', toString(ToDecimal_WrongFormat))
 
 // ToInteger
 define ToInteger_NoSign: ToInteger('12345')
 define ToInteger_PositiveSign: ToInteger('+12345')
 define ToInteger_NegativeSign: ToInteger('-12345')
+define ToInteger_TooLargeInt: ToInteger('2147483648')
+define ToInteger_TooSmallInt: ToInteger('-2147483649')
 
 define test_ToInteger_NoSign: TestMessage(ToInteger_NoSign = 12345, 'ToInteger_NoSign', toString(12345), toString(ToInteger_NoSign))
 define test_ToInteger_PositiveSign: TestMessage(ToInteger_PositiveSign = 12345, 'ToInteger_PositiveSign', toString(12345), toString(ToInteger_PositiveSign))
 define test_ToInteger_NegativeSign: TestMessage(ToInteger_NegativeSign = -12345, 'ToInteger_NegativeSign', toString(-12345), toString(ToInteger_NegativeSign))
+define test_ToInteger_TooLargeInt: TestMessage(ToInteger_TooLargeInt is null, 'ToInteger_TooLargeInt', 'null', toString(ToInteger_TooLargeInt))
+define test_ToInteger_TooSmallInt: TestMessage(ToInteger_TooSmallInt is null, 'ToInteger_TooSmallInt', 'null', toString(ToInteger_TooSmallInt))
 
 // ToQuantity
 define ToQuantity_NullArg: ToQuantity((null as String))
+define ToQuantity_WrongFormatQuantity: ToQuantity('abc')
+define ToQuantity_TooLargeQuantity: ToQuantity('444444444444444444444444444444 \'\'')
+define ToQuantity_TooSmallQuantity: ToQuantity('-444444444444444444444444444444 \'\'')
 
 define test_ToQuantity_NullArg: TestMessage(ToQuantity_NullArg is null, 'ToQuantity_NullArg', 'null', toString(ToQuantity_NullArg))
+define test_ToQuantity_WrongFormatQuantity: TestMessage(ToQuantity_WrongFormatQuantity is null, 'ToQuantity_WrongFormatQuantity', 'null', toString(ToQuantity_WrongFormatQuantity))
+define test_ToQuantity_TooLargeQuantity: TestMessage(ToQuantity_TooLargeQuantity is null, 'ToQuantity_TooLargeQuantity', 'null', toString(ToQuantity_TooLargeQuantity))
+define test_ToQuantity_TooSmallQuantity: TestMessage(ToQuantity_TooSmallQuantity is null, 'ToQuantity_TooSmallQuantity', 'null', toString(ToQuantity_TooSmallQuantity))
 
 // ToTime
 define ToTime_NullArgTime: ToTime((null as String))
+define ToTime_TimeH: ToTime('T02')
+define ToTime_TimeHM: ToTime('T02:04')
+define ToTime_TimeHMS: ToTime('T02:04:59')
+define ToTime_TimeHMSMs: ToTime('T02:04:59.123')
+define ToTime_TimeHMSMsZ: ToTime('T02:04:59.123Z')
+define ToTime_TimeHMSMsTimezone: ToTime('T02:04:59.123+01')
+define ToTime_TimeHMSMsFullTimezone: ToTime('T02:04:59.123+01:00')
+define ToTime_IncorrectFormatTime: ToTime('10:00PM')
+define ToTime_InvalidTime: ToTime('25:99.000+00.00')
+define ToTime_HourTooHigh: ToTime('T24')
+define ToTime_MinuteTooHigh: ToTime('T23:60')
+define ToTime_SecondTooHigh: ToTime('T23:59:60')
 
 define test_ToTime_NullArgTime: TestMessage(ToTime_NullArgTime is null, 'ToTime_NullArgTime', 'null', toString(ToTime_NullArgTime))
+define test_ToTime_TimeH: TestMessage(ToTime_TimeH = @T02, 'ToTime_TimeH', toString(@T02), toString(ToTime_TimeH))
+define test_ToTime_TimeHM: TestMessage(ToTime_TimeHM = @T02:04, 'ToTime_TimeHM', toString(@T02:04), toString(ToTime_TimeHM))
+define test_ToTime_TimeHMS: TestMessage(ToTime_TimeHMS = @T02:04:59, 'ToTime_TimeHMS', toString(@T02:04:59), toString(ToTime_TimeHMS))
+define test_ToTime_TimeHMSMs: TestMessage(ToTime_TimeHMSMs = @T02:04:59.123, 'ToTime_TimeHMSMs', toString(@T02:04:59.123), toString(ToTime_TimeHMSMs))
+define test_ToTime_TimeHMSMsZ: TestMessage(ToTime_TimeHMSMsZ = @T02:04:59.123Z, 'ToTime_TimeHMSMsZ', toString(@T02:04:59.123Z), toString(ToTime_TimeHMSMsZ))
+define test_ToTime_TimeHMSMsTimezone: TestMessage(ToTime_TimeHMSMsTimezone = @T02:04:59.123+01:00, 'ToTime_TimeHMSMsTimezone', toString(@T02:04:59.123+01:00), toString(ToTime_TimeHMSMsTimezone))
+define test_ToTime_TimeHMSMsFullTimezone: TestMessage(ToTime_TimeHMSMsFullTimezone = @T02:04:59.123+01:00, 'ToTime_TimeHMSMsFullTimezone', toString(@T02:04:59.123+01:00), toString(ToTime_TimeHMSMsFullTimezone))
+define test_ToTime_IncorrectFormatTime: TestMessage(ToTime_IncorrectFormatTime is null, 'ToTime_IncorrectFormatTime', 'null', toString(ToTime_IncorrectFormatTime))
+define test_ToTime_InvalidTime: TestMessage(ToTime_InvalidTime is null, 'ToTime_InvalidTime', 'null', toString(ToTime_InvalidTime))
+define test_ToTime_HourTooHigh: TestMessage(ToTime_HourTooHigh is null, 'ToTime_HourTooHigh', 'null', toString(ToTime_HourTooHigh))
+define test_ToTime_MinuteTooHigh: TestMessage(ToTime_MinuteTooHigh is null, 'ToTime_MinuteTooHigh', 'null', toString(ToTime_MinuteTooHigh))
+define test_ToTime_SecondTooHigh: TestMessage(ToTime_SecondTooHigh is null, 'ToTime_SecondTooHigh', 'null', toString(ToTime_SecondTooHigh))
 
-*/
+// ToBoolean
+define ToBoolean_UpperCaseTrue: ToBoolean('TRUE')
+define ToBoolean_UpperCaseFalse: ToBoolean('FALSE')
+define ToBoolean_LowerCaseTrue: ToBoolean('true')
+define ToBoolean_LowerCaseFalse: ToBoolean('false')
+define ToBoolean_UpperCaseT: ToBoolean('T')
+define ToBoolean_UpperCaseF: ToBoolean('F')
+define ToBoolean_LowerCaseT: ToBoolean('t')
+define ToBoolean_LowerCaseF: ToBoolean('f')
+define ToBoolean_IsTrue: ToBoolean('y')
+define ToBoolean_IsFalse: ToBoolean('0')
+define ToBoolean_IsNull: ToBoolean('falsetto')
+
+define test_ToBoolean_UpperCaseTrue: TestMessage(ToBoolean_UpperCaseTrue, 'ToBoolean_UpperCaseTrue', toString(true), toString(ToBoolean_UpperCaseTrue))
+define test_ToBoolean_UpperCaseFalse: TestMessage(not ToBoolean_UpperCaseFalse, 'ToBoolean_UpperCaseFalse', toString(false), toString(ToBoolean_UpperCaseFalse))
+define test_ToBoolean_LowerCaseTrue: TestMessage(ToBoolean_LowerCaseTrue, 'ToBoolean_LowerCaseTrue', toString(true), toString(ToBoolean_LowerCaseTrue))
+define test_ToBoolean_LowerCaseFalse: TestMessage(not ToBoolean_LowerCaseFalse, 'ToBoolean_LowerCaseFalse', toString(false), toString(ToBoolean_LowerCaseFalse))
+define test_ToBoolean_UpperCaseT: TestMessage(ToBoolean_UpperCaseT, 'ToBoolean_UpperCaseT', toString(true), toString(ToBoolean_UpperCaseT))
+define test_ToBoolean_UpperCaseF: TestMessage(not ToBoolean_UpperCaseF, 'ToBoolean_UpperCaseF', toString(false), toString(ToBoolean_UpperCaseF))
+define test_ToBoolean_LowerCaseT: TestMessage(ToBoolean_LowerCaseT, 'ToBoolean_LowerCaseT', toString(true), toString(ToBoolean_LowerCaseT))
+define test_ToBoolean_LowerCaseF: TestMessage(not ToBoolean_LowerCaseF, 'ToBoolean_LowerCaseF', toString(false), toString(ToBoolean_LowerCaseF))
+define test_ToBoolean_IsTrue: TestMessage(ToBoolean_IsTrue, 'ToBoolean_IsTrue', toString(true), toString(ToBoolean_IsTrue))
+define test_ToBoolean_IsFalse: TestMessage(not ToBoolean_IsFalse, 'ToBoolean_IsFalse', toString(false), toString(ToBoolean_IsFalse))
+define test_ToBoolean_IsNull: TestMessage(ToBoolean_IsNull is null, 'ToBoolean_IsNull', 'null', toString(ToBoolean_IsNull))
+
+// ToConcept
+define ToConcept_IsValid: ToConcept(Code { system: 'http://loinc.org', code: '8480-6' }) // Concept { codes: { Code { system: 'http://loinc.org', code: '8480-6' } } }
+define ToConcept_IsNull: ToConcept(null as Code)
+
+define test_ToConcept_IsValid: TestMessage(ToConcept_IsValid ~ Concept { codes: { Code { system: 'http://loinc.org', code: '8480-6' } } }, 'ToConcept_IsValid', toString(Concept { codes: { Code { system: 'http://loinc.org', code: '8480-6' } } }), toString(ToConcept_IsValid))
+define test_ToConcept_IsNull: TestMessage(ToConcept_IsNull is null, 'ToConcept_IsNull', 'null', toString(ToConcept_IsNull))
 
 /*
 ************************

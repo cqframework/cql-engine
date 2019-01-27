@@ -10,6 +10,8 @@ import java.util.Date;
 
 public class DateTime extends BaseTemporal {
 
+    // \d{4}(-[0-1]\d(-[0-3]\d(T[0-2]\d(:[0-5]\d(:[0-5]\d(\.\d{3})?)?)?)?)?)?
+
     private OffsetDateTime dateTime;
     public OffsetDateTime getDateTime() {
         return dateTime;
@@ -49,6 +51,10 @@ public class DateTime extends BaseTemporal {
     }
 
     public DateTime(String dateString, ZoneOffset offset) {
+        // Handles case when Tz is not complete (T02:04:59.123+01)
+        if (dateString.matches("T[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}(\\+|-)\\d{2}$")) {
+            dateString += ":00";
+        }
         int size = 0;
         if (dateString.contains("T")) {
             String[] datetimeSplit = dateString.split("T");

@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.Value;
+
 import java.math.BigDecimal;
 
 /*
@@ -39,16 +41,33 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
                     number.append(c);
                 } else if (Character.isLetter(c) || c == '/') {
                     unit.append(c);
-                } else if (c == ' ') {
+                } else if (c == ' ' || c == '\'') {
                     // continue
                 } else {
                     throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
                 }
             }
-            return new Quantity().withValue(new BigDecimal(number.toString())).withUnit(unit.toString().toLowerCase());
-        } else if (operand instanceof Integer) {
-            return new Quantity().withValue(new BigDecimal((Integer) operand)).withDefaultUnit();
-        } else if (operand instanceof BigDecimal) {
+            try {
+                BigDecimal ret = new BigDecimal(number.toString());
+                if (Value.validateDecimal(ret) == null) {
+                    return null;
+                }
+                return new Quantity().withValue(ret).withUnit(unit.toString());
+            } catch (NumberFormatException nfe) {
+                return null;
+            }
+        }
+        else if (operand instanceof Integer) {
+            BigDecimal ret = new BigDecimal((Integer) operand);
+            if (Value.validateDecimal(ret) == null) {
+                return null;
+            }
+            return new Quantity().withValue(ret).withDefaultUnit();
+        }
+        else if (operand instanceof BigDecimal) {
+            if (Value.validateDecimal((BigDecimal) operand) == null) {
+                return null;
+            }
             return new Quantity().withValue((BigDecimal) operand).withDefaultUnit();
         }
 

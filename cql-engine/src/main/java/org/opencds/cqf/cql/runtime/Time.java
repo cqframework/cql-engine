@@ -33,6 +33,10 @@ public class Time extends BaseTemporal {
     }
 
     public Time(String dateString, ZoneOffset offset) {
+        // Handles case when Tz is not complete (T02:04:59.123+01)
+        if (dateString.matches("^T[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}(\\+|-)\\d{2}$")) {
+            dateString += ":00";
+        }
         dateString = dateString.replace("T", "");
         String[] tzSplit = dateString.contains("Z") ? dateString.split("Z") : dateString.split("[+-]");
         int size = tzSplit[0].split(":").length;
