@@ -1,28 +1,38 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.Precision;
+import org.opencds.cqf.cql.runtime.*;
 
 /*
-same precision as(left DateTime, right DateTime) Boolean
-same precision as(left Time, right Time) Boolean
+
+same _precision_ as(left Date, right Date) Boolean
+same _precision_ as(left DateTime, right DateTime) Boolean
+same _precision_ as(left Time, right Time) Boolean
 
 The same-precision-as operator compares two date/time values to the specified precision for equality.
-  Individual component values are compared starting from the year component down to the specified precision.
-    If all values are specified and have the same value for each component, then the result is true.
-      If a compared component is specified in both dates, but the values are not the same, then the result is false.
-        Otherwise the result is null, as there is not enough information to make a determination.
+    The comparison is performed by considering each precision in order, beginning with years (or hours for time values).
+    If the values are the same, comparison proceeds to the next precision;
+    if the values are different, the comparison stops and the result is false;
+    if either input has no value for the precision, the comparison stops and the result is null; if the specified precision has been reached,
+        the comparison stops and the result is true.
+
+If no precision is specified, the comparison is performed beginning with years (or hours for time values)
+    and proceeding to the finest precision specified in either input.
+
+For Date values, precision must be one of: year, month, or day.
 For DateTime values, precision must be one of: year, month, day, hour, minute, second, or millisecond.
 For Time values, precision must be one of: hour, minute, second, or millisecond.
-For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
-  depending on whether the values involved are specified to the level of precision used for the comparison.
+
+Note specifically that due to variability in the way week numbers are determined, comparisons involving weeks are not supported.
+
+When this operator is called with both Date and DateTime inputs, the Date values will be implicitly converted to DateTime as defined by the ToDateTime operator.
+
+As with all date/time calculations, comparisons are performed respecting the timezone offset.
+
 If either or both arguments are null, the result is null.
+
 */
 
-/**
- * Created by Chris Schuler on 6/23/2016
- */
 public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
 
     public static Boolean sameAs(Object left, Object right, String precision) {
@@ -31,7 +41,12 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
         }
 
         if (precision == null) {
-            precision = "millisecond";
+            precision =
+                    left instanceof DateTime
+                            ? Precision.getHighestDateTimePrecision(((DateTime) left).getPrecision(), ((DateTime) right).getPrecision()).toString()
+                            : left instanceof Date
+                                ? Precision.getHighestDatePrecision(((Date) left).getPrecision(), ((Date) right).getPrecision()).toString()
+                                : Precision.getHighestTimePrecision(((Time) left).getPrecision(), ((Time) right).getPrecision()).toString();
         }
 
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {

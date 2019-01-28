@@ -1213,6 +1213,35 @@ define test_DateComponentFrom_Month: TestMessage(DateComponentFrom_Month = 3, 'D
 define test_DateComponentFrom_Day: TestMessage(DateComponentFrom_Day = 15, 'DateComponentFrom_Day', toString(15), toString(DateComponentFrom_Day))
 define test_DateComponentFrom_ImpreciseComponentTuple_Day: TestMessage(DateComponentFrom_ImpreciseComponentTuple_Day is null, 'DateComponentFrom_ImpreciseComponentTuple_Day', 'null', toString(DateComponentFrom_ImpreciseComponentTuple_Day))
 
+// SameAs
+define SameAs_Date_SameYear: Date(2000, 3, 15) same year as Date(2000, 11, 23)
+define SameAs_Date_NotSameYear: Date(2000, 3, 15) same year as Date(2001, 11, 23)
+define SameAs_Date_SameMonth: Date(2000, 3, 15) same month as Date(2000, 3, 23)
+define SameAs_Date_NotSameMonth: Date(2000, 3, 15) same month as Date(2000, 4, 23)
+define SameAs_Date_SameMonthWrongYear: Date(2000, 3, 15) same month as Date(2001, 3, 23)
+define SameAs_Date_SameDay: Date(2000, 3, 15) same day as Date(2000, 3, 15)
+define SameAs_Date_NotSameDay: Date(2000, 3, 15) same day as Date(2000, 3, 23)
+define SameAs_Date_SameDayWrongMonth: Date(2000, 3, 15) same day as Date(2000, 4, 15)
+define SameAs_Date_Same: Date(2000, 3, 15) same as Date(2000, 3, 15)
+define SameAs_Date_NotSame: Date(2000, 3, 16) same as Date(2000, 3, 15)
+define SameAs_Date_NullLeft: null same as Date(2000, 3, 15)
+define SameAs_Date_NullRight: Date(2000, 3, 15) same as (null as Date)
+define SameAs_Date_NullBoth: (null as Date) same as null
+
+define test_SameAs_Date_SameYear: TestMessage(SameAs_Date_SameYear, 'SameAs_Date_SameYear', toString(true), toString(SameAs_Date_SameYear))
+define test_SameAs_Date_NotSameYear: TestMessage(not SameAs_Date_NotSameYear, 'SameAs_Date_NotSameYear', toString(false), toString(SameAs_Date_NotSameYear))
+define test_SameAs_Date_SameMonth: TestMessage(SameAs_Date_SameMonth, 'SameAs_Date_SameMonth', toString(true), toString(SameAs_Date_SameMonth))
+define test_SameAs_Date_NotSameMonth: TestMessage(not SameAs_Date_NotSameMonth, 'SameAs_Date_NotSameMonth', toString(false), toString(SameAs_Date_NotSameMonth))
+define test_SameAs_Date_SameMonthWrongYear: TestMessage(not SameAs_Date_SameMonthWrongYear, 'SameAs_Date_SameMonthWrongYear', toString(false), toString(SameAs_Date_SameMonthWrongYear))
+define test_SameAs_Date_SameDay: TestMessage(SameAs_Date_SameDay, 'SameAs_Date_SameDay', toString(true), toString(SameAs_Date_SameDay))
+define test_SameAs_Date_NotSameDay: TestMessage(not SameAs_Date_NotSameDay, 'SameAs_Date_NotSameDay', toString(false), toString(SameAs_Date_NotSameDay))
+define test_SameAs_Date_SameDayWrongMonth: TestMessage(not SameAs_Date_SameDayWrongMonth, 'SameAs_Date_SameDayWrongMonth', toString(false), toString(SameAs_Date_SameDayWrongMonth))
+define test_SameAs_Date_Same: TestMessage(SameAs_Date_Same, 'SameAs_Date_Same', toString(true), toString(SameAs_Date_Same))
+define test_SameAs_Date_NotSame: TestMessage(not SameAs_Date_NotSame, 'SameAs_Date_NotSame', toString(false), toString(SameAs_Date_NotSame))
+define test_SameAs_Date_NullLeft: TestMessage(SameAs_Date_NullLeft is null, 'SameAs_Date_NullLeft', 'null', toString(SameAs_Date_NullLeft))
+define test_SameAs_Date_NullRight: TestMessage(SameAs_Date_NullRight is null, 'SameAs_Date_NullRight', 'null', toString(SameAs_Date_NullRight))
+define test_SameAs_Date_NullBoth: TestMessage(SameAs_Date_NullBoth is null, 'SameAs_Date_NullBoth', 'null', toString(SameAs_Date_NullBoth))
+
 /*
 ************************
   End Date Tests
