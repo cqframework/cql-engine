@@ -1242,6 +1242,48 @@ define test_SameAs_Date_NullLeft: TestMessage(SameAs_Date_NullLeft is null, 'Sam
 define test_SameAs_Date_NullRight: TestMessage(SameAs_Date_NullRight is null, 'SameAs_Date_NullRight', 'null', toString(SameAs_Date_NullRight))
 define test_SameAs_Date_NullBoth: TestMessage(SameAs_Date_NullBoth is null, 'SameAs_Date_NullBoth', 'null', toString(SameAs_Date_NullBoth))
 
+// SameOrAfter
+define SameOrAfter_Date_SameYear: Date(2000, 3, 15) same year or after Date(2000, 11, 23)
+define SameOrAfter_Date_YearAfter: Date(2000, 3, 15) same year or after Date(1999, 11, 23)
+define SameOrAfter_Date_YearBefore: Date(2000, 3, 15) same year or after Date(2001, 11, 23)
+define SameOrAfter_Date_SameMonth: Date(2000, 3, 15) same month or after Date(2000, 3, 23)
+define SameOrAfter_Date_MonthAfter: Date(2000, 3, 15) same month or after Date(2000, 2, 23)
+define SameOrAfter_Date_MonthBefore: Date(2000, 3, 15) same month or after Date(2000, 4, 23)
+define SameOrAfter_Date_SameDay: Date(2000, 3, 15) same day or after Date(2000, 3, 15)
+define SameOrAfter_Date_DayAfter: Date(2000, 3, 15) same day or after Date(2000, 3, 14)
+define SameOrAfter_Date_DayBefore: Date(2000, 3, 15) same day or after Date(2000, 3, 16)
+define SameOrAfter_Date_Same: Date(2000, 3, 15) same or after Date(2000, 3, 15)
+define SameOrAfter_Date_After: Date(2000, 3, 15) same or after Date(2000, 3, 15)
+define SameOrAfter_Date_Before: Date(2000, 3, 14) same or after Date(2000, 3, 15)
+define SameOrAfter_Date_SameDayMonthBefore: Date(2000, 3, 15) same day or after Date(2000, 4, 15)
+define SameOrAfter_Date_DayAfterMonthBefore: Date(2000, 3, 15) same day or after Date(2000, 4, 14)
+define SameOrAfter_Date_DayBeforeMonthAfter: Date(2000, 3, 15) same day or after Date(2000, 2, 16)
+define SameOrAfter_Date_ImpreciseDay: Date(2000, 3, 15) same day or after Date(2000, 3)
+define SameOrAfter_Date_ImpreciseDayMonthAfter: Date(2000, 3, 15) same day or after Date(2000, 2)
+define SameOrAfter_Date_ImpreciseDayMonthBefore: Date(2000, 3, 15) same day or after Date(2000, 4)
+define SameOrAfter_Date_NullLeft: null same or after Date(2000, 3, 15)
+define SameOrAfter_Date_NullRight: Date(2000, 3, 15) same or after null
+define SameOrAfter_Date_NullBoth: (null as Date) same or after null
+
+define test_SameOrAfter_Date_SameYear: TestMessage(SameOrAfter_Date_SameYear, 'SameOrAfter_Date_SameYear', toString(true), toString(SameOrAfter_Date_SameYear))
+define test_SameOrAfter_Date_YearAfter: TestMessage(SameOrAfter_Date_YearAfter, 'SameOrAfter_Date_YearAfter', toString(true), toString(SameOrAfter_Date_YearAfter))
+define test_SameOrAfter_Date_YearBefore: TestMessage(not SameOrAfter_Date_YearBefore, 'SameOrAfter_Date_YearBefore', toString(false), toString(SameOrAfter_Date_YearBefore))
+define test_SameOrAfter_Date_SameMonth: TestMessage(SameOrAfter_Date_SameMonth, 'SameOrAfter_Date_SameMonth', toString(true), toString(SameOrAfter_Date_SameMonth))
+define test_SameOrAfter_Date_MonthAfter: TestMessage(SameOrAfter_Date_MonthAfter, 'SameOrAfter_Date_MonthAfter', toString(true), toString(SameOrAfter_Date_MonthAfter))
+define test_SameOrAfter_Date_MonthBefore: TestMessage(not SameOrAfter_Date_MonthBefore, 'SameOrAfter_Date_MonthBefore', toString(false), toString(SameOrAfter_Date_MonthBefore))
+define test_SameOrAfter_Date_SameDay: TestMessage(SameOrAfter_Date_SameDay, 'SameOrAfter_Date_SameDay', toString(true), toString(SameOrAfter_Date_SameDay))
+define test_SameOrAfter_Date_DayAfter: TestMessage(SameOrAfter_Date_DayAfter, 'SameOrAfter_Date_DayAfter', toString(true), toString(SameOrAfter_Date_DayAfter))
+define test_SameOrAfter_Date_DayBefore: TestMessage(not SameOrAfter_Date_DayBefore, 'SameOrAfter_Date_DayBefore', toString(false), toString(SameOrAfter_Date_DayBefore))
+define test_SameOrAfter_Date_Same: TestMessage(SameOrAfter_Date_Same, 'SameOrAfter_Date_Same', toString(true), toString(SameOrAfter_Date_Same))
+define test_SameOrAfter_Date_After: TestMessage(SameOrAfter_Date_After, 'SameOrAfter_Date_After', toString(true), toString(SameOrAfter_Date_After))
+define test_SameOrAfter_Date_Before: TestMessage(not SameOrAfter_Date_Before, 'SameOrAfter_Date_Before', toString(false), toString(SameOrAfter_Date_Before))
+define test_SameOrAfter_Date_SameDayMonthBefore: TestMessage(not SameOrAfter_Date_SameDayMonthBefore, 'SameOrAfter_Date_SameDayMonthBefore', toString(false), toString(SameOrAfter_Date_SameDayMonthBefore))
+define test_SameOrAfter_Date_DayAfterMonthBefore: TestMessage(not SameOrAfter_Date_DayAfterMonthBefore, 'SameOrAfter_Date_DayAfterMonthBefore', toString(false), toString(SameOrAfter_Date_DayAfterMonthBefore))
+define test_SameOrAfter_Date_DayBeforeMonthAfter: TestMessage(SameOrAfter_Date_DayBeforeMonthAfter, 'SameOrAfter_Date_DayBeforeMonthAfter', toString(true), toString(SameOrAfter_Date_DayBeforeMonthAfter))
+define test_SameOrAfter_Date_NullLeft: TestMessage(SameOrAfter_Date_NullLeft is null, 'SameOrAfter_Date_NullLeft', 'null', toString(SameOrAfter_Date_NullLeft))
+define test_SameOrAfter_Date_NullRight: TestMessage(SameOrAfter_Date_NullRight is null, 'SameOrAfter_Date_NullRight', 'null', toString(SameOrAfter_Date_NullRight))
+define test_SameOrAfter_Date_NullBoth: TestMessage(SameOrAfter_Date_NullBoth is null, 'SameOrAfter_Date_NullBoth', 'null', toString(SameOrAfter_Date_NullBoth))
+
 /*
 ************************
   End Date Tests

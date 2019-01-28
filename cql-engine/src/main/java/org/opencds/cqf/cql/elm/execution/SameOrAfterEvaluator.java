@@ -4,18 +4,48 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
 /*
-same precision or after(left DateTime, right DateTime) Boolean
-same precision or after(left Time, right Time) Boolean
 
-The same-precision-or after operator compares two date/time values to the specified precision to determine
-  whether the first argument is the same or after the second argument.
+same _precision_ or after(left Date, right Date) Boolean
+same _precision_ or after(left DateTime, right DateTime) Boolean
+same _precision_ or after(left Time, right Time) Boolean
+
+The same-precision-or after operator compares two date/time values to the specified precision to determine whether the
+    first argument is the same or after the second argument. The comparison is performed by considering each precision
+    in order, beginning with years (or hours for time values). If the values are the same, comparison proceeds to the
+    next precision; if the first value is greater than the second, the result is true; if the first value is less than
+    the second, the result is false; if either input has no value for the precision, the comparison stops and the result
+    is null; if the specified precision has been reached, the comparison stops and the result is true.
+
+If no precision is specified, the comparison is performed beginning with years (or hours for time values) and proceeding
+    to the finest precision specified in either input.
+
+For Date values, precision must be one of: year, month, or day.
 For DateTime values, precision must be one of: year, month, day, hour, minute, second, or millisecond.
 For Time values, precision must be one of: hour, minute, second, or millisecond.
-For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
-  depending on whether the values involved are specified to the level of precision used for the comparison.
+
+Note specifically that due to variability in the way week numbers are determined, comparisons involving weeks are not supported.
+
+When this operator is called with both Date and DateTime inputs, the Date values will be implicitly converted to DateTime as defined by the ToDateTime operator.
+
+As with all date/time calculations, comparisons are performed respecting the timezone offset.
+
 If either or both arguments are null, the result is null.
 
-OnOrAfter overload
+Note that in timing phrases, the keyword on may be used as a synonym for same for this operator
+
+*** OnOrAfter DateTime overload ***
+on or after _precision_ (left Date, right Date) Boolean
+on or after _precision_ (left DateTime, right DateTime) Boolean
+on or after _precision_ (left Time, right Time) Boolean
+
+The on or after operator for date/time values is a synonym for the same or after operator and is supported to enable
+    natural phrasing. See the description of the Same Or After (Date/Time) operator.
+
+Note that this operator can be invoked using either the on or after or the after or on syntax.
+
+In timing phrases, the keyword same is a synonym for on.
+
+*** OnOrAfter Interval overload ***
 on or after precision (left Interval<T>, right Interval<T>) Boolean
 on or after precision (left T, right Interval<T>) Boolean
 on or after precision (left Interval<T>, right T) Boolean
@@ -31,9 +61,6 @@ If either argument is null, the result is null.
 Note that this operator can be invoked using either the on or after or the after or on syntax.
 */
 
-/**
- * Created by Chris Schuler on 6/23/2016
- */
 public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.SameOrAfter {
 
     public static Boolean onOrAfter(Object left, Object right, String precision) {
@@ -75,7 +102,7 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
         }
 
         if (precision == null) {
-            precision = "millisecond";
+            precision = BaseTemporal.getHighestPrecision((BaseTemporal) left, (BaseTemporal) right);
         }
 
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {

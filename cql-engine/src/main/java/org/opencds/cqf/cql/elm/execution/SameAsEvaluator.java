@@ -41,12 +41,7 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs {
         }
 
         if (precision == null) {
-            precision =
-                    left instanceof DateTime
-                            ? Precision.getHighestDateTimePrecision(((DateTime) left).getPrecision(), ((DateTime) right).getPrecision()).toString()
-                            : left instanceof Date
-                                ? Precision.getHighestDatePrecision(((Date) left).getPrecision(), ((Date) right).getPrecision()).toString()
-                                : Precision.getHighestTimePrecision(((Time) left).getPrecision(), ((Time) right).getPrecision()).toString();
+            precision = BaseTemporal.getHighestPrecision((BaseTemporal) left, (BaseTemporal) right);
         }
 
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
