@@ -10,8 +10,6 @@ import java.util.Date;
 
 public class DateTime extends BaseTemporal {
 
-    // \d{4}(-[0-1]\d(-[0-3]\d(T[0-2]\d(:[0-5]\d(:[0-5]\d(\.\d{3})?)?)?)?)?)?
-
     private OffsetDateTime dateTime;
     public OffsetDateTime getDateTime() {
         return dateTime;

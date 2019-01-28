@@ -14,7 +14,7 @@ public class DateEvaluator extends org.cqframework.cql.elm.execution.Date {
         }
         Precision precision = Precision.YEAR;
 
-        Integer month = (Integer) this.getMonth().evaluate(context);
+        Integer month = this.getMonth() == null ? null : (Integer) this.getMonth().evaluate(context);
         if (month == null) {
             month = 1;
         }
@@ -22,7 +22,7 @@ public class DateEvaluator extends org.cqframework.cql.elm.execution.Date {
             precision = Precision.MONTH;
         }
 
-        Integer day = (Integer) this.getDay().evaluate(context);
+        Integer day = this.getDay() == null ? null : (Integer) this.getDay().evaluate(context);
         if (day == null) {
             day = 1;
         }

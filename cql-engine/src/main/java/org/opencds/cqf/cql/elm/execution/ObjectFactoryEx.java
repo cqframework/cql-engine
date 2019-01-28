@@ -454,6 +454,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ToDecimal createToDecimal() { return new ToDecimalEvaluator(); }
 
     @Override
+    public ToDate createToDate() { return new ToDateEvaluator(); }
+
+    @Override
     public ToDateTime createToDateTime() { return new ToDateTimeEvaluator(); }
 
     @Override

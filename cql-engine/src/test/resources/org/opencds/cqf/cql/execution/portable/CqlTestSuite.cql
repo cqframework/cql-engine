@@ -977,7 +977,7 @@ define FromString_posQuantityStr: convert '+10 \'A\'' to Quantity
 define FromString_negQuantityStr: convert '-10 \'A\'' to Quantity
 define FromString_quantityStrDecimal: convert '10.0 \'mA\'' to Quantity
 define FromString_dateTimeStr: convert '2015-01-02' to DateTime
-//define FromString_dateStr: convert '2015-01-02' to Date
+define FromString_dateStr: convert '2015-01-02' to Date
 define FromString_NullConvert: convert 'foo' to DateTime
 define FromString_ZDateTime: convert '2014-01-01T14:30:00.0Z' to DateTime // January 1st, 2014, 2:30PM UTC
 define FromString_TimezoneDateTime: convert '2014-01-01T14:30:00.0-07:00' to DateTime // January 1st, 2014, 2:30PM Mountain Standard (GMT-7:00)
@@ -999,7 +999,7 @@ define test_FromString_posQuantityStr: TestMessage(FromString_posQuantityStr = 1
 define test_FromString_negQuantityStr: TestMessage(FromString_negQuantityStr = -10 'A', 'FromString_negQuantityStr', toString(-10 'A'), toString(FromString_negQuantityStr))
 define test_FromString_quantityStrDecimal: TestMessage(FromString_quantityStrDecimal = 10.0 'mA', 'FromString_quantityStrDecimal', toString(10.0 'mA'), toString(FromString_quantityStrDecimal))
 define test_FromString_dateTimeStr: TestMessage(FromString_dateTimeStr = DateTime(2015, 1, 2), 'FromString_dateTimeStr', toString(DateTime(2015, 1, 2)), toString(FromString_dateTimeStr))
-//define test_FromString_dateStr: TestMessage(FromString_dateStr = Date(2015, 1, 2), 'FromString_dateStr', toString(Date(2015, 1, 2)), toString(FromString_dateStr))
+define test_FromString_dateStr: TestMessage(FromString_dateStr = Date(2015, 1, 2), 'FromString_dateStr', toString(Date(2015, 1, 2)), toString(FromString_dateStr))
 define test_FromString_NullConvert: TestMessage(FromString_NullConvert is null, 'FromString_NullConvert', 'null', toString(FromString_NullConvert))
 define test_FromString_ZDateTime: TestMessage(FromString_ZDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, 0), 'FromString_ZDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, 0)), toString(FromString_ZDateTime))
 define test_FromString_TimezoneDateTime: TestMessage(FromString_TimezoneDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, -7), 'FromString_TimezoneDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, -7)), toString(FromString_TimezoneDateTime))
@@ -1041,11 +1041,26 @@ define test_FromBoolean_booleanTrueBool: TestMessage(FromBoolean_booleanTrueBool
 define test_FromBoolean_booleanFalseBool: TestMessage(not FromBoolean_booleanFalseBool, 'FromBoolean_booleanFalseBool', toString(false), toString(FromBoolean_booleanFalseBool))
 
 // FromDateTime
-define FromDateTime_dateStr: convert DateTime(2015, 1, 2) to String
-define FromDateTime_dateDate: convert DateTime(2015, 1, 2) to DateTime
+define FromDateTime_dateTimeToStr: convert @2015-01-02T12:01:02.321-06:00 to String
+define FromDateTime_dateTimeToDate: convert @2015-01-02T12:01:02.321-06:00 to Date
+define FromDateTime_dateTimeToDateTime: convert @2015-01-02T12:01:02.321-06:00 to DateTime
 
-define test_FromDateTime_dateStr: TestMessage(FromDateTime_dateStr = '2015-01-02', 'FromDateTime_dateStr', '2015-01-02', FromDateTime_dateStr)
-define test_FromDateTime_dateDate: TestMessage(FromDateTime_dateDate = DateTime(2015, 1, 2), 'FromDateTime_dateDate', toString(DateTime(2015, 1, 2)), toString(FromDateTime_dateDate))
+define test_FromDateTime_dateTimeToStr: TestMessage(FromDateTime_dateTimeToStr = '2015-01-02T12:01:02.321', 'FromDateTime_dateTimeToStr', '2015-01-02T12:01:02.321', FromDateTime_dateTimeToStr)
+define test_FromDateTime_dateTimeToDate: TestMessage(FromDateTime_dateTimeToDate = Date(2015, 1, 2), 'FromDateTime_dateTimeToDate', toString(Date(2015, 1, 2)), toString(FromDateTime_dateTimeToDate))
+define test_FromDateTime_dateTimeToDateTime: TestMessage(FromDateTime_dateTimeToDateTime = @2015-01-02T12:01:02.321-06:00, 'FromDateTime_dateTimeToDateTime', toString(@2015-01-02T12:01:02.321-06:00), toString(FromDateTime_dateTimeToDateTime))
+
+// FromDate
+define FromDate_dateYMDToDateTime: convert @2015-01-01 to DateTime
+define FromDate_dateYMToDateTime: convert @2015-01 to DateTime
+define FromDate_dateYToDateTime: convert @2015 to DateTime
+define FromDate_dateToDate: convert @2015-01-01 to Date
+define FromDate_dateToStr: convert @2015-01-01 to String
+
+define test_FromDate_dateYMDToDateTime: TestMessage(FromDate_dateYMDToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYMDToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYMDToDateTime))
+define test_FromDate_dateYMToDateTime: TestMessage(FromDate_dateYMToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYMToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYMToDateTime))
+define test_FromDate_dateYToDateTime: TestMessage(FromDate_dateYToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYToDateTime))
+define test_FromDate_dateToDate: TestMessage(FromDate_dateToDate ~ Date(2015, 1, 1), 'FromDate_dateToDate', toString(Date(2015, 1, 1)), toString(FromDate_dateToDate))
+define test_FromDate_dateStr: TestMessage(FromDate_dateStr = '2015-01-01', 'FromDate_dateStr', '2015-01-01', FromDate_dateStr)
 
 // FromTime
 define FromTime_timeStr: convert @T11:57 to String

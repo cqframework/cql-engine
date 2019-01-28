@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -8,19 +7,22 @@ convert to<T>(argument Any) T
 
 The convert operator converts a value to a specific type.
 The result of the operator is the value of the argument converted to the target type, if possible.
-  Note that use of this operator may result in a run-time exception being thrown if there is no valid
-    conversion from the actual value to the target type.
+  If there is no valid conversion from the actual value to the target type, the result is null.
+
 The following table lists the conversions supported in CQL:
 From\To	  Boolean	  Integer	  Decimal	  Quantity	String	 Datetime	 Time	 Code	Concept
 Boolean	    N/A	        -	        -	         -	   Explicit	    -	      -	      -	      -
 Integer	     -	       N/A	     Implicit	     -	   Explicit	    -	      -	      -	      -
 Decimal	     -	        -	       N/A	         -	   Explicit	    - 	      -	      -	      -
 Quantity	 -	        -	        -	         N/A   Explicit	    -	      -	      -	      -
+Ratio   	 -	        -	        -	         N/A   Explicit	    -	      -	      -	      -
 String	  Explicit   Explicit	 Explicit	  Explicit	 N/A	 Explicit   Explicit  -	      -
+Date    	 -	        -	        -	          -	   Explicit	   N/A	    Implicit  -	      -
 Datetime	 -	        -	        -	          -	   Explicit	   N/A	      -	      -	      -
 Time	     -	        -	        -	          -	   Explicit	    -	     N/A	  -	      -
 Code	     -	        -	        -	          -	      -	        -	      -	     N/A   Implicit
 Concept	     -	        -	        -	          -	      -	        -	      -	      -	     N/A
+List<Code>   -	        -	        -	          -	      -	        -	      -	      -	   Explicit
 
 For conversions between date/time and string values, ISO-8601 standard format is used:
 yyyy-MM-ddThh:mm:ss.fff(Z | +/- hh:mm)
@@ -33,9 +35,6 @@ For specific semantics for each conversion, refer to the explicit conversion ope
 
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert {
 
     private Class resolveType(Context context) {
@@ -66,6 +65,6 @@ public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert 
         Object operand = getOperand().evaluate(context);
         Class type = resolveType(context);
 
-        return context.logTrace(this.getClass(), convert(operand, type), operand);
+        return convert(operand, type);
     }
 }

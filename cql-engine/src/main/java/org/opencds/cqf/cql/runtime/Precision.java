@@ -37,6 +37,14 @@ public enum Precision {
         }
     }
 
+    public int toDateIndex() {
+        switch (this) {
+            case YEAR: return 0;
+            case MONTH: return 1;
+            default: return 2;
+        }
+    }
+
     public int toDateTimeIndex() {
         switch (this) {
             case YEAR: return 0;
@@ -114,6 +122,15 @@ public enum Precision {
         throw new IllegalArgumentException("Invalid precision: " + precision);
     }
 
+    public static Precision fromDateIndex(int index) {
+        switch (index) {
+            case 0: return YEAR;
+            case 1: return MONTH;
+            case 2: return DAY;
+            default: throw new IllegalArgumentException("Invalid precision index: " + Integer.toString(index));
+        }
+    }
+
     public static Precision fromDateTimeIndex(int index) {
         switch (index) {
             case 0: return YEAR;
@@ -131,6 +148,15 @@ public enum Precision {
         return fromDateTimeIndex(index + 3);
     }
 
+    public static ChronoField getDateChronoFieldFromIndex(int index) {
+        switch (index) {
+            case 0: return ChronoField.YEAR;
+            case 1: return ChronoField.MONTH_OF_YEAR;
+            case 2: return ChronoField.DAY_OF_MONTH;
+            default: throw new IllegalArgumentException("Invalid precision index: " + Integer.toString(index));
+        }
+    }
+
     public static ChronoField getDateTimeChronoFieldFromIndex(int index) {
         switch (index) {
             case 0: return ChronoField.YEAR;
@@ -146,6 +172,14 @@ public enum Precision {
 
     public static ChronoField getTimeChronoFieldFromIndex(int index) {
         return getDateTimeChronoFieldFromIndex(index + 3);
+    }
+
+    public static Precision getLowestDatePrecision(Precision p1, Precision p2) {
+        return p1.toDateIndex() < p2.toDateIndex() ? p1 : p2;
+    }
+
+    public static Precision getHighestDatePrecision(Precision p1, Precision p2) {
+        return p1.toDateIndex() > p2.toDateIndex() ? p1 : p2;
     }
 
     public static Precision getLowestDateTimePrecision(Precision p1, Precision p2) {
