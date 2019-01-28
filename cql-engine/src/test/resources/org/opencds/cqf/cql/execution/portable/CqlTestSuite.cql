@@ -1191,8 +1191,6 @@ define test_ToConcept_IsNull: TestMessage(ToConcept_IsNull is null, 'ToConcept_I
 ************************
 */
 
-/*
-
 // Today
 define Today_Var: Today()
 
@@ -1254,7 +1252,7 @@ define DateFrom_Date: date from IdesOfMarch
 define DateFrom_ImpreciseDate: date from DateTime(2000)
 define DateFrom_NullDate: date from (null as DateTime)
 
-define test_DateFrom_Date: TestMessage(DateFrom_Date same day as DateTime(2000, 3, 15, null, null, null, null, 1.0), 'DateFrom_Date', toString(DateTime(2000, 3, 15, null, null, null, null, 1.0)), toString(DateFrom_Date))
+define test_DateFrom_Date: TestMessage(DateFrom_Date same day as Date(2000, 3, 15), 'DateFrom_Date', toString(Date(2000, 3, 15)), toString(DateFrom_Date))
 define test_DateFrom_ImpreciseDate: TestMessage(DateFrom_ImpreciseDate = @2000, 'DateFrom_ImpreciseDate', toString(@2000), toString(DateFrom_ImpreciseDate))
 define test_DateFrom_NullDate: TestMessage(DateFrom_NullDate is null, 'DateFrom_NullDate', 'null', toString(DateFrom_NullDate))
 
@@ -1792,8 +1790,6 @@ define test_DateMath_PlusThreeSeconds: TestMessage(DateMath_PlusThreeSeconds = D
 define test_DateMath_MinusThreeSeconds: TestMessage(DateMath_MinusThreeSeconds = DateTime(2013, 6, 14, 23, 59, 57, 0), 'DateMath_MinusThreeSeconds', toString(DateTime(2013, 6, 14, 23, 59, 57, 0)), toString(DateMath_MinusThreeSeconds))
 define test_DateMath_PlusThreeMilliseconds: TestMessage(DateMath_PlusThreeMilliseconds = DateTime(2013, 6, 15, 0, 0, 0, 3), 'DateMath_PlusThreeMilliseconds', toString(DateTime(2013, 6, 15, 0, 0, 0, 3)), toString(DateMath_PlusThreeMilliseconds))
 define test_DateMath_MinusThreeMilliseconds: TestMessage(DateMath_MinusThreeMilliseconds = DateTime(2013, 6, 14, 23, 59, 59, 997), 'DateMath_MinusThreeMilliseconds', toString(DateTime(2013, 6, 14, 23, 59, 59, 997)), toString(DateMath_MinusThreeMilliseconds))
-
-*/
 
 /*
 **********************
