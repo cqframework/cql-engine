@@ -35,6 +35,9 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
         if (type.endsWith("Decimal")) {
             return Value.MAX_DECIMAL;
         }
+        if (type.endsWith("Date")) {
+            return new Date(9999, 12, 31).setPrecision(Precision.DAY);
+        }
         // TODO - the temporal types are slightly limited here ... using system defaults for timezone instead of what's specified for evaluation
         if (type.endsWith("DateTime")) {
             return new DateTime(TemporalHelper.getDefaultOffset(), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
@@ -62,6 +65,9 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
         }
         if (type.endsWith("Decimal")) {
             return Value.MAX_DECIMAL;
+        }
+        if (type.endsWith("Date")) {
+            return new Date(9999, 12, 31).setPrecision(Precision.DAY);
         }
         if (type.endsWith("DateTime")) {
             return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());

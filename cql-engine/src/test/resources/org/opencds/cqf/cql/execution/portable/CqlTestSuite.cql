@@ -432,30 +432,26 @@ define test_Pow: TestMessage(Pow = 81, 'Pow', toString(81), toString(Pow))
 // MinValue
 define MinInteger: minimum Integer
 define MinDecimal: minimum Decimal
-// TODO: uncomment once Date is implemented
-// define MinDate: minimum Date
+define MinDate: minimum Date
 define MinDateTime: minimum  DateTime
 define MinTime: minimum Time
 
 define test_MinInteger: TestMessage(MinInteger = -2147483648, 'MinInteger', toString(-2147483648), toString(MinInteger))
 define test_MinDecimal: TestMessage(MinDecimal = -9999999999999999999999999999.99999999, 'MinDecimal', toString(-9999999999999999999999999999.99999999), toString(MinDecimal))
-// TODO: uncomment once Date is implemented
-// define test_MinDate: TestMessage(MinDate = @0001-01-01, 'MinDate', toString(@0001-01-01), toString(MinDate))
+define test_MinDate: TestMessage(MinDate = @0001-01-01, 'MinDate', toString(@0001-01-01), toString(MinDate))
 define test_MinDateTime: TestMessage(MinDateTime = @0001-01-01T00:00:00.000, 'MinDateTime', toString(@0001-01-01T00:00:00.000), toString(MinDateTime))
 define test_MinTime: TestMessage(MinTime = @T00:00:00.000, 'MinTime', toString(@T00:00:00.000), toString(MinTime))
 
 // MaxValue
 define MaxInteger: maximum Integer
 define MaxDecimal: maximum Decimal
-// TODO: uncomment once Date is implemented
-// define MaxDate: maximum Date
+define MaxDate: maximum Date
 define MaxDateTime: maximum DateTime
 define MaxTime: maximum Time
 
 define test_MaxInteger: TestMessage(MaxInteger = 2147483647, 'MaxInteger', toString(2147483647), toString(MaxInteger))
 define test_MaxDecimal: TestMessage(MaxDecimal = 9999999999999999999999999999.99999999, 'MaxDecimal', toString(9999999999999999999999999999.99999999), toString(MaxDecimal))
-// TODO: uncomment once Date is implemented
-// define test_MaxDate: TestMessage(MaxDate = @9999-12-31, 'MaxDate', toString(@9999-12-31), toString(MaxDate))
+define test_MaxDate: TestMessage(MaxDate = @9999-12-31, 'MaxDate', toString(@9999-12-31), toString(MaxDate))
 define test_MaxDateTime: TestMessage(MaxDateTime = @9999-12-31T23:59:59.999, 'MaxDateTime', toString(@9999-12-31T23:59:59.999), toString(MaxDateTime))
 define test_MaxTime: TestMessage(MaxTime = @T23:59:59.999, 'MaxTime', toString(@T23:59:59.999), toString(MaxTime))
 
@@ -1060,7 +1056,7 @@ define test_FromDate_dateYMDToDateTime: TestMessage(FromDate_dateYMDToDateTime ~
 define test_FromDate_dateYMToDateTime: TestMessage(FromDate_dateYMToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYMToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYMToDateTime))
 define test_FromDate_dateYToDateTime: TestMessage(FromDate_dateYToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYToDateTime))
 define test_FromDate_dateToDate: TestMessage(FromDate_dateToDate ~ Date(2015, 1, 1), 'FromDate_dateToDate', toString(Date(2015, 1, 1)), toString(FromDate_dateToDate))
-define test_FromDate_dateStr: TestMessage(FromDate_dateStr = '2015-01-01', 'FromDate_dateStr', '2015-01-01', FromDate_dateStr)
+define test_FromDate_dateToStr: TestMessage(FromDate_dateToStr = '2015-01-01', 'FromDate_dateToStr', '2015-01-01', FromDate_dateToStr)
 
 // FromTime
 define FromTime_timeStr: convert @T11:57 to String
