@@ -1187,6 +1187,40 @@ define test_ToConcept_IsNull: TestMessage(ToConcept_IsNull is null, 'ToConcept_I
 
 /*
 ************************
+  Start Date Tests
+************************
+*/
+
+// Globals
+define IdesOfMarch_Date: Date(2000, 3, 15)
+define ImpreciseIdesOfMarch_Date: Date(2000, 3)
+
+// DateComponentFrom
+define DateComponentFrom_Year: year from IdesOfMarch_Date
+define DateComponentFrom_Month: month from IdesOfMarch_Date
+define DateComponentFrom_Day: day from IdesOfMarch
+define DateComponentFrom_ImpreciseComponentTuple:
+    Tuple {
+        Year: year from ImpreciseIdesOfMarch_Date,
+        Month: month from ImpreciseIdesOfMarch_Date,
+        Day: day from ImpreciseIdesOfMarch_Date
+    }
+define DateComponentFrom_ImpreciseComponentTuple_Day: DateComponentFrom_ImpreciseComponentTuple.Day
+define DateComponentFrom_NullDate: year from (null as Date)
+
+define test_DateComponentFrom_Year: TestMessage(DateComponentFrom_Year = 2000, 'DateComponentFrom_Year', toString(2000), toString(DateComponentFrom_Year))
+define test_DateComponentFrom_Month: TestMessage(DateComponentFrom_Month = 3, 'DateComponentFrom_Month', toString(3), toString(DateComponentFrom_Month))
+define test_DateComponentFrom_Day: TestMessage(DateComponentFrom_Day = 15, 'DateComponentFrom_Day', toString(15), toString(DateComponentFrom_Day))
+define test_DateComponentFrom_ImpreciseComponentTuple_Day: TestMessage(DateComponentFrom_ImpreciseComponentTuple_Day is null, 'DateComponentFrom_ImpreciseComponentTuple_Day', 'null', toString(DateComponentFrom_ImpreciseComponentTuple_Day))
+
+/*
+************************
+  End Date Tests
+************************
+*/
+
+/*
+************************
   Start DateTime Tests
 ************************
 */
