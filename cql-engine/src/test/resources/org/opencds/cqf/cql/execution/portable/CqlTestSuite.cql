@@ -1332,6 +1332,44 @@ define test_SameOrBefore_Date_NullLeft: TestMessage(SameOrBefore_Date_NullLeft i
 define test_SameOrBefore_Date_NullRight: TestMessage(SameOrBefore_Date_NullRight is null, 'SameOrBefore_Date_NullRight', 'null', toString(SameOrBefore_Date_NullRight))
 define test_SameOrBefore_Date_NullBoth: TestMessage(SameOrBefore_Date_NullBoth is null, 'SameOrBefore_Date_NullBoth', 'null', toString(SameOrBefore_Date_NullBoth))
 
+// After
+define After_Date_SameYear: Date(2000, 12, 15) after year of Date(2000, 11, 23)
+define After_Date_YearAfter: Date(2000, 12, 15) after year of Date(1999, 11, 23)
+define After_Date_YearBefore: Date(2000, 12, 15) after year of Date(2001, 11, 23)
+define After_Date_SameMonth: Date(2000, 3, 25) after month of Date(2000, 3, 23)
+define After_Date_MonthAfter: Date(2000, 3, 25) after month of Date(2000, 2, 23)
+define After_Date_MonthBefore: Date(2000, 3, 25) after month of Date(2000, 4, 23)
+define After_Date_SameDay: Date(2000, 3, 15) after day of Date(2000, 3, 15)
+define After_Date_DayAfter: Date(2000, 3, 15) after day of Date(2000, 3, 14)
+define After_Date_DayBefore: Date(2000, 3, 15) after day of Date(2000, 3, 16)
+define After_Date_Same: Date(2000, 3, 15) after Date(2000, 3, 15)
+define After_Date_After: Date(2000, 3, 16) after Date(2000, 3, 15)
+define After_Date_Before: Date(2000, 3, 15) after Date(2000, 3, 15)
+define After_Date_ImpreciseDay: Date(2000, 3, 15) after day of Date(2000, 3)
+define After_Date_ImpreciseDayMonthAfter: Date(2000, 3, 15) after day of Date(2000, 2)
+define After_Date_ImpreciseDayMonthBefore: Date(2000, 3, 15) after day of Date(2000, 4)
+define After_Date_NullLeft: null after Date(2000, 3, 15)
+define After_Date_NullRight: Date(2000, 3, 15) after null
+define After_Date_NullBoth: (null as Date) after null
+
+define test_After_Date_SameYear: TestMessage(not After_Date_SameYear, 'After_Date_SameYear', toString(false), toString(After_Date_SameYear))
+define test_After_Date_YearAfter: TestMessage(After_Date_YearAfter, 'After_Date_YearAfter', toString(true), toString(After_Date_YearAfter))
+define test_After_Date_YearBefore: TestMessage(not After_Date_YearBefore, 'After_Date_YearBefore', toString(false), toString(After_Date_YearBefore))
+define test_After_Date_SameMonth: TestMessage(not After_Date_SameMonth, 'After_Date_SameMonth', toString(false), toString(After_Date_SameMonth))
+define test_After_Date_MonthAfter: TestMessage(After_Date_MonthAfter, 'After_Date_MonthAfter', toString(true), toString(After_Date_MonthAfter))
+define test_After_Date_MonthBefore: TestMessage(not After_Date_MonthBefore, 'After_Date_MonthBefore', toString(false), toString(After_Date_MonthBefore))
+define test_After_Date_SameDay: TestMessage(not After_Date_SameDay, 'After_Date_SameDay', toString(false), toString(After_Date_SameDay))
+define test_After_Date_DayAfter: TestMessage(After_Date_DayAfter, 'After_Date_DayAfter', toString(true), toString(After_Date_DayAfter))
+define test_After_Date_DayBefore: TestMessage(not After_Date_DayBefore, 'After_Date_DayBefore', toString(false), toString(After_Date_DayBefore))
+define test_After_Date_Same: TestMessage(not After_Date_Same, 'After_Date_Same', toString(false), toString(After_Date_Same))
+define test_After_Date_After: TestMessage(After_Date_After, 'After_Date_After', toString(true), toString(After_Date_After))
+define test_After_Date_Before: TestMessage(not After_Date_Before, 'After_Date_Before', toString(false), toString(After_Date_Before))
+define test_After_Date_ImpreciseDay: TestMessage(After_Date_ImpreciseDay is null, 'After_Date_ImpreciseDay', 'null', toString(After_Date_ImpreciseDay))
+define test_After_Date_ImpreciseDayMonthAfter: TestMessage(After_Date_ImpreciseDayMonthAfter, 'After_Date_ImpreciseDayMonthAfter', toString(true), toString(After_Date_ImpreciseDayMonthAfter))
+define test_After_Date_ImpreciseDayMonthBefore: TestMessage(not After_Date_ImpreciseDayMonthBefore, 'After_Date_ImpreciseDayMonthBefore', toString(false), toString(After_Date_ImpreciseDayMonthBefore))
+define test_After_Date_NullLeft: TestMessage(After_Date_NullLeft is null, 'After_Date_NullLeft', 'null', toString(After_Date_NullLeft))
+define test_After_Date_NullRight: TestMessage(After_Date_NullRight is null, 'After_Date_NullRight', 'null', toString(After_Date_NullRight))
+define test_After_Date_NullBoth: TestMessage(After_Date_NullBoth is null, 'After_Date_NullBoth', 'null', toString(After_Date_NullBoth))
 
 /*
 ************************

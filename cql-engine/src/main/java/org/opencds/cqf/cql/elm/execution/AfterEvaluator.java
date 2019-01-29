@@ -4,6 +4,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
 /*
+
 *** NOTES FOR INTERVAL ***
 after(left Interval<T>, right Interval<T>) Boolean
 after(left T, right Interval<T>) Boolean
@@ -18,19 +19,35 @@ If either argument is null, the result is null.
 
 
 *** NOTES FOR DATETIME ***
-after precision of(left DateTime, right DateTime) Boolean
-after precision of(left Time, right Time) Boolean
+after _precision_ of(left Date, right Date) Boolean
+after _precision_ of(left DateTime, right DateTime) Boolean
+after _precision_ of(left Time, right Time) Boolean
 
-The after-precision-of operator compares two date/time values to the specified precision to determine whether the
-  first argument is the after the second argument. Precision must be one of: year, month, day, hour, minute, second, or millisecond.
-For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
-  depending on whether the values involved are specified to the level of precision used for the comparison.
+The after-precision-of operator compares two date/time values to the specified precision to determine whether the first
+    argument is the after the second argument. The comparison is performed by considering each precision in order,
+    beginning with years (or hours for time values). If the values are the same, comparison proceeds to the next
+    precision; if the first value is greater than the second, the result is true; if the first value is less than the
+    second, the result is false; if either input has no value for the precision, the comparison stops and the result is
+    null; if the specified precision has been reached, the comparison stops and the result is false.
+
+If no precision is specified, the comparison is performed beginning with years (or hours for time values) and proceeding
+    to the finest precision specified in either input.
+
+For Date values, precision must be one of: year, month, or day.
+For DateTime values, precision must be one of: year, month, day, hour, minute, second, or millisecond.
+For Time values, precision must be one of: hour, minute, second, or millisecond.
+
+Note specifically that due to variability in the way week numbers are determined, comparisons involving weeks are not supported.
+
+When this operator is called with both Date and DateTime inputs, the Date values will be implicitly converted to
+    DateTime values as defined by the ToDateTime operator.
+
+As with all date/time calculations, comparisons are performed respecting the timezone offset.
+
 If either or both arguments are null, the result is null.
+
 */
 
-/**
- * Created by Chris Schuler on 6/7/2016
- */
 public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
 
     public static Boolean after(Object left, Object right, String precision) {
@@ -53,10 +70,10 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
             return after(left, ((Interval)right).getEnd(), precision);
         }
 
-        // (DateTime, DateTime) or (Time, Time)
+        // (Date, Date), (DateTime, DateTime) or (Time, Time)
         else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
             if (precision == null) {
-                precision = "millisecond";
+                precision = BaseTemporal.getHighestPrecision((BaseTemporal) left, (BaseTemporal) right);
             }
 
             Integer result = ((BaseTemporal) left).compareToPrecision((BaseTemporal) right, Precision.fromString(precision));
