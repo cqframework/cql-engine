@@ -1514,7 +1514,6 @@ define test_DateMath_Date_MinusThreeWeeks: TestMessage(DateMath_Date_MinusThreeW
 define test_DateMath_Date_PlusTwentyDays: TestMessage(DateMath_Date_PlusTwentyDays = Date(2013, 7, 5), 'DateMath_Date_PlusTwentyDays', toString(Date(2013, 7, 5)), toString(DateMath_Date_PlusTwentyDays))
 define test_DateMath_Date_MinusTwentyDays: TestMessage(DateMath_Date_MinusTwentyDays = Date(2013, 5, 26), 'DateMath_Date_MinusTwentyDays', toString(Date(2013, 5, 26)), toString(DateMath_Date_MinusTwentyDays))
 
-
 /*
 ************************
   End Date Tests
@@ -1708,6 +1707,20 @@ define SameOrAfter_HourBeforeNormalizeZones: DateTime(2000, 3, 15, 13, 30, 25, 2
 define SameOrAfter_NullLeft: null same or after DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define SameOrAfter_NullRight: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) same or after null
 define SameOrAfter_NullBoth: (null as DateTime) same or after null
+// on or after:
+define OnOrAfter_SameOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrAfter_AfterOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define OnOrAfter_BeforeOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define OnOrAfter_NullLeftOOA: null on or after DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrAfter_NullRightOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after null
+define OnOrAfter_NullBothOOA: (null as DateTime) on or after null
+// after or on:
+define AfterOrOn_SameAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define AfterOrOn_AfterAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define AfterOrOn_BeforeAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define AfterOrOn_NullLeftAOO: null after or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define AfterOrOn_NullRightAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on null
+define AfterOrOn_NullBothAOO: (null as DateTime) after or on null
 
 define test_SameOrAfter_SameYear: TestMessage(SameOrAfter_SameYear, 'SameOrAfter_SameYear', toString(true), toString(SameOrAfter_SameYear))
 define test_SameOrAfter_YearAfter: TestMessage(SameOrAfter_YearAfter, 'SameOrAfter_YearAfter', toString(true), toString(SameOrAfter_YearAfter))
@@ -1745,6 +1758,18 @@ define test_SameOrAfter_HourBeforeNormalizeZones: TestMessage(not SameOrAfter_Ho
 define test_SameOrAfter_NullLeft: TestMessage(SameOrAfter_NullLeft is null, 'SameOrAfter_NullLeft', 'null', toString(SameOrAfter_NullLeft))
 define test_SameOrAfter_NullRight: TestMessage(SameOrAfter_NullRight is null, 'SameOrAfter_NullRight', 'null', toString(SameOrAfter_NullRight))
 define test_SameOrAfter_NullBoth: TestMessage(SameOrAfter_NullBoth is null, 'SameOrAfter_NullBoth', 'null', toString(SameOrAfter_NullBoth))
+define test_OnOrAfter_SameOOA: TestMessage(OnOrAfter_SameOOA, 'OnOrAfter_SameOOA', toString(true), toString(OnOrAfter_SameOOA))
+define test_OnOrAfter_AfterOOA: TestMessage(OnOrAfter_AfterOOA, 'OnOrAfter_AfterOOA', toString(true), toString(OnOrAfter_AfterOOA))
+define test_OnOrAfter_BeforeOOA: TestMessage(not OnOrAfter_BeforeOOA, 'OnOrAfter_BeforeOOA', toString(false), toString(OnOrAfter_BeforeOOA))
+define test_OnOrAfter_NullLeftOOA: TestMessage(OnOrAfter_NullLeftOOA is null, 'OnOrAfter_NullLeftOOA', 'null', toString(OnOrAfter_NullLeftOOA))
+define test_OnOrAfter_NullRightOOA: TestMessage(OnOrAfter_NullRightOOA is null, 'OnOrAfter_NullRightOOA', 'null', toString(OnOrAfter_NullRightOOA))
+define test_OnOrAfter_NullBothOOA: TestMessage(OnOrAfter_NullBothOOA is null, 'OnOrAfter_NullBothOOA', 'null', toString(OnOrAfter_NullBothOOA))
+define test_AfterOrOn_SameAOO: TestMessage(AfterOrOn_SameAOO, 'AfterOrOn_SameAOO', toString(true), toString(AfterOrOn_SameAOO))
+define test_AfterOrOn_AfterAOO: TestMessage(AfterOrOn_AfterAOO, 'AfterOrOn_AfterAOO', toString(true), toString(AfterOrOn_AfterAOO))
+define test_AfterOrOn_BeforeAOO: TestMessage(not AfterOrOn_BeforeAOO, 'AfterOrOn_BeforeAOO', toString(false), toString(AfterOrOn_BeforeAOO))
+define test_AfterOrOn_NullLeftAOO: TestMessage(AfterOrOn_NullLeftAOO is null, 'AfterOrOn_NullLeftAOO', 'null', toString(AfterOrOn_NullLeftAOO))
+define test_AfterOrOn_NullRightAOO: TestMessage(AfterOrOn_NullRightAOO is null, 'AfterOrOn_NullRightAOO', 'null', toString(AfterOrOn_NullRightAOO))
+define test_AfterOrOn_NullBothAOO: TestMessage(AfterOrOn_NullBothAOO is null, 'AfterOrOn_NullBothAOO', 'null', toString(AfterOrOn_NullBothAOO))
 
 // SameOrBefore
 define SameOrBefore_SameYear: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) same year or before DateTime(2000, 11, 23, 8, 14, 47, 500, +1.0)
@@ -1783,6 +1808,20 @@ define SameOrBefore_HourBeforeNormalizeZones: DateTime(2000, 3, 15, 13, 30, 25, 
 define SameOrBefore_NullLeft: null same or before DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define SameOrBefore_NullRight: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) same or before null
 define SameOrBefore_NullBoth: (null as DateTime) same or before null
+// on or before
+define OnOrBefore_SameOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrBefore_AfterOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define OnOrBefore_BeforeOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define OnOrBefore_NullLeftOOB: null on or before DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrBefore_NullRightOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before null
+define OnOrBefore_NullBothOOB: (null as DateTime) on or before null
+// before or on
+define BeforeOrOn_SameBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define BeforeOrOn_AfterBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define BeforeOrOn_BeforeBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define BeforeOrOn_NullLeftBOO: null before or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define BeforeOrOn_NullRightBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on null
+define BeforeOrOn_NullBothBOO: (null as DateTime) before or on null
 
 define test_SameOrBefore_SameYear: TestMessage(SameOrBefore_SameYear, 'SameOrBefore_SameYear', toString(true), toString(SameOrBefore_SameYear))
 define test_SameOrBefore_YearAfter: TestMessage(not SameOrBefore_YearAfter, 'SameOrBefore_YearAfter', toString(false), toString(SameOrBefore_YearAfter))
@@ -1820,6 +1859,18 @@ define test_SameOrBefore_HourBeforeNormalizeZones: TestMessage(SameOrBefore_Hour
 define test_SameOrBefore_NullLeft: TestMessage(SameOrBefore_NullLeft is null, 'SameOrBefore_NullLeft', 'null', toString(SameOrBefore_NullLeft))
 define test_SameOrBefore_NullRight: TestMessage(SameOrBefore_NullRight is null, 'SameOrBefore_NullRight', 'null', toString(SameOrBefore_NullRight))
 define test_SameOrBefore_NullBoth: TestMessage(SameOrBefore_NullBoth is null, 'SameOrBefore_NullBoth', 'null', toString(SameOrBefore_NullBoth))
+define test_OnOrBefore_SameOOB: TestMessage(OnOrBefore_SameOOB, 'OnOrBefore_SameOOB', toString(true), toString(OnOrBefore_SameOOB))
+define test_OnOrBefore_AfterOOB: TestMessage(not OnOrBefore_AfterOOB, 'OnOrBefore_AfterOOB', toString(false), toString(OnOrBefore_AfterOOB))
+define test_OnOrBefore_BeforeOOB: TestMessage(OnOrBefore_BeforeOOB, 'OnOrBefore_BeforeOOB', toString(true), toString(OnOrBefore_BeforeOOB))
+define test_OnOrBefore_NullLeftOOB: TestMessage(OnOrBefore_NullLeftOOB is null, 'OnOrBefore_NullLeftOOB', 'null', toString(OnOrBefore_NullLeftOOB))
+define test_OnOrBefore_NullRightOOB: TestMessage(OnOrBefore_NullRightOOB is null, 'OnOrBefore_NullRightOOB', 'null', toString(OnOrBefore_NullRightOOB))
+define test_OnOrBefore_NullBothOOB: TestMessage(OnOrBefore_NullBothOOB is null, 'OnOrBefore_NullBothOOB', 'null', toString(OnOrBefore_NullBothOOB))
+define test_BeforeOrOn_SameBOO: TestMessage(BeforeOrOn_SameBOO, 'BeforeOrOn_SameBOO', toString(true), toString(BeforeOrOn_SameBOO))
+define test_BeforeOrOn_AfterBOO: TestMessage(not BeforeOrOn_AfterBOO, 'BeforeOrOn_AfterBOO', toString(false), toString(BeforeOrOn_AfterBOO))
+define test_BeforeOrOn_BeforeBOO: TestMessage(BeforeOrOn_BeforeBOO, 'BeforeOrOn_BeforeBOO', toString(true), toString(BeforeOrOn_BeforeBOO))
+define test_BeforeOrOn_NullLeftBOO: TestMessage(BeforeOrOn_NullLeftBOO is null, 'BeforeOrOn_NullLeftBOO', 'null', toString(BeforeOrOn_NullLeftBOO))
+define test_BeforeOrOn_NullRightBOO: TestMessage(BeforeOrOn_NullRightBOO is null, 'BeforeOrOn_NullRightBOO', 'null', toString(BeforeOrOn_NullRightBOO))
+define test_BeforeOrOn_NullBothBOO: TestMessage(BeforeOrOn_NullBothBOO is null, 'BeforeOrOn_NullBothBOO', 'null', toString(BeforeOrOn_NullBothBOO))
 
 // After
 define After_SameYear: DateTime(2000, 12, 15, 13, 30, 25, 200, +1.0) after year of DateTime(2000, 11, 23, 8, 14, 47, 500, +1.0)
