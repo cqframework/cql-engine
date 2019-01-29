@@ -1526,6 +1526,18 @@ define test_DateMath_Date_MinusTwentyDays: TestMessage(DateMath_Date_MinusTwenty
 ************************
 */
 
+// Globals
+define IdesOfMarch: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define ImpreciseIdesOfMarch: DateTime(2000, 3, 15)
+define NewYear2013: DateTime(2013, 1, 1, 0, 0, 0, 0)
+define NewYear2014: DateTime(2014, 1, 1, 0, 0, 0, 0)
+define January2014: DateTime(2014, 1)
+define February2014: DateTime(2014, 2)
+define DecTen2013: DateTime(2013, 12, 10, 12, 30, 30, 500)
+define JanOne2015: DateTime(2015, 1, 1, 0, 0, 0, 0)
+define January2015: DateTime(2015, 1)
+define June15th2013: DateTime(2013, 6, 15, 0, 0, 0, 0)
+
 // Today
 define Today_Var: Today()
 
@@ -1545,7 +1557,6 @@ define TimeOfDay_Var: TimeOfDay()
 define test_TimeOfDay_Var: TestMessage(TimeOfDay_Var = @T07:00:00.000, 'TimeOfDay_Var', toString(@T07:00:00.000), toString(TimeOfDay_Var))
 
 // DateTimeComponentFrom
-define IdesOfMarch: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define DTCFrom_Year: year from IdesOfMarch
 define DTCFrom_Month: month from IdesOfMarch
 define DTCFrom_Day: day from IdesOfMarch
@@ -1553,7 +1564,6 @@ define DTCFrom_Hour: hour from IdesOfMarch
 define DTCFrom_Minute: minute from IdesOfMarch
 define DTCFrom_Second: second from IdesOfMarch
 define DTCFrom_Millisecond: millisecond from IdesOfMarch
-define ImpreciseIdesOfMarch: DateTime(2000, 3, 15)
 define ImpreciseComponentTuple: Tuple {
   Year: year from ImpreciseIdesOfMarch,
   Month: month from ImpreciseIdesOfMarch,
@@ -2013,9 +2023,6 @@ define test_Before_NullRight: TestMessage(Before_NullRight is null, 'Before_Null
 define test_Before_NullBoth: TestMessage(Before_NullBoth is null, 'Before_NullBoth', 'null', toString(Before_NullBoth))
 
 // DifferenceBetween
-define NewYear2013: DateTime(2013, 1, 1, 0, 0, 0, 0)
-define NewYear2014: DateTime(2014, 1, 1, 0, 0, 0, 0)
-define January2014: DateTime(2014, 1)
 define DifferenceBetween_YearsBetween: difference in years between NewYear2013 and NewYear2014
 define DifferenceBetween_MonthsBetween: difference in months between NewYear2013 and NewYear2014
 define DifferenceBetween_WeeksBetween: difference in weeks between NewYear2013 and NewYear2014
@@ -2055,7 +2062,6 @@ define test_DifferenceBetween_HoursBetween1and3CrossingSpringDST: TestMessage(Di
 define test_DifferenceBetween_HoursBetween1and3CrossingFallDST: TestMessage(DifferenceBetween_HoursBetween1and3CrossingFallDST = 3, 'DifferenceBetween_HoursBetween1and3CrossingFallDST', toString(3), toString(DifferenceBetween_HoursBetween1and3CrossingFallDST))
 
 // DifferenceBetween Comparisons
-define February2014: DateTime(2014, 2)
 define DiffComp_GreaterThan25DaysAfter: difference in days between NewYear2014 and February2014 > 25
 define DiffComp_GreaterThan40DaysAfter: difference in days between NewYear2014 and February2014 > 40
 define DiffComp_GreaterThan80DaysAfter: difference in days between NewYear2014 and February2014 > 80
@@ -2099,9 +2105,6 @@ define test_DiffComp_BonnieTestCase: TestMessage(not DiffComp_BonnieTestCase, 'D
 define test_DiffComp_BonnieTestCaseZulu: TestMessage(not DiffComp_BonnieTestCaseZulu, 'DiffComp_BonnieTestCaseZulu', toString(false), toString(DiffComp_BonnieTestCaseZulu))
 
 // DurationBetween
-define DecTen2013: DateTime(2013, 12, 10, 12, 30, 30, 500)
-define JanOne2015: DateTime(2015, 1, 1, 0, 0, 0, 0)
-define January2015: DateTime(2015, 1)
 define DurationBetween_YearsBetween: years between DecTen2013 and JanOne2015
 define DurationBetween_MonthsBetween: months between DecTen2013 and JanOne2015
 define DurationBetween_WeeksBetween: weeks between DecTen2013 and JanOne2015
@@ -2143,7 +2146,6 @@ define test_DurationBetween_HoursBetween1and3CrossingSpringDST: TestMessage(Dura
 define test_DurationBetween_HoursBetween1and3CrossingFallDST: TestMessage(DurationBetween_HoursBetween1and3CrossingFallDST = 3, 'DurationBetween_HoursBetween1and3CrossingFallDST', toString(3), toString(DurationBetween_HoursBetween1and3CrossingFallDST))
 
 // DateMath
-define June15th2013: DateTime(2013, 6, 15, 0, 0, 0, 0)
 define DateMath_PlusThreeYears: June15th2013 + 3 years
 define DateMath_MinusThreeYears: June15th2013 - 3 years
 define DateMath_PlusEightMonths: June15th2013 + 8 months
@@ -2190,6 +2192,11 @@ define test_DateMath_MinusThreeMilliseconds: TestMessage(DateMath_MinusThreeMill
 ************************
 */
 
+// Globals
+define DateIvl: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 9, 1, 0, 0, 0, 0))
+define PrecisionDateIvl: Interval[DateTime(2012, 3, 2, 12, 34, 56, 789), DateTime(2012, 9, 2, 1, 23, 45, 678))
+define ImpDateIvl: Interval[DateTime(2012, 3), DateTime(2012, 8)]
+
 // Equal
 define Equal_EqualClosed: Interval[1, 5] = Interval[1, 5]
 define Equal_EqualOpen: Interval(1, 5) = Interval(1, 5)
@@ -2207,6 +2214,7 @@ define Equal_EqualDates: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(201
 define Equal_EqualDatesOpenClosed: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)) = Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 12, 31, 23, 59, 59, 999)]
 define Equal_SameDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) = Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1))
 define Equal_DifferentDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) = Interval[DateTime(2012, 1, 1), DateTime(2012, 7, 1))
+define Equal_DifferingPrecision: Interval[DateTime(2012, 1, 1, 12, 30, 21), DateTime(2013, 1, 1, 12, 30, 21)] = Interval[DateTime(2012, 1, 1, 12, 30), DateTime(2013, 1, 1, 12, 30)]
 
 define test_Equal_EqualClosed: TestMessage(Equal_EqualClosed, 'Equal_EqualClosed', toString(true), toString(Equal_EqualClosed))
 define test_Equal_EqualOpen: TestMessage(Equal_EqualOpen, 'Equal_EqualOpen', toString(true), toString(Equal_EqualOpen))
@@ -2224,6 +2232,7 @@ define test_Equal_EqualDates: TestMessage(Equal_EqualDates, 'Equal_EqualDates', 
 define test_Equal_EqualDatesOpenClosed: TestMessage(Equal_EqualDatesOpenClosed, 'Equal_EqualDatesOpenClosed', toString(true), toString(Equal_EqualDatesOpenClosed))
 define test_Equal_SameDays: TestMessage(Equal_SameDays, 'Equal_SameDays', toString(true), toString(Equal_SameDays))
 define test_Equal_DifferentDays: TestMessage(not Equal_DifferentDays, 'Equal_DifferentDays', toString(false), toString(Equal_DifferentDays))
+define test_Equal_DifferingPrecision: TestMessage(Equal_DifferingPrecision is null, 'Equal_DifferingPrecision', 'null', toString(Equal_DifferingPrecision))
 
 // NotEqual
 define NotEqual_EqualClosed: Interval[1, 5] != Interval[1, 5]
@@ -2242,6 +2251,7 @@ define NotEqual_EqualDates: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(
 define NotEqual_EqualDatesOpenClosed: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)) != Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 12, 31, 23, 59, 59, 999)]
 define NotEqual_SameDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) != Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1))
 define NotEqual_DifferentDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) != Interval[DateTime(2012, 1, 1), DateTime(2012, 7, 1))
+define NotEqual_DifferingPrecision: Interval[DateTime(2012, 1, 1, 12, 30, 21), DateTime(2013, 1, 1, 12, 30, 21)] != Interval[DateTime(2012, 1, 1, 12, 30), DateTime(2013, 1, 1, 12, 30)]
 
 define test_NotEqual_EqualClosed: TestMessage(not NotEqual_EqualClosed, 'NotEqual_EqualClosed', toString(false), toString(NotEqual_EqualClosed))
 define test_NotEqual_EqualOpen: TestMessage(not NotEqual_EqualOpen, 'NotEqual_EqualOpen', toString(false), toString(NotEqual_EqualOpen))
@@ -2259,12 +2269,9 @@ define test_NotEqual_EqualDates: TestMessage(not NotEqual_EqualDates, 'NotEqual_
 define test_NotEqual_EqualDatesOpenClosed: TestMessage(not NotEqual_EqualDatesOpenClosed, 'NotEqual_EqualDatesOpenClosed', toString(false), toString(NotEqual_EqualDatesOpenClosed))
 define test_NotEqual_SameDays: TestMessage(not NotEqual_SameDays, 'NotEqual_SameDays', toString(false), toString(NotEqual_SameDays))
 define test_NotEqual_DifferentDays: TestMessage(NotEqual_DifferentDays, 'NotEqual_DifferentDays', toString(true), toString(NotEqual_DifferentDays))
+define test_NotEqual_DifferingPrecision: TestMessage(NotEqual_DifferingPrecision is null, 'NotEqual_DifferingPrecision', 'null', toString(NotEqual_DifferingPrecision))
 
 // Contains
-define DateIvl: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 9, 1, 0, 0, 0, 0))
-define PrecisionDateIvl: Interval[DateTime(2012, 3, 2, 12, 34, 56, 789), DateTime(2012, 9, 2, 1, 23, 45, 678))
-define ImpDateIvl: Interval[DateTime(2012, 3), DateTime(2012, 8)]
-
 define Contains_ContainsInt: Interval[1, 5] contains 3
 define Contains_NotContainsInt: Interval(1, 5] contains 1
 define Contains_ContainsReal: Interval[1.234, 3.456] contains 2.345
@@ -2463,6 +2470,10 @@ define Includes_MayIncludeDayOfIvlVeryImpreciseLow: PrecisionDateIvl includes da
 define Includes_MayIncludeDayOfIvlVeryImpreciseHigh: PrecisionDateIvl includes day of Interval[DateTime(2012, 6), DateTime(2012, 9)]
 define Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding: PrecisionDateIvl includes day of Interval[DateTime(2012), DateTime(2012)]
 define Includes_ImpreciseIncludesDateIvl: ImpDateIvl includes Interval[DateTime(2012, 4, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0))
+define Includes_ImpreciseIncludesDate: ImpDateIvl includes DateTime(2012, 4, 1, 0, 0, 0, 0)
+define Includes_ImpreciseDoesntIncludeDate: ImpDateIvl includes DateTime(2016, 4, 1, 0, 0, 0, 0)
+define Includes_IntervalIncludesQuantity: Interval[4 'mg', 6 'mg'] includes 5 'mg'
+define Includes_IntervalDoesntIncludeQuantity: Interval[4 'mg', 6 'mg'] includes 50 'mg'
 define Includes_ImpreciseNotIncludesDateIvl: ImpDateIvl includes Interval[DateTime(2012, 2, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0))
 define Includes_ImpreciseMayIncludeDateIvl: ImpDateIvl includes Interval[DateTime(2012, 3, 15, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0))
 define Includes_NegInfBegIncludesIntIvl: Interval[null, 5] includes Interval[-7, 2]
@@ -2508,6 +2519,10 @@ define test_Includes_MayIncludeDayOfIvlVeryImpreciseLow: TestMessage(Includes_Ma
 define test_Includes_MayIncludeDayOfIvlVeryImpreciseHigh: TestMessage(Includes_MayIncludeDayOfIvlVeryImpreciseHigh is null, 'Includes_MayIncludeDayOfIvlVeryImpreciseHigh', 'null', toString(Includes_MayIncludeDayOfIvlVeryImpreciseHigh))
 define test_Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding: TestMessage(Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding is null, 'Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding', 'null', toString(Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding))
 define test_Includes_ImpreciseIncludesDateIvl: TestMessage(Includes_ImpreciseIncludesDateIvl, 'Includes_ImpreciseIncludesDateIvl', toString(true), toString(Includes_ImpreciseIncludesDateIvl))
+define test_Includes_ImpreciseIncludesDate: TestMessage(Includes_ImpreciseIncludesDate, 'Includes_ImpreciseIncludesDate', toString(true), toString(Includes_ImpreciseIncludesDate))
+define test_Includes_ImpreciseDoesntIncludeDate: TestMessage(not Includes_ImpreciseDoesntIncludeDate, 'Includes_ImpreciseDoesntIncludeDate', toString(false), toString(Includes_ImpreciseDoesntIncludeDate))
+define test_Includes_IntervalIncludesQuantity: TestMessage(Includes_IntervalIncludesQuantity, 'Includes_IntervalIncludesQuantity', toString(true), toString(Includes_IntervalIncludesQuantity))
+define test_Includes_IntervalDoesntIncludeQuantity: TestMessage(not Includes_IntervalDoesntIncludeQuantity, 'Includes_IntervalDoesntIncludeQuantity', toString(false), toString(Includes_IntervalDoesntIncludeQuantity))
 define test_Includes_ImpreciseNotIncludesDateIvl: TestMessage(not Includes_ImpreciseNotIncludesDateIvl, 'Includes_ImpreciseNotIncludesDateIvl', toString(false), toString(Includes_ImpreciseNotIncludesDateIvl))
 define test_Includes_ImpreciseMayIncludeDateIvl: TestMessage(Includes_ImpreciseMayIncludeDateIvl is null, 'Includes_ImpreciseMayIncludeDateIvl', 'null', toString(Includes_ImpreciseMayIncludeDateIvl))
 define test_Includes_NegInfBegIncludesIntIvl: TestMessage(Includes_NegInfBegIncludesIntIvl, 'Includes_NegInfBegIncludesIntIvl', toString(true), toString(Includes_NegInfBegIncludesIntIvl))
@@ -2583,6 +2598,10 @@ define IncludedIn_IncludesImpreciseDateIvl: Interval[DateTime(2012, 4), DateTime
 define IncludedIn_NotIncludesImpreciseDateIvl: Interval[DateTime(2012, 4), DateTime(2012, 9)] included in DateIvl
 define IncludedIn_MayIncludeImpreciseDateIvl: Interval[DateTime(2012), DateTime(2012)] included in DateIvl
 define IncludedIn_IncludesDayOfIvlLowEdge: Interval[DateTime(2012, 3, 2, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)) included in day of PrecisionDateIvl
+define IncludedIn_IncludesDayInInterval: DateTime(2012, 3, 3) included in day of PrecisionDateIvl
+define IncludedIn_DoesNotIncludeDayInInterval: DateTime(2014, 3, 3) included in day of PrecisionDateIvl
+define IncludedIn_QuantityIncludedInterval: 5 'mg' included in Interval[4 'mg', 6 'mg']
+define IncludedIn_QuantityNotIncludedInterval: 50 'mg' included in Interval[4 'mg', 6 'mg']
 define IncludedIn_IncludesDayOfIvlHighEdge: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2012, 9, 2, 23, 59, 59, 999)) included in day of PrecisionDateIvl
 define IncludedIn_NotIncludesDayOfIvlLowEdge: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)] included in day of PrecisionDateIvl
 define IncludedIn_NotIncludesDayOfIvlHighEdge: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2012, 9, 3, 0, 0, 0, 0)] included in day of PrecisionDateIvl
@@ -2632,6 +2651,10 @@ define test_IncludedIn_IncludesImpreciseDateIvl: TestMessage(IncludedIn_Includes
 define test_IncludedIn_NotIncludesImpreciseDateIvl: TestMessage(not IncludedIn_NotIncludesImpreciseDateIvl, 'IncludedIn_NotIncludesImpreciseDateIvl', toString(false), toString(IncludedIn_NotIncludesImpreciseDateIvl))
 define test_IncludedIn_MayIncludeImpreciseDateIvl: TestMessage(IncludedIn_MayIncludeImpreciseDateIvl is null, 'IncludedIn_MayIncludeImpreciseDateIvl', 'null', toString(IncludedIn_MayIncludeImpreciseDateIvl))
 define test_IncludedIn_IncludesDayOfIvlLowEdge: TestMessage(IncludedIn_IncludesDayOfIvlLowEdge, 'IncludedIn_IncludesDayOfIvlLowEdge', toString(true), toString(IncludedIn_IncludesDayOfIvlLowEdge))
+define test_IncludedIn_IncludesDayInInterval: TestMessage(IncludedIn_IncludesDayInInterval, 'IncludedIn_IncludesDayInInterval', toString(true), toString(IncludedIn_IncludesDayInInterval))
+define test_IncludedIn_DoesNotIncludeDayInInterval: TestMessage(not IncludedIn_DoesNotIncludeDayInInterval, 'IncludedIn_DoesNotIncludeDayInInterval', toString(false), toString(IncludedIn_DoesNotIncludeDayInInterval))
+define test_IncludedIn_QuantityIncludedInterval: TestMessage(IncludedIn_QuantityIncludedInterval, 'IncludedIn_QuantityIncludedInterval', toString(true), toString(IncludedIn_QuantityIncludedInterval))
+define test_IncludedIn_QuantityNotIncludedInterval: TestMessage(not IncludedIn_QuantityNotIncludedInterval, 'IncludedIn_QuantityNotIncludedInterval', toString(false), toString(IncludedIn_QuantityNotIncludedInterval))
 define test_IncludedIn_IncludesDayOfIvlHighEdge: TestMessage(IncludedIn_IncludesDayOfIvlHighEdge, 'IncludedIn_IncludesDayOfIvlHighEdge', toString(true), toString(IncludedIn_IncludesDayOfIvlHighEdge))
 define test_IncludedIn_NotIncludesDayOfIvlLowEdge: TestMessage(not IncludedIn_NotIncludesDayOfIvlLowEdge, 'IncludedIn_NotIncludesDayOfIvlLowEdge', toString(false), toString(IncludedIn_NotIncludesDayOfIvlLowEdge))
 define test_IncludedIn_NotIncludesDayOfIvlHighEdge: TestMessage(not IncludedIn_NotIncludesDayOfIvlHighEdge, 'IncludedIn_NotIncludesDayOfIvlHighEdge', toString(false), toString(IncludedIn_NotIncludesDayOfIvlHighEdge))
@@ -3189,6 +3212,7 @@ define OverlapsDT_OverlapsContains: ivlC overlaps ivlB
 define OverlapsDT_NoOverlap: ivlC overlaps ivlD
 define OverlapsDT_NoImpreciseOverlap: ivlE overlaps ivlG
 define OverlapsDT_UnknownOverlap: ivlE overlaps ivlH
+define OverlapsDT_MatchingPrecisionOverlap: ivlF overlaps ivlG
 // NOTE: There appears to be a bug in cql-to-elm that translates these 'overlaps' to 'OverlapsAfter'!
 define OverlapsDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
@@ -3207,6 +3231,7 @@ define test_OverlapsDT_OverlapsContains: TestMessage(OverlapsDT_OverlapsContains
 define test_OverlapsDT_NoOverlap: TestMessage(not OverlapsDT_NoOverlap, 'OverlapsDT_NoOverlap', toString(false), toString(OverlapsDT_NoOverlap))
 define test_OverlapsDT_NoImpreciseOverlap: TestMessage(not OverlapsDT_NoImpreciseOverlap, 'OverlapsDT_OverlapsBefore', toString(false), toString(OverlapsDT_OverlapsBefore))
 define test_OverlapsDT_UnknownOverlap: TestMessage(OverlapsDT_UnknownOverlap is null, 'OverlapsDT_UnknownOverlap', 'null', toString(OverlapsDT_UnknownOverlap))
+define test_OverlapsDT_MatchingPrecisionOverlap: TestMessage(OverlapsDT_MatchingPrecisionOverlap, 'OverlapsDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsDT_MatchingPrecisionOverlap))
 define test_OverlapsDT_OverlapsBeforeDayOfIvlEdge: TestMessage(OverlapsDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsDT_OverlapsBeforeDayOfIvlEdge', toString(true), toString(OverlapsDT_OverlapsBeforeDayOfIvlEdge))
 define test_OverlapsDT_OverlapsAfterDayOfIvlEdge: TestMessage(OverlapsDT_OverlapsAfterDayOfIvlEdge, 'OverlapsDT_OverlapsAfterDayOfIvlEdge', toString(true), toString(OverlapsDT_OverlapsAfterDayOfIvlEdge))
 define test_OverlapsDT_OverlapsContainsDayOfIvl: TestMessage(OverlapsDT_OverlapsContainsDayOfIvl, 'OverlapsDT_OverlapsContainsDayOfIvl', toString(true), toString(OverlapsDT_OverlapsContainsDayOfIvl))
@@ -3356,14 +3381,38 @@ define test_Width_RealWidth: TestMessage(Width_RealWidth = 3.33, 'Width_RealWidt
 define test_Width_RealOpenWidth: TestMessage(Width_RealOpenWidth = 3.32999998, 'Width_RealOpenWidth', toString(3.32999998), toString(Width_RealOpenWidth))
 
 // Start
-define Start_DateTimeIvl: start of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define Start_ClosedNotNull: start of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define Start_ClosedNullDateTime: start of Interval[null, DateTime(2013, 1, 1)]
+define Start_ClosedNullInteger: start of Interval[null, 3]
+define Start_ClosedNullDecimal: start of Interval[null, 5.1]
+define Start_NullInterval: start of (null as Interval<DateTime>)
+define Start_OpenNotNull: start of Interval(DateTime(2012, 1, 1), DateTime(2013, 1, 1))
+define Start_OpenNull: start of Interval(null, DateTime(2013, 1, 1))
 
-define test_Start_DateTimeIvl: TestMessage(Start_DateTimeIvl = DateTime(2012, 1, 1), 'Start_DateTimeIvl', toString(DateTime(2012, 1, 1)), toString(Start_DateTimeIvl))
+define test_Start_ClosedNotNull: TestMessage(Start_ClosedNotNull = DateTime(2012, 1, 1), 'Start_ClosedNotNull', toString(DateTime(2012, 1, 1)), toString(Start_ClosedNotNull))
+define test_Start_ClosedNullDateTime: TestMessage(Start_ClosedNullDateTime = minimum DateTime, 'Start_ClosedNullDateTime', toString(minimum DateTime), toString(Start_ClosedNullDateTime))
+define test_Start_ClosedNullInteger: TestMessage(Start_ClosedNullInteger = minimum Integer, 'Start_ClosedNullInteger', toString(minimum Integer), toString(Start_ClosedNullInteger))
+define test_Start_ClosedNullDecimal: TestMessage(Start_ClosedNullDecimal = minimum Decimal, 'Start_ClosedNullDecimal', toString(minimum Decimal), toString(Start_ClosedNullDecimal))
+define test_Start_NullInterval: TestMessage(Start_NullInterval is null, 'Start_NullInterval', 'null', toString(Start_NullInterval))
+define test_Start_OpenNotNull: TestMessage(Start_OpenNotNull = successor of DateTime(2012, 1, 1), 'Start_OpenNotNull', toString(successor of DateTime(2012, 1, 1)), toString(Start_OpenNotNull))
+define test_Start_OpenNull: TestMessage(Start_OpenNull is null, 'Start_OpenNull', 'null', toString(Start_OpenNull))
 
 // End
-define End_DateTimeIvl: end of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define End_ClosedNotNull: end of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define End_ClosedNullDateTime: end of Interval[DateTime(2013, 1, 1), null]
+define End_ClosedNullInteger: end of Interval[5, null]
+define End_ClosedNullDecimal: end of Interval[7.3, null]
+define End_NullInterval: end of (null as Interval<DateTime>)
+define End_OpenNotNull: end of Interval(DateTime(2012, 1, 1), DateTime(2013, 1, 1))
+define End_OpenNull: end of Interval(DateTime(2013, 1, 1), null)
 
-define test_End_DateTimeIvl: TestMessage(End_DateTimeIvl = DateTime(2013, 1, 1), 'End_DateTimeIvl', toString(DateTime(2013, 1, 1)), toString(End_DateTimeIvl))
+define test_End_ClosedNotNull: TestMessage(End_ClosedNotNull = DateTime(2013, 1, 1), 'End_ClosedNotNull', toString(DateTime(2013, 1, 1)), toString(End_ClosedNotNull))
+define test_End_ClosedNullDateTime: TestMessage(End_ClosedNullDateTime = maximum DateTime, 'End_ClosedNullDateTime', toString(maximum DateTime), toString(End_ClosedNullDateTime))
+define test_End_ClosedNullInteger: TestMessage(End_ClosedNullInteger = maximum Integer, 'End_ClosedNullInteger', toString(maximum Integer), toString(End_ClosedNullInteger))
+define test_End_ClosedNullDecimal: TestMessage(End_ClosedNullDecimal = maximum Decimal, 'End_ClosedNullDecimal', toString(maximum Decimal), toString(End_ClosedNullDecimal))
+define test_End_NullInterval: TestMessage(End_NullInterval is null, 'End_NullInterval', 'null', toString(End_NullInterval))
+define test_End_OpenNotNull: TestMessage(End_OpenNotNull = predecessor of DateTime(2013, 1, 1), 'End_OpenNotNull', toString(predecessor of DateTime(2013, 1, 1)), toString(End_OpenNotNull))
+define test_End_OpenNull: TestMessage(End_OpenNull is null, 'End_OpenNull', 'null', toString(End_OpenNull))
 
 // Starts
 define Starts_TestStartsNull: Interval[null, null] starts Interval[1, 10]
