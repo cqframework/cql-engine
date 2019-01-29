@@ -1194,6 +1194,10 @@ define test_ToConcept_IsNull: TestMessage(ToConcept_IsNull is null, 'ToConcept_I
 // Globals
 define IdesOfMarch_Date: Date(2000, 3, 15)
 define ImpreciseIdesOfMarch_Date: Date(2000, 3)
+define NewYear2013_Date: Date(2013, 1, 1)
+define NewYear2014_Date: Date(2014, 1, 1)
+define January2014_Date: Date(2014, 1)
+define February2014_Date: Date(2014, 2)
 
 // DateComponentFrom
 define DateComponentFrom_Year: year from IdesOfMarch_Date
@@ -1409,6 +1413,64 @@ define test_Before_Date_ImpreciseDayMonthBefore: TestMessage(Before_Date_Impreci
 define test_Before_Date_NullLeft: TestMessage(Before_Date_NullLeft is null, 'Before_Date_NullLeft', 'null', toString(Before_Date_NullLeft))
 define test_Before_Date_NullRight: TestMessage(Before_Date_NullRight is null, 'Before_Date_NullRight', 'null', toString(Before_Date_NullRight))
 define test_Before_Date_NullBoth: TestMessage(Before_Date_NullBoth is null, 'Before_Date_NullBoth', 'null', toString(Before_Date_NullBoth))
+
+// DifferenceBetween
+define DifferenceBetween_Date_YearsBetween: difference in years between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_MonthsBetween: difference in months between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_WeeksBetween: difference in weeks between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_DaysBetween: difference in days between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_YearsBetweenUncertainty: difference in years between NewYear2014_Date and January2014_Date
+define DifferenceBetween_Date_MonthsBetweenUncertainty: difference in months between NewYear2014_Date and January2014_Date
+define DifferenceBetween_Date_WeeksBetweenUncertainty: difference in weeks between NewYear2014_Date and January2014_Date
+define DifferenceBetween_Date_DaysBetweenUncertainty: difference in days between NewYear2014_Date and January2014_Date
+
+define test_DifferenceBetween_Date_YearsBetween: TestMessage(DifferenceBetween_Date_YearsBetween = 1, 'DifferenceBetween_Date_YearsBetween', toString(1), toString(DifferenceBetween_Date_YearsBetween))
+define test_DifferenceBetween_Date_MonthsBetween: TestMessage(DifferenceBetween_Date_MonthsBetween = 12, 'DifferenceBetween_Date_MonthsBetween', toString(12), toString(DifferenceBetween_Date_MonthsBetween))
+define test_DifferenceBetween_Date_WeeksBetween: TestMessage(DifferenceBetween_Date_WeeksBetween = 52, 'DifferenceBetween_Date_WeeksBetween', toString(52), toString(DifferenceBetween_Date_WeeksBetween))
+define test_DifferenceBetween_Date_DaysBetween: TestMessage(DifferenceBetween_Date_DaysBetween = 365, 'DifferenceBetween_Date_DaysBetween', toString(365), toString(DifferenceBetween_Date_DaysBetween))
+define test_DifferenceBetween_Date_YearsBetweenUncertainty: TestMessage(DifferenceBetween_Date_YearsBetweenUncertainty = 0, 'DifferenceBetween_Date_YearsBetweenUncertainty', toString(0), toString(DifferenceBetween_Date_YearsBetweenUncertainty))
+define test_DifferenceBetween_Date_MonthsBetweenUncertainty: TestMessage(DifferenceBetween_Date_MonthsBetweenUncertainty = 0, 'DifferenceBetween_Date_MonthsBetweenUncertainty', toString(0), toString(DifferenceBetween_Date_MonthsBetweenUncertainty))
+define test_DifferenceBetween_Date_WeeksBetweenUncertainty: TestMessage(DifferenceBetween_Date_WeeksBetweenUncertainty > -1 and (DifferenceBetween_Date_WeeksBetweenUncertainty > 0) is null and DifferenceBetween_Date_WeeksBetweenUncertainty < 5 and (DifferenceBetween_Date_WeeksBetweenUncertainty < 4) is null, 'DifferenceBetween_Date_WeeksBetweenUncertainty', toString(true), toString(DifferenceBetween_Date_WeeksBetweenUncertainty > -1 and (DifferenceBetween_Date_WeeksBetweenUncertainty > 0) is null and DifferenceBetween_Date_WeeksBetweenUncertainty < 5 and (DifferenceBetween_Date_WeeksBetweenUncertainty < 4) is null))
+define test_DifferenceBetween_Date_DaysBetweenUncertainty: TestMessage(DifferenceBetween_Date_DaysBetweenUncertainty > -1 and (DifferenceBetween_Date_DaysBetweenUncertainty > 0) is null and DifferenceBetween_Date_DaysBetweenUncertainty < 31 and (DifferenceBetween_Date_DaysBetweenUncertainty < 30) is null, 'DifferenceBetween_Date_DaysBetweenUncertainty', toString(true), toString(DifferenceBetween_Date_DaysBetweenUncertainty > -1 and (DifferenceBetween_Date_DaysBetweenUncertainty > 0) is null and DifferenceBetween_Date_DaysBetweenUncertainty < 31 and (DifferenceBetween_Date_DaysBetweenUncertainty < 30) is null))
+
+// DifferenceBetween Comparisons
+define DifferenceBetween_Date_GreaterThan25DaysAfter: difference in days between NewYear2014_Date and February2014_Date > 25
+define DifferenceBetween_Date_GreaterThan40DaysAfter: difference in days between NewYear2014_Date and February2014_Date > 40
+define DifferenceBetween_Date_GreaterThan80DaysAfter: difference in days between NewYear2014_Date and February2014_Date > 80
+define DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter: difference in days between NewYear2014_Date and February2014_Date >= 25
+define DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter: difference in days between NewYear2014_Date and February2014_Date >= 40
+define DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter: difference in days between NewYear2014_Date and February2014_Date >= 80
+define DifferenceBetween_Date_EqualTo25DaysAfter: difference in days between NewYear2014_Date and February2014_Date = 25
+define DifferenceBetween_Date_EqualTo40DaysAfter: difference in days between NewYear2014_Date and February2014_Date = 40
+define DifferenceBetween_Date_EqualTo80DaysAfter: difference in days between NewYear2014_Date and February2014_Date = 80
+define DifferenceBetween_Date_LessOrEqualTo25DaysAfter: difference in days between NewYear2014_Date and February2014_Date <= 25
+define DifferenceBetween_Date_LessOrEqualTo40DaysAfter: difference in days between NewYear2014_Date and February2014_Date <= 40
+define DifferenceBetween_Date_LessOrEqualTo80DaysAfter: difference in days between NewYear2014_Date and February2014_Date <= 80
+define DifferenceBetween_Date_LessThan25DaysAfter: difference in days between NewYear2014_Date and February2014_Date < 25
+define DifferenceBetween_Date_LessThan40DaysAfter: difference in days between NewYear2014_Date and February2014_Date < 40
+define DifferenceBetween_Date_LessThan80DaysAfter: difference in days between NewYear2014_Date and February2014_Date < 80
+define DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween: 25 < difference in days between NewYear2014_Date and February2014_Date
+define DifferenceBetween_Date_FortyDaysEqualToDaysBetween: 40 = difference in days between NewYear2014_Date and February2014_Date
+define DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween: 25 > difference in days between NewYear2014_Date and February2014_Date
+
+define test_DifferenceBetween_Date_GreaterThan25DaysAfter: TestMessage(DifferenceBetween_Date_GreaterThan25DaysAfter, 'DifferenceBetween_Date_GreaterThan25DaysAfter', toString(true), toString(DifferenceBetween_Date_GreaterThan25DaysAfter))
+define test_DifferenceBetween_Date_GreaterThan40DaysAfter: TestMessage(DifferenceBetween_Date_GreaterThan40DaysAfter is null, 'DifferenceBetween_Date_GreaterThan40DaysAfter', 'null', toString(DifferenceBetween_Date_GreaterThan40DaysAfter))
+define test_DifferenceBetween_Date_GreaterThan80DaysAfter: TestMessage(not DifferenceBetween_Date_GreaterThan80DaysAfter, 'DifferenceBetween_Date_GreaterThan80DaysAfter', toString(false), toString(DifferenceBetween_Date_GreaterThan80DaysAfter))
+define test_DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter: TestMessage(DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter, 'DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter', toString(true), toString(DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter))
+define test_DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter: TestMessage(DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter is null, 'DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter', 'null', toString(DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter))
+define test_DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter: TestMessage(not DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter, 'DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter', toString(false), toString(DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter))
+define test_DifferenceBetween_Date_EqualTo25DaysAfter: TestMessage(not DifferenceBetween_Date_EqualTo25DaysAfter, 'DifferenceBetween_Date_EqualTo25DaysAfter', toString(false), toString(DifferenceBetween_Date_EqualTo25DaysAfter))
+define test_DifferenceBetween_Date_EqualTo40DaysAfter: TestMessage(DifferenceBetween_Date_EqualTo40DaysAfter is null, 'DifferenceBetween_Date_EqualTo40DaysAfter', 'null', toString(DifferenceBetween_Date_EqualTo40DaysAfter))
+define test_DifferenceBetween_Date_EqualTo80DaysAfter: TestMessage(not DifferenceBetween_Date_EqualTo80DaysAfter, 'DifferenceBetween_Date_EqualTo80DaysAfter', toString(false), toString(DifferenceBetween_Date_EqualTo80DaysAfter))
+define test_DifferenceBetween_Date_LessOrEqualTo25DaysAfter: TestMessage(not DifferenceBetween_Date_LessOrEqualTo25DaysAfter, 'DifferenceBetween_Date_LessOrEqualTo25DaysAfter', toString(false), toString(DifferenceBetween_Date_LessOrEqualTo25DaysAfter))
+define test_DifferenceBetween_Date_LessOrEqualTo40DaysAfter: TestMessage(DifferenceBetween_Date_LessOrEqualTo40DaysAfter is null, 'DifferenceBetween_Date_LessOrEqualTo40DaysAfter', 'null', toString(DifferenceBetween_Date_LessOrEqualTo40DaysAfter))
+define test_DifferenceBetween_Date_LessOrEqualTo80DaysAfter: TestMessage(DifferenceBetween_Date_LessOrEqualTo80DaysAfter, 'DifferenceBetween_Date_LessOrEqualTo80DaysAfter', toString(true), toString(DifferenceBetween_Date_LessOrEqualTo80DaysAfter))
+define test_DifferenceBetween_Date_LessThan25DaysAfter: TestMessage(not DifferenceBetween_Date_LessThan25DaysAfter, 'DifferenceBetween_Date_LessThan25DaysAfter', toString(false), toString(DifferenceBetween_Date_LessThan25DaysAfter))
+define test_DifferenceBetween_Date_LessThan40DaysAfter: TestMessage(DifferenceBetween_Date_LessThan40DaysAfter is null, 'DifferenceBetween_Date_LessThan40DaysAfter', 'null', toString(DifferenceBetween_Date_LessThan40DaysAfter))
+define test_DifferenceBetween_Date_LessThan80DaysAfter: TestMessage(DifferenceBetween_Date_LessThan80DaysAfter, 'DifferenceBetween_Date_LessThan80DaysAfter', toString(true), toString(DifferenceBetween_Date_LessThan80DaysAfter))
+define test_DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween: TestMessage(DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween, 'DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween', toString(true), toString(DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween))
+define test_DifferenceBetween_Date_FortyDaysEqualToDaysBetween: TestMessage(DifferenceBetween_Date_FortyDaysEqualToDaysBetween is null, 'DifferenceBetween_Date_FortyDaysEqualToDaysBetween', 'null', toString(DifferenceBetween_Date_FortyDaysEqualToDaysBetween))
+define test_DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween: TestMessage(not DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween, 'DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween', toString(false), toString(DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween))
 
 /*
 ************************

@@ -6,20 +6,30 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 
 /*
-difference in precision between(low DateTime, high DateTime) Integer
-difference in precision between(low Time, high Time) Integer
 
-The difference-between operator returns the number of boundaries crossed for the specified precision between the
-    first and second arguments.
-If the first argument is after the second argument, the result is negative.
-The result of this operation is always an integer; any fractional boundaries are dropped.
-For DateTime values, precision must be one of: years, months, days, hours, minutes, seconds, or milliseconds.
+difference in _precision_ between(low Date, high Date) Integer
+difference in _precision_ between(low DateTime, high DateTime) Integer
+difference in _precision_ between(low Time, high Time) Integer
+
+The difference-between operator returns the number of boundaries crossed for the specified precision between the first
+    and second arguments. If the first argument is after the second argument, the result is negative. The result of this
+    operation is always an integer; any fractional boundaries are dropped.
+
+As with all date/time calculations, difference calculations are performed respecting the timezone offset depending on the precision.
+
+For Date values, precision must be one of: years, months, weeks, or days.
+For DateTime values, precision must be one of: years, months, weeks, days, hours, minutes, seconds, or milliseconds.
 For Time values, precision must be one of: hours, minutes, seconds, or milliseconds.
+
+For calculations involving weeks, Sunday is considered to be the first day of the week for the purposes of determining the number of boundaries crossed.
+
+When this operator is called with both Date and DateTime inputs, the Date values will be implicitly converted to DateTime as defined by the ToDateTime operator.
+
 If either argument is null, the result is null.
 
 Additional Complexity: precision elements above the specified precision must also be accounted for.
 For example:
-days between DateTime(2012, 5, 5) and DateTime(2011, 5, 0) = 365 + 5 = 370 days
+days between DateTime(2011, 5, 1) and DateTime(2012, 5, 6) = 365 + 5 = 370 days
 
 NOTE: This is the same operation as DurationBetween, but the precision after the specified precision is truncated
 to get the number of boundaries crossed instead of whole calendar periods.
@@ -27,11 +37,9 @@ For Example:
 difference in days between DateTime(2014, 5, 12, 12, 10) and DateTime(2014, 5, 25, 15, 55)
 will truncate the DateTimes to:
 DateTime(2014, 5, 12) and DateTime(2014, 5, 25) respectively
+
 */
 
-/**
- * Created by Chris Schuler on 6/22/2016
- */
 public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.execution.DifferenceBetween {
 
     public static Object difference(Object left, Object right, Precision precision) {
@@ -73,6 +81,16 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
                         : (int) precision.toChronoUnit().between(
                                 ((DateTime) left).expandPartialMinFromPrecision(precision).getDateTime(),
                                 ((DateTime) right).expandPartialMinFromPrecision(precision).getDateTime());
+            }
+
+            if (left instanceof Date && right instanceof Date) {
+                return isWeeks
+                        ? (int) precision.toChronoUnit().between(
+                                ((Date) left).expandPartialMinFromPrecision(precision).getDate(),
+                                ((Date) right).expandPartialMinFromPrecision(precision).getDate()) / 7
+                        : (int) precision.toChronoUnit().between(
+                                ((Date) left).expandPartialMinFromPrecision(precision).getDate(),
+                                ((Date) right).expandPartialMinFromPrecision(precision).getDate());
             }
 
             if (left instanceof Time && right instanceof Time) {

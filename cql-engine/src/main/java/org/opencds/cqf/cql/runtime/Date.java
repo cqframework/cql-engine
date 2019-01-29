@@ -32,9 +32,9 @@ public class Date extends BaseTemporal {
         setDate(date);
     }
 
-    private Date expandPartialMinFromPrecision(Precision thePrecision) {
+    public Date expandPartialMinFromPrecision(Precision thePrecision) {
         LocalDate ld = this.getDate().plusYears(0);
-        for (int i = thePrecision.toDateIndex() + 1; i < 7; ++i) {
+        for (int i = thePrecision.toDateIndex() + 1; i < 3; ++i) {
             ld = ld.with(
                     Precision.fromDateIndex(i).toChronoField(),
                     ld.range(Precision.fromDateIndex(i).toChronoField()).getMinimum()
@@ -50,7 +50,7 @@ public class Date extends BaseTemporal {
 
     private Date expandPartialMax(Precision thePrecision) {
         LocalDate ld = this.getDate().plusYears(0);
-        for (int i = this.getPrecision().toDateIndex() + 1; i < 7; ++i) {
+        for (int i = this.getPrecision().toDateIndex() + 1; i < 3; ++i) {
             if (i <= thePrecision.toDateIndex()) {
                 ld = ld.with(
                         Precision.fromDateIndex(i).toChronoField(),
