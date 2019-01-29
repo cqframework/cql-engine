@@ -81,8 +81,6 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
         }
 
         return GreaterEvaluator.greater(left, right);
-
-//        throw new IllegalArgumentException(String.format("Cannot After arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
