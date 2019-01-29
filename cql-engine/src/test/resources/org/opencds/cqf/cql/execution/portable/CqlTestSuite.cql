@@ -1198,6 +1198,9 @@ define NewYear2013_Date: Date(2013, 1, 1)
 define NewYear2014_Date: Date(2014, 1, 1)
 define January2014_Date: Date(2014, 1)
 define February2014_Date: Date(2014, 2)
+define DecTen2013_Date: Date(2013, 12, 10)
+define JanOne2015_Date: Date(2015, 1, 1)
+define January2015_Date: Date(2015, 1)
 
 // DateComponentFrom
 define DateComponentFrom_Year: year from IdesOfMarch_Date
@@ -1471,6 +1474,27 @@ define test_DifferenceBetween_Date_LessThan80DaysAfter: TestMessage(DifferenceBe
 define test_DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween: TestMessage(DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween, 'DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween', toString(true), toString(DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween))
 define test_DifferenceBetween_Date_FortyDaysEqualToDaysBetween: TestMessage(DifferenceBetween_Date_FortyDaysEqualToDaysBetween is null, 'DifferenceBetween_Date_FortyDaysEqualToDaysBetween', 'null', toString(DifferenceBetween_Date_FortyDaysEqualToDaysBetween))
 define test_DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween: TestMessage(not DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween, 'DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween', toString(false), toString(DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween))
+
+// DurationBetween
+define DurationBetween_Date_YearsBetween: years between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_MonthsBetween: months between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_WeeksBetween: weeks between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_DaysBetween: days between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_YearsBetweenUncertainty: years between JanOne2015_Date and January2015_Date
+define DurationBetween_Date_MonthsBetweenUncertainty: months between JanOne2015_Date and January2015_Date
+define DurationBetween_Date_WeeksBetweenUncertainty: weeks between JanOne2015_Date and January2015_Date
+define DurationBetween_Date_DaysBetweenUncertainty: days between JanOne2015_Date and January2015_Date
+
+define test_DurationBetween_Date_YearsBetween: TestMessage(DurationBetween_Date_YearsBetween = 1, 'DurationBetween_Date_YearsBetween', toString(1), toString(DurationBetween_Date_YearsBetween))
+define test_DurationBetween_Date_MonthsBetween: TestMessage(DurationBetween_Date_MonthsBetween = 12, 'DurationBetween_Date_MonthsBetween', toString(12), toString(DurationBetween_Date_MonthsBetween))
+define test_DurationBetween_Date_WeeksBetween: TestMessage(DurationBetween_Date_WeeksBetween = 55, 'DurationBetween_Date_WeeksBetween', toString(55), toString(DurationBetween_Date_WeeksBetween))
+define test_DurationBetween_Date_DaysBetween: TestMessage(DurationBetween_Date_DaysBetween = 387, 'DurationBetween_Date_DaysBetween', toString(387), toString(DurationBetween_Date_DaysBetween))
+define test_DurationBetween_Date_YearsBetweenUncertainty: TestMessage(DurationBetween_Date_YearsBetweenUncertainty = 0, 'DurationBetween_Date_YearsBetweenUncertainty', toString(0), toString(DurationBetween_Date_YearsBetweenUncertainty))
+define test_DurationBetween_Date_MonthsBetweenUncertainty: TestMessage(DurationBetween_Date_MonthsBetweenUncertainty = 0, 'DurationBetween_Date_MonthsBetweenUncertainty', toString(0), toString(DurationBetween_Date_MonthsBetweenUncertainty))
+define test_DurationBetween_Date_WeeksBetweenUncertainty: TestMessage(DurationBetween_Date_WeeksBetweenUncertainty > -1 and (DurationBetween_Date_WeeksBetweenUncertainty > 0) is null and DurationBetween_Date_WeeksBetweenUncertainty < 5 and (DurationBetween_Date_WeeksBetweenUncertainty < 4) is null, 'DurationBetween_Date_WeeksBetweenUncertainty', toString(true), toString(DurationBetween_Date_WeeksBetweenUncertainty > -1 and (DurationBetween_Date_WeeksBetweenUncertainty > 0) is null and DurationBetween_Date_WeeksBetweenUncertainty < 5 and (DurationBetween_Date_WeeksBetweenUncertainty < 4) is null))
+define test_DurationBetween_Date_DaysBetweenUncertainty: TestMessage(DurationBetween_Date_DaysBetweenUncertainty > -1 and (DurationBetween_Date_DaysBetweenUncertainty > 0) is null and DurationBetween_Date_DaysBetweenUncertainty < 31 and (DurationBetween_Date_DaysBetweenUncertainty < 30) is null, 'DurationBetween_Date_DaysBetweenUncertainty', toString(true), toString(DurationBetween_Date_DaysBetweenUncertainty > -1 and (DurationBetween_Date_DaysBetweenUncertainty > 0) is null and DurationBetween_Date_DaysBetweenUncertainty < 31 and (DurationBetween_Date_DaysBetweenUncertainty < 30) is null))
+
+
 
 /*
 ************************

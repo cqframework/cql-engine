@@ -6,25 +6,30 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 
 /*
-duration between(low DateTime, high DateTime) Integer
-duration between(low Time, high Time) Integer
 
-The duration-between operator returns the number of whole calendar periods for the specified precision between
-  the first and second arguments.
-If the first argument is after the second argument, the result is negative.
-The result of this operation is always an integer; any fractional periods are dropped.
-For DateTime values, duration must be one of: years, months, days, hours, minutes, seconds, or milliseconds.
+_duration_ between(low Date, high Date) Integer
+_duration_ between(low DateTime, high DateTime) Integer
+_duration_ between(low Time, high Time) Integer
+
+The duration-between operator returns the number of whole calendar periods for the specified precision between the first
+    and second arguments. If the first argument is after the second argument, the result is negative. The result of this
+    operation is always an integer; any fractional periods are dropped.
+
+For Date values, duration must be one of: years, months, weeks, or days.
+For DateTime values, duration must be one of: years, months, weeks, days, hours, minutes, seconds, or milliseconds.
 For Time values, duration must be one of: hours, minutes, seconds, or milliseconds.
+
+When this operator is called with both Date and DateTime inputs, the Date values will be implicitly converted to
+    DateTime as defined by the ToDateTime operator.
+
 If either argument is null, the result is null.
 
-Additional Complexity: precison elements above the specified precision must also be accounted.
+Additional Complexity: precision elements above the specified precision must also be accounted.
 For example:
-days between DateTime(2012, 5, 5) and DateTime(2011, 5, 0) = 365 + 5 = 370 days
+days between DateTime(2011, 5, 1) and DateTime(2012, 5, 6) = 365 + 5 = 370 days
+
 */
 
-/**
- * Created by Chris Schuler on 6/22/2016
- */
 public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.DurationBetween {
 
     public static Object duration(Object left, Object right, Precision precision) {
@@ -63,6 +68,12 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
                 return isWeeks
                         ? (int) precision.toChronoUnit().between(((DateTime) left).getDateTime(), ((DateTime) right).getDateTime()) / 7
                         : (int) precision.toChronoUnit().between(((DateTime) left).getDateTime(), ((DateTime) right).getDateTime());
+            }
+
+            if (left instanceof Date && right instanceof Date) {
+                return isWeeks
+                        ? (int) precision.toChronoUnit().between(((Date) left).getDate(), ((Date) right).getDate()) / 7
+                        : (int) precision.toChronoUnit().between(((Date) left).getDate(), ((Date) right).getDate());
             }
 
             if (left instanceof Time && right instanceof Time) {
