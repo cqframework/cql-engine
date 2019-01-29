@@ -2190,8 +2190,6 @@ define test_DateMath_MinusThreeMilliseconds: TestMessage(DateMath_MinusThreeMill
 ************************
 */
 
-/*
-
 // Equal
 define Equal_EqualClosed: Interval[1, 5] = Interval[1, 5]
 define Equal_EqualOpen: Interval(1, 5) = Interval(1, 5)
@@ -3180,16 +3178,17 @@ define ivlD: Interval[DateTime(2013, 1, 1, 0, 0, 0, 0), DateTime(2014, 1, 1, 0, 
 define ivlE: Interval[DateTime(2013), DateTime(2015)]
 define ivlF: Interval[DateTime(2014), DateTime(2016)]
 define ivlG: Interval[DateTime(2016), DateTime(2017)]
+define ivlH: Interval[DateTime(2012, 2, 3), DateTime(2013, 3)]
 
 define OverlapsDT_OverlapsBefore: ivlA overlaps ivlB
 define OverlapsDT_OverlapsAfter: ivlB overlaps ivlA
 define OverlapsDT_OverlapsContained: ivlB overlaps ivlC
 define OverlapsDT_OverlapsContains: ivlC overlaps ivlB
 // TODO - this test should return null, but Bonnie expects true
-// define OverlapsDT_ImpreciseOverlap: ivlD overlaps ivlE
+// define OverlapsDT_ImpreciseOverlap: ivlD overlaps ivlH
 define OverlapsDT_NoOverlap: ivlC overlaps ivlD
 define OverlapsDT_NoImpreciseOverlap: ivlE overlaps ivlG
-define OverlapsDT_UnknownOverlap: ivlF overlaps ivlG
+define OverlapsDT_UnknownOverlap: ivlE overlaps ivlH
 // NOTE: There appears to be a bug in cql-to-elm that translates these 'overlaps' to 'OverlapsAfter'!
 define OverlapsDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
@@ -3237,6 +3236,7 @@ define test_OverlapsAfter_OverlapsBoundaryRealIvl: TestMessage(OverlapsAfter_Ove
 define test_OverlapsAfter_NoOverlapsRealIvl: TestMessage(not OverlapsAfter_NoOverlapsRealIvl, 'OverlapsAfter_NoOverlapsRealIvl', toString(false), toString(OverlapsAfter_NoOverlapsRealIvl))
 
 // OverlapsAfterDateTime
+define ivlH_OA: Interval[DateTime(2013, 1), DateTime(2015, 1)]
 define OverlapsAfterDT_OverlapsBefore: ivlA overlaps after ivlB
 define OverlapsAfterDT_OverlapsAfter: ivlB overlaps after ivlA
 define OverlapsAfterDT_OverlapsContained: ivlB overlaps after ivlC
@@ -3245,7 +3245,8 @@ define OverlapsAfterDT_ImpreciseOverlapBefore: ivlE overlaps after ivlF
 define OverlapsAfterDT_ImpreciseOverlapAfter: ivlF overlaps after ivlE
 define OverlapsAfterDT_NoOverlap: ivlC overlaps after ivlD
 define OverlapsAfterDT_NoImpreciseOverlap: ivlE overlaps after ivlG
-define OverlapsAfterDT_UnknownOverlap: ivlG overlaps after ivlF
+define OverlapsAfterDT_MatchingPrecisionOverlap: ivlG overlaps after ivlF
+define OverlapsAfterDT_UnknownOverlap: ivlH_OA overlaps after ivlE
 define OverlapsAfterDT_PrecisionDateIvl: Interval[DateTime(2012, 3, 2, 12, 34, 56, 789), DateTime(2012, 9, 2, 1, 23, 45, 678))
 define OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps after day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsAfterDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps after day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
@@ -3264,6 +3265,7 @@ define test_OverlapsAfterDT_ImpreciseOverlapBefore: TestMessage(not OverlapsAfte
 define test_OverlapsAfterDT_ImpreciseOverlapAfter: TestMessage(OverlapsAfterDT_ImpreciseOverlapAfter, 'OverlapsAfterDT_ImpreciseOverlapAfter', toString(true), toString(OverlapsAfterDT_ImpreciseOverlapAfter))
 define test_OverlapsAfterDT_NoOverlap: TestMessage(not OverlapsAfterDT_NoOverlap, 'OverlapsAfterDT_NoOverlap', toString(false), toString(OverlapsAfterDT_NoOverlap))
 define test_OverlapsAfterDT_NoImpreciseOverlap: TestMessage(not OverlapsAfterDT_NoImpreciseOverlap, 'OverlapsAfterDT_OverlapsBefore', toString(false), toString(OverlapsAfterDT_OverlapsBefore))
+define test_OverlapsAfterDT_MatchingPrecisionOverlap: TestMessage(OverlapsAfterDT_MatchingPrecisionOverlap, 'OverlapsAfterDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsAfterDT_MatchingPrecisionOverlap))
 define test_OverlapsAfterDT_UnknownOverlap: TestMessage(OverlapsAfterDT_UnknownOverlap is null, 'OverlapsAfterDT_UnknownOverlap', 'null', toString(OverlapsAfterDT_UnknownOverlap))
 define test_OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge: TestMessage(not OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge', toString(false), toString(OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge))
 define test_OverlapsAfterDT_OverlapsAfterDayOfIvlEdge: TestMessage(OverlapsAfterDT_OverlapsAfterDayOfIvlEdge, 'OverlapsAfterDT_OverlapsAfterDayOfIvlEdge', toString(true), toString(OverlapsAfterDT_OverlapsAfterDayOfIvlEdge))
@@ -3294,6 +3296,7 @@ define test_OverlapsBefore_OverlapsBoundaryRealIvl: TestMessage(OverlapsBefore_O
 define test_OverlapsBefore_NoOverlapsRealIvl: TestMessage(not OverlapsBefore_NoOverlapsRealIvl, 'OverlapsBefore_NoOverlapsRealIvl', toString(false), toString(OverlapsBefore_NoOverlapsRealIvl))
 
 // OverlapsBeforeDateTime
+define ivlH_OB: Interval[DateTime(2011, 3), DateTime(2013, 3)]
 define OverlapsBeforeDT_OverlapsBefore: ivlA overlaps before ivlB
 define OverlapsBeforeDT_OverlapsAfter: ivlB overlaps before ivlA
 define OverlapsBeforeDT_OverlapsContained: ivlB overlaps before ivlC
@@ -3302,7 +3305,8 @@ define OverlapsBeforeDT_ImpreciseOverlapBefore: ivlE overlaps before ivlF
 define OverlapsBeforeDT_ImpreciseOverlapAfter: ivlF overlaps before ivlE
 define OverlapsBeforeDT_NoOverlap: ivlC overlaps before ivlD
 define OverlapsBeforeDT_NoImpreciseOverlap: ivlE overlaps before ivlG
-define OverlapsBeforeDT_UnknownOverlap: ivlF overlaps before ivlG
+define OverlapsBeforeDT_MatchingPrecisionOverlap: ivlF overlaps before ivlG
+define OverlapsBeforeDT_UnknownOverlap: ivlH_OB overlaps before ivlE
 define OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps before day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps before day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
 define OverlapsBeforeDT_OverlapsContainsDayOfIvl: PrecisionDateIvl overlaps before day of Interval[DateTime(2012, 5, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)]
@@ -3320,6 +3324,7 @@ define test_OverlapsBeforeDT_ImpreciseOverlapAfter: TestMessage(not OverlapsBefo
 define test_OverlapsBeforeDT_ImpreciseOverlapBefore: TestMessage(OverlapsBeforeDT_ImpreciseOverlapBefore, 'OverlapsBeforeDT_ImpreciseOverlapBefore', toString(true), toString(OverlapsBeforeDT_ImpreciseOverlapBefore))
 define test_OverlapsBeforeDT_NoOverlap: TestMessage(not OverlapsBeforeDT_NoOverlap, 'OverlapsBeforeDT_NoOverlap', toString(false), toString(OverlapsBeforeDT_NoOverlap))
 define test_OverlapsBeforeDT_NoImpreciseOverlap: TestMessage(not OverlapsBeforeDT_NoImpreciseOverlap, 'OverlapsBeforeDT_OverlapsBefore', toString(false), toString(OverlapsBeforeDT_OverlapsBefore))
+define test_OverlapsBeforeDT_MatchingPrecisionOverlap: TestMessage(OverlapsBeforeDT_MatchingPrecisionOverlap, 'OverlapsBeforeDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsBeforeDT_MatchingPrecisionOverlap))
 define test_OverlapsBeforeDT_UnknownOverlap: TestMessage(OverlapsBeforeDT_UnknownOverlap is null, 'OverlapsBeforeDT_UnknownOverlap', 'null', toString(OverlapsBeforeDT_UnknownOverlap))
 define test_OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge: TestMessage(OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge', toString(true), toString(OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge))
 define test_OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge: TestMessage(not OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge, 'OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge', toString(false), toString(OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge))
@@ -3629,7 +3634,9 @@ define test_DtIvlCollapse_DateTimeCollapseOverlapContainedEdge2: TestMessage(DtI
 define test_DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine: TestMessage(DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine))
 define test_DtIvlCollapse_DateTimeCollapseImpreciseBoundary: TestMessage(DtIvlCollapse_DateTimeCollapseImpreciseBoundary = DateTime1_10IntervalList, 'DtIvlCollapse_DateTimeCollapseImpreciseBoundary', toString(DateTime1_10IntervalList), toString(DtIvlCollapse_DateTimeCollapseImpreciseBoundary))
 
-*/
+
+
+
 
 /*
 **********************
