@@ -1201,6 +1201,7 @@ define February2014_Date: Date(2014, 2)
 define DecTen2013_Date: Date(2013, 12, 10)
 define JanOne2015_Date: Date(2015, 1, 1)
 define January2015_Date: Date(2015, 1)
+define June15th2013_Date: Date(2013, 6, 15)
 
 // DateComponentFrom
 define DateComponentFrom_Year: year from IdesOfMarch_Date
@@ -1494,6 +1495,24 @@ define test_DurationBetween_Date_MonthsBetweenUncertainty: TestMessage(DurationB
 define test_DurationBetween_Date_WeeksBetweenUncertainty: TestMessage(DurationBetween_Date_WeeksBetweenUncertainty > -1 and (DurationBetween_Date_WeeksBetweenUncertainty > 0) is null and DurationBetween_Date_WeeksBetweenUncertainty < 5 and (DurationBetween_Date_WeeksBetweenUncertainty < 4) is null, 'DurationBetween_Date_WeeksBetweenUncertainty', toString(true), toString(DurationBetween_Date_WeeksBetweenUncertainty > -1 and (DurationBetween_Date_WeeksBetweenUncertainty > 0) is null and DurationBetween_Date_WeeksBetweenUncertainty < 5 and (DurationBetween_Date_WeeksBetweenUncertainty < 4) is null))
 define test_DurationBetween_Date_DaysBetweenUncertainty: TestMessage(DurationBetween_Date_DaysBetweenUncertainty > -1 and (DurationBetween_Date_DaysBetweenUncertainty > 0) is null and DurationBetween_Date_DaysBetweenUncertainty < 31 and (DurationBetween_Date_DaysBetweenUncertainty < 30) is null, 'DurationBetween_Date_DaysBetweenUncertainty', toString(true), toString(DurationBetween_Date_DaysBetweenUncertainty > -1 and (DurationBetween_Date_DaysBetweenUncertainty > 0) is null and DurationBetween_Date_DaysBetweenUncertainty < 31 and (DurationBetween_Date_DaysBetweenUncertainty < 30) is null))
 
+// DateMath
+define DateMath_Date_PlusThreeYears: June15th2013_Date + 3 years
+define DateMath_Date_MinusThreeYears: June15th2013_Date - 3 years
+define DateMath_Date_PlusEightMonths: June15th2013_Date + 8 months
+define DateMath_Date_MinusEightMonths: June15th2013_Date - 8 months
+define DateMath_Date_PlusThreeWeeks: June15th2013_Date + 3 weeks
+define DateMath_Date_MinusThreeWeeks: June15th2013_Date - 3 weeks
+define DateMath_Date_PlusTwentyDays: June15th2013_Date + 20 days
+define DateMath_Date_MinusTwentyDays: June15th2013_Date - 20 days
+
+define test_DateMath_Date_PlusThreeYears: TestMessage(DateMath_Date_PlusThreeYears = Date(2016, 6, 15), 'DateMath_Date_PlusThreeYears', toString(Date(2016, 6, 15)), toString(DateMath_Date_PlusThreeYears))
+define test_DateMath_Date_MinusThreeYears: TestMessage(DateMath_Date_MinusThreeYears = Date(2010, 6, 15), 'DateMath_Date_MinusThreeYears', toString(Date(2010, 6, 15)), toString(DateMath_Date_MinusThreeYears))
+define test_DateMath_Date_PlusEightMonths: TestMessage(DateMath_Date_PlusEightMonths = Date(2014, 2, 15), 'DateMath_Date_PlusEightMonths', toString(Date(2014, 2, 15)), toString(DateMath_Date_PlusEightMonths))
+define test_DateMath_Date_MinusEightMonths: TestMessage(DateMath_Date_MinusEightMonths = Date(2012, 10, 15), 'DateMath_Date_MinusEightMonths', toString(Date(2012, 10, 15)), toString(DateMath_Date_MinusEightMonths))
+define test_DateMath_Date_PlusThreeWeeks: TestMessage(DateMath_Date_PlusThreeWeeks = Date(2013, 7, 6), 'DateMath_Date_PlusThreeWeeks', toString(Date(2013, 7, 6)), toString(DateMath_Date_PlusThreeWeeks))
+define test_DateMath_Date_MinusThreeWeeks: TestMessage(DateMath_Date_MinusThreeWeeks = Date(2013, 5, 25), 'DateMath_Date_MinusThreeWeeks', toString(Date(2013, 5, 25)), toString(DateMath_Date_MinusThreeWeeks))
+define test_DateMath_Date_PlusTwentyDays: TestMessage(DateMath_Date_PlusTwentyDays = Date(2013, 7, 5), 'DateMath_Date_PlusTwentyDays', toString(Date(2013, 7, 5)), toString(DateMath_Date_PlusTwentyDays))
+define test_DateMath_Date_MinusTwentyDays: TestMessage(DateMath_Date_MinusTwentyDays = Date(2013, 5, 26), 'DateMath_Date_MinusTwentyDays', toString(Date(2013, 5, 26)), toString(DateMath_Date_MinusTwentyDays))
 
 
 /*
