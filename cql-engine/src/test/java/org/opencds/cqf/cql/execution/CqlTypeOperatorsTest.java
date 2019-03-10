@@ -135,12 +135,12 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal(0), 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
-        try {
-            context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
-            Assert.fail();
-        } catch (DateTimeParseException iae) {
-            // pass
-        }
+//        try {
+//            context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
+//            Assert.fail();
+//        } catch (DateTimeParseException iae) {
+//            // pass
+//        }
 
     }
 
@@ -223,11 +223,11 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal(0), 14, 30, 0, 0)));
         // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
-        try {
-            context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
-            Assert.fail();
-        } catch (DateTimeParseException iae) {
-            // pass
-        }
+//        try {
+//            context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
+//            Assert.fail();
+//        } catch (DateTimeParseException iae) {
+//            // pass
+//        }
     }
 }

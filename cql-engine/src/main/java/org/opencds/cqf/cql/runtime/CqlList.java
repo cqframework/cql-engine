@@ -7,8 +7,10 @@ import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 
 public class CqlList {
     private Context context;
@@ -29,11 +31,7 @@ public class CqlList {
         this.path = path;
     }
 
-    public Comparator<Object> valueSort = new Comparator<Object>() {
-        public int compare(Object left, Object right) {
-            return compareTo(left, right);
-        }
-    };
+    public Comparator<Object> valueSort = this::compareTo;
 
     public Comparator<Object> expressionSort = new Comparator<Object>() {
         public int compare(Object left, Object right) {
@@ -127,5 +125,18 @@ public class CqlList {
         }
 
         return true;
+    }
+
+    public static <T> List<T> toList(Iterable<T> iterable, boolean includeNullElements) {
+        List<T> ret = new ArrayList<>();
+        for (T element : iterable) {
+            if (includeNullElements) {
+                ret.add(element);
+            }
+            else if (element != null) {
+                ret.add(element);
+            }
+        }
+        return ret;
     }
 }

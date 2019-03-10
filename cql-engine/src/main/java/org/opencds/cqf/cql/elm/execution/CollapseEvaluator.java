@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 /*
@@ -29,76 +30,104 @@ If the per argument is null, the default unit interval for the point type of the
     (i.e. the interval that has a width equal to the result of the successor function for the point type).
 */
 
-public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collapse {
+public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collapse
+{
+    private static Interval getIntervalWithPerApplied(Interval interval, Quantity per)
+    {
+        if (per.getValue().equals(new BigDecimal("0")))
+        {
+            return interval;
+        }
 
-    public static Object collapse(Iterable list, Quantity per) {
+        if (interval.getPointType().getTypeName().contains("Integer"))
+        {
+            return new Interval(
+                    interval.getStart(),
+                    true,
+                    AddEvaluator.add(interval.getEnd(), per.getValue().intValue()),
+                    true
+            );
+        }
+        else if (interval.getPointType().getTypeName().contains("BigDecimal"))
+        {
+            return new Interval(
+                    interval.getStart(),
+                    true,
+                    AddEvaluator.add(interval.getEnd(), per.getValue()),
+                    true
+            );
+        }
+        // Quantity, Date, DateTime, and Time
+        else
+        {
+            return new Interval(
+                    interval.getStart(),
+                    true,
+                    AddEvaluator.add(interval.getEnd(), per),
+                    true
+            );
+        }
+    }
 
-        if (list == null) {
+    public static List<Interval> collapse(Iterable<Interval> list, Quantity per)
+    {
+        if (list == null)
+        {
             return null;
         }
 
-        List<Interval> intervals = new ArrayList<>();
-        for (Object interval : list) {
-            if (interval != null) {
-                intervals.add((Interval) interval);
-            }
-        }
+        List<Interval> intervals = CqlList.toList(list, false);
 
-        if (intervals.size() == 1 || intervals.isEmpty()) {
+        if (intervals.size() == 1 || intervals.isEmpty())
+        {
             return intervals;
         }
 
+        boolean isTemporal =
+                intervals.get(0).getStart() instanceof BaseTemporal
+                        || intervals.get(0).getEnd() instanceof BaseTemporal;
+
         intervals.sort(new CqlList().valueSort);
 
-        String precision = null;
-        if (intervals.get(0).getStart() instanceof BaseTemporal || intervals.get(0).getEnd() instanceof BaseTemporal) {
-            List<BaseTemporal> temporals = new ArrayList<>();
-            for (Interval interval : intervals) {
-                if (interval.getStart() != null) {
-                    if (per != null && per.getUnit() != null) {
-                        temporals.add(((BaseTemporal) interval.getStart()).setPrecision(Precision.fromString(per.getUnit())));
-                    }
-                    else {
-                        temporals.add((BaseTemporal) interval.getStart());
-                    }
-                }
-                if (interval.getEnd() != null) {
-                    if (per != null && per.getUnit() != null) {
-                        temporals.add(((BaseTemporal) interval.getEnd()).setPrecision(Precision.fromString(per.getUnit())));
-                    }
-                    else {
-                        temporals.add((BaseTemporal) interval.getEnd());
-                    }
-                }
-            }
-            precision = BaseTemporal.getHighestPrecision(temporals.toArray(new BaseTemporal[temporals.size()]));
+        if (per == null)
+        {
+            per = new Quantity().withValue(new BigDecimal(0)).withDefaultUnit();
         }
 
-        for (int i = 0; i < intervals.size(); ++i) {
-            if ((i+1) < intervals.size()) {
-                Boolean doMerge = AnyTrueEvaluator.anyTrue(
-                        Arrays.asList(
-                                OverlapsEvaluator.overlaps(intervals.get(i), intervals.get(i+1), precision),
-                                MeetsEvaluator.meets(intervals.get(i), intervals.get(i+1), precision)
+        String precision = per.getUnit().equals("1") ? null : per.getUnit();
+
+        for (int i = 0; i < intervals.size() - 1; ++i)
+        {
+            Interval applyPer = getIntervalWithPerApplied(intervals.get(i), per);
+
+            Boolean doMerge = AnyTrueEvaluator.anyTrue(
+                    Arrays.asList(
+                            OverlapsEvaluator.overlaps(applyPer, intervals.get(i+1), precision),
+                            MeetsEvaluator.meets(applyPer, intervals.get(i+1), precision)
+                    )
+            );
+
+            if (doMerge == null)
+            {
+                continue;
+            }
+
+            if (doMerge)
+            {
+                Boolean isNextEndGreater =
+                        isTemporal
+                                ? AfterEvaluator.after((intervals.get(i+1)).getEnd(), applyPer.getEnd(), precision)
+                                : GreaterEvaluator.greater((intervals.get(i+1)).getEnd(), applyPer.getEnd());
+
+                intervals.set(
+                        i,
+                        new Interval(
+                                applyPer.getStart(), true,
+                                isNextEndGreater != null && isNextEndGreater ? (intervals.get(i+1)).getEnd() : applyPer.getEnd(), true
                         )
                 );
-
-                if (doMerge == null) {
-                    continue;
-                }
-
-                if (doMerge) {
-                    Boolean isNextEndGreater = GreaterEvaluator.greater((intervals.get(i+1)).getEnd(), (intervals.get(i)).getEnd());
-                    intervals.set(
-                            i,
-                            new Interval(
-                                    (intervals.get(i)).getStart(), true,
-                                    isNextEndGreater != null && isNextEndGreater ? (intervals.get(i+1)).getEnd() : (intervals.get(i)).getEnd(), true
-                            )
-                    );
-                    intervals.remove(i+1);
-                    i -= 1;
-                }
+                intervals.remove(i+1);
+                i -= 1;
             }
         }
 
@@ -106,8 +135,9 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
     }
 
     @Override
-    public Object evaluate(Context context) {
-        Iterable list = (Iterable) getOperand().get(0).evaluate(context);
+    public Object evaluate(Context context)
+    {
+        Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);
         Quantity per = (Quantity) getOperand().get(1).evaluate(context);
 
         return collapse(list, per);

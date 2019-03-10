@@ -90,6 +90,11 @@ define function toString(value Interval<Integer>):
     then 'null'
   else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
 
+define function toString(value Interval<Quantity>):
+  if value is null
+    then 'null'
+  else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
+
 define function toString(value Interval<DateTime>):
   if value is null
     then 'null'
@@ -101,6 +106,11 @@ define function toString(value List<Code>):
   else Combine((value V return toString(V)), ', ')
 
 define function toString(value List<Interval<Integer>>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Interval<Quantity>>):
   if value is null
     then 'null'
   else Combine((value V return toString(V)), ', ')
@@ -3682,6 +3692,114 @@ define test_DtIvlCollapse_DateTimeCollapseOverlapContainedEdge: TestMessage(DtIv
 define test_DtIvlCollapse_DateTimeCollapseOverlapContainedEdge2: TestMessage(DtIvlCollapse_DateTimeCollapseOverlapContainedEdge2 = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseOverlapContainedEdge2', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseOverlapContainedEdge2))
 define test_DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine: TestMessage(DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine))
 define test_DtIvlCollapse_DateTimeCollapseImpreciseBoundary: TestMessage(DtIvlCollapse_DateTimeCollapseImpreciseBoundary = DateTime1_10IntervalList, 'DtIvlCollapse_DateTimeCollapseImpreciseBoundary', toString(DateTime1_10IntervalList), toString(DtIvlCollapse_DateTimeCollapseImpreciseBoundary))
+
+// Numeric Intervals
+define IntIntervalList: { Interval[1, 4], Interval[4, 8], Interval[7, 9] }
+define IntIntervalSeparatedList: { Interval[3, 5], Interval[8, 10] }
+define ExpectedIntervalList: { Interval[3,10] }
+define NumIvlCollapse_IntCollapsePerUnit1: collapse IntIntervalList per ToQuantity(1)
+define NumIvlCollapse_IntCollapseNoPer: collapse IntIntervalList
+define NumIvlCollapse_IntCollapseSeparatedListPer3: collapse IntIntervalSeparatedList per 3
+
+define test_NumIvlCollapse_IntCollapsePerUnit1: TestMessage(NumIvlCollapse_IntCollapsePerUnit1 = { Interval[1, 9] }, 'NumIvlCollapse_IntCollapsePerUnit1', toString({ Interval[1, 9] }), toString(NumIvlCollapse_IntCollapsePerUnit1))
+define test_NumIvlCollapse_IntCollapseNoPer: TestMessage(NumIvlCollapse_IntCollapseNoPer = { Interval[1, 9] }, 'NumIvlCollapse_IntCollapseNoPer', toString({ Interval[1, 9] }), toString(NumIvlCollapse_IntCollapseNoPer))
+define test_NumIvlCollapse_IntCollapseSeparatedListPer3: TestMessage(NumIvlCollapse_IntCollapseSeparatedListPer3 = { Interval[3,10] }, 'NumIvlCollapse_IntCollapseSeparatedListPer3', toString({ Interval[3,10] }), toString(NumIvlCollapse_IntCollapseSeparatedListPer3))
+
+// DateTime Intervals
+define DateTime3_15Interval: Interval[DateTime(2012, 1, 3, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)]
+define DtIvlCollapse_DateTimeCollapseNoPer: collapse { DateTime1_12Interval, DateTime3_15Interval}
+define DtIvlCollapse_DateTimeCollapsePerMs: collapse { DateTime1_12Interval, DateTime3_15Interval} per millisecond
+define DtIvlCollapse_DateTimeCollapsePerDay: collapse { DateTime1_12Interval, DateTime3_15Interval} per day
+// NOTE: the following tests were added (Bonnie is missing datetime collapse with tests like NumIvlCollapse_IntCollapseSeparatedListPer3)
+define DtIvlCollapse_DateTimeCollapseSeparatedPerDay: collapse { DateTime1_6Interval, DateTime10_15Interval} per 4 days
+define DtIvlCollapse_DateTimeCollapseSeparatedPerHour: collapse { DateTime1_6Interval, DateTime10_15Interval} per 96 hours
+
+define test_DtIvlCollapse_DateTimeCollapseNoPer: TestMessage(DtIvlCollapse_DateTimeCollapseNoPer = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseNoPer', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseNoPer))
+define test_DtIvlCollapse_DateTimeCollapsePerMs: TestMessage(DtIvlCollapse_DateTimeCollapsePerMs = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapsePerMs', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapsePerMs))
+define test_DtIvlCollapse_DateTimeCollapsePerDay: TestMessage(DtIvlCollapse_DateTimeCollapsePerDay = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapsePerDay', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapsePerDay))
+define test_DtIvlCollapse_DateTimeCollapseSeparatedPerDay: TestMessage(DtIvlCollapse_DateTimeCollapseSeparatedPerDay = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseSeparatedPerDay', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseSeparatedPerDay))
+define test_DtIvlCollapse_DateTimeCollapseSeparatedPerHour: TestMessage(DtIvlCollapse_DateTimeCollapseSeparatedPerHour = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseSeparatedPerHour', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseSeparatedPerHour))
+
+// Quantity Intervals with default units
+define QuantityIntervalList: { Interval[ToQuantity(1), ToQuantity(4)], Interval[ToQuantity(4), ToQuantity(8)] }
+define ExpectedQuantityList: { Interval[ToQuantity(1), ToQuantity(8)] }
+define QuantitySeparatedBy3: { Interval[ToQuantity(3), ToQuantity(5)], Interval[ToQuantity(8), ToQuantity(10)]}
+define ExpectedSeparatedQuantity: { Interval[ToQuantity(3), ToQuantity(10)] }
+define QtyIvlCollapse_QuantityIntervalCollapseNoPer: collapse QuantityIntervalList
+define QtyIvlCollapse_QuantityIntervalCollapsePerUnit1: collapse QuantityIntervalList per ToQuantity(1)
+define QtyIvlCollapse_CollapseSeparatedQuantity: collapse QuantitySeparatedBy3
+define QtyIvlCollapse_CollapseSeparatedQuantityPer3: collapse QuantitySeparatedBy3 per 3
+
+define test_QtyIvlCollapse_QuantityIntervalCollapseNoPer: TestMessage(QtyIvlCollapse_QuantityIntervalCollapseNoPer = ExpectedQuantityList, 'QtyIvlCollapse_QuantityIntervalCollapseNoPer', toString(ExpectedQuantityList), toString(QtyIvlCollapse_QuantityIntervalCollapseNoPer))
+define test_QtyIvlCollapse_QuantityIntervalCollapsePerUnit1: TestMessage(QtyIvlCollapse_QuantityIntervalCollapsePerUnit1 = ExpectedQuantityList, 'QtyIvlCollapse_QuantityIntervalCollapsePerUnit1', toString(ExpectedQuantityList), toString(QtyIvlCollapse_QuantityIntervalCollapsePerUnit1))
+define test_QtyIvlCollapse_CollapseSeparatedQuantity: TestMessage(QtyIvlCollapse_CollapseSeparatedQuantity = QuantitySeparatedBy3, 'QtyIvlCollapse_CollapseSeparatedQuantity', toString(QuantitySeparatedBy3), toString(QtyIvlCollapse_CollapseSeparatedQuantity))
+define test_QtyIvlCollapse_CollapseSeparatedQuantityPer3: TestMessage(QtyIvlCollapse_CollapseSeparatedQuantityPer3 = ExpectedSeparatedQuantity, 'QtyIvlCollapse_CollapseSeparatedQuantityPer3', toString(ExpectedSeparatedQuantity), toString(QtyIvlCollapse_CollapseSeparatedQuantityPer3))
+
+// Quantity Intervals with units TODO: when UCUM service is plugged in
+define QuantityMeterIntervalList: { Interval[ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\'')], Interval[ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')] }
+define QtyIvlCollapse_CollapseDisjointQuantityUnits: collapse QuantityMeterIntervalList
+define QtyIvlCollapse_ExpectedQuantityUnitsCollapse: { Interval[ToQuantity('1 \'m\''), ToQuantity('3 \'m\'')] }
+define QtyIvlCollapse_CollapseQuantityUnitsWithinPer: collapse QuantityMeterIntervalList per ToQuantity('1 \'cm\'')
+define QtyIvlCollapse_CollapseQuantityUnitsNotWithinPer: collapse QuantityMeterIntervalList per ToQuantity('1 \'mm\'')
+
+// Null test cases
+define NullLowIntervalList: { Interval[null, 4], Interval[3, 5] }
+define ExpectedNullLowIntervalCollapse: { Interval[null, 5] }
+define NullHighIntervalList: { Interval[1, 4], Interval[3, null] }
+define ExpectedNullHighIntervalCollapse: { Interval[1, null] }
+define ExpectedResultWithNull: { Interval[1,3] }
+define ExpectedResultNullPer: { Interval[1,7] }
+define DateTime5_NullInterval: Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), null]
+define DateTimeNull_5Interval: Interval[null, DateTime(2012, 1, 5, 0, 0, 0, 0)]
+define DateTime9_10Interval: Interval[DateTime(2012, 1, 9, 0, 0, 0, 0), DateTime(2012, 1, 10, 0, 0, 0, 0)]
+define DateTime1_2Interval: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 1, 2, 0, 0, 0, 0)]
+define DateTimeNullStartCollapseExpected: { Interval[null, DateTime(2012, 1, 10, 0, 0, 0, 0)] }
+define DateTimeNullEndCollapseNoOverlapExpected: { DateTime1_2Interval, DateTime5_NullInterval }
+define DateTimeNullStartCollapseNoOverlapExpected: { DateTimeNull_5Interval, DateTime9_10Interval }
+define DateTimeNullEndCollapseExpected: { Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), null] }
+// TODO: should be { Interval[(null as DateTime), (null as DateTime)] } but that currently evaluates to null in the engine
+define DateTimeNullStartEndCollapseExpected: { Interval[null, DateTime(9999, 12, 31, 23, 59, 59, 999)] }
+define QuantityMeterNullLowIntervalList: { Interval[null, ToQuantity('1.995 \'m\'')], Interval[ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')] }
+define CollapseQuantityNullLowUnitsWithinPerExpected : { Interval[null, ToQuantity('3 \'m\'')] }
+define QuantityMeterNullHighIntervalList: { Interval[ToQuantity('1 \'m\''),ToQuantity('1.995 \'m\'')], Interval[ToQuantity('2 \'m\''), null] }
+define CollapseQuantityNullHighUnitsWithinPerExpected : { Interval[ToQuantity('1 \'m\''), null] }
+define QuantityIntervalListWithNulls: { Interval[ToQuantity(4), ToQuantity(8)], Interval[null, ToQuantity(2)], Interval[ToQuantity(1), ToQuantity(4)], Interval[ToQuantity(7), null] }
+// TODO: should be { Interval[(null as Quantity), (null as Quantity)] } but that currently evaluates to null in the engine
+define CollapseQuantityIntervalListWithNullsExpected: { Interval[null, 9999999999999999999999999999.99999999 '1'] }
+define QuantityIntervalListWithNullLowNoOverlap: { Interval[ToQuantity(4), ToQuantity(8)], Interval[null, ToQuantity(2)] }
+define CollapseQuantityIntervalListWithNullLowNoOverlapExpected: { Interval[null, ToQuantity(2)], Interval[ToQuantity(4), ToQuantity(8)]}
+define QuantityIntervalListWithNullHighNoOverlap: { Interval[ToQuantity(4), null], Interval[ToQuantity(1), ToQuantity(2)] }
+define CollapseQuantityIntervalListWithNullHighNoOverlapExpected: { Interval[ToQuantity(1), ToQuantity(2)], Interval[ToQuantity(4), null]}
+// define NullIvlCollapse_NullCollapse: collapse null // Translation Error
+define NullIvlCollapse_CollapseNullLowIntervalList: collapse NullLowIntervalList
+define NullIvlCollapse_CollapseNullHighIntervalList: collapse NullHighIntervalList
+define NullIvlCollapse_NullInCollapse: collapse { Interval[1,3], null }
+define NullIvlCollapse_DateTimeNullStartCollapse: collapse { DateTime1_10Interval, DateTimeNull_5Interval }
+define NullIvlCollapse_DateTimeNullEndCollapse: collapse { DateTime1_10Interval, DateTime5_NullInterval }
+define NullIvlCollapse_NullPerCollapse: collapse { Interval[1,4], Interval[4,7] } per null
+define NullIvlCollapse_DateTimeNullEndCollapseNoOverlap: collapse { DateTime1_2Interval, DateTime5_NullInterval }
+define NullIvlCollapse_DateTimeNullStartCollapseNoOverlap: collapse { DateTime9_10Interval, DateTimeNull_5Interval }
+define NullIvlCollapse_DateTimeNullStartEndCollapse: collapse { DateTimeNull_5Interval, DateTime1_10Interval, DateTime5_NullInterval }
+define NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: collapse QuantityMeterNullLowIntervalList per ToQuantity('1 \'cm\'')
+define NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: collapse QuantityMeterNullHighIntervalList per ToQuantity('1 \'cm\'')
+define NullIvlCollapse_CollapseQuantityIntervalListWithNulls: collapse QuantityIntervalListWithNulls
+define NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap: collapse QuantityIntervalListWithNullLowNoOverlap
+define NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap: collapse QuantityIntervalListWithNullHighNoOverlap
+
+define test_NullIvlCollapse_CollapseNullLowIntervalList: TestMessage(NullIvlCollapse_CollapseNullLowIntervalList = ExpectedNullLowIntervalCollapse, 'NullIvlCollapse_CollapseNullLowIntervalList', toString(ExpectedNullLowIntervalCollapse), toString(NullIvlCollapse_CollapseNullLowIntervalList))
+define test_NullIvlCollapse_CollapseNullHighIntervalList: TestMessage(NullIvlCollapse_CollapseNullHighIntervalList = ExpectedNullHighIntervalCollapse, 'NullIvlCollapse_CollapseNullHighIntervalList', toString(ExpectedNullHighIntervalCollapse), toString(NullIvlCollapse_CollapseNullHighIntervalList))
+define test_NullIvlCollapse_NullInCollapse: TestMessage(NullIvlCollapse_NullInCollapse = ExpectedResultWithNull, 'NullIvlCollapse_NullInCollapse', toString(ExpectedResultWithNull), toString(NullIvlCollapse_NullInCollapse))
+define test_NullIvlCollapse_DateTimeNullStartCollapse: TestMessage(NullIvlCollapse_DateTimeNullStartCollapse = DateTimeNullStartCollapseExpected, 'NullIvlCollapse_DateTimeNullStartCollapse', toString(DateTimeNullStartCollapseExpected), toString(NullIvlCollapse_DateTimeNullStartCollapse))
+define test_NullIvlCollapse_DateTimeNullEndCollapse: TestMessage(NullIvlCollapse_DateTimeNullEndCollapse = DateTimeNullEndCollapseExpected, 'NullIvlCollapse_DateTimeNullEndCollapse', toString(DateTimeNullEndCollapseExpected), toString(NullIvlCollapse_DateTimeNullEndCollapse))
+define test_NullIvlCollapse_NullPerCollapse: TestMessage(NullIvlCollapse_NullPerCollapse = ExpectedResultNullPer, 'NullIvlCollapse_NullPerCollapse', toString(ExpectedResultNullPer), toString(NullIvlCollapse_NullPerCollapse))
+define test_NullIvlCollapse_DateTimeNullEndCollapseNoOverlap: TestMessage(NullIvlCollapse_DateTimeNullEndCollapseNoOverlap = DateTimeNullEndCollapseNoOverlapExpected, 'NullIvlCollapse_DateTimeNullEndCollapseNoOverlap', toString(DateTimeNullEndCollapseNoOverlapExpected), toString(NullIvlCollapse_DateTimeNullEndCollapseNoOverlap))
+define test_NullIvlCollapse_DateTimeNullStartCollapseNoOverlap: TestMessage(NullIvlCollapse_DateTimeNullStartCollapseNoOverlap = DateTimeNullStartCollapseNoOverlapExpected, 'NullIvlCollapse_DateTimeNullStartCollapseNoOverlap', toString(DateTimeNullStartCollapseNoOverlapExpected), toString(NullIvlCollapse_DateTimeNullStartCollapseNoOverlap))
+define test_NullIvlCollapse_DateTimeNullStartEndCollapse: TestMessage(NullIvlCollapse_DateTimeNullStartEndCollapse = DateTimeNullStartEndCollapseExpected, 'NullIvlCollapse_DateTimeNullStartEndCollapse', toString(DateTimeNullStartEndCollapseExpected), toString(NullIvlCollapse_DateTimeNullStartEndCollapse))
+define test_NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer = CollapseQuantityNullLowUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer', toString(CollapseQuantityNullLowUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer))
+define test_NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer = CollapseQuantityNullHighUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer', toString(CollapseQuantityNullHighUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer))
+define test_NullIvlCollapse_CollapseQuantityIntervalListWithNulls: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNulls = CollapseQuantityIntervalListWithNullsExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNulls', toString(CollapseQuantityIntervalListWithNullsExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNulls))
+define test_NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap = CollapseQuantityIntervalListWithNullLowNoOverlapExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap', toString(CollapseQuantityIntervalListWithNullLowNoOverlapExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap))
+define test_NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap = CollapseQuantityIntervalListWithNullHighNoOverlapExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap', toString(CollapseQuantityIntervalListWithNullHighNoOverlapExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap))
 
 
 
