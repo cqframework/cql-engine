@@ -145,6 +145,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Exp createExp() { return new ExpEvaluator(); }
 
     @Override
+    public Expand createExpand() { return new ExpandEvaluator(); }
+
+    @Override
     public ExpressionDef createExpressionDef() { return new ExpressionDefEvaluator(); }
 
     @Override

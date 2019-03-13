@@ -23,6 +23,11 @@ public class Date extends BaseTemporal {
         setDate(LocalDate.of(year, month, day));
     }
 
+    public Date(LocalDate date, Precision precision) {
+        this.date = date;
+        this.precision = precision;
+    }
+
     public Date(String dateString) {
         precision = Precision.fromDateIndex(dateString.split("-").length - 1);
         setDate(LocalDate.parse(dateString));
@@ -92,7 +97,7 @@ public class Date extends BaseTemporal {
             thePrecision = Precision.getLowestDatePrecision(this.precision, other.precision);
         }
 
-        for (int i = 0; i < thePrecision.toDateTimeIndex() + 1; ++i) {
+        for (int i = 0; i < thePrecision.toDateIndex() + 1; ++i) {
             int leftComp = this.date.get(Precision.getDateChronoFieldFromIndex(i));
             int rightComp = ((Date) other).getDate().get(Precision.getDateChronoFieldFromIndex(i));
             if (leftComp > rightComp) {

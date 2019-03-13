@@ -169,6 +169,11 @@ public class Interval implements CqlType, Comparable<Interval> {
     }
 
     @Override
+    public boolean equals(Object other) {
+        return other instanceof Interval ? equivalent(other) : false;
+    }
+
+    @Override
     public String toString() {
         if (getStart() == null) {
 
