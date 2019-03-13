@@ -4489,14 +4489,22 @@ define test_SameAsIvl_OpenNullLowsHighsSame: TestMessage(SameAsIvl_OpenNullLowsH
 *********************
 */
 
-/*
-
 // Exists
 define Exists_EmptyList: exists (List<Integer>{})
 define Exists_FullList: exists ({ 1, 2, 3 })
+define Exists_ListWithOneNull: exists ({ null })
+define Exists_ListWithTwoNulls: exists ({ null, null })
+define Exists_ListStartingWithNull: exists ({ null, 3, 4 })
+define Exists_ListWithNull: exists ({ 3, null, 5 })
+define Exists_NullExists: exists (null)
 
 define test_Exists_EmptyList: TestMessage(not Exists_EmptyList, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
 define test_Exists_FullList: TestMessage(Exists_FullList, 'Exists_FullList', toString(true), toString(Exists_FullList))
+define test_Exists_ListWithOneNull: TestMessage(not Exists_ListWithOneNull, 'Exists_ListWithOneNull', toString(false), toString(Exists_ListWithOneNull))
+define test_Exists_ListWithTwoNulls: TestMessage(not Exists_ListWithTwoNulls, 'Exists_ListWithTwoNulls', toString(false), toString(Exists_ListWithTwoNulls))
+define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
+define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
+define test_Exists_NullExists: TestMessage(not Exists_NullExists, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
 
 // Equal
 define Equal_EqualIntList: {1, 2, 3} = {1, 2, 3}
@@ -4559,8 +4567,9 @@ define test_Union_UnionNull: TestMessage(Union_UnionNull is null, 'Union_UnionNu
 define Except_ExceptThreeFour: {1, 2, 3, 4, 5} except {3, 4}
 define Except_ThreeFourExcept: {3, 4} except {1, 2, 3, 4, 5}
 define Except_ExceptFiveThree: {1, 2, 3, 4, 5} except {5, 3}
-define Except_ExceptNoOp: {1, 2, 3, 4, 5} except {6, 7, 8, 9, 10}
-define Except_ExceptEverything: {1, 2, 3, 4, 5} except {1, 2, 3, 4, 5}
+define Except_ExceptNoOp: {1, 2, 3, 3, 4, 5} except {6, 7, 8, 9, 10}
+define Except_ExceptEverything: {1, 2, 3, 3, 4, 5} except {1, 2, 3, 4, 5}
+define Except_MultipleNullExcept: {1, 3, 5, 7, null, null} except {null, 3}
 define Except_SomethingExceptNothing: {1, 2, 3, 4, 5} except List<Integer>{}
 define Except_NothingExceptSomething: List<Integer>{} except {1, 2, 3, 4, 5}
 define Except_ExceptTuples: {Tuple{a: 1}, Tuple{a: 2}, Tuple{a: 3}} except {Tuple{a: 2}}
@@ -4572,30 +4581,35 @@ define test_Except_ThreeFourExcept: TestMessage(Except_ThreeFourExcept = List<In
 define test_Except_ExceptFiveThree: TestMessage(Except_ExceptFiveThree = {1,2,4}, 'Except_ExceptFiveThree', toString({1,2,4}), toString(Except_ExceptFiveThree))
 define test_Except_ExceptNoOp: TestMessage(Except_ExceptNoOp = {1,2,3,4,5}, 'Except_ExceptNoOp', toString({1,2,3,4,5}), toString(Except_ExceptNoOp))
 define test_Except_ExceptEverything: TestMessage(Except_ExceptEverything = List<Integer>{}, 'Except_ExceptEverything', toString(List<Integer>{}), toString(Except_ExceptEverything))
+define test_Except_MultipleNullExcept: TestMessage(Except_MultipleNullExcept = {1,5,7}, 'Except_MultipleNullExcept', toString({1,5,7}), toString(Except_MultipleNullExcept))
 define test_Except_SomethingExceptNothing: TestMessage(Except_SomethingExceptNothing = {1,2,3,4,5}, 'Except_SomethingExceptNothing', toString({1,2,3,4,5}), toString(Except_SomethingExceptNothing))
 define test_Except_NothingExceptSomething: TestMessage(Except_NothingExceptSomething = List<Integer>{}, 'Except_NothingExceptSomething', toString(List<Integer>{}), toString(Except_NothingExceptSomething))
 define test_Except_ExceptTuples: TestMessage(Except_ExceptTuples = {Tuple{a: 1}, Tuple{a: 3}}, 'Except_ExceptTuples', toString({Tuple{a: 1}, Tuple{a: 3}}), toString(Except_ExceptTuples))
-define test_Except_ExceptNull: TestMessage(Except_ExceptNull = {1,2,3,4,5}, 'Except_ExceptNull', toString({1,2,3,4,5}), toString(Except_ExceptNull))
+define test_Except_ExceptNull: TestMessage(Except_ExceptNull is null, 'Except_ExceptNull', 'null', toString(Except_ExceptNull))
 define test_Except_NullExcept: TestMessage(Except_NullExcept is null, 'Except_NullExcept', 'null', toString(Except_NullExcept))
 
 // Intersect
-define Intersect_NoIntersection: {1, 2, 3} intersect {4, 5, 6}
-define Intersect_IntersectOnFive: {4, 5, 6} intersect {1, 3, 5, 7}
+define Intersect_NoIntersection: {1, 2, 2, 3} intersect {4, 5, 6}
+define Intersect_IntersectOnFive: {4, 5, 5, 6} intersect {1, 3, 5, 7}
+define Intersect_IntersectionOnFourDuplicates: {4, 4, 1, 1, 2} intersect {4, 4, 3, 9}
 define Intersect_IntersectOnEvens: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} intersect {0, 2, 4, 6, 8, 10, 12}
 define Intersect_IntersectOnAll: {1, 2, 3, 4, 5} intersect {5, 4, 3, 2, 1}
 define Intersect_NestedIntersects: {1, 2, 3, 4, 5} intersect {2, 3, 4, 5, 6} intersect {3, 4, 5, 6, 7} intersect {4, 5, 6, 7, 8}
 define Intersect_IntersectTuples: {Tuple{a:1, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}} intersect {Tuple{a:2, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}, Tuple{a:5, b:'e'}}
 define Intersect_NullIntersect: null intersect {1, 2, 3}
 define Intersect_IntersectNull: {1, 2, 3} intersect null
+define Intersect_MultipleNullInListIntersect: {1, 2, 3, null} intersect {null, 3}
 
 define test_Intersect_NoIntersection: TestMessage(Intersect_NoIntersection = List<Integer>{}, 'Intersect_NoIntersection', toString(List<Integer>{}), toString(Intersect_NoIntersection))
 define test_Intersect_IntersectOnFive: TestMessage(Intersect_IntersectOnFive = {5}, 'Intersect_IntersectOnFive', toString({5}), toString(Intersect_IntersectOnFive))
+define test_Intersect_IntersectionOnFourDuplicates: TestMessage(Intersect_IntersectionOnFourDuplicates = {4}, 'Intersect_IntersectionOnFourDuplicates', toString({4}), toString(Intersect_IntersectionOnFourDuplicates))
 define test_Intersect_IntersectOnEvens: TestMessage(Intersect_IntersectOnEvens = {2,4,6,8,10}, 'Intersect_IntersectOnEvens', toString({2,4,6,8,10}), toString(Intersect_IntersectOnEvens))
 define test_Intersect_IntersectOnAll: TestMessage(Intersect_IntersectOnAll = {1,2,3,4,5}, 'Intersect_IntersectOnAll', toString({1,2,3,4,5}), toString(Intersect_IntersectOnAll))
 define test_Intersect_NestedIntersects: TestMessage(Intersect_NestedIntersects = {4,5}, 'Intersect_NestedIntersects', toString({4,5}), toString(Intersect_NestedIntersects))
 define test_Intersect_IntersectTuples: TestMessage(Intersect_IntersectTuples = {Tuple{a: 1, b:'c'}, Tuple{a: 2, b:'c'}}, 'Intersect_IntersectTuples', toString({Tuple{a: 1, b:'c'}, Tuple{a: 2, b: 'c'}}), toString(Intersect_IntersectTuples))
 define test_Intersect_NullIntersect: TestMessage(Intersect_NullIntersect is null, 'Intersect_NullIntersect', 'null', toString(Intersect_NullIntersect))
 define test_Intersect_IntersectNull: TestMessage(Intersect_IntersectNull is null, 'Intersect_IntersectNull', 'null', toString(Intersect_IntersectNull))
+define test_Intersect_MultipleNullInListIntersect: TestMessage(Intersect_MultipleNullInListIntersect = {3}, 'Intersect_MultipleNullInListIntersect', toString({3}), toString(Intersect_MultipleNullInListIntersect))
 
 // IndexOf
 define IndexOf_IndexOfSecond: IndexOf({'a', 'b', 'c', 'd'}, 'b')
@@ -4604,7 +4618,8 @@ define IndexOf_MultipleMatches: IndexOf({'a', 'b', 'c', 'd', 'd', 'e', 'd'}, 'd'
 define IndexOf_ItemNotFound: IndexOf({'a', 'b', 'c'}, 'd')
 define IndexOf_NullList: IndexOf(null, 'a')
 define IndexOf_NullItem: IndexOf({'a', 'b', 'c'}, null)
-define IndexOf_ListCode: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
+define IndexOf_ListCode: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5', display: 'foo'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5', display: 'foo'})
+define IndexOf_ListCodeUndefined: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'})
 define IndexOf_ListWrongCode: IndexOf({Code{code: 'M', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
 define IndexOf_ListWrongCodeSystem: IndexOf({Code{code: 'F', system: '1.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
 
@@ -4615,6 +4630,7 @@ define test_IndexOf_ItemNotFound: TestMessage(IndexOf_ItemNotFound = -1, 'IndexO
 define test_IndexOf_NullList: TestMessage(IndexOf_NullList is null, 'IndexOf_NullList', 'null', toString(IndexOf_NullList))
 define test_IndexOf_NullItem: TestMessage(IndexOf_NullItem = -1, 'IndexOf_NullItem', toString(-1), toString(IndexOf_NullItem))
 define test_IndexOf_ListCode: TestMessage(IndexOf_ListCode = 0, 'IndexOf_ListCode', toString(0), toString(IndexOf_ListCode))
+define test_IndexOf_ListCodeUndefined: TestMessage(IndexOf_ListCodeUndefined = 0, 'IndexOf_ListCodeUndefined', toString(0), toString(IndexOf_ListCodeUndefined))
 define test_IndexOf_ListWrongCode: TestMessage(IndexOf_ListWrongCode = -1, 'IndexOf_ListWrongCode', toString(-1), toString(IndexOf_ListWrongCode))
 define test_IndexOf_ListWrongCodeSystem: TestMessage(IndexOf_ListWrongCodeSystem = -1, 'IndexOf_ListWrongCodeSystem', toString(-1), toString(IndexOf_ListWrongCodeSystem))
 
@@ -4644,9 +4660,9 @@ define test_In_IsIn: TestMessage(In_IsIn, 'In_IsIn', toString(true), toString(In
 define test_In_IsNotIn: TestMessage(not In_IsNotIn, 'In_IsNotIn', toString(false), toString(In_IsNotIn))
 define test_In_TupleIsIn: TestMessage(In_TupleIsIn, 'In_TupleIsIn', toString(true), toString(In_TupleIsIn))
 define test_In_TupleIsNotIn: TestMessage(not In_TupleIsNotIn, 'In_TupleIsNotIn', toString(false), toString(In_TupleIsNotIn))
-define test_In_NullIn: TestMessage(In_NullIn, 'In_NullIn', toString(true), toString(In_NullIn))
-define test_In_InNull: TestMessage(not In_InNull, 'In_InNull', toString(false), toString(In_InNull))
-define test_In_NullNotIn: TestMessage(not In_NullNotIn, 'In_NullNotIn', toString(false), toString(In_NullNotIn))
+define test_In_NullIn: TestMessage(In_NullIn is null, 'In_NullIn', 'null', toString(In_NullIn))
+define test_In_InNull: TestMessage(In_InNull is null, 'In_InNull', 'null', toString(In_InNull))
+define test_In_NullNotIn: TestMessage(In_NullNotIn is null, 'In_NullNotIn', 'null', toString(In_NullNotIn))
 
 // Contains
 define Contains_IsIn: { 3, 4, 5 } contains 4
@@ -4661,9 +4677,9 @@ define test_Contains_IsIn: TestMessage(Contains_IsIn, 'Contains_IsIn', toString(
 define test_Contains_IsNotIn: TestMessage(not Contains_IsNotIn, 'Contains_IsNotIn', toString(false), toString(Contains_IsNotIn))
 define test_Contains_TupleIsIn: TestMessage(Contains_TupleIsIn, 'Contains_TupleIsIn', toString(true), toString(Contains_TupleIsIn))
 define test_Contains_TupleIsNotIn: TestMessage(not Contains_TupleIsNotIn, 'Contains_TupleIsNotIn', toString(false), toString(Contains_TupleIsNotIn))
-define test_Contains_NullIn: TestMessage(Contains_NullIn, 'Contains_NullIn', toString(true), toString(Contains_NullIn))
-define test_Contains_InNull: TestMessage(not Contains_InNull, 'Contains_InNull', toString(false), toString(Contains_InNull))
-define test_Contains_NullNotIn: TestMessage(not Contains_NullNotIn, 'Contains_NullNotIn', toString(false), toString(Contains_NullNotIn))
+define test_Contains_NullIn: TestMessage(Contains_NullIn is null, 'Contains_NullIn', 'null', toString(Contains_NullIn))
+define test_Contains_InNull: TestMessage(Contains_InNull is null, 'Contains_InNull', 'null', toString(Contains_InNull))
+define test_Contains_NullNotIn: TestMessage(Contains_NullNotIn is null, 'Contains_NullNotIn', 'null', toString(Contains_NullNotIn))
 
 // Includes
 define Includes_IsIncluded: {1, 2, 3, 4, 5} includes {2, 3, 4}
@@ -4674,6 +4690,12 @@ define Includes_TuplesIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2
 define Includes_TuplesNotIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} includes {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}}
 define Includes_NullIncluded: {1, 2, 3, 4, 5} includes null as List<Integer>
 define Includes_NullIncludes: null includes {1, 2, 3, 4, 5}
+define Includes_DayIncluded: {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)} includes DateTime(2012, 3, 3)
+define Includes_DayNotIncluded: {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)} includes DateTime(2014, 3, 3)
+define Includes_IntegerIncluded: {1, 2, 3, 4, 5} includes 3
+define Includes_IntegerNotIncluded: {1, 2, 3, 4, 5} includes 33
+define Includes_QuantityInList: { ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')} includes ToQuantity('1 \'m\'')
+define Includes_QuantityNotInList: { ToQuantity('100 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')} includes ToQuantity('1 \'m\'')
 
 define test_Includes_IsIncluded: TestMessage(Includes_IsIncluded, 'Includes_IsIncluded', toString(true), toString(Includes_IsIncluded))
 define test_Includes_IsIncludedReversed: TestMessage(Includes_IsIncludedReversed, 'Includes_IsIncludedReversed', toString(true), toString(Includes_IsIncludedReversed))
@@ -4683,6 +4705,12 @@ define test_Includes_TuplesIncluded: TestMessage(Includes_TuplesIncluded, 'Inclu
 define test_Includes_TuplesNotIncluded: TestMessage(not Includes_TuplesNotIncluded, 'Includes_TuplesNotIncluded', toString(false), toString(Includes_TuplesNotIncluded))
 define test_Includes_NullIncluded: TestMessage(Includes_NullIncluded, 'Includes_NullIncluded', toString(true), toString(Includes_NullIncluded))
 define test_Includes_NullIncludes: TestMessage(not Includes_NullIncludes, 'Includes_NullIncludes', toString(false), toString(Includes_NullIncludes))
+define test_Includes_DayIncluded: TestMessage(Includes_DayIncluded, 'Includes_DayIncluded', toString(true), toString(Includes_DayIncluded))
+define test_Includes_DayNotIncluded: TestMessage(not Includes_DayNotIncluded, 'Includes_DayNotIncluded', toString(false), toString(Includes_DayNotIncluded))
+define test_Includes_IntegerIncluded: TestMessage(Includes_IntegerIncluded, 'Includes_IntegerIncluded', toString(true), toString(Includes_IntegerIncluded))
+define test_Includes_IntegerNotIncluded: TestMessage(not Includes_IntegerNotIncluded, 'Includes_IntegerNotIncluded', toString(false), toString(Includes_IntegerNotIncluded))
+define test_Includes_QuantityInList: TestMessage(Includes_QuantityInList, 'Includes_QuantityInList', toString(true), toString(Includes_QuantityInList))
+define test_Includes_QuantityNotInList: TestMessage(not Includes_QuantityNotInList, 'Includes_QuantityNotInList', toString(false), toString(Includes_QuantityNotInList))
 
 // IncludedIn
 define IncludedIn_IsIncluded: {2, 3, 4} included in {1, 2, 3, 4, 5}
@@ -4693,6 +4721,12 @@ define IncludedIn_TuplesIncluded: {Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} include
 define IncludedIn_TuplesNotIncluded: {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}} included in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
 define IncludedIn_NullIncludes: {1, 2, 3, 4, 5} included in null
 define IncludedIn_NullIncluded: null as List<Integer> included in {1, 2, 3, 4, 5}
+define IncludedIn_DayIncluded: DateTime(2012, 3, 3) included in {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)}
+define IncludedIn_DayNotIncluded: DateTime(2014, 3, 3) included in {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)}
+define IncludedIn_IntegerIncluded: 3 included in {1, 2, 3, 4, 5}
+define IncludedIn_IntegerNotIncluded: 33 included in {1, 2, 3, 4, 5}
+define IncludedIn_QuantityInList: ToQuantity('1 \'m\'') included in { ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')}
+define IncludedIn_QuantityNotInList: ToQuantity('100 \'m\'') included in { ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')}
 
 define test_IncludedIn_IsIncluded: TestMessage(IncludedIn_IsIncluded, 'IncludedIn_IsIncluded', toString(true), toString(IncludedIn_IsIncluded))
 define test_IncludedIn_IsIncludedReversed: TestMessage(IncludedIn_IsIncludedReversed, 'IncludedIn_IsIncludedReversed', toString(true), toString(IncludedIn_IsIncludedReversed))
@@ -4702,6 +4736,12 @@ define test_IncludedIn_TuplesIncluded: TestMessage(IncludedIn_TuplesIncluded, 'I
 define test_IncludedIn_TuplesNotIncluded: TestMessage(not IncludedIn_TuplesNotIncluded, 'IncludedIn_TuplesNotIncluded', toString(false), toString(IncludedIn_TuplesNotIncluded))
 define test_IncludedIn_NullIncludes: TestMessage(not IncludedIn_NullIncludes, 'IncludedIn_NullIncludes', toString(false), toString(IncludedIn_NullIncludes))
 define test_IncludedIn_NullIncluded: TestMessage(IncludedIn_NullIncluded, 'IncludedIn_NullIncluded', toString(true), toString(IncludedIn_NullIncluded))
+define test_IncludedIn_DayIncluded: TestMessage(IncludedIn_DayIncluded, 'IncludedIn_DayIncluded', toString(true), toString(IncludedIn_DayIncluded))
+define test_IncludedIn_DayNotIncluded: TestMessage(not IncludedIn_DayNotIncluded, 'IncludedIn_DayNotIncluded', toString(false), toString(IncludedIn_DayNotIncluded))
+define test_IncludedIn_IntegerIncluded: TestMessage(IncludedIn_IntegerIncluded, 'IncludedIn_IntegerIncluded', toString(true), toString(IncludedIn_IntegerIncluded))
+define test_IncludedIn_IntegerNotIncluded: TestMessage(not IncludedIn_IntegerNotIncluded, 'IncludedIn_IntegerNotIncluded', toString(false), toString(IncludedIn_IntegerNotIncluded))
+define test_IncludedIn_QuantityInList: TestMessage(IncludedIn_QuantityInList, 'IncludedIn_QuantityInList', toString(true), toString(IncludedIn_QuantityInList))
+define test_IncludedIn_QuantityNotInList: TestMessage(not IncludedIn_QuantityNotInList, 'IncludedIn_QuantityNotInList', toString(false), toString(IncludedIn_QuantityNotInList))
 
 // ProperIncludes
 define ProperIncludes_IsIncluded: {1, 2, 3, 4, 5} properly includes {2, 3, 4, 5}
@@ -4811,15 +4851,11 @@ define test_Length_NullValue: TestMessage(Length_NullValue = 0, 'Length_NullValu
 // ToList
 define ToList_FiveInFive: 5 in 5 // CQL-to-ELM will promote the second 5 to a list via ToList
 define ToList_FourInFive: 4 in 5 // CQL-to-ELM will promote the 5 to a list via ToList
-// TODO - the following expression is throwing the error:
-// Call to operator Length(System.Integer) is ambiguous with: - Length(list<list<System.Integer>>) - Length(list<System.Integer>)
-// define ToList_LengthOfNull: Length(null as Integer) // CQL-to-ELM will promote the null to a list via ToList
+define ToList_LengthOfNull: Length(null as Integer) // CQL-to-ELM will promote the null to a list via ToList
 
 define test_ToList_FiveInFive: TestMessage(ToList_FiveInFive, 'ToList_FiveInFive', toString(true), toString(ToList_FiveInFive))
 define test_ToList_FourInFive: TestMessage(not ToList_FourInFive, 'ToList_FourInFive', toString(false), toString(ToList_FourInFive))
-// define test_ToList_LengthOfNull: TestMessage(ToList_LengthOfNull = 0, 'ToList_LengthOfNull', toString(0), toString(ToList_LengthOfNull))
-
-*/
+define test_ToList_LengthOfNull: TestMessage(ToList_LengthOfNull = 0, 'ToList_LengthOfNull', toString(0), toString(ToList_LengthOfNull))
 
 /*
 *******************

@@ -46,8 +46,38 @@ public class Concept implements CqlType {
     }
 
     public Boolean equivalent(Object other) {
-        List intersection = (List) IntersectEvaluator.intersect(this.codes, ((Concept) other).codes);
-        return intersection != null && !intersection.isEmpty();
+        if (this.codes == null && ((Concept) other).codes == null)
+        {
+            return EquivalentEvaluator.equivalent(this.display, ((Concept) other).display);
+        }
+        if (this.codes == null || ((Concept) other).codes == null)
+        {
+            return false;
+        }
+        if (this.codes.size() != ((Concept) other).codes.size())
+        {
+            return false;
+        }
+
+        boolean match = false;
+        for (Code code : this.codes)
+        {
+            for (Code otherCode : ((Concept) other).codes)
+            {
+                if (EquivalentEvaluator.equivalent(code, otherCode))
+                {
+                    match = true;
+                    break;
+                }
+            }
+            if (!match)
+            {
+                return false;
+            }
+            match = false;
+        }
+
+        return EquivalentEvaluator.equivalent(this.display, ((Concept) other).display);
     }
 
     public Boolean equal(Object other) {

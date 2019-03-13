@@ -18,27 +18,28 @@ The except operator for intervals returns the set difference of two intervals.
 If either argument is null, the result is null.
 
 except(left List<T>, right List<T>) List<T>
-The except operator returns the set difference of two lists. More precisely, the operator returns a list with the
-    elements that appear in the first operand that do not appear in the second operand.
-This operator uses the notion of equivalence to determine whether two elements are the same for the purposes of computing the difference.
-If the left argument is null, the result is null. else if the right argument is null, the result is the left argument.
+The except operator returns the set difference of two lists.
+    More precisely, the operator returns a list with the elements that appear in the first operand
+    that do not appear in the second operand.
+
+This operator uses equality semantics to determine whether two elements are the same for the purposes of computing the difference.
+
+The operator is defined with set semantics, meaning that each element will appear in the result at most once,
+    and that there is no expectation that the order of the inputs will be preserved in the results.
+
+If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
-public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
-
-    public static Object except(Object left, Object right) {
-        if (left == null) {
+public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
+{
+    public static Object except(Object left, Object right)
+    {
+        if (left == null || right == null)
+        {
             return null;
         }
 
         if (left instanceof Interval) {
-            if (right == null) {
-                return null;
-            }
-
             Object leftStart = ((Interval)left).getStart();
             Object leftEnd = ((Interval)left).getEnd();
             Object rightStart = ((Interval)right).getStart();
@@ -55,9 +56,11 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
             // right properly includes left
             // left properly includes right and right doesn't start or end left
             String precision = null;
-            if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
+            if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal)
+            {
                 precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
             }
+
             Boolean leftEqualRight = EqualEvaluator.equal(left, right);
             Boolean rightProperlyIncludesLeft = ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
             Boolean leftProperlyIncludesRight = ProperlyIncludesEvaluator.properlyIncludes(left, right, precision);
@@ -76,11 +79,14 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
                             )
                     )
             );
-            if (isUndefined != null && isUndefined) {
+
+            if (isUndefined != null && isUndefined)
+            {
                 return null;
             }
 
-            if (GreaterEvaluator.greater(rightStart, leftEnd)) {
+            if (GreaterEvaluator.greater(rightStart, leftEnd))
+            {
                 return left;
             }
 
@@ -106,27 +112,30 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except {
             throw new IllegalArgumentException(String.format("The following interval values led to an undefined Except result: leftStart: %s, leftEnd: %s, rightStart: %s, rightEnd: %s", leftStart.toString(), leftEnd.toString(), rightStart.toString(), rightEnd.toString()));
         }
 
-        else if (left instanceof Iterable) {
-            if (right == null) {
-                return left;
-            }
-
+        else if (left instanceof Iterable)
+        {
             Iterable leftArr = (Iterable)left;
             Iterable rightArr = (Iterable)right;
 
             List<Object> result = new ArrayList<>();
-            for (Object leftItem : leftArr) {
-                if (!InEvaluator.in(leftItem, rightArr, null)) {
+            Boolean in;
+            for (Object leftItem : leftArr)
+            {
+                in = InEvaluator.in(leftItem, rightArr, null);
+                if (in != null && !in)
+                {
                     result.add(leftItem);
                 }
             }
-            return result;
+
+            return DistinctEvaluator.distinct(result);
         }
         throw new IllegalArgumentException(String.format("Cannot Except arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
-    public Object evaluate(Context context) {
+    public Object evaluate(Context context)
+    {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
