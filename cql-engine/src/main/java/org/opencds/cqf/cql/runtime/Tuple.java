@@ -62,6 +62,11 @@ public class Tuple implements CqlType {
 
         for (String key : ((Tuple) other).getElements().keySet()) {
             if (this.getElements().containsKey(key)) {
+                if (((Tuple) other).getElements().get(key) == null
+                        && this.getElements().get(key) == null)
+                {
+                    continue;
+                }
                 Boolean equal = EqualEvaluator.equal(((Tuple) other).getElements().get(key), this.getElements().get(key));
                 if (equal == null) { return null; }
                 else if (!equal) { return false; }

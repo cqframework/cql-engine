@@ -1,13 +1,10 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.elm.execution.*;
-import org.opencds.cqf.cql.execution.Context;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Date;
 
 /**
@@ -32,8 +29,7 @@ public class Interval implements CqlType, Comparable<Interval> {
             throw new IllegalArgumentException("Low or high boundary of an interval must be present.");
         }
 
-        if ((this.low != null && this.low.getClass() != pointType)
-                || (this.high != null && this.high.getClass() != pointType)) {
+        if (this.high != null && this.high.getClass() != pointType) {
             throw new IllegalArgumentException("Low and high boundary values of an interval must be of the same type.");
         }
 
@@ -82,6 +78,9 @@ public class Interval implements CqlType, Comparable<Interval> {
     }
 
     private Type pointType;
+    public Type getPointType() {
+        return pointType;
+    }
 
     private boolean uncertain = false;
     public boolean isUncertain() {
@@ -167,6 +166,11 @@ public class Interval implements CqlType, Comparable<Interval> {
         }
 
         throw new IllegalArgumentException(String.format("Cannot perform equal operation on types: '%s' and '%s'", this.getClass().getName(), other.getClass().getName()));
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof Interval ? equivalent(other) : false;
     }
 
     @Override

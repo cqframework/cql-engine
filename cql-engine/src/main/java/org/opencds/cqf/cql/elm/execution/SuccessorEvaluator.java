@@ -50,6 +50,10 @@ public class SuccessorEvaluator extends org.cqframework.cql.elm.execution.Succes
             Quantity quantity = (Quantity)value;
             return new Quantity().withValue((BigDecimal)successor(quantity.getValue())).withUnit(quantity.getUnit());
         }
+        else if (value instanceof Date) {
+            Date dt = (Date)value;
+            return new Date(dt.getDate().plus(1, dt.getPrecision().toChronoUnit()), dt.getPrecision());
+        }
         else if (value instanceof DateTime) {
             DateTime dt = (DateTime)value;
             return new DateTime(dt.getDateTime().plus(1, dt.getPrecision().toChronoUnit()), dt.getPrecision());

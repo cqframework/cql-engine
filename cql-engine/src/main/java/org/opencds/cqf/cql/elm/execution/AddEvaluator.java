@@ -6,6 +6,7 @@ import org.opencds.cqf.cql.runtime.*;
 import java.math.BigDecimal;
 
 /*
+
 *** NOTES FOR ARITHMETIC OPERATORS ***
 +(left Integer, right Integer) Integer
 +(left Decimal, right Decimal) Decimal
@@ -20,28 +21,33 @@ If either argument is null, the result is null.
 
 
 *** NOTES FOR DATETIME ***
++(left Date, right Quantity) Date
 +(left DateTime, right Quantity) DateTime
 +(left Time, right Quantity) Time
 
-The add (+) operator returns the value of the given date/time, incremented by the time-valued quantity,
-  respecting variable length periods for calendar years and months.
+The add (+) operator returns the value of the given date/time, incremented by the time-valued quantity, respecting
+    variable length periods for calendar years and months.
+
+For Date values, the quantity unit must be one of: years, months, weeks, or days.
 For DateTime values, the quantity unit must be one of: years, months, weeks, days, hours, minutes, seconds, or milliseconds.
 For Time values, the quantity unit must be one of: hours, minutes, seconds, or milliseconds.
-The operation is performed by attempting to derive the highest granularity precision first, working down successive
-  granularities to the granularity of the time-valued quantity. For example, the following addition:
-    DateTime(2014) + 24 months
-    This example results in the value DateTime(2016) even though the date/time value is not specified to the level
-      of precision of the time-valued quantity.
-    NOTE: this implementation (v3) returns a DateTime which truncates minimum element values until the original DateTime's precision is reached.
-    For Example:
-      DateTime(2014) + 735 days
-        returns DateTime(2016)
+
+Note that the quantity units may be specified in singular, plural, or UCUM form.
+
+The operation is performed by converting the time-based quantity to the most precise value specified in the date/time
+    (truncating any resulting decimal portion) and then adding it to the date/time value.
+    For example, the following addition:
+        DateTime(2014) + 24 months
+    This example results in the value DateTime(2016) even though the date/time value is not specified to the level of precision of the time-valued quantity.
+Note also that this means that if decimals appear in the time-valued quantities, the fractional component will be ignored.
+    For example, the following addition:
+        DateTime(2014) + 18 months
+    This example results in the value DateTime(2015)
+
 If either argument is null, the result is null.
+
 */
 
-/**
- * Created by Bryn on 5/25/2016
- */
 public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
 
     public static Object add(Object left, Object right) {
@@ -74,6 +80,15 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
                 }
 
                 return new DateTime(((DateTime) left).getDateTime().plus(valueToAdd, precision.toChronoUnit()), ((DateTime) left).getPrecision());
+            }
+            // +(Date, Quantity)
+            else if (left instanceof Date) {
+                if (precision == Precision.WEEK) {
+                    valueToAdd = TemporalHelper.weeksToDays(valueToAdd);
+                    precision = Precision.DAY;
+                }
+
+                return new Date(((Date) left).getDate().plus(valueToAdd, precision.toChronoUnit())).setPrecision(((Date) left).getPrecision());
             }
             // +(Time, Quantity)
             else {

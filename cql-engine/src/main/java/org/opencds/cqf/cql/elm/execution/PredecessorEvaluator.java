@@ -1,10 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
-import javax.management.ObjectName;
 import java.math.BigDecimal;
 
 /*
@@ -50,6 +48,10 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
             }
             Quantity quantity = (Quantity)value;
             return new Quantity().withValue((BigDecimal)predecessor(quantity.getValue())).withUnit(quantity.getUnit());
+        }
+        else if (value instanceof Date) {
+            Date dt = (Date)value;
+            return new Date(dt.getDate().minus(1, dt.getPrecision().toChronoUnit()), dt.getPrecision());
         }
         else if (value instanceof DateTime) {
             DateTime dt = (DateTime)value;

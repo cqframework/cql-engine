@@ -6,24 +6,36 @@ import org.opencds.cqf.cql.runtime.*;
 import java.math.BigDecimal;
 
 /*
+
 >(left Integer, right Integer) Boolean
 >(left Decimal, right Decimal) Boolean
 >(left Quantity, right Quantity) Boolean
+>(left Date, right Date) Boolean
 >(left DateTime, right DateTime) Boolean
 >(left Time, right Time) Boolean
 >(left String, right String) Boolean
 
 The greater (>) operator returns true if the first argument is greater than the second argument.
+
+String comparisons are strictly lexical based on the Unicode value of the individual characters in the string.
+
 For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit.
-  For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and  'cm' are not.
-For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
-  depending on whether the values involved are specified to the level of precision used for the comparison.
+    For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on
+    quantities with invalid units will result in a null. When a quantity has no units specified, it is treated as a
+    quantity with the default unit ('1').
+
+For date/time values, the comparison is performed by considering each precision in order, beginning with years (or hours
+    for time values). If the values are the same, comparison proceeds to the next precision; if the first value is
+    greater than the second, the result is true; if the first value is less than the second, the result is false; if one
+    input has a value for the precision and the other does not, the comparison stops and the result is null; if neither
+    input has a value for the precision or the last precision has been reached, the comparison stops and the result is false.
+    For example:
+        define DateTimeGreaterIsNull: @2012-01-01 > @2012-01-01T12
+
 If either argument is null, the result is null.
+
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater {
 
     public static Boolean greater(Object left, Object right) {
@@ -47,13 +59,8 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
             return ((Quantity) left).compareTo((Quantity) right) > 0;
         }
 
-        else if (left instanceof DateTime && right instanceof DateTime) {
-            Integer i = ((DateTime) left).compare((DateTime) right, false);
-            return i == null ? null : i > 0;
-        }
-
-        else if (left instanceof Time && right instanceof Time) {
-            Integer i = ((Time) left).compare((Time) right, false);
+        else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+            Integer i = ((BaseTemporal) left).compare((BaseTemporal) right, false);
             return i == null ? null : i > 0;
         }
 

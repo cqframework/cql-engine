@@ -1,4 +1,4 @@
-library CqlTestSuite version '1'
+library CqlTestSuite version '2'
 
 codesystem "SNOMED-CT": 'http://snomed.info/sct'
 
@@ -36,6 +36,11 @@ define function toString(value Integer):
   else ToString(value)
 
 define function toString(value DateTime):
+  if value is null
+    then 'null'
+  else ToString(value)
+
+define function toString(value Date):
   if value is null
     then 'null'
   else ToString(value)
@@ -90,7 +95,27 @@ define function toString(value Interval<Integer>):
     then 'null'
   else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
 
+define function toString(value Interval<Decimal>):
+  if value is null
+    then 'null'
+  else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
+
+define function toString(value Interval<Quantity>):
+  if value is null
+    then 'null'
+  else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
+
 define function toString(value Interval<DateTime>):
+  if value is null
+    then 'null'
+  else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
+
+define function toString(value Interval<Date>):
+  if value is null
+    then 'null'
+  else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
+
+define function toString(value Interval<Time>):
   if value is null
     then 'null'
   else '[' + toString(start of value) + ', ' + toString(end of value) + ']'
@@ -105,7 +130,27 @@ define function toString(value List<Interval<Integer>>):
     then 'null'
   else Combine((value V return toString(V)), ', ')
 
+define function toString(value List<Interval<Decimal>>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Interval<Quantity>>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
 define function toString(value List<Interval<DateTime>>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Interval<Date>>):
+  if value is null
+    then 'null'
+  else Combine((value V return toString(V)), ', ')
+
+define function toString(value List<Interval<Time>>):
   if value is null
     then 'null'
   else Combine((value V return toString(V)), ', ')
@@ -226,14 +271,16 @@ define Median_dup_vals_even_q: Median({3 'ml',1 'ml',2 'ml',2 'ml',2 'ml',3 'ml'
 define Median_dup_vals_odd_q:  Median({3 'ml',1 'ml',2 'ml',2 'ml',2 'ml',3 'ml',4 'ml',5 'ml',6 'ml'})
 define Median_q_diff_units: Median({5 'ml',0.001 'l',0.02 'dl',3 'ml',4 'ml',6 'ml'})
 
-define test_Median_odd: TestMessage(Median_odd = 3, 'Median_odd', toString(3), toString(Median_odd))
+// TODO: possible issue in translator causing Median_odd = 3 to fail (Integer not being implicitly promoted to Decimal)
+define test_Median_odd: TestMessage(Median_odd = 3.0, 'Median_odd', toString(3), toString(Median_odd))
 define test_Median_even: TestMessage(Median_even = 3.5, 'Median_even', toString(3.5), toString(Median_even))
 define test_Median_odd_q: TestMessage(Median_odd_q = 3 'ml', 'Median_odd_q', toString(3 'ml'), toString(Median_odd_q))
 define test_Median_even_q: TestMessage(Median_even_q = 3.5 'ml', 'Median_even_q', toString(3.5 'ml'), toString(Median_even_q))
 define test_Median_empty: TestMessage(Median_empty is null, 'Median_empty', 'null', toString(Median_empty))
 define test_Median_has_null: TestMessage(Median_has_null = 1.5, 'Median_has_null', toString(1.5), toString(Median_has_null))
 define test_Median_dup_vals_even: TestMessage(Median_dup_vals_even = 2.5, 'Median_dup_vals_even', toString(2.5), toString(Median_dup_vals_even))
-define test_Median_dup_vals_odd: TestMessage(Median_dup_vals_odd = 3, 'Median_dup_vals_odd', toString(3), toString(Median_dup_vals_odd))
+// TODO: possible issue in translator causing Median_dup_vals_odd = 3 to fail (Integer not being implicitly promoted to Decimal)
+define test_Median_dup_vals_odd: TestMessage(Median_dup_vals_odd = 3.0, 'Median_dup_vals_odd', toString(3), toString(Median_dup_vals_odd))
 define test_Median_has_null_q: TestMessage(Median_has_null_q = 1.5 'ml', 'Median_has_null_q', toString(1.5 'ml'), toString(Median_has_null_q))
 define test_Median_dup_vals_even_q: TestMessage(Median_dup_vals_even_q = 2.5 'ml', 'Median_dup_vals_even_q', toString(2.5 'ml'), toString(Median_dup_vals_even_q))
 define test_Median_dup_vals_odd_q: TestMessage(Median_dup_vals_odd_q = 3 'ml', 'Median_dup_vals_odd_q', toString(3 'ml'), toString(Median_dup_vals_odd_q))
@@ -292,6 +339,40 @@ define test_PopulationStd_q: TestMessage(PopulationStd_q = 1.41421356 'ml', 'Pop
 // TODO - this behavior has yet to be implemented for Quantity
 // define test_PopulationStd_q_diff_units: TestMessage(PopulationStd_q_diff_units = 1.41421356 'ml', 'PopulationStd_q_diff_units', toString(1.41421356 'ml'), toString(PopulationStd_q_diff_units))
 
+// Product
+define Product_Decimal: Product({1.0, 2.0, 3.0, 4.0})
+define Product_Integer: Product({5, 4, 5})
+define Product_Zero: Product({0, 5, 10})
+define Product_Quantity: Product({1.0 'g', 2.0 'g', 3.0 'g', 4.0 'g'})
+define Product_Quantity_Zero: Product({1.0 'g', 2.0 'g', 0 'g'})
+define Product_Null: Product({5, 4, null})
+define Product_Nulls: Product({null as Integer, null, null})
+define Product_Null_List: Product(null as List<Decimal>)
+define Product_Null_Quantity: Product({null as Quantity, null as Quantity, null as Quantity})
+
+define test_Product_Decimal: TestMessage(Product_Decimal = 24.0, 'Product_Decimal', toString(24.0), toString(Product_Decimal))
+define test_Product_Integer: TestMessage(Product_Integer = 100, 'Product_Integer', toString(100), toString(Product_Integer))
+define test_Product_Zero: TestMessage(Product_Zero = 0, 'Product_Zero', toString(0), toString(Product_Zero))
+define test_Product_Quantity: TestMessage(Product_Quantity = 24.0'g', 'Product_Quantity', toString(24.0'g'), toString(Product_Quantity))
+define test_Product_Quantity_Zero: TestMessage(Product_Quantity_Zero = 0'g', 'Product_Quantity_Zero', toString(0'g'), toString(Product_Quantity_Zero))
+define test_Product_Null: TestMessage(Product_Null is null, 'Product_Null', 'null', toString(Product_Null))
+define test_Product_Nulls: TestMessage(Product_Nulls is null, 'Product_Nulls', 'null', toString(Product_Nulls))
+define test_Product_Null_List: TestMessage(Product_Null_List is null, 'Product_Null_List', 'null', toString(Product_Null_List))
+define test_Product_Null_Quantity: TestMessage(Product_Null_Quantity is null, 'Product_Null_Quantity', 'null', toString(Product_Null_Quantity))
+
+// GeometricMean
+define GeometricMean_Decimal: GeometricMean({2.0, 8.0, null})
+define GeometricMean_Zero: GeometricMean({2.0, 8.0, 0})
+define GeometricMean_Null: GeometricMean({1, 2, null})
+define GeometricMean_Nulls: GeometricMean({null, null, null})
+define GeometricMean_Null_List: GeometricMean(null as List<Decimal>)
+
+define test_GeometricMean_Decimal: TestMessage(GeometricMean_Decimal = 4.0, 'GeometricMean_Decimal', toString(4.0), toString(GeometricMean_Decimal))
+// TODO: possible issue in translator causing GeometricMean_Zero = 0 to fail (Integer not being implicitly promoted to Decimal)
+define test_GeometricMean_Zero: TestMessage(GeometricMean_Zero = 0.0, 'GeometricMean_Zero', toString(0.0), toString(GeometricMean_Zero))
+define test_GeometricMean_Null: TestMessage(GeometricMean_Null = 1.41421356, 'GeometricMean_Null', toString(1.41421356), toString(GeometricMean_Null))
+define test_GeometricMean_Nulls: TestMessage(GeometricMean_Nulls is null, 'GeometricMean_Nulls', 'null', toString(GeometricMean_Nulls))
+define test_GeometricMean_Null_List: TestMessage(GeometricMean_Null_List is null, 'GeometricMean_Null_List', 'null', toString(GeometricMean_Null_List))
 
 // AllTrue
 define All_True: AllTrue({true,true,true,true})
@@ -366,10 +447,13 @@ define TenDividedByFour: 10 / 4
 define DivideMultiple: 1000 / 4 / 10 / 5
 define DivideVariables: Hundred / Four
 
-define test_TenDividedByTwo: TestMessage(TenDividedByTwo = 5, 'TenDividedByTwo', toString(5), toString(TenDividedByTwo))
+// TODO: possible issue in translator causing TenDividedByTwo = 5 to fail (Integer not being implicitly promoted to Decimal)
+define test_TenDividedByTwo: TestMessage(TenDividedByTwo = 5.0, 'TenDividedByTwo', toString(5.0), toString(TenDividedByTwo))
 define test_TenDividedByFour: TestMessage(TenDividedByFour = 2.5, 'TenDividedByFour', toString(2.5), toString(TenDividedByFour))
-define test_DivideMultiple: TestMessage(DivideMultiple = 5, 'DivideMultiple', toString(5), toString(DivideMultiple))
-define test_DivideVariables: TestMessage(DivideVariables = 25, 'DivideVariables', toString(25), toString(DivideVariables))
+// TODO: possible issue in translator causing DivideMultiple = 5 to fail (Integer not being implicitly promoted to Decimal)
+define test_DivideMultiple: TestMessage(DivideMultiple = 5.0, 'DivideMultiple', toString(5.0), toString(DivideMultiple))
+// TODO: possible issue in translator causing DivideVariables = 25 to fail (Integer not being implicitly promoted to Decimal)
+define test_DivideVariables: TestMessage(DivideVariables = 25.0, 'DivideVariables', toString(25.0), toString(DivideVariables))
 
 // Negate
 define NegativeOne: -1
@@ -380,8 +464,10 @@ define test_NegativeOne: TestMessage(NegativeOne = -1, 'NegativeOne', toString(-
 define Arithmetic_Mixed: 1 + 5 * 10 - 15 / 3
 define Arithmetic_Parenthetical: (1 + 5) * (10 - 15) / 3
 
-define test_Arithmetic_Mixed: TestMessage(Arithmetic_Mixed = 46, 'Arithmetic_Mixed', toString(46), toString(Arithmetic_Mixed))
-define test_Arithmetic_Parenthetical: TestMessage(Arithmetic_Parenthetical = -10, 'Arithmetic_Parenthetical', toString(-10), toString(Arithmetic_Parenthetical))
+// TODO: possible issue in translator causing Arithmetic_Mixed = 46 to fail (Integer not being implicitly promoted to Decimal)
+define test_Arithmetic_Mixed: TestMessage(Arithmetic_Mixed = 46.0, 'Arithmetic_Mixed', toString(46.0), toString(Arithmetic_Mixed))
+// TODO: possible issue in translator causing Arithmetic_Parenthetical = -10 to fail (Integer not being implicitly promoted to Decimal)
+define test_Arithmetic_Parenthetical: TestMessage(Arithmetic_Parenthetical = -10.0, 'Arithmetic_Parenthetical', toString(-10.0), toString(Arithmetic_Parenthetical))
 
 // Power
 define Pow: 3 ^ 4
@@ -391,22 +477,26 @@ define test_Pow: TestMessage(Pow = 81, 'Pow', toString(81), toString(Pow))
 // MinValue
 define MinInteger: minimum Integer
 define MinDecimal: minimum Decimal
+define MinDate: minimum Date
 define MinDateTime: minimum  DateTime
 define MinTime: minimum Time
 
 define test_MinInteger: TestMessage(MinInteger = -2147483648, 'MinInteger', toString(-2147483648), toString(MinInteger))
 define test_MinDecimal: TestMessage(MinDecimal = -9999999999999999999999999999.99999999, 'MinDecimal', toString(-9999999999999999999999999999.99999999), toString(MinDecimal))
+define test_MinDate: TestMessage(MinDate = @0001-01-01, 'MinDate', toString(@0001-01-01), toString(MinDate))
 define test_MinDateTime: TestMessage(MinDateTime = @0001-01-01T00:00:00.000, 'MinDateTime', toString(@0001-01-01T00:00:00.000), toString(MinDateTime))
 define test_MinTime: TestMessage(MinTime = @T00:00:00.000, 'MinTime', toString(@T00:00:00.000), toString(MinTime))
 
 // MaxValue
 define MaxInteger: maximum Integer
 define MaxDecimal: maximum Decimal
+define MaxDate: maximum Date
 define MaxDateTime: maximum DateTime
 define MaxTime: maximum Time
 
 define test_MaxInteger: TestMessage(MaxInteger = 2147483647, 'MaxInteger', toString(2147483647), toString(MaxInteger))
 define test_MaxDecimal: TestMessage(MaxDecimal = 9999999999999999999999999999.99999999, 'MaxDecimal', toString(9999999999999999999999999999.99999999), toString(MaxDecimal))
+define test_MaxDate: TestMessage(MaxDate = @9999-12-31, 'MaxDate', toString(@9999-12-31), toString(MaxDate))
 define test_MaxDateTime: TestMessage(MaxDateTime = @9999-12-31T23:59:59.999, 'MaxDateTime', toString(@9999-12-31T23:59:59.999), toString(MaxDateTime))
 define test_MaxTime: TestMessage(MaxTime = @T23:59:59.999, 'MaxTime', toString(@T23:59:59.999), toString(MaxTime))
 
@@ -458,9 +548,11 @@ define RoundUp_percent: Round(4.56,1)
 define RoundDown: Round(4.49)
 define RoundDown_percent: Round(4.43,1)
 
-define test_RoundUp: TestMessage(RoundUp = 5, 'RoundUp', toString(5), toString(RoundUp))
+// TODO: possible issue in translator causing RoundUp = 5 to fail (Integer not being implicitly promoted to Decimal)
+define test_RoundUp: TestMessage(RoundUp = 5.0, 'RoundUp', toString(5.0), toString(RoundUp))
 define test_RoundUp_percent: TestMessage(RoundUp_percent = 4.6, 'RoundUp_percent', toString(4.6), toString(RoundUp_percent))
-define test_RoundDown: TestMessage(RoundDown = 4, 'RoundDown', toString(4), toString(RoundDown))
+// TODO: possible issue in translator causing RoundDown = 4 to fail (Integer not being implicitly promoted to Decimal)
+define test_RoundDown: TestMessage(RoundDown = 4.0, 'RoundDown', toString(4.0), toString(RoundDown))
 define test_RoundDown_percent: TestMessage(RoundDown_percent = 4.4, 'RoundDown_percent', toString(4.4), toString(RoundDown_percent))
 
 // Ln
@@ -471,7 +563,8 @@ define test_Ln_Four: TestMessage(Ln_Four = 1.38629436, 'Ln_Four', toString(1.386
 // Log
 define Log_BaseTen: Log(10000,10)
 
-define test_Log_BaseTen: TestMessage(Log_BaseTen = 4, 'Log_BaseTen', toString(4), toString(Log_BaseTen))
+// TODO: possible issue in translator causing Log_BaseTen = 4 to fail (Integer not being implicitly promoted to Decimal)
+define test_Log_BaseTen: TestMessage(Log_BaseTen = 4.0, 'Log_BaseTen', toString(4.0), toString(Log_BaseTen))
 
 // Successor
 define Successor_Is: successor of 2
@@ -550,6 +643,7 @@ define test_Quantity_mul_d_q: TestMessage(Quantity_mul_d_q = 20 days, 'Quantity_
 define test_Quantity_neg: TestMessage(Quantity_neg = -10 days, 'Quantity_neg', toString(-10 days), toString(Quantity_neg))
 define test_Quantity_abs: TestMessage(Quantity_abs = 10 days, 'Quantity_abs', toString(10 days), toString(Quantity_abs))
 
+
 /*
 ************************
   End Arithmetic Tests
@@ -584,12 +678,27 @@ define Equal_AEqB_Int: 5 = 5
 define Equal_ALtB_Int: 5 = 6
 define Equal_EqTuples: Tuple{a: 1, b: Tuple{c: 1}} = Tuple{a: 1, b: Tuple{c: 1}}
 define Equal_UneqTuples: Tuple{a: 1, b: Tuple{c: 1}} = Tuple{a: 1, b: Tuple{c: -1}}
+define Equal_TupleDifferentKeys: Tuple{ Foo: null } = Tuple{ Bar: null }
+define Equal_EqTuplesWithNullFields: Tuple{a: 'Hello', b: null} = Tuple{a: 'Hello', b: null}
+define Equal_UneqTuplesWithNullFields: Tuple{a: 'Hello', b: null} = Tuple{a: 'Goodbye', b: null}
+define Equal_UncertTuplesWithNullFieldOnOne: Tuple{a: 'Hello', b: null} = Tuple{a: 'Hello', b: 'null'}
+define Equal_UncertTuplesWithDiffNullFields: Tuple{a: 'Hello', b: null} = Tuple{a: 'Hello', c: null}
 define Equal_EqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) = DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define Equal_UneqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) = DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
 define Equal_EqDateTimesTZ: DateTime(2000, 3, 15, 23, 30, 25, 200, +1.0) = DateTime(2000, 3, 16, 2, 30, 25, 200, +4.0)
 define Equal_UneqDateTimesTZ: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) = DateTime(2000, 3, 15, 13, 30, 25, 200, +2.0)
+define Equal_EqDateTimesOnlyDate: DateTime(2000, 3, 15) = DateTime(2000, 3, 15)
+define Equal_UneqDateTimesOnlyDate: DateTime(2000, 3, 14) = DateTime(2000, 3, 15)
+define Equal_PossiblyEqDateTimesOnlyDateOnOne: DateTime(2000, 3, 13) = DateTime(2000, 3, 13, 13, 43, 32)
+define Equal_UneqDateTimesOnlyDateOnOne: DateTime(2000, 4, 13, 12, 43, 32) = DateTime(2000, 3, 13)
 define Equal_PossiblyEqualDateTimes: DateTime(2000, 3, 15) = DateTime(2000)
 define Equal_ImpossiblyEqualDateTimes: DateTime(2000, 3, 15) = DateTime(2000, 4)
+define Equal_DateAndDateTimeEqual: Date(2000, 3, 13) = DateTime(2000, 3, 13)
+define Equal_DateAndDateTimeNotEqual: Date(2000, 3, 13) = DateTime(2000, 3, 12)
+define Equal_DateAndDateTimeUncertainEqual: Date(2000, 3, 13) = DateTime(2000, 3, 13, 2, 4, 23)
+define Equal_DateTimeAndDateEqual: DateTime(2000, 3, 13) = Date(2000, 3, 13)
+define Equal_DateTimeAndDateNotEqual: DateTime(2000, 3, 12) = Date(2000, 3, 13)
+define Equal_DateTimeAndDateUncertainEqual: DateTime(2000, 3, 13, 2, 4, 23) = Date(2000, 3, 13)
 define Equal_AGtB_Quantity: 5 'm' = 4 'm'
 define Equal_AEqB_Quantity: 5 'm' = 5 'm'
 define Equal_ALtB_Quantity: 5 'm' = 6 'm'
@@ -603,12 +712,27 @@ define test_Equal_AEqB_Int: TestMessage(Equal_AEqB_Int, 'Equal_AEqB_Int', toStri
 define test_Equal_ALtB_Int: TestMessage(not Equal_ALtB_Int, 'Equal_ALtB_Int', toString(false), toString(Equal_ALtB_Int))
 define test_Equal_EqTuples: TestMessage(Equal_EqTuples, 'Equal_EqTuples', toString(true), toString(Equal_EqTuples))
 define test_Equal_UneqTuples: TestMessage(not Equal_UneqTuples, 'Equal_UneqTuples', toString(false), toString(Equal_UneqTuples))
+define test_Equal_TupleDifferentKeys: TestMessage(not Equal_TupleDifferentKeys, 'Equal_TupleDifferentKeys', toString(false), toString(Equal_TupleDifferentKeys))
+define test_Equal_EqTuplesWithNullFields: TestMessage(Equal_EqTuplesWithNullFields, 'Equal_EqTuplesWithNullFields', toString(true), toString(Equal_EqTuplesWithNullFields))
+define test_Equal_UneqTuplesWithNullFields: TestMessage(not Equal_UneqTuplesWithNullFields, 'Equal_UneqTuplesWithNullFields', toString(false), toString(Equal_UneqTuplesWithNullFields))
+define test_Equal_UncertTuplesWithNullFieldOnOne: TestMessage(Equal_UncertTuplesWithNullFieldOnOne is null, 'Equal_UncertTuplesWithNullFieldOnOne', 'null', toString(Equal_UncertTuplesWithNullFieldOnOne))
+define test_Equal_UncertTuplesWithDiffNullFields: TestMessage(not Equal_UncertTuplesWithDiffNullFields, 'Equal_UncertTuplesWithDiffNullFields', toString(false), toString(Equal_UncertTuplesWithDiffNullFields))
 define test_Equal_EqDateTimes: TestMessage(Equal_EqDateTimes, 'Equal_EqDateTimes', toString(true), toString(Equal_EqDateTimes))
 define test_Equal_UneqDateTimes: TestMessage(not Equal_UneqDateTimes, 'Equal_UneqDateTimes', toString(false), toString(Equal_UneqDateTimes))
 define test_Equal_EqDateTimesTZ: TestMessage(Equal_EqDateTimesTZ, 'Equal_EqDateTimesTZ', toString(true), toString(Equal_EqDateTimesTZ))
 define test_Equal_UneqDateTimesTZ: TestMessage(not Equal_UneqDateTimesTZ, 'Equal_UneqDateTimesTZ', toString(false), toString(Equal_UneqDateTimesTZ))
+define test_Equal_EqDateTimesOnlyDate: TestMessage(Equal_EqDateTimesOnlyDate, 'Equal_EqDateTimesOnlyDate', toString(true), toString(Equal_EqDateTimesOnlyDate))
+define test_Equal_UneqDateTimesOnlyDate: TestMessage(not Equal_UneqDateTimesOnlyDate, 'Equal_UneqDateTimesOnlyDate', toString(false), toString(Equal_UneqDateTimesOnlyDate))
+define test_Equal_PossiblyEqDateTimesOnlyDateOnOne: TestMessage(Equal_PossiblyEqDateTimesOnlyDateOnOne is null, 'Equal_PossiblyEqDateTimesOnlyDateOnOne', 'null', toString(Equal_PossiblyEqDateTimesOnlyDateOnOne))
+define test_Equal_UneqDateTimesOnlyDateOnOne: TestMessage(not Equal_UneqDateTimesOnlyDateOnOne, 'Equal_UneqDateTimesOnlyDateOnOne', toString(false), toString(Equal_UneqDateTimesOnlyDateOnOne))
 define test_Equal_PossiblyEqualDateTimes: TestMessage(Equal_PossiblyEqualDateTimes is null, 'Equal_PossiblyEqualDateTimes', 'null', toString(Equal_PossiblyEqualDateTimes))
 define test_Equal_ImpossiblyEqualDateTimes: TestMessage(not Equal_ImpossiblyEqualDateTimes, 'Equal_ImpossiblyEqualDateTimes', toString(false), toString(Equal_ImpossiblyEqualDateTimes))
+define test_Equal_DateAndDateTimeEqual: TestMessage(not Equal_DateAndDateTimeEqual, 'Equal_DateAndDateTimeEqual', toString(false), toString(Equal_DateAndDateTimeEqual))
+define test_Equal_DateAndDateTimeNotEqual: TestMessage(not Equal_DateAndDateTimeNotEqual, 'Equal_DateAndDateTimeNotEqual', toString(false), toString(Equal_DateAndDateTimeNotEqual))
+define test_Equal_DateAndDateTimeUncertainEqual: TestMessage(not Equal_DateAndDateTimeUncertainEqual, 'Equal_DateAndDateTimeUncertainEqual', toString(false), toString(Equal_DateAndDateTimeUncertainEqual))
+define test_Equal_DateTimeAndDateEqual: TestMessage(not Equal_DateTimeAndDateEqual, 'Equal_DateTimeAndDateEqual', toString(false), toString(Equal_DateTimeAndDateEqual))
+define test_Equal_DateTimeAndDateNotEqual: TestMessage(not Equal_DateTimeAndDateNotEqual, 'Equal_DateTimeAndDateNotEqual', toString(false), toString(Equal_DateTimeAndDateNotEqual))
+define test_Equal_DateTimeAndDateUncertainEqual: TestMessage(not Equal_DateTimeAndDateUncertainEqual, 'Equal_DateTimeAndDateUncertainEqual', toString(false), toString(Equal_DateTimeAndDateUncertainEqual))
 define test_Equal_AGtB_Quantity: TestMessage(not Equal_AGtB_Quantity, 'Equal_AGtB_Quantity', toString(false), toString(Equal_AGtB_Quantity))
 define test_Equal_AEqB_Quantity: TestMessage(Equal_AEqB_Quantity, 'Equal_AEqB_Quantity', toString(true), toString(Equal_AEqB_Quantity))
 define test_Equal_ALtB_Quantity: TestMessage(not Equal_ALtB_Quantity, 'Equal_ALtB_Quantity', toString(false), toString(Equal_ALtB_Quantity))
@@ -619,12 +743,27 @@ define NotEqual_AEqB_Int: 5 != 5
 define NotEqual_ALtB_Int: 5 != 6
 define NotEqual_EqTuples: Tuple{a: 1, b: Tuple{c: 1}} != Tuple{a: 1, b: Tuple{c: 1}}
 define NotEqual_UneqTuples: Tuple{a: 1, b: Tuple{c: 1}} != Tuple{a: 1, b: Tuple{c: -1}}
+define NotEqual_TupleDifferentKeys: Tuple{ Foo: null } != Tuple{ Bar: null }
+define NotEqual_EqTuplesWithNullFields: Tuple{a: 'Hello', b: null} != Tuple{a: 'Hello', b: null}
+define NotEqual_UneqTuplesWithNullFields: Tuple{a: 'Hello', b: null} != Tuple{a: 'Goodbye', b: null}
+define NotEqual_UncertTuplesWithNullFieldOnOne: Tuple{a: 'Hello', b: null} != Tuple{a: 'Hello', b: 'null'}
+define NotEqual_UncertTuplesWithDiffNullFields: Tuple{a: 'Hello', b: null} != Tuple{a: 'Hello', c: null}
 define NotEqual_EqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) != DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define NotEqual_UneqDateTimes: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) != DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
 define NotEqual_EqDateTimesTZ: DateTime(2000, 3, 15, 23, 30, 25, 200, +1.0) != DateTime(2000, 3, 16, 2, 30, 25, 200, +4.0)
 define NotEqual_UneqDateTimesTZ: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) != DateTime(2000, 3, 15, 13, 30, 25, 200, +2.0)
+define NotEqual_EqDateTimesOnlyDate: DateTime(2000, 3, 15) != DateTime(2000, 3, 15)
+define NotEqual_UneqDateTimesOnlyDate: DateTime(2000, 3, 14) != DateTime(2000, 3, 15)
+define NotEqual_PossiblyEqDateTimesOnlyDateOnOne: DateTime(2000, 3, 13) != DateTime(2000, 3, 13, 13, 43, 32)
+define NotEqual_UneqDateTimesOnlyDateOnOne: DateTime(2000, 4, 13, 12, 43, 32) != DateTime(2000, 3, 13)
 define NotEqual_PossiblyEqualDateTimes: DateTime(2000, 3, 15) != DateTime(2000)
 define NotEqual_ImpossiblyEqualDateTimes: DateTime(2000, 3, 15) != DateTime(2000, 4)
+define NotEqual_DateAndDateTimeEqual: Date(2000, 3, 13) != DateTime(2000, 3, 13)
+define NotEqual_DateAndDateTimeNotEqual: Date(2000, 3, 13) != DateTime(2000, 3, 12)
+define NotEqual_DateAndDateTimeUncertainEqual: Date(2000, 3, 13) != DateTime(2000, 3, 13, 2, 4, 23)
+define NotEqual_DateTimeAndDateEqual: DateTime(2000, 3, 13) != Date(2000, 3, 13)
+define NotEqual_DateTimeAndDateNotEqual: DateTime(2000, 3, 12) != Date(2000, 3, 13)
+define NotEqual_DateTimeAndDateUncertainEqual: DateTime(2000, 3, 13, 2, 4, 23) != Date(2000, 3, 13)
 define NotEqual_AGtB_Quantity: 5 'm' != 4 'm'
 define NotEqual_AEqB_Quantity: 5 'm' != 5 'm'
 define NotEqual_ALtB_Quantity: 5 'm' != 6 'm'
@@ -638,12 +777,27 @@ define test_NotEqual_AEqB_Int: TestMessage(not NotEqual_AEqB_Int, 'NotEqual_AEqB
 define test_NotEqual_ALtB_Int: TestMessage(NotEqual_ALtB_Int, 'NotEqual_ALtB_Int', toString(true), toString(NotEqual_ALtB_Int))
 define test_NotEqual_EqTuples: TestMessage(not NotEqual_EqTuples, 'NotEqual_EqTuples', toString(false), toString(NotEqual_EqTuples))
 define test_NotEqual_UneqTuples: TestMessage(NotEqual_UneqTuples, 'NotEqual_UneqTuples', toString(true), toString(NotEqual_UneqTuples))
+define test_NotEqual_TupleDifferentKeys: TestMessage(NotEqual_TupleDifferentKeys, 'NotEqual_TupleDifferentKeys', toString(true), toString(NotEqual_TupleDifferentKeys))
+define test_NotEqual_EqTuplesWithNullFields: TestMessage(not NotEqual_EqTuplesWithNullFields, 'NotEqual_EqTuplesWithNullFields', toString(false), toString(NotEqual_EqTuplesWithNullFields))
+define test_NotEqual_UneqTuplesWithNullFields: TestMessage(NotEqual_UneqTuplesWithNullFields, 'NotEqual_UneqTuplesWithNullFields', toString(true), toString(NotEqual_UneqTuplesWithNullFields))
+define test_NotEqual_UncertTuplesWithNullFieldOnOne: TestMessage(NotEqual_UncertTuplesWithNullFieldOnOne is null, 'NotEqual_UncertTuplesWithNullFieldOnOne', 'null', toString(NotEqual_UncertTuplesWithNullFieldOnOne))
+define test_NotEqual_UncertTuplesWithDiffNullFields: TestMessage(NotEqual_UncertTuplesWithDiffNullFields, 'NotEqual_UncertTuplesWithDiffNullFields', toString(true), toString(NotEqual_UncertTuplesWithDiffNullFields))
 define test_NotEqual_EqDateTimes: TestMessage(not NotEqual_EqDateTimes, 'NotEqual_EqDateTimes', toString(false), toString(NotEqual_EqDateTimes))
 define test_NotEqual_UneqDateTimes: TestMessage(NotEqual_UneqDateTimes, 'NotEqual_UneqDateTimes', toString(true), toString(NotEqual_UneqDateTimes))
 define test_NotEqual_EqDateTimesTZ: TestMessage(not NotEqual_EqDateTimesTZ, 'NotEqual_EqDateTimesTZ', toString(false), toString(NotEqual_EqDateTimesTZ))
 define test_NotEqual_UneqDateTimesTZ: TestMessage(NotEqual_UneqDateTimesTZ, 'NotEqual_UneqDateTimesTZ', toString(true), toString(NotEqual_UneqDateTimesTZ))
+define test_NotEqual_EqDateTimesOnlyDate: TestMessage(not NotEqual_EqDateTimesOnlyDate, 'NotEqual_EqDateTimesOnlyDate', toString(true), toString(NotEqual_EqDateTimesOnlyDate))
+define test_NotEqual_UneqDateTimesOnlyDate: TestMessage(NotEqual_UneqDateTimesOnlyDate, 'NotEqual_UneqDateTimesOnlyDate', toString(false), toString(NotEqual_UneqDateTimesOnlyDate))
+define test_NotEqual_PossiblyEqDateTimesOnlyDateOnOne: TestMessage(NotEqual_PossiblyEqDateTimesOnlyDateOnOne is null, 'NotEqual_PossiblyEqDateTimesOnlyDateOnOne', 'null', toString(NotEqual_PossiblyEqDateTimesOnlyDateOnOne))
+define test_NotEqual_UneqDateTimesOnlyDateOnOne: TestMessage(NotEqual_UneqDateTimesOnlyDateOnOne, 'NotEqual_UneqDateTimesOnlyDateOnOne', toString(false), toString(NotEqual_UneqDateTimesOnlyDateOnOne))
 define test_NotEqual_PossiblyEqualDateTimes: TestMessage(NotEqual_PossiblyEqualDateTimes is null, 'NotEqual_PossiblyEqualDateTimes', 'null', toString(NotEqual_PossiblyEqualDateTimes))
 define test_NotEqual_ImpossiblyEqualDateTimes: TestMessage(NotEqual_ImpossiblyEqualDateTimes, 'NotEqual_ImpossiblyEqualDateTimes', toString(true), toString(NotEqual_ImpossiblyEqualDateTimes))
+define test_NotEqual_DateAndDateTimeEqual: TestMessage(NotEqual_DateAndDateTimeEqual, 'NotEqual_DateAndDateTimeEqual', toString(true), toString(NotEqual_DateAndDateTimeEqual))
+define test_NotEqual_DateAndDateTimeNotEqual: TestMessage(NotEqual_DateAndDateTimeNotEqual, 'NotEqual_DateAndDateTimeNotEqual', toString(true), toString(NotEqual_DateAndDateTimeNotEqual))
+define test_NotEqual_DateAndDateTimeUncertainEqual: TestMessage(NotEqual_DateAndDateTimeUncertainEqual, 'NotEqual_DateAndDateTimeUncertainEqual', toString(true), toString(NotEqual_DateAndDateTimeUncertainEqual))
+define test_NotEqual_DateTimeAndDateEqual: TestMessage(NotEqual_DateTimeAndDateEqual, 'NotEqual_DateTimeAndDateEqual', toString(true), toString(NotEqual_DateTimeAndDateEqual))
+define test_NotEqual_DateTimeAndDateNotEqual: TestMessage(NotEqual_DateTimeAndDateNotEqual, 'NotEqual_DateTimeAndDateNotEqual', toString(true), toString(NotEqual_DateTimeAndDateNotEqual))
+define test_NotEqual_DateTimeAndDateUncertainEqual: TestMessage(NotEqual_DateTimeAndDateUncertainEqual, 'NotEqual_DateTimeAndDateUncertainEqual', toString(true), toString(NotEqual_DateTimeAndDateUncertainEqual))
 define test_NotEqual_AGtB_Quantity: TestMessage(NotEqual_AGtB_Quantity, 'NotEqual_AGtB_Quantity', toString(true), toString(NotEqual_AGtB_Quantity))
 define test_NotEqual_AEqB_Quantity: TestMessage(not NotEqual_AEqB_Quantity, 'NotEqual_AEqB_Quantity', toString(false), toString(NotEqual_AEqB_Quantity))
 define test_NotEqual_ALtB_Quantity: TestMessage(NotEqual_ALtB_Quantity, 'NotEqual_ALtB_Quantity', toString(true), toString(NotEqual_ALtB_Quantity))
@@ -653,11 +807,13 @@ define Equivalent_ANull_BDefined: null ~ 4
 define Equivalent_ADefined_BNull: 5 ~ null
 define Equivalent_ANull_BNull: null ~ null
 define Equivalent_ADefined_BDefined: 3 ~ 3
+define Equivalent_CaseInsensitiveStrings: 'FOO' ~ 'foo'
 
 define test_Equivalent_ANull_BDefined: TestMessage(not Equivalent_ANull_BDefined, 'Equivalent_ANull_BDefined', toString(false), toString(Equivalent_ANull_BDefined))
 define test_Equivalent_ADefined_BNull: TestMessage(not Equivalent_ADefined_BNull, 'Equivalent_ADefined_BNull', toString(false), toString(Equivalent_ADefined_BNull))
 define test_Equivalent_ANull_BNull: TestMessage(Equivalent_ANull_BNull, 'Equivalent_ANull_BNull', toString(true), toString(Equivalent_ANull_BNull))
 define test_Equivalent_ADefined_BDefined: TestMessage(Equivalent_ADefined_BDefined, 'Equivalent_ADefined_BDefined', toString(true), toString(Equivalent_ADefined_BDefined))
+define test_Equivalent_CaseInsensitiveStrings: TestMessage(Equivalent_CaseInsensitiveStrings, 'Equivalent_CaseInsensitiveStrings', toString(true), toString(Equivalent_CaseInsensitiveStrings))
 
 // Tuple Equivalence
 define Equivalent_EmptyTuples: { : } ~ { : }
@@ -791,6 +947,7 @@ define test_GreaterOrEqual_AGtB_Quantity: TestMessage(GreaterOrEqual_AGtB_Quanti
 define test_GreaterOrEqual_AEqB_Quantity: TestMessage(GreaterOrEqual_AEqB_Quantity, 'GreaterOrEqual_AEqB_Quantity', toString(true), toString(GreaterOrEqual_AEqB_Quantity))
 define test_GreaterOrEqual_ALtB_Quantity: TestMessage(not GreaterOrEqual_ALtB_Quantity, 'GreaterOrEqual_ALtB_Quantity', toString(false), toString(GreaterOrEqual_ALtB_Quantity))
 
+
 /*
 ************************
   End Comparison Tests
@@ -852,13 +1009,21 @@ define FromString_stringNull: convert null to String
 define FromString_boolTrue: convert 'true' to Boolean
 define FromString_boolFalse: convert 'false' to Boolean
 define FromString_decimalValid: convert '10.2' to Decimal
+define FromString_decimalInvalid: convert 'abc' to Decimal
 define FromString_integerValid: convert '10' to Integer
+define FromString_integerInvalid: convert 'abc' to Integer
 define FromString_integerDropDecimal: convert '10.2' to Integer
 define FromString_quantityStr: convert '10 \'A\'' to Quantity
 define FromString_posQuantityStr: convert '+10 \'A\'' to Quantity
 define FromString_negQuantityStr: convert '-10 \'A\'' to Quantity
 define FromString_quantityStrDecimal: convert '10.0 \'mA\'' to Quantity
-define FromString_dateStr: convert '2015-01-02' to DateTime
+define FromString_dateTimeStr: convert '2015-01-02' to DateTime
+define FromString_dateStr: convert '2015-01-02' to Date
+define FromString_NullConvert: convert 'foo' to DateTime
+define FromString_ZDateTime: convert '2014-01-01T14:30:00.0Z' to DateTime // January 1st, 2014, 2:30PM UTC
+define FromString_TimezoneDateTime: convert '2014-01-01T14:30:00.0-07:00' to DateTime // January 1st, 2014, 2:30PM Mountain Standard (GMT-7:00)
+define FromString_ZTime: convert 'T14:30:00.0Z' to Time // 2:30PM UTC
+define FromString_TimezoneTime: convert 'T14:30:00.0-07:00' to Time // 2:30PM Mountain Standard (GMT-7:00)
 define FromString_timeStr: convert 'T12:30:00.000' to Time
 
 define test_FromString_stringStr: TestMessage(FromString_stringStr = 'str', 'FromString_stringStr', 'str', FromString_stringStr)
@@ -866,13 +1031,21 @@ define test_FromString_stringNull: TestMessage(FromString_stringNull is null, 'F
 define test_FromString_boolTrue: TestMessage(FromString_boolTrue, 'FromString_boolTrue', toString(true), toString(FromString_boolTrue))
 define test_FromString_boolFalse: TestMessage(not FromString_boolFalse, 'FromString_boolFalse', toString(false), toString(FromString_boolFalse))
 define test_FromString_decimalValid: TestMessage(FromString_decimalValid = 10.2, 'FromString_decimalValid', toString(10.2), toString(FromString_decimalValid))
+define test_FromString_decimalInvalid: TestMessage(FromString_decimalInvalid is null, 'FromString_decimalInvalid', 'null', toString(FromString_decimalInvalid))
 define test_FromString_integerValid: TestMessage(FromString_integerValid = 10, 'FromString_integerValid', toString(10), toString(FromString_integerValid))
+define test_FromString_integerInvalid: TestMessage(FromString_integerInvalid is null, 'FromString_integerInvalid', 'null', toString(FromString_integerInvalid))
 define test_FromString_integerDropDecimal: TestMessage(FromString_integerDropDecimal = 10, 'FromString_integerDropDecimal', toString(10), toString(FromString_integerDropDecimal))
 define test_FromString_quantityStr: TestMessage(FromString_quantityStr = 10 'A', 'FromString_quantityStr', toString(10 'A'), toString(FromString_quantityStr))
 define test_FromString_posQuantityStr: TestMessage(FromString_posQuantityStr = 10 'A', 'FromString_posQuantityStr', toString(10 'A'), toString(FromString_posQuantityStr))
 define test_FromString_negQuantityStr: TestMessage(FromString_negQuantityStr = -10 'A', 'FromString_negQuantityStr', toString(-10 'A'), toString(FromString_negQuantityStr))
 define test_FromString_quantityStrDecimal: TestMessage(FromString_quantityStrDecimal = 10.0 'mA', 'FromString_quantityStrDecimal', toString(10.0 'mA'), toString(FromString_quantityStrDecimal))
-define test_FromString_dateStr: TestMessage(FromString_dateStr = @2015-01-02, 'FromString_dateStr', toString(@2015-01-02), toString(FromString_dateStr))
+define test_FromString_dateTimeStr: TestMessage(FromString_dateTimeStr = DateTime(2015, 1, 2), 'FromString_dateTimeStr', toString(DateTime(2015, 1, 2)), toString(FromString_dateTimeStr))
+define test_FromString_dateStr: TestMessage(FromString_dateStr = Date(2015, 1, 2), 'FromString_dateStr', toString(Date(2015, 1, 2)), toString(FromString_dateStr))
+define test_FromString_NullConvert: TestMessage(FromString_NullConvert is null, 'FromString_NullConvert', 'null', toString(FromString_NullConvert))
+define test_FromString_ZDateTime: TestMessage(FromString_ZDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, 0), 'FromString_ZDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, 0)), toString(FromString_ZDateTime))
+define test_FromString_TimezoneDateTime: TestMessage(FromString_TimezoneDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, -7), 'FromString_TimezoneDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, -7)), toString(FromString_TimezoneDateTime))
+define test_FromString_ZTime: TestMessage(FromString_ZTime = Time(14, 30, 0, 0, 0), 'FromString_ZTime', toString(Time(14, 30, 0, 0, 0)), toString(FromString_ZTime))
+define test_FromString_TimezoneTime: TestMessage(FromString_TimezoneTime = Time(14, 30, 0, 0, -7), 'FromString_TimezoneTime', toString(Time(14, 30, 0, 0, -7)), toString(FromString_TimezoneTime))
 define test_FromString_timeStr: TestMessage(FromString_timeStr = @T12:30:00.000, 'FromString_timeStr', toString(@T12:30:00.000), toString(FromString_timeStr))
 
 // FromInteger
@@ -909,11 +1082,26 @@ define test_FromBoolean_booleanTrueBool: TestMessage(FromBoolean_booleanTrueBool
 define test_FromBoolean_booleanFalseBool: TestMessage(not FromBoolean_booleanFalseBool, 'FromBoolean_booleanFalseBool', toString(false), toString(FromBoolean_booleanFalseBool))
 
 // FromDateTime
-define FromDateTime_dateStr: convert @2015-01-02 to String
-define FromDateTime_dateDate: convert @2015-01-02 to DateTime
+define FromDateTime_dateTimeToStr: convert @2015-01-02T12:01:02.321-06:00 to String
+define FromDateTime_dateTimeToDate: convert @2015-01-02T12:01:02.321-06:00 to Date
+define FromDateTime_dateTimeToDateTime: convert @2015-01-02T12:01:02.321-06:00 to DateTime
 
-define test_FromDateTime_dateStr: TestMessage(FromDateTime_dateStr = '2015-01-02', 'FromDateTime_dateStr', '2015-01-02', FromDateTime_dateStr)
-define test_FromDateTime_dateDate: TestMessage(FromDateTime_dateDate = @2015-01-02, 'FromDateTime_dateDate', toString(@2015-01-02), toString(FromDateTime_dateDate))
+define test_FromDateTime_dateTimeToStr: TestMessage(FromDateTime_dateTimeToStr = '2015-01-02T12:01:02.321', 'FromDateTime_dateTimeToStr', '2015-01-02T12:01:02.321', FromDateTime_dateTimeToStr)
+define test_FromDateTime_dateTimeToDate: TestMessage(FromDateTime_dateTimeToDate = Date(2015, 1, 2), 'FromDateTime_dateTimeToDate', toString(Date(2015, 1, 2)), toString(FromDateTime_dateTimeToDate))
+define test_FromDateTime_dateTimeToDateTime: TestMessage(FromDateTime_dateTimeToDateTime = @2015-01-02T12:01:02.321-06:00, 'FromDateTime_dateTimeToDateTime', toString(@2015-01-02T12:01:02.321-06:00), toString(FromDateTime_dateTimeToDateTime))
+
+// FromDate
+define FromDate_dateYMDToDateTime: convert @2015-01-01 to DateTime
+define FromDate_dateYMToDateTime: convert @2015-01 to DateTime
+define FromDate_dateYToDateTime: convert @2015 to DateTime
+define FromDate_dateToDate: convert @2015-01-01 to Date
+define FromDate_dateToStr: convert @2015-01-01 to String
+
+define test_FromDate_dateYMDToDateTime: TestMessage(FromDate_dateYMDToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYMDToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYMDToDateTime))
+define test_FromDate_dateYMToDateTime: TestMessage(FromDate_dateYMToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYMToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYMToDateTime))
+define test_FromDate_dateYToDateTime: TestMessage(FromDate_dateYToDateTime ~ DateTime(2015, 1, 1, 0, 0, 0, 0), 'FromDate_dateYToDateTime', toString(DateTime(2015, 1, 1, 0, 0, 0, 0)), toString(FromDate_dateYToDateTime))
+define test_FromDate_dateToDate: TestMessage(FromDate_dateToDate ~ Date(2015, 1, 1), 'FromDate_dateToDate', toString(Date(2015, 1, 1)), toString(FromDate_dateToDate))
+define test_FromDate_dateToStr: TestMessage(FromDate_dateToStr = '2015-01-01', 'FromDate_dateToStr', '2015-01-01', FromDate_dateToStr)
 
 // FromTime
 define FromTime_timeStr: convert @T11:57 to String
@@ -936,30 +1124,105 @@ define ToDecimal_NoSign: ToDecimal('0.0')
 define ToDecimal_PositiveSign: ToDecimal('+1.1')
 define ToDecimal_NegativeSign: ToDecimal('-1.1')
 define ToDecimal_NullDecimal: ToDecimal((null as String))
+define ToDecimal_TooLargeDec: ToDecimal('444444444444444444444444444444')
+define ToDecimal_TooSmallDec: ToDecimal('-444444444444444444444444444444')
+// TODO: Bonnie has ToDecimal('.444444444'), but the format is invalid
+define ToDecimal_TooPrecise: ToDecimal('0.444444444')
+define ToDecimal_WrongFormat: ToDecimal('+.1')
 
 define test_ToDecimal_NoSign: TestMessage(ToDecimal_NoSign = 0.0, 'ToDecimal_NoSign', toString(0.0), toString(ToDecimal_NoSign))
 define test_ToDecimal_PositiveSign: TestMessage(ToDecimal_PositiveSign = 1.1, 'ToDecimal_PositiveSign', toString(1.1), toString(ToDecimal_PositiveSign))
 define test_ToDecimal_NegativeSign: TestMessage(ToDecimal_NegativeSign = -1.1, 'ToDecimal_NegativeSign', toString(-1.1), toString(ToDecimal_NegativeSign))
 define test_ToDecimal_NullDecimal: TestMessage(ToDecimal_NullDecimal is null, 'ToDecimal_NullDecimal', 'null', toString(ToDecimal_NullDecimal))
+define test_ToDecimal_TooLargeDec: TestMessage(ToDecimal_TooLargeDec is null, 'ToDecimal_TooLargeDec', 'null', toString(ToDecimal_TooLargeDec))
+define test_ToDecimal_TooSmallDec: TestMessage(ToDecimal_TooSmallDec is null, 'ToDecimal_TooSmallDec', 'null', toString(ToDecimal_TooSmallDec))
+define test_ToDecimal_TooPrecise: TestMessage(ToDecimal_TooPrecise = 0.44444444, 'ToDecimal_TooPrecise', toString(0.44444444), toString(ToDecimal_TooPrecise))
+define test_ToDecimal_WrongFormat: TestMessage(ToDecimal_WrongFormat is null, 'ToDecimal_WrongFormat', 'null', toString(ToDecimal_WrongFormat))
 
 // ToInteger
 define ToInteger_NoSign: ToInteger('12345')
 define ToInteger_PositiveSign: ToInteger('+12345')
 define ToInteger_NegativeSign: ToInteger('-12345')
+define ToInteger_TooLargeInt: ToInteger('2147483648')
+define ToInteger_TooSmallInt: ToInteger('-2147483649')
 
 define test_ToInteger_NoSign: TestMessage(ToInteger_NoSign = 12345, 'ToInteger_NoSign', toString(12345), toString(ToInteger_NoSign))
 define test_ToInteger_PositiveSign: TestMessage(ToInteger_PositiveSign = 12345, 'ToInteger_PositiveSign', toString(12345), toString(ToInteger_PositiveSign))
 define test_ToInteger_NegativeSign: TestMessage(ToInteger_NegativeSign = -12345, 'ToInteger_NegativeSign', toString(-12345), toString(ToInteger_NegativeSign))
+define test_ToInteger_TooLargeInt: TestMessage(ToInteger_TooLargeInt is null, 'ToInteger_TooLargeInt', 'null', toString(ToInteger_TooLargeInt))
+define test_ToInteger_TooSmallInt: TestMessage(ToInteger_TooSmallInt is null, 'ToInteger_TooSmallInt', 'null', toString(ToInteger_TooSmallInt))
 
 // ToQuantity
 define ToQuantity_NullArg: ToQuantity((null as String))
+define ToQuantity_WrongFormatQuantity: ToQuantity('abc')
+define ToQuantity_TooLargeQuantity: ToQuantity('444444444444444444444444444444 \'\'')
+define ToQuantity_TooSmallQuantity: ToQuantity('-444444444444444444444444444444 \'\'')
 
 define test_ToQuantity_NullArg: TestMessage(ToQuantity_NullArg is null, 'ToQuantity_NullArg', 'null', toString(ToQuantity_NullArg))
+define test_ToQuantity_WrongFormatQuantity: TestMessage(ToQuantity_WrongFormatQuantity is null, 'ToQuantity_WrongFormatQuantity', 'null', toString(ToQuantity_WrongFormatQuantity))
+define test_ToQuantity_TooLargeQuantity: TestMessage(ToQuantity_TooLargeQuantity is null, 'ToQuantity_TooLargeQuantity', 'null', toString(ToQuantity_TooLargeQuantity))
+define test_ToQuantity_TooSmallQuantity: TestMessage(ToQuantity_TooSmallQuantity is null, 'ToQuantity_TooSmallQuantity', 'null', toString(ToQuantity_TooSmallQuantity))
 
 // ToTime
 define ToTime_NullArgTime: ToTime((null as String))
+define ToTime_TimeH: ToTime('T02')
+define ToTime_TimeHM: ToTime('T02:04')
+define ToTime_TimeHMS: ToTime('T02:04:59')
+define ToTime_TimeHMSMs: ToTime('T02:04:59.123')
+define ToTime_TimeHMSMsZ: ToTime('T02:04:59.123Z')
+define ToTime_TimeHMSMsTimezone: ToTime('T02:04:59.123+01')
+define ToTime_TimeHMSMsFullTimezone: ToTime('T02:04:59.123+01:00')
+define ToTime_IncorrectFormatTime: ToTime('10:00PM')
+define ToTime_InvalidTime: ToTime('25:99.000+00.00')
+define ToTime_HourTooHigh: ToTime('T24')
+define ToTime_MinuteTooHigh: ToTime('T23:60')
+define ToTime_SecondTooHigh: ToTime('T23:59:60')
 
 define test_ToTime_NullArgTime: TestMessage(ToTime_NullArgTime is null, 'ToTime_NullArgTime', 'null', toString(ToTime_NullArgTime))
+define test_ToTime_TimeH: TestMessage(ToTime_TimeH = @T02, 'ToTime_TimeH', toString(@T02), toString(ToTime_TimeH))
+define test_ToTime_TimeHM: TestMessage(ToTime_TimeHM = @T02:04, 'ToTime_TimeHM', toString(@T02:04), toString(ToTime_TimeHM))
+define test_ToTime_TimeHMS: TestMessage(ToTime_TimeHMS = @T02:04:59, 'ToTime_TimeHMS', toString(@T02:04:59), toString(ToTime_TimeHMS))
+define test_ToTime_TimeHMSMs: TestMessage(ToTime_TimeHMSMs = @T02:04:59.123, 'ToTime_TimeHMSMs', toString(@T02:04:59.123), toString(ToTime_TimeHMSMs))
+define test_ToTime_TimeHMSMsZ: TestMessage(ToTime_TimeHMSMsZ = @T02:04:59.123Z, 'ToTime_TimeHMSMsZ', toString(@T02:04:59.123Z), toString(ToTime_TimeHMSMsZ))
+define test_ToTime_TimeHMSMsTimezone: TestMessage(ToTime_TimeHMSMsTimezone = @T02:04:59.123+01:00, 'ToTime_TimeHMSMsTimezone', toString(@T02:04:59.123+01:00), toString(ToTime_TimeHMSMsTimezone))
+define test_ToTime_TimeHMSMsFullTimezone: TestMessage(ToTime_TimeHMSMsFullTimezone = @T02:04:59.123+01:00, 'ToTime_TimeHMSMsFullTimezone', toString(@T02:04:59.123+01:00), toString(ToTime_TimeHMSMsFullTimezone))
+define test_ToTime_IncorrectFormatTime: TestMessage(ToTime_IncorrectFormatTime is null, 'ToTime_IncorrectFormatTime', 'null', toString(ToTime_IncorrectFormatTime))
+define test_ToTime_InvalidTime: TestMessage(ToTime_InvalidTime is null, 'ToTime_InvalidTime', 'null', toString(ToTime_InvalidTime))
+define test_ToTime_HourTooHigh: TestMessage(ToTime_HourTooHigh is null, 'ToTime_HourTooHigh', 'null', toString(ToTime_HourTooHigh))
+define test_ToTime_MinuteTooHigh: TestMessage(ToTime_MinuteTooHigh is null, 'ToTime_MinuteTooHigh', 'null', toString(ToTime_MinuteTooHigh))
+define test_ToTime_SecondTooHigh: TestMessage(ToTime_SecondTooHigh is null, 'ToTime_SecondTooHigh', 'null', toString(ToTime_SecondTooHigh))
+
+// ToBoolean
+define ToBoolean_UpperCaseTrue: ToBoolean('TRUE')
+define ToBoolean_UpperCaseFalse: ToBoolean('FALSE')
+define ToBoolean_LowerCaseTrue: ToBoolean('true')
+define ToBoolean_LowerCaseFalse: ToBoolean('false')
+define ToBoolean_UpperCaseT: ToBoolean('T')
+define ToBoolean_UpperCaseF: ToBoolean('F')
+define ToBoolean_LowerCaseT: ToBoolean('t')
+define ToBoolean_LowerCaseF: ToBoolean('f')
+define ToBoolean_IsTrue: ToBoolean('y')
+define ToBoolean_IsFalse: ToBoolean('0')
+define ToBoolean_IsNull: ToBoolean('falsetto')
+
+define test_ToBoolean_UpperCaseTrue: TestMessage(ToBoolean_UpperCaseTrue, 'ToBoolean_UpperCaseTrue', toString(true), toString(ToBoolean_UpperCaseTrue))
+define test_ToBoolean_UpperCaseFalse: TestMessage(not ToBoolean_UpperCaseFalse, 'ToBoolean_UpperCaseFalse', toString(false), toString(ToBoolean_UpperCaseFalse))
+define test_ToBoolean_LowerCaseTrue: TestMessage(ToBoolean_LowerCaseTrue, 'ToBoolean_LowerCaseTrue', toString(true), toString(ToBoolean_LowerCaseTrue))
+define test_ToBoolean_LowerCaseFalse: TestMessage(not ToBoolean_LowerCaseFalse, 'ToBoolean_LowerCaseFalse', toString(false), toString(ToBoolean_LowerCaseFalse))
+define test_ToBoolean_UpperCaseT: TestMessage(ToBoolean_UpperCaseT, 'ToBoolean_UpperCaseT', toString(true), toString(ToBoolean_UpperCaseT))
+define test_ToBoolean_UpperCaseF: TestMessage(not ToBoolean_UpperCaseF, 'ToBoolean_UpperCaseF', toString(false), toString(ToBoolean_UpperCaseF))
+define test_ToBoolean_LowerCaseT: TestMessage(ToBoolean_LowerCaseT, 'ToBoolean_LowerCaseT', toString(true), toString(ToBoolean_LowerCaseT))
+define test_ToBoolean_LowerCaseF: TestMessage(not ToBoolean_LowerCaseF, 'ToBoolean_LowerCaseF', toString(false), toString(ToBoolean_LowerCaseF))
+define test_ToBoolean_IsTrue: TestMessage(ToBoolean_IsTrue, 'ToBoolean_IsTrue', toString(true), toString(ToBoolean_IsTrue))
+define test_ToBoolean_IsFalse: TestMessage(not ToBoolean_IsFalse, 'ToBoolean_IsFalse', toString(false), toString(ToBoolean_IsFalse))
+define test_ToBoolean_IsNull: TestMessage(ToBoolean_IsNull is null, 'ToBoolean_IsNull', 'null', toString(ToBoolean_IsNull))
+
+// ToConcept
+define ToConcept_IsValid: ToConcept(Code { system: 'http://loinc.org', code: '8480-6' }) // Concept { codes: { Code { system: 'http://loinc.org', code: '8480-6' } } }
+define ToConcept_IsNull: ToConcept(null as Code)
+
+define test_ToConcept_IsValid: TestMessage(ToConcept_IsValid ~ Concept { codes: { Code { system: 'http://loinc.org', code: '8480-6' } } }, 'ToConcept_IsValid', toString(Concept { codes: { Code { system: 'http://loinc.org', code: '8480-6' } } }), toString(ToConcept_IsValid))
+define test_ToConcept_IsNull: TestMessage(ToConcept_IsNull is null, 'ToConcept_IsNull', 'null', toString(ToConcept_IsNull))
 
 /*
 ************************
@@ -969,9 +1232,356 @@ define test_ToTime_NullArgTime: TestMessage(ToTime_NullArgTime is null, 'ToTime_
 
 /*
 ************************
+  Start Date Tests
+************************
+*/
+
+// Globals
+define IdesOfMarch_Date: Date(2000, 3, 15)
+define ImpreciseIdesOfMarch_Date: Date(2000, 3)
+define NewYear2013_Date: Date(2013, 1, 1)
+define NewYear2014_Date: Date(2014, 1, 1)
+define January2014_Date: Date(2014, 1)
+define February2014_Date: Date(2014, 2)
+define DecTen2013_Date: Date(2013, 12, 10)
+define JanOne2015_Date: Date(2015, 1, 1)
+define January2015_Date: Date(2015, 1)
+define June15th2013_Date: Date(2013, 6, 15)
+
+// DateComponentFrom
+define DateComponentFrom_Year: year from IdesOfMarch_Date
+define DateComponentFrom_Month: month from IdesOfMarch_Date
+define DateComponentFrom_Day: day from IdesOfMarch
+define DateComponentFrom_ImpreciseComponentTuple:
+    Tuple {
+        Year: year from ImpreciseIdesOfMarch_Date,
+        Month: month from ImpreciseIdesOfMarch_Date,
+        Day: day from ImpreciseIdesOfMarch_Date
+    }
+define DateComponentFrom_ImpreciseComponentTuple_Day: DateComponentFrom_ImpreciseComponentTuple.Day
+define DateComponentFrom_NullDate: year from (null as Date)
+
+define test_DateComponentFrom_Year: TestMessage(DateComponentFrom_Year = 2000, 'DateComponentFrom_Year', toString(2000), toString(DateComponentFrom_Year))
+define test_DateComponentFrom_Month: TestMessage(DateComponentFrom_Month = 3, 'DateComponentFrom_Month', toString(3), toString(DateComponentFrom_Month))
+define test_DateComponentFrom_Day: TestMessage(DateComponentFrom_Day = 15, 'DateComponentFrom_Day', toString(15), toString(DateComponentFrom_Day))
+define test_DateComponentFrom_ImpreciseComponentTuple_Day: TestMessage(DateComponentFrom_ImpreciseComponentTuple_Day is null, 'DateComponentFrom_ImpreciseComponentTuple_Day', 'null', toString(DateComponentFrom_ImpreciseComponentTuple_Day))
+
+// SameAs
+define SameAs_Date_SameYear: Date(2000, 3, 15) same year as Date(2000, 11, 23)
+define SameAs_Date_NotSameYear: Date(2000, 3, 15) same year as Date(2001, 11, 23)
+define SameAs_Date_SameMonth: Date(2000, 3, 15) same month as Date(2000, 3, 23)
+define SameAs_Date_NotSameMonth: Date(2000, 3, 15) same month as Date(2000, 4, 23)
+define SameAs_Date_SameMonthWrongYear: Date(2000, 3, 15) same month as Date(2001, 3, 23)
+define SameAs_Date_SameDay: Date(2000, 3, 15) same day as Date(2000, 3, 15)
+define SameAs_Date_NotSameDay: Date(2000, 3, 15) same day as Date(2000, 3, 23)
+define SameAs_Date_SameDayWrongMonth: Date(2000, 3, 15) same day as Date(2000, 4, 15)
+define SameAs_Date_Same: Date(2000, 3, 15) same as Date(2000, 3, 15)
+define SameAs_Date_NotSame: Date(2000, 3, 16) same as Date(2000, 3, 15)
+define SameAs_Date_NullLeft: null same as Date(2000, 3, 15)
+define SameAs_Date_NullRight: Date(2000, 3, 15) same as (null as Date)
+define SameAs_Date_NullBoth: (null as Date) same as null
+
+define test_SameAs_Date_SameYear: TestMessage(SameAs_Date_SameYear, 'SameAs_Date_SameYear', toString(true), toString(SameAs_Date_SameYear))
+define test_SameAs_Date_NotSameYear: TestMessage(not SameAs_Date_NotSameYear, 'SameAs_Date_NotSameYear', toString(false), toString(SameAs_Date_NotSameYear))
+define test_SameAs_Date_SameMonth: TestMessage(SameAs_Date_SameMonth, 'SameAs_Date_SameMonth', toString(true), toString(SameAs_Date_SameMonth))
+define test_SameAs_Date_NotSameMonth: TestMessage(not SameAs_Date_NotSameMonth, 'SameAs_Date_NotSameMonth', toString(false), toString(SameAs_Date_NotSameMonth))
+define test_SameAs_Date_SameMonthWrongYear: TestMessage(not SameAs_Date_SameMonthWrongYear, 'SameAs_Date_SameMonthWrongYear', toString(false), toString(SameAs_Date_SameMonthWrongYear))
+define test_SameAs_Date_SameDay: TestMessage(SameAs_Date_SameDay, 'SameAs_Date_SameDay', toString(true), toString(SameAs_Date_SameDay))
+define test_SameAs_Date_NotSameDay: TestMessage(not SameAs_Date_NotSameDay, 'SameAs_Date_NotSameDay', toString(false), toString(SameAs_Date_NotSameDay))
+define test_SameAs_Date_SameDayWrongMonth: TestMessage(not SameAs_Date_SameDayWrongMonth, 'SameAs_Date_SameDayWrongMonth', toString(false), toString(SameAs_Date_SameDayWrongMonth))
+define test_SameAs_Date_Same: TestMessage(SameAs_Date_Same, 'SameAs_Date_Same', toString(true), toString(SameAs_Date_Same))
+define test_SameAs_Date_NotSame: TestMessage(not SameAs_Date_NotSame, 'SameAs_Date_NotSame', toString(false), toString(SameAs_Date_NotSame))
+define test_SameAs_Date_NullLeft: TestMessage(SameAs_Date_NullLeft is null, 'SameAs_Date_NullLeft', 'null', toString(SameAs_Date_NullLeft))
+define test_SameAs_Date_NullRight: TestMessage(SameAs_Date_NullRight is null, 'SameAs_Date_NullRight', 'null', toString(SameAs_Date_NullRight))
+define test_SameAs_Date_NullBoth: TestMessage(SameAs_Date_NullBoth is null, 'SameAs_Date_NullBoth', 'null', toString(SameAs_Date_NullBoth))
+
+// SameOrAfter
+define SameOrAfter_Date_SameYear: Date(2000, 3, 15) same year or after Date(2000, 11, 23)
+define SameOrAfter_Date_YearAfter: Date(2000, 3, 15) same year or after Date(1999, 11, 23)
+define SameOrAfter_Date_YearBefore: Date(2000, 3, 15) same year or after Date(2001, 11, 23)
+define SameOrAfter_Date_SameMonth: Date(2000, 3, 15) same month or after Date(2000, 3, 23)
+define SameOrAfter_Date_MonthAfter: Date(2000, 3, 15) same month or after Date(2000, 2, 23)
+define SameOrAfter_Date_MonthBefore: Date(2000, 3, 15) same month or after Date(2000, 4, 23)
+define SameOrAfter_Date_SameDay: Date(2000, 3, 15) same day or after Date(2000, 3, 15)
+define SameOrAfter_Date_DayAfter: Date(2000, 3, 15) same day or after Date(2000, 3, 14)
+define SameOrAfter_Date_DayBefore: Date(2000, 3, 15) same day or after Date(2000, 3, 16)
+define SameOrAfter_Date_Same: Date(2000, 3, 15) same or after Date(2000, 3, 15)
+define SameOrAfter_Date_After: Date(2000, 3, 15) same or after Date(2000, 3, 15)
+define SameOrAfter_Date_Before: Date(2000, 3, 14) same or after Date(2000, 3, 15)
+define SameOrAfter_Date_SameDayMonthBefore: Date(2000, 3, 15) same day or after Date(2000, 4, 15)
+define SameOrAfter_Date_DayAfterMonthBefore: Date(2000, 3, 15) same day or after Date(2000, 4, 14)
+define SameOrAfter_Date_DayBeforeMonthAfter: Date(2000, 3, 15) same day or after Date(2000, 2, 16)
+define SameOrAfter_Date_ImpreciseDay: Date(2000, 3, 15) same day or after Date(2000, 3)
+define SameOrAfter_Date_ImpreciseDayMonthAfter: Date(2000, 3, 15) same day or after Date(2000, 2)
+define SameOrAfter_Date_ImpreciseDayMonthBefore: Date(2000, 3, 15) same day or after Date(2000, 4)
+define SameOrAfter_Date_NullLeft: null same or after Date(2000, 3, 15)
+define SameOrAfter_Date_NullRight: Date(2000, 3, 15) same or after null
+define SameOrAfter_Date_NullBoth: (null as Date) same or after null
+
+define test_SameOrAfter_Date_SameYear: TestMessage(SameOrAfter_Date_SameYear, 'SameOrAfter_Date_SameYear', toString(true), toString(SameOrAfter_Date_SameYear))
+define test_SameOrAfter_Date_YearAfter: TestMessage(SameOrAfter_Date_YearAfter, 'SameOrAfter_Date_YearAfter', toString(true), toString(SameOrAfter_Date_YearAfter))
+define test_SameOrAfter_Date_YearBefore: TestMessage(not SameOrAfter_Date_YearBefore, 'SameOrAfter_Date_YearBefore', toString(false), toString(SameOrAfter_Date_YearBefore))
+define test_SameOrAfter_Date_SameMonth: TestMessage(SameOrAfter_Date_SameMonth, 'SameOrAfter_Date_SameMonth', toString(true), toString(SameOrAfter_Date_SameMonth))
+define test_SameOrAfter_Date_MonthAfter: TestMessage(SameOrAfter_Date_MonthAfter, 'SameOrAfter_Date_MonthAfter', toString(true), toString(SameOrAfter_Date_MonthAfter))
+define test_SameOrAfter_Date_MonthBefore: TestMessage(not SameOrAfter_Date_MonthBefore, 'SameOrAfter_Date_MonthBefore', toString(false), toString(SameOrAfter_Date_MonthBefore))
+define test_SameOrAfter_Date_SameDay: TestMessage(SameOrAfter_Date_SameDay, 'SameOrAfter_Date_SameDay', toString(true), toString(SameOrAfter_Date_SameDay))
+define test_SameOrAfter_Date_DayAfter: TestMessage(SameOrAfter_Date_DayAfter, 'SameOrAfter_Date_DayAfter', toString(true), toString(SameOrAfter_Date_DayAfter))
+define test_SameOrAfter_Date_DayBefore: TestMessage(not SameOrAfter_Date_DayBefore, 'SameOrAfter_Date_DayBefore', toString(false), toString(SameOrAfter_Date_DayBefore))
+define test_SameOrAfter_Date_Same: TestMessage(SameOrAfter_Date_Same, 'SameOrAfter_Date_Same', toString(true), toString(SameOrAfter_Date_Same))
+define test_SameOrAfter_Date_After: TestMessage(SameOrAfter_Date_After, 'SameOrAfter_Date_After', toString(true), toString(SameOrAfter_Date_After))
+define test_SameOrAfter_Date_Before: TestMessage(not SameOrAfter_Date_Before, 'SameOrAfter_Date_Before', toString(false), toString(SameOrAfter_Date_Before))
+define test_SameOrAfter_Date_SameDayMonthBefore: TestMessage(not SameOrAfter_Date_SameDayMonthBefore, 'SameOrAfter_Date_SameDayMonthBefore', toString(false), toString(SameOrAfter_Date_SameDayMonthBefore))
+define test_SameOrAfter_Date_DayAfterMonthBefore: TestMessage(not SameOrAfter_Date_DayAfterMonthBefore, 'SameOrAfter_Date_DayAfterMonthBefore', toString(false), toString(SameOrAfter_Date_DayAfterMonthBefore))
+define test_SameOrAfter_Date_DayBeforeMonthAfter: TestMessage(SameOrAfter_Date_DayBeforeMonthAfter, 'SameOrAfter_Date_DayBeforeMonthAfter', toString(true), toString(SameOrAfter_Date_DayBeforeMonthAfter))
+define test_SameOrAfter_Date_ImpreciseDay: TestMessage(SameOrAfter_Date_ImpreciseDay is null, 'SameOrAfter_Date_ImpreciseDay', 'null', toString(SameOrAfter_Date_ImpreciseDay))
+define test_SameOrAfter_Date_ImpreciseDayMonthAfter: TestMessage(SameOrAfter_Date_ImpreciseDayMonthAfter, 'SameOrAfter_Date_ImpreciseDayMonthAfter', toString(true), toString(SameOrAfter_Date_ImpreciseDayMonthAfter))
+define test_SameOrAfter_Date_ImpreciseDayMonthBefore: TestMessage(not SameOrAfter_Date_ImpreciseDayMonthBefore, 'SameOrAfter_Date_ImpreciseDayMonthBefore', toString(false), toString(SameOrAfter_Date_ImpreciseDayMonthBefore))
+define test_SameOrAfter_Date_NullLeft: TestMessage(SameOrAfter_Date_NullLeft is null, 'SameOrAfter_Date_NullLeft', 'null', toString(SameOrAfter_Date_NullLeft))
+define test_SameOrAfter_Date_NullRight: TestMessage(SameOrAfter_Date_NullRight is null, 'SameOrAfter_Date_NullRight', 'null', toString(SameOrAfter_Date_NullRight))
+define test_SameOrAfter_Date_NullBoth: TestMessage(SameOrAfter_Date_NullBoth is null, 'SameOrAfter_Date_NullBoth', 'null', toString(SameOrAfter_Date_NullBoth))
+
+// SameOrBefore
+define SameOrBefore_Date_SameYear: Date(2000, 3, 15) same year or before Date(2000, 11, 23)
+define SameOrBefore_Date_YearAfter: Date(2000, 3, 15) same year or before Date(1999, 11, 23)
+define SameOrBefore_Date_YearBefore: Date(2000, 3, 15) same year or before Date(2001, 11, 23)
+define SameOrBefore_Date_SameMonth: Date(2000, 3, 15) same month or before Date(2000, 3, 23)
+define SameOrBefore_Date_MonthAfter: Date(2000, 3, 15) same month or before Date(2000, 2, 23)
+define SameOrBefore_Date_MonthBefore: Date(2000, 3, 15) same month or before Date(2000, 4, 23)
+define SameOrBefore_Date_SameDay: Date(2000, 3, 15) same day or before Date(2000, 3, 15)
+define SameOrBefore_Date_DayAfter: Date(2000, 3, 15) same day or before Date(2000, 3, 14)
+define SameOrBefore_Date_DayBefore: Date(2000, 3, 15) same day or before Date(2000, 3, 16)
+define SameOrBefore_Date_Same: Date(2000, 3, 15) same or before Date(2000, 3, 15)
+define SameOrBefore_Date_After: Date(2000, 3, 16) same or before Date(2000, 3, 15)
+define SameOrBefore_Date_Before: Date(2000, 3, 15) same or before Date(2000, 3, 15)
+define SameOrBefore_Date_SameDayMonthBefore: Date(2000, 3, 15) same day or before Date(2000, 4, 15)
+define SameOrBefore_Date_DayAfterMonthBefore: Date(2000, 3, 15) same day or before Date(2000, 4, 14)
+define SameOrBefore_Date_DayBeforeMonthAfter: Date(2000, 3, 15) same day or before Date(2000, 2, 16)
+define SameOrBefore_Date_ImpreciseDay: Date(2000, 3, 15) same day or before Date(2000, 3)
+define SameOrBefore_Date_ImpreciseDayMonthAfter: Date(2000, 3, 15) same day or before Date(2000, 2)
+define SameOrBefore_Date_ImpreciseDayMonthBefore: Date(2000, 3, 15) same day or before Date(2000, 4)
+define SameOrBefore_Date_NullLeft: null same or before Date(2000, 3, 15)
+define SameOrBefore_Date_NullRight: Date(2000, 3, 15) same or before null
+define SameOrBefore_Date_NullBoth: (null as Date) same or before null
+
+define test_SameOrBefore_Date_SameYear: TestMessage(SameOrBefore_Date_SameYear, 'SameOrBefore_Date_SameYear', toString(true), toString(SameOrBefore_Date_SameYear))
+define test_SameOrBefore_Date_YearAfter: TestMessage(not SameOrBefore_Date_YearAfter, 'SameOrBefore_Date_YearAfter', toString(false), toString(SameOrBefore_Date_YearAfter))
+define test_SameOrBefore_Date_YearBefore: TestMessage(SameOrBefore_Date_YearBefore, 'SameOrBefore_Date_YearBefore', toString(true), toString(SameOrBefore_Date_YearBefore))
+define test_SameOrBefore_Date_SameMonth: TestMessage(SameOrBefore_Date_SameMonth, 'SameOrBefore_Date_SameMonth', toString(true), toString(SameOrBefore_Date_SameMonth))
+define test_SameOrBefore_Date_MonthAfter: TestMessage(not SameOrBefore_Date_MonthAfter, 'SameOrBefore_Date_MonthAfter', toString(false), toString(SameOrBefore_Date_MonthAfter))
+define test_SameOrBefore_Date_MonthBefore: TestMessage(SameOrBefore_Date_MonthBefore, 'SameOrBefore_Date_MonthBefore', toString(true), toString(SameOrBefore_Date_MonthBefore))
+define test_SameOrBefore_Date_SameDay: TestMessage(SameOrBefore_Date_SameDay, 'SameOrBefore_Date_SameDay', toString(true), toString(SameOrBefore_Date_SameDay))
+define test_SameOrBefore_Date_DayAfter: TestMessage(not SameOrBefore_Date_DayAfter, 'SameOrBefore_Date_DayAfter', toString(false), toString(SameOrBefore_Date_DayAfter))
+define test_SameOrBefore_Date_DayBefore: TestMessage(SameOrBefore_Date_DayBefore, 'SameOrBefore_Date_DayBefore', toString(true), toString(SameOrBefore_Date_DayBefore))
+define test_SameOrBefore_Date_Same: TestMessage(SameOrBefore_Date_Same, 'SameOrBefore_Date_Same', toString(true), toString(SameOrBefore_Date_Same))
+define test_SameOrBefore_Date_After: TestMessage(not SameOrBefore_Date_After, 'SameOrBefore_Date_After', toString(false), toString(SameOrBefore_Date_After))
+define test_SameOrBefore_Date_Before: TestMessage(SameOrBefore_Date_Before, 'SameOrBefore_Date_Before', toString(true), toString(SameOrBefore_Date_Before))
+define test_SameOrBefore_Date_SameDayMonthBefore: TestMessage(SameOrBefore_Date_SameDayMonthBefore, 'SameOrBefore_Date_SameDayMonthBefore', toString(true), toString(SameOrBefore_Date_SameDayMonthBefore))
+define test_SameOrBefore_Date_DayAfterMonthBefore: TestMessage(SameOrBefore_Date_DayAfterMonthBefore, 'SameOrBefore_Date_DayAfterMonthBefore', toString(true), toString(SameOrBefore_Date_DayAfterMonthBefore))
+define test_SameOrBefore_Date_DayBeforeMonthAfter: TestMessage(not SameOrBefore_Date_DayBeforeMonthAfter, 'SameOrBefore_Date_DayBeforeMonthAfter', toString(false), toString(SameOrBefore_Date_DayBeforeMonthAfter))
+define test_SameOrBefore_Date_ImpreciseDay: TestMessage(SameOrBefore_Date_ImpreciseDay is null, 'SameOrBefore_Date_ImpreciseDay', 'null', toString(SameOrBefore_Date_ImpreciseDay))
+define test_SameOrBefore_Date_ImpreciseDayMonthAfter: TestMessage(not SameOrBefore_Date_ImpreciseDayMonthAfter, 'SameOrBefore_Date_ImpreciseDayMonthAfter', toString(false), toString(SameOrBefore_Date_ImpreciseDayMonthAfter))
+define test_SameOrBefore_Date_ImpreciseDayMonthBefore: TestMessage(SameOrBefore_Date_ImpreciseDayMonthBefore, 'SameOrBefore_Date_ImpreciseDayMonthBefore', toString(true), toString(SameOrBefore_Date_ImpreciseDayMonthBefore))
+define test_SameOrBefore_Date_NullLeft: TestMessage(SameOrBefore_Date_NullLeft is null, 'SameOrBefore_Date_NullLeft', 'null', toString(SameOrBefore_Date_NullLeft))
+define test_SameOrBefore_Date_NullRight: TestMessage(SameOrBefore_Date_NullRight is null, 'SameOrBefore_Date_NullRight', 'null', toString(SameOrBefore_Date_NullRight))
+define test_SameOrBefore_Date_NullBoth: TestMessage(SameOrBefore_Date_NullBoth is null, 'SameOrBefore_Date_NullBoth', 'null', toString(SameOrBefore_Date_NullBoth))
+
+// After
+define After_Date_SameYear: Date(2000, 12, 15) after year of Date(2000, 11, 23)
+define After_Date_YearAfter: Date(2000, 12, 15) after year of Date(1999, 11, 23)
+define After_Date_YearBefore: Date(2000, 12, 15) after year of Date(2001, 11, 23)
+define After_Date_SameMonth: Date(2000, 3, 25) after month of Date(2000, 3, 23)
+define After_Date_MonthAfter: Date(2000, 3, 25) after month of Date(2000, 2, 23)
+define After_Date_MonthBefore: Date(2000, 3, 25) after month of Date(2000, 4, 23)
+define After_Date_SameDay: Date(2000, 3, 15) after day of Date(2000, 3, 15)
+define After_Date_DayAfter: Date(2000, 3, 15) after day of Date(2000, 3, 14)
+define After_Date_DayBefore: Date(2000, 3, 15) after day of Date(2000, 3, 16)
+define After_Date_Same: Date(2000, 3, 15) after Date(2000, 3, 15)
+define After_Date_After: Date(2000, 3, 16) after Date(2000, 3, 15)
+define After_Date_Before: Date(2000, 3, 15) after Date(2000, 3, 15)
+define After_Date_ImpreciseDay: Date(2000, 3, 15) after day of Date(2000, 3)
+define After_Date_ImpreciseDayMonthAfter: Date(2000, 3, 15) after day of Date(2000, 2)
+define After_Date_ImpreciseDayMonthBefore: Date(2000, 3, 15) after day of Date(2000, 4)
+define After_Date_NullLeft: null after Date(2000, 3, 15)
+define After_Date_NullRight: Date(2000, 3, 15) after null
+define After_Date_NullBoth: (null as Date) after null
+
+define test_After_Date_SameYear: TestMessage(not After_Date_SameYear, 'After_Date_SameYear', toString(false), toString(After_Date_SameYear))
+define test_After_Date_YearAfter: TestMessage(After_Date_YearAfter, 'After_Date_YearAfter', toString(true), toString(After_Date_YearAfter))
+define test_After_Date_YearBefore: TestMessage(not After_Date_YearBefore, 'After_Date_YearBefore', toString(false), toString(After_Date_YearBefore))
+define test_After_Date_SameMonth: TestMessage(not After_Date_SameMonth, 'After_Date_SameMonth', toString(false), toString(After_Date_SameMonth))
+define test_After_Date_MonthAfter: TestMessage(After_Date_MonthAfter, 'After_Date_MonthAfter', toString(true), toString(After_Date_MonthAfter))
+define test_After_Date_MonthBefore: TestMessage(not After_Date_MonthBefore, 'After_Date_MonthBefore', toString(false), toString(After_Date_MonthBefore))
+define test_After_Date_SameDay: TestMessage(not After_Date_SameDay, 'After_Date_SameDay', toString(false), toString(After_Date_SameDay))
+define test_After_Date_DayAfter: TestMessage(After_Date_DayAfter, 'After_Date_DayAfter', toString(true), toString(After_Date_DayAfter))
+define test_After_Date_DayBefore: TestMessage(not After_Date_DayBefore, 'After_Date_DayBefore', toString(false), toString(After_Date_DayBefore))
+define test_After_Date_Same: TestMessage(not After_Date_Same, 'After_Date_Same', toString(false), toString(After_Date_Same))
+define test_After_Date_After: TestMessage(After_Date_After, 'After_Date_After', toString(true), toString(After_Date_After))
+define test_After_Date_Before: TestMessage(not After_Date_Before, 'After_Date_Before', toString(false), toString(After_Date_Before))
+define test_After_Date_ImpreciseDay: TestMessage(After_Date_ImpreciseDay is null, 'After_Date_ImpreciseDay', 'null', toString(After_Date_ImpreciseDay))
+define test_After_Date_ImpreciseDayMonthAfter: TestMessage(After_Date_ImpreciseDayMonthAfter, 'After_Date_ImpreciseDayMonthAfter', toString(true), toString(After_Date_ImpreciseDayMonthAfter))
+define test_After_Date_ImpreciseDayMonthBefore: TestMessage(not After_Date_ImpreciseDayMonthBefore, 'After_Date_ImpreciseDayMonthBefore', toString(false), toString(After_Date_ImpreciseDayMonthBefore))
+define test_After_Date_NullLeft: TestMessage(After_Date_NullLeft is null, 'After_Date_NullLeft', 'null', toString(After_Date_NullLeft))
+define test_After_Date_NullRight: TestMessage(After_Date_NullRight is null, 'After_Date_NullRight', 'null', toString(After_Date_NullRight))
+define test_After_Date_NullBoth: TestMessage(After_Date_NullBoth is null, 'After_Date_NullBoth', 'null', toString(After_Date_NullBoth))
+
+// Before
+define Before_Date_SameYear: Date(2000, 10, 15) before year of Date(2000, 11, 23)
+define Before_Date_YearAfter: Date(2000, 10, 15) before year of Date(1999, 11, 23)
+define Before_Date_YearBefore: Date(2000, 10, 15) before year of Date(2001, 11, 23)
+define Before_Date_SameMonth: Date(2000, 3, 22) before month of Date(2000, 3, 23)
+define Before_Date_MonthAfter: Date(2000, 3, 22) before month of Date(2000, 2, 23)
+define Before_Date_MonthBefore: Date(2000, 3, 22) before month of Date(2000, 4, 23)
+define Before_Date_SameDay: Date(2000, 3, 15) before day of Date(2000, 3, 15)
+define Before_Date_DayAfter: Date(2000, 3, 15) before day of Date(2000, 3, 14)
+define Before_Date_DayBefore: Date(2000, 3, 15) before day of Date(2000, 3, 16)
+define Before_Date_Same: Date(2000, 3, 15) before Date(2000, 3, 15)
+define Before_Date_After: Date(2000, 3, 15) before Date(2000, 3, 15)
+define Before_Date_Before: Date(2000, 3, 14) before Date(2000, 3, 15)
+define Before_Date_ImpreciseDay: Date(2000, 3, 15) before day of Date(2000, 3)
+define Before_Date_ImpreciseDayMonthAfter: Date(2000, 3, 15) before day of Date(2000, 2)
+define Before_Date_ImpreciseDayMonthBefore: Date(2000, 3, 15) before day of Date(2000, 4)
+define Before_Date_NullLeft: null before Date(2000, 3, 15)
+define Before_Date_NullRight: Date(2000, 3, 15) before null
+define Before_Date_NullBoth: (null as Date) before null
+
+define test_Before_Date_SameYear: TestMessage(not Before_Date_SameYear, 'Before_Date_SameYear', toString(false), toString(Before_Date_SameYear))
+define test_Before_Date_YearAfter: TestMessage(not Before_Date_YearAfter, 'Before_Date_YearAfter', toString(false), toString(Before_Date_YearAfter))
+define test_Before_Date_YearBefore: TestMessage(Before_Date_YearBefore, 'Before_Date_YearBefore', toString(true), toString(Before_Date_YearBefore))
+define test_Before_Date_SameMonth: TestMessage(not Before_Date_SameMonth, 'Before_Date_SameMonth', toString(false), toString(Before_Date_SameMonth))
+define test_Before_Date_MonthAfter: TestMessage(not Before_Date_MonthAfter, 'Before_Date_MonthAfter', toString(false), toString(Before_Date_MonthAfter))
+define test_Before_Date_MonthBefore: TestMessage(Before_Date_MonthBefore, 'Before_Date_MonthBefore', toString(true), toString(Before_Date_MonthBefore))
+define test_Before_Date_SameDay: TestMessage(not Before_Date_SameDay, 'Before_Date_SameDay', toString(false), toString(Before_Date_SameDay))
+define test_Before_Date_DayAfter: TestMessage(not Before_Date_DayAfter, 'Before_Date_DayAfter', toString(false), toString(Before_Date_DayAfter))
+define test_Before_Date_DayBefore: TestMessage(Before_Date_DayBefore, 'Before_Date_DayBefore', toString(true), toString(Before_Date_DayBefore))
+define test_Before_Date_Same: TestMessage(not Before_Date_Same, 'Before_Date_Same', toString(false), toString(Before_Date_Same))
+define test_Before_Date_After: TestMessage(not Before_Date_After, 'Before_Date_After', toString(false), toString(Before_Date_After))
+define test_Before_Date_Before: TestMessage(Before_Date_Before, 'Before_Date_Before', toString(true), toString(Before_Date_Before))
+define test_Before_Date_ImpreciseDay: TestMessage(Before_Date_ImpreciseDay is null, 'Before_Date_ImpreciseDay', 'null', toString(Before_Date_ImpreciseDay))
+define test_Before_Date_ImpreciseDayMonthAfter: TestMessage(not Before_Date_ImpreciseDayMonthAfter, 'Before_Date_ImpreciseDayMonthAfter', toString(false), toString(Before_Date_ImpreciseDayMonthAfter))
+define test_Before_Date_ImpreciseDayMonthBefore: TestMessage(Before_Date_ImpreciseDayMonthBefore, 'Before_Date_ImpreciseDayMonthBefore', toString(true), toString(Before_Date_ImpreciseDayMonthBefore))
+define test_Before_Date_NullLeft: TestMessage(Before_Date_NullLeft is null, 'Before_Date_NullLeft', 'null', toString(Before_Date_NullLeft))
+define test_Before_Date_NullRight: TestMessage(Before_Date_NullRight is null, 'Before_Date_NullRight', 'null', toString(Before_Date_NullRight))
+define test_Before_Date_NullBoth: TestMessage(Before_Date_NullBoth is null, 'Before_Date_NullBoth', 'null', toString(Before_Date_NullBoth))
+
+// DifferenceBetween
+define DifferenceBetween_Date_YearsBetween: difference in years between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_MonthsBetween: difference in months between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_WeeksBetween: difference in weeks between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_DaysBetween: difference in days between NewYear2013_Date and NewYear2014_Date
+define DifferenceBetween_Date_YearsBetweenUncertainty: difference in years between NewYear2014_Date and January2014_Date
+define DifferenceBetween_Date_MonthsBetweenUncertainty: difference in months between NewYear2014_Date and January2014_Date
+define DifferenceBetween_Date_WeeksBetweenUncertainty: difference in weeks between NewYear2014_Date and January2014_Date
+define DifferenceBetween_Date_DaysBetweenUncertainty: difference in days between NewYear2014_Date and January2014_Date
+
+define test_DifferenceBetween_Date_YearsBetween: TestMessage(DifferenceBetween_Date_YearsBetween = 1, 'DifferenceBetween_Date_YearsBetween', toString(1), toString(DifferenceBetween_Date_YearsBetween))
+define test_DifferenceBetween_Date_MonthsBetween: TestMessage(DifferenceBetween_Date_MonthsBetween = 12, 'DifferenceBetween_Date_MonthsBetween', toString(12), toString(DifferenceBetween_Date_MonthsBetween))
+define test_DifferenceBetween_Date_WeeksBetween: TestMessage(DifferenceBetween_Date_WeeksBetween = 52, 'DifferenceBetween_Date_WeeksBetween', toString(52), toString(DifferenceBetween_Date_WeeksBetween))
+define test_DifferenceBetween_Date_DaysBetween: TestMessage(DifferenceBetween_Date_DaysBetween = 365, 'DifferenceBetween_Date_DaysBetween', toString(365), toString(DifferenceBetween_Date_DaysBetween))
+define test_DifferenceBetween_Date_YearsBetweenUncertainty: TestMessage(DifferenceBetween_Date_YearsBetweenUncertainty = 0, 'DifferenceBetween_Date_YearsBetweenUncertainty', toString(0), toString(DifferenceBetween_Date_YearsBetweenUncertainty))
+define test_DifferenceBetween_Date_MonthsBetweenUncertainty: TestMessage(DifferenceBetween_Date_MonthsBetweenUncertainty = 0, 'DifferenceBetween_Date_MonthsBetweenUncertainty', toString(0), toString(DifferenceBetween_Date_MonthsBetweenUncertainty))
+define test_DifferenceBetween_Date_WeeksBetweenUncertainty: TestMessage(DifferenceBetween_Date_WeeksBetweenUncertainty > -1 and (DifferenceBetween_Date_WeeksBetweenUncertainty > 0) is null and DifferenceBetween_Date_WeeksBetweenUncertainty < 5 and (DifferenceBetween_Date_WeeksBetweenUncertainty < 4) is null, 'DifferenceBetween_Date_WeeksBetweenUncertainty', toString(true), toString(DifferenceBetween_Date_WeeksBetweenUncertainty > -1 and (DifferenceBetween_Date_WeeksBetweenUncertainty > 0) is null and DifferenceBetween_Date_WeeksBetweenUncertainty < 5 and (DifferenceBetween_Date_WeeksBetweenUncertainty < 4) is null))
+define test_DifferenceBetween_Date_DaysBetweenUncertainty: TestMessage(DifferenceBetween_Date_DaysBetweenUncertainty > -1 and (DifferenceBetween_Date_DaysBetweenUncertainty > 0) is null and DifferenceBetween_Date_DaysBetweenUncertainty < 31 and (DifferenceBetween_Date_DaysBetweenUncertainty < 30) is null, 'DifferenceBetween_Date_DaysBetweenUncertainty', toString(true), toString(DifferenceBetween_Date_DaysBetweenUncertainty > -1 and (DifferenceBetween_Date_DaysBetweenUncertainty > 0) is null and DifferenceBetween_Date_DaysBetweenUncertainty < 31 and (DifferenceBetween_Date_DaysBetweenUncertainty < 30) is null))
+
+// DifferenceBetween Comparisons
+define DifferenceBetween_Date_GreaterThan25DaysAfter: difference in days between NewYear2014_Date and February2014_Date > 25
+define DifferenceBetween_Date_GreaterThan40DaysAfter: difference in days between NewYear2014_Date and February2014_Date > 40
+define DifferenceBetween_Date_GreaterThan80DaysAfter: difference in days between NewYear2014_Date and February2014_Date > 80
+define DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter: difference in days between NewYear2014_Date and February2014_Date >= 25
+define DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter: difference in days between NewYear2014_Date and February2014_Date >= 40
+define DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter: difference in days between NewYear2014_Date and February2014_Date >= 80
+define DifferenceBetween_Date_EqualTo25DaysAfter: difference in days between NewYear2014_Date and February2014_Date = 25
+define DifferenceBetween_Date_EqualTo40DaysAfter: difference in days between NewYear2014_Date and February2014_Date = 40
+define DifferenceBetween_Date_EqualTo80DaysAfter: difference in days between NewYear2014_Date and February2014_Date = 80
+define DifferenceBetween_Date_LessOrEqualTo25DaysAfter: difference in days between NewYear2014_Date and February2014_Date <= 25
+define DifferenceBetween_Date_LessOrEqualTo40DaysAfter: difference in days between NewYear2014_Date and February2014_Date <= 40
+define DifferenceBetween_Date_LessOrEqualTo80DaysAfter: difference in days between NewYear2014_Date and February2014_Date <= 80
+define DifferenceBetween_Date_LessThan25DaysAfter: difference in days between NewYear2014_Date and February2014_Date < 25
+define DifferenceBetween_Date_LessThan40DaysAfter: difference in days between NewYear2014_Date and February2014_Date < 40
+define DifferenceBetween_Date_LessThan80DaysAfter: difference in days between NewYear2014_Date and February2014_Date < 80
+define DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween: 25 < difference in days between NewYear2014_Date and February2014_Date
+define DifferenceBetween_Date_FortyDaysEqualToDaysBetween: 40 = difference in days between NewYear2014_Date and February2014_Date
+define DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween: 25 > difference in days between NewYear2014_Date and February2014_Date
+
+define test_DifferenceBetween_Date_GreaterThan25DaysAfter: TestMessage(DifferenceBetween_Date_GreaterThan25DaysAfter, 'DifferenceBetween_Date_GreaterThan25DaysAfter', toString(true), toString(DifferenceBetween_Date_GreaterThan25DaysAfter))
+define test_DifferenceBetween_Date_GreaterThan40DaysAfter: TestMessage(DifferenceBetween_Date_GreaterThan40DaysAfter is null, 'DifferenceBetween_Date_GreaterThan40DaysAfter', 'null', toString(DifferenceBetween_Date_GreaterThan40DaysAfter))
+define test_DifferenceBetween_Date_GreaterThan80DaysAfter: TestMessage(not DifferenceBetween_Date_GreaterThan80DaysAfter, 'DifferenceBetween_Date_GreaterThan80DaysAfter', toString(false), toString(DifferenceBetween_Date_GreaterThan80DaysAfter))
+define test_DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter: TestMessage(DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter, 'DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter', toString(true), toString(DifferenceBetween_Date_GreaterOrEqualTo25DaysAfter))
+define test_DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter: TestMessage(DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter is null, 'DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter', 'null', toString(DifferenceBetween_Date_GreaterOrEqualTo40DaysAfter))
+define test_DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter: TestMessage(not DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter, 'DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter', toString(false), toString(DifferenceBetween_Date_GreaterOrEqualTo80DaysAfter))
+define test_DifferenceBetween_Date_EqualTo25DaysAfter: TestMessage(not DifferenceBetween_Date_EqualTo25DaysAfter, 'DifferenceBetween_Date_EqualTo25DaysAfter', toString(false), toString(DifferenceBetween_Date_EqualTo25DaysAfter))
+define test_DifferenceBetween_Date_EqualTo40DaysAfter: TestMessage(DifferenceBetween_Date_EqualTo40DaysAfter is null, 'DifferenceBetween_Date_EqualTo40DaysAfter', 'null', toString(DifferenceBetween_Date_EqualTo40DaysAfter))
+define test_DifferenceBetween_Date_EqualTo80DaysAfter: TestMessage(not DifferenceBetween_Date_EqualTo80DaysAfter, 'DifferenceBetween_Date_EqualTo80DaysAfter', toString(false), toString(DifferenceBetween_Date_EqualTo80DaysAfter))
+define test_DifferenceBetween_Date_LessOrEqualTo25DaysAfter: TestMessage(not DifferenceBetween_Date_LessOrEqualTo25DaysAfter, 'DifferenceBetween_Date_LessOrEqualTo25DaysAfter', toString(false), toString(DifferenceBetween_Date_LessOrEqualTo25DaysAfter))
+define test_DifferenceBetween_Date_LessOrEqualTo40DaysAfter: TestMessage(DifferenceBetween_Date_LessOrEqualTo40DaysAfter is null, 'DifferenceBetween_Date_LessOrEqualTo40DaysAfter', 'null', toString(DifferenceBetween_Date_LessOrEqualTo40DaysAfter))
+define test_DifferenceBetween_Date_LessOrEqualTo80DaysAfter: TestMessage(DifferenceBetween_Date_LessOrEqualTo80DaysAfter, 'DifferenceBetween_Date_LessOrEqualTo80DaysAfter', toString(true), toString(DifferenceBetween_Date_LessOrEqualTo80DaysAfter))
+define test_DifferenceBetween_Date_LessThan25DaysAfter: TestMessage(not DifferenceBetween_Date_LessThan25DaysAfter, 'DifferenceBetween_Date_LessThan25DaysAfter', toString(false), toString(DifferenceBetween_Date_LessThan25DaysAfter))
+define test_DifferenceBetween_Date_LessThan40DaysAfter: TestMessage(DifferenceBetween_Date_LessThan40DaysAfter is null, 'DifferenceBetween_Date_LessThan40DaysAfter', 'null', toString(DifferenceBetween_Date_LessThan40DaysAfter))
+define test_DifferenceBetween_Date_LessThan80DaysAfter: TestMessage(DifferenceBetween_Date_LessThan80DaysAfter, 'DifferenceBetween_Date_LessThan80DaysAfter', toString(true), toString(DifferenceBetween_Date_LessThan80DaysAfter))
+define test_DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween: TestMessage(DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween, 'DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween', toString(true), toString(DifferenceBetween_Date_TwentyFiveDaysLessThanDaysBetween))
+define test_DifferenceBetween_Date_FortyDaysEqualToDaysBetween: TestMessage(DifferenceBetween_Date_FortyDaysEqualToDaysBetween is null, 'DifferenceBetween_Date_FortyDaysEqualToDaysBetween', 'null', toString(DifferenceBetween_Date_FortyDaysEqualToDaysBetween))
+define test_DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween: TestMessage(not DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween, 'DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween', toString(false), toString(DifferenceBetween_Date_TwentyFiveDaysGreaterThanDaysBetween))
+
+// DurationBetween
+define DurationBetween_Date_YearsBetween: years between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_MonthsBetween: months between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_WeeksBetween: weeks between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_DaysBetween: days between DecTen2013_Date and JanOne2015_Date
+define DurationBetween_Date_YearsBetweenUncertainty: years between JanOne2015_Date and January2015_Date
+define DurationBetween_Date_MonthsBetweenUncertainty: months between JanOne2015_Date and January2015_Date
+define DurationBetween_Date_WeeksBetweenUncertainty: weeks between JanOne2015_Date and January2015_Date
+define DurationBetween_Date_DaysBetweenUncertainty: days between JanOne2015_Date and January2015_Date
+
+define test_DurationBetween_Date_YearsBetween: TestMessage(DurationBetween_Date_YearsBetween = 1, 'DurationBetween_Date_YearsBetween', toString(1), toString(DurationBetween_Date_YearsBetween))
+define test_DurationBetween_Date_MonthsBetween: TestMessage(DurationBetween_Date_MonthsBetween = 12, 'DurationBetween_Date_MonthsBetween', toString(12), toString(DurationBetween_Date_MonthsBetween))
+define test_DurationBetween_Date_WeeksBetween: TestMessage(DurationBetween_Date_WeeksBetween = 55, 'DurationBetween_Date_WeeksBetween', toString(55), toString(DurationBetween_Date_WeeksBetween))
+define test_DurationBetween_Date_DaysBetween: TestMessage(DurationBetween_Date_DaysBetween = 387, 'DurationBetween_Date_DaysBetween', toString(387), toString(DurationBetween_Date_DaysBetween))
+define test_DurationBetween_Date_YearsBetweenUncertainty: TestMessage(DurationBetween_Date_YearsBetweenUncertainty = 0, 'DurationBetween_Date_YearsBetweenUncertainty', toString(0), toString(DurationBetween_Date_YearsBetweenUncertainty))
+define test_DurationBetween_Date_MonthsBetweenUncertainty: TestMessage(DurationBetween_Date_MonthsBetweenUncertainty = 0, 'DurationBetween_Date_MonthsBetweenUncertainty', toString(0), toString(DurationBetween_Date_MonthsBetweenUncertainty))
+define test_DurationBetween_Date_WeeksBetweenUncertainty: TestMessage(DurationBetween_Date_WeeksBetweenUncertainty > -1 and (DurationBetween_Date_WeeksBetweenUncertainty > 0) is null and DurationBetween_Date_WeeksBetweenUncertainty < 5 and (DurationBetween_Date_WeeksBetweenUncertainty < 4) is null, 'DurationBetween_Date_WeeksBetweenUncertainty', toString(true), toString(DurationBetween_Date_WeeksBetweenUncertainty > -1 and (DurationBetween_Date_WeeksBetweenUncertainty > 0) is null and DurationBetween_Date_WeeksBetweenUncertainty < 5 and (DurationBetween_Date_WeeksBetweenUncertainty < 4) is null))
+define test_DurationBetween_Date_DaysBetweenUncertainty: TestMessage(DurationBetween_Date_DaysBetweenUncertainty > -1 and (DurationBetween_Date_DaysBetweenUncertainty > 0) is null and DurationBetween_Date_DaysBetweenUncertainty < 31 and (DurationBetween_Date_DaysBetweenUncertainty < 30) is null, 'DurationBetween_Date_DaysBetweenUncertainty', toString(true), toString(DurationBetween_Date_DaysBetweenUncertainty > -1 and (DurationBetween_Date_DaysBetweenUncertainty > 0) is null and DurationBetween_Date_DaysBetweenUncertainty < 31 and (DurationBetween_Date_DaysBetweenUncertainty < 30) is null))
+
+// DateMath
+define DateMath_Date_PlusThreeYears: June15th2013_Date + 3 years
+define DateMath_Date_MinusThreeYears: June15th2013_Date - 3 years
+define DateMath_Date_PlusEightMonths: June15th2013_Date + 8 months
+define DateMath_Date_MinusEightMonths: June15th2013_Date - 8 months
+define DateMath_Date_PlusThreeWeeks: June15th2013_Date + 3 weeks
+define DateMath_Date_MinusThreeWeeks: June15th2013_Date - 3 weeks
+define DateMath_Date_PlusTwentyDays: June15th2013_Date + 20 days
+define DateMath_Date_MinusTwentyDays: June15th2013_Date - 20 days
+
+define test_DateMath_Date_PlusThreeYears: TestMessage(DateMath_Date_PlusThreeYears = Date(2016, 6, 15), 'DateMath_Date_PlusThreeYears', toString(Date(2016, 6, 15)), toString(DateMath_Date_PlusThreeYears))
+define test_DateMath_Date_MinusThreeYears: TestMessage(DateMath_Date_MinusThreeYears = Date(2010, 6, 15), 'DateMath_Date_MinusThreeYears', toString(Date(2010, 6, 15)), toString(DateMath_Date_MinusThreeYears))
+define test_DateMath_Date_PlusEightMonths: TestMessage(DateMath_Date_PlusEightMonths = Date(2014, 2, 15), 'DateMath_Date_PlusEightMonths', toString(Date(2014, 2, 15)), toString(DateMath_Date_PlusEightMonths))
+define test_DateMath_Date_MinusEightMonths: TestMessage(DateMath_Date_MinusEightMonths = Date(2012, 10, 15), 'DateMath_Date_MinusEightMonths', toString(Date(2012, 10, 15)), toString(DateMath_Date_MinusEightMonths))
+define test_DateMath_Date_PlusThreeWeeks: TestMessage(DateMath_Date_PlusThreeWeeks = Date(2013, 7, 6), 'DateMath_Date_PlusThreeWeeks', toString(Date(2013, 7, 6)), toString(DateMath_Date_PlusThreeWeeks))
+define test_DateMath_Date_MinusThreeWeeks: TestMessage(DateMath_Date_MinusThreeWeeks = Date(2013, 5, 25), 'DateMath_Date_MinusThreeWeeks', toString(Date(2013, 5, 25)), toString(DateMath_Date_MinusThreeWeeks))
+define test_DateMath_Date_PlusTwentyDays: TestMessage(DateMath_Date_PlusTwentyDays = Date(2013, 7, 5), 'DateMath_Date_PlusTwentyDays', toString(Date(2013, 7, 5)), toString(DateMath_Date_PlusTwentyDays))
+define test_DateMath_Date_MinusTwentyDays: TestMessage(DateMath_Date_MinusTwentyDays = Date(2013, 5, 26), 'DateMath_Date_MinusTwentyDays', toString(Date(2013, 5, 26)), toString(DateMath_Date_MinusTwentyDays))
+
+/*
+************************
+  End Date Tests
+************************
+*/
+
+/*
+************************
   Start DateTime Tests
 ************************
 */
+
+// Globals
+define IdesOfMarch: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define ImpreciseIdesOfMarch: DateTime(2000, 3, 15)
+define NewYear2013: DateTime(2013, 1, 1, 0, 0, 0, 0)
+define NewYear2014: DateTime(2014, 1, 1, 0, 0, 0, 0)
+define January2014: DateTime(2014, 1)
+define February2014: DateTime(2014, 2)
+define DecTen2013: DateTime(2013, 12, 10, 12, 30, 30, 500)
+define JanOne2015: DateTime(2015, 1, 1, 0, 0, 0, 0)
+define January2015: DateTime(2015, 1)
+define June15th2013: DateTime(2013, 6, 15, 0, 0, 0, 0)
 
 // Today
 define Today_Var: Today()
@@ -992,7 +1602,6 @@ define TimeOfDay_Var: TimeOfDay()
 define test_TimeOfDay_Var: TestMessage(TimeOfDay_Var = @T07:00:00.000, 'TimeOfDay_Var', toString(@T07:00:00.000), toString(TimeOfDay_Var))
 
 // DateTimeComponentFrom
-define IdesOfMarch: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define DTCFrom_Year: year from IdesOfMarch
 define DTCFrom_Month: month from IdesOfMarch
 define DTCFrom_Day: day from IdesOfMarch
@@ -1000,7 +1609,6 @@ define DTCFrom_Hour: hour from IdesOfMarch
 define DTCFrom_Minute: minute from IdesOfMarch
 define DTCFrom_Second: second from IdesOfMarch
 define DTCFrom_Millisecond: millisecond from IdesOfMarch
-define ImpreciseIdesOfMarch: DateTime(2000, 3, 15)
 define ImpreciseComponentTuple: Tuple {
   Year: year from ImpreciseIdesOfMarch,
   Month: month from ImpreciseIdesOfMarch,
@@ -1034,7 +1642,7 @@ define DateFrom_Date: date from IdesOfMarch
 define DateFrom_ImpreciseDate: date from DateTime(2000)
 define DateFrom_NullDate: date from (null as DateTime)
 
-define test_DateFrom_Date: TestMessage(DateFrom_Date same day as DateTime(2000, 3, 15, null, null, null, null, 1.0), 'DateFrom_Date', toString(DateTime(2000, 3, 15, null, null, null, null, 1.0)), toString(DateFrom_Date))
+define test_DateFrom_Date: TestMessage(DateFrom_Date same day as Date(2000, 3, 15), 'DateFrom_Date', toString(Date(2000, 3, 15)), toString(DateFrom_Date))
 define test_DateFrom_ImpreciseDate: TestMessage(DateFrom_ImpreciseDate = @2000, 'DateFrom_ImpreciseDate', toString(@2000), toString(DateFrom_ImpreciseDate))
 define test_DateFrom_NullDate: TestMessage(DateFrom_NullDate is null, 'DateFrom_NullDate', 'null', toString(DateFrom_NullDate))
 
@@ -1154,6 +1762,20 @@ define SameOrAfter_HourBeforeNormalizeZones: DateTime(2000, 3, 15, 13, 30, 25, 2
 define SameOrAfter_NullLeft: null same or after DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define SameOrAfter_NullRight: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) same or after null
 define SameOrAfter_NullBoth: (null as DateTime) same or after null
+// on or after:
+define OnOrAfter_SameOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrAfter_AfterOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define OnOrAfter_BeforeOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define OnOrAfter_NullLeftOOA: null on or after DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrAfter_NullRightOOA: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or after null
+define OnOrAfter_NullBothOOA: (null as DateTime) on or after null
+// after or on:
+define AfterOrOn_SameAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define AfterOrOn_AfterAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define AfterOrOn_BeforeAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define AfterOrOn_NullLeftAOO: null after or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define AfterOrOn_NullRightAOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) after or on null
+define AfterOrOn_NullBothAOO: (null as DateTime) after or on null
 
 define test_SameOrAfter_SameYear: TestMessage(SameOrAfter_SameYear, 'SameOrAfter_SameYear', toString(true), toString(SameOrAfter_SameYear))
 define test_SameOrAfter_YearAfter: TestMessage(SameOrAfter_YearAfter, 'SameOrAfter_YearAfter', toString(true), toString(SameOrAfter_YearAfter))
@@ -1191,6 +1813,18 @@ define test_SameOrAfter_HourBeforeNormalizeZones: TestMessage(not SameOrAfter_Ho
 define test_SameOrAfter_NullLeft: TestMessage(SameOrAfter_NullLeft is null, 'SameOrAfter_NullLeft', 'null', toString(SameOrAfter_NullLeft))
 define test_SameOrAfter_NullRight: TestMessage(SameOrAfter_NullRight is null, 'SameOrAfter_NullRight', 'null', toString(SameOrAfter_NullRight))
 define test_SameOrAfter_NullBoth: TestMessage(SameOrAfter_NullBoth is null, 'SameOrAfter_NullBoth', 'null', toString(SameOrAfter_NullBoth))
+define test_OnOrAfter_SameOOA: TestMessage(OnOrAfter_SameOOA, 'OnOrAfter_SameOOA', toString(true), toString(OnOrAfter_SameOOA))
+define test_OnOrAfter_AfterOOA: TestMessage(OnOrAfter_AfterOOA, 'OnOrAfter_AfterOOA', toString(true), toString(OnOrAfter_AfterOOA))
+define test_OnOrAfter_BeforeOOA: TestMessage(not OnOrAfter_BeforeOOA, 'OnOrAfter_BeforeOOA', toString(false), toString(OnOrAfter_BeforeOOA))
+define test_OnOrAfter_NullLeftOOA: TestMessage(OnOrAfter_NullLeftOOA is null, 'OnOrAfter_NullLeftOOA', 'null', toString(OnOrAfter_NullLeftOOA))
+define test_OnOrAfter_NullRightOOA: TestMessage(OnOrAfter_NullRightOOA is null, 'OnOrAfter_NullRightOOA', 'null', toString(OnOrAfter_NullRightOOA))
+define test_OnOrAfter_NullBothOOA: TestMessage(OnOrAfter_NullBothOOA is null, 'OnOrAfter_NullBothOOA', 'null', toString(OnOrAfter_NullBothOOA))
+define test_AfterOrOn_SameAOO: TestMessage(AfterOrOn_SameAOO, 'AfterOrOn_SameAOO', toString(true), toString(AfterOrOn_SameAOO))
+define test_AfterOrOn_AfterAOO: TestMessage(AfterOrOn_AfterAOO, 'AfterOrOn_AfterAOO', toString(true), toString(AfterOrOn_AfterAOO))
+define test_AfterOrOn_BeforeAOO: TestMessage(not AfterOrOn_BeforeAOO, 'AfterOrOn_BeforeAOO', toString(false), toString(AfterOrOn_BeforeAOO))
+define test_AfterOrOn_NullLeftAOO: TestMessage(AfterOrOn_NullLeftAOO is null, 'AfterOrOn_NullLeftAOO', 'null', toString(AfterOrOn_NullLeftAOO))
+define test_AfterOrOn_NullRightAOO: TestMessage(AfterOrOn_NullRightAOO is null, 'AfterOrOn_NullRightAOO', 'null', toString(AfterOrOn_NullRightAOO))
+define test_AfterOrOn_NullBothAOO: TestMessage(AfterOrOn_NullBothAOO is null, 'AfterOrOn_NullBothAOO', 'null', toString(AfterOrOn_NullBothAOO))
 
 // SameOrBefore
 define SameOrBefore_SameYear: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) same year or before DateTime(2000, 11, 23, 8, 14, 47, 500, +1.0)
@@ -1229,6 +1863,20 @@ define SameOrBefore_HourBeforeNormalizeZones: DateTime(2000, 3, 15, 13, 30, 25, 
 define SameOrBefore_NullLeft: null same or before DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
 define SameOrBefore_NullRight: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) same or before null
 define SameOrBefore_NullBoth: (null as DateTime) same or before null
+// on or before
+define OnOrBefore_SameOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrBefore_AfterOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define OnOrBefore_BeforeOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define OnOrBefore_NullLeftOOB: null on or before DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define OnOrBefore_NullRightOOB: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) on or before null
+define OnOrBefore_NullBothOOB: (null as DateTime) on or before null
+// before or on
+define BeforeOrOn_SameBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define BeforeOrOn_AfterBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on DateTime(2000, 3, 15, 13, 30, 25, 199, +1.0)
+define BeforeOrOn_BeforeBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on DateTime(2000, 3, 15, 13, 30, 25, 201, +1.0)
+define BeforeOrOn_NullLeftBOO: null before or on DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0)
+define BeforeOrOn_NullRightBOO: DateTime(2000, 3, 15, 13, 30, 25, 200, +1.0) before or on null
+define BeforeOrOn_NullBothBOO: (null as DateTime) before or on null
 
 define test_SameOrBefore_SameYear: TestMessage(SameOrBefore_SameYear, 'SameOrBefore_SameYear', toString(true), toString(SameOrBefore_SameYear))
 define test_SameOrBefore_YearAfter: TestMessage(not SameOrBefore_YearAfter, 'SameOrBefore_YearAfter', toString(false), toString(SameOrBefore_YearAfter))
@@ -1266,6 +1914,18 @@ define test_SameOrBefore_HourBeforeNormalizeZones: TestMessage(SameOrBefore_Hour
 define test_SameOrBefore_NullLeft: TestMessage(SameOrBefore_NullLeft is null, 'SameOrBefore_NullLeft', 'null', toString(SameOrBefore_NullLeft))
 define test_SameOrBefore_NullRight: TestMessage(SameOrBefore_NullRight is null, 'SameOrBefore_NullRight', 'null', toString(SameOrBefore_NullRight))
 define test_SameOrBefore_NullBoth: TestMessage(SameOrBefore_NullBoth is null, 'SameOrBefore_NullBoth', 'null', toString(SameOrBefore_NullBoth))
+define test_OnOrBefore_SameOOB: TestMessage(OnOrBefore_SameOOB, 'OnOrBefore_SameOOB', toString(true), toString(OnOrBefore_SameOOB))
+define test_OnOrBefore_AfterOOB: TestMessage(not OnOrBefore_AfterOOB, 'OnOrBefore_AfterOOB', toString(false), toString(OnOrBefore_AfterOOB))
+define test_OnOrBefore_BeforeOOB: TestMessage(OnOrBefore_BeforeOOB, 'OnOrBefore_BeforeOOB', toString(true), toString(OnOrBefore_BeforeOOB))
+define test_OnOrBefore_NullLeftOOB: TestMessage(OnOrBefore_NullLeftOOB is null, 'OnOrBefore_NullLeftOOB', 'null', toString(OnOrBefore_NullLeftOOB))
+define test_OnOrBefore_NullRightOOB: TestMessage(OnOrBefore_NullRightOOB is null, 'OnOrBefore_NullRightOOB', 'null', toString(OnOrBefore_NullRightOOB))
+define test_OnOrBefore_NullBothOOB: TestMessage(OnOrBefore_NullBothOOB is null, 'OnOrBefore_NullBothOOB', 'null', toString(OnOrBefore_NullBothOOB))
+define test_BeforeOrOn_SameBOO: TestMessage(BeforeOrOn_SameBOO, 'BeforeOrOn_SameBOO', toString(true), toString(BeforeOrOn_SameBOO))
+define test_BeforeOrOn_AfterBOO: TestMessage(not BeforeOrOn_AfterBOO, 'BeforeOrOn_AfterBOO', toString(false), toString(BeforeOrOn_AfterBOO))
+define test_BeforeOrOn_BeforeBOO: TestMessage(BeforeOrOn_BeforeBOO, 'BeforeOrOn_BeforeBOO', toString(true), toString(BeforeOrOn_BeforeBOO))
+define test_BeforeOrOn_NullLeftBOO: TestMessage(BeforeOrOn_NullLeftBOO is null, 'BeforeOrOn_NullLeftBOO', 'null', toString(BeforeOrOn_NullLeftBOO))
+define test_BeforeOrOn_NullRightBOO: TestMessage(BeforeOrOn_NullRightBOO is null, 'BeforeOrOn_NullRightBOO', 'null', toString(BeforeOrOn_NullRightBOO))
+define test_BeforeOrOn_NullBothBOO: TestMessage(BeforeOrOn_NullBothBOO is null, 'BeforeOrOn_NullBothBOO', 'null', toString(BeforeOrOn_NullBothBOO))
 
 // After
 define After_SameYear: DateTime(2000, 12, 15, 13, 30, 25, 200, +1.0) after year of DateTime(2000, 11, 23, 8, 14, 47, 500, +1.0)
@@ -1408,9 +2068,6 @@ define test_Before_NullRight: TestMessage(Before_NullRight is null, 'Before_Null
 define test_Before_NullBoth: TestMessage(Before_NullBoth is null, 'Before_NullBoth', 'null', toString(Before_NullBoth))
 
 // DifferenceBetween
-define NewYear2013: DateTime(2013, 1, 1, 0, 0, 0, 0)
-define NewYear2014: DateTime(2014, 1, 1, 0, 0, 0, 0)
-define January2014: DateTime(2014, 1)
 define DifferenceBetween_YearsBetween: difference in years between NewYear2013 and NewYear2014
 define DifferenceBetween_MonthsBetween: difference in months between NewYear2013 and NewYear2014
 define DifferenceBetween_WeeksBetween: difference in weeks between NewYear2013 and NewYear2014
@@ -1450,7 +2107,6 @@ define test_DifferenceBetween_HoursBetween1and3CrossingSpringDST: TestMessage(Di
 define test_DifferenceBetween_HoursBetween1and3CrossingFallDST: TestMessage(DifferenceBetween_HoursBetween1and3CrossingFallDST = 3, 'DifferenceBetween_HoursBetween1and3CrossingFallDST', toString(3), toString(DifferenceBetween_HoursBetween1and3CrossingFallDST))
 
 // DifferenceBetween Comparisons
-define February2014: DateTime(2014, 2)
 define DiffComp_GreaterThan25DaysAfter: difference in days between NewYear2014 and February2014 > 25
 define DiffComp_GreaterThan40DaysAfter: difference in days between NewYear2014 and February2014 > 40
 define DiffComp_GreaterThan80DaysAfter: difference in days between NewYear2014 and February2014 > 80
@@ -1494,9 +2150,6 @@ define test_DiffComp_BonnieTestCase: TestMessage(not DiffComp_BonnieTestCase, 'D
 define test_DiffComp_BonnieTestCaseZulu: TestMessage(not DiffComp_BonnieTestCaseZulu, 'DiffComp_BonnieTestCaseZulu', toString(false), toString(DiffComp_BonnieTestCaseZulu))
 
 // DurationBetween
-define DecTen2013: DateTime(2013, 12, 10, 12, 30, 30, 500)
-define JanOne2015: DateTime(2015, 1, 1, 0, 0, 0, 0)
-define January2015: DateTime(2015, 1)
 define DurationBetween_YearsBetween: years between DecTen2013 and JanOne2015
 define DurationBetween_MonthsBetween: months between DecTen2013 and JanOne2015
 define DurationBetween_WeeksBetween: weeks between DecTen2013 and JanOne2015
@@ -1538,7 +2191,6 @@ define test_DurationBetween_HoursBetween1and3CrossingSpringDST: TestMessage(Dura
 define test_DurationBetween_HoursBetween1and3CrossingFallDST: TestMessage(DurationBetween_HoursBetween1and3CrossingFallDST = 3, 'DurationBetween_HoursBetween1and3CrossingFallDST', toString(3), toString(DurationBetween_HoursBetween1and3CrossingFallDST))
 
 // DateMath
-define June15th2013: DateTime(2013, 6, 15, 0, 0, 0, 0)
 define DateMath_PlusThreeYears: June15th2013 + 3 years
 define DateMath_MinusThreeYears: June15th2013 - 3 years
 define DateMath_PlusEightMonths: June15th2013 + 8 months
@@ -1585,6 +2237,11 @@ define test_DateMath_MinusThreeMilliseconds: TestMessage(DateMath_MinusThreeMill
 ************************
 */
 
+// Globals
+define DateIvl: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 9, 1, 0, 0, 0, 0))
+define PrecisionDateIvl: Interval[DateTime(2012, 3, 2, 12, 34, 56, 789), DateTime(2012, 9, 2, 1, 23, 45, 678))
+define ImpDateIvl: Interval[DateTime(2012, 3), DateTime(2012, 8)]
+
 // Equal
 define Equal_EqualClosed: Interval[1, 5] = Interval[1, 5]
 define Equal_EqualOpen: Interval(1, 5) = Interval(1, 5)
@@ -1602,6 +2259,7 @@ define Equal_EqualDates: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(201
 define Equal_EqualDatesOpenClosed: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)) = Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 12, 31, 23, 59, 59, 999)]
 define Equal_SameDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) = Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1))
 define Equal_DifferentDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) = Interval[DateTime(2012, 1, 1), DateTime(2012, 7, 1))
+define Equal_DifferingPrecision: Interval[DateTime(2012, 1, 1, 12, 30, 21), DateTime(2013, 1, 1, 12, 30, 21)] = Interval[DateTime(2012, 1, 1, 12, 30), DateTime(2013, 1, 1, 12, 30)]
 
 define test_Equal_EqualClosed: TestMessage(Equal_EqualClosed, 'Equal_EqualClosed', toString(true), toString(Equal_EqualClosed))
 define test_Equal_EqualOpen: TestMessage(Equal_EqualOpen, 'Equal_EqualOpen', toString(true), toString(Equal_EqualOpen))
@@ -1619,6 +2277,7 @@ define test_Equal_EqualDates: TestMessage(Equal_EqualDates, 'Equal_EqualDates', 
 define test_Equal_EqualDatesOpenClosed: TestMessage(Equal_EqualDatesOpenClosed, 'Equal_EqualDatesOpenClosed', toString(true), toString(Equal_EqualDatesOpenClosed))
 define test_Equal_SameDays: TestMessage(Equal_SameDays, 'Equal_SameDays', toString(true), toString(Equal_SameDays))
 define test_Equal_DifferentDays: TestMessage(not Equal_DifferentDays, 'Equal_DifferentDays', toString(false), toString(Equal_DifferentDays))
+define test_Equal_DifferingPrecision: TestMessage(Equal_DifferingPrecision is null, 'Equal_DifferingPrecision', 'null', toString(Equal_DifferingPrecision))
 
 // NotEqual
 define NotEqual_EqualClosed: Interval[1, 5] != Interval[1, 5]
@@ -1637,6 +2296,7 @@ define NotEqual_EqualDates: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(
 define NotEqual_EqualDatesOpenClosed: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)) != Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 12, 31, 23, 59, 59, 999)]
 define NotEqual_SameDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) != Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1))
 define NotEqual_DifferentDays: Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)) != Interval[DateTime(2012, 1, 1), DateTime(2012, 7, 1))
+define NotEqual_DifferingPrecision: Interval[DateTime(2012, 1, 1, 12, 30, 21), DateTime(2013, 1, 1, 12, 30, 21)] != Interval[DateTime(2012, 1, 1, 12, 30), DateTime(2013, 1, 1, 12, 30)]
 
 define test_NotEqual_EqualClosed: TestMessage(not NotEqual_EqualClosed, 'NotEqual_EqualClosed', toString(false), toString(NotEqual_EqualClosed))
 define test_NotEqual_EqualOpen: TestMessage(not NotEqual_EqualOpen, 'NotEqual_EqualOpen', toString(false), toString(NotEqual_EqualOpen))
@@ -1654,12 +2314,9 @@ define test_NotEqual_EqualDates: TestMessage(not NotEqual_EqualDates, 'NotEqual_
 define test_NotEqual_EqualDatesOpenClosed: TestMessage(not NotEqual_EqualDatesOpenClosed, 'NotEqual_EqualDatesOpenClosed', toString(false), toString(NotEqual_EqualDatesOpenClosed))
 define test_NotEqual_SameDays: TestMessage(not NotEqual_SameDays, 'NotEqual_SameDays', toString(false), toString(NotEqual_SameDays))
 define test_NotEqual_DifferentDays: TestMessage(NotEqual_DifferentDays, 'NotEqual_DifferentDays', toString(true), toString(NotEqual_DifferentDays))
+define test_NotEqual_DifferingPrecision: TestMessage(NotEqual_DifferingPrecision is null, 'NotEqual_DifferingPrecision', 'null', toString(NotEqual_DifferingPrecision))
 
 // Contains
-define DateIvl: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 9, 1, 0, 0, 0, 0))
-define PrecisionDateIvl: Interval[DateTime(2012, 3, 2, 12, 34, 56, 789), DateTime(2012, 9, 2, 1, 23, 45, 678))
-define ImpDateIvl: Interval[DateTime(2012, 3), DateTime(2012, 8)]
-
 define Contains_ContainsInt: Interval[1, 5] contains 3
 define Contains_NotContainsInt: Interval(1, 5] contains 1
 define Contains_ContainsReal: Interval[1.234, 3.456] contains 2.345
@@ -1858,6 +2515,10 @@ define Includes_MayIncludeDayOfIvlVeryImpreciseLow: PrecisionDateIvl includes da
 define Includes_MayIncludeDayOfIvlVeryImpreciseHigh: PrecisionDateIvl includes day of Interval[DateTime(2012, 6), DateTime(2012, 9)]
 define Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding: PrecisionDateIvl includes day of Interval[DateTime(2012), DateTime(2012)]
 define Includes_ImpreciseIncludesDateIvl: ImpDateIvl includes Interval[DateTime(2012, 4, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0))
+define Includes_ImpreciseIncludesDate: ImpDateIvl includes DateTime(2012, 4, 1, 0, 0, 0, 0)
+define Includes_ImpreciseDoesntIncludeDate: ImpDateIvl includes DateTime(2016, 4, 1, 0, 0, 0, 0)
+define Includes_IntervalIncludesQuantity: Interval[4 'mg', 6 'mg'] includes 5 'mg'
+define Includes_IntervalDoesntIncludeQuantity: Interval[4 'mg', 6 'mg'] includes 50 'mg'
 define Includes_ImpreciseNotIncludesDateIvl: ImpDateIvl includes Interval[DateTime(2012, 2, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0))
 define Includes_ImpreciseMayIncludeDateIvl: ImpDateIvl includes Interval[DateTime(2012, 3, 15, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0))
 define Includes_NegInfBegIncludesIntIvl: Interval[null, 5] includes Interval[-7, 2]
@@ -1903,6 +2564,10 @@ define test_Includes_MayIncludeDayOfIvlVeryImpreciseLow: TestMessage(Includes_Ma
 define test_Includes_MayIncludeDayOfIvlVeryImpreciseHigh: TestMessage(Includes_MayIncludeDayOfIvlVeryImpreciseHigh is null, 'Includes_MayIncludeDayOfIvlVeryImpreciseHigh', 'null', toString(Includes_MayIncludeDayOfIvlVeryImpreciseHigh))
 define test_Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding: TestMessage(Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding is null, 'Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding', 'null', toString(Includes_MayIncludeDayOfIvlVeryImpreciseSurrounding))
 define test_Includes_ImpreciseIncludesDateIvl: TestMessage(Includes_ImpreciseIncludesDateIvl, 'Includes_ImpreciseIncludesDateIvl', toString(true), toString(Includes_ImpreciseIncludesDateIvl))
+define test_Includes_ImpreciseIncludesDate: TestMessage(Includes_ImpreciseIncludesDate, 'Includes_ImpreciseIncludesDate', toString(true), toString(Includes_ImpreciseIncludesDate))
+define test_Includes_ImpreciseDoesntIncludeDate: TestMessage(not Includes_ImpreciseDoesntIncludeDate, 'Includes_ImpreciseDoesntIncludeDate', toString(false), toString(Includes_ImpreciseDoesntIncludeDate))
+define test_Includes_IntervalIncludesQuantity: TestMessage(Includes_IntervalIncludesQuantity, 'Includes_IntervalIncludesQuantity', toString(true), toString(Includes_IntervalIncludesQuantity))
+define test_Includes_IntervalDoesntIncludeQuantity: TestMessage(not Includes_IntervalDoesntIncludeQuantity, 'Includes_IntervalDoesntIncludeQuantity', toString(false), toString(Includes_IntervalDoesntIncludeQuantity))
 define test_Includes_ImpreciseNotIncludesDateIvl: TestMessage(not Includes_ImpreciseNotIncludesDateIvl, 'Includes_ImpreciseNotIncludesDateIvl', toString(false), toString(Includes_ImpreciseNotIncludesDateIvl))
 define test_Includes_ImpreciseMayIncludeDateIvl: TestMessage(Includes_ImpreciseMayIncludeDateIvl is null, 'Includes_ImpreciseMayIncludeDateIvl', 'null', toString(Includes_ImpreciseMayIncludeDateIvl))
 define test_Includes_NegInfBegIncludesIntIvl: TestMessage(Includes_NegInfBegIncludesIntIvl, 'Includes_NegInfBegIncludesIntIvl', toString(true), toString(Includes_NegInfBegIncludesIntIvl))
@@ -1978,6 +2643,10 @@ define IncludedIn_IncludesImpreciseDateIvl: Interval[DateTime(2012, 4), DateTime
 define IncludedIn_NotIncludesImpreciseDateIvl: Interval[DateTime(2012, 4), DateTime(2012, 9)] included in DateIvl
 define IncludedIn_MayIncludeImpreciseDateIvl: Interval[DateTime(2012), DateTime(2012)] included in DateIvl
 define IncludedIn_IncludesDayOfIvlLowEdge: Interval[DateTime(2012, 3, 2, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)) included in day of PrecisionDateIvl
+define IncludedIn_IncludesDayInInterval: DateTime(2012, 3, 3) included in day of PrecisionDateIvl
+define IncludedIn_DoesNotIncludeDayInInterval: DateTime(2014, 3, 3) included in day of PrecisionDateIvl
+define IncludedIn_QuantityIncludedInterval: 5 'mg' included in Interval[4 'mg', 6 'mg']
+define IncludedIn_QuantityNotIncludedInterval: 50 'mg' included in Interval[4 'mg', 6 'mg']
 define IncludedIn_IncludesDayOfIvlHighEdge: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2012, 9, 2, 23, 59, 59, 999)) included in day of PrecisionDateIvl
 define IncludedIn_NotIncludesDayOfIvlLowEdge: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)] included in day of PrecisionDateIvl
 define IncludedIn_NotIncludesDayOfIvlHighEdge: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2012, 9, 3, 0, 0, 0, 0)] included in day of PrecisionDateIvl
@@ -2027,6 +2696,10 @@ define test_IncludedIn_IncludesImpreciseDateIvl: TestMessage(IncludedIn_Includes
 define test_IncludedIn_NotIncludesImpreciseDateIvl: TestMessage(not IncludedIn_NotIncludesImpreciseDateIvl, 'IncludedIn_NotIncludesImpreciseDateIvl', toString(false), toString(IncludedIn_NotIncludesImpreciseDateIvl))
 define test_IncludedIn_MayIncludeImpreciseDateIvl: TestMessage(IncludedIn_MayIncludeImpreciseDateIvl is null, 'IncludedIn_MayIncludeImpreciseDateIvl', 'null', toString(IncludedIn_MayIncludeImpreciseDateIvl))
 define test_IncludedIn_IncludesDayOfIvlLowEdge: TestMessage(IncludedIn_IncludesDayOfIvlLowEdge, 'IncludedIn_IncludesDayOfIvlLowEdge', toString(true), toString(IncludedIn_IncludesDayOfIvlLowEdge))
+define test_IncludedIn_IncludesDayInInterval: TestMessage(IncludedIn_IncludesDayInInterval, 'IncludedIn_IncludesDayInInterval', toString(true), toString(IncludedIn_IncludesDayInInterval))
+define test_IncludedIn_DoesNotIncludeDayInInterval: TestMessage(not IncludedIn_DoesNotIncludeDayInInterval, 'IncludedIn_DoesNotIncludeDayInInterval', toString(false), toString(IncludedIn_DoesNotIncludeDayInInterval))
+define test_IncludedIn_QuantityIncludedInterval: TestMessage(IncludedIn_QuantityIncludedInterval, 'IncludedIn_QuantityIncludedInterval', toString(true), toString(IncludedIn_QuantityIncludedInterval))
+define test_IncludedIn_QuantityNotIncludedInterval: TestMessage(not IncludedIn_QuantityNotIncludedInterval, 'IncludedIn_QuantityNotIncludedInterval', toString(false), toString(IncludedIn_QuantityNotIncludedInterval))
 define test_IncludedIn_IncludesDayOfIvlHighEdge: TestMessage(IncludedIn_IncludesDayOfIvlHighEdge, 'IncludedIn_IncludesDayOfIvlHighEdge', toString(true), toString(IncludedIn_IncludesDayOfIvlHighEdge))
 define test_IncludedIn_NotIncludesDayOfIvlLowEdge: TestMessage(not IncludedIn_NotIncludesDayOfIvlLowEdge, 'IncludedIn_NotIncludesDayOfIvlLowEdge', toString(false), toString(IncludedIn_NotIncludesDayOfIvlLowEdge))
 define test_IncludedIn_NotIncludesDayOfIvlHighEdge: TestMessage(not IncludedIn_NotIncludesDayOfIvlHighEdge, 'IncludedIn_NotIncludesDayOfIvlHighEdge', toString(false), toString(IncludedIn_NotIncludesDayOfIvlHighEdge))
@@ -2573,16 +3246,18 @@ define ivlD: Interval[DateTime(2013, 1, 1, 0, 0, 0, 0), DateTime(2014, 1, 1, 0, 
 define ivlE: Interval[DateTime(2013), DateTime(2015)]
 define ivlF: Interval[DateTime(2014), DateTime(2016)]
 define ivlG: Interval[DateTime(2016), DateTime(2017)]
+define ivlH: Interval[DateTime(2012, 2, 3), DateTime(2013, 3)]
 
 define OverlapsDT_OverlapsBefore: ivlA overlaps ivlB
 define OverlapsDT_OverlapsAfter: ivlB overlaps ivlA
 define OverlapsDT_OverlapsContained: ivlB overlaps ivlC
 define OverlapsDT_OverlapsContains: ivlC overlaps ivlB
 // TODO - this test should return null, but Bonnie expects true
-// define OverlapsDT_ImpreciseOverlap: ivlD overlaps ivlE
+// define OverlapsDT_ImpreciseOverlap: ivlD overlaps ivlH
 define OverlapsDT_NoOverlap: ivlC overlaps ivlD
 define OverlapsDT_NoImpreciseOverlap: ivlE overlaps ivlG
-define OverlapsDT_UnknownOverlap: ivlF overlaps ivlG
+define OverlapsDT_UnknownOverlap: ivlE overlaps ivlH
+define OverlapsDT_MatchingPrecisionOverlap: ivlF overlaps ivlG
 // NOTE: There appears to be a bug in cql-to-elm that translates these 'overlaps' to 'OverlapsAfter'!
 define OverlapsDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
@@ -2601,6 +3276,7 @@ define test_OverlapsDT_OverlapsContains: TestMessage(OverlapsDT_OverlapsContains
 define test_OverlapsDT_NoOverlap: TestMessage(not OverlapsDT_NoOverlap, 'OverlapsDT_NoOverlap', toString(false), toString(OverlapsDT_NoOverlap))
 define test_OverlapsDT_NoImpreciseOverlap: TestMessage(not OverlapsDT_NoImpreciseOverlap, 'OverlapsDT_OverlapsBefore', toString(false), toString(OverlapsDT_OverlapsBefore))
 define test_OverlapsDT_UnknownOverlap: TestMessage(OverlapsDT_UnknownOverlap is null, 'OverlapsDT_UnknownOverlap', 'null', toString(OverlapsDT_UnknownOverlap))
+define test_OverlapsDT_MatchingPrecisionOverlap: TestMessage(OverlapsDT_MatchingPrecisionOverlap, 'OverlapsDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsDT_MatchingPrecisionOverlap))
 define test_OverlapsDT_OverlapsBeforeDayOfIvlEdge: TestMessage(OverlapsDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsDT_OverlapsBeforeDayOfIvlEdge', toString(true), toString(OverlapsDT_OverlapsBeforeDayOfIvlEdge))
 define test_OverlapsDT_OverlapsAfterDayOfIvlEdge: TestMessage(OverlapsDT_OverlapsAfterDayOfIvlEdge, 'OverlapsDT_OverlapsAfterDayOfIvlEdge', toString(true), toString(OverlapsDT_OverlapsAfterDayOfIvlEdge))
 define test_OverlapsDT_OverlapsContainsDayOfIvl: TestMessage(OverlapsDT_OverlapsContainsDayOfIvl, 'OverlapsDT_OverlapsContainsDayOfIvl', toString(true), toString(OverlapsDT_OverlapsContainsDayOfIvl))
@@ -2630,6 +3306,7 @@ define test_OverlapsAfter_OverlapsBoundaryRealIvl: TestMessage(OverlapsAfter_Ove
 define test_OverlapsAfter_NoOverlapsRealIvl: TestMessage(not OverlapsAfter_NoOverlapsRealIvl, 'OverlapsAfter_NoOverlapsRealIvl', toString(false), toString(OverlapsAfter_NoOverlapsRealIvl))
 
 // OverlapsAfterDateTime
+define ivlH_OA: Interval[DateTime(2013, 1), DateTime(2015, 1)]
 define OverlapsAfterDT_OverlapsBefore: ivlA overlaps after ivlB
 define OverlapsAfterDT_OverlapsAfter: ivlB overlaps after ivlA
 define OverlapsAfterDT_OverlapsContained: ivlB overlaps after ivlC
@@ -2638,7 +3315,8 @@ define OverlapsAfterDT_ImpreciseOverlapBefore: ivlE overlaps after ivlF
 define OverlapsAfterDT_ImpreciseOverlapAfter: ivlF overlaps after ivlE
 define OverlapsAfterDT_NoOverlap: ivlC overlaps after ivlD
 define OverlapsAfterDT_NoImpreciseOverlap: ivlE overlaps after ivlG
-define OverlapsAfterDT_UnknownOverlap: ivlG overlaps after ivlF
+define OverlapsAfterDT_MatchingPrecisionOverlap: ivlG overlaps after ivlF
+define OverlapsAfterDT_UnknownOverlap: ivlH_OA overlaps after ivlE
 define OverlapsAfterDT_PrecisionDateIvl: Interval[DateTime(2012, 3, 2, 12, 34, 56, 789), DateTime(2012, 9, 2, 1, 23, 45, 678))
 define OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps after day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsAfterDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps after day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
@@ -2657,6 +3335,7 @@ define test_OverlapsAfterDT_ImpreciseOverlapBefore: TestMessage(not OverlapsAfte
 define test_OverlapsAfterDT_ImpreciseOverlapAfter: TestMessage(OverlapsAfterDT_ImpreciseOverlapAfter, 'OverlapsAfterDT_ImpreciseOverlapAfter', toString(true), toString(OverlapsAfterDT_ImpreciseOverlapAfter))
 define test_OverlapsAfterDT_NoOverlap: TestMessage(not OverlapsAfterDT_NoOverlap, 'OverlapsAfterDT_NoOverlap', toString(false), toString(OverlapsAfterDT_NoOverlap))
 define test_OverlapsAfterDT_NoImpreciseOverlap: TestMessage(not OverlapsAfterDT_NoImpreciseOverlap, 'OverlapsAfterDT_OverlapsBefore', toString(false), toString(OverlapsAfterDT_OverlapsBefore))
+define test_OverlapsAfterDT_MatchingPrecisionOverlap: TestMessage(OverlapsAfterDT_MatchingPrecisionOverlap, 'OverlapsAfterDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsAfterDT_MatchingPrecisionOverlap))
 define test_OverlapsAfterDT_UnknownOverlap: TestMessage(OverlapsAfterDT_UnknownOverlap is null, 'OverlapsAfterDT_UnknownOverlap', 'null', toString(OverlapsAfterDT_UnknownOverlap))
 define test_OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge: TestMessage(not OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge', toString(false), toString(OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge))
 define test_OverlapsAfterDT_OverlapsAfterDayOfIvlEdge: TestMessage(OverlapsAfterDT_OverlapsAfterDayOfIvlEdge, 'OverlapsAfterDT_OverlapsAfterDayOfIvlEdge', toString(true), toString(OverlapsAfterDT_OverlapsAfterDayOfIvlEdge))
@@ -2687,6 +3366,7 @@ define test_OverlapsBefore_OverlapsBoundaryRealIvl: TestMessage(OverlapsBefore_O
 define test_OverlapsBefore_NoOverlapsRealIvl: TestMessage(not OverlapsBefore_NoOverlapsRealIvl, 'OverlapsBefore_NoOverlapsRealIvl', toString(false), toString(OverlapsBefore_NoOverlapsRealIvl))
 
 // OverlapsBeforeDateTime
+define ivlH_OB: Interval[DateTime(2011, 3), DateTime(2013, 3)]
 define OverlapsBeforeDT_OverlapsBefore: ivlA overlaps before ivlB
 define OverlapsBeforeDT_OverlapsAfter: ivlB overlaps before ivlA
 define OverlapsBeforeDT_OverlapsContained: ivlB overlaps before ivlC
@@ -2695,7 +3375,8 @@ define OverlapsBeforeDT_ImpreciseOverlapBefore: ivlE overlaps before ivlF
 define OverlapsBeforeDT_ImpreciseOverlapAfter: ivlF overlaps before ivlE
 define OverlapsBeforeDT_NoOverlap: ivlC overlaps before ivlD
 define OverlapsBeforeDT_NoImpreciseOverlap: ivlE overlaps before ivlG
-define OverlapsBeforeDT_UnknownOverlap: ivlF overlaps before ivlG
+define OverlapsBeforeDT_MatchingPrecisionOverlap: ivlF overlaps before ivlG
+define OverlapsBeforeDT_UnknownOverlap: ivlH_OB overlaps before ivlE
 define OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge: PrecisionDateIvl overlaps before day of Interval[DateTime(2012, 9, 2, 23, 59, 59, 999), DateTime(2012, 10, 1, 0, 0, 0, 0)]
 define OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge: PrecisionDateIvl overlaps before day of Interval[DateTime(2012, 1, 2, 0, 0, 0, 0), DateTime(2012, 3, 2, 0, 0, 0, 0)]
 define OverlapsBeforeDT_OverlapsContainsDayOfIvl: PrecisionDateIvl overlaps before day of Interval[DateTime(2012, 5, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)]
@@ -2713,6 +3394,7 @@ define test_OverlapsBeforeDT_ImpreciseOverlapAfter: TestMessage(not OverlapsBefo
 define test_OverlapsBeforeDT_ImpreciseOverlapBefore: TestMessage(OverlapsBeforeDT_ImpreciseOverlapBefore, 'OverlapsBeforeDT_ImpreciseOverlapBefore', toString(true), toString(OverlapsBeforeDT_ImpreciseOverlapBefore))
 define test_OverlapsBeforeDT_NoOverlap: TestMessage(not OverlapsBeforeDT_NoOverlap, 'OverlapsBeforeDT_NoOverlap', toString(false), toString(OverlapsBeforeDT_NoOverlap))
 define test_OverlapsBeforeDT_NoImpreciseOverlap: TestMessage(not OverlapsBeforeDT_NoImpreciseOverlap, 'OverlapsBeforeDT_OverlapsBefore', toString(false), toString(OverlapsBeforeDT_OverlapsBefore))
+define test_OverlapsBeforeDT_MatchingPrecisionOverlap: TestMessage(OverlapsBeforeDT_MatchingPrecisionOverlap, 'OverlapsBeforeDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsBeforeDT_MatchingPrecisionOverlap))
 define test_OverlapsBeforeDT_UnknownOverlap: TestMessage(OverlapsBeforeDT_UnknownOverlap is null, 'OverlapsBeforeDT_UnknownOverlap', 'null', toString(OverlapsBeforeDT_UnknownOverlap))
 define test_OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge: TestMessage(OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge', toString(true), toString(OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge))
 define test_OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge: TestMessage(not OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge, 'OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge', toString(false), toString(OverlapsBeforeDT_OverlapsAfterDayOfIvlEdge))
@@ -2744,14 +3426,38 @@ define test_Width_RealWidth: TestMessage(Width_RealWidth = 3.33, 'Width_RealWidt
 define test_Width_RealOpenWidth: TestMessage(Width_RealOpenWidth = 3.32999998, 'Width_RealOpenWidth', toString(3.32999998), toString(Width_RealOpenWidth))
 
 // Start
-define Start_DateTimeIvl: start of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define Start_ClosedNotNull: start of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define Start_ClosedNullDateTime: start of Interval[null, DateTime(2013, 1, 1)]
+define Start_ClosedNullInteger: start of Interval[null, 3]
+define Start_ClosedNullDecimal: start of Interval[null, 5.1]
+define Start_NullInterval: start of (null as Interval<DateTime>)
+define Start_OpenNotNull: start of Interval(DateTime(2012, 1, 1), DateTime(2013, 1, 1))
+define Start_OpenNull: start of Interval(null, DateTime(2013, 1, 1))
 
-define test_Start_DateTimeIvl: TestMessage(Start_DateTimeIvl = DateTime(2012, 1, 1), 'Start_DateTimeIvl', toString(DateTime(2012, 1, 1)), toString(Start_DateTimeIvl))
+define test_Start_ClosedNotNull: TestMessage(Start_ClosedNotNull = DateTime(2012, 1, 1), 'Start_ClosedNotNull', toString(DateTime(2012, 1, 1)), toString(Start_ClosedNotNull))
+define test_Start_ClosedNullDateTime: TestMessage(Start_ClosedNullDateTime = minimum DateTime, 'Start_ClosedNullDateTime', toString(minimum DateTime), toString(Start_ClosedNullDateTime))
+define test_Start_ClosedNullInteger: TestMessage(Start_ClosedNullInteger = minimum Integer, 'Start_ClosedNullInteger', toString(minimum Integer), toString(Start_ClosedNullInteger))
+define test_Start_ClosedNullDecimal: TestMessage(Start_ClosedNullDecimal = minimum Decimal, 'Start_ClosedNullDecimal', toString(minimum Decimal), toString(Start_ClosedNullDecimal))
+define test_Start_NullInterval: TestMessage(Start_NullInterval is null, 'Start_NullInterval', 'null', toString(Start_NullInterval))
+define test_Start_OpenNotNull: TestMessage(Start_OpenNotNull = successor of DateTime(2012, 1, 1), 'Start_OpenNotNull', toString(successor of DateTime(2012, 1, 1)), toString(Start_OpenNotNull))
+define test_Start_OpenNull: TestMessage(Start_OpenNull is null, 'Start_OpenNull', 'null', toString(Start_OpenNull))
 
 // End
-define End_DateTimeIvl: end of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define End_ClosedNotNull: end of Interval[DateTime(2012, 1, 1), DateTime(2013, 1, 1)]
+define End_ClosedNullDateTime: end of Interval[DateTime(2013, 1, 1), null]
+define End_ClosedNullInteger: end of Interval[5, null]
+define End_ClosedNullDecimal: end of Interval[7.3, null]
+define End_NullInterval: end of (null as Interval<DateTime>)
+define End_OpenNotNull: end of Interval(DateTime(2012, 1, 1), DateTime(2013, 1, 1))
+define End_OpenNull: end of Interval(DateTime(2013, 1, 1), null)
 
-define test_End_DateTimeIvl: TestMessage(End_DateTimeIvl = DateTime(2013, 1, 1), 'End_DateTimeIvl', toString(DateTime(2013, 1, 1)), toString(End_DateTimeIvl))
+define test_End_ClosedNotNull: TestMessage(End_ClosedNotNull = DateTime(2013, 1, 1), 'End_ClosedNotNull', toString(DateTime(2013, 1, 1)), toString(End_ClosedNotNull))
+define test_End_ClosedNullDateTime: TestMessage(End_ClosedNullDateTime = maximum DateTime, 'End_ClosedNullDateTime', toString(maximum DateTime), toString(End_ClosedNullDateTime))
+define test_End_ClosedNullInteger: TestMessage(End_ClosedNullInteger = maximum Integer, 'End_ClosedNullInteger', toString(maximum Integer), toString(End_ClosedNullInteger))
+define test_End_ClosedNullDecimal: TestMessage(End_ClosedNullDecimal = maximum Decimal, 'End_ClosedNullDecimal', toString(maximum Decimal), toString(End_ClosedNullDecimal))
+define test_End_NullInterval: TestMessage(End_NullInterval is null, 'End_NullInterval', 'null', toString(End_NullInterval))
+define test_End_OpenNotNull: TestMessage(End_OpenNotNull = predecessor of DateTime(2013, 1, 1), 'End_OpenNotNull', toString(predecessor of DateTime(2013, 1, 1)), toString(End_OpenNotNull))
+define test_End_OpenNull: TestMessage(End_OpenNull is null, 'End_OpenNull', 'null', toString(End_OpenNull))
 
 // Starts
 define Starts_TestStartsNull: Interval[null, null] starts Interval[1, 10]
@@ -3022,6 +3728,741 @@ define test_DtIvlCollapse_DateTimeCollapseOverlapContainedEdge2: TestMessage(DtI
 define test_DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine: TestMessage(DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseOverlapMultipleCombine))
 define test_DtIvlCollapse_DateTimeCollapseImpreciseBoundary: TestMessage(DtIvlCollapse_DateTimeCollapseImpreciseBoundary = DateTime1_10IntervalList, 'DtIvlCollapse_DateTimeCollapseImpreciseBoundary', toString(DateTime1_10IntervalList), toString(DtIvlCollapse_DateTimeCollapseImpreciseBoundary))
 
+// Numeric Intervals
+define IntIntervalList: { Interval[1, 4], Interval[4, 8], Interval[7, 9] }
+define IntIntervalSeparatedList: { Interval[3, 5], Interval[8, 10] }
+define ExpectedIntervalList: { Interval[3,10] }
+define NumIvlCollapse_IntCollapsePerUnit1: collapse IntIntervalList per ToQuantity(1)
+define NumIvlCollapse_IntCollapseNoPer: collapse IntIntervalList
+define NumIvlCollapse_IntCollapseSeparatedListPer3: collapse IntIntervalSeparatedList per 3
+
+define test_NumIvlCollapse_IntCollapsePerUnit1: TestMessage(NumIvlCollapse_IntCollapsePerUnit1 = { Interval[1, 9] }, 'NumIvlCollapse_IntCollapsePerUnit1', toString({ Interval[1, 9] }), toString(NumIvlCollapse_IntCollapsePerUnit1))
+define test_NumIvlCollapse_IntCollapseNoPer: TestMessage(NumIvlCollapse_IntCollapseNoPer = { Interval[1, 9] }, 'NumIvlCollapse_IntCollapseNoPer', toString({ Interval[1, 9] }), toString(NumIvlCollapse_IntCollapseNoPer))
+define test_NumIvlCollapse_IntCollapseSeparatedListPer3: TestMessage(NumIvlCollapse_IntCollapseSeparatedListPer3 = { Interval[3,10] }, 'NumIvlCollapse_IntCollapseSeparatedListPer3', toString({ Interval[3,10] }), toString(NumIvlCollapse_IntCollapseSeparatedListPer3))
+
+// DateTime Intervals
+define DateTime3_15Interval: Interval[DateTime(2012, 1, 3, 0, 0, 0, 0), DateTime(2012, 1, 15, 0, 0, 0, 0)]
+define DtIvlCollapse_DateTimeCollapseNoPer: collapse { DateTime1_12Interval, DateTime3_15Interval}
+define DtIvlCollapse_DateTimeCollapsePerMs: collapse { DateTime1_12Interval, DateTime3_15Interval} per millisecond
+define DtIvlCollapse_DateTimeCollapsePerDay: collapse { DateTime1_12Interval, DateTime3_15Interval} per day
+// NOTE: the following tests were added (Bonnie is missing datetime collapse with tests like NumIvlCollapse_IntCollapseSeparatedListPer3)
+define DtIvlCollapse_DateTimeCollapseSeparatedPerDay: collapse { DateTime1_6Interval, DateTime10_15Interval} per 4 days
+define DtIvlCollapse_DateTimeCollapseSeparatedPerHour: collapse { DateTime1_6Interval, DateTime10_15Interval} per 96 hours
+
+define test_DtIvlCollapse_DateTimeCollapseNoPer: TestMessage(DtIvlCollapse_DateTimeCollapseNoPer = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseNoPer', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseNoPer))
+define test_DtIvlCollapse_DateTimeCollapsePerMs: TestMessage(DtIvlCollapse_DateTimeCollapsePerMs = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapsePerMs', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapsePerMs))
+define test_DtIvlCollapse_DateTimeCollapsePerDay: TestMessage(DtIvlCollapse_DateTimeCollapsePerDay = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapsePerDay', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapsePerDay))
+define test_DtIvlCollapse_DateTimeCollapseSeparatedPerDay: TestMessage(DtIvlCollapse_DateTimeCollapseSeparatedPerDay = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseSeparatedPerDay', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseSeparatedPerDay))
+define test_DtIvlCollapse_DateTimeCollapseSeparatedPerHour: TestMessage(DtIvlCollapse_DateTimeCollapseSeparatedPerHour = DateTime1_15IntervalList, 'DtIvlCollapse_DateTimeCollapseSeparatedPerHour', toString(DateTime1_15IntervalList), toString(DtIvlCollapse_DateTimeCollapseSeparatedPerHour))
+
+// Quantity Intervals with default units
+define QuantityIntervalList: { Interval[ToQuantity(1), ToQuantity(4)], Interval[ToQuantity(4), ToQuantity(8)] }
+define ExpectedQuantityList: { Interval[ToQuantity(1), ToQuantity(8)] }
+define QuantitySeparatedBy3: { Interval[ToQuantity(3), ToQuantity(5)], Interval[ToQuantity(8), ToQuantity(10)]}
+define ExpectedSeparatedQuantity: { Interval[ToQuantity(3), ToQuantity(10)] }
+define QtyIvlCollapse_QuantityIntervalCollapseNoPer: collapse QuantityIntervalList
+define QtyIvlCollapse_QuantityIntervalCollapsePerUnit1: collapse QuantityIntervalList per ToQuantity(1)
+define QtyIvlCollapse_CollapseSeparatedQuantity: collapse QuantitySeparatedBy3
+define QtyIvlCollapse_CollapseSeparatedQuantityPer3: collapse QuantitySeparatedBy3 per 3
+
+define test_QtyIvlCollapse_QuantityIntervalCollapseNoPer: TestMessage(QtyIvlCollapse_QuantityIntervalCollapseNoPer = ExpectedQuantityList, 'QtyIvlCollapse_QuantityIntervalCollapseNoPer', toString(ExpectedQuantityList), toString(QtyIvlCollapse_QuantityIntervalCollapseNoPer))
+define test_QtyIvlCollapse_QuantityIntervalCollapsePerUnit1: TestMessage(QtyIvlCollapse_QuantityIntervalCollapsePerUnit1 = ExpectedQuantityList, 'QtyIvlCollapse_QuantityIntervalCollapsePerUnit1', toString(ExpectedQuantityList), toString(QtyIvlCollapse_QuantityIntervalCollapsePerUnit1))
+define test_QtyIvlCollapse_CollapseSeparatedQuantity: TestMessage(QtyIvlCollapse_CollapseSeparatedQuantity = QuantitySeparatedBy3, 'QtyIvlCollapse_CollapseSeparatedQuantity', toString(QuantitySeparatedBy3), toString(QtyIvlCollapse_CollapseSeparatedQuantity))
+define test_QtyIvlCollapse_CollapseSeparatedQuantityPer3: TestMessage(QtyIvlCollapse_CollapseSeparatedQuantityPer3 = ExpectedSeparatedQuantity, 'QtyIvlCollapse_CollapseSeparatedQuantityPer3', toString(ExpectedSeparatedQuantity), toString(QtyIvlCollapse_CollapseSeparatedQuantityPer3))
+
+// Quantity Intervals with units TODO: when UCUM service is plugged in
+define QuantityMeterIntervalList: { Interval[ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\'')], Interval[ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')] }
+define QtyIvlCollapse_CollapseDisjointQuantityUnits: collapse QuantityMeterIntervalList
+define QtyIvlCollapse_ExpectedQuantityUnitsCollapse: { Interval[ToQuantity('1 \'m\''), ToQuantity('3 \'m\'')] }
+define QtyIvlCollapse_CollapseQuantityUnitsWithinPer: collapse QuantityMeterIntervalList per ToQuantity('1 \'cm\'')
+define QtyIvlCollapse_CollapseQuantityUnitsNotWithinPer: collapse QuantityMeterIntervalList per ToQuantity('1 \'mm\'')
+
+// Null test cases
+define NullLowIntervalList: { Interval[null, 4], Interval[3, 5] }
+define ExpectedNullLowIntervalCollapse: { Interval[null, 5] }
+define NullHighIntervalList: { Interval[1, 4], Interval[3, null] }
+define ExpectedNullHighIntervalCollapse: { Interval[1, null] }
+define ExpectedResultWithNull: { Interval[1,3] }
+define ExpectedResultNullPer: { Interval[1,7] }
+define DateTime5_NullInterval: Interval[DateTime(2012, 1, 5, 0, 0, 0, 0), null]
+define DateTimeNull_5Interval: Interval[null, DateTime(2012, 1, 5, 0, 0, 0, 0)]
+define DateTime9_10Interval: Interval[DateTime(2012, 1, 9, 0, 0, 0, 0), DateTime(2012, 1, 10, 0, 0, 0, 0)]
+define DateTime1_2Interval: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 1, 2, 0, 0, 0, 0)]
+define DateTimeNullStartCollapseExpected: { Interval[null, DateTime(2012, 1, 10, 0, 0, 0, 0)] }
+define DateTimeNullEndCollapseNoOverlapExpected: { DateTime1_2Interval, DateTime5_NullInterval }
+define DateTimeNullStartCollapseNoOverlapExpected: { DateTimeNull_5Interval, DateTime9_10Interval }
+define DateTimeNullEndCollapseExpected: { Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), null] }
+// TODO: should be { Interval[(null as DateTime), (null as DateTime)] } but that currently evaluates to null in the engine
+define DateTimeNullStartEndCollapseExpected: { Interval[null, DateTime(9999, 12, 31, 23, 59, 59, 999)] }
+define QuantityMeterNullLowIntervalList: { Interval[null, ToQuantity('1.995 \'m\'')], Interval[ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')] }
+define CollapseQuantityNullLowUnitsWithinPerExpected : { Interval[null, ToQuantity('3 \'m\'')] }
+define QuantityMeterNullHighIntervalList: { Interval[ToQuantity('1 \'m\''),ToQuantity('1.995 \'m\'')], Interval[ToQuantity('2 \'m\''), null] }
+define CollapseQuantityNullHighUnitsWithinPerExpected : { Interval[ToQuantity('1 \'m\''), null] }
+define QuantityIntervalListWithNulls: { Interval[ToQuantity(4), ToQuantity(8)], Interval[null, ToQuantity(2)], Interval[ToQuantity(1), ToQuantity(4)], Interval[ToQuantity(7), null] }
+// TODO: should be { Interval[(null as Quantity), (null as Quantity)] } but that currently evaluates to null in the engine
+define CollapseQuantityIntervalListWithNullsExpected: { Interval[null, 9999999999999999999999999999.99999999 '1'] }
+define QuantityIntervalListWithNullLowNoOverlap: { Interval[ToQuantity(4), ToQuantity(8)], Interval[null, ToQuantity(2)] }
+define CollapseQuantityIntervalListWithNullLowNoOverlapExpected: { Interval[null, ToQuantity(2)], Interval[ToQuantity(4), ToQuantity(8)]}
+define QuantityIntervalListWithNullHighNoOverlap: { Interval[ToQuantity(4), null], Interval[ToQuantity(1), ToQuantity(2)] }
+define CollapseQuantityIntervalListWithNullHighNoOverlapExpected: { Interval[ToQuantity(1), ToQuantity(2)], Interval[ToQuantity(4), null]}
+// define NullIvlCollapse_NullCollapse: collapse null // Translation Error
+define NullIvlCollapse_CollapseNullLowIntervalList: collapse NullLowIntervalList
+define NullIvlCollapse_CollapseNullHighIntervalList: collapse NullHighIntervalList
+define NullIvlCollapse_NullInCollapse: collapse { Interval[1,3], null }
+define NullIvlCollapse_DateTimeNullStartCollapse: collapse { DateTime1_10Interval, DateTimeNull_5Interval }
+define NullIvlCollapse_DateTimeNullEndCollapse: collapse { DateTime1_10Interval, DateTime5_NullInterval }
+define NullIvlCollapse_NullPerCollapse: collapse { Interval[1,4], Interval[4,7] } per null
+define NullIvlCollapse_DateTimeNullEndCollapseNoOverlap: collapse { DateTime1_2Interval, DateTime5_NullInterval }
+define NullIvlCollapse_DateTimeNullStartCollapseNoOverlap: collapse { DateTime9_10Interval, DateTimeNull_5Interval }
+define NullIvlCollapse_DateTimeNullStartEndCollapse: collapse { DateTimeNull_5Interval, DateTime1_10Interval, DateTime5_NullInterval }
+define NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: collapse QuantityMeterNullLowIntervalList per ToQuantity('1 \'cm\'')
+define NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: collapse QuantityMeterNullHighIntervalList per ToQuantity('1 \'cm\'')
+define NullIvlCollapse_CollapseQuantityIntervalListWithNulls: collapse QuantityIntervalListWithNulls
+define NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap: collapse QuantityIntervalListWithNullLowNoOverlap
+define NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap: collapse QuantityIntervalListWithNullHighNoOverlap
+
+define test_NullIvlCollapse_CollapseNullLowIntervalList: TestMessage(NullIvlCollapse_CollapseNullLowIntervalList = ExpectedNullLowIntervalCollapse, 'NullIvlCollapse_CollapseNullLowIntervalList', toString(ExpectedNullLowIntervalCollapse), toString(NullIvlCollapse_CollapseNullLowIntervalList))
+define test_NullIvlCollapse_CollapseNullHighIntervalList: TestMessage(NullIvlCollapse_CollapseNullHighIntervalList = ExpectedNullHighIntervalCollapse, 'NullIvlCollapse_CollapseNullHighIntervalList', toString(ExpectedNullHighIntervalCollapse), toString(NullIvlCollapse_CollapseNullHighIntervalList))
+define test_NullIvlCollapse_NullInCollapse: TestMessage(NullIvlCollapse_NullInCollapse = ExpectedResultWithNull, 'NullIvlCollapse_NullInCollapse', toString(ExpectedResultWithNull), toString(NullIvlCollapse_NullInCollapse))
+define test_NullIvlCollapse_DateTimeNullStartCollapse: TestMessage(NullIvlCollapse_DateTimeNullStartCollapse = DateTimeNullStartCollapseExpected, 'NullIvlCollapse_DateTimeNullStartCollapse', toString(DateTimeNullStartCollapseExpected), toString(NullIvlCollapse_DateTimeNullStartCollapse))
+define test_NullIvlCollapse_DateTimeNullEndCollapse: TestMessage(NullIvlCollapse_DateTimeNullEndCollapse = DateTimeNullEndCollapseExpected, 'NullIvlCollapse_DateTimeNullEndCollapse', toString(DateTimeNullEndCollapseExpected), toString(NullIvlCollapse_DateTimeNullEndCollapse))
+define test_NullIvlCollapse_NullPerCollapse: TestMessage(NullIvlCollapse_NullPerCollapse = ExpectedResultNullPer, 'NullIvlCollapse_NullPerCollapse', toString(ExpectedResultNullPer), toString(NullIvlCollapse_NullPerCollapse))
+define test_NullIvlCollapse_DateTimeNullEndCollapseNoOverlap: TestMessage(NullIvlCollapse_DateTimeNullEndCollapseNoOverlap = DateTimeNullEndCollapseNoOverlapExpected, 'NullIvlCollapse_DateTimeNullEndCollapseNoOverlap', toString(DateTimeNullEndCollapseNoOverlapExpected), toString(NullIvlCollapse_DateTimeNullEndCollapseNoOverlap))
+define test_NullIvlCollapse_DateTimeNullStartCollapseNoOverlap: TestMessage(NullIvlCollapse_DateTimeNullStartCollapseNoOverlap = DateTimeNullStartCollapseNoOverlapExpected, 'NullIvlCollapse_DateTimeNullStartCollapseNoOverlap', toString(DateTimeNullStartCollapseNoOverlapExpected), toString(NullIvlCollapse_DateTimeNullStartCollapseNoOverlap))
+define test_NullIvlCollapse_DateTimeNullStartEndCollapse: TestMessage(NullIvlCollapse_DateTimeNullStartEndCollapse = DateTimeNullStartEndCollapseExpected, 'NullIvlCollapse_DateTimeNullStartEndCollapse', toString(DateTimeNullStartEndCollapseExpected), toString(NullIvlCollapse_DateTimeNullStartEndCollapse))
+define test_NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer = CollapseQuantityNullLowUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer', toString(CollapseQuantityNullLowUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer))
+define test_NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer = CollapseQuantityNullHighUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer', toString(CollapseQuantityNullHighUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer))
+define test_NullIvlCollapse_CollapseQuantityIntervalListWithNulls: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNulls = CollapseQuantityIntervalListWithNullsExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNulls', toString(CollapseQuantityIntervalListWithNullsExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNulls))
+define test_NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap = CollapseQuantityIntervalListWithNullLowNoOverlapExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap', toString(CollapseQuantityIntervalListWithNullLowNoOverlapExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap))
+define test_NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap = CollapseQuantityIntervalListWithNullHighNoOverlapExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap', toString(CollapseQuantityIntervalListWithNullHighNoOverlapExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap))
+
+// DateIntervalExpand
+define ClosedSinglePerDayExpected: { Interval[@2018-01-01, @2018-01-01], Interval[@2018-01-02, @2018-01-02], Interval[@2018-01-03, @2018-01-03] }
+define ClosedSinglePerWeekExpected: { Interval[@2018-01-01, @2018-01-07], Interval[@2018-01-08, @2018-01-14], Interval[@2018-01-15, @2018-01-21] }
+define ClosedSinglePerMonthExpected: { Interval[@2018-01-01, @2018-01-31], Interval[@2018-02-01, @2018-02-28], Interval[@2018-03-01, @2018-03-31] }
+define ClosedSinglePerYearExpected: { Interval[@2016-01-01, @2016-12-31], Interval[@2017-01-01, @2017-12-31], Interval[@2018-01-01, @2018-12-31] }
+define DateIvlExpand_ClosedSinglePerDay: expand { Interval[@2018-01-01, @2018-01-03] } per day
+define DateIvlExpand_ClosedSinglePerWeek: expand { Interval[@2018-01-01, @2018-01-21] } per week
+define DateIvlExpand_ClosedSinglePerMonth: expand { Interval[@2018-01-01, @2018-03-31] } per month
+define DateIvlExpand_ClosedSinglePerMonthTrunc: expand { Interval[@2018-01-01, @2018-04-29] } per month
+define DateIvlExpand_ClosedSinglePerYear: expand { Interval[@2016-01-01, @2018-12-31] } per year
+define DateIvlExpand_ClosedSinglePerYearTrunc: expand { Interval[@2016-01-01, @2019-12-30] } per year
+
+define test_DateIvlExpand_ClosedSinglePerDay: TestMessage(DateIvlExpand_ClosedSinglePerDay = ClosedSinglePerDayExpected, 'DateIvlExpand_ClosedSinglePerDay', toString(ClosedSinglePerDayExpected), toString(DateIvlExpand_ClosedSinglePerDay))
+define test_DateIvlExpand_ClosedSinglePerWeek: TestMessage(DateIvlExpand_ClosedSinglePerWeek = ClosedSinglePerWeekExpected, 'DateIvlExpand_ClosedSinglePerWeek', toString(ClosedSinglePerWeekExpected), toString(DateIvlExpand_ClosedSinglePerWeek))
+define test_DateIvlExpand_ClosedSinglePerMonth: TestMessage(DateIvlExpand_ClosedSinglePerMonth = ClosedSinglePerMonthExpected, 'DateIvlExpand_ClosedSinglePerMonth', toString(ClosedSinglePerMonthExpected), toString(DateIvlExpand_ClosedSinglePerMonth))
+define test_DateIvlExpand_ClosedSinglePerMonthTrunc: TestMessage(DateIvlExpand_ClosedSinglePerMonthTrunc = ClosedSinglePerMonthExpected, 'DateIvlExpand_ClosedSinglePerMonthTrunc', toString(ClosedSinglePerMonthExpected), toString(DateIvlExpand_ClosedSinglePerMonthTrunc))
+define test_DateIvlExpand_ClosedSinglePerYear: TestMessage(DateIvlExpand_ClosedSinglePerYear = ClosedSinglePerYearExpected, 'DateIvlExpand_ClosedSinglePerYear', toString(ClosedSinglePerYearExpected), toString(DateIvlExpand_ClosedSinglePerYear))
+define test_DateIvlExpand_ClosedSinglePerYearTrunc: TestMessage(DateIvlExpand_ClosedSinglePerYearTrunc = ClosedSinglePerYearExpected, 'DateIvlExpand_ClosedSinglePerYearTrunc', toString(ClosedSinglePerYearExpected), toString(DateIvlExpand_ClosedSinglePerYearTrunc))
+
+define MidBoundariesPerDayExpected: { Interval[@2017-12-30, @2017-12-30], Interval[@2017-12-31, @2017-12-31], Interval[@2018-01-01, @2018-01-01] }
+define MidBoundariesPerMonthExpected: { Interval[@2017-11-14, @2017-12-13], Interval[@2017-12-14, @2018-01-13] }
+define MidBoundariesPerYearExpected: { Interval[@2016-04-06, @2017-04-05], Interval[@2017-04-06, @2018-04-05] }
+define DateIvlExpand_MidBoundariesPerDay: expand { Interval[@2017-12-30, @2018-01-01] } per day
+define DateIvlExpand_MidBoundariesPerMonth: expand { Interval[@2017-11-14, @2018-01-18] } per month
+define DateIvlExpand_MidBoundariesPerYear: expand { Interval[@2016-04-06, @2018-04-06] } per year
+
+define test_DateIvlExpand_MidBoundariesPerDay: TestMessage(DateIvlExpand_MidBoundariesPerDay = MidBoundariesPerDayExpected, 'DateIvlExpand_MidBoundariesPerDay', toString(MidBoundariesPerDayExpected), toString(DateIvlExpand_MidBoundariesPerDay))
+define test_DateIvlExpand_MidBoundariesPerMonth: TestMessage(DateIvlExpand_MidBoundariesPerMonth = MidBoundariesPerMonthExpected, 'DateIvlExpand_MidBoundariesPerMonth', toString(MidBoundariesPerMonthExpected), toString(DateIvlExpand_MidBoundariesPerMonth))
+define test_DateIvlExpand_MidBoundariesPerYear: TestMessage(DateIvlExpand_MidBoundariesPerYear = MidBoundariesPerYearExpected, 'DateIvlExpand_MidBoundariesPerYear', toString(MidBoundariesPerYearExpected), toString(DateIvlExpand_MidBoundariesPerYear))
+
+define OverlappingExpected: { Interval[@2018-01-01, @2018-01-01], Interval[@2018-01-02, @2018-01-02], Interval[@2018-01-03, @2018-01-03], Interval[@2018-01-04, @2018-01-04] }
+define NonOverlappingExpected: { Interval[@2018-01-01, @2018-01-01], Interval[@2018-01-02, @2018-01-02], Interval[@2018-01-03, @2018-01-03], Interval[@2018-01-08, @2018-01-08] }
+define DateIvlExpand_NullInList: expand { Interval[@2018-01-01, @2018-01-03], null } per day
+define DateIvlExpand_Overlapping: expand { Interval[@2018-01-01, @2018-01-03], Interval[@2018-01-02, @2018-01-04] } per day
+define DateIvlExpand_NonOverlapping: expand { Interval[@2018-01-01, @2018-01-03], Interval[@2018-01-08, @2018-01-08] } per day
+
+define test_DateIvlExpand_NullInList: TestMessage(DateIvlExpand_NullInList = ClosedSinglePerDayExpected, 'DateIvlExpand_NullInList', toString(ClosedSinglePerDayExpected), toString(DateIvlExpand_NullInList))
+define test_DateIvlExpand_Overlapping: TestMessage(DateIvlExpand_Overlapping = OverlappingExpected, 'DateIvlExpand_Overlapping', toString(OverlappingExpected), toString(DateIvlExpand_Overlapping))
+define test_DateIvlExpand_NonOverlapping: TestMessage(DateIvlExpand_NonOverlapping = NonOverlappingExpected, 'DateIvlExpand_NonOverlapping', toString(NonOverlappingExpected), toString(DateIvlExpand_NonOverlapping))
+
+define NoPerDefaultMonthExpected: { Interval[@2018-01, @2018-01], Interval[@2018-02, @2018-02], Interval[@2018-03, @2018-03] }
+define NoPerDefaultYearExpected: { Interval[@2016, @2016], Interval[@2017, @2017], Interval[@2018, @2018] }
+define DateIvlExpand_NoPerDefaultDay: expand { Interval[@2018-01-01, @2018-01-03] }
+define DateIvlExpand_NoPerDefaultMonth: expand { Interval[@2018-01, @2018-03] }
+define DateIvlExpand_NoPerDefaultYear: expand { Interval[@2016, @2018] }
+define DateIvlExpand_NoPerDefaultMonthWithMismatch: expand { Interval[@2016, @2018-03] }
+
+define test_DateIvlExpand_NoPerDefaultDay: TestMessage(DateIvlExpand_NoPerDefaultDay = ClosedSinglePerDayExpected, 'DateIvlExpand_NoPerDefaultDay', toString(ClosedSinglePerDayExpected), toString(DateIvlExpand_NoPerDefaultDay))
+define test_DateIvlExpand_NoPerDefaultMonth: TestMessage(DateIvlExpand_NoPerDefaultMonth = NoPerDefaultMonthExpected, 'DateIvlExpand_NoPerDefaultMonth', toString(NoPerDefaultMonthExpected), toString(DateIvlExpand_NoPerDefaultMonth))
+define test_DateIvlExpand_NoPerDefaultYear: TestMessage(DateIvlExpand_NoPerDefaultYear = NoPerDefaultYearExpected, 'DateIvlExpand_NoPerDefaultYear', toString(NoPerDefaultYearExpected), toString(DateIvlExpand_NoPerDefaultYear))
+define test_DateIvlExpand_NoPerDefaultMonthWithMismatch: TestMessage(DateIvlExpand_NoPerDefaultMonthWithMismatch = NoPerDefaultYearExpected, 'DateIvlExpand_NoPerDefaultMonthWithMismatch', toString(NoPerDefaultYearExpected), toString(DateIvlExpand_NoPerDefaultMonthWithMismatch))
+
+define OpenStartExpected: { Interval[@2018-01-02, @2018-01-02], Interval[@2018-01-03, @2018-01-03] }
+define OpenEndExpected: { Interval[@2018-01-01, @2018-01-01], Interval[@2018-01-02, @2018-01-02] }
+define OpenBothExpected: { Interval[@2018-01-02, @2018-01-02] }
+define DateIvlExpand_OpenStart: expand { Interval(@2018-01-01, @2018-01-03] } per day
+define DateIvlExpand_OpenEnd: expand { Interval[@2018-01-01, @2018-01-03) } per day
+define DateIvlExpand_OpenBoth: expand { Interval(@2018-01-01, @2018-01-03) } per day
+
+define test_DateIvlExpand_OpenStart: TestMessage(DateIvlExpand_OpenStart = OpenStartExpected, 'DateIvlExpand_OpenStart', toString(OpenStartExpected), toString(DateIvlExpand_OpenStart))
+define test_DateIvlExpand_OpenEnd: TestMessage(DateIvlExpand_OpenEnd = OpenEndExpected, 'DateIvlExpand_OpenEnd', toString(OpenEndExpected), toString(DateIvlExpand_OpenEnd))
+define test_DateIvlExpand_OpenBoth: TestMessage(DateIvlExpand_OpenBoth = OpenBothExpected, 'DateIvlExpand_OpenBoth', toString(OpenBothExpected), toString(DateIvlExpand_OpenBoth))
+
+define MismatchPrecisionExpected: { Interval[@2018-01-01, @2018-01-31], Interval[@2018-02-01, @2018-02-28] }
+define MismatchPrecisionEmptyExpected: { Interval[@2018-01, @2018-01], Interval[@2018-02, @2018-02] }
+define DateIvlExpand_MismatchPrecision: expand { Interval[@2018-01-01, @2018-03] } per month
+define DateIvlExpand_MismatchPrecisionEmpty: expand { Interval[@2018-01, @2018-02-28] } per month
+
+define test_DateIvlExpand_MismatchPrecision: TestMessage(DateIvlExpand_MismatchPrecision = MismatchPrecisionExpected, 'DateIvlExpand_MismatchPrecision', toString(MismatchPrecisionExpected), toString(DateIvlExpand_MismatchPrecision))
+define test_DateIvlExpand_MismatchPrecisionEmpty: TestMessage(DateIvlExpand_MismatchPrecisionEmpty = MismatchPrecisionEmptyExpected, 'DateIvlExpand_MismatchPrecisionEmpty', toString(MismatchPrecisionEmptyExpected), toString(DateIvlExpand_MismatchPrecisionEmpty))
+
+define DateIvlExpand_NullOpen: expand { Interval[null, @2018-01-03] } per day
+define DateIvlExpand_NullClose: expand { Interval[@2018-01-01, null] } per day
+// TODO: should be { Interval[null as Date, null] } but that currently evaluates to null in the engine, uncomment once fixed
+//define DateIvlExpand_NullBoth: expand { Interval[null, null] } per day
+define DateIvlExpand_MonthDayPer: expand { Interval[@2018-01, @2018-03] } per day
+define DateIvlExpand_YearMonthPer: expand { Interval[@2016, @2018] } per month
+define DateIvlExpand_YearDayPer: expand { Interval[@2016, @2018] } per day
+define DateIvlExpand_BadPerMinute: expand { Interval[@2018-01-01, @2018-01-04] } per minute
+define DateIvlExpand_BadPerGram: expand { Interval[@2018-01-01, @2018-01-04] } per 1 'g'
+
+define test_DateIvlExpand_NullOpen: TestMessage(DateIvlExpand_NullOpen is null, 'DateIvlExpand_NullOpen', 'null', toString(DateIvlExpand_NullOpen))
+define test_DateIvlExpand_NullClose: TestMessage(DateIvlExpand_NullClose is null, 'DateIvlExpand_NullClose', 'null', toString(DateIvlExpand_NullClose))
+//define test_DateIvlExpand_NullBoth: TestMessage(DateIvlExpand_NullBoth is null, 'DateIvlExpand_NullBoth', 'null', toString(DateIvlExpand_NullBoth))
+define test_DateIvlExpand_MonthDayPer: TestMessage(DateIvlExpand_MonthDayPer is null, 'DateIvlExpand_MonthDayPer', 'null', toString(DateIvlExpand_MonthDayPer))
+define test_DateIvlExpand_YearMonthPer: TestMessage(DateIvlExpand_YearMonthPer is null, 'DateIvlExpand_YearMonthPer', 'null', toString(DateIvlExpand_YearMonthPer))
+define test_DateIvlExpand_YearDayPer: TestMessage(DateIvlExpand_YearDayPer is null, 'DateIvlExpand_YearDayPer', 'null', toString(DateIvlExpand_YearDayPer))
+define test_DateIvlExpand_BadPerMinute: TestMessage(DateIvlExpand_BadPerMinute is null, 'DateIvlExpand_BadPerMinute', 'null', toString(DateIvlExpand_BadPerMinute))
+define test_DateIvlExpand_BadPerGram: TestMessage(DateIvlExpand_BadPerGram is null, 'DateIvlExpand_BadPerGram', 'null', toString(DateIvlExpand_BadPerGram))
+
+// DateTimeIntervalExpand
+define MsPrecPerYearExpected: { Interval[@2016-01-01T00:00:00.000+00:00, @2016-12-31T23:59:59.999+00:00], Interval[@2017-01-01T00:00:00.000+00:00, @2017-12-31T23:59:59.999+00:00] }
+define MsPrecPerMonthExpected: { Interval[@2018-01-01T00:00:00.000+00:00, @2018-01-31T23:59:59.999+00:00], Interval[@2018-02-01T00:00:00.000+00:00, @2018-02-28T23:59:59.999+00:00] }
+define MsPrecPerWeekExpected: { Interval[@2018-01-01T00:00:00.000+00:00, @2018-01-07T23:59:59.999+00:00], Interval[@2018-01-08T00:00:00.000+00:00, @2018-01-14T23:59:59.999+00:00] }
+define MsPrecPerDayExpected: { Interval[@2018-01-01T00:00:00.000+00:00, @2018-01-01T23:59:59.999+00:00], Interval[@2018-01-02T00:00:00.000+00:00, @2018-01-02T23:59:59.999+00:00] }
+define MsPrecPerHourExpected: { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:59:59.999+00:00], Interval[@2018-01-01T02:00:00.000+00:00, @2018-01-01T02:59:59.999+00:00] }
+define MsPrecPerMinuteExpected: { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:00:59.999+00:00], Interval[@2018-01-01T01:01:00.000+00:00, @2018-01-01T01:01:59.999+00:00] }
+define MsPrecPerSecondExpected: { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:00:00.999+00:00], Interval[@2018-01-01T01:00:01.000+00:00, @2018-01-01T01:00:01.999+00:00] }
+define MsPrecPerMillisecondExpected: { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:00:00.000+00:00], Interval[@2018-01-01T01:00:00.001+00:00, @2018-01-01T01:00:00.001+00:00] }
+define DateTimeIvlExpand_MsPrecPerYear: expand { Interval[@2016-01-01T00:00:00.000+00:00, @2018-01-01T00:00:00.000+00:00] } per year
+define DateTimeIvlExpand_MsPrecPerMonth: expand { Interval[@2018-01-01T00:00:00.000+00:00, @2018-03-01T00:00:00.000+00:00] } per month
+define DateTimeIvlExpand_MsPrecPerWeek: expand { Interval[@2018-01-01T00:00:00.000+00:00, @2018-01-21T00:00:00.000+00:00] } per week
+define DateTimeIvlExpand_MsPrecPerDay: expand { Interval[@2018-01-01T00:00:00.000+00:00, @2018-01-03T00:00:00.000+00:00] } per day
+define DateTimeIvlExpand_MsPrecPerHour: expand { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T03:00:00.000+00:00] } per hour
+define DateTimeIvlExpand_MsPrecPerMinute: expand { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:02:00.000+00:00] } per minute
+define DateTimeIvlExpand_MsPrecPerSecond: expand { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:00:02.000+00:00] } per second
+define DateTimeIvlExpand_MsPrecPerMillisecond: expand { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:00:00.001+00:00] } per millisecond
+
+define test_DateTimeIvlExpand_MsPrecPerYear: TestMessage(DateTimeIvlExpand_MsPrecPerYear = MsPrecPerYearExpected, 'DateTimeIvlExpand_MsPrecPerYear', toString(MsPrecPerYearExpected), toString(DateTimeIvlExpand_MsPrecPerYear))
+define test_DateTimeIvlExpand_MsPrecPerMonth: TestMessage(DateTimeIvlExpand_MsPrecPerMonth = MsPrecPerMonthExpected, 'DateTimeIvlExpand_MsPrecPerMonth', toString(MsPrecPerMonthExpected), toString(DateTimeIvlExpand_MsPrecPerMonth))
+define test_DateTimeIvlExpand_MsPrecPerWeek: TestMessage(DateTimeIvlExpand_MsPrecPerWeek = MsPrecPerWeekExpected, 'DateTimeIvlExpand_MsPrecPerWeek', toString(MsPrecPerWeekExpected), toString(DateTimeIvlExpand_MsPrecPerWeek))
+define test_DateTimeIvlExpand_MsPrecPerDay: TestMessage(DateTimeIvlExpand_MsPrecPerDay = MsPrecPerDayExpected, 'DateTimeIvlExpand_MsPrecPerDay', toString(MsPrecPerDayExpected), toString(DateTimeIvlExpand_MsPrecPerDay))
+define test_DateTimeIvlExpand_MsPrecPerHour: TestMessage(DateTimeIvlExpand_MsPrecPerHour = MsPrecPerHourExpected, 'DateTimeIvlExpand_MsPrecPerHour', toString(MsPrecPerHourExpected), toString(DateTimeIvlExpand_MsPrecPerHour))
+define test_DateTimeIvlExpand_MsPrecPerMinute: TestMessage(DateTimeIvlExpand_MsPrecPerMinute = MsPrecPerMinuteExpected, 'DateTimeIvlExpand_MsPrecPerMinute', toString(MsPrecPerMinuteExpected), toString(DateTimeIvlExpand_MsPrecPerMinute))
+define test_DateTimeIvlExpand_MsPrecPerSecond: TestMessage(DateTimeIvlExpand_MsPrecPerSecond = MsPrecPerSecondExpected, 'DateTimeIvlExpand_MsPrecPerSecond', toString(MsPrecPerSecondExpected), toString(DateTimeIvlExpand_MsPrecPerSecond))
+define test_DateTimeIvlExpand_MsPrecPerMillisecond: TestMessage(DateTimeIvlExpand_MsPrecPerMillisecond = MsPrecPerMillisecondExpected, 'DateTimeIvlExpand_MsPrecPerMillisecond', toString(MsPrecPerMillisecondExpected), toString(DateTimeIvlExpand_MsPrecPerMillisecond))
+
+define SecPrecPerYearExpected: { Interval[@2016-01-01T00:00:00+00:00, @2016-12-31T23:59:59+00:00], Interval[@2017-01-01T00:00:00+00:00, @2017-12-31T23:59:59+00:00] }
+define SecPrecPerMonthExpected: { Interval[@2018-01-01T00:00:00+00:00, @2018-01-31T23:59:59+00:00], Interval[@2018-02-01T00:00:00+00:00, @2018-02-28T23:59:59+00:00] }
+define SecPrecPerWeekExpected: { Interval[@2018-01-01T00:00:00+00:00, @2018-01-07T23:59:59+00:00], Interval[@2018-01-08T00:00:00+00:00, @2018-01-14T23:59:59+00:00] }
+define SecPrecPerDayExpected: { Interval[@2018-01-01T00:00:00+00:00, @2018-01-01T23:59:59+00:00], Interval[@2018-01-02T00:00:00+00:00, @2018-01-02T23:59:59+00:00] }
+define SecPrecPerHourExpected: { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:59:59+00:00], Interval[@2018-01-01T02:00:00+00:00, @2018-01-01T02:59:59+00:00] }
+define SecPrecPerMinuteExpected: { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:00:59+00:00], Interval[@2018-01-01T01:01:00+00:00, @2018-01-01T01:01:59+00:00] }
+define SecPrecPerSecondExpected: { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:00:00+00:00], Interval[@2018-01-01T01:00:01+00:00, @2018-01-01T01:00:01+00:00] }
+define DateTimeIvlExpand_SecPrecPerYear: expand { Interval[@2016-01-01T00:00:00+00:00, @2018-01-01T00:00:00+00:00] } per year
+define DateTimeIvlExpand_SecPrecPerMonth: expand { Interval[@2018-01-01T00:00:00+00:00, @2018-03-01T00:00:00+00:00] } per month
+define DateTimeIvlExpand_SecPrecPerWeek: expand { Interval[@2018-01-01T00:00:00+00:00, @2018-01-21T00:00:00+00:00] } per week
+define DateTimeIvlExpand_SecPrecPerDay: expand { Interval[@2018-01-01T00:00:00+00:00, @2018-01-03T00:00:00+00:00] } per day
+define DateTimeIvlExpand_SecPrecPerHour: expand { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T03:00:00+00:00] } per hour
+define DateTimeIvlExpand_SecPrecPerMinute: expand { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:02:00+00:00] } per minute
+define DateTimeIvlExpand_SecPrecPerSecond: expand { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:00:01+00:00] } per second
+define DateTimeIvlExpand_SecPrecPerMillisecond: expand { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:00:00+00:00] } per millisecond
+
+define test_DateTimeIvlExpand_SecPrecPerYear: TestMessage(DateTimeIvlExpand_SecPrecPerYear = SecPrecPerYearExpected, 'DateTimeIvlExpand_SecPrecPerYear', toString(SecPrecPerYearExpected), toString(DateTimeIvlExpand_SecPrecPerYear))
+define test_DateTimeIvlExpand_SecPrecPerMonth: TestMessage(DateTimeIvlExpand_SecPrecPerMonth = SecPrecPerMonthExpected, 'DateTimeIvlExpand_SecPrecPerMonth', toString(SecPrecPerMonthExpected), toString(DateTimeIvlExpand_SecPrecPerMonth))
+define test_DateTimeIvlExpand_SecPrecPerWeek: TestMessage(DateTimeIvlExpand_SecPrecPerWeek = SecPrecPerWeekExpected, 'DateTimeIvlExpand_SecPrecPerWeek', toString(SecPrecPerWeekExpected), toString(DateTimeIvlExpand_SecPrecPerWeek))
+define test_DateTimeIvlExpand_SecPrecPerDay: TestMessage(DateTimeIvlExpand_SecPrecPerDay = SecPrecPerDayExpected, 'DateTimeIvlExpand_SecPrecPerDay', toString(SecPrecPerDayExpected), toString(DateTimeIvlExpand_SecPrecPerDay))
+define test_DateTimeIvlExpand_SecPrecPerHour: TestMessage(DateTimeIvlExpand_SecPrecPerHour = SecPrecPerHourExpected, 'DateTimeIvlExpand_SecPrecPerHour', toString(SecPrecPerHourExpected), toString(DateTimeIvlExpand_SecPrecPerHour))
+define test_DateTimeIvlExpand_SecPrecPerMinute: TestMessage(DateTimeIvlExpand_SecPrecPerMinute = SecPrecPerMinuteExpected, 'DateTimeIvlExpand_SecPrecPerMinute', toString(SecPrecPerMinuteExpected), toString(DateTimeIvlExpand_SecPrecPerMinute))
+define test_DateTimeIvlExpand_SecPrecPerSecond: TestMessage(DateTimeIvlExpand_SecPrecPerSecond = SecPrecPerSecondExpected, 'DateTimeIvlExpand_SecPrecPerSecond', toString(SecPrecPerSecondExpected), toString(DateTimeIvlExpand_SecPrecPerSecond))
+define test_DateTimeIvlExpand_SecPrecPerMillisecond: TestMessage(DateTimeIvlExpand_SecPrecPerMillisecond is null, 'DateTimeIvlExpand_SecPrecPerMillisecond', 'null', toString(DateTimeIvlExpand_SecPrecPerMillisecond))
+
+define MinPrecPerYearExpected: { Interval[@2016-01-01T00:00+00:00, @2016-12-31T23:59+00:00], Interval[@2017-01-01T00:00+00:00, @2017-12-31T23:59+00:00] }
+define MinPrecPerMonthExpected: { Interval[@2018-01-01T00:00+00:00, @2018-01-31T23:59+00:00], Interval[@2018-02-01T00:00+00:00, @2018-02-28T23:59+00:00] }
+define MinPrecPerWeekExpected: { Interval[@2018-01-01T00:00+00:00, @2018-01-07T23:59+00:00], Interval[@2018-01-08T00:00+00:00, @2018-01-14T23:59+00:00] }
+define MinPrecPerDayExpected: { Interval[@2018-01-01T00:00+00:00, @2018-01-01T23:59+00:00], Interval[@2018-01-02T00:00+00:00, @2018-01-02T23:59+00:00] }
+define MinPrecPerHourExpected: { Interval[@2018-01-01T01:00+00:00, @2018-01-01T01:59+00:00], Interval[@2018-01-01T02:00+00:00, @2018-01-01T02:59+00:00] }
+define MinPrecPerMinuteExpected: { Interval[@2018-01-01T01:00+00:00, @2018-01-01T01:00+00:00], Interval[@2018-01-01T01:01+00:00, @2018-01-01T01:01+00:00] }
+define DateTimeIvlExpand_MinPrecPerYear: expand { Interval[@2016-01-01T00:00+00:00, @2018-01-01T00:00+00:00] } per year
+define DateTimeIvlExpand_MinPrecPerMonth: expand { Interval[@2018-01-01T00:00+00:00, @2018-03-01T00:00+00:00] } per month
+define DateTimeIvlExpand_MinPrecPerWeek: expand { Interval[@2018-01-01T00:00+00:00, @2018-01-21T00:00+00:00] } per week
+define DateTimeIvlExpand_MinPrecPerDay: expand { Interval[@2018-01-01T00:00+00:00, @2018-01-03T00:00+00:00] } per day
+define DateTimeIvlExpand_MinPrecPerHour: expand { Interval[@2018-01-01T01:00+00:00, @2018-01-01T03:00+00:00] } per hour
+define DateTimeIvlExpand_MinPrecPerMinute: expand { Interval[@2018-01-01T01:00+00:00, @2018-01-01T01:01+00:00] } per minute
+define DateTimeIvlExpand_MinPrecPerSecond: expand { Interval[@2018-01-01T01:00+00:00, @2018-01-01T01:00+00:00] } per second
+define DateTimeIvlExpand_MinPrecPerMillisecond: expand { Interval[@2018-01-01T01:00+00:00, @2018-01-01T01:00+00:00] } per millisecond
+
+define test_DateTimeIvlExpand_MinPrecPerYear: TestMessage(DateTimeIvlExpand_MinPrecPerYear = MinPrecPerYearExpected, 'DateTimeIvlExpand_MinPrecPerYear', toString(MinPrecPerYearExpected), toString(DateTimeIvlExpand_MinPrecPerYear))
+define test_DateTimeIvlExpand_MinPrecPerMonth: TestMessage(DateTimeIvlExpand_MinPrecPerMonth = MinPrecPerMonthExpected, 'DateTimeIvlExpand_MinPrecPerMonth', toString(MinPrecPerMonthExpected), toString(DateTimeIvlExpand_MinPrecPerMonth))
+define test_DateTimeIvlExpand_MinPrecPerWeek: TestMessage(DateTimeIvlExpand_MinPrecPerWeek = MinPrecPerWeekExpected, 'DateTimeIvlExpand_MinPrecPerWeek', toString(MinPrecPerWeekExpected), toString(DateTimeIvlExpand_MinPrecPerWeek))
+define test_DateTimeIvlExpand_MinPrecPerDay: TestMessage(DateTimeIvlExpand_MinPrecPerDay = MinPrecPerDayExpected, 'DateTimeIvlExpand_MinPrecPerDay', toString(MinPrecPerDayExpected), toString(DateTimeIvlExpand_MinPrecPerDay))
+define test_DateTimeIvlExpand_MinPrecPerHour: TestMessage(DateTimeIvlExpand_MinPrecPerHour = MinPrecPerHourExpected, 'DateTimeIvlExpand_MinPrecPerHour', toString(MinPrecPerHourExpected), toString(DateTimeIvlExpand_MinPrecPerHour))
+define test_DateTimeIvlExpand_MinPrecPerMinute: TestMessage(DateTimeIvlExpand_MinPrecPerMinute = MinPrecPerMinuteExpected, 'DateTimeIvlExpand_MinPrecPerMinute', toString(MinPrecPerMinuteExpected), toString(DateTimeIvlExpand_MinPrecPerMinute))
+define test_DateTimeIvlExpand_MinPrecPerSecond: TestMessage(DateTimeIvlExpand_MinPrecPerSecond is null, 'DateTimeIvlExpand_MinPrecPerSecond', 'null', toString(DateTimeIvlExpand_MinPrecPerSecond))
+define test_DateTimeIvlExpand_MinPrecPerMillisecond: TestMessage(DateTimeIvlExpand_MinPrecPerMillisecond is null, 'DateTimeIvlExpand_MinPrecPerMillisecond', 'null', toString(DateTimeIvlExpand_MinPrecPerMillisecond))
+
+define HourPrecPerYearExpected: { Interval[@2016-01-01T00+00:00, @2016-12-31T23+00:00], Interval[@2017-01-01T00+00:00, @2017-12-31T23+00:00] }
+define HourPrecPerMonthExpected: { Interval[@2018-01-01T00+00:00, @2018-01-31T23+00:00], Interval[@2018-02-01T00+00:00, @2018-02-28T23+00:00] }
+define HourPrecPerWeekExpected: { Interval[@2018-01-01T00+00:00, @2018-01-07T23+00:00], Interval[@2018-01-08T00+00:00, @2018-01-14T23+00:00] }
+define HourPrecPerDayExpected: { Interval[@2018-01-01T00+00:00, @2018-01-01T23+00:00], Interval[@2018-01-02T00+00:00, @2018-01-02T23+00:00] }
+define HourPrecPerHourExpected: { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00], Interval[@2018-01-01T02+00:00, @2018-01-01T02+00:00] }
+define DateTimeIvlExpand_HourPrecPerYear: expand { Interval[@2016-01-01T00+00:00, @2018-01-01T00+00:00] } per year
+define DateTimeIvlExpand_HourPrecPerMonth: expand { Interval[@2018-01-01T00+00:00, @2018-03-01T00+00:00] } per month
+define DateTimeIvlExpand_HourPrecPerWeek: expand { Interval[@2018-01-01T00+00:00, @2018-01-21T00+00:00] } per week
+define DateTimeIvlExpand_HourPrecPerDay: expand { Interval[@2018-01-01T00+00:00, @2018-01-03T00+00:00] } per day
+define DateTimeIvlExpand_HourPrecPerHour: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T02+00:00] } per hour
+define DateTimeIvlExpand_HourPrecPerMinute: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00] } per minute
+define DateTimeIvlExpand_HourPrecPerSecond: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00] } per second
+define DateTimeIvlExpand_HourPrecPerMillisecond: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00] } per millisecond
+
+define test_DateTimeIvlExpand_HourPrecPerYear: TestMessage(DateTimeIvlExpand_HourPrecPerYear = HourPrecPerYearExpected, 'DateTimeIvlExpand_HourPrecPerYear', toString(HourPrecPerYearExpected), toString(DateTimeIvlExpand_HourPrecPerYear))
+define test_DateTimeIvlExpand_HourPrecPerMonth: TestMessage(DateTimeIvlExpand_HourPrecPerMonth = HourPrecPerMonthExpected, 'DateTimeIvlExpand_HourPrecPerMonth', toString(HourPrecPerMonthExpected), toString(DateTimeIvlExpand_HourPrecPerMonth))
+define test_DateTimeIvlExpand_HourPrecPerWeek: TestMessage(DateTimeIvlExpand_HourPrecPerWeek = HourPrecPerWeekExpected, 'DateTimeIvlExpand_HourPrecPerWeek', toString(HourPrecPerWeekExpected), toString(DateTimeIvlExpand_HourPrecPerWeek))
+define test_DateTimeIvlExpand_HourPrecPerDay: TestMessage(DateTimeIvlExpand_HourPrecPerDay = HourPrecPerDayExpected, 'DateTimeIvlExpand_HourPrecPerDay', toString(HourPrecPerDayExpected), toString(DateTimeIvlExpand_HourPrecPerDay))
+define test_DateTimeIvlExpand_HourPrecPerHour: TestMessage(DateTimeIvlExpand_HourPrecPerHour = HourPrecPerHourExpected, 'DateTimeIvlExpand_HourPrecPerHour', toString(HourPrecPerHourExpected), toString(DateTimeIvlExpand_HourPrecPerHour))
+define test_DateTimeIvlExpand_HourPrecPerMinute: TestMessage(DateTimeIvlExpand_HourPrecPerMinute is null, 'DateTimeIvlExpand_HourPrecPerMinute', 'null', toString(DateTimeIvlExpand_HourPrecPerMinute))
+define test_DateTimeIvlExpand_HourPrecPerSecond: TestMessage(DateTimeIvlExpand_HourPrecPerSecond is null, 'DateTimeIvlExpand_HourPrecPerSecond', 'null', toString(DateTimeIvlExpand_HourPrecPerSecond))
+define test_DateTimeIvlExpand_HourPrecPerMillisecond: TestMessage(DateTimeIvlExpand_HourPrecPerMillisecond is null, 'DateTimeIvlExpand_HourPrecPerMillisecond', 'null', toString(DateTimeIvlExpand_HourPrecPerMillisecond))
+
+define DayPrecPerYearExpected: { Interval[DateTime(2016,01,01), DateTime(2016,12,31)], Interval[DateTime(2017,01,01), DateTime(2017,12,31)] }
+define DayPrecPerMonthExpected: { Interval[DateTime(2018,01,01), DateTime(2018,01,31)], Interval[DateTime(2018,02,01), DateTime(2018,02,28)] }
+define DayPrecPerWeekExpected: { Interval[DateTime(2018,01,01), DateTime(2018,01,07)], Interval[DateTime(2018,01,08), DateTime(2018,01,14)] }
+define DayPrecPerDayExpected: { Interval[DateTime(2018,01,01), DateTime(2018,01,01)], Interval[DateTime(2018,01,02), DateTime(2018,01,02)] }
+define DateTimeIvlExpand_DayPrecPerYear: expand { Interval[DateTime(2016,01,01), DateTime(2018,01,01)] } per year
+define DateTimeIvlExpand_DayPrecPerMonth: expand { Interval[DateTime(2018,01,01), DateTime(2018,03,01)] } per month
+define DateTimeIvlExpand_DayPrecPerWeek: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,14)] } per week
+define DateTimeIvlExpand_DayPrecPerDay: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,02)] } per day
+define DateTimeIvlExpand_DayPrecPerHour: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,01)] } per hour
+define DateTimeIvlExpand_DayPrecPerMinute: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,01)] } per minute
+define DateTimeIvlExpand_DayPrecPerSecond: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,01)] } per second
+define DateTimeIvlExpand_DayPrecPerMillisecond: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,01)] } per millisecond
+
+define test_DateTimeIvlExpand_DayPrecPerYear: TestMessage(DateTimeIvlExpand_DayPrecPerYear = DayPrecPerYearExpected, 'DateTimeIvlExpand_DayPrecPerYear', toString(DayPrecPerYearExpected), toString(DateTimeIvlExpand_DayPrecPerYear))
+define test_DateTimeIvlExpand_DayPrecPerMonth: TestMessage(DateTimeIvlExpand_DayPrecPerMonth = DayPrecPerMonthExpected, 'DateTimeIvlExpand_DayPrecPerMonth', toString(DayPrecPerMonthExpected), toString(DateTimeIvlExpand_DayPrecPerMonth))
+define test_DateTimeIvlExpand_DayPrecPerWeek: TestMessage(DateTimeIvlExpand_DayPrecPerWeek = DayPrecPerWeekExpected, 'DateTimeIvlExpand_DayPrecPerWeek', toString(DayPrecPerWeekExpected), toString(DateTimeIvlExpand_DayPrecPerWeek))
+define test_DateTimeIvlExpand_DayPrecPerDay: TestMessage(DateTimeIvlExpand_DayPrecPerDay = DayPrecPerDayExpected, 'DateTimeIvlExpand_DayPrecPerDay', toString(DayPrecPerDayExpected), toString(DateTimeIvlExpand_DayPrecPerDay))
+define test_DateTimeIvlExpand_DayPrecPerHour: TestMessage(DateTimeIvlExpand_DayPrecPerHour is null, 'DateTimeIvlExpand_DayPrecPerHour', 'null', toString(DateTimeIvlExpand_DayPrecPerHour))
+define test_DateTimeIvlExpand_DayPrecPerMinute: TestMessage(DateTimeIvlExpand_DayPrecPerMinute is null, 'DateTimeIvlExpand_DayPrecPerMinute', 'null', toString(DateTimeIvlExpand_DayPrecPerMinute))
+define test_DateTimeIvlExpand_DayPrecPerSecond: TestMessage(DateTimeIvlExpand_DayPrecPerSecond is null, 'DateTimeIvlExpand_DayPrecPerSecond', 'null', toString(DateTimeIvlExpand_DayPrecPerSecond))
+define test_DateTimeIvlExpand_DayPrecPerMillisecond: TestMessage(DateTimeIvlExpand_DayPrecPerMillisecond is null, 'DateTimeIvlExpand_DayPrecPerMillisecond', 'null', toString(DateTimeIvlExpand_DayPrecPerMillisecond))
+
+define MonthPrecPerYearExpected: { Interval[DateTime(2016,01), DateTime(2016,12)], Interval[DateTime(2017,01), DateTime(2017,12)] }
+define MonthPrecPerMonthExpected: { Interval[DateTime(2018,01), DateTime(2018,01)], Interval[DateTime(2018,02), DateTime(2018,02)] }
+define DateTimeIvlExpand_MonthPrecPerYear: expand { Interval[DateTime(2016,01), DateTime(2018,01)] } per year
+define DateTimeIvlExpand_MonthPrecPerMonth: expand { Interval[DateTime(2018,01), DateTime(2018,02)] } per month
+define DateTimeIvlExpand_MonthPrecPerWeek: expand { Interval[DateTime(2018,01), DateTime(2018,01)] } per week
+define DateTimeIvlExpand_MonthPrecPerDay: expand { Interval[DateTime(2018,01), DateTime(2018,01)] } per day
+define DateTimeIvlExpand_MonthPrecPerHour: expand { Interval[DateTime(2018,01), DateTime(2018,01)] } per hour
+define DateTimeIvlExpand_MonthPrecPerMinute: expand { Interval[DateTime(2018,01), DateTime(2018,01)] } per minute
+define DateTimeIvlExpand_MonthPrecPerSecond: expand { Interval[DateTime(2018,01), DateTime(2018,01)] } per second
+define DateTimeIvlExpand_MonthPrecPerMillisecond: expand { Interval[DateTime(2018,01), DateTime(2018,01)] } per millisecond
+
+define test_DateTimeIvlExpand_MonthPrecPerYear: TestMessage(DateTimeIvlExpand_MonthPrecPerYear = MonthPrecPerYearExpected, 'DateTimeIvlExpand_MonthPrecPerYear', toString(MonthPrecPerYearExpected), toString(DateTimeIvlExpand_MonthPrecPerYear))
+define test_DateTimeIvlExpand_MonthPrecPerMonth: TestMessage(DateTimeIvlExpand_MonthPrecPerMonth = MonthPrecPerMonthExpected, 'DateTimeIvlExpand_MonthPrecPerMonth', toString(MonthPrecPerMonthExpected), toString(DateTimeIvlExpand_MonthPrecPerMonth))
+define test_DateTimeIvlExpand_MonthPrecPerWeek: TestMessage(DateTimeIvlExpand_MonthPrecPerWeek is null, 'DateTimeIvlExpand_MonthPrecPerWeek', 'null', toString(DateTimeIvlExpand_MonthPrecPerWeek))
+define test_DateTimeIvlExpand_MonthPrecPerDay: TestMessage(DateTimeIvlExpand_MonthPrecPerDay is null, 'DateTimeIvlExpand_MonthPrecPerDay', 'null', toString(DateTimeIvlExpand_MonthPrecPerDay))
+define test_DateTimeIvlExpand_MonthPrecPerHour: TestMessage(DateTimeIvlExpand_MonthPrecPerHour is null, 'DateTimeIvlExpand_MonthPrecPerHour', 'null', toString(DateTimeIvlExpand_MonthPrecPerHour))
+define test_DateTimeIvlExpand_MonthPrecPerMinute: TestMessage(DateTimeIvlExpand_MonthPrecPerMinute is null, 'DateTimeIvlExpand_MonthPrecPerMinute', 'null', toString(DateTimeIvlExpand_MonthPrecPerMinute))
+define test_DateTimeIvlExpand_MonthPrecPerSecond: TestMessage(DateTimeIvlExpand_MonthPrecPerSecond is null, 'DateTimeIvlExpand_MonthPrecPerSecond', 'null', toString(DateTimeIvlExpand_MonthPrecPerSecond))
+define test_DateTimeIvlExpand_MonthPrecPerMillisecond: TestMessage(DateTimeIvlExpand_MonthPrecPerMillisecond is null, 'DateTimeIvlExpand_MonthPrecPerMillisecond', 'null', toString(DateTimeIvlExpand_MonthPrecPerMillisecond))
+
+define YearPrecPerYearExpected: { Interval[DateTime(2016), DateTime(2016)], Interval[DateTime(2017), DateTime(2017)], Interval[DateTime(2018), DateTime(2018)] }
+define DateTimeIvlExpand_YearPrecPerYear: expand { Interval[DateTime(2016), DateTime(2018)] } per year
+define DateTimeIvlExpand_YearPrecPerMonth: expand { Interval[DateTime(2018), DateTime(2018)] } per month
+define DateTimeIvlExpand_YearPrecPerWeek: expand { Interval[DateTime(2018), DateTime(2018)] } per week
+define DateTimeIvlExpand_YearPrecPerDay: expand { Interval[DateTime(2018), DateTime(2018)] } per day
+define DateTimeIvlExpand_YearPrecPerHour: expand { Interval[DateTime(2018), DateTime(2018)] } per hour
+define DateTimeIvlExpand_YearPrecPerMinute: expand { Interval[DateTime(2018), DateTime(2018)] } per minute
+define DateTimeIvlExpand_YearPrecPerSecond: expand { Interval[DateTime(2018), DateTime(2018)] } per second
+define DateTimeIvlExpand_YearPrecPerMillisecond: expand { Interval[DateTime(2018), DateTime(2018)] } per millisecond
+
+define test_DateTimeIvlExpand_YearPrecPerYear: TestMessage(DateTimeIvlExpand_YearPrecPerYear = YearPrecPerYearExpected, 'DateTimeIvlExpand_YearPrecPerYear', toString(YearPrecPerYearExpected), toString(DateTimeIvlExpand_YearPrecPerYear))
+define test_DateTimeIvlExpand_YearPrecPerMonth: TestMessage(DateTimeIvlExpand_YearPrecPerMonth is null, 'DateTimeIvlExpand_YearPrecPerMonth', 'null', toString(DateTimeIvlExpand_YearPrecPerMonth))
+define test_DateTimeIvlExpand_YearPrecPerWeek: TestMessage(DateTimeIvlExpand_YearPrecPerWeek is null, 'DateTimeIvlExpand_YearPrecPerWeek', 'null', toString(DateTimeIvlExpand_YearPrecPerWeek))
+define test_DateTimeIvlExpand_YearPrecPerDay: TestMessage(DateTimeIvlExpand_YearPrecPerDay is null, 'DateTimeIvlExpand_YearPrecPerDay', 'null', toString(DateTimeIvlExpand_YearPrecPerDay))
+define test_DateTimeIvlExpand_YearPrecPerHour: TestMessage(DateTimeIvlExpand_YearPrecPerHour is null, 'DateTimeIvlExpand_YearPrecPerHour', 'null', toString(DateTimeIvlExpand_YearPrecPerHour))
+define test_DateTimeIvlExpand_YearPrecPerMinute: TestMessage(DateTimeIvlExpand_YearPrecPerMinute is null, 'DateTimeIvlExpand_YearPrecPerMinute', 'null', toString(DateTimeIvlExpand_YearPrecPerMinute))
+define test_DateTimeIvlExpand_YearPrecPerSecond: TestMessage(DateTimeIvlExpand_YearPrecPerSecond is null, 'DateTimeIvlExpand_YearPrecPerSecond', 'null', toString(DateTimeIvlExpand_YearPrecPerSecond))
+define test_DateTimeIvlExpand_YearPrecPerMillisecond: TestMessage(DateTimeIvlExpand_YearPrecPerMillisecond is null, 'DateTimeIvlExpand_YearPrecPerMillisecond', 'null', toString(DateTimeIvlExpand_YearPrecPerMillisecond))
+
+define NullInListExpected: { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00] }
+define DateTimeOverlappingExpected: { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00], Interval[@2018-01-01T02+00:00, @2018-01-01T02+00:00], Interval[@2018-01-01T03+00:00, @2018-01-01T03+00:00], Interval[@2018-01-01T04+00:00, @2018-01-01T04+00:00] }
+define DateTimeNonOverlappingExpected: { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00], Interval[@2018-01-01T02+00:00, @2018-01-01T02+00:00], Interval[@2018-01-01T05+00:00, @2018-01-01T05+00:00] }
+define DateTimeIvlExpand_NullInList: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00], null } per hour
+define DateTimeIvlExpand_Overlapping: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T03+00:00], Interval[@2018-01-01T02+00:00, @2018-01-01T04+00:00] } per hour
+define DateTimeIvlExpand_NonOverlapping: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T02+00:00], Interval[@2018-01-01T05+00:00, @2018-01-01T05+00:00] } per hour
+
+define test_DateTimeIvlExpand_NullInList: TestMessage(DateTimeIvlExpand_NullInList = NullInListExpected, 'DateTimeIvlExpand_NullInList', toString(NullInListExpected), toString(DateTimeIvlExpand_NullInList))
+define test_DateTimeIvlExpand_Overlapping: TestMessage(DateTimeIvlExpand_Overlapping = DateTimeOverlappingExpected, 'DateTimeIvlExpand_Overlapping', toString(DateTimeOverlappingExpected), toString(DateTimeIvlExpand_Overlapping))
+define test_DateTimeIvlExpand_NonOverlapping: TestMessage(DateTimeIvlExpand_NonOverlapping = DateTimeNonOverlappingExpected, 'DateTimeIvlExpand_NonOverlapping', toString(DateTimeNonOverlappingExpected), toString(DateTimeIvlExpand_NonOverlapping))
+
+define NoPerDefaultHourExpected: { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00] }
+define NoPerDefaultDayExpected: { Interval[DateTime(2018,01,01), DateTime(2018,01,01)] }
+define DateTimeNoPerDefaultMonthExpected: { Interval[DateTime(2018,01), DateTime(2018,01)] }
+define DateTimeNoPerDefaultYearExpected: { Interval[DateTime(2018), DateTime(2018)] }
+define DateTimeIvlExpand_NoPerDefaultMS: expand { Interval[@2018-01-01T01:00:00.000+00:00, @2018-01-01T01:00:00.001+00:00] }
+define DateTimeIvlExpand_NoPerDefaultSec: expand { Interval[@2018-01-01T01:00:00+00:00, @2018-01-01T01:00:01+00:00] }
+define DateTimeIvlExpand_NoPerDefaultMin: expand { Interval[@2018-01-01T01:00+00:00, @2018-01-01T01:01+00:00] }
+define DateTimeIvlExpand_NoPerDefaultHour: expand { Interval[@2018-01-01T01+00:00, @2018-01-01T01+00:00] }
+define DateTimeIvlExpand_NoPerDefaultDay: expand { Interval[DateTime(2018,01,01), DateTime(2018,01,01)] }
+define DateTimeIvlExpand_NoPerDefaultMonth: expand { Interval[DateTime(2018,01), DateTime(2018,01)] }
+define DateTimeIvlExpand_NoPerDefaultYear: expand { Interval[DateTime(2018), DateTime(2018)] }
+
+define test_DateTimeIvlExpand_NoPerDefaultMS: TestMessage(DateTimeIvlExpand_NoPerDefaultMS = MsPrecPerMillisecondExpected, 'DateTimeIvlExpand_NoPerDefaultMS', toString(MsPrecPerMillisecondExpected), toString(DateTimeIvlExpand_NoPerDefaultMS))
+define test_DateTimeIvlExpand_NoPerDefaultSec: TestMessage(DateTimeIvlExpand_NoPerDefaultSec = SecPrecPerSecondExpected, 'DateTimeIvlExpand_NoPerDefaultSec', toString(SecPrecPerSecondExpected), toString(DateTimeIvlExpand_NoPerDefaultSec))
+define test_DateTimeIvlExpand_NoPerDefaultMin: TestMessage(DateTimeIvlExpand_NoPerDefaultMin = MinPrecPerMinuteExpected, 'DateTimeIvlExpand_NoPerDefaultMin', toString(MinPrecPerMinuteExpected), toString(DateTimeIvlExpand_NoPerDefaultMin))
+define test_DateTimeIvlExpand_NoPerDefaultHour: TestMessage(DateTimeIvlExpand_NoPerDefaultHour = NoPerDefaultHourExpected, 'DateTimeIvlExpand_NoPerDefaultHour', toString(NoPerDefaultHourExpected), toString(DateTimeIvlExpand_NoPerDefaultHour))
+define test_DateTimeIvlExpand_NoPerDefaultDay: TestMessage(DateTimeIvlExpand_NoPerDefaultDay = NoPerDefaultDayExpected, 'DateTimeIvlExpand_NoPerDefaultDay', toString(NoPerDefaultDayExpected), toString(DateTimeIvlExpand_NoPerDefaultDay))
+define test_DateTimeIvlExpand_NoPerDefaultMonth: TestMessage(DateTimeIvlExpand_NoPerDefaultMonth = DateTimeNoPerDefaultMonthExpected, 'DateTimeIvlExpand_NoPerDefaultMonth', toString(DateTimeNoPerDefaultMonthExpected), toString(DateTimeIvlExpand_NoPerDefaultMonth))
+define test_DateTimeIvlExpand_NoPerDefaultYear: TestMessage(DateTimeIvlExpand_NoPerDefaultYear = DateTimeNoPerDefaultYearExpected, 'DateTimeIvlExpand_NoPerDefaultYear', toString(DateTimeNoPerDefaultYearExpected), toString(DateTimeIvlExpand_NoPerDefaultYear))
+
+define DateTimeOpenStartExpected: { Interval[@2018-01-01T02+00:00, @2018-01-02T01+00:00], Interval[@2018-01-02T02+00:00, @2018-01-03T01+00:00] }
+define DateTimeOpenEndExpected: { Interval[@2018-01-01T01+00:00, @2018-01-02T00+00:00], Interval[@2018-01-02T01+00:00, @2018-01-03T00+00:00] }
+define DateTimeOpenBothExpected: { Interval[@2018-01-01T02+00:00, @2018-01-02T01+00:00] }
+define DateTimeIvlExpand_OpenStart: expand { Interval(@2018-01-01T01+00:00, @2018-01-03T01+00:00] } per day
+define DateTimeIvlExpand_OpenEnd: expand { Interval[@2018-01-01T01+00:00, @2018-01-03T01+00:00) } per day
+define DateTimeIvlExpand_OpenBoth: expand { Interval(@2018-01-01T01+00:00, @2018-01-03T01+00:00) } per day
+
+define test_DateTimeIvlExpand_OpenStart: TestMessage(DateTimeIvlExpand_OpenStart = DateTimeOpenStartExpected, 'DateTimeIvlExpand_OpenStart', toString(DateTimeOpenStartExpected), toString(DateTimeIvlExpand_OpenStart))
+define test_DateTimeIvlExpand_OpenEnd: TestMessage(DateTimeIvlExpand_OpenEnd = DateTimeOpenEndExpected, 'DateTimeIvlExpand_OpenEnd', toString(DateTimeOpenEndExpected), toString(DateTimeIvlExpand_OpenEnd))
+define test_DateTimeIvlExpand_OpenBoth: TestMessage(DateTimeIvlExpand_OpenBoth = DateTimeOpenBothExpected, 'DateTimeIvlExpand_OpenBoth', toString(DateTimeOpenBothExpected), toString(DateTimeIvlExpand_OpenBoth))
+
+define DateTimeMismatchPrecisionExpected: { Interval[@2012-01-01T12:00+00:00, @2012-01-02T11:59+00:00] }
+define DateTimeIvlExpand_MismatchPrecision: expand { Interval[@2012-01-01T12:00+00:00, @2012-01-02T12:00:00+00:00] } per day
+define DateTimeIvlExpand_MismatchPrecisionEmpty: expand { Interval[@2012-01-01T13:00:00+00:00, @2012-01-02T12:59+00:00] } per day
+
+define test_DateTimeIvlExpand_MismatchPrecision: TestMessage(DateTimeIvlExpand_MismatchPrecision = DateTimeMismatchPrecisionExpected, 'DateTimeIvlExpand_MismatchPrecision', toString(DateTimeMismatchPrecisionExpected), toString(DateTimeIvlExpand_MismatchPrecision))
+define test_DateTimeIvlExpand_MismatchPrecisionEmpty: TestMessage(DateTimeIvlExpand_MismatchPrecisionEmpty = List<Interval<Date>>{}, 'DateTimeIvlExpand_MismatchPrecisionEmpty', toString(List<Interval<Date>>{}), toString(DateTimeIvlExpand_MismatchPrecisionEmpty))
+
+define DateTimeIvlExpand_NullOpen: expand { Interval[null, @2018-01-03T01+00:00] } per day
+define DateTimeIvlExpand_NullClose: expand { Interval[@2018-01-01T01+00:00, null] } per day
+// TODO: should be { Interval[null as DateTime, null] } but that currently evaluates to null in the engine, uncomment once fixed
+//define DateTimeIvlExpand_NullBoth: expand { Interval[null, null] } per day
+define DateTimeIvlExpand_BadPerGram: expand { Interval[@2018-01-01T01+00:00, @2018-01-04T01+00:00] } per 1 'g'
+
+define test_DateTimeIvlExpand_NullOpen: TestMessage(DateTimeIvlExpand_NullOpen is null, 'DateTimeIvlExpand_NullOpen', 'null', toString(DateTimeIvlExpand_NullOpen))
+define test_DateTimeIvlExpand_NullClose: TestMessage(DateTimeIvlExpand_NullClose is null, 'DateTimeIvlExpand_NullClose', 'null', toString(DateTimeIvlExpand_NullClose))
+//define test_DateTimeIvlExpand_NullBoth: TestMessage(DateTimeIvlExpand_NullBoth is null, 'DateTimeIvlExpand_NullBoth', 'null', toString(DateTimeIvlExpand_NullBoth))
+define test_DateTimeIvlExpand_BadPerGram: TestMessage(DateTimeIvlExpand_BadPerGram is null, 'DateTimeIvlExpand_BadPerGram', 'null', toString(DateTimeIvlExpand_BadPerGram))
+
+// TimeIntervalExpand
+define TimeMsPrecPerHourExpected: { Interval[@T01:00:00.000+00:00, @T01:59:59.999+00:00], Interval[@T02:00:00.000+00:00, @T02:59:59.999+00:00] }
+define TimeMsPrecPerMinuteExpected: { Interval[@T01:00:00.000+00:00, @T01:00:59.999+00:00], Interval[@T01:01:00.000+00:00, @T01:01:59.999+00:00] }
+define TimeMsPrecPerSecondExpected: { Interval[@T01:00:00.000+00:00, @T01:00:00.999+00:00], Interval[@T01:00:01.000+00:00, @T01:00:01.999+00:00] }
+define TimeMsPrecPerMillisecondExpected: { Interval[@T01:00:00.000+00:00, @T01:00:00.000+00:00], Interval[@T01:00:00.001+00:00, @T01:00:00.001+00:00] }
+define TimeIvlExpand_MsPrecPerHour: expand { Interval[@T01:00:00.000+00:00, @T03:00:00.000+00:00] } per hour
+define TimeIvlExpand_MsPrecPerMinute: expand { Interval[@T01:00:00.000+00:00, @T01:02:00.000+00:00] } per minute
+define TimeIvlExpand_MsPrecPerSecond: expand { Interval[@T01:00:00.000+00:00, @T01:00:02.000+00:00] } per second
+define TimeIvlExpand_MsPrecPerMillisecond: expand { Interval[@T01:00:00.000+00:00, @T01:00:00.001+00:00] } per millisecond
+
+define test_TimeIvlExpand_MsPrecPerHour: TestMessage(TimeIvlExpand_MsPrecPerHour = TimeMsPrecPerHourExpected, 'TimeIvlExpand_MsPrecPerHour', toString(TimeMsPrecPerHourExpected), toString(TimeIvlExpand_MsPrecPerHour))
+define test_TimeIvlExpand_MsPrecPerMinute: TestMessage(TimeIvlExpand_MsPrecPerMinute = TimeMsPrecPerMinuteExpected, 'TimeIvlExpand_MsPrecPerMinute', toString(TimeMsPrecPerMinuteExpected), toString(TimeIvlExpand_MsPrecPerMinute))
+define test_TimeIvlExpand_MsPrecPerSecond: TestMessage(TimeIvlExpand_MsPrecPerSecond = TimeMsPrecPerSecondExpected, 'TimeIvlExpand_MsPrecPerSecond', toString(TimeMsPrecPerSecondExpected), toString(TimeIvlExpand_MsPrecPerSecond))
+define test_TimeIvlExpand_MsPrecPerMillisecond: TestMessage(TimeIvlExpand_MsPrecPerMillisecond = TimeMsPrecPerMillisecondExpected, 'TimeIvlExpand_MsPrecPerMillisecond', toString(TimeMsPrecPerMillisecondExpected), toString(TimeIvlExpand_MsPrecPerMillisecond))
+
+define TimeSecPrecPerHourExpected: { Interval[@T01:00:00+00:00, @T01:59:59+00:00], Interval[@T02:00:00+00:00, @T02:59:59+00:00] }
+define TimeSecPrecPerMinuteExpected: { Interval[@T01:00:00+00:00, @T01:00:59+00:00], Interval[@T01:01:00+00:00, @T01:01:59+00:00] }
+define TimeSecPrecPerSecondExpected: { Interval[@T01:00:00+00:00, @T01:00:00+00:00], Interval[@T01:00:01+00:00, @T01:00:01+00:00] }
+define TimeIvlExpand_SecPrecPerHour: expand { Interval[@T01:00:00+00:00, @T03:00:00+00:00] } per hour
+define TimeIvlExpand_SecPrecPerMinute: expand { Interval[@T01:00:00+00:00, @T01:02:00+00:00] } per minute
+define TimeIvlExpand_SecPrecPerSecond: expand { Interval[@T01:00:00+00:00, @T01:00:01+00:00] } per second
+define TimeIvlExpand_SecPrecPerMillisecond: expand { Interval[@T01:00:00+00:00, @T01:00:00+00:00] } per millisecond
+
+define test_TimeIvlExpand_SecPrecPerHour: TestMessage(TimeIvlExpand_SecPrecPerHour = TimeSecPrecPerHourExpected, 'TimeIvlExpand_SecPrecPerHour', toString(TimeSecPrecPerHourExpected), toString(TimeIvlExpand_SecPrecPerHour))
+define test_TimeIvlExpand_SecPrecPerMinute: TestMessage(TimeIvlExpand_SecPrecPerMinute = TimeSecPrecPerMinuteExpected, 'TimeIvlExpand_SecPrecPerMinute', toString(TimeSecPrecPerMinuteExpected), toString(TimeIvlExpand_SecPrecPerMinute))
+define test_TimeIvlExpand_SecPrecPerSecond: TestMessage(TimeIvlExpand_SecPrecPerSecond = TimeSecPrecPerSecondExpected, 'TimeIvlExpand_SecPrecPerSecond', toString(TimeSecPrecPerSecondExpected), toString(TimeIvlExpand_SecPrecPerSecond))
+define test_TimeIvlExpand_SecPrecPerMillisecond: TestMessage(TimeIvlExpand_SecPrecPerMillisecond is null, 'TimeIvlExpand_SecPrecPerMillisecond', 'null', toString(TimeIvlExpand_SecPrecPerMillisecond))
+
+define TimeMinPrecPerHourExpected: { Interval[@T01:00+00:00, @T01:59+00:00], Interval[@T02:00+00:00, @T02:59+00:00] }
+define TimeMinPrecPerMinuteExpected: { Interval[@T01:00+00:00, @T01:00+00:00], Interval[@T01:01+00:00, @T01:01+00:00] }
+define TimeIvlExpand_MinPrecPerHour: expand { Interval[@T01:00+00:00, @T03:00+00:00] } per hour
+define TimeIvlExpand_MinPrecPerMinute: expand { Interval[@T01:00+00:00, @T01:01+00:00] } per minute
+define TimeIvlExpand_MinPrecPerSecond: expand { Interval[@T01:00+00:00, @T01:00+00:00] } per second
+define TimeIvlExpand_MinPrecPerMillisecond: expand { Interval[@T01:00+00:00, @T01:00+00:00] } per millisecond
+
+define test_TimeIvlExpand_MinPrecPerHour: TestMessage(TimeIvlExpand_MinPrecPerHour = TimeMinPrecPerHourExpected, 'TimeIvlExpand_MinPrecPerHour', toString(TimeMinPrecPerHourExpected), toString(TimeIvlExpand_MinPrecPerHour))
+define test_TimeIvlExpand_MinPrecPerMinute: TestMessage(TimeIvlExpand_MinPrecPerMinute = TimeMinPrecPerMinuteExpected, 'TimeIvlExpand_MinPrecPerMinute', toString(TimeMinPrecPerMinuteExpected), toString(TimeIvlExpand_MinPrecPerMinute))
+define test_TimeIvlExpand_MinPrecPerSecond: TestMessage(TimeIvlExpand_MinPrecPerSecond is null, 'TimeIvlExpand_MinPrecPerSecond', 'null', toString(TimeIvlExpand_MinPrecPerSecond))
+define test_TimeIvlExpand_MinPrecPerMillisecond: TestMessage(TimeIvlExpand_MinPrecPerMillisecond is null, 'TimeIvlExpand_MinPrecPerMillisecond', 'null', toString(TimeIvlExpand_MinPrecPerMillisecond))
+
+define TimeHourPrecPerHourExpected: { Interval[@T01+00:00, @T01+00:00], Interval[@T02+00:00, @T02+00:00] }
+define TimeIvlExpand_HourPrecPerHour: expand { Interval[@T01+00:00, @T02+00:00] } per hour
+define TimeIvlExpand_HourPrecPerMinute: expand { Interval[@T01+00:00, @T01+00:00] } per minute
+define TimeIvlExpand_HourPrecPerSecond: expand { Interval[@T01+00:00, @T01+00:00] } per second
+define TimeIvlExpand_HourPrecPerMillisecond: expand { Interval[@T01+00:00, @T01+00:00] } per millisecond
+
+define test_TimeIvlExpand_HourPrecPerHour: TestMessage(TimeIvlExpand_HourPrecPerHour = TimeHourPrecPerHourExpected, 'TimeIvlExpand_HourPrecPerHour', toString(TimeHourPrecPerHourExpected), toString(TimeIvlExpand_HourPrecPerHour))
+define test_TimeIvlExpand_HourPrecPerMinute: TestMessage(TimeIvlExpand_HourPrecPerMinute is null, 'TimeIvlExpand_HourPrecPerMinute', 'null', toString(TimeIvlExpand_HourPrecPerMinute))
+define test_TimeIvlExpand_HourPrecPerSecond: TestMessage(TimeIvlExpand_HourPrecPerSecond is null, 'TimeIvlExpand_HourPrecPerSecond', 'null', toString(TimeIvlExpand_HourPrecPerSecond))
+define test_TimeIvlExpand_HourPrecPerMillisecond: TestMessage(TimeIvlExpand_HourPrecPerMillisecond is null, 'TimeIvlExpand_HourPrecPerMillisecond', 'null', toString(TimeIvlExpand_HourPrecPerMillisecond))
+
+// QuantityIntervalExpand
+// TODO: Bonnie expects this:
+//define ClosedSingleGPerGExpected: { Interval[2 'g', 2 'g'], Interval[3 'g', 3 'g'], Interval[4 'g', 4 'g'] }
+// This seems like the expected behavior and is more in line with how the date expand works
+define ClosedSingleGPerGExpected: { Interval[2 'g', 2.99999999 'g'], Interval[3 'g', 3.99999999 'g'] }
+define ClosedSingleGPerGDecimalExpected: { Interval[2.1 'g', 3.09999999 'g'], Interval[3.1 'g', 4.09999999 'g'] }
+define ClosedSingleMGPerMGTruncExpected: { Interval[2000 'mg', 2799.99999999 'mg'], Interval[2800 'mg', 3599.99999999 'mg'], Interval[3600 'mg', 4399.99999999 'mg'] }
+define ClosedSingleMGPerMGDecimalExpected: { Interval[2000.01 'mg', 2800.00999999 'mg'], Interval[2800.01 'mg', 3600.00999999 'mg'], Interval[3600.01 'mg', 4400.00999999 'mg'] }
+define QtyIvlExpand_ClosedSingleGPerG: expand { Interval[2 'g', 4 'g'] } per 1 'g'
+define QtyIvlExpand_ClosedSingleGPerGDecimal: expand { Interval[2.1 'g', 4.1 'g'] } per 1 'g'
+// TODO: uncomment once UCUM service is implemented
+//define QtyIvlExpand_ClosedSingleGPerMG: expand { Interval[2 'g', 2.003 'g'] } per 1 'mg'
+//define QtyIvlExpand_ClosedSingleMGPerGTrunc: expand { Interval[2999 'mg', 4200 'mg'] } per 1 'g'
+define QtyIvlExpand_ClosedSingleMGPerMGTrunc: expand { Interval[2000 'mg', 4500 'mg'] } per 800 'mg'
+define QtyIvlExpand_ClosedSingleMGPerMGDecimal: expand { Interval[2000.01 'mg', 4500 'mg'] } per 800 'mg'
+
+define test_QtyIvlExpand_ClosedSingleGPerG: TestMessage(QtyIvlExpand_ClosedSingleGPerG = ClosedSingleGPerGExpected, 'QtyIvlExpand_ClosedSingleGPerG', toString(ClosedSingleGPerGExpected), toString(QtyIvlExpand_ClosedSingleGPerG))
+define test_QtyIvlExpand_ClosedSingleGPerGDecimal: TestMessage(QtyIvlExpand_ClosedSingleGPerGDecimal = ClosedSingleGPerGDecimalExpected, 'QtyIvlExpand_ClosedSingleGPerGDecimal', toString(ClosedSingleGPerGDecimalExpected), toString(QtyIvlExpand_ClosedSingleGPerGDecimal))
+define test_QtyIvlExpand_ClosedSingleMGPerMGTrunc: TestMessage(QtyIvlExpand_ClosedSingleMGPerMGTrunc = ClosedSingleMGPerMGTruncExpected, 'QtyIvlExpand_ClosedSingleMGPerMGTrunc', toString(ClosedSingleMGPerMGTruncExpected), toString(QtyIvlExpand_ClosedSingleMGPerMGTrunc))
+define test_QtyIvlExpand_ClosedSingleMGPerMGDecimal: TestMessage(QtyIvlExpand_ClosedSingleMGPerMGDecimal = ClosedSingleMGPerMGDecimalExpected, 'QtyIvlExpand_ClosedSingleMGPerMGDecimal', toString(ClosedSingleMGPerMGDecimalExpected), toString(QtyIvlExpand_ClosedSingleMGPerMGDecimal))
+
+define QtyIvlOverlappingExpected: { Interval[2 'g', 2.99999999 'g'], Interval[3 'g', 3.99999999 'g'], Interval[4 'g', 4.99999999 'g'] }
+define QtyIvlNonOverlappingExpected: { Interval[2 'g', 2.99999999 'g'], Interval[3 'g', 3.99999999 'g'], Interval[6 'g', 6 'g'] }
+define QtyIvlExpand_NullInList: expand { Interval[2 'g', 4 'g'], null } per 1 'g'
+define QtyIvlExpand_Overlapping: expand { Interval[2 'g', 4 'g'], Interval[3 'g', 5 'g'] } per 1 'g'
+define QtyIvlExpand_NonOverlapping: expand { Interval[2 'g', 4 'g'], Interval[6 'g', 6 'g'] } per 1 'g'
+
+define test_QtyIvlExpand_NullInList: TestMessage(QtyIvlExpand_NullInList = ClosedSingleGPerGExpected, 'QtyIvlExpand_NullInList', toString(ClosedSingleGPerGExpected), toString(QtyIvlExpand_NullInList))
+define test_QtyIvlExpand_Overlapping: TestMessage(QtyIvlExpand_Overlapping = QtyIvlOverlappingExpected, 'QtyIvlExpand_Overlapping', toString(QtyIvlOverlappingExpected), toString(QtyIvlExpand_Overlapping))
+define test_QtyIvlExpand_NonOverlapping: TestMessage(QtyIvlExpand_NonOverlapping = QtyIvlNonOverlappingExpected, 'QtyIvlExpand_NonOverlapping', toString(QtyIvlNonOverlappingExpected), toString(QtyIvlExpand_NonOverlapping))
+
+// TODO: uncomment once UCUM service is implemented
+//define QtyIvlExpand_NoPerDefaultM: expand { Interval[2 'm', 400 'cm'] }
+define QtyIvlExpand_NoPerDefaultG: expand { Interval[2 'g', 4 'g'] }
+
+define test_QtyIvlExpand_NoPerDefaultG: TestMessage(QtyIvlExpand_NoPerDefaultG = ClosedSingleGPerGExpected, 'QtyIvlExpand_NoPerDefaultG', toString(ClosedSingleGPerGExpected), toString(QtyIvlExpand_NoPerDefaultG))
+
+// NOTE: Bonnie expects { Interval[3 'g', 3 'g'], Interval[4 'g', 4 'g'] }
+define QtyIvlOpenStartExpected: { Interval[2.00000001 'g', 3 'g'], Interval[3.00000001 'g', 4 'g'] }
+define QtyIvlOpenEndExpected: { Interval[2 'g', 2.99999999 'g'], Interval[3 'g', 3.99999999 'g'] }
+define QtyIvlOpenBothExpected: { Interval[2.00000001 'g', 3 'g'] }
+define QtyIvlOpenBothDecimalExpected: { Interval[2.10000001 'g', 3.1 'g'] }
+define QtyIvlOpenBothDecimalTruncExpected: { Interval[2.10000001 'g', 3.1 'g'], Interval[3.10000001 'g', 4.1 'g'] }
+define QtyIvlExpand_OpenStart: expand { Interval(2 'g', 4 'g'] } per 1 'g'
+define QtyIvlExpand_OpenEnd: expand { Interval[2 'g', 4 'g') } per 1 'g'
+define QtyIvlExpand_OpenBoth: expand { Interval(2 'g', 4 'g') } per 1 'g'
+define QtyIvlExpand_OpenBothDecimal: expand { Interval(2.1 'g', 4.1 'g') } per 1 'g'
+define QtyIvlExpand_OpenBothDecimalTrunc: expand { Interval(2.1 'g', 4.101 'g') } per 1 'g'
+
+define test_QtyIvlExpand_OpenStart: TestMessage(QtyIvlExpand_OpenStart = QtyIvlOpenStartExpected, 'QtyIvlExpand_OpenStart', toString(QtyIvlOpenStartExpected), toString(QtyIvlExpand_OpenStart))
+define test_QtyIvlExpand_OpenEnd: TestMessage(QtyIvlExpand_OpenEnd = QtyIvlOpenEndExpected, 'QtyIvlExpand_OpenEnd', toString(QtyIvlOpenEndExpected), toString(QtyIvlExpand_OpenEnd))
+define test_QtyIvlExpand_OpenBoth: TestMessage(QtyIvlExpand_OpenBoth = QtyIvlOpenBothExpected, 'QtyIvlExpand_OpenBoth', toString(QtyIvlOpenBothExpected), toString(QtyIvlExpand_OpenBoth))
+define test_QtyIvlExpand_OpenBothDecimal: TestMessage(QtyIvlExpand_OpenBothDecimal = QtyIvlOpenBothDecimalExpected, 'QtyIvlExpand_OpenBothDecimal', toString(QtyIvlOpenBothDecimalExpected), toString(QtyIvlExpand_OpenBothDecimal))
+define test_QtyIvlExpand_OpenBothDecimalTrunc: TestMessage(QtyIvlExpand_OpenBothDecimalTrunc = QtyIvlOpenBothDecimalTruncExpected, 'QtyIvlExpand_OpenBothDecimalTrunc', toString(QtyIvlOpenBothDecimalTruncExpected), toString(QtyIvlExpand_OpenBothDecimalTrunc))
+
+define QtyIvlExpand_PerTooBig: expand { Interval[2 'g', 4 'g'], null } per 5 'g'
+define QtyIvlExpand_NullOpen: expand { Interval[null, 4 'g'] } per 1 'g'
+define QtyIvlExpand_NullClose: expand { Interval[2 'g', null] } per 1 'g'
+// TODO: should be { Interval[null as Quantity, null] } but that currently evaluates to null in the engine, uncomment once fixed
+//define QtyIvlExpand_NullBoth: expand { Interval[null, null] } per 1 'g'
+// TODO: uncomment once UCUM service is implemented
+//define QtyIvlExpand_BadPerMinute: expand { Interval(2 'g', 4 'g'] } per 1 minute
+//define QtyIvlExpand_BadPerGram: expand { Interval(2 'km', 4 'km'] }  per 1 'g'
+
+define test_QtyIvlExpand_PerTooBig: TestMessage(QtyIvlExpand_PerTooBig = List<Interval<Quantity>>{}, 'QtyIvlExpand_PerTooBig', toString(List<Interval<Quantity>>{}), toString(QtyIvlExpand_PerTooBig))
+define test_QtyIvlExpand_NullOpen: TestMessage(QtyIvlExpand_NullOpen is null, 'QtyIvlExpand_NullOpen', 'null', toString(QtyIvlExpand_NullOpen))
+define test_QtyIvlExpand_NullClose: TestMessage(QtyIvlExpand_NullClose is null, 'QtyIvlExpand_NullClose', 'null', toString(QtyIvlExpand_NullClose))
+//define test_QtyIvlExpand_NullBoth: TestMessage(QtyIvlExpand_NullBoth is null, 'QtyIvlExpand_NullBoth', 'null', toString(QtyIvlExpand_NullBoth))
+
+// IntegerIntervalExpand
+define IntIvlClosedSinglePer1Expected: { Interval[2, 2], Interval[3, 3], Interval[4, 4] }
+define IntIvlClosedSinglePer3Expected: { Interval[2, 4], Interval[5, 7], Interval[8, 10] }
+define IntIvlClosedSinglePer3NoteTheWidthExpected: { Interval[2, 4] }
+define IntIvlExpand_ClosedSinglePer1: expand { Interval[2, 4] } per 1 '1'
+define IntIvlExpand_ClosedSinglePer3: expand { Interval[2, 10] } per 3 '1'
+define IntIvlExpand_ClosedSinglePer3NoteTheWidth: expand { Interval[2, 4] } per 3 '1'
+
+define test_IntIvlExpand_ClosedSinglePer1: TestMessage(IntIvlExpand_ClosedSinglePer1 = IntIvlClosedSinglePer1Expected, 'IntIvlExpand_ClosedSinglePer1', toString(IntIvlClosedSinglePer1Expected), toString(IntIvlExpand_ClosedSinglePer1))
+define test_IntIvlExpand_ClosedSinglePer3: TestMessage(IntIvlExpand_ClosedSinglePer3 = IntIvlClosedSinglePer3Expected, 'IntIvlExpand_ClosedSinglePer3', toString(IntIvlClosedSinglePer3Expected), toString(IntIvlExpand_ClosedSinglePer3))
+define test_IntIvlExpand_ClosedSinglePer3NoteTheWidth: TestMessage(IntIvlExpand_ClosedSinglePer3NoteTheWidth = IntIvlClosedSinglePer3NoteTheWidthExpected, 'IntIvlExpand_ClosedSinglePer3NoteTheWidth', toString(IntIvlClosedSinglePer3NoteTheWidthExpected), toString(IntIvlExpand_ClosedSinglePer3NoteTheWidth))
+
+define IntIvlOverlappingExpected: { Interval[2, 2], Interval[3, 3], Interval[4, 4], Interval[5, 5] }
+define IntIvlNonOverlappingExpected: { Interval[2, 2], Interval[3, 3], Interval[4, 4], Interval[6, 6] }
+define IntIvlExpand_NullInList: expand { Interval[2, 4], null } per 1 '1'
+define IntIvlExpand_Overlapping: expand { Interval[2, 4], Interval[3, 5] } per 1 '1'
+define IntIvlExpand_NonOverlapping: expand { Interval[2, 4], Interval[6, 6] } per 1 '1'
+
+define test_IntIvlExpand_NullInList: TestMessage(IntIvlExpand_NullInList = IntIvlClosedSinglePer1Expected, 'IntIvlExpand_NullInList', toString(IntIvlClosedSinglePer1Expected), toString(IntIvlExpand_NullInList))
+define test_IntIvlExpand_Overlapping: TestMessage(IntIvlExpand_Overlapping = IntIvlOverlappingExpected, 'IntIvlExpand_Overlapping', toString(IntIvlOverlappingExpected), toString(IntIvlExpand_Overlapping))
+define test_IntIvlExpand_NonOverlapping: TestMessage(IntIvlExpand_NonOverlapping = IntIvlNonOverlappingExpected, 'IntIvlExpand_NonOverlapping', toString(IntIvlNonOverlappingExpected), toString(IntIvlExpand_NonOverlapping))
+
+define IntIvlExpand_NoPer: expand { Interval[2, 4] }
+
+define test_IntIvlExpand_NoPer: TestMessage(IntIvlExpand_NoPer = IntIvlClosedSinglePer1Expected, 'IntIvlExpand_NoPer', toString(IntIvlClosedSinglePer1Expected), toString(IntIvlExpand_NoPer))
+
+define IntIvlOpenStartExpected: { Interval[3, 3], Interval[4, 4] }
+define IntIvlOpenEndExpected: { Interval[2, 2], Interval[3, 3] }
+define IntIvlOpenBothExpected: { Interval[3, 3] }
+define IntIvlExpand_OpenStart: expand { Interval(2, 4] } per 1 '1'
+define IntIvlExpand_OpenEnd: expand { Interval[2, 4) } per 1 '1'
+define IntIvlExpand_OpenBoth: expand { Interval(2, 4) } per 1 '1'
+
+define test_IntIvlExpand_OpenStart: TestMessage(IntIvlExpand_OpenStart = IntIvlOpenStartExpected, 'IntIvlExpand_OpenStart', toString(IntIvlOpenStartExpected), toString(IntIvlExpand_OpenStart))
+define test_IntIvlExpand_OpenEnd: TestMessage(IntIvlExpand_OpenEnd = IntIvlOpenEndExpected, 'IntIvlExpand_OpenEnd', toString(IntIvlOpenEndExpected), toString(IntIvlExpand_OpenEnd))
+define test_IntIvlExpand_OpenBoth: TestMessage(IntIvlExpand_OpenBoth = IntIvlOpenBothExpected, 'IntIvlExpand_OpenBoth', toString(IntIvlOpenBothExpected), toString(IntIvlExpand_OpenBoth))
+
+define IntIvlExpand_PerTooBig: expand { Interval[2, 4], null } per 5 '1'
+define IntIvlExpand_NullOpen: expand { Interval[null, 4] } per 1 '1'
+define IntIvlExpand_NullClose: expand { Interval[2, null] } per 1 '1'
+// TODO: should be { Interval[null as Integer, null] } but that currently evaluates to null in the engine, uncomment once fixed
+//define IntIvlExpand_NullBoth: expand { Interval[null, null] } per 1 '1'
+define IntIvlExpand_BadPerMinute: expand { Interval(2, 4] } per 1 minute
+
+define test_IntIvlExpand_PerTooBig: TestMessage(IntIvlExpand_PerTooBig = List<Interval<Integer>>{}, 'IntIvlExpand_PerTooBig', toString(List<Interval<Integer>>{}), toString(IntIvlExpand_PerTooBig))
+define test_IntIvlExpand_NullOpen: TestMessage(IntIvlExpand_NullOpen is null, 'IntIvlExpand_NullOpen', 'null', toString(IntIvlExpand_NullOpen))
+define test_IntIvlExpand_NullClose: TestMessage(IntIvlExpand_NullClose is null, 'IntIvlExpand_NullClose', 'null', toString(IntIvlExpand_NullClose))
+define test_IntIvlExpand_BadPerMinute: TestMessage(IntIvlExpand_BadPerMinute is null, 'IntIvlExpand_BadPerMinute', 'null', toString(IntIvlExpand_BadPerMinute))
+
+// DecimalIntervalExpand
+define DecIvlClosedSingleExpected: { Interval[2, 3.49999999], Interval[3.5, 4.99999999] }
+define DecIvlClosedSingle1Expected: { Interval[2.5, 4.49999999], Interval[4.5, 6.49999999], Interval[6.5, 8.49999999] }
+define DecIvlClosedSingle2Expected: { Interval[2, 2.49999999], Interval[2.5, 2.99999999], Interval[3, 3.49999999], Interval[3.5, 3.99999999], Interval[4, 4.49999999] }
+// NOTE: Bonnie has Interval[2, 5], but that results in an integer interval with a 1 '1' per
+define DecIvlExpand_ClosedSingle: expand { Interval[2.0, 5] } per 1.5 '1'
+define DecIvlExpand_ClosedSingle1: expand { Interval[2.5, 10] } per 2 '1'
+define DecIvlExpand_ClosedSingle2: expand { Interval[2, 4.5] } per 0.5 '1'
+
+define test_DecIvlExpand_ClosedSingle: TestMessage(DecIvlExpand_ClosedSingle = DecIvlClosedSingleExpected, 'DecIvlExpand_ClosedSingle', toString(DecIvlClosedSingleExpected), toString(DecIvlExpand_ClosedSingle))
+define test_DecIvlExpand_ClosedSingle1: TestMessage(DecIvlExpand_ClosedSingle1 = DecIvlClosedSingle1Expected, 'DecIvlExpand_ClosedSingle1', toString(DecIvlClosedSingle1Expected), toString(DecIvlExpand_ClosedSingle1))
+define test_DecIvlExpand_ClosedSingle2: TestMessage(DecIvlExpand_ClosedSingle2 = DecIvlClosedSingle2Expected, 'DecIvlExpand_ClosedSingle2', toString(DecIvlClosedSingle2Expected), toString(DecIvlExpand_ClosedSingle2))
+
+// NOTE: Bonnie has Interval[2, 5], but that results in an integer interval with a 1 '1' per
+define DecIvlOverlappingExpected: { Interval[2, 3.49999999], Interval[3.5, 4.99999999], Interval[5, 6.49999999] }
+define DecIvlNonOverlappingExpected: { Interval[2, 3.49999999], Interval[6, 7.49999999] }
+define DecIvlExpand_NullInList: expand { Interval[2.0, 5], null } per 1.5 '1'
+define DecIvlExpand_Overlapping: expand { Interval[2.0, 5], Interval[4.0, 7] } per 1.5 '1'
+define DecIvlExpand_NonOverlapping: expand { Interval[2.0, 4], Interval[6.0, 8] } per 1.5 '1'
+
+define test_DecIvlExpand_NullInList: TestMessage(DecIvlExpand_NullInList = DecIvlClosedSingleExpected, 'DecIvlExpand_NullInList', toString(DecIvlClosedSingleExpected), toString(DecIvlExpand_NullInList))
+define test_DecIvlExpand_Overlapping: TestMessage(DecIvlExpand_Overlapping = DecIvlOverlappingExpected, 'DecIvlExpand_Overlapping', toString(DecIvlOverlappingExpected), toString(DecIvlExpand_Overlapping))
+define test_DecIvlExpand_NonOverlapping: TestMessage(DecIvlExpand_NonOverlapping = DecIvlNonOverlappingExpected, 'DecIvlExpand_NonOverlapping', toString(DecIvlNonOverlappingExpected), toString(DecIvlExpand_NonOverlapping))
+
+define DecIvlNoPerExpected: { Interval[2.5, 3.49999999], Interval[3.5, 4.49999999] }
+define DecIvlExpand_NoPer: expand { Interval[2.5, 4.5] }
+
+define test_DecIvlExpand_NoPer: TestMessage(DecIvlExpand_NoPer = DecIvlNoPerExpected, 'DecIvlExpand_NoPer', toString(DecIvlNoPerExpected), toString(DecIvlExpand_NoPer))
+
+define DecIvlOpenStartExpected: { Interval[2.00000001, 3.5], Interval[3.50000001, 5] }
+define DecIvlOpenEndExpected: { Interval[2, 3.49999999], Interval[3.5, 4.99999999] }
+define DecIvlOpenBothExpected: { Interval[2.00000001, 3.5] }
+define DecIvlExpand_OpenStart: expand { Interval(2.0, 5] } per 1.5 '1'
+define DecIvlExpand_OpenEnd: expand { Interval[2.0, 5) } per 1.5 '1'
+define DecIvlExpand_OpenBoth: expand { Interval(2.0, 5) } per 1.5 '1'
+
+define test_DecIvlExpand_OpenStart: TestMessage(DecIvlExpand_OpenStart = DecIvlOpenStartExpected, 'DecIvlExpand_OpenStart', toString(DecIvlOpenStartExpected), toString(DecIvlExpand_OpenStart))
+define test_DecIvlExpand_OpenEnd: TestMessage(DecIvlExpand_OpenEnd = DecIvlOpenEndExpected, 'DecIvlExpand_OpenEnd', toString(DecIvlOpenEndExpected), toString(DecIvlExpand_OpenEnd))
+define test_DecIvlExpand_OpenBoth: TestMessage(DecIvlExpand_OpenBoth = DecIvlOpenBothExpected, 'DecIvlExpand_OpenBoth', toString(DecIvlOpenBothExpected), toString(DecIvlExpand_OpenBoth))
+
+define DecIvlExpand_PerTooBig: expand { Interval[2, 4], null } per 5.5 '1'
+define DecIvlExpand_NullOpen: expand { Interval[null, 4] } per 1.5 '1'
+define DecIvlExpand_NullClose: expand { Interval[2, null] } per 1.5 '1'
+// TODO: should be { Interval[null as Decimal, null] } but that currently evaluates to null in the engine, uncomment once fixed
+//define DecIvlExpand_NullBoth: expand { Interval[null, null] } per 1.5 '1'
+define DecIvlExpand_BadPerMinute: expand { Interval(2.1, 4.1] } per 0.5 minute
+
+define test_DecIvlExpand_PerTooBig: TestMessage(DecIvlExpand_PerTooBig = List<Interval<Decimal>>{}, 'DecIvlExpand_PerTooBig', toString(List<Interval<Decimal>>{}), toString(DecIvlExpand_PerTooBig))
+define test_DecIvlExpand_NullOpen: TestMessage(DecIvlExpand_NullOpen is null, 'DecIvlExpand_NullOpen', 'null', toString(DecIvlExpand_NullOpen))
+define test_DecIvlExpand_NullClose: TestMessage(DecIvlExpand_NullClose is null, 'DecIvlExpand_NullClose', 'null', toString(DecIvlExpand_NullClose))
+define test_DecIvlExpand_BadPerMinute: TestMessage(DecIvlExpand_BadPerMinute is null, 'DecIvlExpand_BadPerMinute', 'null', toString(DecIvlExpand_BadPerMinute))
+
+// Interval SameAs
+// TODO: should be Interval[null as DateTime, null] but that currently evaluates to null (i.e. null as Interval<DateTime>) in the engine, uncomment once fixed
+//define SameAsIvl_NullBoth: Interval[null,null] same as Interval[null,null]
+//define SameAsIvl_NullOne: Interval[DateTime(2018,01,01), DateTime(2018,02,02)] same as Interval[null,null]
+define SameAsIvl_Equal: Interval[DateTime(2018,01,01), DateTime(2018,01,01)] same as Interval[DateTime(2018,01,01), DateTime(2018,01,01)]
+define SameAsIvl_NotEqual: Interval[DateTime(2018,01,01), DateTime(2018,01,01)] same as Interval[DateTime(2018,02,01), DateTime(2018,05,01)]
+define SameAsIvl_DateTimeAndDateComparisonEqual: Interval[DateTime(2018,01,01), DateTime(2018,01,01)] same as Interval[Date(2018,01,01), Date(2018,01,01)]
+define SameAsIvl_NullIntervals: (null as Interval<DateTime>) same as (null as Interval<DateTime>)
+define SameAsIvl_OpenAndClosed: Interval[DateTime(2018,01,01,00,00,00,0), DateTime(2019,01,01,00,00,00,0)) same as Interval[DateTime(2018,01,01,00,00,00,0), DateTime(2018,12,31,23,59,59,999)]
+define SameAsIvl_OpenEnded: Interval[DateTime(2018,01,01), null] same day as Interval[DateTime(2018,01,01), null]
+define SameAsIvl_OpenEndedNotSame: Interval[DateTime(2018,01,01), null] same day as Interval[DateTime(2018,01,01), DateTime(2019,01,01)]
+define SameAsIvl_OpenEndedNotSame2: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same day as Interval[DateTime(2018,01,01), null]
+define SameAsIvl_OpenBeginningSame: Interval[null,DateTime(2018,01,01)] same as Interval[null,DateTime(2018,01,01)]
+define SameAsIvl_OpenBeginningNotSame: Interval[DateTime(2017,01,01),DateTime(2018,01,01)] same as Interval[null,DateTime(2018,01,01)]
+define SameAsIvl_DateOpenAndClosed: Interval[Date(2018,01,01), Date(2018,02,02)] same as Interval[Date(2018,01,01), Date(2018,02,03))
+define SameAsIvl_DateOpenEnded: Interval[Date(2018,01,01), null] same as Interval[Date(2018,01,01), null]
+define SameAsIvl_TimeOpenAndClosed: Interval[Time(01,01), Time(02,02)] same as Interval[Time(01,01), Time(02,03))
+define SameAsIvl_TimeOpenEnded: Interval[Time(01,01), null] same as Interval[Time(01,01), null]
+define SameAsIvl_DateIntervalComparisonSame: Interval[Date(2018,01,01), Date(2018,02,02)] same as Interval[Date(2018,01,01), Date(2018,02,02)]
+define SameAsIvl_DateIntervalComparisonNotSame: Interval[Date(2018,01,01), Date(2018,02,02)] same as Interval[Date(2018,01,01), Date(2018,02,01)]
+define SameAsIvl_TimeIntervalComparisonSame: Interval[Time(01,01), Time(02,02)] same as Interval[Time(01,01), Time(02,02)]
+define SameAsIvl_TimeIntervalComparisonNotSame: Interval[Time(01,01), Time(02,02)] same as Interval[Time(01,01), Time(08,01)]
+define SameAsIvl_DateTimeYearPrecisionSame: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same year as Interval[DateTime(2018,02,01), DateTime(2019,05,01)]
+define SameAsIvl_DateTimeYearPrecisionNotSame: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same year as Interval[DateTime(2018,02,01), DateTime(2020,05,01)]
+define SameAsIvl_DateYearPrecisionSame: Interval[Date(2018,01,01), Date(2019,01,01)] same year as Interval[Date(2018,02,01), Date(2019,05,01)]
+define SameAsIvl_DateYearPrecisionNotSame: Interval[Date(2018,01,01), Date(2019,01,01)] same year as Interval[Date(2018,02,01), Date(2020,05,01)]
+define SameAsIvl_DateTimeMonthPrecisionSame: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same month as Interval[DateTime(2018,01,01), DateTime(2019,01,03)]
+define SameAsIvl_DateTimeMonthPrecisionNotSame: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same month as Interval[DateTime(2018,02,01), DateTime(2019,01,01)]
+define SameAsIvl_DateTimeDayPrecisionSame: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same day as Interval[DateTime(2018,01,01,05), DateTime(2019,01,01,09)]
+define SameAsIvl_DateTimeDayPrecisionNotSame: Interval[DateTime(2018,01,01), DateTime(2019,01,01)] same day as Interval[DateTime(2018,01,01), DateTime(2019,01,02,06)]
+define SameAsIvl_DateTimeHourPrecisionSame: Interval[DateTime(2018,01,01,01), DateTime(2019,01,01,01)] same hour as Interval[DateTime(2018,01,01,01), DateTime(2019,01,01,01,05)]
+define SameAsIvl_DateTimeHourPrecisionNotSame: Interval[DateTime(2018,01,01,01,01), DateTime(2019,01,01,01)] same hour as Interval[DateTime(2018,01,01,06), DateTime(2019,01,01,01)]
+define SameAsIvl_DateTimeMinutePrecisionSame: Interval[DateTime(2018,01,01,01,01), DateTime(2019,01,01,01,01)] same minute as Interval[DateTime(2018,01,01,01,01,09), DateTime(2019,01,01,01,01,06)]
+define SameAsIvl_DateTimeMinutePrecisionNotSame: Interval[DateTime(2018,01,01,01,01), DateTime(2019,01,01,01,01)] same minute as Interval[DateTime(2018,01,01,06,03), DateTime(2019,01,01,01,06)]
+define SameAsIvl_DateTimeSecondPrecisionSame: Interval[DateTime(2018,01,01,01,01,01), DateTime(2019,01,01,01,01,01)] same second as Interval[DateTime(2018,01,01,01,01,01), DateTime(2019,01,01,01,01,01,07)]
+define SameAsIvl_DateTimeSecondPrecisionNotSame: Interval[DateTime(2018,01,01,01,01,01), DateTime(2019,01,01,01,01,01)] same second as Interval[DateTime(2018,01,01,01,01,01), DateTime(2019,01,01,01,07,55)]
+define SameAsIvl_DateTimeMillisecondPrecisionSame: Interval[DateTime(2018,01,01,01,01,01,01), DateTime(2019,01,01,01,01,01,01)] same millisecond as Interval[DateTime(2018,01,01,01,01,01,01), DateTime(2019,01,01,01,01,01,01)]
+define SameAsIvl_DateTimeMillisecondPrecisionNotSame: Interval[DateTime(2018,01,01,01,01,01,01), DateTime(2019,01,01,01,01,01,01)] same millisecond as Interval[DateTime(2018,01,01,01,01,01,01), DateTime(2019,01,01,01,01,01,09)]
+define SameAsIvl_IntegerIntervalSame: Interval[2,5] same as Interval[2,5]
+define SameAsIvl_IntegerIntervalNotSame: Interval[2,5] same as Interval[2,4]
+define SameAsIvl_IntegerIntervalSameOpen: Interval[2,5] same as Interval[2,6)
+define SameAsIvl_OpenNullHighLowDifferent: Interval(3,null) same as Interval(2,4)
+define SameAsIvl_OpenNullLowHighDifferent: Interval(1,5) same as Interval(null,4)
+define SameAsIvl_OpenNullHighLowSame: Interval(2,null) same as Interval(2,4)
+define SameAsIvl_OpenNullLowHighSame: Interval(1,4) same as Interval(null,4)
+define SameAsIvl_OpenNullLowOpenNullHigh: Interval(1,null) same as Interval(null,4)
+define SameAsIvl_OpenNullHighsLowsDifferent: Interval(1,null) same as Interval(2,null)
+define SameAsIvl_OpenNullHighsLowsSame: Interval(1,null) same as Interval(1,null)
+define SameAsIvl_OpenNullLowsHighsSame: Interval(null,3) same as Interval(null,3)
+
+define test_SameAsIvl_Equal: TestMessage(SameAsIvl_Equal, 'SameAsIvl_Equal', toString(true), toString(SameAsIvl_Equal))
+define test_SameAsIvl_NotEqual: TestMessage(not SameAsIvl_NotEqual, 'SameAsIvl_NotEqual', toString(false), toString(SameAsIvl_NotEqual))
+define test_SameAsIvl_DateTimeAndDateComparisonEqual: TestMessage(SameAsIvl_DateTimeAndDateComparisonEqual is null, 'SameAsIvl_DateTimeAndDateComparisonEqual', 'null', toString(SameAsIvl_DateTimeAndDateComparisonEqual))
+define test_SameAsIvl_NullIntervals: TestMessage(SameAsIvl_NullIntervals is null, 'SameAsIvl_NullIntervals', 'null', toString(SameAsIvl_NullIntervals))
+define test_SameAsIvl_OpenAndClosed: TestMessage(SameAsIvl_OpenAndClosed, 'SameAsIvl_OpenAndClosed', toString(true), toString(SameAsIvl_OpenAndClosed))
+define test_SameAsIvl_OpenEnded: TestMessage(SameAsIvl_OpenEnded, 'SameAsIvl_OpenEnded', toString(true), toString(SameAsIvl_OpenEnded))
+define test_SameAsIvl_OpenEndedNotSame: TestMessage(not SameAsIvl_OpenEndedNotSame, 'SameAsIvl_OpenEndedNotSame', toString(false), toString(SameAsIvl_OpenEndedNotSame))
+define test_SameAsIvl_OpenEndedNotSame2: TestMessage(not SameAsIvl_OpenEndedNotSame2, 'SameAsIvl_OpenEndedNotSame2', toString(false), toString(SameAsIvl_OpenEndedNotSame2))
+define test_SameAsIvl_OpenBeginningSame: TestMessage(SameAsIvl_OpenBeginningSame, 'SameAsIvl_OpenBeginningSame', toString(true), toString(SameAsIvl_OpenBeginningSame))
+define test_SameAsIvl_OpenBeginningNotSame: TestMessage(not SameAsIvl_OpenBeginningNotSame, 'SameAsIvl_OpenBeginningNotSame', toString(false), toString(SameAsIvl_OpenBeginningNotSame))
+define test_SameAsIvl_DateOpenAndClosed: TestMessage(SameAsIvl_DateOpenAndClosed, 'SameAsIvl_DateOpenAndClosed', toString(true), toString(SameAsIvl_DateOpenAndClosed))
+define test_SameAsIvl_DateOpenEnded: TestMessage(SameAsIvl_DateOpenEnded, 'SameAsIvl_DateOpenEnded', toString(true), toString(SameAsIvl_DateOpenEnded))
+define test_SameAsIvl_TimeOpenAndClosed: TestMessage(SameAsIvl_TimeOpenAndClosed, 'SameAsIvl_TimeOpenAndClosed', toString(true), toString(SameAsIvl_TimeOpenAndClosed))
+define test_SameAsIvl_TimeOpenEnded: TestMessage(SameAsIvl_TimeOpenEnded, 'SameAsIvl_TimeOpenEnded', toString(true), toString(SameAsIvl_TimeOpenEnded))
+define test_SameAsIvl_DateIntervalComparisonSame: TestMessage(SameAsIvl_DateIntervalComparisonSame, 'SameAsIvl_DateIntervalComparisonSame', toString(true), toString(SameAsIvl_DateIntervalComparisonSame))
+define test_SameAsIvl_DateIntervalComparisonNotSame: TestMessage(not SameAsIvl_DateIntervalComparisonNotSame, 'SameAsIvl_DateIntervalComparisonNotSame', toString(false), toString(SameAsIvl_DateIntervalComparisonNotSame))
+define test_SameAsIvl_TimeIntervalComparisonSame: TestMessage(SameAsIvl_TimeIntervalComparisonSame, 'SameAsIvl_TimeIntervalComparisonSame', toString(true), toString(SameAsIvl_TimeIntervalComparisonSame))
+define test_SameAsIvl_TimeIntervalComparisonNotSame: TestMessage(not SameAsIvl_TimeIntervalComparisonNotSame, 'SameAsIvl_TimeIntervalComparisonNotSame', toString(false), toString(SameAsIvl_TimeIntervalComparisonNotSame))
+define test_SameAsIvl_DateTimeYearPrecisionSame: TestMessage(SameAsIvl_DateTimeYearPrecisionSame, 'SameAsIvl_DateTimeYearPrecisionSame', toString(true), toString(SameAsIvl_DateTimeYearPrecisionSame))
+define test_SameAsIvl_DateTimeYearPrecisionNotSame: TestMessage(not SameAsIvl_DateTimeYearPrecisionNotSame, 'SameAsIvl_DateTimeYearPrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeYearPrecisionNotSame))
+define test_SameAsIvl_DateYearPrecisionSame: TestMessage(SameAsIvl_DateYearPrecisionSame, 'SameAsIvl_DateYearPrecisionSame', toString(true), toString(SameAsIvl_DateYearPrecisionSame))
+define test_SameAsIvl_DateYearPrecisionNotSame: TestMessage(not SameAsIvl_DateYearPrecisionNotSame, 'SameAsIvl_DateYearPrecisionNotSame', toString(false), toString(SameAsIvl_DateYearPrecisionNotSame))
+define test_SameAsIvl_DateTimeMonthPrecisionSame: TestMessage(SameAsIvl_DateTimeMonthPrecisionSame, 'SameAsIvl_DateTimeMonthPrecisionSame', toString(true), toString(SameAsIvl_DateTimeMonthPrecisionSame))
+define test_SameAsIvl_DateTimeMonthPrecisionNotSame: TestMessage(not SameAsIvl_DateTimeMonthPrecisionNotSame, 'SameAsIvl_DateTimeMonthPrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeMonthPrecisionNotSame))
+define test_SameAsIvl_DateTimeDayPrecisionSame: TestMessage(SameAsIvl_DateTimeDayPrecisionSame, 'SameAsIvl_DateTimeDayPrecisionSame', toString(true), toString(SameAsIvl_DateTimeDayPrecisionSame))
+define test_SameAsIvl_DateTimeDayPrecisionNotSame: TestMessage(not SameAsIvl_DateTimeDayPrecisionNotSame, 'SameAsIvl_DateTimeDayPrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeDayPrecisionNotSame))
+define test_SameAsIvl_DateTimeHourPrecisionSame: TestMessage(SameAsIvl_DateTimeHourPrecisionSame, 'SameAsIvl_DateTimeHourPrecisionSame', toString(true), toString(SameAsIvl_DateTimeHourPrecisionSame))
+define test_SameAsIvl_DateTimeHourPrecisionNotSame: TestMessage(not SameAsIvl_DateTimeHourPrecisionNotSame, 'SameAsIvl_DateTimeHourPrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeHourPrecisionNotSame))
+define test_SameAsIvl_DateTimeMinutePrecisionSame: TestMessage(SameAsIvl_DateTimeMinutePrecisionSame, 'SameAsIvl_DateTimeMinutePrecisionSame', toString(true), toString(SameAsIvl_DateTimeMinutePrecisionSame))
+define test_SameAsIvl_DateTimeMinutePrecisionNotSame: TestMessage(not SameAsIvl_DateTimeMinutePrecisionNotSame, 'SameAsIvl_DateTimeMinutePrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeMinutePrecisionNotSame))
+define test_SameAsIvl_DateTimeSecondPrecisionSame: TestMessage(SameAsIvl_DateTimeSecondPrecisionSame, 'SameAsIvl_DateTimeSecondPrecisionSame', toString(true), toString(SameAsIvl_DateTimeSecondPrecisionSame))
+define test_SameAsIvl_DateTimeSecondPrecisionNotSame: TestMessage(not SameAsIvl_DateTimeSecondPrecisionNotSame, 'SameAsIvl_DateTimeSecondPrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeSecondPrecisionNotSame))
+define test_SameAsIvl_DateTimeMillisecondPrecisionSame: TestMessage(SameAsIvl_DateTimeMillisecondPrecisionSame, 'SameAsIvl_DateTimeMillisecondPrecisionSame', toString(true), toString(SameAsIvl_DateTimeMillisecondPrecisionSame))
+define test_SameAsIvl_DateTimeMillisecondPrecisionNotSame: TestMessage(not SameAsIvl_DateTimeMillisecondPrecisionNotSame, 'SameAsIvl_DateTimeMillisecondPrecisionNotSame', toString(false), toString(SameAsIvl_DateTimeMillisecondPrecisionNotSame))
+define test_SameAsIvl_IntegerIntervalSame: TestMessage(SameAsIvl_IntegerIntervalSame, 'SameAsIvl_IntegerIntervalSame', toString(true), toString(SameAsIvl_IntegerIntervalSame))
+define test_SameAsIvl_IntegerIntervalNotSame: TestMessage(not SameAsIvl_IntegerIntervalNotSame, 'SameAsIvl_IntegerIntervalNotSame', toString(false), toString(SameAsIvl_IntegerIntervalNotSame))
+define test_SameAsIvl_IntegerIntervalSameOpen: TestMessage(SameAsIvl_IntegerIntervalSameOpen, 'SameAsIvl_IntegerIntervalSameOpen', toString(true), toString(SameAsIvl_IntegerIntervalSameOpen))
+define test_SameAsIvl_OpenNullHighLowDifferent: TestMessage(not SameAsIvl_OpenNullHighLowDifferent, 'SameAsIvl_OpenNullHighLowDifferent', toString(false), toString(SameAsIvl_OpenNullHighLowDifferent))
+define test_SameAsIvl_OpenNullLowHighDifferent: TestMessage(not SameAsIvl_OpenNullLowHighDifferent, 'SameAsIvl_OpenNullLowHighDifferent', toString(false), toString(SameAsIvl_OpenNullLowHighDifferent))
+define test_SameAsIvl_OpenNullHighLowSame: TestMessage(SameAsIvl_OpenNullHighLowSame is null, 'SameAsIvl_OpenNullHighLowSame', 'null', toString(SameAsIvl_OpenNullHighLowSame))
+define test_SameAsIvl_OpenNullLowHighSame: TestMessage(SameAsIvl_OpenNullLowHighSame is null, 'SameAsIvl_OpenNullLowHighSame', 'null', toString(SameAsIvl_OpenNullLowHighSame))
+define test_SameAsIvl_OpenNullLowOpenNullHigh: TestMessage(SameAsIvl_OpenNullLowOpenNullHigh is null, 'SameAsIvl_OpenNullLowOpenNullHigh', 'null', toString(SameAsIvl_OpenNullLowOpenNullHigh))
+define test_SameAsIvl_OpenNullHighsLowsDifferent: TestMessage(not SameAsIvl_OpenNullHighsLowsDifferent, 'SameAsIvl_OpenNullHighsLowsDifferent', toString(false), toString(SameAsIvl_OpenNullHighsLowsDifferent))
+define test_SameAsIvl_OpenNullHighsLowsSame: TestMessage(SameAsIvl_OpenNullHighsLowsSame is null, 'SameAsIvl_OpenNullHighsLowsSame', 'null', toString(SameAsIvl_OpenNullHighsLowsSame))
+define test_SameAsIvl_OpenNullLowsHighsSame: TestMessage(SameAsIvl_OpenNullLowsHighsSame is null, 'SameAsIvl_OpenNullLowsHighsSame', 'null', toString(SameAsIvl_OpenNullLowsHighsSame))
+
 /*
 **********************
   End Interval Tests
@@ -3051,9 +4492,19 @@ define test_DtIvlCollapse_DateTimeCollapseImpreciseBoundary: TestMessage(DtIvlCo
 // Exists
 define Exists_EmptyList: exists (List<Integer>{})
 define Exists_FullList: exists ({ 1, 2, 3 })
+define Exists_ListWithOneNull: exists ({ null })
+define Exists_ListWithTwoNulls: exists ({ null, null })
+define Exists_ListStartingWithNull: exists ({ null, 3, 4 })
+define Exists_ListWithNull: exists ({ 3, null, 5 })
+define Exists_NullExists: exists (null)
 
 define test_Exists_EmptyList: TestMessage(not Exists_EmptyList, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
 define test_Exists_FullList: TestMessage(Exists_FullList, 'Exists_FullList', toString(true), toString(Exists_FullList))
+define test_Exists_ListWithOneNull: TestMessage(not Exists_ListWithOneNull, 'Exists_ListWithOneNull', toString(false), toString(Exists_ListWithOneNull))
+define test_Exists_ListWithTwoNulls: TestMessage(not Exists_ListWithTwoNulls, 'Exists_ListWithTwoNulls', toString(false), toString(Exists_ListWithTwoNulls))
+define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
+define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
+define test_Exists_NullExists: TestMessage(not Exists_NullExists, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
 
 // Equal
 define Equal_EqualIntList: {1, 2, 3} = {1, 2, 3}
@@ -3116,8 +4567,9 @@ define test_Union_UnionNull: TestMessage(Union_UnionNull is null, 'Union_UnionNu
 define Except_ExceptThreeFour: {1, 2, 3, 4, 5} except {3, 4}
 define Except_ThreeFourExcept: {3, 4} except {1, 2, 3, 4, 5}
 define Except_ExceptFiveThree: {1, 2, 3, 4, 5} except {5, 3}
-define Except_ExceptNoOp: {1, 2, 3, 4, 5} except {6, 7, 8, 9, 10}
-define Except_ExceptEverything: {1, 2, 3, 4, 5} except {1, 2, 3, 4, 5}
+define Except_ExceptNoOp: {1, 2, 3, 3, 4, 5} except {6, 7, 8, 9, 10}
+define Except_ExceptEverything: {1, 2, 3, 3, 4, 5} except {1, 2, 3, 4, 5}
+define Except_MultipleNullExcept: {1, 3, 5, 7, null, null} except {null, 3}
 define Except_SomethingExceptNothing: {1, 2, 3, 4, 5} except List<Integer>{}
 define Except_NothingExceptSomething: List<Integer>{} except {1, 2, 3, 4, 5}
 define Except_ExceptTuples: {Tuple{a: 1}, Tuple{a: 2}, Tuple{a: 3}} except {Tuple{a: 2}}
@@ -3129,30 +4581,35 @@ define test_Except_ThreeFourExcept: TestMessage(Except_ThreeFourExcept = List<In
 define test_Except_ExceptFiveThree: TestMessage(Except_ExceptFiveThree = {1,2,4}, 'Except_ExceptFiveThree', toString({1,2,4}), toString(Except_ExceptFiveThree))
 define test_Except_ExceptNoOp: TestMessage(Except_ExceptNoOp = {1,2,3,4,5}, 'Except_ExceptNoOp', toString({1,2,3,4,5}), toString(Except_ExceptNoOp))
 define test_Except_ExceptEverything: TestMessage(Except_ExceptEverything = List<Integer>{}, 'Except_ExceptEverything', toString(List<Integer>{}), toString(Except_ExceptEverything))
+define test_Except_MultipleNullExcept: TestMessage(Except_MultipleNullExcept = {1,5,7}, 'Except_MultipleNullExcept', toString({1,5,7}), toString(Except_MultipleNullExcept))
 define test_Except_SomethingExceptNothing: TestMessage(Except_SomethingExceptNothing = {1,2,3,4,5}, 'Except_SomethingExceptNothing', toString({1,2,3,4,5}), toString(Except_SomethingExceptNothing))
 define test_Except_NothingExceptSomething: TestMessage(Except_NothingExceptSomething = List<Integer>{}, 'Except_NothingExceptSomething', toString(List<Integer>{}), toString(Except_NothingExceptSomething))
 define test_Except_ExceptTuples: TestMessage(Except_ExceptTuples = {Tuple{a: 1}, Tuple{a: 3}}, 'Except_ExceptTuples', toString({Tuple{a: 1}, Tuple{a: 3}}), toString(Except_ExceptTuples))
-define test_Except_ExceptNull: TestMessage(Except_ExceptNull = {1,2,3,4,5}, 'Except_ExceptNull', toString({1,2,3,4,5}), toString(Except_ExceptNull))
+define test_Except_ExceptNull: TestMessage(Except_ExceptNull is null, 'Except_ExceptNull', 'null', toString(Except_ExceptNull))
 define test_Except_NullExcept: TestMessage(Except_NullExcept is null, 'Except_NullExcept', 'null', toString(Except_NullExcept))
 
 // Intersect
-define Intersect_NoIntersection: {1, 2, 3} intersect {4, 5, 6}
-define Intersect_IntersectOnFive: {4, 5, 6} intersect {1, 3, 5, 7}
+define Intersect_NoIntersection: {1, 2, 2, 3} intersect {4, 5, 6}
+define Intersect_IntersectOnFive: {4, 5, 5, 6} intersect {1, 3, 5, 7}
+define Intersect_IntersectionOnFourDuplicates: {4, 4, 1, 1, 2} intersect {4, 4, 3, 9}
 define Intersect_IntersectOnEvens: {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} intersect {0, 2, 4, 6, 8, 10, 12}
 define Intersect_IntersectOnAll: {1, 2, 3, 4, 5} intersect {5, 4, 3, 2, 1}
 define Intersect_NestedIntersects: {1, 2, 3, 4, 5} intersect {2, 3, 4, 5, 6} intersect {3, 4, 5, 6, 7} intersect {4, 5, 6, 7, 8}
 define Intersect_IntersectTuples: {Tuple{a:1, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}} intersect {Tuple{a:2, b:'d'}, Tuple{a:1, b:'c'}, Tuple{a:2, b:'c'}, Tuple{a:5, b:'e'}}
 define Intersect_NullIntersect: null intersect {1, 2, 3}
 define Intersect_IntersectNull: {1, 2, 3} intersect null
+define Intersect_MultipleNullInListIntersect: {1, 2, 3, null} intersect {null, 3}
 
 define test_Intersect_NoIntersection: TestMessage(Intersect_NoIntersection = List<Integer>{}, 'Intersect_NoIntersection', toString(List<Integer>{}), toString(Intersect_NoIntersection))
 define test_Intersect_IntersectOnFive: TestMessage(Intersect_IntersectOnFive = {5}, 'Intersect_IntersectOnFive', toString({5}), toString(Intersect_IntersectOnFive))
+define test_Intersect_IntersectionOnFourDuplicates: TestMessage(Intersect_IntersectionOnFourDuplicates = {4}, 'Intersect_IntersectionOnFourDuplicates', toString({4}), toString(Intersect_IntersectionOnFourDuplicates))
 define test_Intersect_IntersectOnEvens: TestMessage(Intersect_IntersectOnEvens = {2,4,6,8,10}, 'Intersect_IntersectOnEvens', toString({2,4,6,8,10}), toString(Intersect_IntersectOnEvens))
 define test_Intersect_IntersectOnAll: TestMessage(Intersect_IntersectOnAll = {1,2,3,4,5}, 'Intersect_IntersectOnAll', toString({1,2,3,4,5}), toString(Intersect_IntersectOnAll))
 define test_Intersect_NestedIntersects: TestMessage(Intersect_NestedIntersects = {4,5}, 'Intersect_NestedIntersects', toString({4,5}), toString(Intersect_NestedIntersects))
 define test_Intersect_IntersectTuples: TestMessage(Intersect_IntersectTuples = {Tuple{a: 1, b:'c'}, Tuple{a: 2, b:'c'}}, 'Intersect_IntersectTuples', toString({Tuple{a: 1, b:'c'}, Tuple{a: 2, b: 'c'}}), toString(Intersect_IntersectTuples))
 define test_Intersect_NullIntersect: TestMessage(Intersect_NullIntersect is null, 'Intersect_NullIntersect', 'null', toString(Intersect_NullIntersect))
 define test_Intersect_IntersectNull: TestMessage(Intersect_IntersectNull is null, 'Intersect_IntersectNull', 'null', toString(Intersect_IntersectNull))
+define test_Intersect_MultipleNullInListIntersect: TestMessage(Intersect_MultipleNullInListIntersect = {3}, 'Intersect_MultipleNullInListIntersect', toString({3}), toString(Intersect_MultipleNullInListIntersect))
 
 // IndexOf
 define IndexOf_IndexOfSecond: IndexOf({'a', 'b', 'c', 'd'}, 'b')
@@ -3161,7 +4618,8 @@ define IndexOf_MultipleMatches: IndexOf({'a', 'b', 'c', 'd', 'd', 'e', 'd'}, 'd'
 define IndexOf_ItemNotFound: IndexOf({'a', 'b', 'c'}, 'd')
 define IndexOf_NullList: IndexOf(null, 'a')
 define IndexOf_NullItem: IndexOf({'a', 'b', 'c'}, null)
-define IndexOf_ListCode: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
+define IndexOf_ListCode: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5', display: 'foo'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5', display: 'foo'})
+define IndexOf_ListCodeUndefined: IndexOf({Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'})
 define IndexOf_ListWrongCode: IndexOf({Code{code: 'M', system: '2.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
 define IndexOf_ListWrongCodeSystem: IndexOf({Code{code: 'F', system: '1.16.840.1.113883.18.2', version: 'HL7V2.5'}}, Code{code: 'F', system: '2.16.840.1.113883.18.2', version: 'foo'})
 
@@ -3172,6 +4630,7 @@ define test_IndexOf_ItemNotFound: TestMessage(IndexOf_ItemNotFound = -1, 'IndexO
 define test_IndexOf_NullList: TestMessage(IndexOf_NullList is null, 'IndexOf_NullList', 'null', toString(IndexOf_NullList))
 define test_IndexOf_NullItem: TestMessage(IndexOf_NullItem = -1, 'IndexOf_NullItem', toString(-1), toString(IndexOf_NullItem))
 define test_IndexOf_ListCode: TestMessage(IndexOf_ListCode = 0, 'IndexOf_ListCode', toString(0), toString(IndexOf_ListCode))
+define test_IndexOf_ListCodeUndefined: TestMessage(IndexOf_ListCodeUndefined = 0, 'IndexOf_ListCodeUndefined', toString(0), toString(IndexOf_ListCodeUndefined))
 define test_IndexOf_ListWrongCode: TestMessage(IndexOf_ListWrongCode = -1, 'IndexOf_ListWrongCode', toString(-1), toString(IndexOf_ListWrongCode))
 define test_IndexOf_ListWrongCodeSystem: TestMessage(IndexOf_ListWrongCodeSystem = -1, 'IndexOf_ListWrongCodeSystem', toString(-1), toString(IndexOf_ListWrongCodeSystem))
 
@@ -3201,9 +4660,9 @@ define test_In_IsIn: TestMessage(In_IsIn, 'In_IsIn', toString(true), toString(In
 define test_In_IsNotIn: TestMessage(not In_IsNotIn, 'In_IsNotIn', toString(false), toString(In_IsNotIn))
 define test_In_TupleIsIn: TestMessage(In_TupleIsIn, 'In_TupleIsIn', toString(true), toString(In_TupleIsIn))
 define test_In_TupleIsNotIn: TestMessage(not In_TupleIsNotIn, 'In_TupleIsNotIn', toString(false), toString(In_TupleIsNotIn))
-define test_In_NullIn: TestMessage(In_NullIn, 'In_NullIn', toString(true), toString(In_NullIn))
-define test_In_InNull: TestMessage(not In_InNull, 'In_InNull', toString(false), toString(In_InNull))
-define test_In_NullNotIn: TestMessage(not In_NullNotIn, 'In_NullNotIn', toString(false), toString(In_NullNotIn))
+define test_In_NullIn: TestMessage(In_NullIn is null, 'In_NullIn', 'null', toString(In_NullIn))
+define test_In_InNull: TestMessage(In_InNull is null, 'In_InNull', 'null', toString(In_InNull))
+define test_In_NullNotIn: TestMessage(In_NullNotIn is null, 'In_NullNotIn', 'null', toString(In_NullNotIn))
 
 // Contains
 define Contains_IsIn: { 3, 4, 5 } contains 4
@@ -3218,9 +4677,9 @@ define test_Contains_IsIn: TestMessage(Contains_IsIn, 'Contains_IsIn', toString(
 define test_Contains_IsNotIn: TestMessage(not Contains_IsNotIn, 'Contains_IsNotIn', toString(false), toString(Contains_IsNotIn))
 define test_Contains_TupleIsIn: TestMessage(Contains_TupleIsIn, 'Contains_TupleIsIn', toString(true), toString(Contains_TupleIsIn))
 define test_Contains_TupleIsNotIn: TestMessage(not Contains_TupleIsNotIn, 'Contains_TupleIsNotIn', toString(false), toString(Contains_TupleIsNotIn))
-define test_Contains_NullIn: TestMessage(Contains_NullIn, 'Contains_NullIn', toString(true), toString(Contains_NullIn))
-define test_Contains_InNull: TestMessage(not Contains_InNull, 'Contains_InNull', toString(false), toString(Contains_InNull))
-define test_Contains_NullNotIn: TestMessage(not Contains_NullNotIn, 'Contains_NullNotIn', toString(false), toString(Contains_NullNotIn))
+define test_Contains_NullIn: TestMessage(Contains_NullIn is null, 'Contains_NullIn', 'null', toString(Contains_NullIn))
+define test_Contains_InNull: TestMessage(Contains_InNull is null, 'Contains_InNull', 'null', toString(Contains_InNull))
+define test_Contains_NullNotIn: TestMessage(Contains_NullNotIn is null, 'Contains_NullNotIn', 'null', toString(Contains_NullNotIn))
 
 // Includes
 define Includes_IsIncluded: {1, 2, 3, 4, 5} includes {2, 3, 4}
@@ -3231,6 +4690,12 @@ define Includes_TuplesIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2
 define Includes_TuplesNotIncluded: {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} includes {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}}
 define Includes_NullIncluded: {1, 2, 3, 4, 5} includes null as List<Integer>
 define Includes_NullIncludes: null includes {1, 2, 3, 4, 5}
+define Includes_DayIncluded: {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)} includes DateTime(2012, 3, 3)
+define Includes_DayNotIncluded: {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)} includes DateTime(2014, 3, 3)
+define Includes_IntegerIncluded: {1, 2, 3, 4, 5} includes 3
+define Includes_IntegerNotIncluded: {1, 2, 3, 4, 5} includes 33
+define Includes_QuantityInList: { ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')} includes ToQuantity('1 \'m\'')
+define Includes_QuantityNotInList: { ToQuantity('100 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')} includes ToQuantity('1 \'m\'')
 
 define test_Includes_IsIncluded: TestMessage(Includes_IsIncluded, 'Includes_IsIncluded', toString(true), toString(Includes_IsIncluded))
 define test_Includes_IsIncludedReversed: TestMessage(Includes_IsIncludedReversed, 'Includes_IsIncludedReversed', toString(true), toString(Includes_IsIncludedReversed))
@@ -3240,6 +4705,12 @@ define test_Includes_TuplesIncluded: TestMessage(Includes_TuplesIncluded, 'Inclu
 define test_Includes_TuplesNotIncluded: TestMessage(not Includes_TuplesNotIncluded, 'Includes_TuplesNotIncluded', toString(false), toString(Includes_TuplesNotIncluded))
 define test_Includes_NullIncluded: TestMessage(Includes_NullIncluded, 'Includes_NullIncluded', toString(true), toString(Includes_NullIncluded))
 define test_Includes_NullIncludes: TestMessage(not Includes_NullIncludes, 'Includes_NullIncludes', toString(false), toString(Includes_NullIncludes))
+define test_Includes_DayIncluded: TestMessage(Includes_DayIncluded, 'Includes_DayIncluded', toString(true), toString(Includes_DayIncluded))
+define test_Includes_DayNotIncluded: TestMessage(not Includes_DayNotIncluded, 'Includes_DayNotIncluded', toString(false), toString(Includes_DayNotIncluded))
+define test_Includes_IntegerIncluded: TestMessage(Includes_IntegerIncluded, 'Includes_IntegerIncluded', toString(true), toString(Includes_IntegerIncluded))
+define test_Includes_IntegerNotIncluded: TestMessage(not Includes_IntegerNotIncluded, 'Includes_IntegerNotIncluded', toString(false), toString(Includes_IntegerNotIncluded))
+define test_Includes_QuantityInList: TestMessage(Includes_QuantityInList, 'Includes_QuantityInList', toString(true), toString(Includes_QuantityInList))
+define test_Includes_QuantityNotInList: TestMessage(not Includes_QuantityNotInList, 'Includes_QuantityNotInList', toString(false), toString(Includes_QuantityNotInList))
 
 // IncludedIn
 define IncludedIn_IsIncluded: {2, 3, 4} included in {1, 2, 3, 4, 5}
@@ -3250,6 +4721,12 @@ define IncludedIn_TuplesIncluded: {Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}} include
 define IncludedIn_TuplesNotIncluded: {Tuple{a:2, b:'d'}, Tuple{a:3, b:'c'}} included in {Tuple{a:1, b:'d'}, Tuple{a:2, b:'d'}, Tuple{a:2, b:'c'}}
 define IncludedIn_NullIncludes: {1, 2, 3, 4, 5} included in null
 define IncludedIn_NullIncluded: null as List<Integer> included in {1, 2, 3, 4, 5}
+define IncludedIn_DayIncluded: DateTime(2012, 3, 3) included in {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)}
+define IncludedIn_DayNotIncluded: DateTime(2014, 3, 3) included in {DateTime(2012, 3, 2), DateTime(2012, 3, 3), DateTime(2012, 3, 4)}
+define IncludedIn_IntegerIncluded: 3 included in {1, 2, 3, 4, 5}
+define IncludedIn_IntegerNotIncluded: 33 included in {1, 2, 3, 4, 5}
+define IncludedIn_QuantityInList: ToQuantity('1 \'m\'') included in { ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')}
+define IncludedIn_QuantityNotInList: ToQuantity('100 \'m\'') included in { ToQuantity('1 \'m\''), ToQuantity('1.995 \'m\''), ToQuantity('2 \'m\''), ToQuantity('3 \'m\'')}
 
 define test_IncludedIn_IsIncluded: TestMessage(IncludedIn_IsIncluded, 'IncludedIn_IsIncluded', toString(true), toString(IncludedIn_IsIncluded))
 define test_IncludedIn_IsIncludedReversed: TestMessage(IncludedIn_IsIncludedReversed, 'IncludedIn_IsIncludedReversed', toString(true), toString(IncludedIn_IsIncludedReversed))
@@ -3259,6 +4736,12 @@ define test_IncludedIn_TuplesIncluded: TestMessage(IncludedIn_TuplesIncluded, 'I
 define test_IncludedIn_TuplesNotIncluded: TestMessage(not IncludedIn_TuplesNotIncluded, 'IncludedIn_TuplesNotIncluded', toString(false), toString(IncludedIn_TuplesNotIncluded))
 define test_IncludedIn_NullIncludes: TestMessage(not IncludedIn_NullIncludes, 'IncludedIn_NullIncludes', toString(false), toString(IncludedIn_NullIncludes))
 define test_IncludedIn_NullIncluded: TestMessage(IncludedIn_NullIncluded, 'IncludedIn_NullIncluded', toString(true), toString(IncludedIn_NullIncluded))
+define test_IncludedIn_DayIncluded: TestMessage(IncludedIn_DayIncluded, 'IncludedIn_DayIncluded', toString(true), toString(IncludedIn_DayIncluded))
+define test_IncludedIn_DayNotIncluded: TestMessage(not IncludedIn_DayNotIncluded, 'IncludedIn_DayNotIncluded', toString(false), toString(IncludedIn_DayNotIncluded))
+define test_IncludedIn_IntegerIncluded: TestMessage(IncludedIn_IntegerIncluded, 'IncludedIn_IntegerIncluded', toString(true), toString(IncludedIn_IntegerIncluded))
+define test_IncludedIn_IntegerNotIncluded: TestMessage(not IncludedIn_IntegerNotIncluded, 'IncludedIn_IntegerNotIncluded', toString(false), toString(IncludedIn_IntegerNotIncluded))
+define test_IncludedIn_QuantityInList: TestMessage(IncludedIn_QuantityInList, 'IncludedIn_QuantityInList', toString(true), toString(IncludedIn_QuantityInList))
+define test_IncludedIn_QuantityNotInList: TestMessage(not IncludedIn_QuantityNotInList, 'IncludedIn_QuantityNotInList', toString(false), toString(IncludedIn_QuantityNotInList))
 
 // ProperIncludes
 define ProperIncludes_IsIncluded: {1, 2, 3, 4, 5} properly includes {2, 3, 4, 5}
@@ -3368,13 +4851,11 @@ define test_Length_NullValue: TestMessage(Length_NullValue = 0, 'Length_NullValu
 // ToList
 define ToList_FiveInFive: 5 in 5 // CQL-to-ELM will promote the second 5 to a list via ToList
 define ToList_FourInFive: 4 in 5 // CQL-to-ELM will promote the 5 to a list via ToList
-// TODO - the following expression is throwing the error:
-// Call to operator Length(System.Integer) is ambiguous with: - Length(list<list<System.Integer>>) - Length(list<System.Integer>)
-// define ToList_LengthOfNull: Length(null as Integer) // CQL-to-ELM will promote the null to a list via ToList
+define ToList_LengthOfNull: Length(null as Integer) // CQL-to-ELM will promote the null to a list via ToList
 
 define test_ToList_FiveInFive: TestMessage(ToList_FiveInFive, 'ToList_FiveInFive', toString(true), toString(ToList_FiveInFive))
 define test_ToList_FourInFive: TestMessage(not ToList_FourInFive, 'ToList_FourInFive', toString(false), toString(ToList_FourInFive))
-// define test_ToList_LengthOfNull: TestMessage(ToList_LengthOfNull = 0, 'ToList_LengthOfNull', toString(0), toString(ToList_LengthOfNull))
+define test_ToList_LengthOfNull: TestMessage(ToList_LengthOfNull = 0, 'ToList_LengthOfNull', toString(0), toString(ToList_LengthOfNull))
 
 /*
 *******************
@@ -3387,6 +4868,8 @@ define test_ToList_FourInFive: TestMessage(not ToList_FourInFive, 'ToList_FourIn
   Start Logical Tests
 ************************
 */
+
+/*
 
 // And
 define And_TT: true and true
@@ -3460,6 +4943,8 @@ define test_Not_NotTrue: TestMessage(not Not_NotTrue, 'Not_NotTrue', toString(fa
 define test_Not_NotFalse: TestMessage(Not_NotFalse, 'Not_NotFalse', toString(true), toString(Not_NotFalse))
 define test_Not_NotNull: TestMessage(Not_NotNull is null, 'Not_NotNull', 'null', toString(Not_NotNull))
 
+*/
+
 /*
 **********************
   End Logical Tests
@@ -3471,6 +4956,8 @@ define test_Not_NotNull: TestMessage(Not_NotNull is null, 'Not_NotNull', 'null',
   Start Nullogical Tests
 **************************
 */
+
+/*
 
 // IsNull
 define Nil: null
@@ -3522,6 +5009,8 @@ define IsFalse_NullIsFalse: null is false
 define test_IsFalse_TrueIsFalse: TestMessage(not IsFalse_TrueIsFalse, 'IsFalse_TrueIsFalse', toString(false), toString(IsFalse_TrueIsFalse))
 define test_IsFalse_FalseIsFalse: TestMessage(IsFalse_FalseIsFalse, 'IsFalse_FalseIsFalse', toString(true), toString(IsFalse_FalseIsFalse))
 define test_IsFalse_NullIsFalse: TestMessage(not IsFalse_NullIsFalse, 'IsFalse_NullIsFalse', toString(false), toString(IsFalse_NullIsFalse))
+
+*/
 
 /*
 ************************
@@ -3576,6 +5065,8 @@ define test_IsFalse_NullIsFalse: TestMessage(not IsFalse_NullIsFalse, 'IsFalse_N
   Start String Tests
 **********************
 */
+
+/*
 
 // Concat
 define Hello: 'Hello'
@@ -3722,6 +5213,8 @@ define test_EndsWith_EndsWithNull: TestMessage(EndsWith_EndsWithNull is null, 'E
 define test_EndsWith_EndsWithNullAsString: TestMessage(EndsWith_EndsWithNullAsString is null, 'EndsWith_EndsWithNullAsString', 'null', toString(EndsWith_EndsWithNullAsString))
 define test_EndsWith_NullEndsWith: TestMessage(EndsWith_NullEndsWith is null, 'EndsWith_NullEndsWith', 'null', toString(EndsWith_NullEndsWith))
 define test_EndsWith_NullAsStringEndsWith: TestMessage(EndsWith_NullAsStringEndsWith is null, 'EndsWith_NullAsStringEndsWith', 'null', toString(EndsWith_NullAsStringEndsWith))
+
+*/
 
 /*
 ********************

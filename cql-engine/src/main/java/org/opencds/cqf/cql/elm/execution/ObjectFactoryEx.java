@@ -94,6 +94,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Count createCount() { return new CountEvaluator(); }
 
     @Override
+    public Date createDate() { return new DateEvaluator(); }
+
+    @Override
     public DateTime createDateTime() { return new DateTimeEvaluator(); }
 
     @Override
@@ -142,6 +145,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Exp createExp() { return new ExpEvaluator(); }
 
     @Override
+    public Expand createExpand() { return new ExpandEvaluator(); }
+
+    @Override
     public ExpressionDef createExpressionDef() { return new ExpressionDefEvaluator(); }
 
     @Override
@@ -164,6 +170,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public FunctionRef createFunctionRef() { return new FunctionRefEvaluator(); }
+
+    @Override
+    public GeometricMean createGeometricMean() { return new GeometricMeanEvaluator(); }
 
     @Override
     public Greater createGreater() { return new GreaterEvaluator(); }
@@ -343,6 +352,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Predecessor createPredecessor() { return new PredecessorEvaluator(); }
 
     @Override
+    public Product createProduct() { return new ProductEvaluator(); }
+
+    @Override
     public ProperContains createProperContains() { return new ProperContainsEvaluator(); }
 
     @Override
@@ -443,6 +455,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public ToDecimal createToDecimal() { return new ToDecimalEvaluator(); }
+
+    @Override
+    public ToDate createToDate() { return new ToDateEvaluator(); }
 
     @Override
     public ToDateTime createToDateTime() { return new ToDateTimeEvaluator(); }

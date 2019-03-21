@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Value;
 
 /*
 ToInteger(argument String) Integer
@@ -10,13 +11,10 @@ The operator accepts strings using the following format:
   (+|-)?#0
 Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
 Note that the integer value returned by this operator must be a valid value in the range representable for Integer values in CQL.
-If the input string is not formatted correctly, or cannot be interpreted as a valid Integer value, a run-time error is thrown.
+If the input string is not formatted correctly, or cannot be interpreted as a valid Integer value, the result is null.
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInteger {
 
     public static Object toInteger(Object operand) {
@@ -31,15 +29,12 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
             catch (NumberFormatException nfe) {
                 try {
                     Double ret = Double.parseDouble((String) operand);
-                    if (ret > (Integer) MaxValueEvaluator.maxValue("Integer")) {
-                        throw new IllegalArgumentException("Integer exceeds the maximum value allowed");
-                    }
-                    else if (ret < (Integer) MinValueEvaluator.minValue("Integer")) {
-                        throw new IllegalArgumentException("Integer precedes the minimum value allowed");
+                    if (Value.validateInteger(ret) == null) {
+                        return null;
                     }
                     return ret.intValue();
                 } catch (NumberFormatException e) {
-                    throw new NumberFormatException("Unable to convert given string to Integer");
+                    return null;
                 }
             }
         }
@@ -50,6 +45,6 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), toInteger(operand), operand);
+        return toInteger(operand);
     }
 }

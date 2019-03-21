@@ -17,16 +17,14 @@ If either argument is null, the result is null.
 
 *** NOTES FOR LIST ***
 includes(left List<T>, right List<T>) Boolean
+includes(left List<T>, right T) Boolean
 
-The includes operator for lists returns true if the first list contains every element of the second list.
-This operator uses the notion of equivalence to determine whether or not two elements are the same.
-If the left argument is null, the result is false, else if the right argument is null, the result is true.
+The includes operator for lists returns true if the first list contains every element of the second list using equality semantics.
+For the singleton overload, this operator returns true if the list includes (i.e. contains) the singleton.
+If either argument is null, the result is null.
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Includes {
 
     public static Boolean includes(Object left, Object right, String precision) {

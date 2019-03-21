@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Time;
@@ -8,27 +9,30 @@ import org.opencds.cqf.cql.runtime.Time;
 import java.math.BigDecimal;
 
 /*
+
 ToString(argument Boolean) String
 ToString(argument Integer) String
 ToString(argument Decimal) String
 ToString(argument Quantity) String
+ToString(argument Ratio) String
+ToString(argument Date) String
 ToString(argument DateTime) String
 ToString(argument Time) String
 
 The ToString operator converts the value of its argument to a String value.
 The operator uses the following string representations for each type:
 Boolean	true|false
-Integer	   (-)?#0
-Decimal	   (-)?#0.0#
-Quantity	 (-)?#0.0# '<unit>'
-DateTime	 YYYY-MM-DDThh:mm:ss.fff(+|-)hh:mm
-Time	     Thh:mm:ss.fff(+|-)hh:mm
+Integer	    (-)?#0
+Decimal	    (-)?#0.0#
+Quantity    (-)?#0.0# '<unit>'
+Ratio       <quantity>:<quantity>
+Date        YYYY-MM-DD
+DateTime	YYYY-MM-DDThh:mm:ss.fff(+|-)hh:mm
+Time	    Thh:mm:ss.fff(+|-)hh:mm
 If the argument is null, the result is null.
+
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToString {
 
     public static Object toString(Object operand) {
@@ -45,8 +49,14 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
         else if (operand instanceof Quantity) {
             return String.format("%s %s%s%s", ((Quantity)operand).getValue().toString(), "'", ((Quantity)operand).getUnit(), "'");
         }
+//        else if (operand instanceof Ratio) {
+//            TODO
+//        }
         else if (operand instanceof Boolean) {
             return Boolean.toString((Boolean)operand);
+        }
+        else if (operand instanceof Date) {
+            return operand.toString();
         }
         else if (operand instanceof DateTime) {
             return operand.toString();
@@ -58,8 +68,6 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
         else {
             return operand.toString();
         }
-
-//        throw new IllegalArgumentException(String.format("Cannot ToString a value of type %s.", operand.getClass().getName()));
     }
 
     @Override

@@ -21,22 +21,23 @@ intersect(left List<T>, right List<T>) List<T>
 
 The intersect operator for lists returns the intersection of two lists.
   More precisely, the operator returns a list containing only the elements that appear in both lists.
-This operator uses the notion of equivalence to determine whether or not two elements are the same.
+This operator uses equality semantics to determine whether or not two elements are the same.
+The operator is defined with set semantics, meaning that each element will appear in the result at most once,
+    and that there is no expectation that the order of the inputs will be preserved in the results.
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
-public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Intersect {
-
-    public static Object intersect(Object left, Object right) {
-
-        if (left == null || right == null) {
+public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Intersect
+{
+    public static Object intersect(Object left, Object right)
+    {
+        if (left == null || right == null)
+        {
             return null;
         }
 
-        if (left instanceof Interval) {
+        if (left instanceof Interval)
+        {
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
 
@@ -52,12 +53,15 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
             }
 
             String precision = null;
-            if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
+            if (leftStart instanceof BaseTemporal
+                    && rightStart instanceof BaseTemporal)
+            {
                 precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
             }
 
             Boolean overlaps = OverlapsEvaluator.overlaps(leftInterval, rightInterval, precision);
-            if (overlaps == null || !overlaps) {
+            if (overlaps == null || !overlaps)
+            {
                 return null;
             }
 
@@ -67,27 +71,34 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
             return new Interval(max, true, min, true);
         }
 
-        else if (left instanceof Iterable) {
+        else if (left instanceof Iterable)
+        {
             Iterable leftArr = (Iterable)left;
             Iterable rightArr = (Iterable)right;
 
             List<Object> result = new ArrayList<>();
-            for (Object leftItem : leftArr) {
-                if (InEvaluator.in(leftItem, rightArr, null)) {
+            Boolean in;
+            for (Object leftItem : leftArr)
+            {
+                in = InEvaluator.in(leftItem, rightArr, null);
+                if (in != null && in)
+                {
                     result.add(leftItem);
                 }
             }
-            return result;
+
+            return DistinctEvaluator.distinct(result);
         }
 
         throw new IllegalArgumentException(String.format("Cannot Intersect arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
-    public Object evaluate(Context context) {
+    public Object evaluate(Context context)
+    {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), intersect(left, right), left, right);
+        return intersect(left, right);
     }
 }

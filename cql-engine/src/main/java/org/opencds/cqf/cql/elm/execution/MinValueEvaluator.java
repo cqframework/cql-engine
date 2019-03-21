@@ -34,6 +34,9 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
         if (type.endsWith("Decimal")) {
             return Value.MIN_DECIMAL;
         }
+        if (type.endsWith("Date")) {
+            return new Date(1, 1, 1).setPrecision(Precision.DAY);
+        }
         // TODO - the temporal types are slightly limited here ... using system defaults for timezone instead of what's specified for evaluation
         if (type.endsWith("DateTime")) {
             return new DateTime(TemporalHelper.getDefaultOffset(), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
@@ -61,6 +64,9 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
         }
         if (type.endsWith("Decimal")) {
             return Value.MIN_DECIMAL;
+        }
+        if (type.endsWith("Date")) {
+            return new Date(1, 1, 1).setPrecision(Precision.DAY);
         }
         if (type.endsWith("DateTime")) {
             return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());

@@ -46,7 +46,7 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
     // *(Quantity, Quantity)
     else if (left instanceof Quantity && right instanceof Quantity) {
       // TODO: unit multiplication i.e. cm*cm = cm^2
-      String unit = ((Quantity)left).getUnit();
+      String unit = ((Quantity) left).getUnit().equals("1") ? ((Quantity) right).getUnit() : ((Quantity) left).getUnit();
       BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()));
       return new Quantity().withValue(value).withUnit(unit);
     }

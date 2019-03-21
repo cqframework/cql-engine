@@ -1,4 +1,4 @@
-library CqlErrorTestSuite version '1'
+library CqlErrorTestSuite version '2'
 
 /*
     NOTES:
@@ -114,20 +114,6 @@ define Predecessor_ufr: predecessor of -2147483648
   Start Conversion Tests
 **************************
 */
-
-define FromString_decimalInvalid: convert 'abc' to Decimal
-define FromString_integerInvalid: convert 'abc' to Integer
-define ToDecimal_TooLargeDec: ToDecimal('444444444444444444444444444444')
-define ToDecimal_TooSmallDec: ToDecimal('-444444444444444444444444444444')
-define ToDecimal_TooPrecise: ToDecimal('.444444444')
-define ToDecimal_WrongFormat: ToDecimal('+.1')
-define ToInteger_TooLargeInt: ToInteger('2147483648')
-define ToInteger_TooSmallInt: ToInteger('-2147483649')
-define ToQuantity_WrongFormatQuantity: ToQuantity('abc')
-define ToQuantity_TooLargeQuantity: ToQuantity('444444444444444444444444444444 \'\'')
-define ToQuantity_TooSmallQuantity: ToQuantity('-444444444444444444444444444444 \'\'')
-define ToTime_IncorrectFormatTime: ToTime('10:00PM')
-define ToTime_InvalidTime: ToTime('25:99.000+00.00')
 
 /*
 ************************

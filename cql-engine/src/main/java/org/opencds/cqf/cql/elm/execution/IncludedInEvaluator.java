@@ -21,16 +21,14 @@ Note that during is a synonym for included in and may be used to invoke the same
 
 *** NOTES FOR LIST ***
 included in(left List<T>, right list<T>) Boolean
+included in(left T, right list<T>) Boolean
 
-he included in operator for lists returns true if every element of the first list is in the second list.
-This operator uses the notion of equivalence to determine whether or not two elements are the same.
-If the left argument is null, the result is true, else if the right argument is null, the result is false.
+The included in operator for lists returns true if every element of the first list is in the second list using equality semantics.
+For the singleton overload, this operator returns true if the singleton is included in (i.e. in) the list.
+If either argument is null, the result is null.
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
     public static Boolean includedIn(Object left, Object right, String precision) {
@@ -56,8 +54,8 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
 
         Boolean boundaryCheck =
                 AndEvaluator.and(
-                        InEvaluator.intervalIn(leftStart, right, precision),
-                        InEvaluator.intervalIn(leftEnd, right, precision)
+                        InEvaluator.in(leftStart, right, precision),
+                        InEvaluator.in(leftEnd, right, precision)
                 );
 
         if (boundaryCheck != null && boundaryCheck) {
@@ -96,7 +94,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         }
 
         for (Object element : left) {
-            Object in = InEvaluator.listIn(element, right);
+            Object in = InEvaluator.in(element, right, null);
 
             if (in == null) continue;
 

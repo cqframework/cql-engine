@@ -2,13 +2,13 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Quantity;
 
-import java.math.BigDecimal;
+/*
+point from(argument Interval<T>) : T
+The point from operator extracts the single point from a unit interval. If the argument is not a unit interval, a run-time error is thrown.
 
-/**
- * Created by Christopher Schuler on 6/12/2017.
- */
+If the argument is null, the result is null.
+* */
 public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointFrom {
 
     public static Object pointFrom(Object operand) {
@@ -20,27 +20,12 @@ public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointF
             Object start = ((Interval) operand).getStart();
             Object end = ((Interval) operand).getEnd();
 
-            Object width = Interval.getSize(start, end);
-
-            if (width instanceof Integer) {
-                if ((Integer) width == 0) {
-                    return start;
-                }
+            Boolean equal = EqualEvaluator.equal(start, end);
+            if (equal != null && equal) {
+                return start;
             }
 
-            else if (width instanceof BigDecimal) {
-                if (EqualEvaluator.equal(width, new BigDecimal("0.0"))) {
-                    return start;
-                }
-            }
-
-            else if (width instanceof Quantity) {
-                if (EqualEvaluator.equal(((Quantity) width).getValue(), new BigDecimal("0.0"))) {
-                    return start;
-                }
-            }
-
-            throw new IllegalArgumentException("Cannot perform PointFrom operation on Interval with a width greater than one.");
+            throw new IllegalArgumentException("Cannot perform PointFrom operation on intervals that are not unit intervals.");
         }
 
         throw new IllegalArgumentException(String.format("Cannot perform PointFrom operator with arguments of type: %s", operand.getClass().getName()));

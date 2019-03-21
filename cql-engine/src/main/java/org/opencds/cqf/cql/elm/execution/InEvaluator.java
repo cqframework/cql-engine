@@ -25,40 +25,41 @@ If either argument is null, the result is null.
 *** NOTES FOR LIST ***
 in(element T, argument List<T>) Boolean
 
-The in operator for lists returns true if the given element is in the given list.
-This operator uses the notion of equivalence to determine whether or not the element being searched for
-    is equivalent to any element in the list. In particular this means that if the list contains a null,
-    and the element being searched for is null, the result will be true.
-If the left argument is null, the result is null. If the right argument is null, the result is false.
+The in operator for lists returns true if the given element is in the given list using equality semantics.
+
+If either argument is null, the result is null.
 
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
-public class InEvaluator extends org.cqframework.cql.elm.execution.In {
+public class InEvaluator extends org.cqframework.cql.elm.execution.In
+{
+    public static Boolean in(Object left, Object right, String precision)
+    {
+        if (left == null || right == null)
+        {
+            return null;
+        }
 
-    public static Boolean in(Object left, Object right, String precision) {
-        if (right instanceof Iterable) {
+        if (right instanceof Iterable)
+        {
             return listIn(left, (Iterable) right);
         }
 
-        else if (right instanceof Interval) {
+        else if (right instanceof Interval)
+        {
             return intervalIn(left, (Interval) right, precision);
         }
 
         throw new IllegalArgumentException(String.format("Cannot In arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
     }
 
-    public static Boolean intervalIn(Object left, Interval right, String precision) {
-        if (left == null || right == null) {
-            return null;
-        }
-
+    private static Boolean intervalIn(Object left, Interval right, String precision)
+    {
         Object rightStart = right.getStart();
         Object rightEnd = right.getEnd();
 
-        if (left instanceof BaseTemporal) {
+        if (left instanceof BaseTemporal)
+        {
             if (AnyTrueEvaluator.anyTrue(Arrays.asList(SameAsEvaluator.sameAs(left, right.getStart(), precision), SameAsEvaluator.sameAs(left, right.getEnd(), precision))))
             {
                 return true;
@@ -67,26 +68,31 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
             {
                 return false;
             }
+
             Boolean pointSameOrAfterStart;
-            if (rightStart == null && right.getLowClosed()) {
+            if (rightStart == null && right.getLowClosed())
+            {
                 pointSameOrAfterStart = true;
             }
-            else {
+            else
+            {
                 pointSameOrAfterStart = SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision);
             }
 
             Boolean pointSamedOrBeforeEnd;
-            if (rightEnd == null && right.getHighClosed()) {
+            if (rightEnd == null && right.getHighClosed())
+            {
                 pointSamedOrBeforeEnd = true;
             }
-            else {
+            else
+            {
                 pointSamedOrBeforeEnd = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
             }
 
             return AndEvaluator.and(pointSameOrAfterStart, pointSamedOrBeforeEnd);
         }
 
-        if (AnyTrueEvaluator.anyTrue(Arrays.asList(EqualEvaluator.equal(left, right.getStart()), EqualEvaluator.equal(left, right.getEnd()))))
+        else if (AnyTrueEvaluator.anyTrue(Arrays.asList(EqualEvaluator.equal(left, right.getStart()), EqualEvaluator.equal(left, right.getEnd()))))
         {
             return true;
         }
@@ -94,31 +100,38 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
         {
             return false;
         }
+
         Boolean greaterOrEqual;
-        if (rightStart == null && right.getLowClosed()) {
+        if (rightStart == null && right.getLowClosed())
+        {
             greaterOrEqual = true;
         }
-        else {
+        else
+        {
             greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart);
         }
 
         Boolean lessOrEqual;
-        if (rightEnd == null && right.getHighClosed()) {
+        if (rightEnd == null && right.getHighClosed())
+        {
             lessOrEqual = true;
         }
-        else {
+        else
+        {
             lessOrEqual = LessOrEqualEvaluator.lessOrEqual(left, rightEnd);
         }
+
         return AndEvaluator.and(greaterOrEqual, lessOrEqual);
     }
 
-    public static Boolean listIn(Object left, Iterable right) {
-        if (right == null) {
-            return false;
-        }
-
-        for (Object element : right) {
-            if (EquivalentEvaluator.equivalent(left, element)) {
+    private static Boolean listIn(Object left, Iterable right)
+    {
+        Boolean isEqual;
+        for (Object element : right)
+        {
+            isEqual = EqualEvaluator.equal(left, element);
+            if ((isEqual != null && isEqual))
+            {
                 return true;
             }
         }
@@ -127,24 +140,21 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    public Object evaluate(Context context)
+    {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        if (left == null && right == null) {
-            return null;
-        }
-
         // null right operand case
-        if (getOperand().get(1) instanceof AsEvaluator) {
-            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return intervalIn(left, (Interval) right, precision);
-            }
-            else {
-                return listIn(left, (Iterable) right);
-            }
-        }
+//        if (getOperand().get(1) instanceof AsEvaluator) {
+//            if (((AsEvaluator) getOperand().get(1)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
+//                return intervalIn(left, (Interval) right, precision);
+//            }
+//            else {
+//                return listIn(left, (Iterable) right);
+//            }
+//        }
 
         return in(left, right, precision);
     }

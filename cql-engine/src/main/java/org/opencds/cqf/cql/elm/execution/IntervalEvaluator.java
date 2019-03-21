@@ -15,6 +15,7 @@ public class IntervalEvaluator extends org.cqframework.cql.elm.execution.Interva
         Boolean highClosed = getHighClosedExpression() != null ? (Boolean)getHighClosedExpression().evaluate(context) : this.highClosed;
 
         // An interval with no boundaries is not an interval
+        // TODO: the spec states that it is possible to have an interval with null boundaries, but the ELM is not providing a way to get the Interval type
         if (low == null && high == null) {
             return null;
         }

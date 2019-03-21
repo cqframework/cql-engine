@@ -6,6 +6,7 @@ import org.opencds.cqf.cql.runtime.*;
 import java.math.BigDecimal;
 
 /*
+
 *** NOTES FOR ARITHMETIC OPERATOR ***
 -(left Integer, right Integer) Integer
 -(left Decimal, right Decimal) Decimal
@@ -19,24 +20,38 @@ When subtracting quantities, the dimensions of each quantity must be the same, b
 If either argument is null, the result is null.
 
 *** NOTES FOR DATETIME ***
+-(left Date, right Quantity) Date
 -(left DateTime, right Quantity) DateTime
 -(left Time, right Quantity) Time
 
-The subtract (-) operator returns the value of the given date/time, decremented by the time-valued quantity,
-  respecting variable length periods for calendar years and months.
+The subtract (-) operator returns the value of the given date/time, decremented by the time-valued quantity, respecting
+    variable length periods for calendar years and months.
+
+For Date values, the quantity unit must be one of: years, months, weeks, or days.
+
 For DateTime values, the quantity unit must be one of: years, months, weeks, days, hours, minutes, seconds, or milliseconds.
+
 For Time values, the quantity unit must be one of: hours, minutes, seconds, or milliseconds.
-The operation is performed by attempting to derive the highest granularity precision first, working down successive
-  granularities to the granularity of the time-valued quantity. For example, the following subtraction:
-    DateTime(2014) - 24 months
+
+Note that the quantity units may be specified in singular, plural or UCUM form.
+
+The operation is performed by converting the time-based quantity to the most precise value specified in the date/time
+    (truncating any resulting decimal portion) and then subtracting it from the date/time value.
+    For example, the following subtraction:
+        DateTime(2014) - 24 months
     This example results in the value DateTime(2012) even though the date/time value is not specified to the level of precision of the time-valued quantity.
+
+Note also that this means that if decimals appear in the time-valued quantities, the fractional component will be ignored.
+    For example, the following subtraction:
+        DateTime(2014) - 18 months
+    This example results in the value DateTime(2013)
+
 If either argument is null, the result is null.
+
 NOTE: see note in AddEvaluator
+
 */
 
-/**
- * Created by Bryn on 5/25/2016
- */
 public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtract {
 
     private static final int YEAR_RANGE_MIN = 0001;
@@ -74,6 +89,15 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
                 }
 
                 return new DateTime(((DateTime) left).getDateTime().minus(valueToSubtract, precision.toChronoUnit()), ((DateTime) left).getPrecision());
+            }
+            // +(Date, Quantity)
+            else if (left instanceof Date) {
+                if (precision == Precision.WEEK) {
+                    valueToSubtract = TemporalHelper.weeksToDays(valueToSubtract);
+                    precision = Precision.DAY;
+                }
+
+                return new Date(((Date) left).getDate().minus(valueToSubtract, precision.toChronoUnit())).setPrecision(((Date) left).getPrecision());
             }
             // +(Time, Quantity)
             else {

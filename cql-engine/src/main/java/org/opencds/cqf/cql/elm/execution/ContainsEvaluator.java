@@ -49,10 +49,10 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         // null left operand case
         if (getOperand().get(0) instanceof AsEvaluator) {
             if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return InEvaluator.intervalIn(right, (Interval) left, precision);
+                return InEvaluator.in(right, left, precision);
             }
             else {
-                return InEvaluator.listIn(right, (Iterable) left);
+                return InEvaluator.in(right, left, null);
             }
         }
 

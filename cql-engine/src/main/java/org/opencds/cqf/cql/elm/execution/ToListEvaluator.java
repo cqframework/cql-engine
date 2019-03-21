@@ -5,9 +5,6 @@ import org.opencds.cqf.cql.execution.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 6/12/2017.
- */
 public class ToListEvaluator extends org.cqframework.cql.elm.execution.ToList {
 
     public static Object toList(Object operand) {
@@ -25,6 +22,6 @@ public class ToListEvaluator extends org.cqframework.cql.elm.execution.ToList {
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), toList(operand), operand);
+        return toList(operand);
     }
 }

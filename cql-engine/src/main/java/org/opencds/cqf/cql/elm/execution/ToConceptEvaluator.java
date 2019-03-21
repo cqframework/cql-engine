@@ -12,9 +12,6 @@ If the Code has a display value, the resulting Concept will have the same displa
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class ToConceptEvaluator extends org.cqframework.cql.elm.execution.ToConcept {
 
     public static Object toConcept(Object operand) {
@@ -40,6 +37,6 @@ public class ToConceptEvaluator extends org.cqframework.cql.elm.execution.ToConc
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), toConcept(operand), operand);
+        return toConcept(operand);
     }
 }
