@@ -10,7 +10,7 @@ define SimpleEqTrueTrue : true = true
 define SimpleEqTrueFalse : true = false
 define SimpleEqFalseFalse : false = false
 define SimpleEqFalseTrue : false = true
-define SimpleEqNullNull : null = null
+define SimpleEqNullNull : null as String = null
 define SimpleEqTrueNull : true = null
 define SimpleEqNullTrue : null = true
 define SimpleEqInt1Int1 : 1 = 1
@@ -155,7 +155,7 @@ define EquivTrueTrue                : true ~ true
 define EquivTrueFalse               : true ~ false
 define EquivFalseFalse              : false ~ false
 define EquivFalseTrue               : false ~ true
-define EquivNullNull                : null ~ null
+define EquivNullNull                : null as String ~ null
 define EquivTrueNull                : true ~ null
 define EquivNullTrue                : null ~ true
 define EquivInt1Int1                : 1 ~ 1
@@ -185,7 +185,7 @@ define SimpleNotEqTrueTrue : true != true
 define SimpleNotEqTrueFalse : true != false
 define SimpleNotEqFalseFalse : false != false
 define SimpleNotEqFalseTrue : false != true
-define SimpleNotEqNullNull : null != null
+define SimpleNotEqNullNull : null as String != null
 define SimpleNotEqTrueNull : true != null
 define SimpleNotEqNullTrue : null != true
 define SimpleNotEqInt1Int1 : 1 != 1
