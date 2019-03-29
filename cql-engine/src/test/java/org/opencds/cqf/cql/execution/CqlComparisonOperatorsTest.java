@@ -62,9 +62,8 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("SimpleEqFloat1Float2").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        // TODO - this test should evaluate to true
         result = context.resolveExpressionRef("SimpleEqFloat1Int1").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("SimpleEqFloat1Int2").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -519,9 +518,8 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("EquivFloat1Float2").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        // TODO - this test should actually pass as the int should be upcast to a decimal
         result = context.resolveExpressionRef("EquivFloat1Int1").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("EquivFloat1Int2").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -612,9 +610,8 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("SimpleNotEqFloat1Float2").getExpression().evaluate(context);
         assertThat(result, is(true));
 
-        // TODO - Should evaluate to false
         result = context.resolveExpressionRef("SimpleNotEqFloat1Int1").getExpression().evaluate(context);
-        assertThat(result, is(true));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("SimpleNotEqFloat1Int2").getExpression().evaluate(context);
         assertThat(result, is(true));
