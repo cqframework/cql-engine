@@ -14,7 +14,7 @@ public class TestCodeRef extends FhirExecutionTestBase {
     private FhirTerminologyProvider terminologyProvider =
             new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false);
 
-    @Test
+    // @Test
     public void CodeRefTest1() {
         Context context = new Context(library);
         context.registerTerminologyProvider(terminologyProvider);
@@ -23,7 +23,7 @@ public class TestCodeRef extends FhirExecutionTestBase {
         assertTrue(result != null);
     }
 
-    @Test
+    // @Test
     public void CodeRefTest2() {
         Context context = new Context(library);
         context.registerTerminologyProvider(terminologyProvider);

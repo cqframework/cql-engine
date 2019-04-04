@@ -21,16 +21,16 @@ import static org.testng.Assert.assertTrue;
  */
 public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
-    @Test
-    public void testFhirClient() {
-        FhirContext fhirContext = FhirContext.forDstu3();
-        IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+    private FhirContext fhirContext = FhirContext.forDstu3();
+    private  IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 
+    // @Test
+    public void testFhirClient() {
         Bundle patients = fhirClient.search().forResource("Patient").returnBundle(Bundle.class).execute();
         assertTrue(patients.getEntry().size() > 0);
     }
 
-    @Test
+    // @Test
     public void testDataProviderRetrieve() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
@@ -38,7 +38,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(results.iterator().hasNext());
     }
 
-    @Test
+    // @Test
     public void testPatientRetrieve() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
@@ -53,7 +53,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(patients.size() == resultCount);
     }
 
-    @Test
+    // @Test
     public void testChoiceTypes() {
         Context context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
@@ -72,7 +72,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Assert.assertTrue(result != null);
     }
 
-//    TODO - fix
+    //    TODO - fix
 //    @Test
     public void testPostSearch() {
         Context context = new Context(library);
@@ -101,7 +101,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
     }
 
-    @Test
+    // @Test
     public void testList() {
         BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir.hl7.de:8080/baseDstu3");
         FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "List", null, null, null, null, null, null, null, null);
@@ -113,6 +113,81 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         }
 
         assertTrue(lists.size() == resultCount);
+    }
+
+    @Test
+    public void testContained()
+    {
+        String patient = "{  \n" +
+                "        \"resourceType\":\"Patient\",\n" +
+                "        \"id\":\"81ee6581-02b9-44de-b026-7401bf36643a\",\n" +
+                "        \"meta\":{  \n" +
+                "          \"profile\":[  \n" +
+                "            \"http://hl7.org/fhir/profiles/Patient\"\n" +
+                "          ]\n" +
+                "        },\n" +
+                "        \"birthDate\":\"2012-01-01\"\n" +
+                "      }";
+
+        fhirClient.update().resource(patient).withId("81ee6581-02b9-44de-b026-7401bf36643a").execute();
+
+        String condition = "{  \n" +
+                "        \"resourceType\":\"Condition\",\n" +
+                "        \"id\":\"77d90968-1965-4574-aa34-19d7d1483d8a\",\n" +
+                "        \"contained\":[  \n" +
+                "          {  \n" +
+                "            \"resourceType\":\"Provenance\",\n" +
+                "            \"id\":\"c76ceb3b-ff93-4d4a-ae1f-83b78ce39228\",\n" +
+                "            \"target\":[  \n" +
+                "              {  \n" +
+                "                \"reference\":\"Condition/77d90968-1965-4574-aa34-19d7d1483d8a\"\n" +
+                "              }\n" +
+                "            ],\n" +
+                "            \"entity\":[  \n" +
+                "              {  \n" +
+                "                \"role\":\"source\",\n" +
+                "                \"whatReference\":{  \n" +
+                "                  \"reference\":\"Claim/920013f1-da9b-42ec-89ec-b50069a7aa5c\"\n" +
+                "                }\n" +
+                "              }\n" +
+                "            ]\n" +
+                "          }\n" +
+                "        ],\n" +
+                "        \"clinicalStatus\":\"active\",\n" +
+                "        \"verificationStatus\":\"confirmed\",\n" +
+                "        \"code\":{  \n" +
+                "          \"coding\":[  \n" +
+                "            {  \n" +
+                "              \"system\":\"ICD-10-CM\",\n" +
+                "              \"code\":\"Z00.00\",\n" +
+                "              \"display\":\"HEDIS2019_Ambulatory_Visits_ValueSets\"\n" +
+                "            }\n" +
+                "          ]\n" +
+                "        },\n" +
+                "        \"subject\":{  \n" +
+                "          \"reference\":\"Patient/81ee6581-02b9-44de-b026-7401bf36643a\"\n" +
+                "        },\n" +
+                "        \"onsetDateTime\":\"2018-01-01\", \n" +
+                "        \"evidence\":[   \n" +
+                "            {  \n" +
+                "               \"detail\":{   \n" +
+                "                  \"reference\": \"#c76ceb3b-ff93-4d4a-ae1f-83b78ce39228\"   \n" +
+                "               }  \n" +
+                "            }  \n" +
+                "         ]  \n" +
+                "      }";
+
+        fhirClient.update().resource(condition).withId("77d90968-1965-4574-aa34-19d7d1483d8a").execute();
+
+        Context context = new Context(library);
+
+        dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        context.enterContext("Patient");
+        context.setContextValue("Patient", "81ee6581-02b9-44de-b026-7401bf36643a");
+
+        Object result = context.resolveExpressionRef("GetProvenance").getExpression().evaluate(context);
+        Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
     }
 
     // @Test

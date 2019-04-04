@@ -20,3 +20,8 @@ define "Active Ambulatory Opioid Rx":
   [MedicationRequest: "Ambulatory Abuse Potential Opioids"] Rx
     where Rx.status.value = 'active'
       and Rx.authoredOn.value same day or before Today()
+
+define GetProvenance:
+  (First([Condition]).contained) C
+    where C.Provenance is not null
+    return C.Provenance
