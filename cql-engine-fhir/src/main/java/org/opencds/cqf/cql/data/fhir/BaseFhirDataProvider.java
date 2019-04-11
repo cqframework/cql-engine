@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.Base;
 import org.hl7.fhir.dstu3.model.Quantity;
+import org.hl7.fhir.dstu3.model.ResourceContainer;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.*;
 import org.opencds.cqf.cql.data.DataProvider;
@@ -115,6 +116,10 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         BaseRuntimeElementCompositeDefinition definition;
         if (base instanceof IPrimitiveType) {
             return toJavaPrimitive(path.equals("value") ? ((IPrimitiveType) target).getValue() : target, base);
+        }
+        else if (target instanceof ResourceContainer)
+        {
+            return ((ResourceContainer) target).getContainedResourcesOfType(path);
         }
         else {
             definition = resolveRuntimeDefinition(base);

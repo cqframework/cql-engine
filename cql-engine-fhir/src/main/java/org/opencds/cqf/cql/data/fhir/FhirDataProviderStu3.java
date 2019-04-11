@@ -5,10 +5,7 @@ import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.rest.gclient.*;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.TokenParamModifier;
-import org.hl7.fhir.dstu3.model.Enumeration;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.ValueSet;
+import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -229,10 +226,10 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
             return ((Enumeration)target).getValueAsString();
         }
 
-        // This is kind of a hack to get around contained resources - HAPI doesn't have ResourceContainer type for STU3
-        if (target instanceof Resource && ((Resource) target).fhirType().equals(path))
+        // Workaround for contained resources - HAPI does not implement ResourceContainer (Implemented in this project)
+        if (target instanceof DomainResource && path.equals("contained"))
         {
-            return target;
+            return new ResourceContainer(((DomainResource) target).getContained());
         }
 
         return super.resolveProperty(target, path);
