@@ -15,7 +15,7 @@ public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 
     private Context context;
 
-    @BeforeMethod
+    //@BeforeMethod
     public void before() {
         context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu2Provider);

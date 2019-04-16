@@ -15,7 +15,7 @@ public class TestFhirDataProviderHL7 extends FhirExecutionTestBase {
 
     private Context context;
 
-    @BeforeMethod
+    //@BeforeMethod
     public void before() {
         context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", hl7Provider);
