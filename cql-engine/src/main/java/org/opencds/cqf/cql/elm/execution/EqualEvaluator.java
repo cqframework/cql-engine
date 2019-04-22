@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Iterator;
 
@@ -69,7 +70,26 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return ((CqlType) left).equal(right);
         }
 
-        return left.equals(right);
+        return objectEqual(left, right);
+    }
+
+    public static Boolean objectEqual(Object left, Object right) {
+        for (Field f : left.getClass().getDeclaredFields()) {
+            try {
+                // TODO: This recursion assumes no cycles in an object graph
+                Boolean result = equal(f.get(left), f.get(right));
+                if (result == null || !result) {
+                    return result;
+                }
+            }
+            catch (IllegalAccessException e) {
+                // TODO: Should be a log statement here, but I'm avoiding having to have a context to evaluate equality
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        return true;
     }
 
     @Override
