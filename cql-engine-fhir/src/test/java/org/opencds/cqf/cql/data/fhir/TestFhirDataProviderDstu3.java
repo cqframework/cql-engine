@@ -78,7 +78,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Context context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         Object result = context.resolveExpressionRef("testFhirObjectEqual").getExpression().evaluate(context);
-        Assert.assertTrue(result == null);
+        Assert.assertTrue((Boolean) result);
     }
 
     @Test
