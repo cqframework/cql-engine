@@ -148,4 +148,30 @@ public class SystemDataProvider implements DataProvider {
             throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
         }
     }
+
+    @Override
+    public Boolean objectEqual(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
+
+        if (right == null) {
+            return null;
+        }
+
+        return left.equals(right);
+    }
+
+    @Override
+    public Boolean objectEquivalent(Object left, Object right) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if (left == null) {
+            return false;
+        }
+
+        return left.equals(right);
+    }
 }

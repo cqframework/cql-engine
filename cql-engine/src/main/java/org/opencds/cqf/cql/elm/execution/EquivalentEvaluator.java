@@ -81,50 +81,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((String) left).equalsIgnoreCase((String) right);
         }
 
-        return objectEquivalent(left, right);
-    }
-
-    public static Boolean objectEquivalent(Object left, Object right) {
-        List<Field> fields = new ArrayList<>();
-        Class<?> clazz = left.getClass();
-        while (clazz != null && clazz != Object.class)
-        {
-            Collections.addAll(fields, clazz.getDeclaredFields());
-            clazz = clazz.getSuperclass();
-        }
-
-        for (Field f : fields) {
-            if (!f.isAccessible()) f.setAccessible(true);
-            try {
-                Object leftObj = f.get(left);
-                Object rightObj = f.get(right);
-                if (leftObj.getClass() != rightObj.getClass())
-                {
-                    return false;
-                }
-                if (EqualEvaluator.isPrimitiveOrWrapperClass(leftObj))
-                {
-                    if (!leftObj.equals(rightObj))
-                    {
-                        return false;
-                    }
-                }
-                else {
-                    // TODO: This recursion assumes no cycles in an object graph
-                    Boolean result = equivalent(leftObj, rightObj);
-                    if (result == null || !result) {
-                        return result;
-                    }
-                }
-            }
-            catch (IllegalAccessException e) {
-                // TODO: Should be a log statement here, but I'm avoiding having to have a context to evaluate equality
-                e.printStackTrace();
-                return false;
-            }
-        }
-
-        return true;
+        return Context.getContext().objectEquivalent(left, right);
     }
 
     @Override

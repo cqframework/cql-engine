@@ -74,63 +74,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return ((CqlType) left).equal(right);
         }
 
-        return objectEqual(left, right);
-    }
-
-    public static Boolean objectEqual(Object left, Object right)
-    {
-        List<Field> fields = new ArrayList<>();
-        Class<?> clazz = left.getClass();
-        while (clazz != null && clazz != Object.class)
-        {
-            Collections.addAll(fields, clazz.getDeclaredFields());
-            clazz = clazz.getSuperclass();
-        }
-
-        for (Field f : fields)
-        {
-            if (!f.isAccessible()) f.setAccessible(true);
-            try
-            {
-                Object leftObj = f.get(left);
-                Object rightObj = f.get(right);
-                if (leftObj == null || rightObj == null)
-                {
-                    return null;
-                }
-                if (isPrimitiveOrWrapperClass(leftObj))
-                {
-                    if (!leftObj.equals(rightObj))
-                    {
-                        return false;
-                    }
-                }
-                else
-                {
-                    // TODO: This recursion assumes no cycles in an object graph
-                    Boolean result = equal(leftObj, rightObj);
-                    if (result == null || !result) {
-                        return result;
-                    }
-                }
-            } catch (IllegalAccessException e) {
-                // TODO: Should be a log statement here, but I'm avoiding having to have a context to evaluate equality
-                e.printStackTrace();
-                return null;
-            }
-        }
-
-        return true;
-    }
-
-    public static boolean isPrimitiveOrWrapperClass(Object object)
-    {
-        if (object == null) return false;
-        return object instanceof Character
-                || object instanceof Short
-                || object instanceof Long
-                || object instanceof Double
-                || object.getClass().isPrimitive();
+        return Context.getContext().objectEqual(left, right);
     }
 
     @Override
