@@ -3,8 +3,9 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
-import java.util.HashMap;
-import java.util.Iterator;
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.*;
 
 /*
 *** NOTES FOR CLINICAL OPERATORS ***
@@ -48,8 +49,24 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return false;
         }
 
+        if (left instanceof Interval && right instanceof Integer) {
+            return ((Interval) left).equivalent(right);
+        }
+
+        if (right instanceof Interval && left instanceof Integer) {
+            return ((Interval) right).equivalent(left);
+        }
+
         if (!left.getClass().equals(right.getClass())) {
             return false;
+        }
+
+        else if (left instanceof Boolean || left instanceof Integer) {
+            return left.equals(right);
+        }
+
+        else if (left instanceof BigDecimal && right instanceof BigDecimal) {
+            return ((BigDecimal) left).compareTo((BigDecimal) right) == 0;
         }
 
         if (left instanceof Iterable) {
@@ -64,7 +81,50 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((String) left).equalsIgnoreCase((String) right);
         }
 
-        return EqualEvaluator.equal(left, right);
+        return objectEquivalent(left, right);
+    }
+
+    public static Boolean objectEquivalent(Object left, Object right) {
+        List<Field> fields = new ArrayList<>();
+        Class<?> clazz = left.getClass();
+        while (clazz != null && clazz != Object.class)
+        {
+            Collections.addAll(fields, clazz.getDeclaredFields());
+            clazz = clazz.getSuperclass();
+        }
+
+        for (Field f : fields) {
+            if (!f.isAccessible()) f.setAccessible(true);
+            try {
+                Object leftObj = f.get(left);
+                Object rightObj = f.get(right);
+                if (leftObj.getClass() != rightObj.getClass())
+                {
+                    return false;
+                }
+                if (EqualEvaluator.isPrimitiveOrWrapperClass(leftObj))
+                {
+                    if (!leftObj.equals(rightObj))
+                    {
+                        return false;
+                    }
+                }
+                else {
+                    // TODO: This recursion assumes no cycles in an object graph
+                    Boolean result = equivalent(leftObj, rightObj);
+                    if (result == null || !result) {
+                        return result;
+                    }
+                }
+            }
+            catch (IllegalAccessException e) {
+                // TODO: Should be a log statement here, but I'm avoiding having to have a context to evaluate equality
+                e.printStackTrace();
+                return false;
+            }
+        }
+
+        return true;
     }
 
     @Override

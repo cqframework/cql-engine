@@ -38,7 +38,7 @@ public abstract class FhirExecutionTestBase {
     Library library = null;
     private File xmlFile = null;
 
-    //@BeforeMethod
+    @BeforeMethod
     public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
