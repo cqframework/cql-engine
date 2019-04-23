@@ -19,6 +19,16 @@ public class Date extends BaseTemporal {
         this.date = date;
     }
 
+    public Date(int year) {
+        setDate(LocalDate.of(year, 1, 1));
+        this.precision = Precision.YEAR;
+    }
+
+    public Date(int year, int month) {
+        setDate(LocalDate.of(year, month, 1));
+        this.precision = Precision.MONTH;
+    }
+
     public Date(int year, int month, int day) {
         setDate(LocalDate.of(year, month, day));
     }
