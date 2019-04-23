@@ -24,4 +24,8 @@ public interface DataProvider {
     Object createInstance(String typeName);
 
     void setValue(Object target, String path, Object value);
+
+    Boolean objectEqual(Object left, Object right);
+
+    Boolean objectEquivalent(Object left, Object right);
 }

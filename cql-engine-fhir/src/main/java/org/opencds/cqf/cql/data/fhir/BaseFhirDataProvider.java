@@ -283,4 +283,32 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             }
         }
     }
+
+    @Override
+    public Boolean objectEqual(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
+
+        if (right == null) {
+            return null;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
+
+    @Override
+    public Boolean objectEquivalent(Object left, Object right) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if (left == null) {
+            return false;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
 }

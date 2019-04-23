@@ -82,28 +82,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((String) left).equalsIgnoreCase((String) right);
         }
 
-        return objectEquivalent(left, right);
-    }
-
-    public static Boolean objectEquivalent(Object left, Object right) {
-        for (Field f : left.getClass().getDeclaredFields()) {
-            if (f.isAccessible()) {
-                try {
-                    // TODO: This recursion assumes no cycles in an object graph
-                    Boolean result = equivalent(f.get(left), f.get(right));
-                    if (result == null || !result) {
-                        return result;
-                    }
-                }
-                catch (IllegalAccessException e) {
-                    // TODO: Should be a log statement here, but I'm avoiding having to have a context to evaluate equality
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return Context.getContext().objectEquivalent(left, right);
     }
 
     @Override
