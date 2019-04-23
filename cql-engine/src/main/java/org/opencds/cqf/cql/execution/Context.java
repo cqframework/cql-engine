@@ -65,7 +65,6 @@ public class Context {
 
     public Context(Library library, org.opencds.cqf.cql.runtime.DateTime evaluationDateTime) {
         this.evaluationDateTime = evaluationDateTime;
-        threadContext.set(this);
         init(library);
     }
 
@@ -77,6 +76,7 @@ public class Context {
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+        threadContext.set(this);
     }
 
     public void logEntry(Class clazz, Object ... operands) {
@@ -693,7 +693,7 @@ public class Context {
             return null;
         }
 
-        Class<? extends Object> clazz = left.getClass();
+        Class<?> clazz = left.getClass();
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         return dataProvider.objectEqual(left, right);
@@ -708,7 +708,7 @@ public class Context {
             return false;
         }
 
-        Class<? extends Object> clazz = left.getClass();
+        Class<?> clazz = left.getClass();
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         return dataProvider.objectEquivalent(left, right);

@@ -82,6 +82,6 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), equal(left, right), left, right);
+        return equal(left, right);
     }
 }

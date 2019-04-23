@@ -4,6 +4,7 @@ import ca.uhn.fhir.context.*;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.Base;
 import org.hl7.fhir.dstu3.model.Quantity;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ResourceContainer;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.*;
@@ -299,6 +300,11 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             return null;
         }
 
+        if (left instanceof Base)
+        {
+            return ((Base) left).equalsDeep((Base) right);
+        }
+
         return left.equals(right);
     }
 
@@ -310,6 +316,11 @@ public abstract class BaseFhirDataProvider implements DataProvider {
 
         if (left == null) {
             return false;
+        }
+
+        if (left instanceof Base)
+        {
+            return ((Base) left).equalsDeep((Base) right);
         }
 
         return left.equals(right);

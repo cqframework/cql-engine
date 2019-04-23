@@ -89,6 +89,8 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), equivalent(left, right), left, right);
+
+
+        return equivalent(left, right);
     }
 }
