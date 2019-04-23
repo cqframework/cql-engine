@@ -1,10 +1,15 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 /*
 *** NOTES FOR CLINICAL OPERATORS ***
@@ -69,7 +74,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return ((CqlType) left).equal(right);
         }
 
-        return left.equals(right);
+        return Context.getContext().objectEqual(left, right);
     }
 
     @Override
@@ -77,6 +82,6 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), equal(left, right), left, right);
+        return equal(left, right);
     }
 }

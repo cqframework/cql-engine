@@ -72,6 +72,30 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Assert.assertTrue(result != null);
     }
 
+    @Test
+    public void testFhirObjectEqual()
+    {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        Object result; // = context.resolveExpressionRef("testFhirObjectEqual").getExpression().evaluate(context);
+        //Assert.assertTrue(result == null);
+
+        result = context.resolveExpressionRef("testFhirObjectEqualFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+    }
+
+    @Test
+    public void testFhirObjectEquivalent()
+    {
+        Context context = new Context(library);
+        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+        Object result = context.resolveExpressionRef("testFhirObjectEquivalent").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("testFhirObjectEquivalentFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+    }
+
     //    TODO - fix
 //    @Test
     public void testPostSearch() {

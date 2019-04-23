@@ -16,6 +16,18 @@ define testChoiceTypes:
 define testDateType:
     AgeInYearsAt(Today()) >= 13
 
+define testFhirObjectEqual:
+	  FHIR.positiveInt{ value: 1 } = FHIR.positiveInt{ value: 1 }
+
+define testFhirObjectEqualFalse:
+	  FHIR.positiveInt{ value: 2 } = FHIR.positiveInt{ value: 1 }
+
+define testFhirObjectEquivalent:
+  FHIR.positiveInt{ value: 1 } ~ FHIR.positiveInt{ value: 1 }
+
+define testFhirObjectEquivalentFalse:
+  FHIR.positiveInt{ value: 2 } ~ FHIR.positiveInt{ value: 1 }
+
 define "Active Ambulatory Opioid Rx":
   [MedicationRequest: "Ambulatory Abuse Potential Opioids"] Rx
     where Rx.status.value = 'active'
