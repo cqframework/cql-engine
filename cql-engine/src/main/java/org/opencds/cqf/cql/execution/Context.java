@@ -359,7 +359,7 @@ public class Context {
         return argumentType == null || operandType.isAssignableFrom(argumentType);
     }
 
-    private FunctionDef resolveFunctionRef(FunctionDef functionDef, String name, Iterable<Object> arguments) {
+    private FunctionDef resolveFunctionRef(FunctionDef functionDef, Iterable<Object> arguments) {
         java.util.Iterator<OperandDef> operandIterator = functionDef.getOperand().iterator();
         java.util.Iterator<Object> argumentIterator = arguments.iterator();
         boolean isMatch = true;
@@ -385,12 +385,12 @@ public class Context {
     }
 
     private Map<String, List<FunctionDef>> functionCache = new HashMap<>();
-    public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
+    public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments, String libraryName) {
         FunctionDef ret = null;
-        String mangledFunctionName = getCurrentLibrary().getIdentifier().getId() + "." + name;
+        String mangledFunctionName = (libraryName == null ? getCurrentLibrary().getIdentifier().getId() : libraryName) + "." + name;
         if (functionCache.containsKey(mangledFunctionName)) {
             for (FunctionDef functionDef : functionCache.get(mangledFunctionName)) {
-                if ((ret = resolveFunctionRef(functionDef, name, arguments)) != null) {
+                if ((ret = resolveFunctionRef(functionDef, arguments)) != null) {
                     break;
                 }
             }
@@ -400,7 +400,7 @@ public class Context {
             for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
                 if (expressionDef.getName().equals(name)) {
                     if (expressionDef instanceof FunctionDef) {
-                        FunctionDef candidate = resolveFunctionRef((FunctionDef) expressionDef, name, arguments);
+                        FunctionDef candidate = resolveFunctionRef((FunctionDef) expressionDef, arguments);
                         if (candidate != null) {
                             ret = candidate;
                         }
