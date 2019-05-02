@@ -387,7 +387,7 @@ public class Context {
     private Map<String, List<FunctionDef>> functionCache = new HashMap<>();
     public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
         FunctionDef ret = null;
-        String mangledFunctionName = getCurrentLibrary().getLocalId() + "." + name;
+        String mangledFunctionName = getCurrentLibrary().getIdentifier().getId() + "." + name;
         if (functionCache.containsKey(mangledFunctionName)) {
             for (FunctionDef functionDef : functionCache.get(mangledFunctionName)) {
                 if ((ret = resolveFunctionRef(functionDef, name, arguments)) != null) {
