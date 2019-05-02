@@ -23,7 +23,7 @@ public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.Func
         boolean enteredLibrary = context.enterLibrary(this.getLibraryName());
         try {
             // TODO: Use type specifiers from the operands here if they are available
-            FunctionDef functionDef = context.resolveFunctionRef(this.getName(), arguments);
+            FunctionDef functionDef = context.resolveFunctionRef(this.getName(), arguments, this.getLibraryName());
             if (Optional.ofNullable(functionDef.isExternal()).orElse(false)) {
                 return context.getExternalFunctionProvider().evaluate(functionDef.getName(), arguments);
             }
