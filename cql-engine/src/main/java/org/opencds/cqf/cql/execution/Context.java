@@ -385,11 +385,11 @@ public class Context {
     }
 
     private Map<String, List<FunctionDef>> functionCache = new HashMap<>();
-    // TODO: Could use some caching here, and potentially some better type resolution structures
     public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
         FunctionDef ret = null;
-        if (functionCache.containsKey(name)) {
-            for (FunctionDef functionDef : functionCache.get(name)) {
+        String mangledFunctionName = getCurrentLibrary().getLocalId() + "." + name;
+        if (functionCache.containsKey(mangledFunctionName)) {
+            for (FunctionDef functionDef : functionCache.get(mangledFunctionName)) {
                 if ((ret = resolveFunctionRef(functionDef, name, arguments)) != null) {
                     break;
                 }
@@ -404,13 +404,13 @@ public class Context {
                         if (candidate != null) {
                             ret = candidate;
                         }
-                        if (functionCache.containsKey(name)) {
-                            functionCache.get(name).add((FunctionDef) expressionDef);
+                        if (functionCache.containsKey(mangledFunctionName)) {
+                            functionCache.get(mangledFunctionName).add((FunctionDef) expressionDef);
                         }
                         else {
                             List<FunctionDef> functionDefs = new ArrayList<>();
                             functionDefs.add((FunctionDef) expressionDef);
-                            functionCache.put(name, functionDefs);
+                            functionCache.put(mangledFunctionName, functionDefs);
                         }
                     }
                 }
