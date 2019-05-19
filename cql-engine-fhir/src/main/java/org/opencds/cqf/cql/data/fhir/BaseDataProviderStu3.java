@@ -124,6 +124,9 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
     @Override
     protected String convertPathToSearchParam(String type, String path) {
         path = path.replace(".value", "");
+        if (path.equals("id")) {
+            path = "_id";
+        }
         switch (type) {
             case "AllergyIntolerance":
                 if (path.equals("clinicalStatus")) return "clinical-status";
