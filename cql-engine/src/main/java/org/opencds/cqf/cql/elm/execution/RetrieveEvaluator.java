@@ -30,7 +30,12 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
             }
             else {
                 Object codesResult = this.getCodes().evaluate(context);
-                if (codesResult instanceof Code) {
+                if (codesResult instanceof String) {
+                    ArrayList codesList = new ArrayList<>();
+                    codesList.add(new Code().withCode((String)codesResult));
+                    codes = codesList;
+                }
+                else if (codesResult instanceof Code) {
                     ArrayList<Code> codesList = new ArrayList<>();
                     codesList.add((Code)codesResult);
                     codes = codesList;
@@ -43,7 +48,7 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
                     codes = codesList;
                 }
                 else {
-                    codes = (Iterable<Code>) this.getCodes().evaluate(context);
+                    codes = (Iterable<Code>) codesResult;
                 }
             }
         }
