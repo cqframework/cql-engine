@@ -47,7 +47,7 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
                     }
                     codes = codesList;
                 }
-                else if (codesResult instanceof Iterable) {
+                else {
                     codes = (Iterable<Code>) codesResult;
                 }
             }
