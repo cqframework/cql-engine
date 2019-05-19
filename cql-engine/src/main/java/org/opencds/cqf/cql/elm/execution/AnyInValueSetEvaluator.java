@@ -8,7 +8,7 @@ public class AnyInValueSetEvaluator extends org.cqframework.cql.elm.execution.An
     public Object evaluate(Context context)
     {
         Object codes = this.getCodes().evaluate(context);
-        Object valueset = this.getValueset().evaluate(context);
+        Object valueset = this.getValueset();
 
         if (codes == null || valueset == null) return null;
 
