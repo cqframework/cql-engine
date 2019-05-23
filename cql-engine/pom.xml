@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
         <groupId>org.opencds.cqf</groupId>
         <artifactId>cql_engine</artifactId>
-        <version>1.3.4-SNAPSHOT</version>
+        <version>1.3.5-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -92,6 +92,19 @@
                                 <source>src/generated/java</source>
                             </sources>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>3.0.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
