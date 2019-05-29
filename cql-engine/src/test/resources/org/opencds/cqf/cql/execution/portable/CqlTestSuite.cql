@@ -659,6 +659,29 @@ define test_Quantity_abs: TestMessage(Quantity_abs = 10 days, 'Quantity_abs', to
 
 // TODO
 
+// Equal
+define CodeWithoutDisplayAndVersion1: Code '66071002' from "SNOMED-CT"
+define CodeWithoutDisplayAndVersion2: Code '66071003' from "SNOMED-CT"
+define CodeWithoutVersion1: Code '66071002' from "SNOMED-CT" display 'Type B viral hepatitis'
+define ConceptWithoutDisplayAndVersion1: Concept { codes: { CodeWithoutDisplayAndVersion1, CodeWithoutDisplayAndVersion2 } }
+define ConceptWithoutDisplayAndVersion2: Concept { codes: { CodeWithoutDisplayAndVersion1 } }
+define ConceptWithoutDisplay1: Concept { codes: { CodeWithoutVersion1 } }
+define ConceptWithoutVersion1: Concept { codes: { CodeWithoutVersion1 }, display: 'Test Display' }
+
+define CodeWithoutDisplayAndVersionEqual: CodeWithoutDisplayAndVersion1 = CodeWithoutDisplayAndVersion1
+define CodeWithoutDisplayAndVersionNotEqual: CodeWithoutDisplayAndVersion1 = CodeWithoutDisplayAndVersion2
+define CodeWithoutDisplayAndVersionNull: CodeWithoutDisplayAndVersion1 = CodeWithoutVersion1
+define ConceptWithoutDisplayAndVersionEqual: ConceptWithoutDisplayAndVersion1 = ConceptWithoutDisplayAndVersion1
+define ConceptWithoutDisplayAndVersionNotEqual: ConceptWithoutDisplayAndVersion1 = ConceptWithoutDisplayAndVersion2
+define ConceptWithoutDisplayAndVersionNull: ConceptWithoutDisplay1 = ConceptWithoutVersion1
+
+define test_CodeWithoutDisplayAndVersionEqual: TestMessage(CodeWithoutDisplayAndVersionEqual, 'CodeWithoutDisplayAndVersionEqual', toString(true), toString(CodeWithoutDisplayAndVersionEqual))
+define test_CodeWithoutDisplayAndVersionNotEqual: TestMessage(not CodeWithoutDisplayAndVersionNotEqual, 'CodeWithoutDisplayAndVersionNotEqual', toString(false), toString(CodeWithoutDisplayAndVersionNotEqual))
+define test_CodeWithoutDisplayAndVersionNull: TestMessage(CodeWithoutDisplayAndVersionNull is null, 'CodeWithoutDisplayAndVersionNull', 'null', toString(CodeWithoutDisplayAndVersionNull))
+define test_ConceptWithoutDisplayAndVersionEqual: TestMessage(ConceptWithoutDisplayAndVersionEqual, 'ConceptWithoutDisplayAndVersionEqual', toString(true), toString(ConceptWithoutDisplayAndVersionEqual))
+define test_ConceptWithoutDisplayAndVersionNotEqual: TestMessage(not ConceptWithoutDisplayAndVersionNotEqual, 'ConceptWithoutDisplayAndVersionNotEqual', toString(false), toString(ConceptWithoutDisplayAndVersionNotEqual))
+define test_ConceptWithoutDisplayAndVersionNull: TestMessage(ConceptWithoutDisplayAndVersionNull is null, 'ConceptWithoutDisplayAndVersionNull', 'null', toString(ConceptWithoutDisplayAndVersionNull))
+
 /*
 **********************
   End Clinical Tests

@@ -66,6 +66,22 @@ public class Code implements CqlType {
         Boolean systemIsEqual = EqualEvaluator.equal(this.getSystem(), ((Code) other).getSystem());
         Boolean versionIsEqual = EqualEvaluator.equal(this.getVersion(), ((Code) other).getVersion());
         Boolean displayIsEqual = EqualEvaluator.equal(this.getDisplay(), ((Code) other).getDisplay());
+        if (codeIsEqual == null && this.code == null && ((Code) other).getCode() == null)
+        {
+            codeIsEqual = true;
+        }
+        if (systemIsEqual == null && this.system == null && ((Code) other).getSystem() == null)
+        {
+            systemIsEqual = true;
+        }
+        if (versionIsEqual == null && this.version == null && ((Code) other).getVersion() == null)
+        {
+            versionIsEqual = true;
+        }
+        if (displayIsEqual == null && this.display == null && ((Code) other).getDisplay() == null)
+        {
+            displayIsEqual = true;
+        }
         return (codeIsEqual == null || systemIsEqual == null || versionIsEqual == null || displayIsEqual == null)
                 ? null : codeIsEqual && systemIsEqual && versionIsEqual && displayIsEqual;
     }
