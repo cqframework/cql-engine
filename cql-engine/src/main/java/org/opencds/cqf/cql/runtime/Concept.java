@@ -83,6 +83,10 @@ public class Concept implements CqlType {
     public Boolean equal(Object other) {
         Boolean codesAreEqual = EqualEvaluator.equal(this.codes, ((Concept) other).codes);
         Boolean displayIsEqual = EqualEvaluator.equal(this.display, ((Concept) other).display);
+        if (displayIsEqual == null && this.display == null && ((Concept) other).display == null)
+        {
+            displayIsEqual = true;
+        }
         return (codesAreEqual == null || displayIsEqual == null) ? null : codesAreEqual && displayIsEqual;
 
     }
