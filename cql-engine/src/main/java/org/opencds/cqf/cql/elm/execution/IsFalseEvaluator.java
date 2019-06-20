@@ -9,9 +9,6 @@ The is false operator determines whether or not its argument evaluates to false.
 If the argument evaluates to false, the result is true; otherwise, the result is false.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IsFalseEvaluator extends org.cqframework.cql.elm.execution.IsFalse {
 
     public static Object isFalse(Boolean operand) {
@@ -22,6 +19,6 @@ public class IsFalseEvaluator extends org.cqframework.cql.elm.execution.IsFalse 
     public Object evaluate(Context context) {
         Boolean operand = (Boolean) getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), isFalse(operand), operand);
+        return isFalse(operand);
     }
 }

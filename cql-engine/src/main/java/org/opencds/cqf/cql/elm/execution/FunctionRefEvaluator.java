@@ -8,9 +8,6 @@ import org.opencds.cqf.cql.execution.Variable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.FunctionRef {
 
     @Override

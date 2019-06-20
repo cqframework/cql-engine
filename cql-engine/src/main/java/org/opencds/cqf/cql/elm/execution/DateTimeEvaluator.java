@@ -13,9 +13,6 @@ The DateTime type represents date and time values with potential uncertainty wit
 CQL supports date and time values in the range @0001-01-01T00:00:00.0 to @9999-12-31T23:59:59.999 with a 1 millisecond step size.
 */
 
-/**
- * Created by Chris Schuler on 6/20/2016
- */
 public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTime {
 
     @Override

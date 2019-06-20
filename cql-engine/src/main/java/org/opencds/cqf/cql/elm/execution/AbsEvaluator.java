@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.execution.TraceExecution;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.math.BigDecimal;
 
@@ -15,9 +14,6 @@ When taking the absolute value of a quantity, the unit is unchanged.
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/24/2016.
- */
 public class AbsEvaluator extends org.cqframework.cql.elm.execution.Abs {
 
     public static Object abs(Object operand) {
@@ -44,6 +40,6 @@ public class AbsEvaluator extends org.cqframework.cql.elm.execution.Abs {
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), abs(operand), operand);
+        return abs(operand);
     }
 }

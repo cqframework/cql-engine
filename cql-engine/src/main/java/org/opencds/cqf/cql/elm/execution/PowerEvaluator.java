@@ -14,9 +14,6 @@ When invoked with mixed Integer and Decimal arguments, the Integer argument will
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
 
     public static Object power(Object left, Object right) {
@@ -43,6 +40,6 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), power(left, right), left, right);
+        return power(left, right);
     }
 }

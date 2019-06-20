@@ -5,9 +5,6 @@ import org.opencds.cqf.cql.execution.Context;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Christopher Schuler on 6/20/2017.
- */
 public class MatchesEvaluator extends org.cqframework.cql.elm.execution.Matches {
 
     public static Object matches(String argument, String pattern) {
@@ -23,6 +20,6 @@ public class MatchesEvaluator extends org.cqframework.cql.elm.execution.Matches 
         String argument = (String) getOperand().get(0).evaluate(context);
         String pattern = (String) getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), matches(argument, pattern), argument, pattern);
+        return matches(argument, pattern);
     }
 }

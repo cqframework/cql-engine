@@ -13,9 +13,6 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 10/25/2016.
- */
 public class JsonFileProcessing {
 
     public static List<JSONArray> getPatientResources(Path evalPath, String context, String dataType) {

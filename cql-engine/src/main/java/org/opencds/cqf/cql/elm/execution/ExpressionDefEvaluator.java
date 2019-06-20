@@ -5,9 +5,6 @@ import org.opencds.cqf.cql.execution.Context;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.ExpressionDef {
 
     @Override

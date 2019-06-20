@@ -2,9 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 
-/**
- * Created by Christopher on 4/25/2017.
- */
 public class CodeRefEvaluator extends org.cqframework.cql.elm.execution.CodeRef {
 
     @Override

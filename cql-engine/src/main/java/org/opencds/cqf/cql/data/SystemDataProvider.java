@@ -7,9 +7,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
-/**
- * Created by Bryn on 5/4/2016.
- */
 public class SystemDataProvider implements DataProvider {
 
     @Override

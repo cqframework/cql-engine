@@ -13,9 +13,6 @@ NOTE: this is within the purview of DateTimeComponentFrom
   Description available in that class
 */
 
-/**
- * Created by Chris Schuler on 6/22/2016
- */
 public class TimezoneFromEvaluator extends org.cqframework.cql.elm.execution.TimezoneFrom {
 
     public static Object timezoneFrom(Object operand) {

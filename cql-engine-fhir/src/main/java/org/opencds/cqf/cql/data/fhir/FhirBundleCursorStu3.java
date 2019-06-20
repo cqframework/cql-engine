@@ -7,9 +7,6 @@ import org.hl7.fhir.instance.model.api.IBaseBundle;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-/**
- * Created by Bryn on 4/16/2016.
- */
 public class FhirBundleCursorStu3 implements Iterable<Object> {
     public FhirBundleCursorStu3(IGenericClient fhirClient, Bundle results) {
         this.fhirClient = fhirClient;

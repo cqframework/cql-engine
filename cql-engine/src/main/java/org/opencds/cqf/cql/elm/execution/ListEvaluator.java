@@ -4,9 +4,6 @@ import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class ListEvaluator extends org.cqframework.cql.elm.execution.List {
 
     @Override

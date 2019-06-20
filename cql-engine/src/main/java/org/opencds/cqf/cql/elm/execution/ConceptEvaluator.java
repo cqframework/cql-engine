@@ -15,9 +15,6 @@ structured type Concept
 The Concept type represents a single terminological concept within CQL.
 */
 
-/**
-* Created by Chris Schuler on 6/7/2016
-*/
 public class ConceptEvaluator extends org.cqframework.cql.elm.execution.Concept {
 
   @Override

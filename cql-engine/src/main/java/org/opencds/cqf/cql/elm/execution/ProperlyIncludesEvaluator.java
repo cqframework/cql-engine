@@ -28,9 +28,6 @@ If the left argument is null, the result is false, else if the right argument is
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
 
     public static Boolean properlyIncludes(Object left, Object right, String precision) {

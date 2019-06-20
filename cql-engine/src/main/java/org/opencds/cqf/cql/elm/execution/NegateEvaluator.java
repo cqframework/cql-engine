@@ -15,9 +15,6 @@ When negating quantities, the unit is unchanged.
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class NegateEvaluator extends org.cqframework.cql.elm.execution.Negate {
 
     public static Object negate(Object source) {
@@ -56,6 +53,6 @@ public class NegateEvaluator extends org.cqframework.cql.elm.execution.Negate {
 
         Object source = operand.evaluate(context);
 
-        return context.logTrace(this.getClass(), negate(source), source);
+        return negate(source);
     }
 }

@@ -13,13 +13,10 @@ Now is defined in this way for two reasons:
       be performed with the same timezone information as the data delivered with the evaluation request.
 */
 
-/**
- * Created by Chris Schuler on 6/21/2016.
- */
 public class NowEvaluator extends org.cqframework.cql.elm.execution.Now {
 
     @Override
     public Object evaluate(Context context) {
-        return context.logTrace(this.getClass(), context.getEvaluationDateTime());
+        return context.getEvaluationDateTime();
     }
 }

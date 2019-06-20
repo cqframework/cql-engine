@@ -1,13 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.execution.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Christopher Schuler on 6/13/2017.
- */
 public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message {
 
     final static Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);

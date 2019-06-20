@@ -19,9 +19,6 @@ For DateTime and Time values, predecessor is equivalent to subtracting a time-un
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Predecessor {
 
     public static Object predecessor(Object value) {

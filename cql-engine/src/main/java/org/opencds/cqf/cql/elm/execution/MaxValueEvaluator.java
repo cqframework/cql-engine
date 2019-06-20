@@ -19,9 +19,6 @@ For Time, maximum returns the maximum representable time value, Time(23, 59, 59,
 For any other type, attempting to invoke maximum results in an error.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValue {
 
     public static Object maxValue(String type) {

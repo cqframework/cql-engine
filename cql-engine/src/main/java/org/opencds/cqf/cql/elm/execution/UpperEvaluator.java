@@ -9,9 +9,6 @@ The Upper operator returns the upper case of its argument.
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class UpperEvaluator extends org.cqframework.cql.elm.execution.Upper {
 
     public static Object upper(Object operand) {
@@ -29,6 +26,6 @@ public class UpperEvaluator extends org.cqframework.cql.elm.execution.Upper {
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), upper(operand), operand);
+        return upper(operand);
     }
 }

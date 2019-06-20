@@ -9,9 +9,6 @@ The or operator returns true if either of its arguments are true.
 If both arguments are false, the result is false. Otherwise, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class OrEvaluator extends org.cqframework.cql.elm.execution.Or {
 
     public static Boolean or(Boolean left, Boolean right) {
@@ -30,6 +27,6 @@ public class OrEvaluator extends org.cqframework.cql.elm.execution.Or {
         Boolean left = (Boolean) getOperand().get(0).evaluate(context);
         Boolean right = (Boolean) getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), or(left, right), left, right);
+        return or(left, right);
     }
 }

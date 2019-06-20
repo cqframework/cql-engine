@@ -4,9 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-/**
- * Created by Darren on 2018 Feb 5.
- */
 public class SystemExternalFunctionProvider implements ExternalFunctionProvider {
 
     private List<Method> staticFunctions;

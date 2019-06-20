@@ -14,9 +14,6 @@
 // NULL	| TRUE	NULL	NULL
 // */
 
- /**
-  * Created by Bryn on 5/25/2016.
-  */
  public class ImpliesEvaluator extends org.cqframework.cql.elm.execution.Implies {
 
      public static Object implies(Boolean left, Boolean right) {
@@ -36,6 +33,6 @@
          Boolean left = (Boolean)getOperand().get(0).evaluate(context);
          Boolean right = (Boolean)getOperand().get(1).evaluate(context);
 
-         return context.logTrace(this.getClass(), implies(left, right), left, right);
+         return implies(left, right);
      }
  }

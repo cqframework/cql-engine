@@ -17,9 +17,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 
-/**
- * Created by Bryn on 5/31/2016.
- */
 public class CqlLibraryReader {
 
     // Performance enhancement additions ~ start

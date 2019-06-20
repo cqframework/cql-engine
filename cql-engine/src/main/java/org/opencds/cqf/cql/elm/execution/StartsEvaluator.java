@@ -15,9 +15,6 @@ If precision is specified and the point type is a date/time type, comparisons us
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class StartsEvaluator extends org.cqframework.cql.elm.execution.Starts {
 
     public static Boolean starts(Object left, Object right, String precision) {
@@ -55,6 +52,6 @@ public class StartsEvaluator extends org.cqframework.cql.elm.execution.Starts {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), starts(left, right, precision), left, right, precision);
+        return starts(left, right, precision);
     }
 }

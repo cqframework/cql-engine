@@ -21,9 +21,6 @@ For comparisons involving date/time or time values with imprecision, note that t
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
 
     public static Boolean less(Object left, Object right) {
@@ -85,6 +82,6 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), less(left, right), left, right);
+        return less(left, right);
     }
 }

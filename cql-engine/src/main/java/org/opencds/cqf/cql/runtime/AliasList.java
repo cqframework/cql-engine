@@ -3,9 +3,6 @@ package org.opencds.cqf.cql.runtime;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher on 4/26/2017.
- */
 public class AliasList {
     private List<Object> base;
     private String name;

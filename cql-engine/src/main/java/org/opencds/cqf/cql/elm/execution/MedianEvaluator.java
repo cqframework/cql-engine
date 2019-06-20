@@ -17,9 +17,6 @@ If the source contains no non-null elements, null is returned.
 If the source is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
 
     public static Object median(Object source) {
@@ -71,6 +68,6 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), median(source), source);
+        return median(source);
     }
 }

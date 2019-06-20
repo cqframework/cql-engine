@@ -16,9 +16,6 @@ If the source is null, the result is null.
 Return types: BigDecimal & Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Variance {
 
     public static Object variance(Object source) {
@@ -56,6 +53,6 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), variance(source), source);
+        return variance(source);
     }
 }

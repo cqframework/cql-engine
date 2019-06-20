@@ -10,9 +10,6 @@ The Last operator returns the last element in a list. In a list of length N, the
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class LastEvaluator extends org.cqframework.cql.elm.execution.Last {
 
     public static Object last(Object source) {
@@ -32,6 +29,6 @@ public class LastEvaluator extends org.cqframework.cql.elm.execution.Last {
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), last(source), source);
+        return last(source);
     }
 }

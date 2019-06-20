@@ -11,9 +11,6 @@ flatten(argument List<List<T>>) List<T>
 The flatten operator flattens a list of lists into a single list.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class FlattenEvaluator extends org.cqframework.cql.elm.execution.Flatten {
 
     public static Object flatten(Object operand) {
@@ -36,6 +33,6 @@ public class FlattenEvaluator extends org.cqframework.cql.elm.execution.Flatten 
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), flatten(operand), operand);
+        return flatten(operand);
     }
 }

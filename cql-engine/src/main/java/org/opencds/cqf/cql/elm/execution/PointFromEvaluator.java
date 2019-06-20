@@ -35,6 +35,6 @@ public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointF
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), pointFrom(operand), operand);
+        return pointFrom(operand);
     }
 }

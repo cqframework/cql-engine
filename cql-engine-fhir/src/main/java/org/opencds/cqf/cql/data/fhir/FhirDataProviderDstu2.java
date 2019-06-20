@@ -27,9 +27,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * Created by Christopher on 5/2/2017.
- */
 public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
 
     public FhirDataProviderDstu2() {

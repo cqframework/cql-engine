@@ -12,9 +12,6 @@ When invoked with an Integer argument, the argument will be implicitly converted
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class ExpEvaluator extends org.cqframework.cql.elm.execution.Exp {
 
     public static Object exp(Object operand) {
@@ -48,6 +45,6 @@ public class ExpEvaluator extends org.cqframework.cql.elm.execution.Exp {
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), exp(operand), operand);
+        return exp(operand);
     }
 }

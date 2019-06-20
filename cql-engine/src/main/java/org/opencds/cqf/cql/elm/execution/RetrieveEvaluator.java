@@ -12,9 +12,6 @@ import org.cqframework.cql.elm.execution.ValueSetDef;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retrieve {
 
     public Object evaluate(Context context) {

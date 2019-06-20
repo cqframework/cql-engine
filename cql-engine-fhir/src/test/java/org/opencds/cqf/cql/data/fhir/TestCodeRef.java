@@ -6,9 +6,6 @@ import org.testng.annotations.Test;
 
 import static org.testng.AssertJUnit.assertTrue;
 
-/**
- * Created by Christopher on 4/25/2017.
- */
 public class TestCodeRef extends FhirExecutionTestBase {
 
     private FhirTerminologyProvider terminologyProvider =

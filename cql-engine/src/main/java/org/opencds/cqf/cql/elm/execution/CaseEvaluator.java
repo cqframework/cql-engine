@@ -27,9 +27,6 @@ end
 
 */
 
-/**
- *   Created by Chris Schuler on 9/25/2016
- */
 public class CaseEvaluator extends org.cqframework.cql.elm.execution.Case {
 
     public Object selectedCase(Context context, Object comparand) {
@@ -68,7 +65,6 @@ public class CaseEvaluator extends org.cqframework.cql.elm.execution.Case {
     @Override
     public Object evaluate(Context context) {
         Expression comparand = getComparand();
-        Object ret = comparand == null ? standardCase(context) : selectedCase(context, comparand.evaluate(context));
-        return context.logTrace(this.getClass(), ret, this.getCaseItem());
+        return comparand == null ? standardCase(context) : selectedCase(context, comparand.evaluate(context));
     }
 }

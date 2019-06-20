@@ -12,9 +12,6 @@ import org.opencds.cqf.cql.execution.Context;
 * If either argument is null, the result is null.
 */
 
-/**
- * Created by Christopher Schuler on 6/12/2017.
- */
 public class StartsWithEvaluator extends org.cqframework.cql.elm.execution.StartsWith {
 
     public static Object startsWith(Object argument, Object prefix) {
@@ -30,6 +27,6 @@ public class StartsWithEvaluator extends org.cqframework.cql.elm.execution.Start
         Object argument = getOperand().get(0).evaluate(context);
         Object prefix = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), startsWith(argument, prefix), argument, prefix);
+        return startsWith(argument, prefix);
     }
 }

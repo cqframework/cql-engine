@@ -15,9 +15,6 @@ If the high boundary of the interval is closed and the high value of the interva
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class EndEvaluator extends org.cqframework.cql.elm.execution.End {
 
     public static Object end(Object operand) {
@@ -34,6 +31,6 @@ public class EndEvaluator extends org.cqframework.cql.elm.execution.End {
     public Object evaluate(Context context) {
         Object operand = this.getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), end(operand), operand);
+        return end(operand);
     }
 }

@@ -14,9 +14,6 @@ If the source contains no non-null elements, null is returned.
 If the source is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
 
     public static Object mode(Object source) {
@@ -70,6 +67,6 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), mode(source), source);
+        return mode(source);
     }
 }

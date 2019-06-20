@@ -16,9 +16,6 @@ Precision determines the decimal place at which the rounding will occur.
 If precision is not specified or null, 0 is assumed.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class RoundEvaluator extends org.cqframework.cql.elm.execution.Round {
 
     public static Object round(Object operand, Object precision) {
@@ -51,6 +48,6 @@ public class RoundEvaluator extends org.cqframework.cql.elm.execution.Round {
         Object precision = getPrecision() == null ? null : getPrecision().evaluate(context);
         //BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
 
-        return context.logTrace(this.getClass(), round(operand, precision), operand, precision);
+        return round(operand, precision);
     }
 }

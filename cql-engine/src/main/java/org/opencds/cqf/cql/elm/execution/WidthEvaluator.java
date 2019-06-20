@@ -13,9 +13,6 @@ Note that because CQL defines duration and difference operations for date/time a
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler 6/8/2016
- */
 public class WidthEvaluator extends org.cqframework.cql.elm.execution.Width {
 
     public static Object width(Interval operand) {
@@ -33,6 +30,6 @@ public class WidthEvaluator extends org.cqframework.cql.elm.execution.Width {
     public Object evaluate(Context context) {
         Interval operand = (Interval)getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), width(operand), operand);
+        return width(operand);
     }
 }

@@ -12,9 +12,6 @@ import org.opencds.cqf.cql.runtime.Tuple;
 
 import java.util.*;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
     private boolean shouldInclude;

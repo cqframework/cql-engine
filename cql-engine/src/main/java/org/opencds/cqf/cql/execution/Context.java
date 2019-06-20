@@ -14,8 +14,6 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Created by Bryn on 4/12/2016.
- *
  * NOTE: This class is thread-affine; it uses thread local storage to allow statics throughout the code base to access
  * the context (such as equal and equivalent evaluators).
  */
@@ -53,9 +51,6 @@ public class Context {
 
     private Library library;
 
-    private TraceExecution trace = new TraceExecution();
-    private boolean enableTraceLogging = false;
-
     private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime = 
             new org.opencds.cqf.cql.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
 
@@ -77,52 +72,6 @@ public class Context {
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
         threadContext.set(this);
-    }
-
-    public void logEntry(Class clazz, Object ... operands) {
-        if (!enableTraceLogging) {
-            return;
-        }
-
-        trace.logEntry(clazz, operands);
-    }
-
-    public Object logExit(Class clazz, Object result) {
-        if (!enableTraceLogging) {
-            return result;
-        }
-
-        return trace.logExit(clazz, result);
-    }
-
-    public Object logTrace(Class clazz, Object ... criteria) {
-        if (!enableTraceLogging) {
-            return criteria[0];
-        }
-
-        return trace.logTrace(clazz, criteria);
-    }
-
-    public void logError(Class clazz, String message) {
-        if (!enableTraceLogging) {
-            return;
-        }
-
-        trace.logError(clazz, message);
-    }
-
-    public String getTrace() {
-        String header = getCurrentLibrary().getLocalId() + "\n";
-        return trace.getTraceString();
-    }
-
-    public boolean isTraceLoggingEnabled() {
-        return enableTraceLogging;
-    }
-
-    public Context setEnableTraceLogging(boolean enableTraceLogging) {
-        this.enableTraceLogging = enableTraceLogging;
-        return this;
     }
 
     public org.opencds.cqf.cql.runtime.DateTime getEvaluationDateTime() {

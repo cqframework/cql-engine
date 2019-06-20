@@ -27,9 +27,6 @@ If either argument is null, the result is null.
 Note that the union operator can also be invoked with the symbolic operator (|).
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
 
     public static Object union(Object left, Object right) {

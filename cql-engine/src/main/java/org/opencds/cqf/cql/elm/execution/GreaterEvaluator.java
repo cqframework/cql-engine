@@ -93,6 +93,6 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), greater(left, right), left, right);
+        return greater(left, right);
     }
 }

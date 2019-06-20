@@ -18,7 +18,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testAbs() throws JAXBException {
         Context context = new Context(library);
-        context.setEnableTraceLogging(true);
 
         Object result = context.resolveExpressionRef("AbsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));

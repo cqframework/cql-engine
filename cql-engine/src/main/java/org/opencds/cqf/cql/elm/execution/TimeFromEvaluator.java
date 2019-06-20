@@ -63,6 +63,6 @@ public class TimeFromEvaluator extends org.cqframework.cql.elm.execution.TimeFro
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), timeFrom(operand), operand);
+        return timeFrom(operand);
     }
 }

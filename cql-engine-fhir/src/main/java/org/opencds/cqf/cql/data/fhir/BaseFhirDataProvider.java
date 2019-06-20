@@ -19,9 +19,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public abstract class BaseFhirDataProvider implements DataProvider {
 
     // Data members

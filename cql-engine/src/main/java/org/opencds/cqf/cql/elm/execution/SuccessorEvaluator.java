@@ -20,9 +20,6 @@ For DateTime and Time values, successor is equivalent to adding a time-unit quan
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class SuccessorEvaluator extends org.cqframework.cql.elm.execution.Successor {
 
     public static Object successor(Object value) {

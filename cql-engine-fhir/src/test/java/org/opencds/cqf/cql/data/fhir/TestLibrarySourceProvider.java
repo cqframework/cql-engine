@@ -5,9 +5,6 @@ import org.hl7.elm.r1.VersionedIdentifier;
 
 import java.io.InputStream;
 
-/**
- * Created by Bryn on 12/29/2016.
- */
 public class TestLibrarySourceProvider implements LibrarySourceProvider {
     @Override
     public InputStream getLibrarySource(VersionedIdentifier libraryIdentifier) {

@@ -6,9 +6,6 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
-/**
- * Created by Christopher on 5/11/2017.
- */
 public class TestFhirExecution extends FhirExecutionTestBase {
 
     // TODO: fix this... I think it requires a resource to be loaded - put in init bundle

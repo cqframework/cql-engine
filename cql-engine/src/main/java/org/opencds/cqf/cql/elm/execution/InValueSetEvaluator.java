@@ -26,9 +26,6 @@ For the Concept overload, if the given valueset contains a code equivalent to an
 If the code argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 7/13/2016
- */
 public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InValueSet {
 
     public static Object inValueSet(Context context, Object code, Object valueset) {

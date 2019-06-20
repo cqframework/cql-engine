@@ -19,9 +19,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
 
     public FhirDataProviderStu3() {

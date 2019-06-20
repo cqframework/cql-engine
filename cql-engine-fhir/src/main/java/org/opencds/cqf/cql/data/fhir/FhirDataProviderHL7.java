@@ -14,9 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
 
     // Although this is Dstu2, it is closer in package structure to the STU3 provider...

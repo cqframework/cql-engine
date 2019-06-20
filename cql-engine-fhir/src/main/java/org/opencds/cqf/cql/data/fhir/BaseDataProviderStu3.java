@@ -15,9 +15,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.TimeZone;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public class BaseDataProviderStu3 extends BaseFhirDataProvider {
 
     protected DateTime toDateTime(DateTimeType value) {

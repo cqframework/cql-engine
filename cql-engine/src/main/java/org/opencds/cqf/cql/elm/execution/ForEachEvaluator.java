@@ -6,12 +6,7 @@ import org.opencds.cqf.cql.execution.Context;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
-*   Created by Chris Schuler on 9/25/2016
-*/
 public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach {
-
-    // TODO: create tests
 
     public Object forEach(Object source, Object element, Context context) {
         if (source == null || element == null) {
@@ -30,6 +25,6 @@ public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach 
         Object source = getSource().evaluate(context);
         Object element = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), forEach(source, element, context), source, element);
+        return forEach(source, element, context);
     }
 }

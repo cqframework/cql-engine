@@ -15,9 +15,6 @@ structured type Quantity
 The Quantity type represents quantities with a specified unit within CQL.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class QuantityEvaluator extends org.cqframework.cql.elm.execution.Quantity {
 
     @Override

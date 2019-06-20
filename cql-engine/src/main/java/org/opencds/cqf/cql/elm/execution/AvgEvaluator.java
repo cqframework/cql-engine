@@ -17,9 +17,6 @@ Avg(argument List<Quantity>) Quantity
 * Returns values of type BigDecimal or Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
 
     public static Object avg(Object source) {
@@ -58,6 +55,6 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
 
         Object src = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), avg(src), src);
+        return avg(src);
     }
 }

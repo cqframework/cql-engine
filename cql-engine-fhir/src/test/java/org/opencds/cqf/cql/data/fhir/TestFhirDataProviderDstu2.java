@@ -8,9 +8,6 @@ import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
 
-/**
- * Created by Christopher on 5/3/2017.
- */
 public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 
     private Context context;

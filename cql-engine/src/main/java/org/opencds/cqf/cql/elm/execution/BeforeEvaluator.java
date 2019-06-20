@@ -87,6 +87,6 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
 
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return context.logTrace(this.getClass(), before(left, right, precision), left, right);
+        return before(left, right, precision);
     }
 }

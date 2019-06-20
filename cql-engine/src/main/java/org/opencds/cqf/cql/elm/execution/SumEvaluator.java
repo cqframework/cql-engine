@@ -16,9 +16,6 @@ If the list is null, the result is null.
 Return types: Integer, BigDecimal & Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
 
     public static Object sum(Object source) {
@@ -51,6 +48,6 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), sum(source), source);
+        return sum(source);
     }
 }

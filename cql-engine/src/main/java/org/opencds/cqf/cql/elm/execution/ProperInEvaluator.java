@@ -34,9 +34,9 @@ public class ProperInEvaluator extends org.cqframework.cql.elm.execution.ProperI
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
         if (precision != null) {
-            return context.logTrace(this.getClass(), properIn(left, right, precision), left, right, precision);
+            return properIn(left, right, precision);
         }
 
-        return context.logTrace(this.getClass(), properIn(left, right), left, right);
+        return properIn(left, right);
     }
 }

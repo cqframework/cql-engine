@@ -12,9 +12,6 @@ If the list contains more than one element, a run-time error is thrown.
 If the source list is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.SingletonFrom {
 
     public static Object singletonFrom(Object operand) {
@@ -40,6 +37,6 @@ public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.Si
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), singletonFrom(operand), operand);
+        return singletonFrom(operand);
     }
 }

@@ -3,9 +3,6 @@ package org.opencds.cqf.cql.terminology;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Bryn on 8/2/2016.
- */
 public class ValueSetInfo {
     private String id;
     public String getId() {

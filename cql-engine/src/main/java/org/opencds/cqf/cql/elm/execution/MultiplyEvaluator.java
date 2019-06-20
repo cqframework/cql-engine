@@ -23,9 +23,6 @@ In this example, the first result will have a unit of 'cm2', and the second resu
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multiply {
 
   public static Object multiply(Object left, Object right) {
@@ -78,6 +75,6 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), multiply(left, right), left, right);
+        return multiply(left, right);
     }
 }

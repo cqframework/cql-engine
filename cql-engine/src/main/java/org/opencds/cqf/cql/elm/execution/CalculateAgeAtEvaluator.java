@@ -20,9 +20,6 @@ The CalculateAgeAt operators are defined in terms of a DateTime duration calcula
     the result will be an uncertainty over the range of possible values, potentially causing some comparisons to return null.
 */
 
-/**
- * Created by Chris Schuler on 7/14/2016
- */
 public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.CalculateAgeAt {
 
     public static Object calculateAgeAt(Object birthDate, Object asOf, String precision) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
@@ -41,7 +38,7 @@ public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.C
         String precision = getPrecision().value();
 
         try {
-            return context.logTrace(this.getClass(), calculateAgeAt(birthDate, asOf, precision), birthDate, asOf);
+            return calculateAgeAt(birthDate, asOf, precision);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());

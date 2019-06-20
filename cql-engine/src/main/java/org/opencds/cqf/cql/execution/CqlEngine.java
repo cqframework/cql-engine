@@ -25,9 +25,6 @@ import java.util.Map;
  *  the aggregation of values from child nodes.
  */
 
-/**
- * Created by Bryn on 4/12/2016.
- */
 public class CqlEngine {
 
     // evaluate a single named expression

@@ -16,9 +16,6 @@ If precision is specified and the point type is a date/time type, comparisons us
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class OverlapsEvaluator extends org.cqframework.cql.elm.execution.Overlaps {
 
     public static Boolean overlaps(Object left, Object right, String precision) {

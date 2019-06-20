@@ -26,9 +26,6 @@ If the left argument is null, the result is true if the right argument is not em
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
     public static Object properlyIncudedIn(Object left, Object right, String precision) {

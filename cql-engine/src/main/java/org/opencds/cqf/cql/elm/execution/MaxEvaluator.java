@@ -17,9 +17,6 @@ If the source is null, the result is null.
 Possible return types include: Integer, BigDecimal, Quantity, DateTime, Time, String
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
 
     public static Object max(Object source) {
@@ -62,6 +59,6 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), max(source), source);
+        return max(source);
     }
 }

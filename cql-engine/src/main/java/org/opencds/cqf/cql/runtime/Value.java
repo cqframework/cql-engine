@@ -6,9 +6,6 @@ import org.opencds.cqf.cql.elm.execution.MinValueEvaluator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-/**
- * Created by Bryn on 5/2/2016.
- */
 public class Value {
 
     public static final Integer MAX_INT = Integer.MAX_VALUE;

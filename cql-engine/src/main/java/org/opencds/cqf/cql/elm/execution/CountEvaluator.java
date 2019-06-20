@@ -12,9 +12,6 @@ Count(argument List<T>) Integer
 * Always returns Integer
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
 
     public static Object count(Object source) {
@@ -53,6 +50,6 @@ public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
 
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), count(source), source);
+        return count(source);
     }
 }

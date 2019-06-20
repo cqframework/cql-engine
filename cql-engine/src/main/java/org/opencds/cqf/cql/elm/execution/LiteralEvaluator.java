@@ -4,9 +4,6 @@ import org.opencds.cqf.cql.execution.Context;
 
 import java.math.BigDecimal;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class LiteralEvaluator extends org.cqframework.cql.elm.execution.Literal {
 
     @Override

@@ -7,9 +7,6 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * Created by Bryn on 4/15/2016.
- */
 public class Interval implements CqlType, Comparable<Interval> {
 
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {

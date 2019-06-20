@@ -14,9 +14,6 @@ If the low boundary of the interval is closed and the low value of the interval 
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class StartEvaluator extends org.cqframework.cql.elm.execution.Start {
 
     public static Object start(Interval operand) {
@@ -31,6 +28,6 @@ public class StartEvaluator extends org.cqframework.cql.elm.execution.Start {
     public Object evaluate(Context context) {
         Interval operand = (Interval)this.getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), start(operand), operand);
+        return start(operand);
     }
 }

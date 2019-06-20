@@ -19,9 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-/**
- * Created by Bryn on 8/15/2016.
- */
 public class FhirTerminologyProvider implements TerminologyProvider {
 
     private IClientInterceptor headerInjectionInterceptor;

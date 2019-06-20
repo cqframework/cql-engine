@@ -12,9 +12,6 @@ import org.opencds.cqf.cql.execution.Context;
 * If either argument is null, the result is null.
 */
 
-/**
- * Created by Christopher Schuler on 6/12/2017.
- */
 public class LastPositionOfEvaluator extends org.cqframework.cql.elm.execution.LastPositionOf {
 
     public static Object lastPositionOf(Object string, Object pattern) {
@@ -34,6 +31,6 @@ public class LastPositionOfEvaluator extends org.cqframework.cql.elm.execution.L
         Object string = getString().evaluate(context);
         Object pattern = getPattern().evaluate(context);
 
-        return context.logTrace(this.getClass(), lastPositionOf(string, pattern), string, pattern);
+        return lastPositionOf(string, pattern);
     }
 }

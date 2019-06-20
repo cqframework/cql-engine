@@ -3,9 +3,6 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Tuple;
 
-/**
- * Created by Bryn on 5/25/2016. 
- */
 public class PropertyEvaluator extends org.cqframework.cql.elm.execution.Property {
 
     @Override

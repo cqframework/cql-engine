@@ -24,9 +24,6 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-/**
- * Created by Christopher on 5/3/2017.
- */
 public abstract class FhirExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
 

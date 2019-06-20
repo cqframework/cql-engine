@@ -1,8 +1,5 @@
 package org.opencds.cqf.cql.terminology;
 
-/**
- * Created by Bryn on 8/2/2016.
- */
 public class CodeSystemInfo {
     private String id;
     public String getId() {

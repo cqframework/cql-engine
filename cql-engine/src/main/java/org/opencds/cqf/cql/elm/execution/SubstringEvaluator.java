@@ -12,9 +12,6 @@ If length is ommitted, the substring returned starts at startIndex and continues
 If stringToSub or startIndex is null, or startIndex is out of range, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substring {
 
     public static Object substring(Object stringValue, Object startIndexValue, Object lengthValue) {
@@ -53,6 +50,6 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
         Object startIndexValue = getStartIndex().evaluate(context);
         Object lengthValue = getLength() == null ? null : getLength().evaluate(context);
 
-        return context.logTrace(this.getClass(), substring(stringValue, startIndexValue, lengthValue), stringValue, startIndexValue, lengthValue);
+        return substring(stringValue, startIndexValue, lengthValue);
     }
 }

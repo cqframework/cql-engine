@@ -67,6 +67,6 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return context.logTrace(this.getClass(), properContains(left, right, precision), left, right, precision);
+        return properContains(left, right, precision);
     }
 }

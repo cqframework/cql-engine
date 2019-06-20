@@ -19,9 +19,6 @@ If all arguments evaluate to null, the result is null.
 The static type of the first argument determines the type of the result, and all subsequent arguments must be of that same type.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class CoalesceEvaluator extends org.cqframework.cql.elm.execution.Coalesce {
 
     public static Object coalesce(List<Object> operands) {
@@ -51,6 +48,6 @@ public class CoalesceEvaluator extends org.cqframework.cql.elm.execution.Coalesc
             operands.add(operand.evaluate(context));
         }
 
-        return context.logTrace(this.getClass(), coalesce(operands), operands);
+        return coalesce(operands);
     }
 }
