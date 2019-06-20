@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <hapi_version>3.7.0</hapi_version>
+        <hapi_version>3.8.0</hapi_version>
     </properties>
 
     <packaging>jar</packaging>
