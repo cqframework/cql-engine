@@ -31,6 +31,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public AnyTrue createAnyTrue() { return new AnyTrueEvaluator(); }
 
     @Override
+    public AnyInValueSet createAnyInValueSet() { return new AnyInValueSetEvaluator(); }
+
+    @Override
     public As createAs() { return new AsEvaluator(); }
 
     @Override

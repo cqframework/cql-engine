@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.elm.execution;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.Iterator;
 
@@ -69,7 +70,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return ((CqlType) left).equal(right);
         }
 
-        return left.equals(right);
+        return Context.getContext().objectEqual(left, right);
     }
 
     @Override

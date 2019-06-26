@@ -30,20 +30,25 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
             }
             else {
                 Object codesResult = this.getCodes().evaluate(context);
-                if (codesResult instanceof Code) {
-                    ArrayList<Code> codesList = new ArrayList<>();
+                if (codesResult instanceof String) {
+                    List<Code> codesList = new ArrayList<>();
+                    codesList.add(new Code().withCode((String)codesResult));
+                    codes = codesList;
+                }
+                else if (codesResult instanceof Code) {
+                    List<Code> codesList = new ArrayList<>();
                     codesList.add((Code)codesResult);
                     codes = codesList;
                 }
                 else if (codesResult instanceof Concept) {
-                    ArrayList<Code> codesList = new ArrayList<>();
+                    List<Code> codesList = new ArrayList<>();
                     for (Code conceptCode : ((Concept)codesResult).getCodes()) {
                         codesList.add(conceptCode);
                     }
                     codes = codesList;
                 }
                 else {
-                    codes = (Iterable<Code>) this.getCodes().evaluate(context);
+                    codes = (Iterable<Code>) codesResult;
                 }
             }
         }

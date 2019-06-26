@@ -31,7 +31,7 @@ If the code argument is null, the result is null.
  */
 public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InValueSet {
 
-    public Object inValueSet(Context context, Object code, Object valueset) {
+    public static Object inValueSet(Context context, Object code, Object valueset) {
 
         if (code == null) {
             return null;
@@ -93,11 +93,11 @@ public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InVal
         throw new IllegalArgumentException(String.format("Cannot InValueSet Code arguments of type '%s'.", code.getClass().getName()));
     }
 
-    public ValueSetDef resolveVSR(Context context, ValueSetRef valueset) {
+    public static ValueSetDef resolveVSR(Context context, ValueSetRef valueset) {
         return context.resolveValueSetRef(valueset.getLibraryName(), valueset.getName());
     }
 
-    public CodeSystemDef resolveCSR(Context context, CodeSystemRef codesystem) {
+    public static CodeSystemDef resolveCSR(Context context, CodeSystemRef codesystem) {
         return context.resolveCodeSystemRef(codesystem.getLibraryName(), codesystem.getName());
     }
 
@@ -106,6 +106,6 @@ public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InVal
         Object code = getCode().evaluate(context);
         Object valueset = getValueset();
 
-        return context.logTrace(this.getClass(), inValueSet(context, code, valueset), code, valueset);
+        return inValueSet(context, code, valueset);
     }
 }

@@ -15,8 +15,16 @@ import java.util.List;
 
 /**
  * Created by Bryn on 4/12/2016.
+ *
+ * NOTE: This class is thread-affine; it uses thread local storage to allow statics throughout the code base to access
+ * the context (such as equal and equivalent evaluators).
  */
 public class Context {
+
+    private static ThreadLocal<Context> threadContext = new ThreadLocal<>();
+    public static Context getContext() {
+        return threadContext.get();
+    }
 
     private boolean enableExpressionCache = false;
     private LinkedHashMap expressions = new LinkedHashMap(15, 0.9f, true) {
@@ -68,6 +76,7 @@ public class Context {
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+        threadContext.set(this);
     }
 
     public void logEntry(Class clazz, Object ... operands) {
@@ -350,7 +359,7 @@ public class Context {
         return argumentType == null || operandType.isAssignableFrom(argumentType);
     }
 
-    private FunctionDef resolveFunctionRef(FunctionDef functionDef, String name, Iterable<Object> arguments) {
+    private FunctionDef resolveFunctionRef(FunctionDef functionDef, Iterable<Object> arguments) {
         java.util.Iterator<OperandDef> operandIterator = functionDef.getOperand().iterator();
         java.util.Iterator<Object> argumentIterator = arguments.iterator();
         boolean isMatch = true;
@@ -376,12 +385,12 @@ public class Context {
     }
 
     private Map<String, List<FunctionDef>> functionCache = new HashMap<>();
-    // TODO: Could use some caching here, and potentially some better type resolution structures
-    public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments) {
+    public FunctionDef resolveFunctionRef(String name, Iterable<Object> arguments, String libraryName) {
         FunctionDef ret = null;
-        if (functionCache.containsKey(name)) {
-            for (FunctionDef functionDef : functionCache.get(name)) {
-                if ((ret = resolveFunctionRef(functionDef, name, arguments)) != null) {
+        String mangledFunctionName = (libraryName == null ? getCurrentLibrary().getIdentifier().getId() : libraryName) + "." + name;
+        if (functionCache.containsKey(mangledFunctionName)) {
+            for (FunctionDef functionDef : functionCache.get(mangledFunctionName)) {
+                if ((ret = resolveFunctionRef(functionDef, arguments)) != null) {
                     break;
                 }
             }
@@ -391,17 +400,17 @@ public class Context {
             for (ExpressionDef expressionDef : getCurrentLibrary().getStatements().getDef()) {
                 if (expressionDef.getName().equals(name)) {
                     if (expressionDef instanceof FunctionDef) {
-                        FunctionDef candidate = resolveFunctionRef((FunctionDef) expressionDef, name, arguments);
+                        FunctionDef candidate = resolveFunctionRef((FunctionDef) expressionDef, arguments);
                         if (candidate != null) {
                             ret = candidate;
                         }
-                        if (functionCache.containsKey(name)) {
-                            functionCache.get(name).add((FunctionDef) expressionDef);
+                        if (functionCache.containsKey(mangledFunctionName)) {
+                            functionCache.get(mangledFunctionName).add((FunctionDef) expressionDef);
                         }
                         else {
                             List<FunctionDef> functionDefs = new ArrayList<>();
                             functionDefs.add((FunctionDef) expressionDef);
-                            functionCache.put(name, functionDefs);
+                            functionCache.put(mangledFunctionName, functionDefs);
                         }
                     }
                 }
@@ -678,5 +687,31 @@ public class Context {
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         dataProvider.setValue(target, path, value);
+    }
+
+    public Boolean objectEqual(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
+
+        Class<? extends Object> clazz = left.getClass();
+
+        DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
+        return dataProvider.objectEqual(left, right);
+    }
+
+    public Boolean objectEquivalent(Object left, Object right) {
+        if ((left == null) && (right == null)) {
+            return true;
+        }
+
+        if (left == null) {
+            return false;
+        }
+
+        Class<? extends Object> clazz = left.getClass();
+
+        DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
+        return dataProvider.objectEquivalent(left, right);
     }
 }

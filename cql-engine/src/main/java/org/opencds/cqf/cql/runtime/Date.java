@@ -16,7 +16,20 @@ public class Date extends BaseTemporal {
         if (date.getYear() > 9999) {
             throw new IllegalArgumentException(String.format("The year: %d falls above the accepted bounds of 0001-9999.", date.getYear()));
         }
+        if (this.precision == null) {
+            this.precision = Precision.DAY;
+        }
         this.date = date;
+    }
+
+    public Date(int year) {
+        setDate(LocalDate.of(year, 1, 1));
+        this.precision = Precision.YEAR;
+    }
+
+    public Date(int year, int month) {
+        setDate(LocalDate.of(year, month, 1));
+        this.precision = Precision.MONTH;
     }
 
     public Date(int year, int month, int day) {

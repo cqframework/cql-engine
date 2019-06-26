@@ -6,13 +6,13 @@ import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Date;
 
 import java.time.Instant;
 import java.time.OffsetTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.TimeZone;
 
 /**
@@ -24,8 +24,8 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         return toDateTime(value, value.getPrecision());
     }
 
-    protected DateTime toDateTime(DateType value) {
-        return toDateTime(value, value.getPrecision());
+    protected Date toDate(DateType value) {
+        return toDate(value, value.getPrecision());
     }
 
     protected Time toTime(TimeType value) {
@@ -69,6 +69,18 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         }
     }
 
+    protected Date toDate(BaseDateTimeType value, TemporalPrecisionEnum precision) {
+        Calendar calendar = value.toCalendar();
+        TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
+        ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
+        switch (precision) {
+            case YEAR: return new Date(value.getYear());
+            case MONTH: return new Date(value.getYear(), value.getMonth() + 1);
+            case DAY: return new Date(value.getYear(), value.getMonth() + 1, value.getDay());
+            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+        }
+    }
+
     protected DateTime toDateTime(InstantType value) {
         return toDateTime(value, value.getPrecision());
     }
@@ -77,7 +89,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
     protected Object fromJavaPrimitive(Object value, Object target) {
         if (target instanceof DateTimeType || target instanceof DateType) {
             DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
-            return Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
+            return java.util.Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
         }
         else if (target instanceof TimeType && value instanceof Time) {
             return ((Time) value).getTime().toString();
@@ -93,7 +105,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
             return toDateTime((DateTimeType)source);
         }
         else if (source instanceof DateType) {
-            return toDateTime((DateType)source);
+            return toDate((DateType)source);
         }
         else if (source instanceof TimeType) {
             return toTime((TimeType)source);
@@ -112,6 +124,9 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
     @Override
     protected String convertPathToSearchParam(String type, String path) {
         path = path.replace(".value", "");
+        if (path.equals("id")) {
+            path = "_id";
+        }
         switch (type) {
             case "AllergyIntolerance":
                 if (path.equals("clinicalStatus")) return "clinical-status";
@@ -215,10 +230,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
 
     @Override
     protected String resolveClassName(String typeName) {
-        // TODO: Obviously would like to be able to automate this, but there is no programmatic way of which I'm aware
-        // For the primitive types, not such a big deal.
-        // For the enumerations, the type names are generated from the binding name in the spreadsheet, which doesn't make it to the StructureDefinition,
-        // and the schema has no way of indicating whether the enum will be common (i.e. in Enumerations) or per resource
+        // TODO: Use the bindingName extension on the StructureDefinition for this
         switch (typeName) {
             case "base64Binary": typeName = "Base64BinaryType"; break;
             case "boolean": typeName = "BooleanType"; break;
