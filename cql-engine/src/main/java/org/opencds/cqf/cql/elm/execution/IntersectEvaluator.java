@@ -89,7 +89,7 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
                 min = leftEndLtRightEnd == null ? null : leftEndLtRightEnd ? leftEnd : rightEnd;
             }
 
-            return new Interval(max, true, min, true);
+            return new Interval(max, max != null, min, min != null);
         }
 
         else if (left instanceof Iterable)
