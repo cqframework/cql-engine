@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -83,9 +84,7 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
             return ((Integer) left).compareTo((Integer)((Interval) right).getEnd()) > 0;
         }
 
-        throw new IllegalArgumentException(
-                String.format("Cannot perform greater than operator on types %s and %s",
-                        left.getClass().getSimpleName(), right.getClass().getSimpleName()));
+        throw new InvalidOperatorArgument("Greater (>)", left, right);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -107,7 +108,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
             return ((String) left).concat((String) right);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot AddEvaluator arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument("Add", left, right);
     }
 
     @Override
@@ -115,6 +116,6 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return add(left, right);
+        return super.execute((x) -> add(left, right));
     }
 }

@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.AbsEvaluator;
+import org.opencds.cqf.cql.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -36,6 +39,15 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("Abs1cm").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity)result).compareTo(new Quantity().withValue(new BigDecimal("1.0")).withUnit("cm")) == 0);
+
+        // error testing
+        try {
+            result = AbsEvaluator.abs("This is an error");
+            Assert.fail();
+        }
+        catch (CqlException e) {
+            // pass
+        }
     }
 
     /**
@@ -59,6 +71,15 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("AddIAndD").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("3.0")));
+
+        // error testing
+        try {
+            result = AddEvaluator.add("This is an error", 404);
+            Assert.fail();
+        }
+        catch (CqlException e) {
+            // pass
+        }
     }
 
     /**

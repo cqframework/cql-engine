@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.Iterator;
@@ -42,13 +43,13 @@ public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue 
                     }
                 }
                 else {
-                    throw new IllegalArgumentException(String.format("Cannot perform AllTrue operator on List with type %s", exp.getClass().getSimpleName()));
+                    throw new InvalidOperatorArgument("AllTrue", exp);
                 }
             }
             return true;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform AllTrue operator on type %s", src.getClass().getSimpleName()));
+        throw new InvalidOperatorArgument("AllTrue", src);
     }
 
     @Override
