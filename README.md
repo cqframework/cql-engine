@@ -6,6 +6,22 @@ The specification includes informative open source tooling that can be used to v
 
 This project builds on that tooling to provide an open source Java-based evaluation engine capable of evaluating the result of any CQL expression.
 
+# Repository
+
+This repository uses stable trunk methodology:
+
+|Branch|Description|Status|
+|v12|CQL 1.2 Engine|Maintenance|
+|master|CQL 1.3 Engine|Release|
+
+# Commit Policy
+
+Changes to new features branches may be committed directly if desired, but PRs are preferred. Changes to master and maintenance branches must be done through an approved PR. Delete branches after merging to keep the repository clean.
+
+# Release Policy
+
+This project uses [Semantic Versioning](http://semver.org), with the caveat that we track to the version of CQL the engine supports. Releases are published to Maven snapshot and public directories under the org.opencds.cqframework group id. Each release SHALL have a Release in Github. Pre-releases SHALL be marked as such and use the -SNAPSHOT version indicator. For any new release, a SNAPSHOT is released first and must pass integration testing in at least one external system prior to being promoted to a release. SNAPSHOTs may be published from any branch, but SHALL have incremented version numbers consistent with the branch and semantic versioning policies. Releases may only be published from the master or maintenance branch. Only one prior version is maintained at any given time.
+
 # License
 
 Copyright 2016 University of Utah
