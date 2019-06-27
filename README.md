@@ -11,6 +11,7 @@ This project builds on that tooling to provide an open source Java-based evaluat
 This repository uses stable trunk methodology:
 
 |Branch|Description|Status|
+|----|----|----|
 |v12|CQL 1.2 Engine|Maintenance|
 |master|CQL 1.3 Engine|Release|
 
