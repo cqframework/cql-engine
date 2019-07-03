@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.exception.InvalidTime;
+
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -54,7 +56,7 @@ public class Time extends BaseTemporal {
 
     public Time(BigDecimal offset, int ... timeElements) {
         if (timeElements.length == 0) {
-            throw new IllegalArgumentException("Time must include an hour");
+            throw new InvalidTime("Time must include an hour");
         }
 
         StringBuilder timeString = new StringBuilder();

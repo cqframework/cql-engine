@@ -43,13 +43,13 @@ public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue 
                     }
                 }
                 else {
-                    throw new InvalidOperatorArgument("AllTrue", exp);
+                    throw new InvalidOperatorArgument("AllTrue(List<Boolean>)", String.format("AllTrue(List<%s>)", exp.getClass().getName()));
                 }
             }
             return true;
         }
 
-        throw new InvalidOperatorArgument("AllTrue", src);
+        throw new InvalidOperatorArgument("AllTrue(List<Boolean>)", String.format("AllTrue(%s)", src.getClass().getName()));
     }
 
     @Override

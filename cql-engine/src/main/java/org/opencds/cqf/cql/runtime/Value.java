@@ -26,23 +26,6 @@ public class Value {
         return value;
     }
 
-    public static String getValueType(Class clazz) {
-        if (clazz == Integer.class) {
-            return "Integer";
-        }
-        if (clazz == BigDecimal.class) {
-            return "Decimal";
-        }
-        if (clazz == DateTime.class) {
-            return "DateTime";
-        }
-        if (clazz == Time.class) {
-            return "Time";
-        }
-
-        throw new IllegalArgumentException("Invalid type for Successor/Predecessor operator " + clazz.getName());
-    }
-
     public static BigDecimal validateDecimal(BigDecimal ret) {
         if (ret.compareTo((BigDecimal) MaxValueEvaluator.maxValue("Decimal")) > 0) {
             return null;

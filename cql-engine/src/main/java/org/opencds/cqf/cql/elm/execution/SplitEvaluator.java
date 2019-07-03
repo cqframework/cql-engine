@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,21 +22,27 @@ public class SplitEvaluator extends org.cqframework.cql.elm.execution.Split {
             return null;
         }
 
-        List<Object> result = new ArrayList<>();
-        if (separator == null) {
-            result.add(stringToSplit);
+        if (stringToSplit instanceof String) {
+            List<Object> result = new ArrayList<>();
+            if (separator == null) {
+                result.add(stringToSplit);
+            }
+            else {
+                Collections.addAll(result, ((String) stringToSplit).split((String) separator));
+            }
+            return result;
         }
-        else {
-            Collections.addAll(result, ((String) stringToSplit).split((String) separator));
-        }
-        return result;
+
+        throw new InvalidOperatorArgument(
+                "Split(String, String)",
+                String.format("Split(%s, %s)", stringToSplit.getClass().getName(), separator.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object stringToSplit = getStringToSplit().evaluate(context);
         Object separator = getSeparator().evaluate(context);
-
         return split(stringToSplit, separator);
     }
 }

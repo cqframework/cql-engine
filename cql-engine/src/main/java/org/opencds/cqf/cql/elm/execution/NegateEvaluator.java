@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.cqframework.cql.elm.execution.Expression;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.math.BigDecimal;
@@ -35,7 +36,10 @@ public class NegateEvaluator extends org.cqframework.cql.elm.execution.Negate {
             return new Quantity().withValue(quantity.getValue().negate()).withUnit(quantity.getUnit());
         }
 
-        return source;
+        throw new InvalidOperatorArgument(
+                "Negate(Integer), Negate(Decimal) or Negate(Quantity)",
+                String.format("Negate(%s)", source.getClass().getName())
+        );
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -84,7 +85,6 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-
         String precision = getPrecision() == null ? null : getPrecision().value();
 
         return before(left, right, precision);

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -39,7 +40,10 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
             return listIncludedIn((Iterable) left, (Iterable) right);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot IncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "IncludedIn(Interval<T>, Interval<T>), IncludedIn(List<T>, List<T>) or IncludedIn(T, List<T>)",
+                String.format("IncludedIn(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     public static Boolean intervalIncludedIn(Interval left, Interval right, String precision) {

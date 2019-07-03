@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,14 +35,16 @@ public class ModuloEvaluator extends org.cqframework.cql.elm.execution.Modulo {
             return ((BigDecimal)left).remainder((BigDecimal)right).setScale(8, RoundingMode.FLOOR);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Modulo operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Modulo(Integer, Integer) or Modulo(Decimal, Decimal)",
+                String.format("Modulo(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-
         return modulo(left, right);
     }
 }

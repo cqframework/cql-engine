@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.CqlList;
 
@@ -60,13 +61,15 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
             }
             return mode;
         }
-        throw new IllegalArgumentException(String.format("Cannot Mode arguments of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Mode(List<T>)",
+                String.format("Mode(%s)", source.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return mode(source);
     }
 }

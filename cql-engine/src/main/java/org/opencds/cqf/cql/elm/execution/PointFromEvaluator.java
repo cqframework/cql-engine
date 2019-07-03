@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidInterval;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.execution.Context;
 
@@ -25,16 +27,18 @@ public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointF
                 return start;
             }
 
-            throw new IllegalArgumentException("Cannot perform PointFrom operation on intervals that are not unit intervals.");
+            throw new InvalidInterval("Cannot perform PointFrom operation on intervals that are not unit intervals.");
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform PointFrom operator with arguments of type: %s", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "PointFrom(Interval<T>)",
+                String.format("PointFrom(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return pointFrom(operand);
     }
 }

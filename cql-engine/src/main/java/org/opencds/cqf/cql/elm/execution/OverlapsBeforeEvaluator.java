@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -39,7 +40,10 @@ public class OverlapsBeforeEvaluator extends org.cqframework.cql.elm.execution.O
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot OverlapsBefore arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "OverlapsBefore(Interval<T>, Interval<T>)",
+                String.format("OverlapsBefore(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

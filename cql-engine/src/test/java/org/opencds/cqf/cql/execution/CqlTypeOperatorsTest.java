@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.AsEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidCast;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -30,6 +32,16 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("AsDateTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
+
+        try {
+            AsEvaluator evaluator = new AsEvaluator();
+            evaluator.setStrict(true);
+            result = evaluator.as(1, Tuple.class);
+            Assert.fail();
+        }
+        catch (InvalidCast e) {
+            // pass
+        }
     }
 
     /**

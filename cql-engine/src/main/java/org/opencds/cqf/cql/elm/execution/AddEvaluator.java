@@ -108,7 +108,10 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
             return ((String) left).concat((String) right);
         }
 
-        throw new InvalidOperatorArgument("Add", left, right);
+        throw new InvalidOperatorArgument(
+                "Add(Integer, Integer), Add(Decimal, Decimal), Add(Quantity, Quantity), Add(Date, Quantity), Add(DateTime, Quantity) or Add(Time, Quantity)",
+                String.format("Add(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
@@ -116,6 +119,6 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return super.execute((x) -> add(left, right));
+        return add(left, right);
     }
 }

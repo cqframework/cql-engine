@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.math.BigDecimal;
@@ -36,7 +37,9 @@ public class GeometricMeanEvaluator extends org.cqframework.cql.elm.execution.Ge
                     cleanSource.add((BigDecimal) element);
                 }
                 else {
-                    throw new IllegalArgumentException("Cannot perform GeometricMean operation on List of type: " + element.getClass().getName());
+                    throw new InvalidOperatorArgument(
+                            "GeometricMean(List<Decimal>)",
+                            String.format("GeometricMean(%s)", element.getClass().getName()));
                 }
             }
         }

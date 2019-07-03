@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -11,22 +12,36 @@ If both arguments are false, the result is false. Otherwise, the result is null.
 
 public class OrEvaluator extends org.cqframework.cql.elm.execution.Or {
 
-    public static Boolean or(Boolean left, Boolean right) {
-        if (left == null || right == null) {
-            if ((left != null && left) || (right != null && right)) {
-                return true;
-            }
+    public static Boolean or(Object left, Object right) {
+        if (left == null && right == null) {
             return null;
         }
 
-        return (left || right);
+        if (left == null && right instanceof Boolean) {
+            return (Boolean) right ? true : null;
+        }
+
+        if (right == null && left instanceof Boolean) {
+            return (Boolean) left ? true : null;
+        }
+
+        if (left instanceof Boolean && right instanceof Boolean) {
+            return (Boolean) left || (Boolean) right;
+        }
+
+        throw new InvalidOperatorArgument(
+                "Or(Boolean, Boolean)",
+                String.format(
+                        "Or(%s, %s)",
+                        left == null ? "Null" : left.getClass().getName(),
+                        right == null ? "Null" : right.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
-        Boolean left = (Boolean) getOperand().get(0).evaluate(context);
-        Boolean right = (Boolean) getOperand().get(1).evaluate(context);
-
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
         return or(left, right);
     }
 }

@@ -1,10 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
-
-import java.lang.reflect.InvocationTargetException;
 
 // for Uncertainty
 /*
@@ -33,12 +32,20 @@ The CalculateAge operators are defined in terms of a date/time duration calculat
 
 public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.CalculateAge {
 
-    public static Object calculateAge(Object operand, String precision, Object today) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public static Object calculateAge(Object operand, String precision, Object today) {
         if (operand == null) {
             return null;
         }
 
-        return CalculateAgeAtEvaluator.calculateAgeAt(operand, today, precision);
+        if (operand instanceof Date || operand instanceof DateTime)
+        {
+            return CalculateAgeAtEvaluator.calculateAgeAt(operand, today, precision);
+        }
+
+        throw new InvalidOperatorArgument(
+                "CalculateAgeInYears(Date), CalculateAgeInYears(DateTime), CalculateAgeInMonths(Date), CalculateAgeInMonths(DateTime), CalculateAgeInWeeks(Date), CalculateAgeInWeeks(DateTime), CalculateAgeInDays(Date), CalculateAgeInDays(DateTime), CalculateAgeInHours(Date), CalculateAgeInHours(DateTime), CalculateAgeInMinutes(Date), CalculateAgeInMinutes(DateTime), CalculateAgeInSeconds(Date), CalculateAgeInSeconds(DateTime)",
+                String.format("CalculateAgeIn%ss(%s)", precision, operand.getClass().getName())
+        );
     }
 
     @Override
@@ -51,14 +58,6 @@ public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.Cal
                         ? DateFromEvaluator.dateFrom(context.getEvaluationDateTime())
                         : context.getEvaluationDateTime();
 
-        try
-        {
-            return calculateAge(operand, precision, today);
-        }
-        catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e)
-        {
-            e.printStackTrace();
-            throw new RuntimeException(e.getMessage());
-        }
+        return calculateAge(operand, precision, today);
     }
 }

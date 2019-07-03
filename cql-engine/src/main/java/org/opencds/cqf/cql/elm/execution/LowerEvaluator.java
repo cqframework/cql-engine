@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -19,13 +20,16 @@ public class LowerEvaluator extends org.cqframework.cql.elm.execution.Lower {
         if (operand instanceof String) {
             return ((String) operand).toLowerCase();
         }
-        throw new IllegalArgumentException(String.format("Cannot perform Lower operation with argument of type '%s'.", operand.getClass().getName()));
+
+        throw new InvalidOperatorArgument(
+                "Lower(String)",
+                String.format("Lower(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return lower(operand);
     }
 }

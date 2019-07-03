@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.util.Iterator;
 
@@ -7,12 +8,16 @@ import java.util.Iterator;
 Min(argument List<Integer>) Integer
 Min(argument List<Decimal>) Decimal
 Min(argument List<Quantity>) Quantity
+Min(argument List<Date>) Date
 Min(argument List<DateTime>) DateTime
 Min(argument List<Time>) Time
 Min(argument List<String>) String
 
-The Min operator returns the minimum element in the source.
+The Min operator returns the minimum element in the source. Comparison semantics are defined by the
+    Comparison Operators for the type of value being aggregated.
+
 If the source contains no non-null elements, null is returned.
+
 If the source is null, the result is null.
 */
 
@@ -50,13 +55,15 @@ public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
             return min;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Min operation with arguments of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Min(List<Integer>), Min(List<Decimal>), Min(List<Quantity>), Min(List<Date>), Min(List<DateTime>), Min(List<Time>) or Min(List<String>)",
+                String.format("Min(%s)", source.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return min(source);
     }
 }

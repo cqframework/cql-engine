@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.math.BigDecimal;
@@ -27,13 +28,15 @@ public class FloorEvaluator extends org.cqframework.cql.elm.execution.Floor {
             return BigDecimal.valueOf(Math.floor(((Quantity) operand).getValue().doubleValue())).intValue();
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Floor operation with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Floor(Decimal)",
+                String.format("Floor(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return floor(operand);
     }
 }

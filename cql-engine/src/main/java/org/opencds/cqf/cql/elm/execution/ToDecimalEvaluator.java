@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Value;
 
@@ -54,13 +55,15 @@ public class ToDecimalEvaluator extends org.cqframework.cql.elm.execution.ToDeci
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot call ToDecimal operator with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "ToDecimal(String)",
+                String.format("ToDecimal(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return toDecimal(operand);
     }
 }

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -19,29 +20,41 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
             return null;
         }
 
-        String string = (String)stringValue;
-        Integer startIndex = (Integer)startIndexValue;
+        if (stringValue instanceof String && startIndexValue instanceof Integer) {
+            String string = (String) stringValue;
+            Integer startIndex = (Integer) startIndexValue;
 
-        if (startIndex < 0 || startIndex >= string.length()) {
-            return null;
-        }
-
-        if (lengthValue == null) {
-            return string.substring(startIndex);
-        }
-
-        else {
-            int endIndex = startIndex + (Integer)lengthValue;
-            if (endIndex > string.length()) {
-                endIndex = string.length();
+            if (startIndex < 0 || startIndex >= string.length()) {
+                return null;
             }
 
-            if (endIndex < startIndex) {
-                endIndex = startIndex;
+            if (lengthValue == null) {
+                return string.substring(startIndex);
             }
 
-            return string.substring(startIndex, endIndex);
+            else {
+                int endIndex = startIndex + (Integer) lengthValue;
+                if (endIndex > string.length()) {
+                    endIndex = string.length();
+                }
+
+                if (endIndex < startIndex) {
+                    endIndex = startIndex;
+                }
+
+                return string.substring(startIndex, endIndex);
+            }
         }
+
+        throw new InvalidOperatorArgument(
+                "Substring(String, Integer) or Substring(String, Integer, Integer)",
+                String.format(
+                        "Substring(%s, %s%s)",
+                        stringValue.getClass().getName(),
+                        startIndexValue.getClass().getName(),
+                        lengthValue == null ? "" : ", " + lengthValue.getClass().getName()
+                )
+        );
     }
 
     @Override

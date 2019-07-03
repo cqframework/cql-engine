@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -44,13 +45,8 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
           return ((Quantity) left).compareTo((Quantity) right) >= 0;
       }
 
-      else if (left instanceof DateTime && right instanceof DateTime) {
-          Integer i = ((DateTime) left).compare((DateTime) right, false);
-          return i == null ? null : i >= 0;
-      }
-
-      else if (left instanceof Time && right instanceof Time) {
-          Integer i = ((Time) left).compare((Time) right, false);
+      else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+          Integer i = ((BaseTemporal) left).compare((BaseTemporal) right, false);
           return i == null ? null : i >= 0;
       }
 
@@ -65,7 +61,8 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
           return GreaterEvaluator.greater(left, right);
       }
 
-      throw new IllegalArgumentException(
+      throw new InvalidOperatorArgument(
+              "GreaterOrEqual(Integer, Integer) GreaterOrEqual(Decimal, Decimal), GreaterOrEqual(Quantity, Quantity), GreaterOrEqual(Date, Date), GreaterOrEqual(DateTime, DateTime), GreaterOrEqual(Time, Time) or GreaterOrEqual(String, String)",
               String.format("Cannot perform greater than or equal operator on types %s and %s",
                       left.getClass().getSimpleName(), right.getClass().getSimpleName()));
   }

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
@@ -18,14 +19,21 @@ public class FlattenEvaluator extends org.cqframework.cql.elm.execution.Flatten 
             return null;
         }
 
-        List<Object> resultList = new ArrayList<>();
-        for (Object element : (Iterable) operand) {
-            for (Object subElement : (Iterable)element) {
-                resultList.add(subElement);
+        if (operand instanceof Iterable) {
+            List<Object> resultList = new ArrayList<>();
+            for (Object element : (Iterable) operand) {
+                for (Object subElement : (Iterable) element) {
+                    resultList.add(subElement);
+                }
             }
+
+            return resultList;
         }
 
-        return resultList;
+        throw new InvalidOperatorArgument(
+                "Flatten(List<List<T>>)",
+                String.format("Flatten(%s)", operand.getClass().getName())
+        );
     }
 
 

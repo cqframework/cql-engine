@@ -1,11 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Interval;
 
-import java.util.List;
 import java.util.stream.StreamSupport;
 
 /*
@@ -33,7 +31,10 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
             return listLength((Iterable) operand);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Length operator on type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Length(List<T>) or Length(String)",
+                String.format("Length(%s)", operand.getClass().getName())
+        );
     }
 
     public static Integer stringLength(String operand) {

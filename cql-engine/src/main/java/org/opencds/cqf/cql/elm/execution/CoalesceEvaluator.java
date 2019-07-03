@@ -5,7 +5,6 @@ import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Iterator;
 
 /*
 Coalesce<T>(argument1 T, argument2 T) T

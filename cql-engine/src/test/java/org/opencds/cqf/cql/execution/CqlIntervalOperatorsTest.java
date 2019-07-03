@@ -675,7 +675,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeMeetsNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeMeetsFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -719,7 +719,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeMeetsBeforeNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeMeetsBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -763,7 +763,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeMeetsAfterNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("DateTimeMeetsAfterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));

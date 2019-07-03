@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -44,14 +45,16 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
             return new Interval(div(leftInterval.getStart(), rightInterval.getStart()), true, div(leftInterval.getEnd(), rightInterval.getEnd()), true);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Div arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "TruncatedDivide(Integer, Integer) or TruncatedDivide(Decimal, Decimal)",
+                String.format("TruncatedDivide(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-
         return div(left, right);
     }
 }

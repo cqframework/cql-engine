@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -23,7 +24,11 @@ public class LastPositionOfEvaluator extends org.cqframework.cql.elm.execution.L
             return ((String)string).lastIndexOf((String) pattern);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform LastPositionOf operation with arguments of type '%s' and '%s'.", pattern.getClass().getName(), string.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "LastPositionOf(String, String)",
+                String.format("LastPositionOf(%s, %s)", pattern.getClass().getName(), string.getClass().getName())
+        );
+
     }
 
     @Override

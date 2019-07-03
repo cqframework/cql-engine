@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.exception.InvalidDateTime;
+
 import javax.annotation.Nonnull;
 import java.math.BigDecimal;
 import java.time.Instant;
@@ -16,11 +18,11 @@ public class DateTime extends BaseTemporal {
     }
     public void setDateTime(OffsetDateTime dateTime) {
         if (dateTime.getYear() < 1) {
-            throw new IllegalArgumentException(String.format("The year: %d falls below the accepted bounds of 0001-9999.", dateTime.getYear()));
+            throw new InvalidDateTime(String.format("The year: %d falls below the accepted bounds of 0001-9999.", dateTime.getYear()));
         }
 
         if (dateTime.getYear() > 9999) {
-            throw new IllegalArgumentException(String.format("The year: %d falls above the accepted bounds of 0001-9999.", dateTime.getYear()));
+            throw new InvalidDateTime(String.format("The year: %d falls above the accepted bounds of 0001-9999.", dateTime.getYear()));
         }
         this.dateTime = dateTime;
     }
@@ -80,7 +82,7 @@ public class DateTime extends BaseTemporal {
 
     public DateTime(BigDecimal offset, int ... dateElements) {
         if (dateElements.length == 0) {
-            throw new IllegalArgumentException("DateTime must include a year");
+            throw new InvalidDateTime("DateTime must include a year");
         }
 
         StringBuilder dateString = new StringBuilder();

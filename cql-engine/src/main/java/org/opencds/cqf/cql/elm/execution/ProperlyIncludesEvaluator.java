@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -31,6 +32,22 @@ Note that the order of elements does not matter for the purposes of determining 
 public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
 
     public static Boolean properlyIncludes(Object left, Object right, String precision) {
+        if (left == null && right == null) {
+            return null;
+        }
+
+        if (left == null) {
+            return right instanceof Interval
+                    ? intervalProperlyIncludes(null, (Interval) right, precision)
+                    : listProperlyIncludes(null, (Iterable) right);
+        }
+
+        if (right == null) {
+            return left instanceof Interval
+                    ? intervalProperlyIncludes((Interval) left, null, precision)
+                    : listProperlyIncludes((Iterable) left, null);
+        }
+
         if (left instanceof Interval && right instanceof Interval) {
             return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
         }
@@ -38,7 +55,10 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
             return listProperlyIncludes((Iterable) left, (Iterable) right);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform ProperlyIncludes operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "ProperlyIncludes(Interval<T>, Interval<T>) or ProperlyIncludes(List<T>, List<T>)",
+                String.format("ProperlyIncludes(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     public static Boolean intervalProperlyIncludes(Interval left, Interval right, String precision) {
@@ -93,22 +113,6 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
-
-        if (left == null && right == null) {
-            return null;
-        }
-
-        if (left == null) {
-            return right instanceof Interval
-                    ? intervalProperlyIncludes(null, (Interval) right, precision)
-                    : listProperlyIncludes(null, (Iterable) right);
-        }
-
-        if (right == null) {
-            return left instanceof Interval
-                    ? intervalProperlyIncludes((Interval) left, null, precision)
-                    : listProperlyIncludes((Iterable) left, null);
-        }
 
         return properlyIncludes(left, right, precision);
     }

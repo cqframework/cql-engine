@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -9,16 +10,26 @@ import java.math.BigDecimal;
 <=(left Integer, right Integer) Boolean
 <=(left Decimal, right Decimal) Boolean
 <=(left Quantity, right Quantity) Boolean
+<=(left Date, right Date) Boolean
 <=(left DateTime, right DateTime) Boolean
 <=(left Time, right Time) Boolean
 <=(left String, right String) Boolean
 
 The less or equal (<=) operator returns true if the first argument is less than or equal to the second argument.
+
+String comparisons are strictly lexical based on the Unicode value of the individual characters in the string.
+
 For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit.
-  For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and  'cm' are not.
-For comparisons involving date/time or time values with imprecision, note that the result of the comparison may be null,
-  depending on whether the values involved are specified to the level of precision used for the comparison.
-If either argument is null, the result is null.
+    For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on
+    quantities with invalid units will result in a null. When a quantity has no units specified, it is treated as a
+    quantity with the default unit ('1').
+
+For date/time values, the comparison is performed by considering each precision in order, beginning with years
+    (or hours for time values). If the values are the same, comparison proceeds to the next precision; if the
+    first value is less than the second, the result is true; if the first value is greater than the second, the
+    result is false; if one input has a value for the precision and the other does not, the comparison stops and
+    the result is null; if neither input has a value for the precision or the last precision has been reached,
+    the comparison stops and the result is true.
 */
 
 public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.LessOrEqual {
@@ -59,9 +70,10 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
           return LessEvaluator.less(left, right);
       }
 
-      throw new IllegalArgumentException(
-              String.format("Cannot perform less than or equal operator on types %s and %s",
-                      left.getClass().getSimpleName(), right.getClass().getSimpleName()));
+      throw new InvalidOperatorArgument(
+              "LessOrEqual(Integer, Integer) LessOrEqual(Decimal, Decimal), LessOrEqual(Quantity, Quantity), LessOrEqual(Date, Date), LessOrEqual(DateTime, DateTime), LessOrEqual(Time, Time) or LessOrEqual(String, String)",
+              String.format("LessOrEqual(%s, %s)", left.getClass().getSimpleName(), right.getClass().getSimpleName())
+      );
   }
 
     @Override

@@ -34,13 +34,15 @@ public class AbsEvaluator extends org.cqframework.cql.elm.execution.Abs {
             return new Quantity().withValue((((Quantity)operand).getValue()).abs()).withUnit(((Quantity)operand).getUnit());
         }
 
-        throw new InvalidOperatorArgument("Abs", operand);
+        throw new InvalidOperatorArgument(
+                "Abs(Integer), Abs(Decimal) or Abs(Quantity)",
+                String.format("Abs(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
-        return super.execute(x -> abs(operand));
+        return abs(operand);
     }
 }

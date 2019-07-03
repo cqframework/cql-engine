@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.execution.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
                 case "error":
                     messageBuilder.append(message).append("\n").append(stripPHI(source).toString());
                     logger.error(messageBuilder.toString());
-                    throw new RuntimeException(messageBuilder.toString());
+                    throw new CqlException(messageBuilder.toString());
             }
         }
         return source;

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.util.Iterator;
 
@@ -32,19 +33,29 @@ public class CombineEvaluator extends org.cqframework.cql.elm.execution.Combine 
                         return null;
                     }
 
-                    if (!first) {
-                        buffer.append(separator);
+                    if (item instanceof String) {
+                        if (!first) {
+                            buffer.append(separator);
+                        } else {
+                            first = false;
+                        }
+                        buffer.append((String) item);
                     }
-
                     else {
-                        first = false;
+                        throw new InvalidOperatorArgument(
+                                "Combine(List<String>) or Combine(List<String>, String)",
+                                String.format("Combine(List<%s>%s)", item.getClass().getName(), separator.equals("") ? "" : ", " + separator)
+                        );
                     }
-                    buffer.append((String)item);
                 }
                 return buffer.toString();
             }
         }
-        throw new IllegalArgumentException(String.format("Cannot Combine arguments of type '%s'.", source.getClass().getName()));
+
+        throw new InvalidOperatorArgument(
+                "Combine(List<String>) or Combine(List<String>, String)",
+                String.format("Combine(%s%s)", source.getClass().getName(), separator.equals("") ? "" : ", " + separator)
+        );
     }
 
     @Override

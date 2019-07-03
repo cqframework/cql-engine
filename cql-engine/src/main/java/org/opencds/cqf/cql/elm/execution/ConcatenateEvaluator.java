@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -20,7 +21,10 @@ public class ConcatenateEvaluator extends org.cqframework.cql.elm.execution.Conc
             return ((String)left).concat((String)right);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Concatenate arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Concatenate(String, String)",
+                String.format("Concatenate(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

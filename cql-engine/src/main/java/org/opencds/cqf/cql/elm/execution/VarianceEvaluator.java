@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Quantity;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,23 +38,32 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
 
             for (Object element : (Iterable) source) {
                 if (element != null) {
-                    newVals.add(MultiplyEvaluator.multiply(
-                            SubtractEvaluator.subtract(element, mean),
-                            SubtractEvaluator.subtract(element, mean))
-                    );
+                    if (element instanceof BigDecimal || element instanceof Quantity) {
+                        newVals.add(MultiplyEvaluator.multiply(
+                                SubtractEvaluator.subtract(element, mean),
+                                SubtractEvaluator.subtract(element, mean))
+                        );
+                    }
+                    else {
+                        throw new InvalidOperatorArgument(
+                                "Variance(List<Decimal>) or Variance(List<Quantity>)",
+                                String.format("Variance(List<%s>)", element.getClass().getName())
+                        );
+                    }
                 }
             }
 
             return DivideEvaluator.divide(SumEvaluator.sum(newVals), new BigDecimal(newVals.size() - 1)); // slight variation to Avg
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Variance operation with argument of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Variance(List<Decimal>) or Variance(List<Quantity>)",
+                String.format("Variance(%s)", source.getClass().getName()));
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return variance(source);
     }
 }

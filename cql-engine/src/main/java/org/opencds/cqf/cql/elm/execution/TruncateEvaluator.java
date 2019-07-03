@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.math.BigDecimal;
@@ -29,13 +30,15 @@ public class TruncateEvaluator extends org.cqframework.cql.elm.execution.Truncat
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Truncate with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Truncate(Decimal)",
+                String.format("Truncate(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return truncate(operand);
     }
 }

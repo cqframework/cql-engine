@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Time;
 
@@ -42,6 +43,9 @@ public class ToTimeEvaluator extends org.cqframework.cql.elm.execution.ToTime {
             }
         }
 
-        throw new IllegalArgumentException("Cannot perform the ToTime operation with argument of type " + operand.getClass().getName());
+        throw new InvalidOperatorArgument(
+                "ToTime(String)",
+                "ToTime(%s)" + operand.getClass().getName()
+        );
     }
 }

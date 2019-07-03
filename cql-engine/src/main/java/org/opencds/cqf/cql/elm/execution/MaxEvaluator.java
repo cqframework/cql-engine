@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.util.Iterator;
 
@@ -7,14 +8,17 @@ import java.util.Iterator;
 Max(argument List<Integer>) Integer
 Max(argument List<Decimal>) Decimal
 Max(argument List<Quantity>) Quantity
+Max(argument List<Date>) Date
 Max(argument List<DateTime>) DateTime
 Max(argument List<Time>) Time
 Max(argument List<String>) String
 
-The Max operator returns the maximum element in the source.
+The Max operator returns the maximum element in the source. Comparison semantics are defined by the
+    Comparison Operators for the type of value being aggregated.
+
 If the source contains no non-null elements, null is returned.
+
 If the source is null, the result is null.
-Possible return types include: Integer, BigDecimal, Quantity, DateTime, Time, String
 */
 
 public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
@@ -52,13 +56,15 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
             return max;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Max operation with arguments of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Max(List<Integer>), Max(List<Decimal>, Max(List<Quantity>), Max(List<Date>), Max(List<DateTime>), Max(List<Time>) or Max(List<String>))",
+                String.format("Max(%s)", source.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return max(source);
     }
 }

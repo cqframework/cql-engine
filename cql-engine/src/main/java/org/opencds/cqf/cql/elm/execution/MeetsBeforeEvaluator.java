@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -44,7 +45,10 @@ public class MeetsBeforeEvaluator extends org.cqframework.cql.elm.execution.Meet
             return MeetsEvaluator.meetsOperation(leftEnd, rightStart, precision);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot MeetsBefore arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "MeetsBefore(Interval<T>, Interval<T>)",
+                String.format("MeetsBefore(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

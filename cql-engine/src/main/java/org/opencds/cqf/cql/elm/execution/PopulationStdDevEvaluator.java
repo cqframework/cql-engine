@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 
@@ -38,13 +39,15 @@ public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution
                             new BigDecimal("0.5"))).withUnit(((Quantity) variance).getUnit());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Population Standard Deviation operation with argument of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "PopulationStdDev(List<Decimal>) or PopulationStdDev(List<Quantity>)",
+                String.format("PopulationStdDev(%s)", source.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return popStdDev(source);
     }
 }

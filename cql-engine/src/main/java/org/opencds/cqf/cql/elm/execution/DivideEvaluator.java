@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
@@ -60,12 +61,15 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
 
-            return new Interval(divide(leftInterval.getStart(), rightInterval.getStart()), true, divide(leftInterval.getEnd(), rightInterval.getEnd()), true);
+            return new Interval(
+                    divide(leftInterval.getStart(), rightInterval.getStart()), true,
+                    divide(leftInterval.getEnd(), rightInterval.getEnd()), true
+            );
         }
 
-        throw new IllegalArgumentException(
-                String.format("Cannot Divide arguments of type '%s' and '%s'.",
-                        left.getClass().getName(), right.getClass().getName())
+        throw new InvalidOperatorArgument(
+                "Divide(Decimal, Decimal), Divide(Quantity, Decimal), Divide(Quantity, Quantity)",
+                String.format("Divide(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
 

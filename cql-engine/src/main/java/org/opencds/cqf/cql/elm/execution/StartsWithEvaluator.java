@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -19,7 +20,14 @@ public class StartsWithEvaluator extends org.cqframework.cql.elm.execution.Start
             return null;
         }
 
-        return ((String) argument).startsWith((String) prefix);
+        if (argument instanceof String && prefix instanceof String) {
+            return ((String) argument).startsWith((String) prefix);
+        }
+
+        throw new InvalidOperatorArgument(
+                "StartsWith(String, String)",
+                String.format("StartsWith(%s, %s)", argument.getClass().getName(), prefix.getClass().getName())
+        );
     }
 
     @Override

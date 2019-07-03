@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.math.BigDecimal;
@@ -26,25 +28,27 @@ public class ExpEvaluator extends org.cqframework.cql.elm.execution.Exp {
             }
             catch (NumberFormatException nfe) {
                 if (((BigDecimal)operand).compareTo(new BigDecimal(0)) > 0) {
-                    throw new ArithmeticException("Results in positive infinity");
+                    throw new UndefinedResult("Results in positive infinity");
                 }
                 else if (((BigDecimal)operand).compareTo(new BigDecimal(0)) < 0) {
-                    throw new ArithmeticException("Results in negative infinity");
+                    throw new UndefinedResult("Results in negative infinity");
                 }
                 else {
-                    throw new NumberFormatException();
+                    throw new UndefinedResult(nfe.getMessage());
                 }
             }
             return retVal;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Exp evaluation with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Exp(Decimal)",
+                String.format("Exp(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return exp(operand);
     }
 }

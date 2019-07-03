@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
+import org.opencds.cqf.cql.exception.CqlException;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import javax.xml.bind.JAXBException;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -212,6 +215,14 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("UncertaintyGreaterFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        try {
+            GreaterEvaluator.greater(1, "one");
+            Assert.fail();
+        }
+        catch (CqlException e) {
+            // pass
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -39,15 +40,16 @@ public class RoundEvaluator extends org.cqframework.cql.elm.execution.Round {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Round with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Round(Decimal) or Round(Decimal, Integer)",
+                String.format("Round(%s%s)", operand.getClass().getName(), precision == null ? "" : ", " + precision.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         Object precision = getPrecision() == null ? null : getPrecision().evaluate(context);
-        //BigDecimal precision = new BigDecimal((precisionValue == null ? 0 : (Integer)precisionValue));
-
         return round(operand, precision);
     }
 }

@@ -30,7 +30,6 @@ public class EndEvaluator extends org.cqframework.cql.elm.execution.End {
     @Override
     public Object evaluate(Context context) {
         Object operand = this.getOperand().evaluate(context);
-
         return end(operand);
     }
 }

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Precision;
@@ -56,13 +57,15 @@ public class TimeFromEvaluator extends org.cqframework.cql.elm.execution.TimeFro
             return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute, second, millisecond);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot TimeFrom arguments of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "TimeFrom(DateTime)",
+                String.format("TimeFrom(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return timeFrom(operand);
     }
 }

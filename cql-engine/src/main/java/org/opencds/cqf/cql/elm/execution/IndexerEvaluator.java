@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -50,7 +51,10 @@ public class IndexerEvaluator extends org.cqframework.cql.elm.execution.Indexer 
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Indexer arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Indexer(String, Integer) or Indexer(List<T>, Integer)",
+                String.format("Indexer(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

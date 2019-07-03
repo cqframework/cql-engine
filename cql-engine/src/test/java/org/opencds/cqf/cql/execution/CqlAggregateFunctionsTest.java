@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.AnyTrueEvaluator;
+import org.opencds.cqf.cql.elm.execution.AvgEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
@@ -10,6 +13,7 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -78,6 +82,14 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("AnyTrueEmptyList").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        try {
+            result = AnyTrueEvaluator.anyTrue(Arrays.asList("this", "is", "error"));
+            Assert.fail();
+        }
+        catch (InvalidOperatorArgument e) {
+            // pass
+        }
     }
 
     /**
@@ -89,6 +101,15 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("AvgTest1").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("3.0")));
+
+        try {
+            result = AvgEvaluator.avg(Arrays.asList("this", "is", "error"));
+            Assert.fail();
+        }
+        catch (InvalidOperatorArgument e) {
+            // pass
+            String s = "s";
+        }
     }
 
     /**

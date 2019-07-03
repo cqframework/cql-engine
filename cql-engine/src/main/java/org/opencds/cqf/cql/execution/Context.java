@@ -4,6 +4,7 @@ import org.cqframework.cql.elm.execution.*;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.data.SystemDataProvider;
+import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
@@ -112,7 +113,7 @@ public class Context {
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
         if (libraryLoader == null) {
-            throw new IllegalArgumentException("Library loader implementation must not be null.");
+            throw new CqlException("Library loader implementation must not be null.");
         }
 
         this.libraryLoader = libraryLoader;
@@ -131,7 +132,7 @@ public class Context {
         }
 
         if (libraryIdentifier.getVersion() != null && !libraryIdentifier.getVersion().equals(library.getIdentifier().getVersion())) {
-            throw new IllegalArgumentException(String.format("Could not load library '%s' version '%s' because version '%s' is already loaded.",
+            throw new CqlException(String.format("Could not load library '%s' version '%s' because version '%s' is already loaded.",
                     libraryIdentifier.getId(), libraryIdentifier.getVersion(), library.getIdentifier().getVersion()));
         }
 
@@ -162,7 +163,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve code reference '%s'.", name));
+        throw new CqlException(String.format("Could not resolve code reference '%s'.", name));
     }
 
     private IncludeDef resolveLibraryRef(String libraryName) {
@@ -172,7 +173,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve library reference '%s'.", libraryName));
+        throw new CqlException(String.format("Could not resolve library reference '%s'.", libraryName));
     }
 
     public Expression resolveLetExpressionRef(String name) {
@@ -182,7 +183,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
+        throw new CqlException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
@@ -194,7 +195,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve expression reference '%s' in library '%s'.",
+        throw new CqlException(String.format("Could not resolve expression reference '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
@@ -234,7 +235,7 @@ public class Context {
 //            }
 //        }
 
-        throw new IllegalArgumentException("Cannot resolve identifier " + name);
+        throw new CqlException("Cannot resolve identifier " + name);
     }
 
     public Object createInstance(QName typeName) {
@@ -368,7 +369,7 @@ public class Context {
         if (ret != null) {
             return ret;
         }
-        throw new IllegalArgumentException(String.format("Could not resolve call to operator '%s' in library '%s'.",
+        throw new CqlException(String.format("Could not resolve call to operator '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
@@ -379,7 +380,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve parameter reference '%s' in library '%s'.",
+        throw new CqlException(String.format("Could not resolve parameter reference '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
@@ -419,7 +420,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve value set reference '%s' in library '%s'.",
+        throw new CqlException(String.format("Could not resolve value set reference '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
@@ -440,7 +441,7 @@ public class Context {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Could not resolve code system reference '%s' in library '%s'.",
+        throw new CqlException(String.format("Could not resolve code system reference '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
@@ -465,7 +466,7 @@ public class Context {
     public DataProvider resolveDataProvider(QName dataType) {
         DataProvider dataProvider = dataProviders.get(dataType.getNamespaceURI());
         if (dataProvider == null) {
-            throw new IllegalArgumentException(String.format("Could not resolve data provider for model '%s'.", dataType.getNamespaceURI()));
+            throw new CqlException(String.format("Could not resolve data provider for model '%s'.", dataType.getNamespaceURI()));
         }
 
         return dataProvider;
@@ -485,7 +486,7 @@ public class Context {
                     }
                 }
             }
-            throw new IllegalArgumentException(String.format("Could not resolve data provider for package '%s'.", packageName));
+            throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
         }
 
         return dataProvider;
@@ -511,7 +512,7 @@ public class Context {
         VersionedIdentifier identifier = currentLibrary.getIdentifier();
         ExternalFunctionProvider provider = externalFunctionProviders.get(identifier);
         if (provider == null) {
-            throw new IllegalArgumentException(String.format(
+            throw new CqlException(String.format(
                 "Could not resolve external function provider for library '%s'.", identifier));
         }
         return provider;
@@ -572,7 +573,7 @@ public class Context {
     public Variable resolveVariable(String name, boolean mustResolve) {
         Variable result = resolveVariable(name);
         if (mustResolve && result == null) {
-            throw new IllegalArgumentException(String.format("Could not resolve variable reference %s", name));
+            throw new CqlException(String.format("Could not resolve variable reference %s", name));
         }
 
         return result;
@@ -620,7 +621,7 @@ public class Context {
         Class<?> clazz = target.getClass();
 
         if (clazz.getPackage().getName().startsWith("java.lang")) {
-            throw new IllegalArgumentException(String.format("Invalid path: %s for type: %s - this is likely an issue with the data model.", path, clazz.getName()));
+            throw new CqlException(String.format("Invalid path: %s for type: %s - this is likely an issue with the data model.", path, clazz.getName()));
         }
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -81,7 +82,10 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform DifferenceBetween operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "DurationBetween(Date, Date), DurationBetween(DateTime, DateTime), DurationBetween(Time, Time)",
+                String.format("DurationBetween(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

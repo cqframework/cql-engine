@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
@@ -43,13 +44,15 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
             return AvgEvaluator.avg(newVals);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Population Variance operation with argument of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "PopulationVariance(List<Decimal>) or PopulationVariance(List<Quantity>)",
+                String.format("PopulationVariance(%s)", source.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return popVariance(source);
     }
 }

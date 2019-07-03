@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Value;
 
@@ -31,7 +33,10 @@ public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
             return Value.verifyPrecision(new BigDecimal(value / base));
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Log operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Log(Decimal, Decimal)",
+                String.format("Log(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

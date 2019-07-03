@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -21,7 +22,10 @@ public class PositionOfEvaluator extends org.cqframework.cql.elm.execution.Posit
             return ((String)string).indexOf((String)pattern);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform PositionOf operation with arguments of type '%s' and '%s'.", pattern.getClass().getName(), string.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "PositionOf(String, String)",
+                String.format("PositionOf(%s, %s)", pattern.getClass().getName(), string.getClass().getName())
+        );
     }
 
     @Override

@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.execution;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.ObjectFactory;
 import org.opencds.cqf.cql.elm.execution.ObjectFactoryEx;
+import org.opencds.cqf.cql.exception.CqlException;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
@@ -104,7 +106,7 @@ public class CqlLibraryReader {
      */
     private static Source toSource(Object xml) throws IOException {
         if (xml == null)
-            throw new IllegalArgumentException("no XML is given");
+            throw new CqlException("no XML is given");
 
         if (xml instanceof String) {
             try {
@@ -138,6 +140,6 @@ public class CqlLibraryReader {
             return (Source)xml;
         }
 
-        throw new IllegalArgumentException(String.format("Could not determine access path for input of type %s.", xml.getClass()));
+        throw new CqlException(String.format("Could not determine access path for input of type %s.", xml.getClass()));
     }
 }

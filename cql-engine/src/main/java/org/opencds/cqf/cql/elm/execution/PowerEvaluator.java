@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Value;
 
@@ -32,14 +33,16 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
             return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())));
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Power operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Power(Integer, Integer) or Power(Decimal, Decimal)",
+                String.format("Power(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-
         return power(left, right);
     }
 }

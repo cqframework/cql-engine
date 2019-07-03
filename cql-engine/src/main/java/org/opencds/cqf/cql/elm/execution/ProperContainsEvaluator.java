@@ -1,5 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
+import org.opencds.cqf.cql.runtime.Interval;
+
+import java.util.List;
+
 /*
     There are two overloads of this operator:
         List, T: The type of T must be the same as the element type of the list.
@@ -13,12 +20,6 @@ package org.opencds.cqf.cql.elm.execution;
         If precision is specified and the point type is a date/time type, comparisons used in the
             operation are performed at the specified precision.
 */
-
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.Interval;
-
-import java.util.List;
 
 public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.ProperContains {
 
@@ -47,7 +48,10 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
             return false;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform ProperContains operation with arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "ProperContains(List<T>, T) or ProperContains(Interval<T>, T)",
+                String.format("ProperContains(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     public static Boolean properContains(Object left, Object right, String precision) {

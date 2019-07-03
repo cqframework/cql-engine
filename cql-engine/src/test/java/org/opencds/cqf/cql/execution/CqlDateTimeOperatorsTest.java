@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.AfterEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.CqlException;
+import org.opencds.cqf.cql.exception.InvalidDateTime;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -32,7 +35,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
             context.resolveExpressionRef("DateTimeAddInvalidYears").evaluate(context);
             Assert.fail();
         }
-        catch (IllegalArgumentException ae) {
+        catch (InvalidDateTime ae) {
             // pass
         }
 
@@ -194,6 +197,13 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 
         // result = context.resolveExpressionRef("TimeAfterTimeCstor").getExpression().evaluate(context);
         // assertThat(result, is(true));
+        try {
+            result = AfterEvaluator.after(12, "This is an error", null);
+            Assert.fail();
+        }
+        catch (CqlException e) {
+            // pass
+        }
     }
 
     /**
@@ -900,8 +910,8 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         try {
             context.resolveExpressionRef("DateTimeSubtractInvalidYears").getExpression().evaluate(context);
             Assert.fail();
-        } catch (IllegalArgumentException ae) {
-            // fail
+        } catch (InvalidDateTime ae) {
+            // pass
         }
 
         result = context.resolveExpressionRef("DateTimeSubtract5Months").getExpression().evaluate(context);

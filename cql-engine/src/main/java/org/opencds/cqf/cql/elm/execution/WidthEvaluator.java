@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -15,20 +16,27 @@ If the argument is null, the result is null.
 
 public class WidthEvaluator extends org.cqframework.cql.elm.execution.Width {
 
-    public static Object width(Interval operand) {
-        if (operand != null) {
-            Object start = operand.getStart();
-            Object end = operand.getEnd();
+    public static Object width(Object operand) {
+        if (operand == null) {
+            return null;
+        }
+
+        if (operand instanceof Interval) {
+            Object start = ((Interval) operand).getStart();
+            Object end = ((Interval) operand).getEnd();
 
             return Interval.getSize(start, end);
         }
 
-        return null;
+        throw new InvalidOperatorArgument(
+                "Width(Interval<T>)",
+                String.format("Width(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
-        Interval operand = (Interval)getOperand().evaluate(context);
+        Object operand = getOperand().evaluate(context);
 
         return width(operand);
     }

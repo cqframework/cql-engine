@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
@@ -28,13 +29,15 @@ public class TimezoneFromEvaluator extends org.cqframework.cql.elm.execution.Tim
             return TemporalHelper.zoneToOffset(((Time) operand).getTime().getOffset());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform TimezoneFrom operation with arguments of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "TimezoneFrom(DateTime) or TimezoneFrom(Time)",
+                String.format("TimezoneFrom(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return timezoneFrom(operand);
     }
 }

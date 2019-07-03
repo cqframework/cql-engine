@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.util.Iterator;
@@ -41,13 +42,16 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
 
             return sum;
         }
-        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Sum operation.", source.getClass().getName()));
+
+        throw new InvalidOperatorArgument(
+                "Sum(List<Integer>), Sum(List<Decimal>) or Sum(List<Quantity>)",
+                String.format("Sum(%s)", source.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return sum(source);
     }
 }

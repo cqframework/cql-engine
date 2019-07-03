@@ -4,6 +4,7 @@ import org.opencds.cqf.cql.elm.execution.AbsEvaluator;
 import org.opencds.cqf.cql.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.exception.CqlException;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -209,13 +210,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         try {
             result = context.resolveExpressionRef("Exp1000").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in positive infinity"));
         }
 
         try {
             result = context.resolveExpressionRef("Exp1000D").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in positive infinity"));
         }
     }
@@ -263,13 +264,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         try {
             result = context.resolveExpressionRef("Ln0").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in negative infinity"));
         }
 
         try {
             result = context.resolveExpressionRef("LnNeg0").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in negative infinity"));
         }
 

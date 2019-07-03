@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.exception.InvalidPrecision;
+
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 
@@ -119,7 +121,7 @@ public enum Precision {
             return MILLISECOND;
         }
 
-        throw new IllegalArgumentException("Invalid precision: " + precision);
+        throw new InvalidPrecision("Invalid precision: " + precision);
     }
 
     public static Precision fromDateIndex(int index) {
@@ -127,7 +129,7 @@ public enum Precision {
             case 0: return YEAR;
             case 1: return MONTH;
             case 2: return DAY;
-            default: throw new IllegalArgumentException("Invalid precision index: " + Integer.toString(index));
+            default: throw new InvalidPrecision("Invalid precision index: " + Integer.toString(index));
         }
     }
 
@@ -140,7 +142,7 @@ public enum Precision {
             case 4: return MINUTE;
             case 5: return SECOND;
             case 6: return MILLISECOND;
-            default: throw new IllegalArgumentException("Invalid precision index: " + Integer.toString(index));
+            default: throw new InvalidPrecision("Invalid precision index: " + Integer.toString(index));
         }
     }
 
@@ -153,7 +155,7 @@ public enum Precision {
             case 0: return ChronoField.YEAR;
             case 1: return ChronoField.MONTH_OF_YEAR;
             case 2: return ChronoField.DAY_OF_MONTH;
-            default: throw new IllegalArgumentException("Invalid precision index: " + Integer.toString(index));
+            default: throw new InvalidPrecision("Invalid precision index: " + Integer.toString(index));
         }
     }
 
@@ -166,7 +168,7 @@ public enum Precision {
             case 4: return ChronoField.MINUTE_OF_HOUR;
             case 5: return ChronoField.SECOND_OF_MINUTE;
             case 6: return ChronoField.MILLI_OF_SECOND;
-            default: throw new IllegalArgumentException("Invalid precision index: " + Integer.toString(index));
+            default: throw new InvalidPrecision("Invalid precision index: " + Integer.toString(index));
         }
     }
 

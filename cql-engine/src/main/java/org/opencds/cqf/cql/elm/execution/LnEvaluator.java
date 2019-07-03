@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Value;
 
@@ -20,27 +22,30 @@ public class LnEvaluator extends org.cqframework.cql.elm.execution.Ln {
             return null;
         }
 
-        if (operand instanceof BigDecimal){
+        if (operand instanceof BigDecimal) {
             BigDecimal retVal;
             try {
                 retVal = new BigDecimal(Math.log(((BigDecimal) operand).doubleValue()));
             }
-            catch (NumberFormatException nfe){
+            catch (NumberFormatException nfe) {
                 if (((BigDecimal) operand).compareTo(new BigDecimal(0)) < 0) {
                     return null;
                 }
 
                 else if (((BigDecimal) operand).compareTo(new BigDecimal(0)) == 0) {
-                    throw new ArithmeticException("Results in negative infinity");
+                    throw new UndefinedResult("Results in negative infinity");
                 }
                 else {
-                    throw new NumberFormatException();
+                    throw new UndefinedResult(nfe.getMessage());
                 }
             }
             return Value.verifyPrecision(retVal);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Natural Log operation with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Ln(Decimal)",
+                String.format("Ln(%s)", operand.getClass().getName())
+        );
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -43,7 +44,10 @@ public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Ends arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Ends(Interval<T>, Interval<T>)",
+                String.format("Ends(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

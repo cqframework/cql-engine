@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidCast;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -42,7 +43,7 @@ public class AsEvaluator extends org.cqframework.cql.elm.execution.As {
             return operand;
         }
         else if (this.isStrict()) {
-            throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as %s.", operand.getClass().getName(), clazz.getName()));
+            throw new InvalidCast(String.format("Cannot cast a value of type %s as %s.", operand.getClass().getName(), clazz.getName()));
         }
         else {
             return null;
@@ -52,9 +53,7 @@ public class AsEvaluator extends org.cqframework.cql.elm.execution.As {
     @Override
     public Object evaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         Class clazz = resolveType(context);
-
         return as(operand, clazz);
     }
 }

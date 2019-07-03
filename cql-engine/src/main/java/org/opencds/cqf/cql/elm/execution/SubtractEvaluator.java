@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -53,8 +54,6 @@ NOTE: see note in AddEvaluator
 */
 
 public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtract {
-
-    private static final int YEAR_RANGE_MIN = 0001;
 
     public static Object subtract(Object left, Object right) {
         if (left == null || right == null) {
@@ -111,14 +110,16 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
             return new Interval(subtract(leftInterval.getStart(), rightInterval.getStart()), true, subtract(leftInterval.getEnd(), rightInterval.getEnd()), true);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Subtract arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Subtract(Integer, Integer), Subtract(Decimal, Decimal), Subtract(Quantity, Quantity), Subtract(Date, Quantity), Subtract(DateTime, Quantity), Subtract(Time, Quantity)",
+                String.format("Subtract(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
     public Object evaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-
         return subtract(left, right);
     }
 }

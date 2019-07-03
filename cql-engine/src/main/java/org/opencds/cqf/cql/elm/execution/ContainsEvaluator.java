@@ -1,11 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.Interval;
-
-import java.util.Arrays;
 
 /*
 contains(argument List<T>, element T) Boolean
@@ -28,8 +25,11 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
     public static Object contains(Object left, Object right, String precision) {
         try {
             return InEvaluator.in(right, left, precision);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", left.getClass().getName()));
+        } catch (InvalidOperatorArgument e) {
+            throw new InvalidOperatorArgument(
+                    "Contains(List<T>, T)",
+                    String.format("Contains(%s, %s)", left.getClass().getName(), right.getClass().getName())
+            );
         }
     }
 

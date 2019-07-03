@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -90,7 +91,10 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
             return DistinctEvaluator.distinct(result);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Intersect arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Intersect(Interval<T>, Interval<T>) or Intersect(List<T>, List<T>)",
+                String.format("Intersect(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override

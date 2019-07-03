@@ -84,7 +84,10 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
             return ((Integer) left).compareTo((Integer)((Interval) right).getEnd()) > 0;
         }
 
-        throw new InvalidOperatorArgument("Greater (>)", left, right);
+        throw new InvalidOperatorArgument(
+                "Greater(Integer, Integer) Greater(Decimal, Decimal), Greater(Quantity, Quantity), Greater(Date, Date), Greater(DateTime, DateTime), Greater(Time, Time) or Greater(String, String)",
+                String.format("Greater(%s, %s)", left, right)
+        );
     }
 
     @Override
