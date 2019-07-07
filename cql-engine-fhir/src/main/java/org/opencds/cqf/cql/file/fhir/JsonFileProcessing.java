@@ -4,6 +4,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.opencds.cqf.cql.exception.DataProviderException;
+import org.opencds.cqf.cql.exception.UnknownPath;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +38,7 @@ public class JsonFileProcessing {
                             resources.add(arr);
                     }
                 } catch (NullPointerException e) {
-                    throw new IllegalArgumentException("Patient directory empty...");
+                    throw new DataProviderException("Patient directory empty...");
                 }
             }
         }
@@ -58,14 +60,14 @@ public class JsonFileProcessing {
                     }
                 }
             } else {
-                throw new RuntimeException("The patient files must contain .json or .js extensions");
+                throw new DataProviderException("The patient files must contain .json or .js extensions");
             }
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("The target directory is empty!");
+            throw new DataProviderException("The target directory is empty!");
         } catch (FileNotFoundException e) {
-            throw new RuntimeException("Error reading file path...");
+            throw new UnknownPath("Error reading file path...");
         } catch (IOException | ParseException e) {
-            throw new RuntimeException("Error reading json file...");
+            throw new DataProviderException("Error reading json file...");
         }
         return resources;
     }
@@ -74,12 +76,12 @@ public class JsonFileProcessing {
     public static String getDefaultPatient(Path evalPath) {
         File file = new File(evalPath.toString());
         if (!file.exists()) {
-            throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
+            throw new UnknownPath(String.format("Invalid path: %s", evalPath.toString()));
         }
         try {
             return file.listFiles()[0].getName();
         } catch (NullPointerException e) {
-            throw new IllegalArgumentException("The target directory is empty.");
+            throw new DataProviderException("The target directory is empty.");
         }
     }
 }

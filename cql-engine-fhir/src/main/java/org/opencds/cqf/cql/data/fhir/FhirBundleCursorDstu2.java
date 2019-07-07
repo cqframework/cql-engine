@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.data.fhir;
 import ca.uhn.fhir.model.dstu2.resource.Bundle;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.exception.UnknownElement;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -53,7 +54,7 @@ public class FhirBundleCursorDstu2 implements Iterable<Object> {
          * Returns the next element in the iteration.
          *
          * @return the next element in the iteration
-         * @throws NoSuchElementException if the iteration has no more elements
+         * @throws UnknownElement if the iteration has no more elements
          */
         public Object next() {
             current++;
@@ -68,7 +69,7 @@ public class FhirBundleCursorDstu2 implements Iterable<Object> {
             }
 
             // TODO: It would be possible to get here if the next link was present, but the returned page had 0 entries...
-            throw new NoSuchElementException();
+            throw new UnknownElement("The iteration has no more elements");
         }
     }
 }

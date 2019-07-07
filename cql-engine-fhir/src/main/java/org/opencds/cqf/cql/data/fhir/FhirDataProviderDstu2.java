@@ -10,6 +10,8 @@ import ca.uhn.fhir.model.primitive.*;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.apache.commons.lang3.EnumUtils;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.exception.DataProviderException;
+import org.opencds.cqf.cql.exception.UnknownType;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -54,7 +56,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
         }
 
         if (codePath == null && (codes != null || valueSet != null)) {
-            throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
+            throw new DataProviderException("A code path must be provided when filtering on codes or a valueset.");
         }
 
         if (context != null && context.equals("Patient") && contextValue != null) {
@@ -101,7 +103,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             if (dateRange.getLow() != null) {
                 String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
                 if (lowDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
+                    throw new DataProviderException("A date path or low date path must be provided when filtering on a date range.");
                 }
 
                 params.append(String.format("&%s=%s%s",
@@ -113,7 +115,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             if (dateRange.getHigh() != null) {
                 String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
                 if (highDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
+                    throw new DataProviderException("A date path or high date path must be provided when filtering on a date range.");
                 }
 
                 params.append(String.format("&%s=%s%s",
@@ -141,7 +143,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             Field field = clazz.getField("VALUESET_BINDER");
             return (IValueSetEnumBinder<Enum<?>>) field.get(null);
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Enumeration field access error in class " + clazz.getSimpleName());
+            throw new DataProviderException("Enumeration field access error in class " + clazz.getSimpleName());
         }
     }
 
@@ -213,11 +215,11 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             Method accessor = clazz.getMethod(accessorMethodName, resolveReturnType(readAccessor.getReturnType(), target, path));
             accessor.invoke(target, fromJavaPrimitive(value, target));
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            throw new DataProviderException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            throw new DataProviderException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            throw new DataProviderException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         }
     }
 
@@ -356,12 +358,12 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             }
 
             else {
-                throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+                throw new DataProviderException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
             }
         } catch (InvocationTargetException e) {
-            throw new IllegalArgumentException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            throw new DataProviderException(String.format("Errors occurred attempting to invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         } catch (IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            throw new DataProviderException(String.format("Could not invoke the accessor function for property %s of type %s", path, clazz.getSimpleName()));
         }
     }
 
@@ -419,7 +421,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
         try {
             return clazz.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
+            throw new UnknownType(String.format("Could not create an instance of class %s.", clazz.getName()));
         }
     }
 
@@ -589,7 +591,7 @@ public class FhirDataProviderDstu2 extends BaseDataProviderDstu2 {
             return Class.forName(String.format("%s.%s", truePackage, typeName));
         }
         catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", truePackage, typeName));
+            throw new UnknownType(String.format("Could not resolve type %s.%s.", truePackage, typeName));
         }
     }
 }

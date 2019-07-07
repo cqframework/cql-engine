@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import org.hl7.fhir.dstu3.model.*;
+import org.opencds.cqf.cql.exception.InvalidPrecision;
+import org.opencds.cqf.cql.exception.UnknownType;
 import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
@@ -62,7 +64,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
                     value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
                     value.getMinute(), value.getSecond(), value.getMillis()
             );
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
 
@@ -74,7 +76,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
             case YEAR: return new Date(value.getYear());
             case MONTH: return new Date(value.getYear(), value.getMonth() + 1);
             case DAY: return new Date(value.getYear(), value.getMonth() + 1, value.getDay());
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
 
@@ -218,7 +220,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
                 className = className.substring(0, className.indexOf("EnumFactory"));
                 return Class.forName(className);
             } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException(String.format("Could not resolve type %s", className));
+                throw new UnknownType(String.format("Could not resolve type %s", className));
             }
         }
 
