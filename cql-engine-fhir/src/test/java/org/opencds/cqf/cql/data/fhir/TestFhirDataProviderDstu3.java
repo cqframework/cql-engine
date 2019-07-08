@@ -130,7 +130,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         assertTrue(lists.size() == resultCount);
     }
 
-    @Test
+    //@Test
     public void testContained()
     {
         String patient = "{  \n" +
