@@ -32,7 +32,7 @@ public class LastPositionOfEvaluator extends org.cqframework.cql.elm.execution.L
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object string = getString().evaluate(context);
         Object pattern = getPattern().evaluate(context);
 

@@ -103,7 +103,7 @@ public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InVal
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object code = getCode().evaluate(context);
         Object valueset = getValueset();
 

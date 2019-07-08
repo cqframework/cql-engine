@@ -62,7 +62,7 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object src = getSource().evaluate(context);
         return avg(src);
     }

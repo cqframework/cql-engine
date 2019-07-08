@@ -7,7 +7,7 @@ import org.opencds.cqf.cql.runtime.Precision;
 public class DateEvaluator extends org.cqframework.cql.elm.execution.Date {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Integer year = this.getYear() == null ? null : (Integer) this.getYear().evaluate(context);
         if (year == null) {
             return null;

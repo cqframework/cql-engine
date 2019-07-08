@@ -89,7 +89,7 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object value = getOperand().evaluate(context);
         return predecessor(value);
     }

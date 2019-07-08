@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 public class LiteralEvaluator extends org.cqframework.cql.elm.execution.Literal {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         switch (this.getValueType().getLocalPart()) {
             case "Boolean": return Boolean.parseBoolean(this.getValue());
             case "Integer": return Integer.parseInt(this.getValue());

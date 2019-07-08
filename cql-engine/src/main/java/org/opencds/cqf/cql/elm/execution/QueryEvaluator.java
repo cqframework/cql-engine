@@ -215,7 +215,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
 
         if (this.getLet().size() != 0) {
             resolveLet(context);

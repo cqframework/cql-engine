@@ -11,7 +11,7 @@ public class RepeatEvaluator extends org.cqframework.cql.elm.execution.Repeat {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Object element = getElement().evaluate(context);
         String scope = getScope();

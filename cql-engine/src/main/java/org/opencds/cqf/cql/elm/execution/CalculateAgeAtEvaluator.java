@@ -47,7 +47,7 @@ public class CalculateAgeAtEvaluator extends org.cqframework.cql.elm.execution.C
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object birthDate = getOperand().get(0).evaluate(context);
         Object asOf = getOperand().get(1).evaluate(context);
         String precision = getPrecision().value();

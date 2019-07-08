@@ -43,7 +43,7 @@ public class NegateEvaluator extends org.cqframework.cql.elm.execution.Negate {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Expression operand = getOperand();
 
         // Special case to handle literals of the minimum Integer value

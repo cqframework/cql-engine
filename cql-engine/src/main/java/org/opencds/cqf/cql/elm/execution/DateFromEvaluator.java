@@ -36,7 +36,7 @@ public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFro
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return dateFrom(operand);
     }

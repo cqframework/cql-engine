@@ -13,7 +13,7 @@ public class ReplaceMatchesEvaluator extends org.cqframework.cql.elm.execution.R
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         String argument = (String) getOperand().get(0).evaluate(context);
         String pattern = (String) getOperand().get(1).evaluate(context);
         String substitution = (String) getOperand().get(2).evaluate(context);

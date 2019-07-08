@@ -63,7 +63,7 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return max(source);
     }

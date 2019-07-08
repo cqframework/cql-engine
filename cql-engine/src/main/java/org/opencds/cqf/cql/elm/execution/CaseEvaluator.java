@@ -63,7 +63,7 @@ public class CaseEvaluator extends org.cqframework.cql.elm.execution.Case {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Expression comparand = getComparand();
         return comparand == null ? standardCase(context) : selectedCase(context, comparand.evaluate(context));
     }

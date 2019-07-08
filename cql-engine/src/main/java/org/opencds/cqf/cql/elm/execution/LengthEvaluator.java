@@ -54,7 +54,7 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         // null operand case

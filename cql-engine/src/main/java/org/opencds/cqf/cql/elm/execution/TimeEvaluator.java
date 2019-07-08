@@ -16,7 +16,7 @@ CQL supports time values in the range @T00:00:00.0 to @T23:59:59.999 with a step
 public class TimeEvaluator extends org.cqframework.cql.elm.execution.Time {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
 
         if (this.getHour() == null) {
             return null;

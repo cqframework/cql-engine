@@ -24,7 +24,7 @@ public class NotEqualEvaluator extends org.cqframework.cql.elm.execution.NotEqua
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 

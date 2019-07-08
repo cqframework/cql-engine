@@ -107,7 +107,7 @@ public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Childre
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
 
         return children(source);

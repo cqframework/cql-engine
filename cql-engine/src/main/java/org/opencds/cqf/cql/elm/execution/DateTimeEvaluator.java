@@ -1,10 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidDateTime;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeParseException;
 
 /*
 simple type DateTime
@@ -16,7 +18,7 @@ CQL supports date and time values in the range @0001-01-01T00:00:00.0 to @9999-1
 public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTime {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Integer year = this.getYear() == null ? null : (Integer)this.getYear().evaluate(context);
 
         if (year == null) {
@@ -31,17 +33,25 @@ public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTim
             offset = (BigDecimal) this.getTimezoneOffset().evaluate(context);
         }
 
-        return new DateTime(
-                offset,
-                TemporalHelper.cleanArray(
-                        year,
-                        (this.getMonth() == null) ? null : (Integer)this.getMonth().evaluate(context),
-                        (this.getDay() == null) ? null : (Integer)this.getDay().evaluate(context),
-                        (this.getHour() == null) ? null : (Integer)this.getHour().evaluate(context),
-                        (this.getMinute() == null) ? null : (Integer)this.getMinute().evaluate(context),
-                        (this.getSecond() == null) ? null : (Integer)this.getSecond().evaluate(context),
-                        (this.getMillisecond() == null) ? null : (Integer)this.getMillisecond().evaluate(context)
-                )
-        ).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        try {
+            return new DateTime(
+                    offset,
+                    TemporalHelper.cleanArray(
+                            year,
+                            (this.getMonth() == null) ? null : (Integer) this.getMonth().evaluate(context),
+                            (this.getDay() == null) ? null : (Integer) this.getDay().evaluate(context),
+                            (this.getHour() == null) ? null : (Integer) this.getHour().evaluate(context),
+                            (this.getMinute() == null) ? null : (Integer) this.getMinute().evaluate(context),
+                            (this.getSecond() == null) ? null : (Integer) this.getSecond().evaluate(context),
+                            (this.getMillisecond() == null) ? null : (Integer) this.getMillisecond().evaluate(context)
+                    )
+            ).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+        }
+        catch (DateTimeParseException e) {
+            throw new InvalidDateTime(
+                    String.format("Invalid date time components %s", e.getMessage()),
+                    e
+            );
+        }
     }
 }

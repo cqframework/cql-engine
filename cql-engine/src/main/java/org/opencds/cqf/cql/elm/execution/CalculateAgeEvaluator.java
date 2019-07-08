@@ -49,7 +49,7 @@ public class CalculateAgeEvaluator extends org.cqframework.cql.elm.execution.Cal
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         String precision = getPrecision().value();
 

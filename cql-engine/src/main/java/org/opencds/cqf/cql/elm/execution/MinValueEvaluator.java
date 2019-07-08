@@ -48,7 +48,7 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         String type = this.getValueType().getLocalPart();
         if (type == null) {
             return null;

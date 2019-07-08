@@ -35,7 +35,7 @@ public class WidthEvaluator extends org.cqframework.cql.elm.execution.Width {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         return width(operand);

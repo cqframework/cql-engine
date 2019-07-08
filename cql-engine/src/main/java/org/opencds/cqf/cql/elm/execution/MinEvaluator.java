@@ -62,7 +62,7 @@ public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return min(source);
     }

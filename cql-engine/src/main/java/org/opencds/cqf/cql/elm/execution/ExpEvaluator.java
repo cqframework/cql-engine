@@ -47,7 +47,7 @@ public class ExpEvaluator extends org.cqframework.cql.elm.execution.Exp {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return exp(operand);
     }

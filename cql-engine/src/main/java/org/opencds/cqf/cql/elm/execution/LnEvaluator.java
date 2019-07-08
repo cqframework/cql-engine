@@ -49,7 +49,7 @@ public class LnEvaluator extends org.cqframework.cql.elm.execution.Ln {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         return ln(operand);

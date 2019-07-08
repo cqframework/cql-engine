@@ -16,7 +16,7 @@ public class IsFalseEvaluator extends org.cqframework.cql.elm.execution.IsFalse 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Boolean operand = (Boolean) getOperand().evaluate(context);
 
         return isFalse(operand);

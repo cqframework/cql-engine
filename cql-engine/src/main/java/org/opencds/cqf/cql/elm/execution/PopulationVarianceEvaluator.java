@@ -51,7 +51,7 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return popVariance(source);
     }

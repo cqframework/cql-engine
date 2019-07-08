@@ -33,7 +33,7 @@ public class StartEvaluator extends org.cqframework.cql.elm.execution.Start {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = this.getOperand().evaluate(context);
         return start(operand);
     }

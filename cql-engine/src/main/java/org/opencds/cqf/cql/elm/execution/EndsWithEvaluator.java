@@ -12,7 +12,7 @@ public class EndsWithEvaluator extends org.cqframework.cql.elm.execution.EndsWit
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         String argument = (String) getOperand().get(0).evaluate(context);
         String suffix = (String) getOperand().get(1).evaluate(context);
 

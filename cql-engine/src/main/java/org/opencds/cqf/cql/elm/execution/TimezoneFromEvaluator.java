@@ -36,7 +36,7 @@ public class TimezoneFromEvaluator extends org.cqframework.cql.elm.execution.Tim
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return timezoneFrom(operand);
     }

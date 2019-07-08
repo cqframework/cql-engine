@@ -69,7 +69,7 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return median(source);
     }

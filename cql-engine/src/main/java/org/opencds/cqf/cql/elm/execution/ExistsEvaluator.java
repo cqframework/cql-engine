@@ -23,7 +23,7 @@ public class ExistsEvaluator extends org.cqframework.cql.elm.execution.Exists {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         return exists(operand);

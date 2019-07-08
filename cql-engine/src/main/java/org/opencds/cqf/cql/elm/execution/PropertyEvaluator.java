@@ -6,7 +6,7 @@ import org.opencds.cqf.cql.runtime.Tuple;
 public class PropertyEvaluator extends org.cqframework.cql.elm.execution.Property {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object target = null;
 
         if (this.getSource() != null) {

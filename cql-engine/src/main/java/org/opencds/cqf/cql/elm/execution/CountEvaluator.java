@@ -47,7 +47,7 @@ public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return count(source);
     }

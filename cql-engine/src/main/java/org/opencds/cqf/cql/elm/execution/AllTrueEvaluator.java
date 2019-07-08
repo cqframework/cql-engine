@@ -53,7 +53,7 @@ public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object src = getSource().evaluate(context);
         return allTrue(src);
     }

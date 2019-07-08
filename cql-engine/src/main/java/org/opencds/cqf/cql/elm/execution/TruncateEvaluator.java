@@ -37,7 +37,7 @@ public class TruncateEvaluator extends org.cqframework.cql.elm.execution.Truncat
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return truncate(operand);
     }

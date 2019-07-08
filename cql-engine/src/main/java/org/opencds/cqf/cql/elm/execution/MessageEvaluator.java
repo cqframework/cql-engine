@@ -42,7 +42,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Boolean condition = (Boolean) getCondition().evaluate(context);
         String code = (String) getCode().evaluate(context);

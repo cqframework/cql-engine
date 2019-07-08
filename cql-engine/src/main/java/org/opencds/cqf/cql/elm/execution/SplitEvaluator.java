@@ -40,7 +40,7 @@ public class SplitEvaluator extends org.cqframework.cql.elm.execution.Split {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object stringToSplit = getStringToSplit().evaluate(context);
         Object separator = getSeparator().evaluate(context);
         return split(stringToSplit, separator);

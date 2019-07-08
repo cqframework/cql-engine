@@ -9,31 +9,22 @@ import java.util.function.Function;
 
 public class Executable
 {
-    static {
-        Thread.setDefaultUncaughtExceptionHandler(new CqlExceptionHandler());
-    }
-//    public Object execute(Function<Object, Object> function)
-//    {
-//        Thread.setDefaultUncaughtExceptionHandler(new CqlExceptionHandler());
-//        try
-//        {
-//            return function.apply(null);
-//        }
-//        catch (Exception e)
-//        {
-//            if (e instanceof CqlException)
-//            {
-//                throw e;
-//            }
-//            else
-//            {
-//                throw new CqlException(e.getMessage());
-//            }
-//        }
-//    }
-
     public Object evaluate(Context context) throws CqlException
     {
+        try {
+            return internalEvaluate(context);
+        }
+        catch (Exception e) {
+            if (e instanceof CqlException) {
+                throw e;
+            }
+            else {
+                throw new CqlException(e);
+            }
+        }
+    }
+
+    protected Object internalEvaluate(Context context) {
         throw new NotImplementedException(String.format("evaluate not implemented for class %s",
                 this.getClass().getSimpleName()));
     }

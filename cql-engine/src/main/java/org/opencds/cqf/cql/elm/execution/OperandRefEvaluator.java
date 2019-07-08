@@ -5,7 +5,7 @@ import org.opencds.cqf.cql.execution.Context;
 public class OperandRefEvaluator extends org.cqframework.cql.elm.execution.OperandRef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         return context.resolveVariable(this.getName(), true).getValue();
     }
 }

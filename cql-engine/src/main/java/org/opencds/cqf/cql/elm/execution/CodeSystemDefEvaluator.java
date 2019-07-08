@@ -6,7 +6,7 @@ import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 public class CodeSystemDefEvaluator extends org.cqframework.cql.elm.execution.CodeSystemDef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         return new CodeSystemInfo().withId(getId()).withVersion(getVersion());
     }
 }

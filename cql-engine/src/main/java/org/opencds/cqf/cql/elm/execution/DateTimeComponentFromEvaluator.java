@@ -77,7 +77,7 @@ public class DateTimeComponentFromEvaluator extends org.cqframework.cql.elm.exec
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         String precision = getPrecision().value();
 

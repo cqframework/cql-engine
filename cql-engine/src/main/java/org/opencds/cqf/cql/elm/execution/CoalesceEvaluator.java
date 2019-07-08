@@ -41,7 +41,7 @@ public class CoalesceEvaluator extends org.cqframework.cql.elm.execution.Coalesc
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         List<Object> operands = new ArrayList<>();
         for (Expression operand : getOperand()) {
             operands.add(operand.evaluate(context));

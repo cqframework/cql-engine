@@ -50,7 +50,7 @@ public class GeometricMeanEvaluator extends org.cqframework.cql.elm.execution.Ge
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         return geometricMean((Iterable) getSource().evaluate(context));
     }
 }

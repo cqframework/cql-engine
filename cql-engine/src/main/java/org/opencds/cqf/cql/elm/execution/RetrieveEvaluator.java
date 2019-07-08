@@ -14,7 +14,7 @@ import java.util.List;
 
 public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retrieve {
 
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         DataProvider dataProvider = context.resolveDataProvider(this.dataType);
         Iterable<Code> codes = null;
         String valueSet = null;

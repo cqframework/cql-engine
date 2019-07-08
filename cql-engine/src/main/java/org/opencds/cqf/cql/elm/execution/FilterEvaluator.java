@@ -10,7 +10,7 @@ import java.util.List;
 public class FilterEvaluator extends Filter {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = this.getSource().evaluate(context);
 
         List<Object> ret = new ArrayList<>();

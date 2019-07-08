@@ -62,7 +62,7 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return variance(source);
     }

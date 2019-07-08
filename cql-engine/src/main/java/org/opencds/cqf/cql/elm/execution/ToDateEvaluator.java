@@ -56,7 +56,7 @@ public class ToDateEvaluator extends org.cqframework.cql.elm.execution.ToDate {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return toDate(operand);
     }

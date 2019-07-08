@@ -18,7 +18,7 @@ The Quantity type represents quantities with a specified unit within CQL.
 public class QuantityEvaluator extends org.cqframework.cql.elm.execution.Quantity {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         BigDecimal value = Value.verifyPrecision(this.getValue());
         return new org.opencds.cqf.cql.runtime.Quantity().withValue(value).withUnit(this.getUnit());
     }

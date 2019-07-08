@@ -103,7 +103,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
             context.resolveExpressionRef("DateTimeUpperBoundExcept").getExpression().evaluate(context);
             Assert.fail();
         }
-        catch (DateTimeParseException e) {
+        catch (InvalidDateTime e) {
             // pass
         }
 

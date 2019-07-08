@@ -35,7 +35,7 @@ public class FloorEvaluator extends org.cqframework.cql.elm.execution.Floor {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return floor(operand);
     }

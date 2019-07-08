@@ -5,7 +5,7 @@ import org.opencds.cqf.cql.execution.Context;
 public class IfEvaluator extends org.cqframework.cql.elm.execution.If {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object condition = getCondition().evaluate(context);
 
         if (condition == null) {

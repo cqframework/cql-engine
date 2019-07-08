@@ -16,7 +16,7 @@ Now is defined in this way for two reasons:
 public class NowEvaluator extends org.cqframework.cql.elm.execution.Now {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         return context.getEvaluationDateTime();
     }
 }

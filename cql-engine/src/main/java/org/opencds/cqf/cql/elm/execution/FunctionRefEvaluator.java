@@ -11,7 +11,7 @@ import java.util.Optional;
 public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.FunctionRef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         ArrayList<Object> arguments = new ArrayList<>();
         for (Expression operand : this.getOperand()) {
             arguments.add(operand.evaluate(context));

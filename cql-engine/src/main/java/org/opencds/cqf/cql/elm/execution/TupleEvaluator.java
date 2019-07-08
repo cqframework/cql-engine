@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class TupleEvaluator extends org.cqframework.cql.elm.execution.Tuple {
 
   @Override
-  public Object evaluate(Context context) {
+  protected Object internalEvaluate(Context context) {
     HashMap<String, Object> ret = new HashMap<>();
     for (org.cqframework.cql.elm.execution.TupleElement element : this.getElement()) {
       ret.put(element.getName(), element.getValue().evaluate(context));

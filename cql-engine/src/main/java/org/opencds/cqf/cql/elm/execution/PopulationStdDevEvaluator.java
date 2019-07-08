@@ -46,7 +46,7 @@ public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return popStdDev(source);
     }

@@ -32,7 +32,7 @@ If the argument is null, the result is null.
 public class ToDateTimeEvaluator extends org.cqframework.cql.elm.execution.ToDateTime {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         if (operand == null) {

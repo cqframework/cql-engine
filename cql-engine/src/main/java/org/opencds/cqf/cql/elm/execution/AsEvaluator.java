@@ -51,7 +51,7 @@ public class AsEvaluator extends org.cqframework.cql.elm.execution.As {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         Class clazz = resolveType(context);
         return as(operand, clazz);

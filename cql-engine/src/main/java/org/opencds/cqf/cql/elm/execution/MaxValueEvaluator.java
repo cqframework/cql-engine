@@ -48,7 +48,7 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         String type = getValueType().getLocalPart();
         if (type == null) {
             return null;

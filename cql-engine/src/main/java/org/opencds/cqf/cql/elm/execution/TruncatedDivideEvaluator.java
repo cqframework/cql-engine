@@ -52,7 +52,7 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         return div(left, right);

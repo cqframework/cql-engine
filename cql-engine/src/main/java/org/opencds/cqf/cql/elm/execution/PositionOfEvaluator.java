@@ -29,7 +29,7 @@ public class PositionOfEvaluator extends org.cqframework.cql.elm.execution.Posit
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object pattern = getPattern().evaluate(context);
         Object string = getString().evaluate(context);
 

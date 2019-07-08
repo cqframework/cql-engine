@@ -58,7 +58,7 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object stringValue = getStringToSub().evaluate(context);
         Object startIndexValue = getStartIndex().evaluate(context);
         Object lengthValue = getLength() == null ? null : getLength().evaluate(context);

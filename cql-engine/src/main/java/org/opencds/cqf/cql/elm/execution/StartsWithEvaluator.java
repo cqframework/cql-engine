@@ -31,7 +31,7 @@ public class StartsWithEvaluator extends org.cqframework.cql.elm.execution.Start
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object argument = getOperand().get(0).evaluate(context);
         Object prefix = getOperand().get(1).evaluate(context);
 

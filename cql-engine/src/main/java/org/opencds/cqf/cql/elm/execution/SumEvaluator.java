@@ -50,7 +50,7 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         return sum(source);
     }

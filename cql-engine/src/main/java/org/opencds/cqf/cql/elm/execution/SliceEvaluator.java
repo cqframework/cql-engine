@@ -68,7 +68,7 @@ public class SliceEvaluator extends org.cqframework.cql.elm.execution.Slice {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Integer start = (Integer) getStartIndex().evaluate(context);
         Integer end = getEndIndex() == null ? null : (Integer) getEndIndex().evaluate(context);

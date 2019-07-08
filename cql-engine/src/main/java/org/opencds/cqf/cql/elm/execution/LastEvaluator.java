@@ -26,7 +26,7 @@ public class LastEvaluator extends org.cqframework.cql.elm.execution.Last {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
 
         return last(source);

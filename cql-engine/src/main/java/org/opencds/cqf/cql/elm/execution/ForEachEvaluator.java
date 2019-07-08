@@ -21,7 +21,7 @@ public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Object element = getSource().evaluate(context);
 

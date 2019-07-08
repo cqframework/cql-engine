@@ -62,7 +62,7 @@ public class InCodeSystemEvaluator extends org.cqframework.cql.elm.execution.InC
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object code = getCode().evaluate(context);
         Object codeSystem = getCodesystem();
 

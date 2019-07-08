@@ -75,7 +75,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         return toQuantity(operand);

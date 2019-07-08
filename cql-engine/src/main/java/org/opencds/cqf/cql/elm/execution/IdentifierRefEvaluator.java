@@ -6,7 +6,7 @@ import org.opencds.cqf.cql.execution.Context;
 public class IdentifierRefEvaluator extends IdentifierRef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
 
         String name = this.getName();
 

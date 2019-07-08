@@ -59,7 +59,7 @@ public class CombineEvaluator extends org.cqframework.cql.elm.execution.Combine 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = this.getSource().evaluate(context);
         String separator = this.getSeparator() == null ? "" : (String) this.getSeparator().evaluate(context);
 

@@ -35,7 +35,7 @@ NULL	| TRUE	NULL	NULL
      }
 
      @Override
-     public Object evaluate(Context context) {
+     protected Object internalEvaluate(Context context) {
          Boolean left = (Boolean)getOperand().get(0).evaluate(context);
          Boolean right = (Boolean)getOperand().get(1).evaluate(context);
 

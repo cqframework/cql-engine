@@ -47,7 +47,7 @@ public class RoundEvaluator extends org.cqframework.cql.elm.execution.Round {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         Object precision = getPrecision() == null ? null : getPrecision().evaluate(context);
         return round(operand, precision);

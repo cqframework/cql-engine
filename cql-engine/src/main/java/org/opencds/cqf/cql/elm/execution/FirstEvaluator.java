@@ -25,7 +25,7 @@ public class FirstEvaluator extends org.cqframework.cql.elm.execution.First {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
 
         return first(source);

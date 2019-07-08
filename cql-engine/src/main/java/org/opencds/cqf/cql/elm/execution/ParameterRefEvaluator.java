@@ -5,7 +5,7 @@ import org.opencds.cqf.cql.execution.Context;
 public class ParameterRefEvaluator extends org.cqframework.cql.elm.execution.ParameterRef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         return context.resolveParameterRef(this.getLibraryName(), this.getName());
     }
 }

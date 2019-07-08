@@ -8,7 +8,7 @@ import java.util.List;
 public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.ExpressionDef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         if (this.getContext() != null) {
             context.enterContext(this.getContext());
         }

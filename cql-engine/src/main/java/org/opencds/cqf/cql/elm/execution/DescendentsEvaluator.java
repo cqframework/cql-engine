@@ -45,7 +45,7 @@ public class DescendentsEvaluator extends org.cqframework.cql.elm.execution.Desc
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
 
         return descendents(source);

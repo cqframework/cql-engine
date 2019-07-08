@@ -18,7 +18,7 @@ The Concept type represents a single terminological concept within CQL.
 public class ConceptEvaluator extends org.cqframework.cql.elm.execution.Concept {
 
   @Override
-  public Object evaluate(Context context) {
+  protected Object internalEvaluate(Context context) {
     ArrayList<Code> codes = new ArrayList<>();
     for (int i = 0; i < this.getCode().size(); ++i) {
       codes.add((Code)this.getCode().get(i).evaluate(context));

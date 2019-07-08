@@ -47,7 +47,7 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return toInteger(operand);
     }

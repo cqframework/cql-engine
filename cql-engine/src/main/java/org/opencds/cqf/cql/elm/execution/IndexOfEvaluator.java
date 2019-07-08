@@ -44,7 +44,7 @@ public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Object elementToFind = getElement().evaluate(context);
 

@@ -52,7 +52,7 @@ public class MeetsAfterEvaluator extends org.cqframework.cql.elm.execution.Meets
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();

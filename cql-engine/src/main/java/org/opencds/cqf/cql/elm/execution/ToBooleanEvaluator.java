@@ -45,7 +45,7 @@ public class ToBooleanEvaluator extends org.cqframework.cql.elm.execution.ToBool
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return toBoolean(operand);
     }

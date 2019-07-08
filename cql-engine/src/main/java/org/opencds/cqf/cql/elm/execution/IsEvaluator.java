@@ -31,7 +31,7 @@ public class IsEvaluator extends org.cqframework.cql.elm.execution.Is {
   }
 
   @Override
-  public Object evaluate(Context context) {
+  protected Object internalEvaluate(Context context) {
     Object operand = getOperand().evaluate(context);
     Class type = resolveType(context);
 

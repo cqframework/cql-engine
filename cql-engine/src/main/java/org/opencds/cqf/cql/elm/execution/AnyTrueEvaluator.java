@@ -61,7 +61,7 @@ public class AnyTrueEvaluator extends org.cqframework.cql.elm.execution.AnyTrue 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object src = getSource().evaluate(context);
         return anyTrue(src);
     }

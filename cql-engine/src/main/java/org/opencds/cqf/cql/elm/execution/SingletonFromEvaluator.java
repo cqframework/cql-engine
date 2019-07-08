@@ -42,7 +42,7 @@ public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.Si
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return singletonFrom(operand);
     }

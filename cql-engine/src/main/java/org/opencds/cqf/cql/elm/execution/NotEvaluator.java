@@ -27,7 +27,7 @@ public class NotEvaluator extends org.cqframework.cql.elm.execution.Not {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return not(operand);
     }
