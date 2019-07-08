@@ -157,6 +157,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
                 break;
             case "MedicationRequest":
                 if (path.equals("authoredOn")) return "authoredon";
+                else if (path.equals("medication")) return "code";
                 else if (path.equals("medicationCodeableConcept")) return "code";
                 else if (path.equals("medicationReference")) return "medication";
                 else if (path.contains("event")) return "date";
