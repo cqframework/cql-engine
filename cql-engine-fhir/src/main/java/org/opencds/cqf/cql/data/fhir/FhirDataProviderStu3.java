@@ -7,6 +7,7 @@ import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.TokenParamModifier;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.exception.DataProviderException;
@@ -224,6 +225,12 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
     protected Object resolveProperty(Object target, String path) {
         if (target instanceof Enumeration && path.equals("value")) {
             return ((Enumeration)target).getValueAsString();
+        }
+
+        // This is kind of a hack to get around contained resources - HAPI doesn't have ResourceContainer type for STU3
+        if (target instanceof Resource && ((Resource) target).fhirType().equals(path))
+        {
+            return target;
         }
 
         return super.resolveProperty(target, path);

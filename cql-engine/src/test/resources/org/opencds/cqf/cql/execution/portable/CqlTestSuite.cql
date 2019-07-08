@@ -3662,6 +3662,7 @@ define DateTimeOverlapsInterval: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), Date
 define DateTimeBeginsInterval: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)]
 define DateTimeDuringInterval: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 5, 1, 0, 0, 0, 0)]
 define DateTimeEndsInterval: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
+define DateTimeDifferentPrecisionInterval: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 12, 31, 23, 59, 59, 999)]
 define DtIvlIntersect_DateTimeSameAsIntersect: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)] intersect Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
 define DtIvlIntersect_DateTimeBeforeIntersect: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 4, 1, 0, 0, 0, 0)] intersect Interval[DateTime(2012, 7, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
 define DtIvlIntersect_DateTimeMeetsIntersect: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)] intersect Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
@@ -3669,6 +3670,7 @@ define DtIvlIntersect_DateTimeOverlapsIntersect: Interval[DateTime(2012, 1, 1, 0
 define DtIvlIntersect_DateTimeBeginsIntersect: Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 6, 1, 0, 0, 0, 0)] intersect Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
 define DtIvlIntersect_DateTimeDuringIntersect: Interval[DateTime(2012, 3, 1, 0, 0, 0, 0), DateTime(2012, 5, 1, 0, 0, 0, 0)] intersect Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
 define DtIvlIntersect_DateTimeEndsIntersect: Interval[DateTime(2012, 6, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)] intersect Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2013, 1, 1, 0, 0, 0, 0)]
+define DtIvlIntersect_DateTimeDifferentPrecisionIntersect: Interval[DateTime(2012, 1, 1), DateTime(2012, 12, 31)] intersect Interval[DateTime(2012, 1, 1, 0, 0, 0, 0), DateTime(2012, 12, 31, 23, 59, 59, 999)]
 
 define test_DtIvlIntersect_DateTimeSameAsIntersect: TestMessage(DtIvlIntersect_DateTimeSameAsIntersect = DateTimeFullInterval, 'DtIvlIntersect_DateTimeSameAsIntersect', toString(DateTimeFullInterval), toString(DtIvlIntersect_DateTimeSameAsIntersect))
 define test_DtIvlIntersect_DateTimeBeforeIntersect: TestMessage(DtIvlIntersect_DateTimeBeforeIntersect is null, 'DtIvlIntersect_DateTimeBeforeIntersect', 'null', toString(DtIvlIntersect_DateTimeBeforeIntersect))
@@ -3677,6 +3679,7 @@ define test_DtIvlIntersect_DateTimeOverlapsIntersect: TestMessage(DtIvlIntersect
 define test_DtIvlIntersect_DateTimeBeginsIntersect: TestMessage(DtIvlIntersect_DateTimeBeginsIntersect = DateTimeBeginsInterval, 'DtIvlIntersect_DateTimeBeginsIntersect', toString(DateTimeBeginsInterval), toString(DtIvlIntersect_DateTimeBeginsIntersect))
 define test_DtIvlIntersect_DateTimeDuringIntersect: TestMessage(DtIvlIntersect_DateTimeDuringIntersect = DateTimeDuringInterval, 'DtIvlIntersect_DateTimeDuringIntersect', toString(DateTimeDuringInterval), toString(DtIvlIntersect_DateTimeDuringIntersect))
 define test_DtIvlIntersect_DateTimeEndsIntersect: TestMessage(DtIvlIntersect_DateTimeEndsIntersect = DateTimeEndsInterval, 'DtIvlIntersect_DateTimeEndsIntersect', toString(DateTimeEndsInterval), toString(DtIvlIntersect_DateTimeEndsIntersect))
+define test_DtIvlIntersect_DateTimeDifferentPrecisionIntersect: TestMessage(DtIvlIntersect_DateTimeDifferentPrecisionIntersect = DateTimeDifferentPrecisionInterval, 'DtIvlIntersect_DateTimeDifferentPrecisionIntersect', toString(DateTimeEndsInterval), toString(DtIvlIntersect_DateTimeDifferentPrecisionIntersect))
 
 // IntegerIntervalCollapse
 define IntEmptyIntervalList: List<Interval<Integer>>{}

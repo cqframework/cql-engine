@@ -4,6 +4,7 @@ import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Precision;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,10 +67,30 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
                 return null;
             }
 
-            Object max = GreaterEvaluator.greater(leftStart, rightStart) ? leftStart : rightStart;
-            Object min = LessEvaluator.less(leftEnd, rightEnd) ? leftEnd : rightEnd;
+            Boolean leftStartGtRightStart = GreaterEvaluator.greater(leftStart, rightStart);
+            Boolean leftEndLtRightEnd = LessEvaluator.less(leftEnd, rightEnd);
 
-            return new Interval(max, true, min, true);
+            Object max;
+            if (leftStartGtRightStart == null && precision != null)
+            {
+                max = ((BaseTemporal) leftStart).getPrecision().toString().equals(precision) ? leftStart : rightStart;
+            }
+            else
+            {
+                max = leftStartGtRightStart == null ? null : leftStartGtRightStart ? leftStart : rightStart;
+            }
+
+            Object min;
+            if (leftEndLtRightEnd == null && precision != null)
+            {
+                min = ((BaseTemporal) leftEnd).getPrecision().toString().equals(precision) ? leftEnd : rightEnd;
+            }
+            else
+            {
+                min = leftEndLtRightEnd == null ? null : leftEndLtRightEnd ? leftEnd : rightEnd;
+            }
+
+            return new Interval(max, max != null, min, min != null);
         }
 
         else if (left instanceof Iterable)
