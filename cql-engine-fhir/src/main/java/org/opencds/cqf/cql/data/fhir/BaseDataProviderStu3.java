@@ -152,6 +152,9 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
                 else if (path.equals("onsetPeriod")) return "onset-date";
                 else if (path.equals("onsetRange")) return "onset-age";
                 break;
+            case "MedicationDispense":
+                if (path.equals("medication")) return "code";
+                break;
             case "MedicationRequest":
                 if (path.equals("authoredOn")) return "authoredon";
                 else if (path.equals("medicationCodeableConcept")) return "code";
