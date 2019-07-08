@@ -2,13 +2,10 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IntervalEvaluator extends org.cqframework.cql.elm.execution.Interval {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object low = getLow() != null ? getLow().evaluate(context) : null;
         Boolean lowClosed = getLowClosedExpression() != null ? (Boolean)getLowClosedExpression().evaluate(context) : this.lowClosed;
         Object high = getHigh() != null ? getHigh().evaluate(context) : null;

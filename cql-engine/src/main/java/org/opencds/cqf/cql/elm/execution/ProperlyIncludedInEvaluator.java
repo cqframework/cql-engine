@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -26,40 +27,41 @@ If the left argument is null, the result is true if the right argument is not em
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
     public static Object properlyIncudedIn(Object left, Object right, String precision) {
-        try {
-            return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(String.format("Cannot ProperlyIncludedIn arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
-        }
-    }
-
-    @Override
-    public Object evaluate(Context context) {
-        Object left = getOperand().get(0).evaluate(context);
-        Object right = getOperand().get(1).evaluate(context);
-        String precision = getPrecision() != null ? getPrecision().value() : null;
-
         if (left == null && right == null) {
             return null;
         }
 
-        if (left == null) {
-            return right instanceof Interval
-                    ? ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
-                    : ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, null);
-        }
+        try {
+            if (left == null) {
+                return right instanceof Interval
+                        ? ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
+                        : ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, null);
+            }
 
-        if (right == null) {
-            return left instanceof Interval
-                    ? ProperlyIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
-                    : ProperlyIncludesEvaluator.listProperlyIncludes(null, (Iterable) left);
+            if (right == null) {
+                return left instanceof Interval
+                        ? ProperlyIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
+                        : ProperlyIncludesEvaluator.listProperlyIncludes(null, (Iterable) left);
+            }
+
+            return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
         }
+        catch (InvalidOperatorArgument e) {
+            throw new InvalidOperatorArgument(
+                    "ProperIncludedIn(Interval<T>, Interval<T>) or ProperIncludedIn(List<T>, List<T>)",
+                    String.format("ProperlyIncludedIn(%s, %s)", left.getClass().getName(), right.getClass().getName())
+            );
+        }
+    }
+
+    @Override
+    protected Object internalEvaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+        String precision = getPrecision() != null ? getPrecision().value() : null;
 
         return properlyIncudedIn(left, right, precision);
     }

@@ -1,11 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.BaseTemporal;
-import org.opencds.cqf.cql.runtime.Interval;
-
-import java.util.Arrays;
 
 /*
 contains(argument List<T>, element T) Boolean
@@ -23,21 +20,21 @@ If precision is specified and the point type is a date/time type, comparisons us
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016
- */
 public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contains {
 
     public static Object contains(Object left, Object right, String precision) {
         try {
             return InEvaluator.in(right, left, precision);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(String.format("Cannot Contains arguments of type '%s'.", left.getClass().getName()));
+        } catch (InvalidOperatorArgument e) {
+            throw new InvalidOperatorArgument(
+                    "Contains(List<T>, T)",
+                    String.format("Contains(%s, %s)", left.getClass().getName(), right.getClass().getName())
+            );
         }
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
@@ -27,9 +28,6 @@ import java.util.List;
 * If the number is null, or 0 or less, the result is an empty list.
 * */
 
-/**
- * Created by Christopher Schuler on 6/13/2017.
- */
 public class SliceEvaluator extends org.cqframework.cql.elm.execution.Slice {
 
     public static Object slice(Object source, Integer start, Integer end) {
@@ -63,15 +61,18 @@ public class SliceEvaluator extends org.cqframework.cql.elm.execution.Slice {
             return ret;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Slice operator with arguments of type: %s", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Slice(List<T>, Integer, Integer)",
+                String.format("Slice(%s, %s, %s)", source.getClass().getName(), start.getClass().getName(), end.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Integer start = (Integer) getStartIndex().evaluate(context);
         Integer end = getEndIndex() == null ? null : (Integer) getEndIndex().evaluate(context);
 
-        return context.logTrace(this.getClass(), slice(source, start, end), source, start, end);
+        return slice(source, start, end);
     }
 }

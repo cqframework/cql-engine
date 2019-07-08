@@ -1,10 +1,11 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
 /*
-
+*** SameOrAfter Temporal Overload ***
 same _precision_ or after(left Date, right Date) Boolean
 same _precision_ or after(left DateTime, right DateTime) Boolean
 same _precision_ or after(left Time, right Time) Boolean
@@ -32,6 +33,43 @@ As with all date/time calculations, comparisons are performed respecting the tim
 If either or both arguments are null, the result is null.
 
 Note that in timing phrases, the keyword on may be used as a synonym for same for this operator
+
+*** SameOrAfter Interval Overload ***
+same _precision_ or after(left Interval<T>, right Interval<T>) Boolean
+same _precision_ or after(left T, right Interval<T>) Boolean
+same _precision_ or after(left Interval<T>, right T) Boolean
+
+The same-precision-or after operator for intervals returns true if the first interval starts on or after the
+    second one ends, using the semantics described in the Start and End operators to determine interval
+    boundaries, and for date/time values, performing the comparisons at the specified precision, as described
+    in the Same or After (Date/Time) operator for date/time values.
+
+If no precision is specified, comparisons are performed beginning with years (or hours for time values) and
+    proceeding to the finest precision specified in either input.
+
+For Date-based intervals, precision must be one of: year, month, or day.
+
+For DateTime-based intervals, precision must be one of: year, month, day, hour, minute, second, or millisecond.
+
+For Time-based intervals, precision must be one of: hour, minute, second, or millisecond.
+
+Note specifically that due to variability in the way week numbers are determined, comparisons involving weeks
+    are not supported.
+
+When this operator is called with a mixture of Date-based and DateTime-based intervals, the Date values will
+    be implicitly converted to DateTime values as defined by the ToDateTime operator.
+
+When this operator is called with a mixture of point values and intervals, the point values are implicitly
+    converted to an interval starting and ending on the given point value.
+
+For comparisons involving date/time or time intervals with imprecision, note that the result of the comparison
+    may be null, depending on whether the values involved are specified to the level of precision used for the comparison.
+
+As with all date/time calculations, comparisons are performed respecting the timezone offset.
+
+If either or both arguments are null, the result is null.
+
+Note that in timing phrases, the keyword on may be used as a synonym for same for this operator.
 
 *** OnOrAfter DateTime overload ***
 on or after _precision_ (left Date, right Date) Boolean
@@ -88,7 +126,9 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
             return GreaterOrEqualEvaluator.greaterOrEqual(left, ((Interval) right).getEnd());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform OnOrAfter operator with arguments %s and %s", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "OnOrAfter(Date, Date), OnOrAfter(DateTime, DateTime), OnOrAfter(Time, Time), OnOrAfter(Interval<T>, Interval<T>), OnOrAfter(T, Interval<T>) or OnOrAfter(Interval<T>, T)",
+                String.format("OnOrAfter(%s, %s)", left.getClass().getName(), right.getClass().getName()));
     }
 
     public static Boolean sameOrAfter(Object left, Object right, String precision) {
@@ -110,11 +150,14 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
             return result == null ? null : result == 0 || result > 0;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform SameOrAfter operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "SameOrAfter(Date, Date), SameOrAfter(DateTime, DateTime), SameOrAfter(Time, Time), SameOrAfter(Interval<T>, Interval<T>), SameOrAfter(T, Interval<T>) or SameOrAfter(Interval<T>, T)",
+                String.format("SameOrAfter(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();

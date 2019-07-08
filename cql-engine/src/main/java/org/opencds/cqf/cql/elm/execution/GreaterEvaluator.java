@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -83,16 +84,17 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
             return ((Integer) left).compareTo((Integer)((Interval) right).getEnd()) > 0;
         }
 
-        throw new IllegalArgumentException(
-                String.format("Cannot perform greater than operator on types %s and %s",
-                        left.getClass().getSimpleName(), right.getClass().getSimpleName()));
+        throw new InvalidOperatorArgument(
+                "Greater(Integer, Integer) Greater(Decimal, Decimal), Greater(Quantity, Quantity), Greater(Date, Date), Greater(DateTime, DateTime), Greater(Time, Time) or Greater(String, String)",
+                String.format("Greater(%s, %s)", left, right)
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), greater(left, right), left, right);
+        return greater(left, right);
     }
 }

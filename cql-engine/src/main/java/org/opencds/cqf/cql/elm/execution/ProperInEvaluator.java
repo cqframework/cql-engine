@@ -28,15 +28,15 @@ public class ProperInEvaluator extends org.cqframework.cql.elm.execution.ProperI
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
         if (precision != null) {
-            return context.logTrace(this.getClass(), properIn(left, right, precision), left, right, precision);
+            return properIn(left, right, precision);
         }
 
-        return context.logTrace(this.getClass(), properIn(left, right), left, right);
+        return properIn(left, right);
     }
 }

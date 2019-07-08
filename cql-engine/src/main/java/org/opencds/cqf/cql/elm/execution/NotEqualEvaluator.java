@@ -16,9 +16,6 @@ The not equal (!=) operator for lists returns true if its arguments are not the 
 The not equal operator is a shorthand for invocation of logical negation (not) of the equal operator.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class NotEqualEvaluator extends org.cqframework.cql.elm.execution.NotEqual {
 
     public static Boolean notEqual(Object left, Object right) {
@@ -27,7 +24,7 @@ public class NotEqualEvaluator extends org.cqframework.cql.elm.execution.NotEqua
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 

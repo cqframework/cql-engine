@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -15,30 +16,30 @@ If precision is specified and the point type is a date/time type, comparisons us
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
 
     public static Boolean meetsOperation(Object left, Object right, String precision) {
         if (left == null && right == null) {
             return null;
         }
+
         Object maxValue = MaxValueEvaluator.maxValue(left != null ? left.getClass().getName() : right.getClass().getName());
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
             Boolean isMax = SameAsEvaluator.sameAs(left, maxValue, precision);
             if (isMax != null && isMax) {
                 return false;
             }
-            if (precision == null && ((BaseTemporal) left).isUncertain(Precision.MILLISECOND)) {
-                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(left), right, "millisecond");
+
+            String tempPrecision = BaseTemporal.getHighestPrecision((BaseTemporal) left, (BaseTemporal) right);
+            if (precision == null && ((BaseTemporal) left).isUncertain(Precision.fromString(tempPrecision))) {
+                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(left), right, tempPrecision);
             }
             else if (precision != null && ((BaseTemporal) left).isUncertain(Precision.fromString(precision))) {
                 return SameAsEvaluator.sameAs(left, right, precision);
             }
 
             if (precision == null) {
-                precision = "millisecond";
+                precision = tempPrecision;
             }
 
             if (left instanceof DateTime && right instanceof DateTime) {
@@ -50,10 +51,12 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
                 return SameAsEvaluator.sameAs(t, right, precision);
             }
         }
+
         Boolean isMax = EqualEvaluator.equal(left, maxValue);
         if (isMax != null && isMax) {
             return false;
         }
+
         return EqualEvaluator.equal(SuccessorEvaluator.successor(left), right);
     }
 
@@ -81,11 +84,14 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
             );
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Meets arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Meets(Interval<T>, Interval<T>)",
+                String.format("Meets(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();

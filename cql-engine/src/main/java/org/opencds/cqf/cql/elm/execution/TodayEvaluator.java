@@ -12,7 +12,7 @@ See the Now operator for more information on the rationale for defining the Toda
 public class TodayEvaluator extends org.cqframework.cql.elm.execution.Today {
 
   @Override
-  public Object evaluate(Context context) {
+  protected Object internalEvaluate(Context context) {
     return DateFromEvaluator.dateFrom(context.getEvaluationDateTime());
   }
 }

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -31,11 +32,11 @@ public class DateFromEvaluator extends org.cqframework.cql.elm.execution.DateFro
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform DateFrom with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument("date from(DateTime)", String.format("date from(%s)", operand.getClass().getName()));
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         return dateFrom(operand);
     }

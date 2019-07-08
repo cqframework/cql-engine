@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Value;
@@ -17,9 +18,6 @@ Avg(argument List<Quantity>) Quantity
 * Returns values of type BigDecimal or Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
 
     public static Object avg(Object source) {
@@ -38,26 +36,34 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
                     continue;
                 }
 
-                if (avg == null) {
-                    avg = element;
+                if (element instanceof BigDecimal || element instanceof Quantity) {
+                    if (avg == null) {
+                        avg = element;
+                    } else {
+                        ++size;
+                        avg = AddEvaluator.add(avg, element);
+                    }
                 }
                 else {
-                    ++size;
-                    avg = AddEvaluator.add(avg, element);
+                    throw new InvalidOperatorArgument(
+                            "Avg(List<Decimal>), Avg(List<Quantity>)",
+                            String.format("Avg(List<%s>)", source.getClass().getName())
+                    );
                 }
             }
 
             return DivideEvaluator.divide(avg, new BigDecimal(size));
         }
 
-        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Avg operation.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Avg(List<Decimal>), Avg(List<Quantity>)",
+                String.format("Avg(%s)", source.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
-
+    protected Object internalEvaluate(Context context) {
         Object src = getSource().evaluate(context);
-
-        return context.logTrace(this.getClass(), avg(src), src);
+        return avg(src);
     }
 }

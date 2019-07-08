@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -32,12 +33,15 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
             return IncludedInEvaluator.includedIn(right, left, precision);
         }
         catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(String.format("Cannot Includes arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+            throw new InvalidOperatorArgument(
+                    "Includes(Interval<T>, Interval<T>), Includes(List<T>, List<T>) or Includes(List<T>, T)",
+                    String.format("Includes(%s, %s)", left.getClass().getName(), right.getClass().getName())
+            );
         }
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;

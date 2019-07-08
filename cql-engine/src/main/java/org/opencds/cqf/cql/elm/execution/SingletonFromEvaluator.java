@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -12,9 +13,6 @@ If the list contains more than one element, a run-time error is thrown.
 If the source list is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.SingletonFrom {
 
     public static Object singletonFrom(Object operand) {
@@ -24,22 +22,28 @@ public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.Si
 
         Object result = null;
         boolean first = true;
-        for (Object element : (Iterable) operand) {
-            if (first) {
-                result = element;
-                first = false;
+        if (operand instanceof Iterable) {
+            for (Object element : (Iterable) operand) {
+                if (first) {
+                    result = element;
+                    first = false;
+                }
+                else {
+                    throw new InvalidOperatorArgument("Expected a list with at most one element, but found a list with multiple elements.");
+                }
             }
-            else {
-                throw new IllegalArgumentException("Expected a list with at most one element, but found a list with multiple elements.");
-            }
+            return result;
         }
-        return result;
+
+        throw new InvalidOperatorArgument(
+                "SingletonFrom(List<T>)",
+                String.format("SingletonFrom(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
-        return context.logTrace(this.getClass(), singletonFrom(operand), operand);
+        return singletonFrom(operand);
     }
 }

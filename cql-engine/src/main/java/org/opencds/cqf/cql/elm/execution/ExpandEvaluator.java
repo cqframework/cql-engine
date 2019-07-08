@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -47,7 +48,10 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return AddEvaluator.add(addTo, per);
         }
 
-        throw new IllegalArgumentException("Cannot perform expand operation with arguments of type: " + addTo.getClass().getSimpleName());
+        throw new InvalidOperatorArgument(
+                "Expand(List<Interval<T>>, Quantity)",
+                String.format("Expand(%s, %s)" + addTo.getClass().getName(), per.getClass().getName())
+        );
     }
 
     public static List<Interval> getExpandedInterval(Interval interval, Quantity per)
@@ -206,7 +210,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
     }
 
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);
         Quantity per = (Quantity) getOperand().get(1).evaluate(context);

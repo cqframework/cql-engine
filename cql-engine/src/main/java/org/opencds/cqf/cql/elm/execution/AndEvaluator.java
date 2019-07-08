@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -15,37 +16,39 @@ define IsAlsoFalse = false and null
 define IsNull = true and null
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class AndEvaluator extends org.cqframework.cql.elm.execution.And {
 
-    public static Boolean and(Boolean left, Boolean right) {
-        if (left == null || right == null) {
-            if ((left != null && !left) || (right != null && !right)) {
-                return false;
-            }
-
+    public static Boolean and(Object left, Object right) {
+        if (left == null && right == null) {
             return null;
         }
 
-        return (left && right);
+        if (left == null && right instanceof Boolean) {
+            return (Boolean) right ? null : false;
+        }
+
+        if (right == null && left instanceof Boolean) {
+            return (Boolean) left ? null : false;
+        }
+
+        if (left instanceof Boolean && right instanceof Boolean) {
+            return (Boolean) left && (Boolean) right;
+        }
+
+        throw new InvalidOperatorArgument(
+                "And(Boolean, Boolean)",
+                String.format(
+                        "And(%s, %s)",
+                        left == null ? "Null" : left.getClass().getName(),
+                        right == null ? "Null" : right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
-        Boolean left = (Boolean) getOperand().get(0).evaluate(context);
-        Boolean right = (Boolean) getOperand().get(1).evaluate(context);
+    protected Object internalEvaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
 
-        // need this dup code to avoid null pointer ...
-        if (left == null || right == null) {
-            if ((left != null && !left) || (right != null && !right)) {
-                return false;
-            }
-
-            return null;
-        }
-
-        return context.logTrace(this.getClass(), (left && right), left, right);
+        return and(left, right);
     }
 }

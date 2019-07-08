@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -10,9 +11,6 @@ If the pattern is not found, the result is -1.
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class PositionOfEvaluator extends org.cqframework.cql.elm.execution.PositionOf {
 
     public static Object positionOf(Object pattern, Object string) {
@@ -24,14 +22,17 @@ public class PositionOfEvaluator extends org.cqframework.cql.elm.execution.Posit
             return ((String)string).indexOf((String)pattern);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform PositionOf operation with arguments of type '%s' and '%s'.", pattern.getClass().getName(), string.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "PositionOf(String, String)",
+                String.format("PositionOf(%s, %s)", pattern.getClass().getName(), string.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object pattern = getPattern().evaluate(context);
         Object string = getString().evaluate(context);
 
-        return context.logTrace(this.getClass(), positionOf(pattern, string), pattern, string);
+        return positionOf(pattern, string);
     }
 }

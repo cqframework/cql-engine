@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -21,9 +22,6 @@ For comparisons involving date/time or time values with imprecision, note that t
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.GreaterOrEqual {
 
   public static Boolean greaterOrEqual(Object left, Object right) {
@@ -47,13 +45,8 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
           return ((Quantity) left).compareTo((Quantity) right) >= 0;
       }
 
-      else if (left instanceof DateTime && right instanceof DateTime) {
-          Integer i = ((DateTime) left).compare((DateTime) right, false);
-          return i == null ? null : i >= 0;
-      }
-
-      else if (left instanceof Time && right instanceof Time) {
-          Integer i = ((Time) left).compare((Time) right, false);
+      else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
+          Integer i = ((BaseTemporal) left).compare((BaseTemporal) right, false);
           return i == null ? null : i >= 0;
       }
 
@@ -68,16 +61,17 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
           return GreaterEvaluator.greater(left, right);
       }
 
-      throw new IllegalArgumentException(
+      throw new InvalidOperatorArgument(
+              "GreaterOrEqual(Integer, Integer) GreaterOrEqual(Decimal, Decimal), GreaterOrEqual(Quantity, Quantity), GreaterOrEqual(Date, Date), GreaterOrEqual(DateTime, DateTime), GreaterOrEqual(Time, Time) or GreaterOrEqual(String, String)",
               String.format("Cannot perform greater than or equal operator on types %s and %s",
                       left.getClass().getSimpleName(), right.getClass().getSimpleName()));
   }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), greaterOrEqual(left, right), left, right);
+        return greaterOrEqual(left, right);
     }
 }

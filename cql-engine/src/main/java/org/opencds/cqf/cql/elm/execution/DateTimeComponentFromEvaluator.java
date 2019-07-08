@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -34,7 +35,7 @@ public class DateTimeComponentFromEvaluator extends org.cqframework.cql.elm.exec
         }
 
         if (precision == null) {
-            throw new IllegalArgumentException("Precision must be specified.");
+            throw new InvalidOperatorArgument("Precision must be specified for the _precision_ from operation.");
         }
 
         Precision p = Precision.fromString(precision);
@@ -69,11 +70,14 @@ public class DateTimeComponentFromEvaluator extends org.cqframework.cql.elm.exec
             return time.getTime().get(p.toChronoField());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot DateTimeComponentFrom arguments of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "_precision_ from(Date), _precision_ from(DateTime) or _precision_ from(Time)",
+                String.format("%s from(%s)", precision.toLowerCase(), operand.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         String precision = getPrecision().value();
 

@@ -1,15 +1,14 @@
 package org.opencds.cqf.cql.runtime;
 
 import org.opencds.cqf.cql.elm.execution.*;
+import org.opencds.cqf.cql.exception.InvalidInterval;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * Created by Bryn on 4/15/2016.
- */
 public class Interval implements CqlType, Comparable<Interval> {
 
     public Interval(Object low, boolean lowClosed, Object high, boolean highClosed) {
@@ -26,22 +25,22 @@ public class Interval implements CqlType, Comparable<Interval> {
         }
 
         if (pointType == null) {
-            throw new IllegalArgumentException("Low or high boundary of an interval must be present.");
+            throw new InvalidInterval("Low or high boundary of an interval must be present.");
         }
 
         if (this.high != null && this.high.getClass() != pointType) {
-            throw new IllegalArgumentException("Low and high boundary values of an interval must be of the same type.");
+            throw new InvalidInterval("Low and high boundary values of an interval must be of the same type.");
         }
 
         // Special case for measure processing - MeasurementPeriod is a java date
         if (low instanceof Date && high instanceof Date) {
             if (((Date) low).after((Date) high)) {
-                throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
+                throw new InvalidInterval("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
             }
         }
 
         else if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
-            throw new RuntimeException("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
+            throw new InvalidInterval("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
         }
     }
 
@@ -54,7 +53,7 @@ public class Interval implements CqlType, Comparable<Interval> {
             return SubtractEvaluator.subtract(end, start);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform width operator with argument of type '%s'.", start.getClass().getName()));
+        throw new InvalidOperatorArgument(String.format("Cannot perform width operator with argument of type '%s'.", start.getClass().getName()));
     }
 
     private Object low;
@@ -165,7 +164,7 @@ public class Interval implements CqlType, Comparable<Interval> {
             return equal(new Interval(other, true, other, true));
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform equal operation on types: '%s' and '%s'", this.getClass().getName(), other.getClass().getName()));
+        throw new InvalidOperatorArgument(String.format("Cannot perform equal operation on types: '%s' and '%s'", this.getClass().getName(), other.getClass().getName()));
     }
 
     @Override

@@ -5,7 +5,7 @@ import org.opencds.cqf.cql.execution.Context;
 public class AnyInValueSetEvaluator extends org.cqframework.cql.elm.execution.AnyInValueSet
 {
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         Object codes = this.getCodes().evaluate(context);
         Object valueset = this.getValueset();

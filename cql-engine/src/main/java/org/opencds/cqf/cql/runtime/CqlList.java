@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.cqframework.cql.elm.execution.Expression;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidComparison;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
 
@@ -73,7 +73,7 @@ public class CqlList {
         try {
             return ((Comparable) left).compareTo(right);
         } catch (ClassCastException cce) {
-            throw new NotImplementedException("Type " + left.getClass().getName() + " is not comparable");
+            throw new InvalidComparison("Type " + left.getClass().getName() + " is not comparable");
         }
     }
 

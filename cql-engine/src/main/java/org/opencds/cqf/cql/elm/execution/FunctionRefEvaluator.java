@@ -8,13 +8,10 @@ import org.opencds.cqf.cql.execution.Variable;
 import java.util.ArrayList;
 import java.util.Optional;
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.FunctionRef {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         ArrayList<Object> arguments = new ArrayList<>();
         for (Expression operand : this.getOperand()) {
             arguments.add(operand.evaluate(context));

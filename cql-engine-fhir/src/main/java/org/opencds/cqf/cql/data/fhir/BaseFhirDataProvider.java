@@ -7,6 +7,7 @@ import org.hl7.fhir.dstu3.model.Quantity;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.*;
 import org.opencds.cqf.cql.data.DataProvider;
+import org.opencds.cqf.cql.exception.*;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -19,9 +20,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public abstract class BaseFhirDataProvider implements DataProvider {
 
     // Data members
@@ -154,7 +152,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             return (RuntimeCompositeDatatypeDefinition) getFhirContext().getElementDefinition(base.getClass());
         }
 
-        throw new IllegalArgumentException(String.format("Unable to resolve the runtime definition for %s", base.getClass().getName()));
+        throw new UnknownType(String.format("Unable to resolve the runtime definition for %s", base.getClass().getName()));
     }
 
     protected BaseRuntimeChildDefinition resolveChoiceProperty(BaseRuntimeElementCompositeDefinition definition, String path) {
@@ -168,7 +166,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Unable to resolve path %s for %s", path, definition.getName()));
+        throw new UnknownPath(String.format("Unable to resolve path %s for %s", path, definition.getName()));
     }
 
     protected Class resolveClass(String className) {
@@ -176,7 +174,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             return Class.forName(String.format("%s.%s", packageName, className));
         }
         catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(String.format("Could not resolve type %s.%s.", packageName, className));
+            throw new UnknownType(String.format("Could not resolve type %s.%s.", packageName, className));
         }
     }
 
@@ -186,7 +184,7 @@ public abstract class BaseFhirDataProvider implements DataProvider {
             return clazz.newInstance();
         }
         catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
+            throw new UnknownType(String.format("Could not create an instance of class %s.\nRoot cause: %s", clazz.getName(), e.getMessage()));
         }
     }
 
@@ -274,12 +272,12 @@ public abstract class BaseFhirDataProvider implements DataProvider {
                 try {
                     value = ((Quantity) value).castToSimpleQuantity((Base) value);
                 } catch (FHIRException e) {
-                    throw new IllegalArgumentException("Unable to cast Quantity to SimpleQuantity");
+                    throw new InvalidCast("Unable to cast Quantity to SimpleQuantity");
                 }
                 child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
             }
             else {
-                throw new ConfigurationException(ce.getMessage());
+                throw new DataProviderException(String.format("Configuration error encountered: %s", ce.getMessage()));
             }
         }
     }

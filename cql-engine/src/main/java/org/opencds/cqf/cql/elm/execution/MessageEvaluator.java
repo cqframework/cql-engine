@@ -1,13 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.lang3.NotImplementedException;
+import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.execution.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Created by Christopher Schuler on 6/13/2017.
- */
 public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message {
 
     final static Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
@@ -33,7 +30,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
                 case "error":
                     messageBuilder.append(message).append("\n").append(stripPHI(source).toString());
                     logger.error(messageBuilder.toString());
-                    throw new RuntimeException(messageBuilder.toString());
+                    throw new CqlException(messageBuilder.toString());
             }
         }
         return source;
@@ -45,7 +42,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Boolean condition = (Boolean) getCondition().evaluate(context);
         String code = (String) getCode().evaluate(context);

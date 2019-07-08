@@ -16,9 +16,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
-/**
- * Created by Bryn on 5/1/2016.
- */
 public class TestFhirLibrary {
 
     //@Test

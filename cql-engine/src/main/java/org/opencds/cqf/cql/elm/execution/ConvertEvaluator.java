@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidConversion;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -45,7 +46,9 @@ public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert 
     }
 
     private static Object convert(Object operand, Class type) {
-        if (operand == null) { return null; }
+        if (operand == null) {
+            return null;
+        }
 
         try {
             if (type.isInstance(operand)) {
@@ -53,15 +56,14 @@ public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert 
                 return cls.newInstance();
             }
         } catch (InstantiationException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Error during conversion: " + e.getMessage());
+            throw new InvalidConversion("Error during conversion: " + e.getMessage());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Convert a value of type %s as %s.", operand.getClass().getName(), type.getName()));
+        throw new InvalidConversion(operand, type);
     }
 
     @Override
-    public Object evaluate(Context context) {
-
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
         Class type = resolveType(context);
 

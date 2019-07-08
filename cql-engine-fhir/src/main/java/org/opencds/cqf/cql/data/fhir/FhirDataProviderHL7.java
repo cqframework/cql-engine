@@ -4,6 +4,9 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import org.hl7.fhir.instance.model.*;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.exception.DataProviderException;
+import org.opencds.cqf.cql.exception.InvalidPrecision;
+import org.opencds.cqf.cql.exception.UnknownType;
 import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
@@ -14,9 +17,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
 
     // Although this is Dstu2, it is closer in package structure to the STU3 provider...
@@ -58,7 +58,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
         }
 
         if (codePath == null && (codes != null || valueSet != null)) {
-            throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
+            throw new DataProviderException("A code path must be provided when filtering on codes or a valueset.");
         }
 
         if (context != null && context.equals("Patient") && contextValue != null) {
@@ -105,7 +105,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
             if (dateRange.getLow() != null) {
                 String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
                 if (lowDatePath == null || lowDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
+                    throw new DataProviderException("A date path or low date path must be provided when filtering on a date range.");
                 }
 
                 params.append(String.format("&%s=%s%s",
@@ -117,7 +117,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
             if (dateRange.getHigh() != null) {
                 String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
                 if (highDatePath == null || highDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
+                    throw new DataProviderException("A date path or high date path must be provided when filtering on a date range.");
                 }
 
                 params.append(String.format("&%s=%s%s",
@@ -182,7 +182,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
                     calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH),
                     calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND)
             );
-            default: throw new IllegalArgumentException(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
+            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
         }
     }
 
@@ -258,7 +258,7 @@ public class FhirDataProviderHL7 extends FhirDataProviderStu3 {
             try {
                 return Class.forName(className);
             } catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException(String.format("Could not resolve type %s", className));
+                throw new UnknownType(String.format("Could not resolve type %s", className));
             }
         }
 

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
@@ -15,9 +16,6 @@ If the source is null, the result is null.
 Return types: BigDecimal & Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.execution.PopulationVariance {
 
     public static Object popVariance(Object source) {
@@ -46,13 +44,15 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
             return AvgEvaluator.avg(newVals);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Population Variance operation with argument of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "PopulationVariance(List<Decimal>) or PopulationVariance(List<Quantity>)",
+                String.format("PopulationVariance(%s)", source.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-
         return popVariance(source);
     }
 }

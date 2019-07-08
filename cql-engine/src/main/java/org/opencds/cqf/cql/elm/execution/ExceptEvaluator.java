@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -109,7 +111,7 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
                 return new Interval(max, true, leftEnd, true);
             }
 
-            throw new IllegalArgumentException(String.format("The following interval values led to an undefined Except result: leftStart: %s, leftEnd: %s, rightStart: %s, rightEnd: %s", leftStart.toString(), leftEnd.toString(), rightStart.toString(), rightEnd.toString()));
+            throw new UndefinedResult(String.format("The following interval values led to an undefined Except result: leftStart: %s, leftEnd: %s, rightStart: %s, rightEnd: %s", leftStart.toString(), leftEnd.toString(), rightStart.toString(), rightEnd.toString()));
         }
 
         else if (left instanceof Iterable)
@@ -130,11 +132,15 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
 
             return DistinctEvaluator.distinct(result);
         }
-        throw new IllegalArgumentException(String.format("Cannot Except arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+
+        throw new InvalidOperatorArgument(
+                "Except(Interval<T>, Interval<T>) or Except(List<T>, List<T>)",
+                String.format("Except(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);

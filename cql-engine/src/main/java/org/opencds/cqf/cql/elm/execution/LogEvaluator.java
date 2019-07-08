@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Value;
 
@@ -13,9 +15,6 @@ When invoked with Integer arguments, the arguments will be implicitly converted 
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
 
     public static Object log(Object left, Object right) {
@@ -34,14 +33,17 @@ public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
             return Value.verifyPrecision(new BigDecimal(value / base));
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Log operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Log(Decimal, Decimal)",
+                String.format("Log(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), log(left, right), left, right);
+        return log(left, right);
     }
 }

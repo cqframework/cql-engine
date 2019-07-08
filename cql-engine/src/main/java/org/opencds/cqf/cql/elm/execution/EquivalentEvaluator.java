@@ -36,9 +36,6 @@ The ~ operator for lists returns true if and only if the lists contain elements 
   and for each element in the lists, in order, the elements are equivalent.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equivalent {
 
     public static Boolean equivalent(Object left, Object right) {
@@ -78,7 +75,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((CqlType) left).equivalent(right);
         }
 
-        else if (left instanceof String) {
+        else if (left instanceof String && right instanceof String) {
             return ((String) left).equalsIgnoreCase((String) right);
         }
 
@@ -86,10 +83,10 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), equivalent(left, right), left, right);
+        return equivalent(left, right);
     }
 }

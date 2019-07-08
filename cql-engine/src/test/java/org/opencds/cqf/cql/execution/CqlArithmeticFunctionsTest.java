@@ -1,6 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.AbsEvaluator;
+import org.opencds.cqf.cql.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.CqlException;
+import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -18,7 +22,6 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     @Test
     public void testAbs() throws JAXBException {
         Context context = new Context(library);
-        context.setEnableTraceLogging(true);
 
         Object result = context.resolveExpressionRef("AbsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -37,6 +40,15 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("Abs1cm").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity)result).compareTo(new Quantity().withValue(new BigDecimal("1.0")).withUnit("cm")) == 0);
+
+        // error testing
+        try {
+            result = AbsEvaluator.abs("This is an error");
+            Assert.fail();
+        }
+        catch (CqlException e) {
+            // pass
+        }
     }
 
     /**
@@ -60,6 +72,15 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("AddIAndD").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("3.0")));
+
+        // error testing
+        try {
+            result = AddEvaluator.add("This is an error", 404);
+            Assert.fail();
+        }
+        catch (CqlException e) {
+            // pass
+        }
     }
 
     /**
@@ -189,13 +210,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         try {
             result = context.resolveExpressionRef("Exp1000").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in positive infinity"));
         }
 
         try {
             result = context.resolveExpressionRef("Exp1000D").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in positive infinity"));
         }
     }
@@ -243,13 +264,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         try {
             result = context.resolveExpressionRef("Ln0").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in negative infinity"));
         }
 
         try {
             result = context.resolveExpressionRef("LnNeg0").getExpression().evaluate(context);
-        } catch (ArithmeticException ae) {
+        } catch (UndefinedResult ae) {
             assertThat(ae.getMessage(), is("Results in negative infinity"));
         }
 

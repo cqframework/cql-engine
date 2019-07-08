@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.AndEvaluator;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.testng.Assert;
 import org.testng.annotations.Test;
 import javax.xml.bind.JAXBException;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -41,6 +44,14 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("NullAndNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
+
+        try {
+            AndEvaluator.and(1, true);
+            Assert.fail();
+        }
+        catch (InvalidOperatorArgument e) {
+            // pass
+        }
     }
 
     /**

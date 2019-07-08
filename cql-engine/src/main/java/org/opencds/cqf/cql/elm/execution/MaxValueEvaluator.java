@@ -1,11 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.apache.commons.lang3.NotImplementedException;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
-
-import javax.xml.namespace.QName;
-import java.math.BigDecimal;
 
 /*
 maximum<T>() T
@@ -19,9 +16,6 @@ For Time, maximum returns the maximum representable time value, Time(23, 59, 59,
 For any other type, attempting to invoke maximum results in an error.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValue {
 
     public static Object maxValue(String type) {
@@ -50,11 +44,11 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
             return new Quantity().withValue(Value.MAX_DECIMAL).withUnit("1");
         }
 
-        throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
+        throw new InvalidOperatorArgument(String.format("The Maximum operator is not implemented for type %s", type));
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         String type = getValueType().getLocalPart();
         if (type == null) {
             return null;
@@ -75,6 +69,6 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
         if (type.endsWith("Time")) {
             return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
         }
-        throw new NotImplementedException(String.format("The Maximum operator is not implemented for type %s", type));
+        throw new InvalidOperatorArgument(String.format("The Maximum operator is not implemented for type %s", type));
     }
 }

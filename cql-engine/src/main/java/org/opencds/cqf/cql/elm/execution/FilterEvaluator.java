@@ -7,13 +7,10 @@ import org.opencds.cqf.cql.execution.Variable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher on 6/8/2017.
- */
 public class FilterEvaluator extends Filter {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = this.getSource().evaluate(context);
 
         List<Object> ret = new ArrayList<>();
@@ -43,6 +40,6 @@ public class FilterEvaluator extends Filter {
             }
         }
 
-        return context.logTrace(this.getClass(), ret, source);
+        return ret;
     }
 }

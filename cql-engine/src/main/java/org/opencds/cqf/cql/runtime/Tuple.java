@@ -5,9 +5,6 @@ import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 
 import java.util.HashMap;
 
-/**
- * Created by Chris Schuler on 6/15/2016
- */
 public class Tuple implements CqlType {
 
     protected HashMap<String, Object> elements;

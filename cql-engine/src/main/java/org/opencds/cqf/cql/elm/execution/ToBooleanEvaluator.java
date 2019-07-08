@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -37,13 +38,15 @@ public class ToBooleanEvaluator extends org.cqframework.cql.elm.execution.ToBool
             return null;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Boolean - use String values.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "ToBoolean(String)",
+                String.format("ToBoolean(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return toBoolean(operand);
     }
 }

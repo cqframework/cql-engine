@@ -18,9 +18,6 @@ If the source is null, the result is null.
 
 */
 
-/**
- * Created by Christopher Schuler on 6/13/2017.
- */
 public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Children {
 
     private static void addQuantity(List<Object> list, Quantity quantity) {
@@ -110,9 +107,9 @@ public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Childre
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
 
-        return context.logTrace(this.getClass(), children(source), source);
+        return children(source);
     }
 }

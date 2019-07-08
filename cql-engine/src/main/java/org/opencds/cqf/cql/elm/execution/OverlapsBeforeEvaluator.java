@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -13,9 +14,6 @@ If precision is specified and the point type is a date/time type, comparisons us
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/8/2016
- */
 public class OverlapsBeforeEvaluator extends org.cqframework.cql.elm.execution.OverlapsBefore {
 
     public static Object overlapsBefore(Object left, Object right, String precision) {
@@ -42,11 +40,14 @@ public class OverlapsBeforeEvaluator extends org.cqframework.cql.elm.execution.O
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot OverlapsBefore arguments of type '%s' and %s.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "OverlapsBefore(Interval<T>, Interval<T>)",
+                String.format("OverlapsBefore(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();

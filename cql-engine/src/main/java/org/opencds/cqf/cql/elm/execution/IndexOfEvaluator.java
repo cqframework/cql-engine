@@ -13,9 +13,6 @@ If the list is empty, or no element is found, the result is -1.
 If the list argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf {
 
     public static Object indexOf(Object source, Object elementToFind) {
@@ -47,10 +44,10 @@ public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf 
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
         Object elementToFind = getElement().evaluate(context);
 
-        return context.logTrace(this.getClass(), indexOf(source, elementToFind), source, elementToFind);
+        return indexOf(source, elementToFind);
     }
 }

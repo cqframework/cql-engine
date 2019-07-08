@@ -135,7 +135,7 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
     }
 
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);
         Quantity per = (Quantity) getOperand().get(1).evaluate(context);

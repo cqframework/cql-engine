@@ -5,9 +5,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * Created by Christopher Schuler on 10/31/2016.
- */
 public class TerminologyValidation {
     protected static Set<String> systems = new HashSet<>(Arrays.asList("http://snomed.info/sct", "http://loinc.org", "http://unitsofmeasure.org",
             "http://www.nlm.nih.gov/research/umls/rxnorm", "http://ncimeta.nci.nih.gov", "http://www.ama-assn.org/go/cpt",

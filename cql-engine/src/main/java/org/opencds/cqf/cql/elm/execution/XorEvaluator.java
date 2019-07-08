@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -9,24 +10,27 @@ The xor (exclusive or) operator returns true if one argument is true and the oth
 If both arguments are true or both arguments are false, the result is false. Otherwise, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class XorEvaluator extends org.cqframework.cql.elm.execution.Xor {
 
-    public static Object xor(Boolean left, Boolean right) {
+    public static Object xor(Object left, Object right) {
         if (left == null || right == null) {
             return null;
         }
 
-        return (left ^ right);
+        if (left instanceof Boolean && right instanceof Boolean) {
+            return ((Boolean) left ^ (Boolean) right);
+        }
+
+        throw new InvalidOperatorArgument(
+                "Xor(Boolean, Boolean)",
+                String.format("Xor(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
-        Boolean left = (Boolean)getOperand().get(0).evaluate(context);
-        Boolean right = (Boolean)getOperand().get(1).evaluate(context);
-
-        return context.logTrace(this.getClass(), xor(left, right), left, right);
+    protected Object internalEvaluate(Context context) {
+        Object left = getOperand().get(0).evaluate(context);
+        Object right = getOperand().get(1).evaluate(context);
+        return xor(left, right);
     }
 }

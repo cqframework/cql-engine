@@ -12,9 +12,6 @@ If the run-time type of the argument is of the type being tested, the result of 
   otherwise, the result is false.
 */
 
-/**
-* Created by Chris Schuler on 6/14/2016
-*/
 public class IsEvaluator extends org.cqframework.cql.elm.execution.Is {
 
     public static Object is(Class type, Object operand) {
@@ -34,10 +31,10 @@ public class IsEvaluator extends org.cqframework.cql.elm.execution.Is {
   }
 
   @Override
-  public Object evaluate(Context context) {
+  protected Object internalEvaluate(Context context) {
     Object operand = getOperand().evaluate(context);
     Class type = resolveType(context);
 
-    return context.logTrace(this.getClass(), is(type, operand), operand);
+    return is(type, operand);
   }
 }

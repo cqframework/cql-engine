@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -27,9 +28,6 @@ If either argument is null, the result is null.
 Note that the union operator can also be invoked with the symbolic operator (|).
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
 
     public static Object union(Object left, Object right) {
@@ -81,14 +79,16 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
             return DistinctEvaluator.distinct(result);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Union arguments of type: %s and %s", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Union(Interval<T>, Interval<T>) or Union(List<T>, List<T>)",
+                String.format("Union(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-
         return union(left, right);
     }
 }

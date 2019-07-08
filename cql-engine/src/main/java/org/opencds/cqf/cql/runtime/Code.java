@@ -3,9 +3,6 @@ package org.opencds.cqf.cql.runtime;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 
-/**
- * Created by Bryn on 4/15/2016.
- */
 public class Code implements CqlType {
 
     private String code;

@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.Iterator;
@@ -12,9 +13,6 @@ If the source contains no non-null elements, true is returned.
 If the source is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue {
 
     public static Boolean allTrue(Object src) {
@@ -45,18 +43,18 @@ public class AllTrueEvaluator extends org.cqframework.cql.elm.execution.AllTrue 
                     }
                 }
                 else {
-                    throw new IllegalArgumentException(String.format("Cannot perform AllTrue operator on List with type %s", exp.getClass().getSimpleName()));
+                    throw new InvalidOperatorArgument("AllTrue(List<Boolean>)", String.format("AllTrue(List<%s>)", exp.getClass().getName()));
                 }
             }
             return true;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform AllTrue operator on type %s", src.getClass().getSimpleName()));
+        throw new InvalidOperatorArgument("AllTrue(List<Boolean>)", String.format("AllTrue(%s)", src.getClass().getName()));
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object src = getSource().evaluate(context);
-        return context.logTrace(this.getClass(), allTrue(src), src);
+        return allTrue(src);
     }
 }

@@ -9,9 +9,6 @@ The is true operator determines whether or not its argument evaluates to true.
 If the argument evaluates to true, the result is true; otherwise, the result is false.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IsTrueEvaluator extends org.cqframework.cql.elm.execution.IsTrue {
 
     public static Object isTrue(Boolean operand) {
@@ -19,9 +16,9 @@ public class IsTrueEvaluator extends org.cqframework.cql.elm.execution.IsTrue {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Boolean operand = (Boolean) getOperand().evaluate(context);
 
-        return context.logTrace(this.getClass(), isTrue(operand), operand);
+        return isTrue(operand);
     }
 }

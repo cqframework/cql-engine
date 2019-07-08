@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
@@ -22,9 +23,6 @@ In this example, the result will have a unit of 'cm'.
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
 
     private static BigDecimal divideHelper(BigDecimal left, BigDecimal right) {
@@ -63,20 +61,23 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
 
-            return new Interval(divide(leftInterval.getStart(), rightInterval.getStart()), true, divide(leftInterval.getEnd(), rightInterval.getEnd()), true);
+            return new Interval(
+                    divide(leftInterval.getStart(), rightInterval.getStart()), true,
+                    divide(leftInterval.getEnd(), rightInterval.getEnd()), true
+            );
         }
 
-        throw new IllegalArgumentException(
-                String.format("Cannot Divide arguments of type '%s' and '%s'.",
-                        left.getClass().getName(), right.getClass().getName())
+        throw new InvalidOperatorArgument(
+                "Divide(Decimal, Decimal), Divide(Quantity, Decimal), Divide(Quantity, Quantity)",
+                String.format("Divide(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), divide(left, right), left, right);
+        return divide(left, right);
     }
 }

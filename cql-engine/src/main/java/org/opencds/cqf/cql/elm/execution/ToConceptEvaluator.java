@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.runtime.Code;
@@ -25,18 +26,22 @@ public class ToConceptEvaluator extends org.cqframework.cql.elm.execution.ToConc
             for (Object code : (Iterable) operand) {
                 result.withCode((Code)code);
             }
+            return result;
         }
-        else {
+        else if (operand instanceof Code) {
             result.withCode((Code) operand);
+            return result;
         }
 
-        return result;
+        throw new InvalidOperatorArgument(
+                "ToConcept(Code)",
+                String.format("ToConcept(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return toConcept(operand);
     }
 }

@@ -16,9 +16,6 @@ import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
-/**
- * Created by Bryn on 4/16/2016.
- */
 public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     private FhirContext fhirContext = FhirContext.forDstu3();

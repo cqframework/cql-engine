@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 
@@ -16,9 +17,6 @@ If the list is null, the result is null.
 Return types: BigDecimal & Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class StdDevEvaluator extends org.cqframework.cql.elm.execution.StdDev {
 
     public static Object stdDev(Object source) {
@@ -41,13 +39,15 @@ public class StdDevEvaluator extends org.cqframework.cql.elm.execution.StdDev {
                             new BigDecimal("0.5"))).withUnit(((Quantity) variance).getUnit());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Standard Deviation operation with argument of type '%s'.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "StdDev(List<Decimal>) or StdDev(List<Quantity>)",
+                String.format("StdDev(%s)", source.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-
-        return context.logTrace(this.getClass(), stdDev(source), source);
+        return stdDev(source);
     }
 }

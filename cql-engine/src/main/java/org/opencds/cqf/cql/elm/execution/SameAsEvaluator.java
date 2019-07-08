@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
@@ -133,11 +134,14 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs
             return result == null ? null : result == 0;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform SameAs operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "SameAs(Date, Date), SameAs(DateTime, DateTime), SameAs(Time, Time) or SameAs(Interval<T>, Interval<T>)",
+                String.format("SameAs(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);

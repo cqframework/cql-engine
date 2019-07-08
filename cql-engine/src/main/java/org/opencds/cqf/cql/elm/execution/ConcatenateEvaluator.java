@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -9,9 +10,6 @@ The concatenate (+) operator performs string concatenation of its arguments.
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class ConcatenateEvaluator extends org.cqframework.cql.elm.execution.Concatenate {
 
     public static Object concatenate(Object left, Object right) {
@@ -23,14 +21,17 @@ public class ConcatenateEvaluator extends org.cqframework.cql.elm.execution.Conc
             return ((String)left).concat((String)right);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Concatenate arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Concatenate(String, String)",
+                String.format("Concatenate(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), concatenate(left, right), left, right);
+        return concatenate(left, right);
     }
 }

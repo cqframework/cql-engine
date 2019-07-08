@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
 import java.util.Iterator;
@@ -16,9 +17,6 @@ If the list is null, the result is null.
 Return types: Integer, BigDecimal & Quantity
 */
 
-/**
- * Created by Chris Schuler on 6/14/2016
- */
 public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
 
     public static Object sum(Object source) {
@@ -44,13 +42,16 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
 
             return sum;
         }
-        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Sum operation.", source.getClass().getName()));
+
+        throw new InvalidOperatorArgument(
+                "Sum(List<Integer>), Sum(List<Decimal>) or Sum(List<Quantity>)",
+                String.format("Sum(%s)", source.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-
-        return context.logTrace(this.getClass(), sum(source), source);
+        return sum(source);
     }
 }

@@ -32,9 +32,6 @@ If either argument is null, or contains null elements, the result is null.
 
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
 
     public static Boolean equal(Object left, Object right) {
@@ -74,10 +71,10 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), equal(left, right), left, right);
+        return equal(left, right);
     }
 }

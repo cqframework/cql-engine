@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Time;
 
@@ -26,7 +27,7 @@ If the argument is null, the result is null.
 public class ToTimeEvaluator extends org.cqframework.cql.elm.execution.ToTime {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         if (operand == null) {
@@ -42,6 +43,9 @@ public class ToTimeEvaluator extends org.cqframework.cql.elm.execution.ToTime {
             }
         }
 
-        throw new IllegalArgumentException("Cannot perform the ToTime operation with argument of type " + operand.getClass().getName());
+        throw new InvalidOperatorArgument(
+                "ToTime(String)",
+                "ToTime(%s)" + operand.getClass().getName()
+        );
     }
 }

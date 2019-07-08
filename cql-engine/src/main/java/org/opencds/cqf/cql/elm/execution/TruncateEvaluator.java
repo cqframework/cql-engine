@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.math.BigDecimal;
@@ -12,9 +13,6 @@ When invoked with an Integer argument, the argument will be implicitly converted
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class TruncateEvaluator extends org.cqframework.cql.elm.execution.Truncate {
 
     public static Object truncate(Object operand) {
@@ -32,13 +30,15 @@ public class TruncateEvaluator extends org.cqframework.cql.elm.execution.Truncat
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Truncate with argument of type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Truncate(Decimal)",
+                String.format("Truncate(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
-        return context.logTrace(this.getClass(), truncate(operand), operand);
+        return truncate(operand);
     }
 }

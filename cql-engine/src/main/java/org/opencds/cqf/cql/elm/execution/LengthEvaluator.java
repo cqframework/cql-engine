@@ -1,11 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
 import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Interval;
 
-import java.util.List;
 import java.util.stream.StreamSupport;
 
 /*
@@ -22,9 +20,6 @@ The Length operator returns the number of characters in a string.
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
 
     public static Object length(Object operand) {
@@ -36,7 +31,10 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
             return listLength((Iterable) operand);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform Length operator on type '%s'.", operand.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Length(List<T>) or Length(String)",
+                String.format("Length(%s)", operand.getClass().getName())
+        );
     }
 
     public static Integer stringLength(String operand) {
@@ -56,7 +54,7 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         // null operand case

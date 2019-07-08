@@ -6,9 +6,6 @@ import org.opencds.cqf.cql.elm.execution.MinValueEvaluator;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-/**
- * Created by Bryn on 5/2/2016.
- */
 public class Value {
 
     public static final Integer MAX_INT = Integer.MAX_VALUE;
@@ -27,23 +24,6 @@ public class Value {
         }
 
         return value;
-    }
-
-    public static String getValueType(Class clazz) {
-        if (clazz == Integer.class) {
-            return "Integer";
-        }
-        if (clazz == BigDecimal.class) {
-            return "Decimal";
-        }
-        if (clazz == DateTime.class) {
-            return "DateTime";
-        }
-        if (clazz == Time.class) {
-            return "Time";
-        }
-
-        throw new IllegalArgumentException("Invalid type for Successor/Predecessor operator " + clazz.getName());
     }
 
     public static BigDecimal validateDecimal(BigDecimal ret) {

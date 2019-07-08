@@ -17,7 +17,7 @@ public class ToListEvaluator extends org.cqframework.cql.elm.execution.ToList {
     }
 
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         return toList(getOperand().evaluate(context));
     }

@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.cqframework.cql.elm.execution.CodeSystemRef;
 import org.cqframework.cql.elm.execution.CodeSystemDef;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Concept;
@@ -21,9 +22,6 @@ For the Concept overload, if the given code system contains a code equivalent to
 If the code argument is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 7/13/2016
- */
 public class InCodeSystemEvaluator extends org.cqframework.cql.elm.execution.InCodeSystem {
 
     public Object inCodeSystem(Context context, Object code, Object codeSystem) {
@@ -53,7 +51,10 @@ public class InCodeSystemEvaluator extends org.cqframework.cql.elm.execution.InC
             return false;
         }
 
-        throw new IllegalArgumentException(String.format("Cannot InCodeSystem Code arguments of type '%s'.", code.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "In(String, CodeSystemRef), In(Code, CodeSystemRef) or In(Concept, CodeSystemRef)",
+                String.format("In(%s, %s)", code.getClass().getName(), codeSystem.getClass().getName())
+        );
     }
 
     public CodeSystemDef resolveCSR(Context context, CodeSystemRef codesystem) {
@@ -61,10 +62,10 @@ public class InCodeSystemEvaluator extends org.cqframework.cql.elm.execution.InC
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object code = getCode().evaluate(context);
         Object codeSystem = getCodesystem();
 
-        return context.logTrace(this.getClass(), inCodeSystem(context, code, codeSystem), code, codeSystem);
+        return inCodeSystem(context, code, codeSystem);
     }
 }

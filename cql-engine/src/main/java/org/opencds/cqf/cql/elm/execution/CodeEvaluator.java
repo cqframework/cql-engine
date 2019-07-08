@@ -14,12 +14,9 @@ structured type Code
 The Code type represents single terminology codes within CQL.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class CodeEvaluator extends org.cqframework.cql.elm.execution.Code {
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         org.opencds.cqf.cql.runtime.Code code = new org.opencds.cqf.cql.runtime.Code().withCode(this.getCode()).withDisplay(this.getDisplay());
         org.cqframework.cql.elm.execution.CodeSystemRef codeSystemRef = this.getSystem();
         if (codeSystemRef != null) {

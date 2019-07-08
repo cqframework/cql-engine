@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -20,9 +21,6 @@ If the index is greater than the number of elements in the list, the result is n
 If either argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class IndexerEvaluator extends org.cqframework.cql.elm.execution.Indexer {
 
     public static Object indexer(Object left, Object right) {
@@ -53,14 +51,17 @@ public class IndexerEvaluator extends org.cqframework.cql.elm.execution.Indexer 
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot Indexer arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Indexer(String, Integer) or Indexer(List<T>, Integer)",
+                String.format("Indexer(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return context.logTrace(this.getClass(), indexer(left, right), left, right);
+        return indexer(left, right);
     }
 }

@@ -41,9 +41,6 @@ import org.testng.annotations.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-/**
- * Created by Bryn on 12/14/2016.
- */
 public class TestFhirPath {
 
     private FhirContext fhirContext = FhirContext.forDstu3();

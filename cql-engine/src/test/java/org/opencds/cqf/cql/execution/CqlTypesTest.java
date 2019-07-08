@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.execution;
 
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidDateTime;
 import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -102,7 +103,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
             context.resolveExpressionRef("DateTimeUpperBoundExcept").getExpression().evaluate(context);
             Assert.fail();
         }
-        catch (DateTimeParseException e) {
+        catch (InvalidDateTime e) {
             // pass
         }
 
@@ -110,7 +111,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
             context.resolveExpressionRef("DateTimeLowerBoundExcept").getExpression().evaluate(context);
             Assert.fail();
         }
-        catch (IllegalArgumentException e) {
+        catch (InvalidDateTime e) {
             // pass
         }
 

@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.execution;
 
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
@@ -782,8 +783,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         try {
             context.resolveExpressionRef("SingletonFrom12").getExpression().evaluate(context);
             Assert.fail("List with more than one element should throw an exception");
-        } catch (IllegalArgumentException ex) {
-            assertThat(ex, isA(IllegalArgumentException.class));
+        } catch (InvalidOperatorArgument ex) {
+            assertThat(ex, isA(InvalidOperatorArgument.class));
         }
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();

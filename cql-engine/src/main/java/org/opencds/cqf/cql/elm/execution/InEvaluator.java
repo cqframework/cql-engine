@@ -1,6 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
@@ -50,7 +50,10 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
             return intervalIn(left, (Interval) right, precision);
         }
 
-        throw new IllegalArgumentException(String.format("Cannot In arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "In(T, Interval<T>) or In(T, List<T>)",
+                String.format("In(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
     private static Boolean intervalIn(Object left, Interval right, String precision)
@@ -140,7 +143,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
     }
 
     @Override
-    public Object evaluate(Context context)
+    protected Object internalEvaluate(Context context)
     {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);

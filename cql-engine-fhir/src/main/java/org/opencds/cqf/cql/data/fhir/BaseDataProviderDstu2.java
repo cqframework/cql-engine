@@ -3,9 +3,6 @@ package org.opencds.cqf.cql.data.fhir;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 
-/**
- * Created by Christopher Schuler on 6/15/2017.
- */
 public abstract class BaseDataProviderDstu2 extends BaseFhirDataProvider {
 
     @Override

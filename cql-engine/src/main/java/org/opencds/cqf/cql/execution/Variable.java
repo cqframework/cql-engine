@@ -1,8 +1,5 @@
 package org.opencds.cqf.cql.execution;
 
-/**
- * Created by Bryn on 5/1/2016.
- */
 public class Variable {
     private String name;
     private Object value;

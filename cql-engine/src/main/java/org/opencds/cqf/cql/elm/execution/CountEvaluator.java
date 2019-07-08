@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import java.util.Iterator;
 
@@ -12,9 +13,6 @@ Count(argument List<T>) Integer
 * Always returns Integer
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
 
     public static Object count(Object source) {
@@ -45,14 +43,12 @@ public class CountEvaluator extends org.cqframework.cql.elm.execution.Count {
             return size;
         }
 
-        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Count operation.", source.getClass().getName()));
+        throw new InvalidOperatorArgument("Count(List<T>)", String.format("Count(%s)", source.getClass().getName()));
     }
 
     @Override
-    public Object evaluate(Context context) {
-
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-
-        return context.logTrace(this.getClass(), count(source), source);
+        return count(source);
     }
 }

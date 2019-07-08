@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 
 /*
@@ -12,9 +13,6 @@ If length is ommitted, the substring returned starts at startIndex and continues
 If stringToSub or startIndex is null, or startIndex is out of range, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substring {
 
     public static Object substring(Object stringValue, Object startIndexValue, Object lengthValue) {
@@ -22,37 +20,49 @@ public class SubstringEvaluator extends org.cqframework.cql.elm.execution.Substr
             return null;
         }
 
-        String string = (String)stringValue;
-        Integer startIndex = (Integer)startIndexValue;
+        if (stringValue instanceof String && startIndexValue instanceof Integer) {
+            String string = (String) stringValue;
+            Integer startIndex = (Integer) startIndexValue;
 
-        if (startIndex < 0 || startIndex >= string.length()) {
-            return null;
-        }
-
-        if (lengthValue == null) {
-            return string.substring(startIndex);
-        }
-
-        else {
-            int endIndex = startIndex + (Integer)lengthValue;
-            if (endIndex > string.length()) {
-                endIndex = string.length();
+            if (startIndex < 0 || startIndex >= string.length()) {
+                return null;
             }
 
-            if (endIndex < startIndex) {
-                endIndex = startIndex;
+            if (lengthValue == null) {
+                return string.substring(startIndex);
             }
 
-            return string.substring(startIndex, endIndex);
+            else {
+                int endIndex = startIndex + (Integer) lengthValue;
+                if (endIndex > string.length()) {
+                    endIndex = string.length();
+                }
+
+                if (endIndex < startIndex) {
+                    endIndex = startIndex;
+                }
+
+                return string.substring(startIndex, endIndex);
+            }
         }
+
+        throw new InvalidOperatorArgument(
+                "Substring(String, Integer) or Substring(String, Integer, Integer)",
+                String.format(
+                        "Substring(%s, %s%s)",
+                        stringValue.getClass().getName(),
+                        startIndexValue.getClass().getName(),
+                        lengthValue == null ? "" : ", " + lengthValue.getClass().getName()
+                )
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object stringValue = getStringToSub().evaluate(context);
         Object startIndexValue = getStartIndex().evaluate(context);
         Object lengthValue = getLength() == null ? null : getLength().evaluate(context);
 
-        return context.logTrace(this.getClass(), substring(stringValue, startIndexValue, lengthValue), stringValue, startIndexValue, lengthValue);
+        return substring(stringValue, startIndexValue, lengthValue);
     }
 }

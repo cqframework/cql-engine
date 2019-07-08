@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -101,11 +102,13 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
             }
         }
 
-        throw new IllegalArgumentException(String.format("Cannot perform DifferenceBetween operation with arguments of type '%s' and '%s'.", left.getClass().getName(), right.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "DifferenceBetween(Date, Date), DifferenceBetween(DateTime, DateTime), DifferenceBetween(Time, Time)",
+                String.format("DifferenceBetween(%s, %s)", left.getClass().getName(), right.getClass().getName()));
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision().value();

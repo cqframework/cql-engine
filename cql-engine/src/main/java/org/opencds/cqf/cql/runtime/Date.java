@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.runtime;
 
+import org.opencds.cqf.cql.exception.InvalidDate;
+
 import javax.annotation.Nonnull;
 import java.time.LocalDate;
 
@@ -11,10 +13,10 @@ public class Date extends BaseTemporal {
     }
     public void setDate(LocalDate date) {
         if (date.getYear() < 1) {
-            throw new IllegalArgumentException(String.format("The year: %d falls below the accepted bounds of 0001-9999.", date.getYear()));
+            throw new InvalidDate(String.format("The year: %d falls below the accepted bounds of 0001-9999.", date.getYear()));
         }
         if (date.getYear() > 9999) {
-            throw new IllegalArgumentException(String.format("The year: %d falls above the accepted bounds of 0001-9999.", date.getYear()));
+            throw new InvalidDate(String.format("The year: %d falls above the accepted bounds of 0001-9999.", date.getYear()));
         }
         if (this.precision == null) {
             this.precision = Precision.DAY;

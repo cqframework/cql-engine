@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -31,7 +32,7 @@ If the argument is null, the result is null.
 public class ToDateTimeEvaluator extends org.cqframework.cql.elm.execution.ToDateTime {
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
 
         if (operand == null) {
@@ -51,6 +52,9 @@ public class ToDateTimeEvaluator extends org.cqframework.cql.elm.execution.ToDat
             return new DateTime(TemporalHelper.getDefaultOffset(), ((Date) operand).getDate().getYear(), ((Date) operand).getDate().getMonthValue(), ((Date) operand).getDate().getDayOfMonth(), 0, 0, 0, 0);
         }
 
-        throw new IllegalArgumentException("Cannot perform the ToDateTime operation with argument of type " + operand.getClass().getName());
+        throw new InvalidOperatorArgument(
+                "ToDateTime(String)",
+                String.format("ToDateTime(%s)", operand.getClass().getName())
+        );
     }
 }

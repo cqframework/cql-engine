@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.CqlList;
 import org.opencds.cqf.cql.runtime.Quantity;
@@ -17,9 +18,6 @@ If the source contains no non-null elements, null is returned.
 If the source is null, the result is null.
 */
 
-/**
- * Created by Chris Schuler on 6/13/2016
- */
 public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
 
     public static Object median(Object source) {
@@ -64,13 +62,15 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
             }
         }
 
-        throw new IllegalArgumentException(String.format("Invalid instance '%s' for Median operation.", source.getClass().getName()));
+        throw new InvalidOperatorArgument(
+                "Median(List<Decimal>) or Median(List<Quantity>)",
+                String.format("Median(%s)", source.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
+    protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-
-        return context.logTrace(this.getClass(), median(source), source);
+        return median(source);
     }
 }

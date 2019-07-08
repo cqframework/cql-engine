@@ -4,6 +4,8 @@ import org.hl7.fhir.dstu3.model.*;
 import org.opencds.cqf.cql.data.fhir.FhirDataProviderStu3;
 import org.opencds.cqf.cql.elm.execution.InEvaluator;
 import org.opencds.cqf.cql.elm.execution.IncludesEvaluator;
+import org.opencds.cqf.cql.exception.DataProviderException;
+import org.opencds.cqf.cql.exception.UnknownPath;
 import org.opencds.cqf.cql.runtime.*;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
@@ -56,7 +58,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
     public FileBasedFhirProvider (String path, String endpoint) {
         super();
         if (path.isEmpty()) {
-            throw new InvalidPathException(path, "Invalid path!");
+            throw new UnknownPath("Cannot resolve empty path");
         }
         this.path = Paths.get(path);
         this.terminologyProvider = endpoint == null ? new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false)
@@ -92,7 +94,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
         }
 
         if (codePath == null && (codes != null || valueSet != null)) {
-            throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
+            throw new DataProviderException("A code path must be provided when filtering on codes or a valueset.");
         }
 
         if (context.equals("Patient") && contextValue != null) {
@@ -110,7 +112,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
                 toResults = toResults.resolve(dataType.toLowerCase());
         }
         else { // Just in case -- probably redundant error checking...
-            throw new IllegalArgumentException("A data type (i.e. Procedure, Valueset, etc...) must be specified for clinical data retrieval");
+            throw new DataProviderException("A data type (i.e. Procedure, Valueset, etc...) must be specified for clinical data retrieval");
         }
 
         // No filtering
@@ -148,7 +150,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
                 );
                 if (datePath != null) {
                     if (dateHighPath != null || dateLowPath != null) {
-                        throw new IllegalArgumentException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
+                        throw new DataProviderException("If the datePath is specified, the dateLowPath and dateHighPath attributes must not be present.");
                     }
 
                     DateTime date = null;
@@ -185,7 +187,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
 
                 else {
                     if (dateHighPath == null && dateLowPath == null) {
-                        throw new IllegalArgumentException("If the datePath is not given, either the lowDatePath or highDatePath must be provided.");
+                        throw new DataProviderException("If the datePath is not given, either the lowDatePath or highDatePath must be provided.");
                     }
 
                     // get the high and low dates if present
@@ -281,10 +283,10 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
     public String getDefaultPatient(Path evalPath) {
         File file = new File(evalPath.toString());
         if (!file.exists()) {
-            throw new IllegalArgumentException("Invalid path: " + evalPath.toString());
+            throw new UnknownPath(String.format("Unknown path: %s", evalPath.toString()));
         }
         else if (file.listFiles().length == 0) {
-            throw new IllegalArgumentException("The target directory is empty!");
+            throw new DataProviderException("The target directory is empty!");
         }
 
         return file.listFiles()[0].getName();
@@ -309,7 +311,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
                 }
             }
             catch(NullPointerException npe) {
-                throw new IllegalArgumentException("The target directory is empty!");
+                throw new DataProviderException("The target directory is empty!");
             }
         }
         else { // Population
@@ -340,7 +342,7 @@ public class FileBasedFhirProvider extends FhirDataProviderStu3 {
             }
         }
         catch (IOException e) {
-            throw new IllegalArgumentException("File not found at path " + f.getPath());
+            throw new UnknownPath("File not found at path " + f.getPath());
         }
         return fileContent.toString();
     }

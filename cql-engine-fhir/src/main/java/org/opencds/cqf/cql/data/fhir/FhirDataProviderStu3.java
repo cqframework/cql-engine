@@ -10,6 +10,7 @@ import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Resource;
 import org.hl7.fhir.dstu3.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.exception.DataProviderException;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
@@ -20,9 +21,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
 
     public FhirDataProviderStu3() {
@@ -34,7 +32,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
         try {
             return URLEncoder.encode(url, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            throw new IllegalArgumentException(e.getMessage());
+            throw new DataProviderException(e.getMessage());
         }
     }
 
@@ -76,7 +74,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
         }
 
         if (codePath == null && (codes != null || valueSet != null)) {
-            throw new IllegalArgumentException("A code path must be provided when filtering on codes or a valueset.");
+            throw new DataProviderException("A code path must be provided when filtering on codes or a valueset.");
         }
 
         if (context != null && context.equals("Patient") && contextValue != null) {
@@ -104,7 +102,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
                 }
                 else {
                     if (searchUsingPOST) {
-                        throw new IllegalArgumentException("A terminology provider must be provided and the expandValueSets flag must be set to true when searching using POST method");
+                        throw new DataProviderException("A terminology provider must be provided and the expandValueSets flag must be set to true when searching using POST method");
                     }
                     else {
                         params.append(String.format("%s:in=%s", convertPathToSearchParam(dataType, codePath), URLEncode(valueSet)));
@@ -149,7 +147,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
             if (dateRange.getLow() != null) {
                 String lowDatePath = convertPathToSearchParam(dataType, dateLowPath != null ? dateLowPath : datePath);
                 if (lowDatePath == null || lowDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or low date path must be provided when filtering on a date range.");
+                    throw new DataProviderException("A date path or low date path must be provided when filtering on a date range.");
                 }
 
                 if (searchUsingPOST && search != null) {
@@ -169,7 +167,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
             if (dateRange.getHigh() != null) {
                 String highDatePath = convertPathToSearchParam(dataType, dateHighPath != null ? dateHighPath : datePath);
                 if (highDatePath == null || highDatePath.equals("")) {
-                    throw new IllegalArgumentException("A date path or high date path must be provided when filtering on a date range.");
+                    throw new DataProviderException("A date path or high date path must be provided when filtering on a date range.");
                 }
 
                 if (searchUsingPOST && search != null) {

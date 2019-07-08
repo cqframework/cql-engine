@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -14,23 +15,26 @@ If the low boundary of the interval is closed and the low value of the interval 
 If the argument is null, the result is null.
 */
 
-/**
- * Created by Bryn on 5/25/2016.
- */
 public class StartEvaluator extends org.cqframework.cql.elm.execution.Start {
 
-    public static Object start(Interval operand) {
-        if (operand != null) {
-            return operand.getStart();
+    public static Object start(Object operand) {
+        if (operand == null) {
+            return null;
         }
 
-        return null;
+        if (operand instanceof Interval) {
+            return ((Interval) operand).getStart();
+        }
+
+        throw new InvalidOperatorArgument(
+                "Start(Interval<T>)",
+                String.format("Start(%s)", operand.getClass().getName())
+        );
     }
 
     @Override
-    public Object evaluate(Context context) {
-        Interval operand = (Interval)this.getOperand().evaluate(context);
-
-        return context.logTrace(this.getClass(), start(operand), operand);
+    protected Object internalEvaluate(Context context) {
+        Object operand = this.getOperand().evaluate(context);
+        return start(operand);
     }
 }

@@ -1,6 +1,5 @@
 package org.hl7.fhirpath;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.elm.execution.Library;
@@ -21,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Bryn on 12/29/2016.
- */
 public class TestLibraryLoader implements LibraryLoader {
 
     public TestLibraryLoader(LibraryManager libraryManager) {
