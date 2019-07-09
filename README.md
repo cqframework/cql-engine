@@ -25,9 +25,9 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 
 # Roadmap
 
-* 1.3.8 - Improved exception handling and stable
-* 1.3.9 - Debugging/tracing/coverage
-* 1.3.10 - FHIR R4 Support
+* 1.3.9 - Improved exception handling and stable
+* 1.3.10 - Debugging/tracing/coverage
+* 1.3.11 - FHIR R4 Support
 * 1.4 - CQL 1.4 Support
 
 # License
