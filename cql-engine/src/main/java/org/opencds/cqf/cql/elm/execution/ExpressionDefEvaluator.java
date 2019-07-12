@@ -18,9 +18,14 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
                 return context.getExpressionResultFromCache(this.getName());
             }
 
-            context.setCurrentExpression(this.getName());
-            Object result = this.getExpression().evaluate(context);
-            context.popCurrentExpression();
+            Object result;
+            try {
+                context.setCurrentExpression(this.getName());
+                result = this.getExpression().evaluate(context);
+            }
+            finally {
+                context.popCurrentExpression();
+            }
             
             if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(this.getName())) {
                 context.addExpressionToCache(this.getName(), result);
