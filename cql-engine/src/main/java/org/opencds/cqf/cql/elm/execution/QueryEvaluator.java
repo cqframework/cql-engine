@@ -256,8 +256,6 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
             return null;
         }
 
-        context.clearLetExpressions();
-
         return sourceIsList ? result : result.get(0);
     }
 }

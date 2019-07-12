@@ -49,6 +49,7 @@ public class Context {
     private Stack<Library> currentLibrary = new Stack<>();
     private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
+    private Stack<String> expressionStack;
 
     private Library library;
 
@@ -72,6 +73,7 @@ public class Context {
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+        expressionStack = new Stack<>();
         threadContext.set(this);
     }
 
@@ -100,11 +102,12 @@ public class Context {
     }
 
     public void addLetExpression(String name, Expression result) {
-        if (letExpressions.getElements().containsKey(name)) {
+        String mangledId = this.expressionStack.peek() + "." + name;
+        if (letExpressions.getElements().containsKey(mangledId)) {
             return;
         }
 
-        letExpressions.getElements().put(name, result);
+        letExpressions.getElements().put(mangledId, result);
     }
 
     public void clearLetExpressions() {
@@ -121,6 +124,20 @@ public class Context {
 
     private Library getCurrentLibrary() {
         return currentLibrary.peek();
+    }
+
+    public void setCurrentExpression(String currentExpression) {
+        this.expressionStack.push(currentExpression);
+    }
+
+    public String getCurrentExpression() {
+        return this.expressionStack.peek();
+    }
+
+    public void popCurrentExpression() {
+        if (this.expressionStack.size() > 0) {
+            this.expressionStack.pop();
+        }
     }
 
     private Library resolveIncludeDef(IncludeDef includeDef) {
@@ -177,8 +194,9 @@ public class Context {
     }
 
     public Expression resolveLetExpressionRef(String name) {
+        String mangledId = this.getCurrentExpression() + "." + name;
         for (String key : letExpressions.getElements().keySet()) {
-            if (key.equals(name)) {
+            if (key.equals(mangledId)) {
                 return (Expression) letExpressions.getElements().get(key);
             }
         }

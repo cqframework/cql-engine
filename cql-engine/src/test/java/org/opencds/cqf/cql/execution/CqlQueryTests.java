@@ -12,11 +12,13 @@ public class CqlQueryTests extends CqlExecutionTestBase
     {
         Context context = new Context(library);
 
-        Object result = context.resolveExpressionRef("RightShift").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("RightShift").evaluate(context);
         Assert.assertEquals(result, Arrays.asList(null, "A", "B", "C"));
-        result = context.resolveExpressionRef("LeftShift").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LeftShift").evaluate(context);
         Assert.assertEquals(result, Arrays.asList("B", "C", "D", null));
-        result = context.resolveExpressionRef("LeftShift2").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("LeftShift2").evaluate(context);
         Assert.assertEquals(result, Arrays.asList("B", "C", "D", null));
+
+        result = context.resolveExpressionRef("Let Test Fails").evaluate(context);
     }
 }
