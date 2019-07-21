@@ -42,6 +42,8 @@ public abstract class CqlExecutionTestBase<T> {
 
                 ArrayList<CqlTranslator.Options> options = new ArrayList<>();
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
+                options.add(CqlTranslator.Options.EnableAnnotations);
+                options.add(CqlTranslator.Options.EnableLocators);
                 CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {

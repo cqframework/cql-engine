@@ -18,5 +18,7 @@ public class CqlQueryTests extends CqlExecutionTestBase
         Assert.assertEquals(result, Arrays.asList("B", "C", "D", null));
         result = context.resolveExpressionRef("LeftShift2").getExpression().evaluate(context);
         Assert.assertEquals(result, Arrays.asList("B", "C", "D", null));
+
+        result = context.resolveExpressionRef("Let Test Fails").getExpression().evaluate(context);
     }
 }
