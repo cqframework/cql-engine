@@ -198,8 +198,9 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         AliasList result = new AliasList(a.getName() + b.getName());
         for (Object o : a.getBase()) {
             for (Object oo : b.getBase()) {
-                if (o instanceof Tuple) {
-                    Tuple temp = new Tuple().withElements((HashMap<String, Object>) ((Tuple) o).getElements().clone());
+                if (o instanceof Tuple && oo instanceof Tuple) {
+                    Tuple temp = new Tuple();
+                    temp.getElements().put(a.getName(), o);
                     temp.getElements().put(b.getName(), oo);
                     result.getBase().add(temp);
                 }
