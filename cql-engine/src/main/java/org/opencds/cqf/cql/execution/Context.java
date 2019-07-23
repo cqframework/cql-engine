@@ -32,7 +32,7 @@ public class Context {
         }
     };
 
-    private List<Object> evaluatedResources = new ArrayList<Object>();
+    private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
         return evaluatedResources;
     }
@@ -47,7 +47,7 @@ public class Context {
     private Stack<Stack<Variable> > windows = new Stack<>();
     private Map<String, Library> libraries = new HashMap<>();
     private Stack<Library> currentLibrary = new Stack<>();
-    private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
+//    private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
 
     private Library library;
@@ -99,17 +99,17 @@ public class Context {
         return this.expressions.get(name);
     }
 
-    public void addLetExpression(String name, Expression result) {
-        if (letExpressions.getElements().containsKey(name)) {
-            return;
-        }
+//    public void addLetExpression(String name, Expression result) {
+//        if (letExpressions.getElements().containsKey(name)) {
+//            return;
+//        }
+//
+//        letExpressions.getElements().put(name, result);
+//    }
 
-        letExpressions.getElements().put(name, result);
-    }
-
-    public void clearLetExpressions() {
-        letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
-    }
+//    public void clearLetExpressions() {
+//        letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
+//    }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
         if (libraryLoader == null) {
@@ -176,16 +176,16 @@ public class Context {
         throw new CqlException(String.format("Could not resolve library reference '%s'.", libraryName));
     }
 
-    public Expression resolveLetExpressionRef(String name) {
-        for (String key : letExpressions.getElements().keySet()) {
-            if (key.equals(name)) {
-                return (Expression) letExpressions.getElements().get(key);
-            }
-        }
-
-        throw new CqlException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
-                name, getCurrentLibrary().getIdentifier().getId()));
-    }
+//    public Expression resolveLetExpressionRef(String name) {
+//        for (String key : letExpressions.getElements().keySet()) {
+//            if (key.equals(name)) {
+//                return (Expression) letExpressions.getElements().get(key);
+//            }
+//        }
+//
+//        throw new CqlException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
+//                name, getCurrentLibrary().getIdentifier().getId()));
+//    }
 
     public ExpressionDef resolveExpressionRef(String name) {
 
@@ -201,7 +201,7 @@ public class Context {
 
     public Object resolveIdentifierRef(String name) {
         for (int i = windows.size() - 1; i >= 0; i--) {
-            for (int j = windows.get(i).size() - 1; j >= 0; j--) {
+            for (int j = 0; j < windows.get(i).size(); j++) {
                 Object value = windows.get(i).get(j).getValue();
                 if (value instanceof org.opencds.cqf.cql.runtime.Tuple) {
                     for (String key : ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().keySet()) {
@@ -217,23 +217,6 @@ public class Context {
                 }
             }
         }
-//        for (Stack<Variable> stack : windows) {
-//            for (Variable var : stack) {
-//                Object value = var.getValue();
-//                if (value instanceof org.opencds.cqf.cql.runtime.Tuple) {
-//                    for (String key : ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().keySet()) {
-//                        if (key.equals(name)) {
-//                            return ((org.opencds.cqf.cql.runtime.Tuple) value).getElements().get(key);
-//                        }
-//                    }
-//                }
-//                try {
-//                    return resolvePath(value, name);
-//                } catch (Exception ignored) {
-//
-//                }
-//            }
-//        }
 
         throw new CqlException("Cannot resolve identifier " + name);
     }
@@ -553,19 +536,12 @@ public class Context {
 
     public Variable resolveVariable(String name) {
         for (int i = windows.size() - 1; i >= 0; i--) {
-            for (int j = windows.get(i).size() - 1; j >= 0; j--) {
+            for (int j = 0; j < windows.get(i).size(); j++) {
                 if (windows.get(i).get(j).getName().equals(name)) {
                     return windows.get(i).get(j);
                 }
             }
         }
-//        for (Stack<Variable> stack : windows) {
-//            for (Variable v : stack) {
-//                if (v.getName().equals(name)) {
-//                    return v;
-//                }
-//            }
-//        }
 
         return null;
     }
@@ -590,7 +566,7 @@ public class Context {
                 ret.add(v.getValue());
             }
         }
-        return isList ? ret : ret.get(0);
+        return isList ? ret : ret.get(ret.size() - 1);
     }
 
     public void pop() {
