@@ -36,4 +36,13 @@ public class CqlQueryTests extends CqlExecutionTestBase
 
         result = context.resolveExpressionRef("Let Test Fails").getExpression().evaluate(context);
     }
+
+    @Test
+    public void TestWithout()
+    {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ClaimWithQualifiyingPOSWithoutEncounter").getExpression().evaluate(context);
+        Assert.assertTrue(result == null);
+    }
 }

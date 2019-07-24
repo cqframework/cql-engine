@@ -51,7 +51,9 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 context.push(new Variable().withName(relationship.getAlias()).withValue(relatedElement));
                 try {
                     Object satisfiesRelatedCondition = relationship.getSuchThat().evaluate(context);
-                    if (relationship instanceof org.cqframework.cql.elm.execution.With) {
+                    if (relationship instanceof org.cqframework.cql.elm.execution.With
+                            || relationship instanceof org.cqframework.cql.elm.execution.Without)
+                    {
                         if (satisfiesRelatedCondition instanceof Boolean && (Boolean) satisfiesRelatedCondition) {
                             hasSatisfyingData = true;
                             break; // Once we have detected satisfying data, no need to continue testing
