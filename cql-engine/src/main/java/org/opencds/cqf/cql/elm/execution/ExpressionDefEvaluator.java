@@ -2,9 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 
-import java.util.Collection;
-import java.util.List;
-
 public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.ExpressionDef {
 
     @Override
@@ -18,7 +15,7 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
             }
 
             Object result = this.getExpression().evaluate(context);
-            
+
             if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(this.getName())) {
                 context.addExpressionToCache(this.getName(), result);
             }

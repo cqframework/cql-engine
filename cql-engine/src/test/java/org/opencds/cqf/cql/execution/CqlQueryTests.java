@@ -33,5 +33,7 @@ public class CqlQueryTests extends CqlExecutionTestBase
         Assert.assertTrue(result instanceof List);
         results = (List) result;
         Assert.assertTrue(results.size() == 4);
+
+        result = context.resolveExpressionRef("Let Test Fails").getExpression().evaluate(context);
     }
 }
