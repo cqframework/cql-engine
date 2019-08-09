@@ -127,6 +127,9 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
             multiQueryStack.addFirst(new AliasList(source.getAlias()).withBase(target));
         }
 
+        if (this.getLet().size() > 0) {
+            resolveLet(context);
+        }
         // times operation results in list of Tuples
         AliasList result = times();
         int count = 0;
@@ -134,6 +137,9 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         for (Object tuple : result.getBase()) {
             try {
                 count = 0;
+                if (this.getLet().size() > 0) {
+                    resolveLet(context);
+                }
                 for (String key : ((Tuple) tuple).getElements().keySet()) {
                     Variable v = new Variable().withName(key).withValue(((Tuple) tuple).getElements().get(key));
                     context.push(v);
@@ -141,6 +147,11 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 }
                 shouldInclude = true;
                 resolveRelationship(context);
+
+                if (this.getLet().size() > 0) {
+                    resolveLet(context);
+                }
+
                 resolveWhere(context);
                 if (shouldInclude)
                     returnList.add(resolveResult(context, tuple));
