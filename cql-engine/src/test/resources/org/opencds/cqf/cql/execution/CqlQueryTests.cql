@@ -94,3 +94,10 @@ define "Let Test Fails":
     let renamedIntegerList: (IntegerList i where 1 = 1)
     //let renamedIntegerList: IntegerList
   return renamedIntegerList
+
+define "List 3":
+  { 7, 8, 9 }
+
+define "Triple Source Query":
+  from "List 1" A, "List 2" B, "List 3" C
+
