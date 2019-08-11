@@ -6,16 +6,13 @@ import org.cqframework.cql.elm.execution.ByExpression;
 import org.cqframework.cql.elm.execution.LetClause;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
-import org.opencds.cqf.cql.runtime.AliasList;
 import org.opencds.cqf.cql.runtime.CqlList;
 import org.opencds.cqf.cql.runtime.Tuple;
+import org.opencds.cqf.cql.runtime.iterators.QueryIterator;
 
 import java.util.*;
 
 public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
-
-    private boolean shouldInclude;
-    private Deque<AliasList> multiQueryStack;
 
     public Iterable<Object> ensureIterable(Object source) {
         if (source instanceof Iterable) {
@@ -29,21 +26,15 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         }
     }
 
-    /**
-     * Resolves let clause using a for-each operation to introduce a Tuple element for each defined expression.
-     */
-    public void resolveLet(Context context) {
-        for (LetClause letClause : this.getLet()) {
-            context.push(
-                    new Variable()
-                            .withName(letClause.getIdentifier())
-                            .withValue(letClause.getExpression().evaluate(context))
-            );
+    private void evaluateLets(Context context, List<Variable> letVariables) {
+        for (int i = 0; i < getLet().size(); i++) {
+            letVariables.get(i).setValue(getLet().get(i).getExpression().evaluate(context));
         }
     }
 
-    public void resolveRelationship(Context context) {
+    private boolean evaluateRelationships(Context context) {
         // TODO: This is the most naive possible implementation here, but it should perform okay with 1) caching and 2) small data sets
+        boolean shouldInclude = true;
         for (org.cqframework.cql.elm.execution.RelationshipClause relationship : getRelationship()) {
             boolean hasSatisfyingData = false;
             Iterable<Object> relatedSourceData = ensureIterable(relationship.getExpression().evaluate(context));
@@ -71,19 +62,36 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
                 break; // Once we have determined the row should not be included, no need to continue testing other related information
             }
         }
+
+        return shouldInclude;
     }
 
-    public void resolveWhere(Context context) {
-        if (shouldInclude && getWhere() != null) {
+    private boolean evaluateWhere(Context context) {
+        if (getWhere() != null) {
             Object satisfiesCondition = this.getWhere().evaluate(context);
             if (!(satisfiesCondition instanceof Boolean && (Boolean)satisfiesCondition)) {
-                shouldInclude = false;
+                return false;
             }
         }
+
+        return true;
     }
 
-    public Object resolveResult(Context context, Object element) {
-        return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : element;
+    private Object evaluateReturn(Context context, List<Variable> variables, List<Object> elements) {
+        return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : constructResult(variables, elements);
+    }
+
+    private Object constructResult(List<Variable> variables, List<Object> elements) {
+        if (variables.size() > 1) {
+            HashMap<String,Object> elementMap = new HashMap<String, Object>();
+            for (int i = 0; i < variables.size(); i++) {
+                elementMap.put(variables.get(i).getName(), variables.get(i).getValue());
+            }
+
+            return new Tuple().withElements(elementMap);
+        }
+
+        return elements.get(0);
     }
 
     public void sortResult(List<Object> result, Context context, String alias) {
@@ -114,116 +122,85 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         }
     }
 
-    public Object multisourceQuery(Context context) {
-        List<Object> returnList = new ArrayList<>();
-        multiQueryStack = new ArrayDeque<>();
+    class QuerySource {
+        private String alias;
+        private boolean isList;
+        private Iterable<Object> data;
 
-        for (AliasedQuerySource source : this.getSource()) {
-            // assuming list
-            Object sourceObject = source.getExpression().evaluate(context);
-            Iterable<Object> sourceData = ensureIterable(sourceObject);
-            List<Object> target = new ArrayList<>();
-            sourceData.forEach(target::add);
-            multiQueryStack.addFirst(new AliasList(source.getAlias()).withBase(target));
+        public QuerySource(String alias, Object data) {
+            this.alias = alias;
+            this.isList = data instanceof Iterable;
+            this.data = ensureIterable(data);
         }
 
-        // times operation results in list of Tuples
-        AliasList result = times();
-        int count = 0;
-        // now do the operation
-        for (Object tuple : result.getBase()) {
-            try {
-                count = 0;
-                for (String key : ((Tuple) tuple).getElements().keySet()) {
-                    Variable v = new Variable().withName(key).withValue(((Tuple) tuple).getElements().get(key));
-                    context.push(v);
-                    count++;
-                }
-                shouldInclude = true;
-                resolveRelationship(context);
-                resolveWhere(context);
-                if (shouldInclude)
-                    returnList.add(resolveResult(context, tuple));
-            } finally {
-                while (count > 0) {
-                    context.pop();
-                    count--;
-                }
-            }
+        public String getAlias() {
+            return alias;
         }
 
-        // collapse list of Tuples into a singleton Tuple list
-        // returnList = collapse(returnList);
-
-        // TODO: sorting for List<Tuple>
-        if (returnList.size() > 0 && !(returnList.get(0) instanceof Tuple)) {
-            sortResult(returnList, context, null);
+        public boolean getIsList() {
+            return isList;
         }
 
-        return returnList;
-    }
-
-    public AliasList times() {
-        while (multiQueryStack.size() > 1) {
-            AliasList a = multiQueryStack.removeFirst();
-            AliasList b = multiQueryStack.removeFirst();
-            multiQueryStack.addFirst(cartesianProduct(a, b));
+        public Iterable<Object> getData() {
+            return data;
         }
-
-        return multiQueryStack.removeFirst();
-    }
-
-    public AliasList cartesianProduct(AliasList a, AliasList b) {
-        AliasList result = new AliasList(a.getName() + b.getName());
-        for (Object o : a.getBase()) {
-            for (Object oo : b.getBase()) {
-                if (o instanceof Tuple && oo instanceof Tuple) {
-                    Tuple temp = new Tuple();
-                    temp.getElements().put(a.getName(), o);
-                    temp.getElements().put(b.getName(), oo);
-                    result.getBase().add(temp);
-                }
-                else {
-                    HashMap<String, Object> tupleMap = new HashMap<>();
-                    tupleMap.put(a.getName(), o);
-                    tupleMap.put(b.getName(), oo);
-                    result.getBase().add(new Tuple().withElements(tupleMap));
-                }
-            }
-        }
-        return result;
     }
 
     @Override
     protected Object internalEvaluate(Context context) {
 
-        if (this.getSource().size() != 1) {
-            return multisourceQuery(context);
-        }
-
-        org.cqframework.cql.elm.execution.AliasedQuerySource source = this.getSource().get(0);
-        Object sourceObject = source.getExpression().evaluate(context);
-        boolean sourceIsList = sourceObject instanceof Iterable;
-        Iterable<Object> sourceData = ensureIterable(sourceObject);
+        ArrayList<Iterator> sources = new ArrayList<Iterator>();
+        ArrayList<Variable> variables = new ArrayList<Variable>();
+        ArrayList<Variable> letVariables = new ArrayList<Variable>();
         List<Object> result = new ArrayList<>();
+        boolean sourceIsList = false;
+        int pushCount = 0;
+        try {
+            for (AliasedQuerySource source : this.getSource()) {
+                QuerySource querySource = new QuerySource(source.getAlias(), source.getExpression().evaluate(context));
+                sources.add(querySource.getData().iterator());
+                if (querySource.getIsList()) {
+                    sourceIsList = true;
+                }
+                Variable variable = new Variable().withName(source.getAlias());
+                variables.add(variable);
+                context.push(variable);
+                pushCount++;
+            }
 
-        for (Object element : sourceData) {
-            context.push(new Variable().withName(source.getAlias()).withValue(element));
+            for (LetClause let : this.getLet()) {
+                Variable letVariable = new Variable().withName(let.getIdentifier());
+                letVariables.add(letVariable);
+                context.push(letVariable);
+                pushCount++;
+            }
 
-            try {
-                shouldInclude = true;
-                resolveRelationship(context);
+            QueryIterator iterator = new QueryIterator(context, sources);
 
-                if (this.getLet().size() > 0) {
-                    resolveLet(context);
+            while (iterator.hasNext()) {
+                List<Object> elements = (List<Object>)iterator.next();
+
+                // Assign range variables
+                assignVariables(variables, elements);
+
+                evaluateLets(context, letVariables);
+
+                // Evaluate relationships
+                if (!evaluateRelationships(context)) {
+                    continue;
                 }
 
-                resolveWhere(context);
-                if (shouldInclude)
-                    result.add(resolveResult(context, element));
+                if (!evaluateWhere(context)) {
+                    continue;
+                }
+
+                result.add(evaluateReturn(context, variables, elements));
             }
-            finally {
+        }
+        finally {
+            while (pushCount > 0) {
                 context.pop();
+                pushCount--;
             }
         }
 
@@ -231,12 +208,18 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
             result = DistinctEvaluator.distinct(result);
         }
 
-        sortResult(result, context, source.getAlias());
+        sortResult(result, context, null);
 
         if ((result == null || result.isEmpty()) && !sourceIsList) {
             return null;
         }
 
         return sourceIsList ? result : result.get(0);
+    }
+
+    private void assignVariables(List<Variable> variables, List<Object> elements) {
+        for (int i = 0; i < variables.size(); i++) {
+            variables.get(i).setValue(elements.get(i));
+        }
     }
 }

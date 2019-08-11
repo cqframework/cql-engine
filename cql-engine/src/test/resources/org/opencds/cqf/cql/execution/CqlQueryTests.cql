@@ -94,3 +94,30 @@ define "Let Test Fails":
     let renamedIntegerList: (IntegerList i where 1 = 1)
     //let renamedIntegerList: IntegerList
   return renamedIntegerList
+
+define "List 3":
+  { 7, 8, 9 }
+
+define "Triple Source Query":
+  from "List 1" A, "List 2" B, "List 3" C
+
+define "A":
+{ 1 }
+
+define "B":
+{ 2 }
+
+define "C":
+{ 3 } 
+
+// Issue #218 - Let expression in multi-source query
+define "Let Expression in Multi Source Query":
+    from "A" A, "B" B
+    let sum: A + B
+    return sum
+ 
+// Issue #219 - Index out of range on multi-source query
+define "Accessing Third Element of Triple Source Query":
+    from "A" A, "B" B, "C" C
+    return C
+
