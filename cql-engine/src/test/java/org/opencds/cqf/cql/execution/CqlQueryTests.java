@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.execution;
 
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.Tuple;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,6 +42,19 @@ public class CqlQueryTests extends CqlExecutionTestBase
         Assert.assertTrue(result instanceof List);
         results = (List) result;
         Assert.assertTrue(results.size() == 27);
+
+        result = context.resolveExpressionRef("Let Expression in Multi Source Query").getExpression().evaluate(context);
+        Assert.assertTrue(result instanceof List);
+        results = (List) result;
+        Assert.assertTrue(results.size() == 1);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(results.get(0), 3));
+
+
+        result = context.resolveExpressionRef("Accessing Third Element of Triple Source Query").getExpression().evaluate(context);
+        Assert.assertTrue(result instanceof List);
+        results = (List) result;
+        Assert.assertTrue(results.size() == 1);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(results.get(0), 3));
     }
 
     @Test

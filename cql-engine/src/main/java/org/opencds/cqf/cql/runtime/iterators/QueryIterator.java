@@ -1,12 +1,13 @@
 package org.opencds.cqf.cql.runtime.iterators;
 
-import javafx.util.Pair;
 import org.opencds.cqf.cql.elm.execution.QueryEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import java.util.Map;
 
 /**
  * Created by Bryn on 8/11/2019.
@@ -50,9 +51,9 @@ public class QueryIterator implements Iterator<Object> {
     }
 
     private void unpair(Object element, List<Object> target, int index) {
-        if (element instanceof Pair) {
-            unpair(((Pair)element).getKey(), target, index);
-            unpair(((Pair)element).getValue(), target, index + 1);
+        if (element instanceof Map.Entry) {
+            unpair(((Map.Entry)element).getKey(), target, index);
+            unpair(((Map.Entry)element).getValue(), target, index + 1);
         }
         else {
             target.set(index, element);

@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import javafx.util.Pair;
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
 import org.cqframework.cql.elm.execution.ByColumn;
 import org.cqframework.cql.elm.execution.ByExpression;

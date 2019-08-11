@@ -1,8 +1,6 @@
 package org.opencds.cqf.cql.runtime.iterators;
 
-import javafx.util.Pair;
-import org.opencds.cqf.cql.elm.execution.QueryEvaluator;
-
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -46,7 +44,7 @@ public class TimesIterator implements Iterator<Object> {
             leftNeeded = false;
         }
 
-        return new Pair<Object, Object>(leftElement, right.next());
+        return new AbstractMap.SimpleEntry<Object, Object>(leftElement, right.next());
     }
 }
 
