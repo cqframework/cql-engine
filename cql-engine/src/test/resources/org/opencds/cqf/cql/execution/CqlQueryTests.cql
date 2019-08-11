@@ -101,7 +101,6 @@ define "List 3":
 define "Triple Source Query":
   from "List 1" A, "List 2" B, "List 3" C
 
-
 define "A":
 { 1 }
 
