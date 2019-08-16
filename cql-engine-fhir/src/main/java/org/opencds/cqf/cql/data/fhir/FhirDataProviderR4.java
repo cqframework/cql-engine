@@ -1,28 +1,19 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.rest.gclient.*;
-import ca.uhn.fhir.rest.param.TokenParam;
-import ca.uhn.fhir.rest.param.TokenParamModifier;
-import org.hl7.fhir.dstu3.model.Enumeration;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.ValueSet;
+import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Christopher Schuler on 6/19/2017.
- */
 public class FhirDataProviderR4 extends BaseDataProviderR4 {
 
     public FhirDataProviderR4() {

@@ -916,7 +916,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "OrganizationAffiliation":
                         break;
                     case "Patient":
-                        return "link";
+                        return "_id";
                     case "PaymentNotice":
                         break;
                     case "PaymentReconciliation":
