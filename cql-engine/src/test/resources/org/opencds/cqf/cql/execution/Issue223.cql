@@ -28,11 +28,7 @@ define "Access Flattened List of List Items":
         return true
 
 define "Access Flattened List of List Items in a Single Query":
-    flatten (
-        (
-            "List of Lists"
-        )
-     ) FlattenedListofListsItem
+    (flatten ( "List of Lists" )) FlattenedListofListsItem
          where start of FlattenedListofListsItem = 1
          return true
     
