@@ -5,3 +5,8 @@
 *.class
 /cql-engine/target/
 /cql-engine-fhir/target/
+
+/docs/_site
+/docs/.sass-cache
+/docs/.jekyll-metadata
+
