@@ -1,11 +1,3 @@
-.DS_Store
-.idea
-*.iml
-/cql-engine/src/generated
-*.class
-/cql-engine/target/
-/cql-engine-fhir/target/
-
-/docs/_site
-/docs/.sass-cache
-/docs/.jekyll-metadata
+_site
+.sass-cache
+.jekyll-metadata
