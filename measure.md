@@ -22,4 +22,4 @@ Clinical Quality Measure calculation involves the following conceptual component
 
 These components fit together as shown in this diagram.
 
-![eCQM Components](/images/ecqm_caluclation_architecture.png)
+![eCQM Components](/images/ecqm_components.drawio.png)
