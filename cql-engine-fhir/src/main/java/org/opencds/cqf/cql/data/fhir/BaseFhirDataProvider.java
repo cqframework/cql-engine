@@ -219,15 +219,15 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         return resolveClass(resolveClassName(typeName));
     }
 
-//    @Override
-//    public Class resolveType(Object value) {
-//        return null;
-//    }
-//
-//    @Override
-//    public Object createInstance(String typeName) {
-//        return null;
-//    }
+    @Override
+    public Class resolveType(Object value) {
+        return null;
+    }
+
+    @Override
+    public Object createInstance(String typeName) {
+        return null;
+    }
 
     @Override
     public void setValue(Object target, String path, Object value) {
