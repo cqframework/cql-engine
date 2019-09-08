@@ -11,12 +11,9 @@ import org.opencds.cqf.cql.exception.*;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
-import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -90,15 +87,10 @@ public abstract class BaseFhirDataProvider implements DataProvider {
     }
 
     // Retrieval helpers
-    protected String getPatientSearchParam(String dataType) {
+    public String getPatientSearchParam(String dataType) {
         switch (dataType) {
-            case "Coverage":
-                return "beneficiary";
             case "Patient":
                 return "_id";
-            case "Observation":
-            case "RiskAssessment":
-                return "subject";
             default: return "patient";
         }
     }
@@ -227,15 +219,15 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         return resolveClass(resolveClassName(typeName));
     }
 
-    @Override
-    public Class resolveType(Object value) {
-        return null;
-    }
-
-    @Override
-    public Object createInstance(String typeName) {
-        return null;
-    }
+//    @Override
+//    public Class resolveType(Object value) {
+//        return null;
+//    }
+//
+//    @Override
+//    public Object createInstance(String typeName) {
+//        return null;
+//    }
 
     @Override
     public void setValue(Object target, String path, Object value) {
