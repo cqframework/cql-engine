@@ -720,7 +720,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "AdverseEvent":
                         return "subject";
                     case "AllergyIntolerance":
-                        break;
+                        return "patient";
                     case "Appointment":
                         return "actor";
                     case "AppointmentResponse":
@@ -728,7 +728,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "AuditEvent":
                         return "patient";
                     case "Basic":
-                        break;
+                        return "patient";
                     case "Binary":
                         break;
                     case "BiologicallyDerivedProduct":
@@ -740,9 +740,9 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "CapabilityStatement":
                         break;
                     case "CarePlan":
-                        break;
+                        return "patient";
                     case "CareTeam":
-                        break;
+                        return "patient";
                     case "CatalogEntry":
                         break;
                     case "ChargeItem":
@@ -750,7 +750,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "ChargeItemDefinition":
                         break;
                     case "Claim":
-                        break;
+                        return "patient";
                     case "ClaimResponse":
                         return "patient";
                     case "ClinicalImpression":
@@ -758,23 +758,23 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "CodeSystem":
                         break;
                     case "Communication":
-                        break;
+                        return "subject";
                     case "CommunicationRequest":
-                        break;
+                        return "subject";
                     case "CompartmentDefinition":
                         break;
                     case "Composition":
-                        break;
+                        return "subject";
                     case "ConceptMap":
                         break;
                     case "Condition":
-                        break;
+                        return "patient";
                     case "Consent":
                         return "patient";
                     case "Contract":
                         break;
                     case "Coverage":
-                        break;
+                        return "patient";
                     case "CoverageEligibilityRequest":
                         return "patient";
                     case "CoverageEligibilityResponse":
@@ -788,15 +788,15 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "DeviceMetric":
                         break;
                     case "DeviceRequest":
-                        break;
+                        return "subject";
                     case "DeviceUseStatement":
                         return "subject";
                     case "DiagnosticReport":
                         return "subject";
                     case "DocumentManifest":
-                        break;
+                        return "subject";
                     case "DocumentReference":
-                        break;
+                        return "subject";
                     case "EffectEvidenceSynthesis":
                         break;
                     case "Encounter":
@@ -818,7 +818,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "ExampleScenario":
                         break;
                     case "ExplanationOfBenefit":
-                        break;
+                        return "patient";
                     case "FamilyMemberHistory":
                         return "patient";
                     case "Flag":
@@ -846,13 +846,13 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "InsurancePlan":
                         break;
                     case "Invoice":
-                        break;
+                        return "subject";
                     case "Library":
                         break;
                     case "Linkage":
                         break;
                     case "List":
-                        break;
+                        return "subject";
                     case "Location":
                         break;
                     case "Measure":
@@ -864,9 +864,9 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "Medication":
                         break;
                     case "MedicationAdministration":
-                        break;
+                        return "patient";
                     case "MedicationDispense":
-                        break;
+                        return "patient";
                     case "MedicationKnowledge":
                         break;
                     case "MedicationRequest":
@@ -904,7 +904,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "NutritionOrder":
                         return "patient";
                     case "Observation":
-                        break;
+                        return "subject";
                     case "ObservationDefinition":
                         break;
                     case "OperationDefinition":
@@ -930,17 +930,17 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "PractitionerRole":
                         break;
                     case "Procedure":
-                        break;
+                        return "patient";
                     case "Provenance":
                         return "patient";
                     case "Questionnaire":
                         break;
                     case "QuestionnaireResponse":
-                        break;
+                        return "subject";
                     case "RelatedPerson":
                         return "patient";
                     case "RequestGroup":
-                        break;
+                        return "subject";
                     case "ResearchDefinition":
                         break;
                     case "ResearchElementDefinition":
@@ -958,7 +958,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "SearchParameter":
                         break;
                     case "ServiceRequest":
-                        break;
+                        return "subject";
                     case "Slot":
                         break;
                     case "Specimen":
@@ -1599,7 +1599,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
     }
 
     @Override
-    protected String getPatientSearchParam(String dataType) {
+    public String getPatientSearchParam(String dataType) {
         return getContextSearchParam("Patient", dataType);
     }
 
