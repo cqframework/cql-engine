@@ -774,7 +774,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
                     case "Contract":
                         break;
                     case "Coverage":
-                        return "patient";
+                        return "beneficiary";
                     case "CoverageEligibilityRequest":
                         return "patient";
                     case "CoverageEligibilityResponse":
