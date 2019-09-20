@@ -5,3 +5,9 @@
 *.class
 /cql-engine/target/
 /cql-engine-fhir/target/
+
+.settings
+.vscode
+.classpath
+.project
+org.eclipse.m2e.core.prefs

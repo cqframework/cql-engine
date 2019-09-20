@@ -1,8 +1,21 @@
 package org.opencds.cqf.cql.execution;
 
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.UsingDef;
+import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.opencds.cqf.cql.data.DataProvider;
+import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
+import static org.junit.Assume.assumeTrue;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * NOTE: Several possible approaches to traversing the ELM tree for execution:
@@ -27,8 +40,211 @@ import java.util.Map;
 
 public class CqlEngine {
 
-    // evaluate a single named expression
-    public Object evaluate(Library library, String expressionName, Map<String, Object> parameters) {
-        return null;
+    public static enum Options {
+        EnableExpressionCaching
+    }
+
+    private LibraryLoader libraryLoader;
+    private Map<String, DataProvider> dataProviders;
+    private TerminologyProvider terminologyProvider;
+    private List<Options> engineOptions;
+
+    public CqlEngine(LibraryLoader libraryLoader) {
+        this(libraryLoader, null, null, Options.EnableExpressionCaching);
+    }
+
+    public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider) {
+        this(libraryLoader, dataProviders, terminologyProvider, Options.EnableExpressionCaching);
+    }
+
+    // TODO: External function provider
+    public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider, Options... engineOptions) {
+        if (libraryLoader == null) {
+            throw new IllegalArgumentException("libraryLoader can not be null.");
+        }
+
+        this.libraryLoader = libraryLoader;
+        this.dataProviders = dataProviders;
+        this.terminologyProvider = terminologyProvider;
+        this.engineOptions = Arrays.asList(engineOptions);
+    }
+
+    public EvaluationResult evaluate(Map<VersionedIdentifier, Set<String>> expressions)
+    {
+        return this.evaluate(null, null, expressions);
+    }
+
+    public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier)
+    {
+        return this.evaluate(null, null, libraryIdentifier);
+    }
+
+    public EvaluationResult evaluate(Map<String, Object> contextParameters, Map<VersionedIdentifier, Map<String, Object>> parameters, VersionedIdentifier libraryIdentifier)
+    {
+        Library library = this.loadLibrary(libraryIdentifier);
+        Map<VersionedIdentifier, Set<String>> expressions = this.getExpressionMap(library);
+        return this.evaluate(null, null, expressions);
+    }
+
+
+    public EvaluationResult evaluate(Map<String, Object> contextParameters, Map<VersionedIdentifier, Map<String, Object>> parameters, Map<VersionedIdentifier, Set<String>> expressions)
+    {
+        Map<VersionedIdentifier, Library> libraries = this.loadLibraries(expressions.keySet());
+        return this.evaluate(contextParameters, parameters, expressions, libraries);
+
+    }
+
+    private EvaluationResult evaluate(Map<String, Object> contextParameters, Map<VersionedIdentifier, Map<String, Object>> parameters, Map<VersionedIdentifier, Set<String>> expressions, Map<VersionedIdentifier, Library> libraries) {
+        EvaluationResult evaluationResult = new EvaluationResult();
+
+        for (Map.Entry<VersionedIdentifier, Set<String>> entry : expressions.entrySet()) {
+
+            if (!libraries.containsKey(entry.getKey())) {
+                throw new IllegalArgumentException(String.format("Library %s required to evaluate expressions and was not found.",
+                 this.getLibraryDescription(entry.getKey())));
+            }
+
+            Library library = libraries.get(entry.getKey());
+
+            Context context = this.setupContext(contextParameters, parameters, library);
+
+            LibraryResult result = this.evaluateLibrary(context, library, entry.getValue());
+
+            evaluationResult.libraryResults.put(entry.getKey(), result);
+        }
+
+        return evaluationResult;
+    }
+
+    private LibraryResult evaluateLibrary(Context context, Library library, Set<String> expressions) {
+        LibraryResult result = new LibraryResult();
+
+        for (String expression : expressions) {
+            Object object = context.resolveExpressionRef(expression).getExpression().evaluate(context);
+            result.expressionResults.put(expression, object);
+        }
+
+        return result;
+    }
+
+    // TODO: Handle global parameters?
+    private Context setupContext(Map<String, Object> contextParameters, Map<VersionedIdentifier, Map<String, Object>> parameters, Library library) {
+        
+        // Context requires an initial library to init properly.
+        // TODO: Allow context to be initialized with multiple libraries
+        Context context = new Context(library);
+
+        // TODO: Does the context actually need a library loaded if all the libraries are prefetched?
+        // We'd have to make sure we include the dependencies too.
+        context.registerLibraryLoader(this.libraryLoader);
+
+        if (this.engineOptions.contains(Options.EnableExpressionCaching)) {
+            context.setExpressionCaching(true);
+        }
+
+        if (this.terminologyProvider != null) {
+            context.registerTerminologyProvider(this.terminologyProvider);
+        }
+        
+        if (this.dataProviders != null) {
+            for (Map.Entry<String, DataProvider> pair : this.dataProviders.entrySet()) {
+                context.registerDataProvider(pair.getKey(), pair.getValue());
+            }
+        }
+
+        if (contextParameters != null) {
+            for (Map.Entry<String, Object> pair : contextParameters.entrySet()) {
+                context.setContextValue(pair.getKey(), pair.getValue());
+
+            }
+        }
+
+        if (parameters != null) {
+            for (Map.Entry<VersionedIdentifier, Map<String,Object>> libraryParameters : parameters.entrySet()) {
+                for (Map.Entry<String, Object> parameterValue : libraryParameters.getValue().entrySet()) {
+                    context.setParameter(libraryParameters.getKey().getId(), parameterValue.getKey(), parameterValue.getValue());
+                }
+            }
+        }
+
+        return context;
+    }
+
+
+    private Map<VersionedIdentifier, Library> loadLibraries(Set<VersionedIdentifier> libraryIdentifiers) {
+        
+        Map<VersionedIdentifier, Library> libraries = new HashMap<>();
+
+        for (VersionedIdentifier libraryIdentifier : libraryIdentifiers) {   
+            Library library = this.loadLibrary(libraryIdentifier);
+            libraries.put(libraryIdentifier, library);
+        }
+
+        return libraries;
+    }
+
+    private Library loadLibrary(VersionedIdentifier libraryIdentifier) {
+        Library library = this.libraryLoader.load(libraryIdentifier);
+
+        if (library == null) {
+            throw new IllegalArgumentException(String.format("Unable to load library %s", 
+                libraryIdentifier.getId() + libraryIdentifier.getVersion() != null ? "-" + libraryIdentifier.getVersion() : ""));
+        }
+
+        this.validateDataRequirements(library);
+        this.validateTerminologyRequirements(library);
+
+        // TODO: Optimization ?
+        // TODO: Validate Expressions as well?
+
+        return library;
+    }
+
+    private void validateDataRequirements(Library library) {
+        if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
+        {
+            for (UsingDef using : library.getUsings().getDef()) {
+                // Skip system using since the context automatically registers that.
+                if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
+                {
+                    continue;
+                }
+
+                if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
+                    throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
+                    this.getLibraryDescription(library.getIdentifier()),
+                    using.getUri()));
+                }
+            }
+        }
+    }
+
+    private void validateTerminologyRequirements(Library library) {
+        if ((library.getCodeSystems() != null && library.getCodeSystems().getDef() != null && !library.getCodeSystems().getDef().isEmpty()) || 
+            (library.getCodes() != null  && library.getCodes().getDef() != null && !library.getCodes().getDef().isEmpty()) || 
+            (library.getValueSets() != null  && library.getValueSets().getDef() != null && !library.getValueSets().getDef().isEmpty())) {
+            if (this.terminologyProvider == null) {
+                throw new IllegalArgumentException(String.format("Library %s has terminology requirements and no terminology provider is registered.",
+                    this.getLibraryDescription(library.getIdentifier())));
+            }
+        }
+    }
+
+    private String getLibraryDescription(VersionedIdentifier libraryIdentifier) {
+        return libraryIdentifier.getId() + (libraryIdentifier.getVersion() != null ? ("-" + libraryIdentifier.getVersion()) : "");
+    }
+
+    private Map<VersionedIdentifier, Set<String>> getExpressionMap(Library library) {
+        Map<VersionedIdentifier, Set<String>> map = new HashMap<>();
+        Set<String> expressionNames = new HashSet<>();
+        if (library.getStatements() != null && library.getStatements().getDef() != null) {
+            for (ExpressionDef ed : library.getStatements().getDef()) {
+                expressionNames.add(ed.getName());
+            }
+        }
+
+        map.put(library.getIdentifier(), expressionNames);
+
+        return map;
     }
 }
