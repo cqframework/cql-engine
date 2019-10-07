@@ -11,6 +11,7 @@ import static org.junit.Assume.assumeTrue;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -47,18 +48,18 @@ public class CqlEngine {
     private LibraryLoader libraryLoader;
     private Map<String, DataProvider> dataProviders;
     private TerminologyProvider terminologyProvider;
-    private List<Options> engineOptions;
+    private EnumSet<Options> options;
 
     public CqlEngine(LibraryLoader libraryLoader) {
-        this(libraryLoader, null, null, Options.EnableExpressionCaching);
+        this(libraryLoader, null, null);
     }
 
     public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider) {
-        this(libraryLoader, dataProviders, terminologyProvider, Options.EnableExpressionCaching);
+        this(libraryLoader, dataProviders, terminologyProvider, EnumSet.of(Options.EnableExpressionCaching));
     }
 
     // TODO: External function provider
-    public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider, Options... engineOptions) {
+    public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider, EnumSet<Options> options) {
         if (libraryLoader == null) {
             throw new IllegalArgumentException("libraryLoader can not be null.");
         }
@@ -66,7 +67,7 @@ public class CqlEngine {
         this.libraryLoader = libraryLoader;
         this.dataProviders = dataProviders;
         this.terminologyProvider = terminologyProvider;
-        this.engineOptions = Arrays.asList(engineOptions);
+        this.options = options;
     }
 
     public EvaluationResult evaluate(Map<VersionedIdentifier, Set<String>> expressions)
@@ -138,7 +139,7 @@ public class CqlEngine {
         // We'd have to make sure we include the dependencies too.
         context.registerLibraryLoader(this.libraryLoader);
 
-        if (this.engineOptions.contains(Options.EnableExpressionCaching)) {
+        if (this.options.contains(Options.EnableExpressionCaching)) {
             context.setExpressionCaching(true);
         }
 
