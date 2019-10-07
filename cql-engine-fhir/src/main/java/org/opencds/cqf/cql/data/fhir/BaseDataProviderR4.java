@@ -4926,6 +4926,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
             case "StructureDefinitionKind": typeName = "StructureDefinition$StructureDefinitionKind"; break;
             case "ExtensionContextType": typeName = "StructureDefinition$ExtensionContextType"; break;
             case "TypeDerivationRule": typeName = "StructureDefinition$TypeDerivationRule"; break;
+            case "SortDirection": typeName="DataRequirement$SortDirection"; break;
             case "StructureMapModelMode": typeName = "StructureMap$StructureMapModelMode"; break;
             case "StructureMapGroupTypeMode": typeName = "StructureMap$StructureMapGroupTypeMode"; break;
             case "StructureMapInputMode": typeName = "StructureMap$StructureMapInputMode"; break;
