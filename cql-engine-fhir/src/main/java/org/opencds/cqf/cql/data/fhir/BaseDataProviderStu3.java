@@ -276,7 +276,7 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
             case "Consent":
                 return "patient";
             case "Coverage":
-                return "patient";
+                return "beneficiary";
             case "DetectedIssue":
                 return "patient";
             case "DeviceRequest":
