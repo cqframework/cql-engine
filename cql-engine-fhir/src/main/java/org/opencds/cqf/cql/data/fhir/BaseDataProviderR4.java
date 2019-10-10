@@ -4893,6 +4893,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
             case "ProcedureStatus": typeName = "Procedure$ProcedureStatus"; break;
             case "ProvenanceEntityRole": typeName = "Provenance$ProvenanceEntityRole"; break;
             case "UnitsOfTime": typeName = "Timing$UnitsOfTime"; break;
+            case "AddressType": typeName = "Address$AddressType"; break;
             case "QuestionnaireItemType": typeName = "Questionnaire$QuestionnaireItemType"; break;
             case "QuestionnaireItemOperator": typeName = "Questionnaire$QuestionnaireItemOperator"; break;
             case "EnableWhenBehavior": typeName = "Questionnaire$EnableWhenBehavior"; break;
