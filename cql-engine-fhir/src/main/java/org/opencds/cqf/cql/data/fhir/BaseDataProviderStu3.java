@@ -164,6 +164,9 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
                 else if (path.contains("performer")) return "intended-dispenser";
                 else if (path.contains("requester")) return "requester";
                 break;
+            case "MedicationStatement":
+                if (path.equals("medication")) return "code";
+                break;
             case "NutritionOrder":
                 if (path.contains("additiveType")) return "additive";
                 else if (path.equals("dateTime")) return "datetime";
