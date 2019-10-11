@@ -4926,6 +4926,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
             case "SpecimenStatus": typeName = "Specimen$SpecimenStatus"; break;
             case "SpecimenContainedPreference": typeName = "SpecimenDefinition$SpecimenContainedPreference"; break;
             case "StructureDefinitionKind": typeName = "StructureDefinition$StructureDefinitionKind"; break;
+            case "PublicationStatus": typeName = "Enumerations$PublicationStatus"; break;
             case "ExtensionContextType": typeName = "StructureDefinition$ExtensionContextType"; break;
             case "TypeDerivationRule": typeName = "StructureDefinition$TypeDerivationRule"; break;
             case "SortDirection": typeName="DataRequirement$SortDirection"; break;
