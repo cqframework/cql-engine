@@ -5002,6 +5002,7 @@ public class BaseDataProviderR4 extends BaseFhirDataProvider {
             case "VisionBase": typeName = "VisionPrescription$VisionBase"; break;
             case "FHIRDefinedType": typeName = "Enumerations$FHIRDefinedType"; break;
             case "FHIRAllTypes": typeName = "Enumerations$FHIRAllTypes"; break;
+            case "FHIRVersion": typeName = "Enumerations$FHIRVersion"; break;
         }
 
         return typeName;
