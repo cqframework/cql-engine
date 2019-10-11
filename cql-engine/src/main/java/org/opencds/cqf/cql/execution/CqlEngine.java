@@ -84,7 +84,7 @@ public class CqlEngine {
     {
         Library library = this.loadLibrary(libraryIdentifier);
         Map<VersionedIdentifier, Set<String>> expressions = this.getExpressionMap(library);
-        return this.evaluate(null, null, expressions);
+        return this.evaluate(contextParameters, parameters, expressions);
     }
 
 
@@ -121,7 +121,9 @@ public class CqlEngine {
         LibraryResult result = new LibraryResult();
 
         for (String expression : expressions) {
-            Object object = context.resolveExpressionRef(expression).getExpression().evaluate(context);
+            ExpressionDef def = context.resolveExpressionRef(expression);
+            context.enterContext(def.getContext());
+            Object object = def.evaluate(context);
             result.expressionResults.put(expression, object);
         }
 
@@ -156,7 +158,6 @@ public class CqlEngine {
         if (contextParameters != null) {
             for (Map.Entry<String, Object> pair : contextParameters.entrySet()) {
                 context.setContextValue(pair.getKey(), pair.getValue());
-
             }
         }
 
