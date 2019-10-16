@@ -1,30 +1,21 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.provider.dstu3.TerminologyUploaderProviderDstu3;
 import ca.uhn.fhir.rest.gclient.*;
-import ca.uhn.fhir.rest.param.TokenParam;
-import ca.uhn.fhir.rest.param.TokenParamModifier;
-import org.hl7.fhir.dstu3.model.Enumeration;
-import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Resource;
-import org.hl7.fhir.dstu3.model.ValueSet;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.exception.DataProviderException;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
+public class FhirDataProviderStu3 extends BaseFhirDataProvider {
 
     public FhirDataProviderStu3() {
-        setPackageName("org.hl7.fhir.dstu3.model");
         setFhirContext(FhirContext.forDstu3());
     }
 
@@ -36,7 +27,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
         }
     }
 
-    public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
+    public Iterable<Object> retrieve(String context, Object contextValue, String contextPath, String dataType, String templateId,
                                      String codePath, Iterable<Code> codes, String valueSet, String datePath, String dateLowPath,
                                      String dateHighPath, Interval dateRange) {
 
@@ -79,7 +70,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
 
         if (context != null && context.equals("Patient") && contextValue != null) {
             if (searchUsingPOST && search != null) {
-                search = search.where(new TokenClientParam(getPatientSearchParam(dataType)).exactly().identifier(contextValue.toString()));
+                search = search.where(new TokenClientParam(contextPath).exactly().identifier(contextValue.toString()));
                 doAnd = true;
             }
             else {
@@ -87,7 +78,7 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
                     params.append("&");
                 }
 
-                params.append(String.format("%s=%s", getPatientSearchParam(dataType), URLEncode((String) contextValue)));
+                params.append(String.format("%s=%s", contextPath, URLEncode((String) contextValue)));
             }
         }
 
@@ -209,30 +200,5 @@ public class FhirDataProviderStu3 extends BaseDataProviderStu3 {
         }
         bundle.setEntry(entry);
         return bundle;
-    }
-
-    @Override
-    public void setValue(Object target, String path, Object value) {
-        if (target instanceof Enumeration && path.equals("value")) {
-            ((Enumeration)target).setValueAsString((String)value);
-            return;
-        }
-
-        super.setValue(target, path, value);
-    }
-
-    @Override
-    protected Object resolveProperty(Object target, String path) {
-        if (target instanceof Enumeration && path.equals("value")) {
-            return ((Enumeration)target).getValueAsString();
-        }
-
-        // This is kind of a hack to get around contained resources - HAPI doesn't have ResourceContainer type for STU3
-        if (target instanceof Resource && ((Resource) target).fhirType().equals(path))
-        {
-            return target;
-        }
-
-        return super.resolveProperty(target, path);
     }
 }

@@ -79,6 +79,9 @@
                         <include>org.opencds.cqf.cql.data.fhir.**</include>
                     </includes>
                 </configuration>
+public class SystemDataP
+public class SystemDataP
+public class SystemDataP
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.maven.surefire</groupId>

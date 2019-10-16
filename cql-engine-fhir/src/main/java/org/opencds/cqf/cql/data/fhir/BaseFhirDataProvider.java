@@ -1,38 +1,25 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.context.*;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.dstu3.model.Base;
-import org.hl7.fhir.dstu3.model.Quantity;
-import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.api.*;
+import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.data.DataProvider;
-import org.opencds.cqf.cql.exception.*;
+import org.opencds.cqf.cql.data.RetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
-import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 
-public abstract class BaseFhirDataProvider implements DataProvider {
+public class FhirDataProvider extends CompositeDataProvider {
+
+    public FhirDataProvider(FhirContext fhirContext, RetrieveProvider retrieveProvider) {
+        super(new FhirTypeProvider(fhirContext), retrieveProvider);
+    }
 
     // Data members
     protected FhirContext fhirContext;
-    protected String packageName;
-    protected String endpoint;
-    protected TerminologyProvider terminologyProvider;
-    protected boolean expandValueSets;
-    protected boolean searchUsingPOST;
-    protected IGenericClient fhirClient;
+  
 
-    // Abstract methods
-    protected abstract String resolveClassName(String typeName);
-    protected abstract Object fromJavaPrimitive(Object value, Object target);
-    protected abstract Object toJavaPrimitive(Object result, Object source);
-    protected abstract String convertPathToSearchParam(String type, String path);
 
     // getters & setters
     public FhirContext getFhirContext() {
@@ -81,224 +68,60 @@ public abstract class BaseFhirDataProvider implements DataProvider {
         return fhirClient;
     }
 
-    // Transformations
-    protected DateTime toDateTime(Date result) {
-        return DateTime.fromJavaDate(result);
-    }
 
-    // Retrieval helpers
-    public String getPatientSearchParam(String dataType) {
-        switch (dataType) {
-            case "Patient":
-                return "_id";
-            default: return "patient";
-        }
-    }
-
-    // Resolutions
-    protected Object resolveProperty(Object target, String path) {
-        if (target == null) {
-            return null;
-        }
-
-        IBase base = (IBase) target;
-        BaseRuntimeElementCompositeDefinition definition;
-        if (base instanceof IPrimitiveType) {
-            return toJavaPrimitive(path.equals("value") ? ((IPrimitiveType) target).getValue() : target, base);
-        }
-        else {
-            definition = resolveRuntimeDefinition(base);
-        }
-
-        BaseRuntimeChildDefinition child = definition.getChildByName(path);
-        if (child == null) {
-            child = resolveChoiceProperty(definition, path);
-        }
-
-        List<IBase> values = child.getAccessor().getValues(base);
-
-        if (values == null || values.isEmpty()) {
-            return null;
-        }
-
-        if (child instanceof RuntimeChildChoiceDefinition && !child.getElementName().equalsIgnoreCase(path)) {
-            if (!values.get(0).getClass().getSimpleName().equalsIgnoreCase(child.getChildByName(path).getImplementingClass().getSimpleName()))
-            {
-                return null;
-            }
-        }
-
-        return toJavaPrimitive(child.getMax() < 1 ? values : values.get(0), base);
-    }
-
-    protected BaseRuntimeElementCompositeDefinition resolveRuntimeDefinition(IBase base) {
-        if (base instanceof IAnyResource) {
-            return getFhirContext().getResourceDefinition((IAnyResource) base);
-        }
-
-        else if (base instanceof IBaseBackboneElement || base instanceof IBaseElement) {
-            return (BaseRuntimeElementCompositeDefinition) getFhirContext().getElementDefinition(base.getClass());
-        }
-
-        else if (base instanceof ICompositeType) {
-            return (RuntimeCompositeDatatypeDefinition) getFhirContext().getElementDefinition(base.getClass());
-        }
-
-        throw new UnknownType(String.format("Unable to resolve the runtime definition for %s", base.getClass().getName()));
-    }
-
-    protected BaseRuntimeChildDefinition resolveChoiceProperty(BaseRuntimeElementCompositeDefinition definition, String path) {
-        for (Object child :  definition.getChildren()) {
-            if (child instanceof RuntimeChildChoiceDefinition) {
-                RuntimeChildChoiceDefinition choiceDefinition = (RuntimeChildChoiceDefinition) child;
-
-                if (choiceDefinition.getElementName().startsWith(path)) {
-                    return choiceDefinition;
-                }
-            }
-        }
-
-        throw new UnknownPath(String.format("Unable to resolve path %s for %s", path, definition.getName()));
-    }
-
-    protected Class resolveClass(String className) {
-        try {
-            return Class.forName(String.format("%s.%s", packageName, className));
-        }
-        catch (ClassNotFoundException e) {
-            throw new UnknownType(String.format("Could not resolve type %s.%s.", packageName, className));
-        }
-    }
-
-    // Creators
-    protected Object createInstance(Class clazz) {
-        try {
-            return clazz.newInstance();
-        }
-        catch (InstantiationException | IllegalAccessException e) {
-            throw new UnknownType(String.format("Could not create an instance of class %s.\nRoot cause: %s", clazz.getName(), e.getMessage()));
-        }
-    }
-
-    // DataProvider methods
+        // DataProvider methods
     @Override
-    public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath, String dateLowPath, String dateHighPath, Interval dateRange) {
+    public Iterable<Object> retrieve(String context, Object contextValue, String contextPath, String dataType, String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath, String dateLowPath, String dateHighPath, Interval dateRange) {
         return null;
     }
 
-    @Override
-    public String getPackageName() {
-        return packageName;
+    protected String convertPathToSearchParam(String type, String path) {
+        path = path.replace(".value", "");
+        switch (type) {
+            case "Condition":
+                if (path.equals("bodySite")) return "body-site";
+                else if (path.equals("clinicalStatus")) return "clinical-status";
+                else if (path.equals("dateRecorded")) return "date-recorded";
+                else if (path.contains("evidence")) return "evidence";
+                else if (path.equals("onsetDateTime")) return "onset";
+                else if (path.equals("onsetPeriod")) return "onset";
+                else if (path.contains("onset")) return "onset-info";
+                else if (path.contains("stage")) return "stage";
+                break;
+            case "DiagnosticOrder":
+                if (path.contains("actor")) return "actor";
+                else if (path.contains("bodySite")) return "bodysite";
+                else if (path.contains("code")) return "code";
+                else if (path.contains("item") && path.contains("dateTime")) return "item-date";
+                else if (path.contains(("dateTime"))) return "event-date";
+                else if (path.contains("item") && path.contains("event") && path.contains("status")) return "item-past-status";
+                else if (path.contains("item") && path.contains("status")) return "item-status";
+                else if (path.contains(("status"))) return "event-status";
+                else if (path.contains(("specimen"))) return "specimen";
+            case "MedicationOrder":
+                if (path.equals("medicationCodeableConcept")) return "code";
+                else if (path.equals("medicationReference")) return "medication";
+                else if (path.contains("dateWritten")) return "datewritten";
+                break;
+            case "NutritionOrder":
+                if (path.contains("additiveType")) return "additive";
+                else if (path.equals("dateTime")) return "datetime";
+                else if (path.contains("baseFormulaType")) return "formula";
+                else if (path.contains("oralDiet")) return "oraldiet";
+                else if (path.equals("orderer")) return "provider";
+                else if (path.contains("supplement")) return "supplement";
+                break;
+            case "VisionPrescription":
+                if (path.equals("dateWritten")) return "datewritten";
+                break;
+            default:
+                if (path.startsWith("effective")) return "date";
+                else if (path.equals("period")) return "date";
+                else if (path.equals("vaccineCode")) return "vaccine-code";
+                break;
+        }
+        return path.replace('.', '-').toLowerCase();
     }
+    
 
-    @Override
-    public void setPackageName(String packageName) {
-        this.packageName = packageName;
-    }
-
-    @Override
-    public Object resolvePath(Object target, String path) {
-        String[] identifiers = path.split("\\.");
-        for (String identifier : identifiers) {
-            // handling indexes: i.e. item[0].code
-            if (identifier.contains("[")) {
-                int index = Character.getNumericValue(identifier.charAt(identifier.indexOf("[") + 1));
-                target = resolveProperty(target, identifier.replaceAll("\\[\\d\\]", ""));
-                target = ((ArrayList) target).get(index);
-            }
-            else {
-                target = resolveProperty(target, identifier);
-            }
-        }
-
-        return target;
-    }
-
-    @Override
-    public Class resolveType(String typeName) {
-        return resolveClass(resolveClassName(typeName));
-    }
-
-    @Override
-    public Class resolveType(Object value) {
-        return null;
-    }
-
-    @Override
-    public Object createInstance(String typeName) {
-        return null;
-    }
-
-    @Override
-    public void setValue(Object target, String path, Object value) {
-        if (target == null) {
-            return;
-        }
-
-        IBase base = (IBase) target;
-        BaseRuntimeElementCompositeDefinition definition;
-        if (base instanceof IPrimitiveType) {
-            ((IPrimitiveType) target).setValue(fromJavaPrimitive(value, base));
-            return;
-        }
-        else {
-            definition = resolveRuntimeDefinition(base);
-        }
-
-        BaseRuntimeChildDefinition child = definition.getChildByName(path);
-        if (child == null) {
-            child = resolveChoiceProperty(definition, path);
-        }
-
-        try {
-            if (value instanceof Iterable) {
-                for (Object val : (Iterable) value) {
-                    child.getMutator().addValue(base, (IBase) fromJavaPrimitive(val, base));
-                }
-            }
-            else {
-                child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
-            }
-        } catch (ConfigurationException ce) {
-            if (value instanceof Quantity) {
-                try {
-                    value = ((Quantity) value).castToSimpleQuantity((Base) value);
-                } catch (FHIRException e) {
-                    throw new InvalidCast("Unable to cast Quantity to SimpleQuantity");
-                }
-                child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
-            }
-            else {
-                throw new DataProviderException(String.format("Configuration error encountered: %s", ce.getMessage()));
-            }
-        }
-    }
-
-    @Override
-    public Boolean objectEqual(Object left, Object right) {
-        if (left == null) {
-            return null;
-        }
-
-        if (right == null) {
-            return null;
-        }
-
-        Base base = (Base)left;
-        return base.equalsDeep((Base)right);
-    }
-
-    @Override
-    public Boolean objectEquivalent(Object left, Object right) {
-        if (left == null && right == null) {
-            return true;
-        }
-
-        if (left == null) {
-            return false;
-        }
-
-        Base base = (Base)left;
-        return base.equalsDeep((Base)right);
-    }
 }

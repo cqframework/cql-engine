@@ -1,0 +1,14 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.test.config": [
+        {
+            "name": "Profiling",
+            "workingDirectory": "${workspaceFolder}",
+            "vmargs": [ "-Xmx512M", 
+                "-Dcom.sun.management.jmxremote.port=9999",
+                "-Dcom.sun.management.jmxremote.authenticate=false",
+                "-Dcom.sun.management.jmxremote.ssl=false" ]
+        }
+    ],
+    "java.test.defaultConfig": "Profiling"
+}

@@ -10,9 +10,9 @@ import java.math.BigDecimal;
 public class SystemDataProvider implements DataProvider {
 
     @Override
-    public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
-                                     String codePath, Iterable<Code> codes, String valueSet, String datePath,
-                                     String dateLowPath, String dateHighPath, Interval dateRange) {
+    public Iterable<Object> retrieve(String context, Object contextValue, String contextPath, String dataType,
+            String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
+            String dateLowPath, String dateHighPath, Interval dateRange) {
         throw new IllegalArgumentException("SystemDataProvider does not support retrieval.");
     }
 
@@ -170,5 +170,10 @@ public class SystemDataProvider implements DataProvider {
         }
 
         return left.equals(right);
+    }
+
+    @Override
+    public Object resolveContextPath(String contextType, String targetType) {
+        return null;
     }
 }
