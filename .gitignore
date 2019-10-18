@@ -3,11 +3,10 @@
 *.iml
 /cql-engine/src/generated
 *.class
-/cql-engine/target/
-/cql-engine-fhir/target/
 
-.settings
-.vscode
-.classpath
+target
 .project
+.settings
+.classpath
 org.eclipse.m2e.core.prefs
+
