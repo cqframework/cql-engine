@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.opencds.cqf</groupId>
-    <artifactId>parent</artifactId>
+    <artifactId>cql-parent</artifactId>
     <version>${revision}</version>
 
     <name>parent</name>
@@ -236,10 +236,10 @@
                             <configuration>
                                 <rules>
                                     <requireReleaseVersion>
-                                        <message>No Snapshots Versions Allowed!</message>
+                                        <message>No Snapshot Versions Allowed!</message>
                                     </requireReleaseVersion>
                                     <requireReleaseDeps>
-                                        <message>No Snapshots Dependencies Allowed!</message>
+                                        <message>No Snapshot Dependencies Allowed!</message>
                                     </requireReleaseDeps>
                                 </rules>
                                 <fail>true</fail>

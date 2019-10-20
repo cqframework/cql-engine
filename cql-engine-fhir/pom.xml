@@ -9,7 +9,7 @@
 
     <parent>
         <groupId>org.opencds.cqf</groupId>
-        <artifactId>parent</artifactId>
+        <artifactId>cql-parent</artifactId>
         <version>${revision}</version>
     </parent>
 
