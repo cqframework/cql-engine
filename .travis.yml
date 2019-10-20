@@ -1,0 +1,9 @@
+sudo: false
+
+language: java
+jdk: openjdk11
+
+script:
+  - if [ "$TRAVIS_BRANCH" = "develop" ]; then mvn package test; fi
+  - if [ "$TRAVIS_BRANCH" = "master" ]; then mvn package test -P release; fi
+  - if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "develop" ]; then mvn package test; fi
