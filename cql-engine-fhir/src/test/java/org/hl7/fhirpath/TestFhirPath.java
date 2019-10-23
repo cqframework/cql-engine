@@ -26,16 +26,17 @@ import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.Tests;
-import org.opencds.cqf.cql.data.fhir.BaseFhirDataProvider;
-import org.opencds.cqf.cql.data.fhir.FhirDataProviderDstu2;
-import org.opencds.cqf.cql.data.fhir.FhirDataProviderHL7;
-import org.opencds.cqf.cql.data.fhir.FhirDataProviderStu3;
+import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.type.Dstu2FhirModelResolver;
+import org.opencds.cqf.cql.type.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.type.Dstu3RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.type.HL7FhirModelResolver;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -43,8 +44,12 @@ import static org.hamcrest.Matchers.is;
 
 public class TestFhirPath {
 
-    private FhirContext fhirContext = FhirContext.forDstu3();
-    private BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+	private FhirContext fhirContext = FhirContext.forDstu3();
+	private Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
+	private Dstu3RestFhirRetrieveProvider dstu3RetrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+	private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
+	
+    //private BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
     //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
     //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
 
@@ -301,7 +306,10 @@ public class TestFhirPath {
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
@@ -328,7 +336,10 @@ public class TestFhirPath {
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-        BaseFhirDataProvider provider = new FhirDataProviderDstu2();
+		Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu2(), "");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
@@ -355,7 +366,10 @@ public class TestFhirPath {
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-        BaseFhirDataProvider provider = new FhirDataProviderHL7();
+		HL7FhirModelResolver modelResolver = new HL7FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), "");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        //BaseFhirDataProvider provider = new FhirDataProviderHL7();
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);

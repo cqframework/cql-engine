@@ -55,9 +55,8 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
         }
 
 
-        Object result = dataProvider.retrieve(context.getCurrentContext(), context.getCurrentContextValue(),
-                (String)dataProvider.resolveContextPath(context.getCurrentContext(), getDataType().getLocalPart()),
-                getDataType().getLocalPart(), getTemplateId(),
+		Object result = dataProvider.retrieve(context.getCurrentContext(), (String)dataProvider.resolveContextPath(context.getCurrentContext(), getDataType().getLocalPart()),
+				context.getCurrentContextValue(), getDataType().getLocalPart(), getTemplateId(),
                 getCodeProperty(), codes, valueSet, getDateProperty(), getDateLowProperty(), getDateHighProperty(), dateRange);
 
         //append list results to evaluatedResources list

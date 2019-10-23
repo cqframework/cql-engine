@@ -10,13 +10,18 @@ import java.math.BigDecimal;
 public class SystemDataProvider implements DataProvider {
 
     @Override
-    public Iterable<Object> retrieve(String context, Object contextValue, String contextPath, String dataType,
+    public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
             String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
             String dateLowPath, String dateHighPath, Interval dateRange) {
         throw new IllegalArgumentException("SystemDataProvider does not support retrieval.");
     }
 
-    @Override
+	// @Override
+	// public boolean isPatientCompartment(String dataType) {
+	// 	return false;
+	// }
+
+	@Override
     public String getPackageName() {
         return "org.opencds.cqf.cql.runtime";
     }
@@ -135,7 +140,12 @@ public class SystemDataProvider implements DataProvider {
         }
     }
 
-    @Override
+	@Override
+	public String resolveClassName(String typeName) {
+		return null;
+	}
+
+	@Override
     public Object createInstance(String typeName) {
         Class clazz = resolveType(typeName);
         try {

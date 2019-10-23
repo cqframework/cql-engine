@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.data;
 
 
-public interface TypeProvider {
+public interface ModelResolver {
     String getPackageName();
 
     void setPackageName(String packageName);
@@ -14,7 +14,9 @@ public interface TypeProvider {
 
     Class resolveType(Object value);
 
-    Object createInstance(String typeName);
+    String resolveClassName(String typeName);
+
+	Object createInstance(String typeName);
 
     void setValue(Object target, String path, Object value);
 

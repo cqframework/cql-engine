@@ -1,17 +1,15 @@
-package org.opencds.cqf.cql.data.fhir;
+package org.opencds.cqf.cql.type;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.instance.model.Bundle;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.exception.UnknownElement;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
-/**
- * Created by Bryn on 4/16/2016.
- */
-public class FhirBundleCursorR4 implements Iterable<Object> {
-    public FhirBundleCursorR4(IGenericClient fhirClient, Bundle results) {
+public class FhirBundleCursor implements Iterable<Object> {
+
+    public FhirBundleCursor(IGenericClient fhirClient, Bundle results) {
         this.fhirClient = fhirClient;
         this.results = results;
     }
@@ -55,7 +53,7 @@ public class FhirBundleCursorR4 implements Iterable<Object> {
          * Returns the next element in the iteration.
          *
          * @return the next element in the iteration
-         * @throws NoSuchElementException if the iteration has no more elements
+         * @throws UnknownElement if the iteration has no more elements
          */
         public Object next() {
             current++;
@@ -70,7 +68,7 @@ public class FhirBundleCursorR4 implements Iterable<Object> {
             }
 
             // TODO: It would be possible to get here if the next link was present, but the returned page had 0 entries...
-            throw new NoSuchElementException();
+            throw new UnknownElement("The iteration has no more elements.");
         }
     }
 }
