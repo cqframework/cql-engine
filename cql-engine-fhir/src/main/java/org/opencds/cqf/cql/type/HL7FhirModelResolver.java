@@ -9,6 +9,11 @@ public class HL7FhirModelResolver extends Dstu3FhirModelResolver {
 	}
 
 	@Override
+	protected void setPackageName() {
+		this.packageName = "org.hl7.fhir.instance.model";
+	}
+
+	@Override
 	public String resolveClassName(String typeName) {
 		// TODO: Obviously would like to be able to automate this, but there is no programmatic way of which I'm aware
         // For the primitive types, not such a big deal.

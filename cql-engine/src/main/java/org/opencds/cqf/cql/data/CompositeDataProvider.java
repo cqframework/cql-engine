@@ -5,8 +5,8 @@ import org.opencds.cqf.cql.runtime.Interval;
 
 public class CompositeDataProvider implements DataProvider {
 
-    private ModelResolver modelResolver;
-    private RetrieveProvider retrieveProvider;
+    protected ModelResolver modelResolver;
+    protected RetrieveProvider retrieveProvider;
 
     public CompositeDataProvider(ModelResolver modelResolver, RetrieveProvider retrieveProvider) {
         this.modelResolver = modelResolver;

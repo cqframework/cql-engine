@@ -10,8 +10,21 @@ import java.util.List;
 import java.util.TimeZone;
 
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.*;
-import org.hl7.fhir.instance.model.api.*;
+import org.hl7.fhir.instance.model.Base;
+import org.hl7.fhir.instance.model.BaseDateTimeType;
+import org.hl7.fhir.instance.model.DateTimeType;
+import org.hl7.fhir.instance.model.DateType;
+import org.hl7.fhir.instance.model.IdType;
+import org.hl7.fhir.instance.model.InstantType;
+import org.hl7.fhir.instance.model.Quantity;
+import org.hl7.fhir.instance.model.TemporalPrecisionEnum;
+import org.hl7.fhir.instance.model.TimeType;
+import org.hl7.fhir.instance.model.api.IAnyResource;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.IBaseBackboneElement;
+import org.hl7.fhir.instance.model.api.IBaseElement;
+import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.hl7.fhir.instance.model.api.IPrimitiveType;
 // import org.hl7.fhir.instance.model.Base;
 // import org.hl7.fhir.instance.model.BaseDateTimeType;
 // import org.hl7.fhir.instance.model.DateTimeType;
@@ -52,6 +65,9 @@ public abstract class FhirModelResolver implements ModelResolver {
 	}
 	
 	protected abstract void setPackageName();
+	public abstract Boolean objectEqual(Object left, Object right);
+	public abstract Boolean objectEquivalent(Object left, Object right);
+	//public abstract void setValue(Object target, String path, Object value);
 
     // Data members
     protected FhirContext fhirContext;
@@ -239,33 +255,33 @@ public abstract class FhirModelResolver implements ModelResolver {
         }
     }
 
-    @Override
-    public Boolean objectEqual(Object left, Object right) {
-        if (left == null) {
-            return null;
-        }
+    // @Override
+    // public Boolean objectEqual(Object left, Object right) {
+    //     if (left == null) {
+    //         return null;
+    //     }
 
-        if (right == null) {
-            return null;
-        }
+    //     if (right == null) {
+    //         return null;
+    //     }
 
-        Base base = (Base)left;
-        return base.equalsDeep((Base)right);
-    }
+    //     Base base = (Base)left;
+    //     return base.equalsDeep((Base)right);
+    // }
 
-    @Override
-    public Boolean objectEquivalent(Object left, Object right) {
-        if (left == null && right == null) {
-            return true;
-        }
+    // @Override
+    // public Boolean objectEquivalent(Object left, Object right) {
+    //     if (left == null && right == null) {
+    //         return true;
+    //     }
 
-        if (left == null) {
-            return false;
-        }
+    //     if (left == null) {
+    //         return false;
+    //     }
 
-        Base base = (Base)left;
-        return base.equalsDeep((Base)right);
-    }
+    //     Base base = (Base)left;
+    //     return base.equalsDeep((Base)right);
+    // }
 
     // Transformations
     protected DateTime toDateTime(java.util.Date result) {

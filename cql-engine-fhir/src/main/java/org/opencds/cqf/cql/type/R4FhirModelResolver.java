@@ -1,8 +1,7 @@
 package org.opencds.cqf.cql.type;
 
 import org.hl7.fhir.instance.model.Resource;
-import org.hl7.fhir.r4.model.EnumFactory;
-import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.*;
 
 import ca.uhn.fhir.context.FhirContext;
 
@@ -77,6 +76,34 @@ public class R4FhirModelResolver extends FhirModelResolver {
         return super.resolveProperty(target, path);
 	}
 	
+    @Override
+    public Boolean objectEqual(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
+
+        if (right == null) {
+            return null;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
+
+    @Override
+    public Boolean objectEquivalent(Object left, Object right) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if (left == null) {
+            return false;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
+
 	@Override
 	public String resolveClassName(String typeName) {
         // Common bindings such as RequestIntent are not marked as such in the structure definitions for R4

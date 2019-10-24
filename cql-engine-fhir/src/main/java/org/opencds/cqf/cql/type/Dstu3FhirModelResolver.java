@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.type;
 
+import org.hl7.fhir.dstu3.model.Base;
 import org.hl7.fhir.dstu3.model.EnumFactory;
+import org.hl7.fhir.instance.model.api.IBase;
 import org.opencds.cqf.cql.exception.UnknownType;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -32,7 +34,52 @@ public class Dstu3FhirModelResolver extends FhirModelResolver {
         return createInstance(resolveClass(className));
     }
 
-    @Override
+    // @Override
+    // public void setValue(Object target, String path, Object value) {
+    //     if (target == null) {
+    //         return;
+    //     }
+
+    //     IBase base = (IBase) target;
+    //     BaseRuntimeElementCompositeDefinition definition;
+    //     if (base instanceof IPrimitiveType) {
+    //         ((IPrimitiveType) target).setValue(fromJavaPrimitive(value, base));
+    //         return;
+    //     }
+    //     else {
+    //         definition = resolveRuntimeDefinition(base);
+    //     }
+
+    //     BaseRuntimeChildDefinition child = definition.getChildByName(path);
+    //     if (child == null) {
+    //         child = resolveChoiceProperty(definition, path);
+    //     }
+
+    //     try {
+    //         if (value instanceof Iterable) {
+    //             for (Object val : (Iterable) value) {
+    //                 child.getMutator().addValue(base, (IBase) fromJavaPrimitive(val, base));
+    //             }
+    //         }
+    //         else {
+    //             child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
+    //         }
+    //     } catch (ConfigurationException ce) {
+    //         if (value instanceof Quantity) {
+    //             try {
+    //                 value = ((Quantity) value).castToSimpleQuantity((Base) value);
+    //             } catch (FHIRException e) {
+    //                 throw new InvalidCast("Unable to cast Quantity to SimpleQuantity");
+    //             }
+    //             child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
+    //         }
+    //         else {
+    //             throw new DataProviderException(String.format("Configuration error encountered: %s", ce.getMessage()));
+    //         }
+    //     }
+    // }
+
+	@Override
     public Class resolveType(Object value) {
         if (value == null) {
             return Object.class;
@@ -51,6 +98,34 @@ public class Dstu3FhirModelResolver extends FhirModelResolver {
         return value.getClass();
 	}
 	
+    @Override
+    public Boolean objectEqual(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
+
+        if (right == null) {
+            return null;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
+
+    @Override
+    public Boolean objectEquivalent(Object left, Object right) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if (left == null) {
+            return false;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
+
 	@Override
 	public String resolveClassName(String typeName) {
         // TODO: Use the bindingName extension on the StructureDefinition for this
