@@ -14,7 +14,7 @@ public class FileBasedFhirProvider {
     public FileBasedFhirProvider (String path, String endpoint) {
 		FhirContext fhirContext = FhirContext.forDstu3();
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
-		FileBasedFhirRetrieveProvider retrieveProvider = new FileBasedFhirRetrieveProvider(path, endpoint, fhirContext);
+		FileBasedFhirRetrieveProvider retrieveProvider = new FileBasedFhirRetrieveProvider(path, endpoint, fhirContext, modelResolver);
 		this.dataProvider = new CompositeDataProvider(modelResolver, retrieveProvider);
     }
 

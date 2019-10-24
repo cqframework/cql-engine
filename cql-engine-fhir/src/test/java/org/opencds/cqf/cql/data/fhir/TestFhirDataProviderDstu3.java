@@ -229,13 +229,13 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
     }
 
-    // @Test
+	//@Test
     public void testFileDataProvider() {
         // non-filtering tests
         // Patient context
 		FhirContext fhirContext = FhirContext.forDstu3();
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
-		FileBasedFhirRetrieveProvider retrieveProvider = new FileBasedFhirRetrieveProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null, fhirContext);
+		FileBasedFhirRetrieveProvider retrieveProvider = new FileBasedFhirRetrieveProvider(System.getProperty("user.dir") + "/cql-engine-fhir/src/test/resources/org/opencds/cqf/cql/data/data", null, fhirContext, modelResolver);
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
 		String contextPath = modelResolver.resolveContextPath("Patient", "Procedure").toString();
         //FileBasedFhirProvider provider = new FileBasedFhirProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null);
@@ -245,18 +245,18 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
             size++;
         assertTrue(size == 1);
 
-		contextPath = modelResolver.resolveContextPath("Patient", "Condition").toString();
-        results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", null, "end-of-life-conditions", null, null, null, null);
-        size = 0;
-        for (Object o : results)
-            size++;
-        assertTrue(size == 1);
+		// contextPath = modelResolver.resolveContextPath("Patient", "Condition").toString();
+        // results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", null, "end-of-life-conditions", null, null, null, null);
+        // size = 0;
+        // for (Object o : results)
+        //     size++;
+        // assertTrue(size == 1);
 
-        results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", null, "http://hl7.org/fhir/ig/opioid-cds/ValueSet/end-of-life-conditions", null, null, null, null);
-        size = 0;
-        for (Object o : results)
-            size++;
-        assertTrue(size == 1);
+        // results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", null, "http://hl7.org/fhir/ig/opioid-cds/ValueSet/end-of-life-conditions", null, null, null, null);
+        // size = 0;
+        // for (Object o : results)
+        //     size++;
+        // assertTrue(size == 1);
 
         List<Code> codes = new ArrayList<>();
         Code code = new Code().withSystem("http://snomed.info/sct").withCode("94398002");
