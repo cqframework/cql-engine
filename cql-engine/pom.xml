@@ -10,7 +10,7 @@
         <relativePath>../pom.xml</relativePath>
         <groupId>org.opencds.cqf</groupId>
         <artifactId>cql_engine</artifactId>
-        <version>1.3.10-SNAPSHOT</version>
+        <version>1.3.11-SNAPSHOT</version>
     </parent>
 
     <name>cql-engine</name>

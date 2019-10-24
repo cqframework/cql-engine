@@ -26,8 +26,8 @@ public class Context {
     }
 
     private boolean enableExpressionCache = false;
-    private LinkedHashMap expressions = new LinkedHashMap(15, 0.9f, true) {
-        protected boolean removeEldestEntry(Map.Entry eldest) {
+    private LinkedHashMap<String, Object> expressions = new LinkedHashMap<String, Object>(15, 0.9f, true) {
+        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
             return size() > 10;
         }
     };
@@ -50,10 +50,28 @@ public class Context {
 //    private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
 
+    // TODO: This doesn't appear to be used. Can we remove it?
     private Library library;
 
     private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime = 
             new org.opencds.cqf.cql.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
+
+    // public Context(Collection<Library> libraries) {
+    //     Library defaultLibrary = null;
+    //     for (Library library : libraries) {
+    //         if (defaultLibrary == null) {
+    //             defaultLibrary = library;
+    //         }
+    //         this.libraries.put(library.getIdentifier().getId(), library);
+    //     }
+
+    //     init(defaultLibrary);
+    // }
+
+    // public Context(Collection<Library> libraries, org.opencds.cqf.cql.runtime.DateTime evaluationDateTime) {
+    //     this(libraries);
+    //     this.evaluationDateTime = evaluationDateTime;
+    // }
 
     public Context(Library library) {
         init(library);
