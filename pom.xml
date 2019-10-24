@@ -8,7 +8,7 @@
     <artifactId>cql-parent</artifactId>
     <version>${revision}</version>
 
-    <name>parent</name>
+    <name>cql-parent</name>
     <description>CQL Engine Project</description>
     <url>https://github.com/DBCG/cql_engine/tree/master</url>
 
