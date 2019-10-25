@@ -4,6 +4,6 @@ language: java
 jdk: openjdk11
 
 script:
-  - if [ ! -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test; fi
+  - if [ ! -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test deploy; fi
   - if [ "$TRAVIS_BRANCH" = "develop" ] && [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test deploy; fi
   - if [ "$TRAVIS_BRANCH" = "master" ] && [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test -P release; fi
