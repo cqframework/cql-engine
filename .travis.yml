@@ -3,6 +3,10 @@ sudo: false
 language: java
 jdk: openjdk11
 
+cache:
+  directories:
+  - "$HOME/.cache"
+
 
 deploy:
   # deploy develop as a snapshot
