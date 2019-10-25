@@ -3,7 +3,17 @@ sudo: false
 language: java
 jdk: openjdk11
 
-script:
-  - if [ ! -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test deploy; fi
-  - if [ "$TRAVIS_BRANCH" = "develop" ] && [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test deploy; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ] && [ -z "$TRAVIS_PULL_REQUEST_BRANCH" ]; then mvn package test -P release; fi
+
+deploy:
+  # deploy develop as a snapshot
+  - provider: script
+    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
+    skip_cleanup: true
+    on:
+      branch: develop
+  # deploy master to production
+  - provider: script
+    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -P release"
+    skip_cleanup: true
+    on:
+      branch: master
