@@ -1,18 +1,5 @@
 package org.opencds.cqf.cql.file.fhir;
 
-import org.hl7.fhir.dstu3.model.*;
-import org.opencds.cqf.cql.runtime.*;
-import org.opencds.cqf.cql.type.FhirRetrieveProvider;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
-
-//import org.hl7.fhir.instance.model.*;
-import org.opencds.cqf.cql.exception.DataProviderException;
-import org.opencds.cqf.cql.exception.UnknownPath;
-import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -22,6 +9,23 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.ValueSet;
+import org.opencds.cqf.cql.data.ModelResolver;
+//import org.hl7.fhir.instance.model.*;
+import org.opencds.cqf.cql.exception.DataProviderException;
+import org.opencds.cqf.cql.exception.UnknownPath;
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.terminology.ValueSetInfo;
+import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
+import org.opencds.cqf.cql.type.FhirRetrieveProvider;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 
 /*
 What the heck does this thing do?
@@ -54,9 +58,11 @@ public class FileBasedFhirRetrieveProvider extends FhirRetrieveProvider {
 
 	private Path path;
 	protected FhirContext fhirContext;
+	protected ModelResolver modelResolver;
 
-	public FileBasedFhirRetrieveProvider(String path, String endpoint, FhirContext fhirContext) {
+	public FileBasedFhirRetrieveProvider(String path, String endpoint, FhirContext fhirContext, ModelResolver modelResolver) {
 		this.fhirContext = fhirContext;
+		this.modelResolver = modelResolver;
 		if (path.isEmpty()) {
 			throw new UnknownPath("Cannot resolve empty path");
 		}
@@ -218,7 +224,7 @@ public class FileBasedFhirRetrieveProvider extends FhirRetrieveProvider {
 				if (valueSet != null && !valueSet.equals("")) {
 					// now we need to get the codes in the resource and check for membership in the
 					// valueset
-					Object resCodes = resolvePath(res, codePath);
+					Object resCodes = this.modelResolver.resolvePath(res, codePath);
 					if (resCodes instanceof Iterable) {
 						for (Object codeObj : (Iterable) resCodes) {
 							boolean inValSet = checkCodeMembership(codeObj, valueSet);
@@ -236,7 +242,7 @@ public class FileBasedFhirRetrieveProvider extends FhirRetrieveProvider {
 					for (Code code : codes) {
 						if (codeMatch)
 							break;
-						Object resCodes = resolvePath(res, codePath);
+						Object resCodes = this.modelResolver.resolvePath(res, codePath);
 						if (resCodes instanceof Iterable) {
 							for (Object codeObj : (Iterable) resCodes) {
 								Iterable<Coding> conceptCodes = ((CodeableConcept) codeObj).getCoding();
@@ -267,10 +273,6 @@ public class FileBasedFhirRetrieveProvider extends FhirRetrieveProvider {
 		} // end of filtering for each loop
 
 		return results;
-	}
-
-	private Object resolvePath(Object res, String datePath) {
-		return null;
 	}
 
 	private boolean isCodeMatch(Code code, Iterable<Coding> codes) {
