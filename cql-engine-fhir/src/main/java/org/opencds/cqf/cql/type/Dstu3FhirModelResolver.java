@@ -1,218 +1,85 @@
-package org.opencds.cqf.cql.data.fhir;
+package org.opencds.cqf.cql.type;
 
-import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
-import org.hl7.fhir.dstu3.model.*;
-import org.opencds.cqf.cql.exception.InvalidPrecision;
+import org.hl7.fhir.dstu3.model.Base;
+import org.hl7.fhir.dstu3.model.EnumFactory;
+import org.hl7.fhir.instance.model.api.IBase;
 import org.opencds.cqf.cql.exception.UnknownType;
-import org.opencds.cqf.cql.runtime.Precision;
-import org.opencds.cqf.cql.runtime.TemporalHelper;
-import org.opencds.cqf.cql.runtime.Time;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.Date;
 
-import java.time.Instant;
-import java.time.OffsetTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.TimeZone;
+import ca.uhn.fhir.context.FhirContext;
 
-public class BaseDataProviderStu3 extends BaseFhirDataProvider {
+public class Dstu3FhirModelResolver extends FhirModelResolver {
 
-    protected DateTime toDateTime(DateTimeType value) {
-        return toDateTime(value, value.getPrecision());
-    }
+	public Dstu3FhirModelResolver() {
+		super(FhirContext.forDstu3());
+	}
 
-    protected Date toDate(DateType value) {
-        return toDate(value, value.getPrecision());
-    }
+	public Dstu3FhirModelResolver(FhirContext fhirContext) {
+		super(fhirContext);
+	}
 
-    protected Time toTime(TimeType value) {
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ISO_TIME;
-        return new Time(OffsetTime.from(formatter.parse(value.getValue())), Precision.MILLISECOND);
-    }
+	@Override
+	protected void setPackageName() {
+		this.packageName = "org.hl7.fhir.dstu3.model";
+	}
 
-    protected DateTime toDateTime(BaseDateTimeType value, TemporalPrecisionEnum precision) {
-        Calendar calendar = value.toCalendar();
-        TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
-        ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
-        switch (precision) {
-            case YEAR: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear()
-            );
-            case MONTH: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth() + 1
-            );
-            case DAY: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth() + 1, value.getDay()
-            );
-            case MINUTE: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
-                    value.getMinute()
-            );
-            case SECOND: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
-                    value.getMinute(), value.getSecond()
-            );
-            case MILLI: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    value.getYear(), value.getMonth() + 1, value.getDay(), value.getHour(),
-                    value.getMinute(), value.getSecond(), value.getMillis()
-            );
-            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
-        }
-    }
-
-    protected Date toDate(BaseDateTimeType value, TemporalPrecisionEnum precision) {
-        Calendar calendar = value.toCalendar();
-        TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
-        ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
-        switch (precision) {
-            case YEAR: return new Date(value.getYear());
-            case MONTH: return new Date(value.getYear(), value.getMonth() + 1);
-            case DAY: return new Date(value.getYear(), value.getMonth() + 1, value.getDay());
-            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", value.getPrecision().toString()));
-        }
-    }
-
-    protected DateTime toDateTime(InstantType value) {
-        return toDateTime(value, value.getPrecision());
-    }
-
-    @Override
-    protected Object fromJavaPrimitive(Object value, Object target) {
-        if (target instanceof DateTimeType || target instanceof DateType) {
-            DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
-            return java.util.Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
-        }
-        else if (target instanceof TimeType && value instanceof Time) {
-            return ((Time) value).getTime().toString();
-        }
-        else {
-            return value;
-        }
-    }
-
-    @Override
-    protected Object toJavaPrimitive(Object result, Object source) {
-        if (source instanceof DateTimeType) {
-            return toDateTime((DateTimeType)source);
-        }
-        else if (source instanceof DateType) {
-            return toDate((DateType)source);
-        }
-        else if (source instanceof TimeType) {
-            return toTime((TimeType)source);
-        }
-        else if (source instanceof InstantType) {
-            return toDateTime((InstantType)source);
-        }
-        else if (source instanceof IdType) {
-            return ((IdType) source).getIdPart();
-        }
-        else {
-            return result;
-        }
-    }
-
-    @Override
-    protected String convertPathToSearchParam(String type, String path) {
-        path = path.replace(".value", "");
-        if (path.equals("id")) {
-            path = "_id";
-        }
-        switch (type) {
-            case "AllergyIntolerance":
-                if (path.equals("clinicalStatus")) return "clinical-status";
-                else if (path.contains("substance")) return "code";
-                else if (path.equals("assertedDate")) return "date";
-                else if (path.equals("lastOccurrence")) return "last-date";
-                else if (path.startsWith("reaction")) {
-                    if (path.endsWith("manifestation")) return "manifestation";
-                    else if (path.endsWith("onset")) return "onset";
-                    else if (path.endsWith("exposureRoute")) return "route";
-                    else if (path.endsWith("severity")) return "severity";
-                }
-                else if (path.equals("verificationStatus")) return "verification-status";
-                break;
-            case "Claim":
-                if (path.contains("careTeam")) return "care-team";
-                else if (path.contains("payee")) return "payee";
-                break;
-            case "Condition":
-                if (path.equals("abatementDateTime")) return "abatement-date";
-                else if (path.equals("abatementPeriod")) return "abatement-date";
-                else if (path.equals("abatementRange")) return "abatement-age";
-                else if (path.equals("onsetDateTime")) return "onset-date";
-                else if (path.equals("onsetPeriod")) return "onset-date";
-                else if (path.equals("onsetRange")) return "onset-age";
-                break;
-            case "MedicationDispense":
-                if (path.equals("medication")) return "code";
-                break;
-            case "MedicationRequest":
-                if (path.equals("authoredOn")) return "authoredon";
-                else if (path.equals("medication")) return "code";
-                else if (path.equals("medicationCodeableConcept")) return "code";
-                else if (path.equals("medicationReference")) return "medication";
-                else if (path.contains("event")) return "date";
-                else if (path.contains("performer")) return "intended-dispenser";
-                else if (path.contains("requester")) return "requester";
-                break;
-            case "NutritionOrder":
-                if (path.contains("additiveType")) return "additive";
-                else if (path.equals("dateTime")) return "datetime";
-                else if (path.contains("baseFormulaType")) return "formula";
-                else if (path.contains("oralDiet")) return "oraldiet";
-                else if (path.equals("orderer")) return "provider";
-                else if (path.contains("supplement")) return "supplement";
-                break;
-            case "ProcedureRequest":
-                if (path.equals("authoredOn")) return "authored";
-                else if (path.equals("basedOn")) return "based-on";
-                else if (path.equals("bodySite")) return "body-site";
-                else if (path.equals("context")) return "encounter";
-                else if (path.equals("performerType")) return "performer-type";
-                else if (path.contains("requester")) return "requester";
-                break;
-            case "ReferralRequest":
-                if (path.equals("authoredOn")) return "authored";
-                else if (path.equals("basedOn")) return "based-on";
-                else if (path.equals("context")) return "encounter";
-                else if (path.equals("groupIdentifier")) return "group-identifier";
-                else if (path.equals("occurrence")) return "occurrence-date";
-                else if (path.contains("requester")) return "requester";
-                else if (path.equals("serviceRequested")) return "service";
-                break;
-            case "VisionPrescription":
-                if (path.equals("dateWritten")) return "datewritten";
-                break;
-            default:
-                if (path.startsWith("effective")) return "date";
-                else if (path.equals("period")) return "date";
-                else if (path.equals("vaccineCode")) return "vaccine-code";
-                break;
-        }
-        return path.replace('.', '-').toLowerCase();
-    }
-
-    @Override
+	@Override
     public Object createInstance(String typeName) {
         String className = resolveClassName(typeName);
         if (className.indexOf('$') >= 0) {
             className += "EnumFactory";
+
             return new org.hl7.fhir.dstu3.model.Enumeration((EnumFactory)createInstance(resolveClass(className)));
         }
 
         return createInstance(resolveClass(className));
     }
 
-    @Override
+    // @Override
+    // public void setValue(Object target, String path, Object value) {
+    //     if (target == null) {
+    //         return;
+    //     }
+
+    //     IBase base = (IBase) target;
+    //     BaseRuntimeElementCompositeDefinition definition;
+    //     if (base instanceof IPrimitiveType) {
+    //         ((IPrimitiveType) target).setValue(fromJavaPrimitive(value, base));
+    //         return;
+    //     }
+    //     else {
+    //         definition = resolveRuntimeDefinition(base);
+    //     }
+
+    //     BaseRuntimeChildDefinition child = definition.getChildByName(path);
+    //     if (child == null) {
+    //         child = resolveChoiceProperty(definition, path);
+    //     }
+
+    //     try {
+    //         if (value instanceof Iterable) {
+    //             for (Object val : (Iterable) value) {
+    //                 child.getMutator().addValue(base, (IBase) fromJavaPrimitive(val, base));
+    //             }
+    //         }
+    //         else {
+    //             child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
+    //         }
+    //     } catch (ConfigurationException ce) {
+    //         if (value instanceof Quantity) {
+    //             try {
+    //                 value = ((Quantity) value).castToSimpleQuantity((Base) value);
+    //             } catch (FHIRException e) {
+    //                 throw new InvalidCast("Unable to cast Quantity to SimpleQuantity");
+    //             }
+    //             child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
+    //         }
+    //         else {
+    //             throw new DataProviderException(String.format("Configuration error encountered: %s", ce.getMessage()));
+    //         }
+    //     }
+    // }
+
+	@Override
     public Class resolveType(Object value) {
         if (value == null) {
             return Object.class;
@@ -229,10 +96,38 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         }
 
         return value.getClass();
+	}
+	
+    @Override
+    public Boolean objectEqual(Object left, Object right) {
+        if (left == null) {
+            return null;
+        }
+
+        if (right == null) {
+            return null;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
     }
 
     @Override
-    protected String resolveClassName(String typeName) {
+    public Boolean objectEquivalent(Object left, Object right) {
+        if (left == null && right == null) {
+            return true;
+        }
+
+        if (left == null) {
+            return false;
+        }
+
+        Base base = (Base)left;
+        return base.equalsDeep((Base)right);
+    }
+
+	@Override
+	public String resolveClassName(String typeName) {
         // TODO: Use the bindingName extension on the StructureDefinition for this
         switch (typeName) {
             case "base64Binary": typeName = "Base64BinaryType"; break;
@@ -471,5 +366,148 @@ public class BaseDataProviderStu3 extends BaseFhirDataProvider {
         }
 
         return typeName;
-    }
+	}
+
+	@Override
+	public Object resolveContextPath(String contextType, String targetType) {
+		switch (contextType) {
+			case "Patient":
+				switch (targetType) {
+					case "Account":
+						return "subject";
+					case "AdverseEvent":
+						return "subject";
+					case "AllergyIntolerance":
+						return "patient";
+					case "Appointment":
+						return "actor";
+					case "AppointmentResponse":
+						return "actor";
+					case "AuditEvent":
+						return "patient";
+					case "Basic":
+						return "patient";
+					case "BodySite":
+						return "patient";
+					case "CarePlan":
+						return "patient";
+					case "CareTeam":
+						return "patient";
+					case "ChargeItem":
+						return "subject";
+					case "Claim":
+						return "patient";
+					case "ClaimResponse":
+						return "patient";
+					case "ClinicalImpression":
+						return "subject";
+					case "Communication":
+						return "subject";
+					case "CommunicationRequest":
+						return "subject";
+					case "Composition":
+						return "subject";
+					case "Condition":
+						return "patient";
+					case "Consent":
+						return "patient";
+					case "Coverage":
+						return "patient";
+					case "DetectedIssue":
+						return "patient";
+					case "DeviceRequest":
+						return "subject";
+					case "DeviceUseStatement":
+						return "subject";
+					case "DiagnosticReport":
+						return "subject";
+					case "DocumentManifest":
+						return "subject";
+					case "DocumentReference":
+						return "subject";
+					case "EligibilityRequest":
+						return "patient";
+					case "Encounter":
+						return "patient";
+					case "EnrollmentRequest":
+						return "subject";
+					case "EpisodeOfCare":
+						return "patient";
+					case "ExplanationOfBenefit":
+						return "patient";
+					case "FamilyMemberHistory":
+						return "patient";
+					case "Flag":
+						return "patient";
+					case "Goal":
+						return "patient";
+					case "Group":
+						return "member";
+					case "ImagingManifest":
+						return "patient";
+					case "ImagingStudy":
+						return "patient";
+					case "Immunization":
+						return "patient";
+					case "ImmunizationRecommendation":
+						return "patient";
+					case "List":
+						return "subject";
+					case "MeasureReport":
+						return "patient";
+					case "Media":
+						return "subject";
+					case "MedicationAdministration":
+						return "patient";
+					case "MedicationDispense":
+						return "patient";
+					case "MedicationRequest":
+						return "subject";
+					case "MedicationStatement":
+						return "subject";
+					case "NutritionOrder":
+						return "patient";
+					case "Observation":
+						return "subject";
+					case "Patient":
+						return "_id";
+					case "Person":
+						return "patient";
+					case "Procedure":
+						return "patient";
+					case "ProcedureRequest":
+						return "patient";
+					case "Provenance":
+						return "patient";
+					case "QuestionnaireResponse":
+						return "subject";
+					case "ReferralRequest":
+						return "patient";
+					case "RelatedPerson":
+						return "patient";
+					case "RequestGroup":
+						return "subject";
+					case "ResearchSubject":
+						return "individual";
+					case "RiskAssessment":
+						return "subject";
+					case "Schedule":
+						return "actor";
+					case "Specimen":
+						return "subject";
+					case "SupplyDelivery":
+						return "patient";
+					case "SupplyRequest":
+						return "subject";
+					case "VisionPrescription":
+						return "patient";
+				}
+				break;
+		
+			default:
+				break;
+		}
+
+        return null;
+	}
 }

@@ -3,5 +3,10 @@
 *.iml
 /cql-engine/src/generated
 *.class
-/cql-engine/target/
-/cql-engine-fhir/target/
+
+target
+.project
+.settings
+.classpath
+org.eclipse.m2e.core.prefs
+

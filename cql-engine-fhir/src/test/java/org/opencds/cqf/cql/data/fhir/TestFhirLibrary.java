@@ -4,8 +4,13 @@ import org.cqframework.cql.elm.execution.Library;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.RiskAssessment;
 import org.junit.Test;
+import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
+import org.opencds.cqf.cql.type.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.type.Dstu3RestFhirRetrieveProvider;
+
+import ca.uhn.fhir.context.FhirContext;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -25,7 +30,10 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
-        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
         context.registerDataProvider("http://hl7.org/fhir", provider);
@@ -55,7 +63,10 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
-        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
         context.registerDataProvider("http://hl7.org/fhir", provider);

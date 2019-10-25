@@ -3,10 +3,14 @@ package org.opencds.cqf.cql.data.fhir;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
+import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
+import org.opencds.cqf.cql.file.fhir.FileBasedFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
+import org.opencds.cqf.cql.type.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.type.Dstu3RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.type.FhirBundleCursor;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,16 +33,28 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testDataProviderRetrieve() {
-        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
-        FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+		String contextPath = modelResolver.resolveContextPath("Patient", "Patient").toString();
+        FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", contextPath, null, "Patient", null, null, null, null, null, null, null, null);
+
+		// BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        // FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "Patient", null, null, null, null, null, null, null, null);
 
         assertTrue(results.iterator().hasNext());
     }
 
     // @Test
     public void testPatientRetrieve() {
-        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
-        Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+		String contextPath = modelResolver.resolveContextPath("Patient", "Patient").toString();
+        Iterable<Object> results = provider.retrieve("Patient", contextPath, "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
+
+		// BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        // Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
         List<Patient> patients = new ArrayList<>();
 
         int resultCount = 0;
@@ -89,37 +105,43 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
 //    TODO - fix
 //    @Test
-    public void testPostSearch() {
-        Context context = new Context(library);
+    // public void testPostSearch() {
+    //     Context context = new Context(library);
 
-        String patientId = "post-search-example";
-        Patient patient = new Patient();
+    //     String patientId = "post-search-example";
+    //     Patient patient = new Patient();
 
-        dstu3Provider.fhirClient.update().resource(patient).withId(patientId).execute();
+    //     dstu3Provider.fhirClient.update().resource(patient).withId(patientId).execute();
 
-        MedicationRequest request = new MedicationRequest();
-        request.setIntent(MedicationRequest.MedicationRequestIntent.ORDER)
-                .setStatus(MedicationRequest.MedicationRequestStatus.ACTIVE)
-                .setMedication(new CodeableConcept().addCoding(new Coding().setCode("1049502").setSystem("http://www.nlm.nih.gov/research/umls/rxnorm")))
-                .setSubject(new Reference("Patient/" + patientId))
-                .setAuthoredOn(new Date());
+    //     MedicationRequest request = new MedicationRequest();
+    //     request.setIntent(MedicationRequest.MedicationRequestIntent.ORDER)
+    //             .setStatus(MedicationRequest.MedicationRequestStatus.ACTIVE)
+    //             .setMedication(new CodeableConcept().addCoding(new Coding().setCode("1049502").setSystem("http://www.nlm.nih.gov/research/umls/rxnorm")))
+    //             .setSubject(new Reference("Patient/" + patientId))
+    //             .setAuthoredOn(new Date());
 
-        dstu3Provider.fhirClient.update().resource(request).withId(patientId).execute();
+    //     dstu3Provider.fhirClient.update().resource(request).withId(patientId).execute();
 
-        dstu3Provider.setSearchUsingPOST(true);
-        dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
-        context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
-        context.enterContext("Patient");
-        context.setContextValue("Patient", patientId);
+    //     dstu3Provider.setSearchUsingPOST(true);
+    //     dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+    //     context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
+    //     context.enterContext("Patient");
+    //     context.setContextValue("Patient", patientId);
 
-        Object result = context.resolveExpressionRef("Active Ambulatory Opioid Rx").getExpression().evaluate(context);
-        Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
-    }
+    //     Object result = context.resolveExpressionRef("Active Ambulatory Opioid Rx").getExpression().evaluate(context);
+    //     Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
+    // }
 
     // @Test
     public void testList() {
-        BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir.hl7.de:8080/baseDstu3");
-        FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "List", null, null, null, null, null, null, null, null);
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhir.hl7.de:8080/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+		String contextPath = modelResolver.resolveContextPath("Patient", "List").toString();
+		FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", contextPath, null, "List", null, null, null, null, null, null, null, null);
+
+		//BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir.hl7.de:8080/baseDstu3");
+        //FhirBundleCursorStu3 results = (FhirBundleCursorStu3) provider.retrieve("Patient", null, "List", null, null, null, null, null, null, null, null);
         List<ListResource> lists = new ArrayList<>();
         int resultCount = 0;
         for (Object o : results) {
@@ -196,7 +218,8 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
         Context context = new Context(library);
 
-        dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+		dstu3RetrieveProvider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+        //dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         context.enterContext("Patient");
         context.setContextValue("Patient", "81ee6581-02b9-44de-b026-7401bf36643a");
@@ -205,33 +228,39 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
     }
 
-    // @Test
+	//@Test
     public void testFileDataProvider() {
         // non-filtering tests
         // Patient context
-        FileBasedFhirProvider provider = new FileBasedFhirProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null);
-        Iterable<Object> results = provider.retrieve("Patient", "123", "Procedure", null, null, null, null, null, null, null, null);
+		FhirContext fhirContext = FhirContext.forDstu3();
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
+		FileBasedFhirRetrieveProvider retrieveProvider = new FileBasedFhirRetrieveProvider(System.getProperty("user.dir") + "/cql-engine-fhir/src/test/resources/org/opencds/cqf/cql/data/data", null, fhirContext, modelResolver);
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+		String contextPath = modelResolver.resolveContextPath("Patient", "Procedure").toString();
+        //FileBasedFhirProvider provider = new FileBasedFhirProvider(System.getProperty("user.dir") + "/src/test/resources/org/opencds/cqf/cql/data/data", null);
+        Iterable<Object> results = provider.retrieve("Patient", contextPath, "123", "Procedure", null, null, null, null, null, null, null, null);
         int size = 0;
         for (Object o : results)
             size++;
         assertTrue(size == 1);
 
-        results = provider.retrieve("Patient", "123", "Condition", null, "code", null, "end-of-life-conditions", null, null, null, null);
-        size = 0;
-        for (Object o : results)
-            size++;
-        assertTrue(size == 1);
+		// contextPath = modelResolver.resolveContextPath("Patient", "Condition").toString();
+        // results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", null, "end-of-life-conditions", null, null, null, null);
+        // size = 0;
+        // for (Object o : results)
+        //     size++;
+        // assertTrue(size == 1);
 
-        results = provider.retrieve("Patient", "123", "Condition", null, "code", null, "http://hl7.org/fhir/ig/opioid-cds/ValueSet/end-of-life-conditions", null, null, null, null);
-        size = 0;
-        for (Object o : results)
-            size++;
-        assertTrue(size == 1);
+        // results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", null, "http://hl7.org/fhir/ig/opioid-cds/ValueSet/end-of-life-conditions", null, null, null, null);
+        // size = 0;
+        // for (Object o : results)
+        //     size++;
+        // assertTrue(size == 1);
 
         List<Code> codes = new ArrayList<>();
         Code code = new Code().withSystem("http://snomed.info/sct").withCode("94398002");
         codes.add(code);
-        results = provider.retrieve("Patient", "123", "Condition", null, "code", codes, null, null, null, null, null);
+        results = provider.retrieve("Patient", contextPath, "123", "Condition", null, "code", codes, null, null, null, null, null);
         size = 0;
         for (Object o : results)
             size++;
