@@ -5,7 +5,6 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
 import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.file.fhir.FileBasedFhirProvider;
 import org.opencds.cqf.cql.file.fhir.FileBasedFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;

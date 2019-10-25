@@ -20,6 +20,7 @@ import org.opencds.cqf.cql.exception.DataProviderException;
 import org.opencds.cqf.cql.exception.UnknownPath;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
 import org.opencds.cqf.cql.type.FhirRetrieveProvider;
@@ -60,16 +61,14 @@ public class FileBasedFhirRetrieveProvider extends FhirRetrieveProvider {
 	protected FhirContext fhirContext;
 	protected ModelResolver modelResolver;
 
-	public FileBasedFhirRetrieveProvider(String path, String endpoint, FhirContext fhirContext, ModelResolver modelResolver) {
+	public FileBasedFhirRetrieveProvider(String path, TerminologyProvider terminologyProvider, FhirContext fhirContext, ModelResolver modelResolver) {
 		this.fhirContext = fhirContext;
 		this.modelResolver = modelResolver;
 		if (path.isEmpty()) {
 			throw new UnknownPath("Cannot resolve empty path");
 		}
 		this.path = Paths.get(path);
-		this.terminologyProvider = endpoint == null
-				? new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false)
-				: new FhirTerminologyProvider().setEndpoint(endpoint, false);
+		this.terminologyProvider = terminologyProvider;
 	}
 
 	@Override
