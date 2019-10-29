@@ -33,19 +33,19 @@ public abstract class FhirExecutionTestBase {
 	static Map<String, Library> libraries = new HashMap<>();
 
 	Dstu2FhirModelResolver dstu2ModelResolver = new Dstu2FhirModelResolver();
-	Dstu3RestFhirRetrieveProvider dstu2RetrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu2(), "http://fhirtest.uhn.ca/baseDstu2");
+	RestFhirRetrieveProvider dstu2RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(), "http://fhirtest.uhn.ca/baseDstu2");
 	CompositeDataProvider dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
 	// BaseFhirDataProvider dstu2Provider = new
 	// FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
 	Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
-	Dstu3RestFhirRetrieveProvider dstu3RetrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+	RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 	CompositeDataProvider dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 	// BaseFhirDataProvider dstu3Provider = new
 	// FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 	// BaseFhirDataProvider dstu3Provider = new
 	// FhirDataProviderStu3().setEndpoint("http://localhost:8080/cqf-ruler/baseDstu3");
 	HL7FhirModelResolver hl7ModelResolver = new HL7FhirModelResolver();
-	Dstu3RestFhirRetrieveProvider hl7RetrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu2(), "http://fhirtest.uhn.ca/baseDstu2");
+	RestFhirRetrieveProvider hl7RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(), "http://fhirtest.uhn.ca/baseDstu2");
 	CompositeDataProvider hl7Provider = new CompositeDataProvider(hl7ModelResolver, hl7RetrieveProvider);
 	//BaseFhirDataProvider hl7Provider = new FhirDataProviderHL7().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
 

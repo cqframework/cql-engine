@@ -1,11 +1,20 @@
 package org.opencds.cqf.cql.model;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class HL7FhirModelResolver extends Dstu3FhirModelResolver {
 
 	public HL7FhirModelResolver() {
 		this.fhirContext = FhirContext.forDstu2Hl7Org();
+    }
+    
+    public HL7FhirModelResolver(FhirContext fhirContext) {
+        super(fhirContext);
+        
+        if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2_HL7ORG) {
+            throw new IllegalArgumentException("The supplied context is not configured for DSTU2_HL7ORG");
+        }
 	}
 
 	@Override

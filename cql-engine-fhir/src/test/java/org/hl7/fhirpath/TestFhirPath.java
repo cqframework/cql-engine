@@ -34,7 +34,7 @@ import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.model.Dstu2FhirModelResolver;
 import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.model.HL7FhirModelResolver;
-import org.opencds.cqf.cql.retrieve.Dstu3RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.testng.annotations.Test;
@@ -46,7 +46,7 @@ public class TestFhirPath {
 
 	private FhirContext fhirContext = FhirContext.forDstu3();
 	private Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
-	private Dstu3RestFhirRetrieveProvider dstu3RetrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+	private RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
 	private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 	
     //private BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
@@ -337,7 +337,7 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
 
 		Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
-		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu2(), "");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(), "");
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
@@ -367,7 +367,7 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
 
 		HL7FhirModelResolver modelResolver = new HL7FhirModelResolver();
-		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), "");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), "");
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderHL7();
         context.registerDataProvider("http://hl7.org/fhir", provider);

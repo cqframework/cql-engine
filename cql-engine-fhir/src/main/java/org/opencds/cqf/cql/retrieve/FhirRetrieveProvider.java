@@ -44,7 +44,6 @@ public abstract class FhirRetrieveProvider implements RetrieveProvider {
         return this;
     }
 
-	protected abstract boolean isPatientCompartment(String dataType);
 	protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
 	@Override
@@ -98,11 +97,9 @@ public abstract class FhirRetrieveProvider implements RetrieveProvider {
     }
 
     protected Pair<String, ReferenceParam> getContextParam(String dataType, String context, String contextPath, Object contextValue) {
-        if (context != null && context.equals("Patient") && contextValue != null) {
-            if (isPatientCompartment(dataType)) {
-                ReferenceParam patientParam = new ReferenceParam(contextValue.toString());
-                return Pair.of(contextPath, patientParam);
-            }
+        if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
+            ReferenceParam patientParam = new ReferenceParam(contextValue.toString());
+            return Pair.of(contextPath, patientParam);
         }
 
         return null;
@@ -129,6 +126,9 @@ public abstract class FhirRetrieveProvider implements RetrieveProvider {
         return Pair.of(codePath, codeParamLists);
     }
 
+    // The code params will be either the literal set of codes in the event the data server doesn't have the referenced ValueSet
+    // (or doesn't support pulling and caching a ValueSet).
+    //  If the target server DOES support that then it's "dataType.codePath in ValueSet"
     protected List<TokenOrListParam> getCodeParams(String codePath, Iterable<Code> codes, String valueSet) {
         if (valueSet != null) {
             if (isExpandValueSets()) {

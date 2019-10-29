@@ -9,8 +9,19 @@ import java.util.Iterator;
 
 public class FhirBundleCursor implements Iterable<Object> {
 
-    public FhirBundleCursor(IGenericClient fhirClient, Bundle results) {
+    public FhirBundleCursor(IGenericClient fhirClient, Bundle results)
+    {
+        this(fhirClient, results, null);
+    }
+
+    // This constructor filters the bundle based on dataType
+    public FhirBundleCursor(IGenericClient fhirClient, Bundle results, String dataType) {
         this.fhirClient = fhirClient;
+
+        if (dataType != null) {
+            results = cleanEntry(results, dataType);
+        }
+
         this.results = results;
     }
 
@@ -26,10 +37,22 @@ public class FhirBundleCursor implements Iterable<Object> {
         return new FhirBundleIterator(fhirClient, results);
     }
 
+
+    private org.hl7.fhir.instance.model.Bundle cleanEntry(org.hl7.fhir.instance.model.Bundle bundle, String dataType) {
+        org.hl7.fhir.instance.model.Bundle cleanBundle = new org.hl7.fhir.instance.model.Bundle();
+        for (org.hl7.fhir.instance.model.Bundle.BundleEntryComponent comp : bundle.getEntry()){
+            if (comp.getResource().getResourceType().name().equals(dataType)) {
+                cleanBundle.addEntry(comp);
+            }
+        }
+
+        return cleanBundle;
+    }
+
     private class FhirBundleIterator implements Iterator<Object> {
         public FhirBundleIterator(IGenericClient fhirClient, Bundle results) {
             this.fhirClient = fhirClient;
-            this.results = results;
+            this.results =  results;
             this.current = -1;
         }
 

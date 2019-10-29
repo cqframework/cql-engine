@@ -4,6 +4,7 @@ import org.hl7.fhir.instance.model.Resource;
 import org.hl7.fhir.r4.model.*;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class R4FhirModelResolver extends FhirModelResolver {
 
@@ -12,7 +13,11 @@ public class R4FhirModelResolver extends FhirModelResolver {
 	}
 
 	public R4FhirModelResolver(FhirContext fhirContext) {
-		super(fhirContext);
+        super(fhirContext);
+        
+        if (fhirContext.getVersion().getVersion() != FhirVersionEnum.R4) {
+            throw new IllegalArgumentException("The supplied context is not configured for DSTU3");
+        }
 	}
 
 	@Override

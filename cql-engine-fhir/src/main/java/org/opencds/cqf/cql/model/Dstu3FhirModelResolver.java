@@ -5,6 +5,7 @@ import org.hl7.fhir.dstu3.model.EnumFactory;
 import org.opencds.cqf.cql.exception.UnknownType;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class Dstu3FhirModelResolver extends FhirModelResolver {
 
@@ -13,7 +14,11 @@ public class Dstu3FhirModelResolver extends FhirModelResolver {
 	}
 
 	public Dstu3FhirModelResolver(FhirContext fhirContext) {
-		super(fhirContext);
+        super(fhirContext);
+        
+        if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU3) {
+            throw new IllegalArgumentException("The supplied context is not configured for DSTU3");
+        }
 	}
 
 	@Override
