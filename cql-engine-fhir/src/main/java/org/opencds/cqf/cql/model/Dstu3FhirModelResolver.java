@@ -1,8 +1,7 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.model;
 
 import org.hl7.fhir.dstu3.model.Base;
 import org.hl7.fhir.dstu3.model.EnumFactory;
-import org.hl7.fhir.instance.model.api.IBase;
 import org.opencds.cqf.cql.exception.UnknownType;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -369,7 +368,7 @@ public class Dstu3FhirModelResolver extends FhirModelResolver {
 	}
 
 	@Override
-	public Object resolveContextPath(String contextType, String targetType) {
+	public Object getContextPath(String contextType, String targetType) {
 		switch (contextType) {
 			case "Patient":
 				switch (targetType) {

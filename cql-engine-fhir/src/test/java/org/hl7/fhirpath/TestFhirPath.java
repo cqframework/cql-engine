@@ -31,12 +31,12 @@ import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
+import org.opencds.cqf.cql.model.Dstu2FhirModelResolver;
+import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.model.HL7FhirModelResolver;
+import org.opencds.cqf.cql.retrieve.Dstu3RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.type.Dstu2FhirModelResolver;
-import org.opencds.cqf.cql.type.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.type.Dstu3RestFhirRetrieveProvider;
-import org.opencds.cqf.cql.type.HL7FhirModelResolver;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

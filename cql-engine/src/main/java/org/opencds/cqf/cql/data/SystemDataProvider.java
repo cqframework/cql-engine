@@ -183,7 +183,7 @@ public class SystemDataProvider implements DataProvider {
     }
 
     @Override
-    public Object resolveContextPath(String contextType, String targetType) {
+    public Object getContextPath(String contextType, String targetType) {
         return null;
     }
 }

@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.retrieve;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.opencds.cqf.cql.data.RetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;

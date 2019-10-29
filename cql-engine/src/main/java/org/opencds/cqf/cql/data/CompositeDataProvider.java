@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.data;
 
+import org.opencds.cqf.cql.model.ModelResolver;
+import org.opencds.cqf.cql.retrieve.RetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Interval;
 
@@ -30,8 +32,8 @@ public class CompositeDataProvider implements DataProvider {
     }
 
     @Override
-    public Object resolveContextPath(String contextType, String targetType) {
-        return this.modelResolver.resolveContextPath(contextType, targetType);
+    public Object getContextPath(String contextType, String targetType) {
+        return this.modelResolver.getContextPath(contextType, targetType);
     }
 
     @Override

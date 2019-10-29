@@ -3,12 +3,11 @@ package org.opencds.cqf.cql.data.fhir;
 import org.cqframework.cql.elm.execution.Library;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.RiskAssessment;
-import org.junit.Test;
 import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
-import org.opencds.cqf.cql.type.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.type.Dstu3RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.retrieve.Dstu3RestFhirRetrieveProvider;
 
 import ca.uhn.fhir.context.FhirContext;
 

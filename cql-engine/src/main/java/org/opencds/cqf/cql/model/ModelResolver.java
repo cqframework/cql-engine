@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.data;
+package org.opencds.cqf.cql.model;
 
 
 public interface ModelResolver {
@@ -8,7 +8,7 @@ public interface ModelResolver {
 
     Object resolvePath(Object target, String path);
 
-    Object resolveContextPath(String contextType, String targetType);
+    Object getContextPath(String contextType, String targetType);
 
     Class resolveType(String typeName);
 

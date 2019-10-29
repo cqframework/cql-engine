@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.retrieve;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.instance.model.Bundle;

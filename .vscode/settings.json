@@ -10,5 +10,12 @@
                 "-Dcom.sun.management.jmxremote.ssl=false" ]
         }
     ],
-    "java.test.defaultConfig": "Profiling"
+    "java.test.defaultConfig": "Profiling",
+    "cSpell.words": [
+        "Codeable",
+        "Dstu",
+        "Fhir",
+        "hapi",
+        "ucum"
+    ]
 }

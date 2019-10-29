@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.model;
 
 import org.hl7.fhir.instance.model.Resource;
 import org.hl7.fhir.r4.model.*;
@@ -380,7 +380,7 @@ public class R4FhirModelResolver extends FhirModelResolver {
 	}
 
 	@Override
-    public String resolveContextPath(String contextType, String dataType) {
+    public String getContextPath(String contextType, String dataType) {
         switch (contextType) {
             case "Device":
                 switch (dataType) {

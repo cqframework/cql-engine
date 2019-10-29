@@ -2,11 +2,9 @@ package org.opencds.cqf.cql.data.fhir;
 
 import org.hl7.fhir.instance.model.Encounter;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.type.FhirBundleCursor;
+import org.opencds.cqf.cql.retrieve.FhirBundleCursor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import static org.testng.Assert.assertTrue;
 
 public class TestFhirDataProviderHL7 extends FhirExecutionTestBase {
@@ -21,7 +19,7 @@ public class TestFhirDataProviderHL7 extends FhirExecutionTestBase {
 
 //    @Test
     public void testHL7ProviderRetrieve() {
-		String contextPath = hl7ModelResolver.resolveContextPath("Patient", "Encounter").toString();
+		String contextPath = hl7ModelResolver.getContextPath("Patient", "Encounter").toString();
         FhirBundleCursor results = (FhirBundleCursor) hl7Provider.retrieve("Patient", contextPath, "2822", "Encounter", null, "code", null, null, null, null, null, null);
 
         for (Object result : results) {

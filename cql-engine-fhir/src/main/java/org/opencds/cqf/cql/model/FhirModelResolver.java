@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.model;
 
 import java.time.Instant;
 import java.time.OffsetTime;
@@ -40,7 +40,7 @@ import org.hl7.fhir.instance.model.api.IPrimitiveType;
 // import org.hl7.fhir.instance.model.api.IBaseElement;
 // import org.hl7.fhir.instance.model.api.ICompositeType;
 // import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.opencds.cqf.cql.data.ModelResolver;
+import org.opencds.cqf.cql.model.ModelResolver;
 import org.opencds.cqf.cql.exception.DataProviderException;
 import org.opencds.cqf.cql.exception.InvalidCast;
 import org.opencds.cqf.cql.exception.InvalidPrecision;

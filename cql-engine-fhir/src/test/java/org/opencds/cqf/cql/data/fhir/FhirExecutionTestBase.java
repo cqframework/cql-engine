@@ -11,11 +11,8 @@ import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
-import org.opencds.cqf.cql.type.Dstu2FhirModelResolver;
-import org.opencds.cqf.cql.type.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.type.Dstu3RestFhirRetrieveProvider;
-import org.opencds.cqf.cql.type.HL7FhirModelResolver;
-import org.opencds.cqf.cql.type.Dstu3JpaFhirRetrieveProvider;
+import org.opencds.cqf.cql.model.*;
+import org.opencds.cqf.cql.retrieve.*;
 import org.testng.annotations.BeforeMethod;
 
 import ca.uhn.fhir.context.FhirContext;

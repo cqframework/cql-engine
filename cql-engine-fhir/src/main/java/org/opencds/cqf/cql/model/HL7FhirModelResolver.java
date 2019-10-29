@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.model;
 
 import ca.uhn.fhir.context.FhirContext;
 

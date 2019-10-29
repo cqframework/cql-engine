@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.type;
+package org.opencds.cqf.cql.model;
 
 import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.instance.model.*;
@@ -47,7 +47,7 @@ public class Dstu2FhirModelResolver extends FhirModelResolver {
     }
 
 	@Override
-	public Object resolveContextPath(String contextType, String targetType) {
+	public Object getContextPath(String contextType, String targetType) {
         switch (targetType) {
             case "Patient":
                 return "_id";
