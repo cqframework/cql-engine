@@ -8,5 +8,6 @@ target
 .project
 .settings
 .classpath
+.flattened-pom.xml
 org.eclipse.m2e.core.prefs
 
