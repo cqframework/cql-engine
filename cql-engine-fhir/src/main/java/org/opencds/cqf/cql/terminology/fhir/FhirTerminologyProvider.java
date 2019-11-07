@@ -21,6 +21,16 @@ import java.util.ArrayList;
 
 public class FhirTerminologyProvider implements TerminologyProvider {
 
+    private FhirContext fhirContext;
+
+    public FhirTerminologyProvider() {
+        this.fhirContext = FhirContext.forDstu3();
+    }
+
+    public FhirTerminologyProvider(FhirContext fhirContext) {
+        this.fhirContext = fhirContext;
+    }
+
     private IClientInterceptor headerInjectionInterceptor;
 
     public FhirTerminologyProvider withInjectedHeader(String headerKey, String headerValue) {
@@ -44,9 +54,8 @@ public class FhirTerminologyProvider implements TerminologyProvider {
     }
     public FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
         this.endpoint = endpoint;
-        FhirContext fhirContext = FhirContext.forDstu3();
         if (!validation) {
-            fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
+            this.fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
         }
         fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 10000);
         fhirClient = fhirContext.newRestfulGenericClient(endpoint);
