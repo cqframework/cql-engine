@@ -322,8 +322,7 @@ public class TestFhirPath {
         result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
-        // TODO: Didn't sort this out yet
-        //result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
