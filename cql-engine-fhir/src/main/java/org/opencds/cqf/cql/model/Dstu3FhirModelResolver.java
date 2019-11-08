@@ -1,20 +1,30 @@
 package org.opencds.cqf.cql.model;
 
-import org.hl7.fhir.dstu3.model.Base;
-import org.hl7.fhir.dstu3.model.EnumFactory;
+import org.hl7.fhir.dstu3.model.*;
+
 import org.opencds.cqf.cql.exception.UnknownType;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
-public class Dstu3FhirModelResolver extends FhirModelResolver<Base> {
+public class Dstu3FhirModelResolver
+        extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType> {
 
 	public Dstu3FhirModelResolver() {
         this(FhirContext.forDstu3());
 	}
 
 	public Dstu3FhirModelResolver(FhirContext fhirContext) {
-        super(fhirContext, (x, y) -> x.equalsDeep(y));
+        super(
+            fhirContext, 
+            (x, y) -> x.equalsDeep(y),
+            x -> x.castToSimpleQuantity(x),
+            x -> x.getValueAsCalendar(),
+            x -> x.getPrecision().getCalendarConstant(),
+            x -> x.getValue(),
+            x -> x.getIdPart()
+        );
+
         this.setPackageName("org.hl7.fhir.dstu3.model");
     
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU3) {

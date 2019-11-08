@@ -130,6 +130,7 @@ public class SystemDataProvider implements DataProvider {
             case "Interval": return Interval.class;
             case "Tuple": return Tuple.class;
             case "DateTime": return DateTime.class;
+            case "Date": return Date.class;
             case "Time": return Time.class;
             default:
                 try {

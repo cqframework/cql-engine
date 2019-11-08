@@ -2,16 +2,25 @@ package org.opencds.cqf.cql.model;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import org.hl7.fhir.instance.model.Base;
+import org.hl7.fhir.instance.model.*;
 
-public class HL7FhirModelResolver extends FhirModelResolver<Base> {
+public class HL7FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType> {
 
 	public HL7FhirModelResolver() {
 		this(FhirContext.forDstu2Hl7Org());
     }
     
     public HL7FhirModelResolver(FhirContext fhirContext) {
-        super(fhirContext, (x, y) -> x.equalsDeep(y));
+        super(
+            fhirContext, 
+            (x, y) -> x.equalsDeep(y),
+            x -> x.castToSimpleQuantity(x),
+            x -> x.toCalendar(),
+            x -> x.getPrecision().getCalendarConstant(),
+            x -> x.getValue(),
+            x -> x.getIdPart()
+        );
+
         this.setPackageName("org.hl7.fhir.instance.model");
         
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2_HL7ORG) {

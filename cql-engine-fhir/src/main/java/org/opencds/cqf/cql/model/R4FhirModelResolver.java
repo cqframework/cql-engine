@@ -6,14 +6,23 @@ import org.hl7.fhir.r4.model.*;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
-public class R4FhirModelResolver extends FhirModelResolver<Base> {
+public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType> {
 
 	public R4FhirModelResolver() {
         this(FhirContext.forR4());
 	}
 
 	public R4FhirModelResolver(FhirContext fhirContext) {
-        super(fhirContext, (x, y) -> x.equalsDeep(y));
+        super(
+            fhirContext, 
+            (x, y) -> x.equalsDeep(y),
+            x -> x.castToSimpleQuantity(x),
+            x -> x.getValueAsCalendar(),
+            x -> x.getPrecision().getCalendarConstant(),
+            x -> x.getValue(),
+            x -> x.getIdPart()
+        );
+
         this.setPackageName("org.hl7.fhir.r4.model");
 
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.R4) {
