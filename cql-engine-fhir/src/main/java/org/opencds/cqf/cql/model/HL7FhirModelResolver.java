@@ -2,24 +2,21 @@ package org.opencds.cqf.cql.model;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import org.hl7.fhir.instance.model.Base;
 
-public class HL7FhirModelResolver extends Dstu3FhirModelResolver {
+public class HL7FhirModelResolver extends FhirModelResolver<Base> {
 
 	public HL7FhirModelResolver() {
-		this.fhirContext = FhirContext.forDstu2Hl7Org();
+		this(FhirContext.forDstu2Hl7Org());
     }
     
     public HL7FhirModelResolver(FhirContext fhirContext) {
-        super(fhirContext);
+        super(fhirContext, (x, y) -> x.equalsDeep(y));
+        this.setPackageName("org.hl7.fhir.instance.model");
         
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2_HL7ORG) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU2_HL7ORG");
         }
-	}
-
-	@Override
-	protected void setPackageName() {
-		this.packageName = "org.hl7.fhir.instance.model";
 	}
 
 	@Override

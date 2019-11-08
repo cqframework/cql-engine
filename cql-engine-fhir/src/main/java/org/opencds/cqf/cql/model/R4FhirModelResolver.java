@@ -6,23 +6,19 @@ import org.hl7.fhir.r4.model.*;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
-public class R4FhirModelResolver extends FhirModelResolver {
+public class R4FhirModelResolver extends FhirModelResolver<Base> {
 
 	public R4FhirModelResolver() {
-		super(FhirContext.forR4());
+        this(FhirContext.forR4());
 	}
 
 	public R4FhirModelResolver(FhirContext fhirContext) {
-        super(fhirContext);
-        
+        super(fhirContext, (x, y) -> x.equalsDeep(y));
+        this.setPackageName("org.hl7.fhir.r4.model");
+
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.R4) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU3");
         }
-	}
-
-	@Override
-	protected void setPackageName() {
-		this.packageName = "org.hl7.fhir.r4.model";
 	}
 
 	@Override
@@ -38,10 +34,6 @@ public class R4FhirModelResolver extends FhirModelResolver {
 
     @Override
     public Class resolveType(Object value) {
-        if (value == null) {
-            return Object.class;
-        }
-
         if (value instanceof org.hl7.fhir.r4.model.Enumeration) {
             String className = ((org.hl7.fhir.r4.model.Enumeration)value).getEnumFactory().getClass().getName();
             try {
@@ -52,7 +44,7 @@ public class R4FhirModelResolver extends FhirModelResolver {
             }
         }
 
-        return value.getClass();
+        return super.resolveType(value);
     }
 
 
@@ -80,34 +72,6 @@ public class R4FhirModelResolver extends FhirModelResolver {
 
         return super.resolveProperty(target, path);
 	}
-	
-    @Override
-    public Boolean objectEqual(Object left, Object right) {
-        if (left == null) {
-            return null;
-        }
-
-        if (right == null) {
-            return null;
-        }
-
-        Base base = (Base)left;
-        return base.equalsDeep((Base)right);
-    }
-
-    @Override
-    public Boolean objectEquivalent(Object left, Object right) {
-        if (left == null && right == null) {
-            return true;
-        }
-
-        if (left == null) {
-            return false;
-        }
-
-        Base base = (Base)left;
-        return base.equalsDeep((Base)right);
-    }
 
 	@Override
 	public String resolveClassName(String typeName) {

@@ -10,9 +10,9 @@ public interface ModelResolver {
 
     Object getContextPath(String contextType, String targetType);
 
-    Class resolveType(String typeName);
+    Class<?> resolveType(String typeName);
 
-    Class resolveType(Object value);
+    Class<?> resolveType(Object value);
 
     String resolveClassName(String typeName);
 
