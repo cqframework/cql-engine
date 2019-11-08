@@ -299,35 +299,35 @@ public class TestFhirPath {
     }
 
     // TODO: Resolve Error: Could not load model information for model FHIR, version 3.0.0 because version 1.0.2 is already loaded
-//     @Test
-//     public void testFhirHelpersStu3() throws UcumException {
-//         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
-//         Library library = translate(cql);
-//         Context context = new Context(library);
-//         context.registerLibraryLoader(getLibraryLoader());
+    @Test
+    public void testFhirHelpersStu3() throws UcumException {
+        String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
+        Library library = translate(cql);
+        Context context = new Context(library);
+        context.registerLibraryLoader(getLibraryLoader());
 
-// 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-// 		Dstu3RestFhirRetrieveProvider retrieveProvider = new Dstu3RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
-// 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-//         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
-//         context.registerDataProvider("http://hl7.org/fhir", provider);
+		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        context.registerDataProvider("http://hl7.org/fhir", provider);
 
-//         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
-//         // TODO - fix
-// //        Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 18, 8, 0}));
-// //        Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 19, 8, 0}));
-//         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToDecimal").getExpression().evaluate(context);
-//         result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
-//     }
+        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
+        // TODO - fix
+//        Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 18, 8, 0}));
+//        Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 19, 8, 0}));
+        result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToDecimal").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
+    }
 
     //@Test
     public void testFhirHelpersDstu2() throws UcumException {
