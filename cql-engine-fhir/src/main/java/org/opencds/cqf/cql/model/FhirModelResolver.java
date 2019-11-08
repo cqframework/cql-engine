@@ -26,6 +26,7 @@ import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseBackboneElement;
 import org.hl7.fhir.instance.model.api.IBaseElement;
+import org.hl7.fhir.instance.model.api.IBaseEnumeration;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.opencds.cqf.cql.model.ModelResolver;
@@ -45,14 +46,14 @@ import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeChildChoiceDefinition;
 
-public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, SimpleQuantityType, IdType> implements ModelResolver {
-    public FhirModelResolver(FhirContext fhirContext, 
-        BiFunction<BaseType, BaseType, Boolean> equalsDeep,
-        Function<BaseType, SimpleQuantityType> castToSimpleQuantity,
-        Function<BaseDateTimeType, Calendar> getCalendar,
-        Function<BaseDateTimeType, Integer> getCalendarConstant,
-        Function<TimeType, String> timeToString,
-        Function<IdType, String> idToString) {
+// TODO: Probably quite a bit of redundancy here. Probably only really need the BaseType and the PrimitiveType
+public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, SimpleQuantityType, IdType, ResourceType>
+        implements ModelResolver {
+    public FhirModelResolver(FhirContext fhirContext, BiFunction<BaseType, BaseType, Boolean> equalsDeep,
+            Function<BaseType, SimpleQuantityType> castToSimpleQuantity,
+            Function<BaseDateTimeType, Calendar> getCalendar, Function<BaseDateTimeType, Integer> getCalendarConstant,
+            Function<TimeType, String> timeToString, Function<IdType, String> idToString,
+            Function<ResourceType, String> getResourceType) {
         this.fhirContext = fhirContext;
         this.equalsDeep = equalsDeep;
         this.castToSimpleQuantity = castToSimpleQuantity;
@@ -60,22 +61,24 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         this.getCalendarConstant = getCalendarConstant;
         this.idToString = idToString;
         this.timeToString = timeToString;
+        this.getResourceType = getResourceType;
     }
-    
+
     private BiFunction<BaseType, BaseType, Boolean> equalsDeep;
     private Function<BaseType, SimpleQuantityType> castToSimpleQuantity;
     private Function<BaseDateTimeType, Calendar> getCalendar;
     private Function<BaseDateTimeType, Integer> getCalendarConstant;
     private Function<IdType, String> idToString;
     private Function<TimeType, String> timeToString;
+    private Function<ResourceType, String> getResourceType;
     private String packageName;
-       
+
     // Data members
     protected FhirContext fhirContext;
 
-
     // TODO: Solid, generic implementations of this.
-    // Possible general approach is to check the HAPI runtime registration of attributes and see
+    // Possible general approach is to check the HAPI runtime registration of
+    // attributes and see
     // if any of the of the properties match the type.
     public Object getContextPath(String contextType, String targetType) {
         // Simplest case is contextType to lower, or an identity
@@ -90,13 +93,14 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
         return null;
     }
-    
+
     // TODO: Solid, generic implementations of this.
-    // Possible general approach is to check the HAPI runtime registration and get the implementing class.
+    // Possible general approach is to check the HAPI runtime registration and get
+    // the implementing class.
     public String resolveClassName(String typeName) {
         return this.resolveClass(typeName).getSimpleName();
     }
-	
+
     @Override
     public Boolean objectEqual(Object left, Object right) {
         if (left == null) {
@@ -147,8 +151,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                 int index = Character.getNumericValue(identifier.charAt(identifier.indexOf("[") + 1));
                 target = resolveProperty(target, identifier.replaceAll("\\[\\d\\]", ""));
                 target = ((ArrayList<?>) target).get(index);
-            }
-            else {
+            } else {
                 target = resolveProperty(target, identifier);
             }
         }
@@ -173,6 +176,11 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     @Override
     public void setValue(Object target, String path, Object value) {
         if (target == null) {
+            return;
+        }
+
+        if (target instanceof IBaseEnumeration && path.equals("value")) {
+            ((IBaseEnumeration)target).setValueAsString((String)value);
             return;
         }
 
@@ -224,6 +232,16 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     protected Object resolveProperty(Object target, String path) {
         if (target == null) {
             return null;
+        }
+
+        if (target instanceof IBaseEnumeration && path.equals("value")) {
+            return ((IBaseEnumeration) target).getValueAsString();
+        }
+
+
+        // TODO: Consider using getResourceType everywhere?
+        if (target instanceof IAnyResource && this.getResourceType.apply((ResourceType) target).equals(path)) {
+            return target;
         }
 
         IBase base = (IBase) target;

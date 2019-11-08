@@ -8,7 +8,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class Dstu3FhirModelResolver
-        extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType> {
+        extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource> {
 
 	public Dstu3FhirModelResolver() {
         this(FhirContext.forDstu3());
@@ -22,7 +22,8 @@ public class Dstu3FhirModelResolver
             x -> x.getValueAsCalendar(),
             x -> x.getPrecision().getCalendarConstant(),
             x -> x.getValue(),
-            x -> x.getIdPart()
+            x -> x.getIdPart(),
+            x -> x.fhirType()
         );
 
         this.setPackageName("org.hl7.fhir.dstu3.model");
@@ -30,7 +31,7 @@ public class Dstu3FhirModelResolver
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU3) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU3");
         }
-	}
+    }
 
 	@Override
     public Object createInstance(String typeName) {

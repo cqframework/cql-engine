@@ -5,7 +5,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 
 import org.hl7.fhir.instance.model.*;
 
-public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType> {
+public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource> {
 
 	public Dstu2FhirModelResolver() {
 		this(FhirContext.forDstu2());
@@ -19,7 +19,8 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
             x -> x.toCalendar(),
             x -> x.getPrecision().getCalendarConstant(),
             x -> x.getValue(),
-            x -> x.getIdPart()
+            x -> x.getIdPart(),
+            x -> x.fhirType()
         );
 
         this.setPackageName("org.hl7.fhir.instance.model");
