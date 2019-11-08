@@ -403,7 +403,7 @@ public class Dstu3FhirModelResolver
 					case "Observation":
 						return "subject";
 					case "Patient":
-						return "_id";
+						return "id";
 					case "Person":
 						return "patient";
 					case "Procedure":

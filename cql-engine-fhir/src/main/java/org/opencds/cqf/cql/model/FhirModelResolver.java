@@ -78,7 +78,17 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     // Possible general approach is to check the HAPI runtime registration of attributes and see
     // if any of the of the properties match the type.
     public Object getContextPath(String contextType, String targetType) {
-        return targetType;
+        // Simplest case is contextType to lower, or an identity
+        // E.g. "Patient" -> "patient"
+        if (contextType != null) {
+            if (targetType != null && targetType.equals(contextType)) {
+                return "id";
+            }
+
+            return contextType.toLowerCase();
+        }
+
+        return null;
     }
     
     // TODO: Solid, generic implementations of this.

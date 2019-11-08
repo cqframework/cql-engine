@@ -1153,7 +1153,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                     case "OrganizationAffiliation":
                         break;
                     case "Patient":
-                        return "_id";
+                        return "id";
                     case "PaymentNotice":
                         break;
                     case "PaymentReconciliation":
