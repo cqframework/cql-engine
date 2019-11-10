@@ -31,7 +31,7 @@ public class SystemDataProvider implements DataProvider {
 
     }
 
-    private Field getProperty(Class clazz, String path) {
+    private Field getProperty(Class<?> clazz, String path) {
         try {
             Field field = clazz.getDeclaredField(path);
             return field;
@@ -40,8 +40,8 @@ public class SystemDataProvider implements DataProvider {
         }
     }
 
-    private Method getReadAccessor(Class clazz, String path) {
-        Field field = getProperty(clazz, path);
+    private Method getReadAccessor(Class<?> clazz, String path) {
+        // Field field = getProperty(clazz, path);
         String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
         Method accessor = null;
         try {
@@ -52,7 +52,7 @@ public class SystemDataProvider implements DataProvider {
         return accessor;
     }
 
-    private Method getWriteAccessor(Class clazz, String path) {
+    private Method getWriteAccessor(Class<?> clazz, String path) {
         Field field = getProperty(clazz, path);
         String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
         Method accessor = null;
@@ -111,7 +111,7 @@ public class SystemDataProvider implements DataProvider {
     }
 
     @Override
-    public Class resolveType(Object value) {
+    public Class<?> resolveType(Object value) {
         if (value == null) {
             return Object.class;
         }
@@ -120,7 +120,7 @@ public class SystemDataProvider implements DataProvider {
     }
 
     @Override
-    public Class resolveType(String typeName) {
+    public Class<?> resolveType(String typeName) {
         switch (typeName) {
             case "Boolean": return Boolean.class;
             case "Integer": return Integer.class;
@@ -142,13 +142,8 @@ public class SystemDataProvider implements DataProvider {
     }
 
 	@Override
-	public String resolveClassName(String typeName) {
-		return null;
-	}
-
-	@Override
     public Object createInstance(String typeName) {
-        Class clazz = resolveType(typeName);
+        Class<?> clazz = resolveType(typeName);
         try {
             Object object = clazz.newInstance();
             return object;

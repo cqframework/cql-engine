@@ -14,8 +14,6 @@ public interface ModelResolver {
 
     Class<?> resolveType(Object value);
 
-    String resolveClassName(String typeName);
-
 	Object createInstance(String typeName);
 
     void setValue(Object target, String path, Object value);

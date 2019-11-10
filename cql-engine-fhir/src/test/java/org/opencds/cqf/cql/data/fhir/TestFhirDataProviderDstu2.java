@@ -24,7 +24,7 @@ public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 //        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
     }
 
-    // @Test
+    //@Test
     public void testDstu2ProviderRetrieve() {
 		String contextPath = dstu2ModelResolver.getContextPath("Patient", "Encounter").toString();
         FhirBundleCursor results = (FhirBundleCursor) dstu2Provider.retrieve("Patient", contextPath, "2822", "Encounter", null, "code", null, null, null, null, null, null);

@@ -37,18 +37,13 @@ public class CompositeDataProvider implements DataProvider {
     }
 
     @Override
-    public Class resolveType(String typeName) {
+    public Class<?> resolveType(String typeName) {
         return this.modelResolver.resolveType(typeName);
     }
 
     @Override
-    public Class resolveType(Object value) {
+    public Class<?> resolveType(Object value) {
         return this.modelResolver.resolveType(value);
-	}
-	
-	@Override
-	public String resolveClassName(String typeName) {
-		return this.modelResolver.resolveClassName(typeName);
 	}
 
     @Override
@@ -77,9 +72,4 @@ public class CompositeDataProvider implements DataProvider {
             String dateLowPath, String dateHighPath, Interval dateRange) {
         return this.retrieveProvider.retrieve(context, contextPath, contextValue, dataType, templateId, codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
     }
-
-// 	@Override
-// 	public boolean isPatientCompartment(String dataType) {
-// 		return false;
-// 	}
 }
