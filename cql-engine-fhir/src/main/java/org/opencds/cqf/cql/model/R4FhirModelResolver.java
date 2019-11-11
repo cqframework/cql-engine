@@ -92,4 +92,19 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
     protected Class<?> enumFactoryTypeGetter(Enumeration<?> enumeration) {
         return enumeration.getEnumFactory().getClass();
     }
+
+    @Override
+    protected Class<?> typeToClass(String typeName) {
+
+        // TODO: Might be able to patch some of these by registering custom types in HAPI.
+        switch(typeName) {
+            case "ConfidentialityClassification": typeName = "Composition$DocumentConfidentiality"; break;
+            case "ContractResourceStatusCodes": typeName = "Contract$ContractStatus"; break;
+            case "EventStatus": typeName = "Procedure$ProcedureStatus"; break;
+            case "FinancialResourceStatusCodes": typeName = "ClaimResponse$ClaimResponseStatus"; break;
+            case "SampledDataDataType": typeName = "StringType"; break;
+        }
+
+        return super.typeToClass(typeName);
+    }
 }

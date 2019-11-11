@@ -9,6 +9,11 @@ import static org.testng.AssertJUnit.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.model.Model;
+import org.hl7.elm.r1.VersionedIdentifier;
+import org.hl7.elm_modelinfo.r1.ClassInfo;
+import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
@@ -64,9 +69,7 @@ public class TestR4ModelResolver {
                 default:
             }
 
-            Class<?> clazz = resolver.resolveType(type.toCode());
-
-            assertNotNull(clazz);
+            resolver.resolveType(type.toCode());
         }
 
         for (ResourceType type : ResourceType.values()) {
@@ -79,24 +82,69 @@ public class TestR4ModelResolver {
                 default:
             }
 
-            Class<?> clazz = resolver.resolveType(type.toCode());
-
-            assertNotNull(clazz);
+            resolver.resolveType(type.toCode());;
         }
 
         for (Class<?> enumType : enums) {
-            Class<?> clazz = resolver.resolveType(enumType.getSimpleName());
-            assertNotNull(clazz);
-
+            resolver.resolveType(enumType.getSimpleName());
         }
+    }
 
-        // These are some inner classes that don't appear in the enums above
-        // This list is not exhaustive. It's meant as a spot check for the resolution code.
-        Class<?> clazz = resolver.resolveType("TestScriptRequestMethodCode");
-        assertNotNull(clazz);
+    @Test 
+    public void modelInfoSpecialCaseTests() {
+        ModelResolver resolver = new R4FhirModelResolver();
+                
+        // This tests resolution of inner classes. They aren't registered directly.
+        resolver.resolveType("TestScriptRequestMethodCode");
+        resolver.resolveType("FHIRDeviceStatus");
 
-        clazz = resolver.resolveType("FHIRDeviceStatus");
-        assertNotNull(clazz);
+
+        // This tests the special case handling of "Codes".
+        resolver.resolveType("ImmunizationStatusCodes");
+
+
+        // These are oddballs requiring manual mapping.
+        resolver.resolveType("ConfidentialityClassification");
+        resolver.resolveType("ContractResourceStatusCodes");
+        resolver.resolveType("EventStatus");
+        resolver.resolveType("FinancialResourceStatusCodes");
+        resolver.resolveType("SampledDataDataType");
+    }
+
+    // This tests all the types that are present in the modelinfo
+     @Test
+    public void resolveModelInfoTests() {
+        ModelResolver resolver = new R4FhirModelResolver();
+        ModelManager mm = new ModelManager();
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.0"));
+
+        List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
+
+        for (TypeInfo ti : typeInfos) {
+            ClassInfo ci = (ClassInfo)ti;
+            if (ci != null) {
+                switch (ci.getBaseType()) {
+                    // Astract classes
+                    case "FHIR.BackboneElement":
+                    case "FHIR.Element": continue;
+                }
+
+                switch (ci.getName()) {
+                    // TODO: HAPI Doesn't have a ResourceContainer type
+                    case "ResourceContainer": continue;
+                }
+
+
+                // TODO: The cause of failure for this is unknown.
+                // Need to figure out if it's a gap in happy,
+                // or if a manual mapping is required, or what.
+                switch(ci.getName()) {
+                    case "ItemInstance" : continue;
+                }
+
+                resolver.resolveType(ci.getName());
+            }
+        }
     }
 
     @Test

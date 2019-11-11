@@ -9,6 +9,11 @@ import static org.testng.AssertJUnit.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.model.Model;
+import org.hl7.elm.r1.VersionedIdentifier;
+import org.hl7.elm_modelinfo.r1.ClassInfo;
+import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhir.dstu3.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
@@ -46,6 +51,7 @@ public class TestDstu3ModelResolver {
     }
 
     @Test
+    // This tests all the top-level types HAPI knows about.
     public void resolveTypeTests() {
         ModelResolver resolver = new Dstu3FhirModelResolver();
 
@@ -78,13 +84,49 @@ public class TestDstu3ModelResolver {
         for (Class<?> enumType : enums) {
             resolver.resolveType(enumType.getSimpleName());
         }
+    }
 
+    @Test
+    // This tests all the types that are present in the modelinfo
+    public void resolveModelInfoTests() {
+        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelManager mm = new ModelManager();
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("3.0.0"));
+
+        List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
+
+        for (TypeInfo ti : typeInfos) {
+            ClassInfo ci = (ClassInfo)ti;
+            if (ci != null) {
+                switch (ci.getBaseType()) {
+                    // Astract classes
+                    case "FHIR.BackboneElement":
+                    case "FHIR.Element": continue;
+                }
+
+                switch (ci.getName()) {
+                    // TODO: HAPI Doesn't have a ResourceContainer type for Dstu3
+                    case "ResourceContainer": continue;
+                }
+
+                resolver.resolveType(ci.getName());
+            }
+        }
+    }
+    
+    // This tests special case logic in the Model Resolver.
+    // Ideally, these would all disappear with either registering custom types
+    // on the FhirContext or generalized logic, or fixed-up ModelInfos
+    @Test 
+    public void modelInfoSpecialCaseTests() {
+        ModelResolver resolver = new Dstu3FhirModelResolver();
+                
         // This tests resolution of inner classes. They aren't registered directly.
         resolver.resolveType("TestScriptRequestMethodCode");
         resolver.resolveType("FHIRDeviceStatus");
 
 
-        // This tests the special case handling of "Covaluevaluedes".
+        // This tests the special case handling of "Codes".
         resolver.resolveType("ImmunizationStatusCodes");
         resolver.resolveType("ConditionClinicalStatusCodes");
 

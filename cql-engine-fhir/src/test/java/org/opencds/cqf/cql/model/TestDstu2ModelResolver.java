@@ -58,9 +58,7 @@ public class TestDstu2ModelResolver {
                 default:
             }
 
-            Class<?> clazz = resolver.resolveType(type.toCode());
-
-            assertNotNull(clazz);
+            resolver.resolveType(type.toCode());
         }
 
         for (ResourceType type : ResourceType.values()) {
@@ -73,15 +71,11 @@ public class TestDstu2ModelResolver {
                 default:
             }
 
-            Class<?> clazz = resolver.resolveType(type.toCode());
-
-            assertNotNull(clazz);
+            resolver.resolveType(type.toCode());
         }
 
         for (Class<?> enumType : enums) {
-            Class<?> clazz = resolver.resolveType(enumType.getSimpleName());
-            assertNotNull(clazz);
-
+            resolver.resolveType(enumType.getSimpleName());
         }
     }
 
