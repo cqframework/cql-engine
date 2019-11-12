@@ -13,13 +13,16 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
 	protected String endpoint;
-	IGenericClient client;
+
+	private FhirContext fhirContext;
 
 
 	public RestFhirRetrieveProvider(FhirContext fhirContext, ISearchParamRegistry searchParamRegistry, String endpoint) {
-		super(fhirContext, searchParamRegistry);
+		super(searchParamRegistry);
 		this.endpoint = endpoint;
-		this.client = this.fhirContext.newRestfulGenericClient(this.endpoint);
+		this.fhirContext = fhirContext;
+
+		// TODO: Figure out how to validate that the searchParameter register and the context are on the same version of FHIR.
 	}
 
 	@Override
@@ -27,11 +30,13 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 		if (queries == null || queries.isEmpty()) {
             return Collections.emptyList();
 		}
+
+		IGenericClient client = this.fhirContext.newRestfulGenericClient(this.endpoint);
 		
 		// No filters for the the dataType.
 		List<IBaseBundle> bundles = new ArrayList<IBaseBundle>();
 		for (SearchParameterMap map : queries) {
-			IBaseBundle bundle = this.client.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirContext)).execute();
+			IBaseBundle bundle = client.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirContext)).execute();
 			bundles.add(bundle);
 		}
 

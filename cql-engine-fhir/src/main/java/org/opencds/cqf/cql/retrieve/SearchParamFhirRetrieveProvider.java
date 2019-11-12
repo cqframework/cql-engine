@@ -13,7 +13,6 @@ import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeSearchParam;
 import ca.uhn.fhir.context.RuntimeSearchParam.RuntimeSearchParamStatusEnum;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
@@ -31,15 +30,12 @@ import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.TokenParamModifier;
 import ca.uhn.fhir.rest.param.UriParam;
 
-public abstract class SearchParamFhirRetrieveProvider extends FhirRetrieveProvider {
+public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
     private ISearchParamRegistry searchParamRegistry;
 
-    public SearchParamFhirRetrieveProvider(FhirContext fhirContext, ISearchParamRegistry searchParamRegistry) {
-        super(fhirContext);
+    public SearchParamFhirRetrieveProvider(ISearchParamRegistry searchParamRegistry) {
         this.searchParamRegistry = searchParamRegistry;
-
-        // TODO: Figure out how to validate that the searchParameter register and the context are on the same version of FHIR.
     }
 
     private static final int MAX_CODES_PER_QUERY = 1024;
