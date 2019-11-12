@@ -1,32 +1,33 @@
 package org.opencds.cqf.cql.retrieve;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.instance.model.Bundle;
+import ca.uhn.fhir.util.BundleUtil;
+
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.exception.UnknownElement;
 
 import java.util.Iterator;
+import java.util.List;
 
 public class FhirBundleCursor implements Iterable<Object> {
 
-    public FhirBundleCursor(IGenericClient fhirClient, Bundle results)
+    public FhirBundleCursor(IGenericClient fhirClient, IBaseBundle results)
     {
         this(fhirClient, results, null);
     }
 
     // This constructor filters the bundle based on dataType
-    public FhirBundleCursor(IGenericClient fhirClient, Bundle results, String dataType) {
+    public FhirBundleCursor(IGenericClient fhirClient, IBaseBundle results, String dataType) {
         this.fhirClient = fhirClient;
-
-        if (dataType != null) {
-            results = cleanEntry(results, dataType);
-        }
-
         this.results = results;
+        this.dataType = dataType;
     }
 
     private IGenericClient fhirClient;
-    private Bundle results;
+    private IBaseBundle results;
+    private String dataType;
+
 
     /**
      * Returns an iterator over elements of type {@code T}.
@@ -34,31 +35,29 @@ public class FhirBundleCursor implements Iterable<Object> {
      * @return an Iterator.
      */
     public Iterator<Object> iterator() {
-        return new FhirBundleIterator(fhirClient, results);
-    }
-
-
-    private org.hl7.fhir.instance.model.Bundle cleanEntry(org.hl7.fhir.instance.model.Bundle bundle, String dataType) {
-        org.hl7.fhir.instance.model.Bundle cleanBundle = new org.hl7.fhir.instance.model.Bundle();
-        for (org.hl7.fhir.instance.model.Bundle.BundleEntryComponent comp : bundle.getEntry()){
-            if (comp.getResource().getResourceType().name().equals(dataType)) {
-                cleanBundle.addEntry(comp);
-            }
-        }
-
-        return cleanBundle;
+        return new FhirBundleIterator(fhirClient, results, dataType);
     }
 
     private class FhirBundleIterator implements Iterator<Object> {
-        public FhirBundleIterator(IGenericClient fhirClient, Bundle results) {
+        public FhirBundleIterator(IGenericClient fhirClient, IBaseBundle results, String dataType) {
             this.fhirClient = fhirClient;
             this.results =  results;
             this.current = -1;
+            this.dataType = dataType;
+
+            if (dataType != null) {
+                this.dataTypeClass = this.fhirClient.getFhirContext().getResourceDefinition(this.dataType).getImplementingClass();
+            }
+
+            this.currentEntry = this.getEntry();
         }
 
         private IGenericClient fhirClient;
-        private Bundle results;
+        private IBaseBundle results;
         private int current;
+        private String dataType;
+        private Class<? extends IBaseResource> dataTypeClass;
+        private List<? extends IBaseResource> currentEntry;
 
         /**
          * Returns {@code true} if the iteration has more elements.
@@ -68,8 +67,22 @@ public class FhirBundleCursor implements Iterable<Object> {
          * @return {@code true} if the iteration has more elements
          */
         public boolean hasNext() {
-            return current < results.getEntry().size() - 1
-                    || results.getLink(IBaseBundle.LINK_NEXT) != null;
+            return current < this.currentEntry.size() - 1
+                    || this.getLink() != null;
+        }
+
+        private List<? extends IBaseResource> getEntry() {
+            if (this.dataTypeClass != null)
+            {
+                return BundleUtil.toListOfResourcesOfType(this.fhirClient.getFhirContext(), this.results, this.dataTypeClass);
+            }
+            else {
+                return BundleUtil.toListOfResources(this.fhirClient.getFhirContext(), this.results);
+            }
+        }
+
+        private String getLink() {
+            return BundleUtil.getLinkUrlOfType(this.fhirClient.getFhirContext(), this.results, IBaseBundle.LINK_NEXT);
         }
 
         /**
@@ -80,13 +93,14 @@ public class FhirBundleCursor implements Iterable<Object> {
          */
         public Object next() {
             current++;
-            if (current < results.getEntry().size()) {
-                return results.getEntry().get(current).getResource();
+            if (current < this.currentEntry.size()) {
+                return this.currentEntry.get(current);
             } else {
-                results = fhirClient.loadPage().next(results).execute();
+                this.results = fhirClient.loadPage().next(results).execute();
+                this.currentEntry = getEntry();
                 current = 0;
-                if (current < results.getEntry().size()) {
-                    return results.getEntry().get(current).getResource();
+                if (current < this.currentEntry.size()) {
+                    return this.currentEntry.get(current);
                 }
             }
 

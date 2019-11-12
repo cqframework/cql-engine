@@ -10,6 +10,7 @@ import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -30,7 +31,7 @@ public class TestFhirLibrary {
         Context context = new Context(library);
 
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), new SearchParamRegistryDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
@@ -63,7 +64,7 @@ public class TestFhirLibrary {
         Context context = new Context(library);
 
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), new SearchParamRegistryDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");

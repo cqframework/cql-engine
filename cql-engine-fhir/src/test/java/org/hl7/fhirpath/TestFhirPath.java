@@ -13,6 +13,9 @@ import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu2;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
+
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -44,28 +47,32 @@ import static org.hamcrest.Matchers.is;
 
 public class TestFhirPath {
 
-	private FhirContext fhirContext = FhirContext.forDstu3();
-	private Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
-	private RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
-	private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
-	
-    //private BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
-    //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
-    //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
+    private FhirContext fhirContext = FhirContext.forDstu3();
+    private Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
+    private RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(),
+        new SearchParamRegistryDstu3(),
+            "http://fhirtest.uhn.ca/baseDstu3");
+    private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
+
+    // private BaseFhirDataProvider provider = new
+    // FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+    // BaseFhirDataProvider provider = new
+    // FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
+    // BaseFhirDataProvider provider = new
+    // FhirDataProviderStu3().setEndpoint("http://wildfhir.aegis.net/fhir");
 
     private Tests loadTestsFile(String testsFilePath) {
         try {
             InputStream testsFileRaw = TestFhirPath.class.getResourceAsStream(testsFilePath);
             return JAXB.unmarshal(testsFileRaw, Tests.class);
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("Couldn't load tests file ["+testsFilePath+"]: " + e.toString());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Couldn't load tests file [" + testsFilePath + "]: " + e.toString());
         }
     }
 
     private Resource loadResourceFile(String resourceFilePath) {
-        return (Resource)fhirContext.newXmlParser().parseResource(
-            new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
+        return (Resource) fhirContext.newXmlParser()
+                .parseResource(new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
     }
 
     private Iterable<Object> loadExpectedResults(org.hl7.fhirpath.tests.Test test) {
@@ -73,21 +80,22 @@ public class TestFhirPath {
         if (test.getOutput() != null) {
             for (org.hl7.fhirpath.tests.Output output : test.getOutput()) {
                 switch (output.getType()) {
-                    case BOOLEAN:
-                        results.add(Boolean.valueOf(output.getValue()));
-                        break;
-                    case DATE:
-                        results.add(new DateTime(output.getValue(), ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
-                        break;
-                    case INTEGER:
-                        results.add(Integer.valueOf(output.getValue()));
-                        break;
-                    case STRING:
-                        results.add(output.getValue());
-                        break;
-                    case CODE:
-                        results.add(new Code().withCode(output.getValue()));
-                        break;
+                case BOOLEAN:
+                    results.add(Boolean.valueOf(output.getValue()));
+                    break;
+                case DATE:
+                    results.add(new DateTime(output.getValue(),
+                            ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
+                    break;
+                case INTEGER:
+                    results.add(Integer.valueOf(output.getValue()));
+                    break;
+                case STRING:
+                    results.add(output.getValue());
+                    break;
+                case CODE:
+                    results.add(new Code().withCode(output.getValue()));
+                    break;
                 }
             }
         }
@@ -96,6 +104,7 @@ public class TestFhirPath {
     }
 
     private ModelManager modelManager;
+
     private ModelManager getModelManager() {
         if (modelManager == null) {
             modelManager = new ModelManager();
@@ -105,6 +114,7 @@ public class TestFhirPath {
     }
 
     private LibraryManager libraryManager;
+
     private LibraryManager getLibraryManager() {
         if (libraryManager == null) {
             libraryManager = new LibraryManager(getModelManager());
@@ -115,6 +125,7 @@ public class TestFhirPath {
     }
 
     private LibraryLoader libraryLoader;
+
     private LibraryLoader getLibraryLoader() {
         if (libraryLoader == null) {
             libraryLoader = new TestLibraryLoader(libraryManager);
@@ -125,14 +136,17 @@ public class TestFhirPath {
     private Library translate(String cql) throws UcumException {
         ArrayList<CqlTranslator.Options> options = new ArrayList<>();
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-        UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
-        CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
+        UcumService ucumService = new UcumEssenceService(
+                UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+        CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
+                options.toArray(new CqlTranslator.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
             ArrayList<String> errors = new ArrayList<>();
             for (CqlTranslatorException error : translator.getErrors()) {
                 TrackBack tb = error.getLocator();
-                String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
-                        tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
+                String lines = tb == null ? "[n/a]"
+                        : String.format("[%d:%d, %d:%d]", tb.getStartLine(), tb.getStartChar(), tb.getEndLine(),
+                                tb.getEndChar());
                 errors.add(lines + error.getMessage());
             }
             throw new IllegalArgumentException(errors.toString());
@@ -153,36 +167,25 @@ public class TestFhirPath {
     private Boolean compareResults(Object expectedResult, Object actualResult) {
         // Perform FHIR system-defined type conversions
         if (actualResult instanceof Enumeration) {
-            actualResult = new Code().withCode(((Enumeration)actualResult).getValueAsString());
-        }
-        else if (actualResult instanceof BooleanType) {
-            actualResult = ((BooleanType)actualResult).getValue();
-        }
-        else if (actualResult instanceof IntegerType) {
-            actualResult = ((IntegerType)actualResult).getValue();
-        }
-        else if (actualResult instanceof DecimalType) {
-            actualResult = ((DecimalType)actualResult).getValue();
-        }
-        else if (actualResult instanceof StringType) {
-            actualResult = ((StringType)actualResult).getValue();
-        }
-        else if (actualResult instanceof BaseDateTimeType) {
-            actualResult = DateTime.fromJavaDate(((BaseDateTimeType)actualResult).getValue());
-        }
-        else if (actualResult instanceof Quantity) {
-            Quantity quantity = (Quantity)actualResult;
-            actualResult = new org.opencds.cqf.cql.runtime.Quantity()
-                    .withValue(quantity.getValue())
+            actualResult = new Code().withCode(((Enumeration) actualResult).getValueAsString());
+        } else if (actualResult instanceof BooleanType) {
+            actualResult = ((BooleanType) actualResult).getValue();
+        } else if (actualResult instanceof IntegerType) {
+            actualResult = ((IntegerType) actualResult).getValue();
+        } else if (actualResult instanceof DecimalType) {
+            actualResult = ((DecimalType) actualResult).getValue();
+        } else if (actualResult instanceof StringType) {
+            actualResult = ((StringType) actualResult).getValue();
+        } else if (actualResult instanceof BaseDateTimeType) {
+            actualResult = DateTime.fromJavaDate(((BaseDateTimeType) actualResult).getValue());
+        } else if (actualResult instanceof Quantity) {
+            Quantity quantity = (Quantity) actualResult;
+            actualResult = new org.opencds.cqf.cql.runtime.Quantity().withValue(quantity.getValue())
                     .withUnit(quantity.getUnit());
-        }
-        else if (actualResult instanceof Coding) {
-            Coding coding = (Coding)actualResult;
-            actualResult = new Code()
-                    .withCode(coding.getCode())
-                    .withDisplay(coding.getDisplay())
-                    .withSystem(coding.getSystem())
-                    .withVersion(coding.getVersion());
+        } else if (actualResult instanceof Coding) {
+            Coding coding = (Coding) actualResult;
+            actualResult = new Code().withCode(coding.getCode()).withDisplay(coding.getDisplay())
+                    .withSystem(coding.getSystem()).withVersion(coding.getVersion());
         }
         return EqualEvaluator.equal(expectedResult, actualResult);
     }
@@ -190,27 +193,27 @@ public class TestFhirPath {
     private void runStu3Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
         String resourceFilePath = "stu3/input/" + test.getInputfile();
         Resource resource = loadResourceFile(resourceFilePath);
-        String cql = String.format("library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
+        String cql = String.format(
+                "library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
 
         Library library = null;
-        // If the test expression is invalid, expect an error during translation and fail if we don't get one
+        // If the test expression is invalid, expect an error during translation and
+        // fail if we don't get one
         boolean isInvalid = test.getExpression().isInvalid() != null && test.getExpression().isInvalid();
 
         if (isInvalid) {
             boolean testPassed = false;
             try {
                 library = translate(cql);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 testPassed = true;
             }
 
             if (!testPassed) {
                 throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
             }
-        }
-        else {
+        } else {
             library = translate(cql);
 
             Context context = new Context(library);
@@ -267,18 +270,20 @@ public class TestFhirPath {
             for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
                 testCounter += 1;
                 try {
-                    //System.out.println(String.format("Running test %s...", test.getName()));
+                    // System.out.println(String.format("Running test %s...", test.getName()));
                     runStu3Test(test);
                     passCounter += 1;
                     System.out.println(String.format("Test %s passed.", test.getName()));
-                }
-                catch (Exception e) {
-                    System.out.println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
+                } catch (Exception e) {
+                    System.out
+                            .println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
                 }
             }
-            //System.out.println(String.format("Finished test group %s.", group.getName()));
+            // System.out.println(String.format("Finished test group %s.",
+            // group.getName()));
         }
-        System.out.println(String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
+        System.out.println(
+                String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
     }
 
     private String getStringFromResourceStream(String resourceName) {
@@ -298,7 +303,8 @@ public class TestFhirPath {
         return null;
     }
 
-    // TODO: Resolve Error: Could not load model information for model FHIR, version 3.0.0 because version 1.0.2 is already loaded
+    // TODO: Resolve Error: Could not load model information for model FHIR, version
+    // 3.0.0 because version 1.0.2 is already loaded
     @Test
     public void testFhirHelpersStu3() throws UcumException {
         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
@@ -306,16 +312,20 @@ public class TestFhirPath {
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-        //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
+        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), new SearchParamRegistryDstu3(),
+                "http://fhirtest.uhn.ca/baseDstu3");
+        CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        // BaseFhirDataProvider provider = new
+        // FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
         Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         // TODO - fix
-//        Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 18, 8, 0}));
-//        Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(), new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 19, 8, 0}));
+        // Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(),
+        // new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 18, 8, 0}));
+        // Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(),
+        // new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 19, 8, 0}));
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
         // TODO: ModelInfo bug. Not aware of SimpleQuantity
         result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
@@ -330,15 +340,16 @@ public class TestFhirPath {
         result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
     }
 
-    //@Test
+    // @Test
     public void testFhirHelpersDstu2() throws UcumException {
         String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
         Library library = translate(cql);
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-		Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(), "");
+        Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
+        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(),
+                new SearchParamRegistryDstu2(), "");
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
@@ -368,7 +379,7 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
 
 		HL7FhirModelResolver modelResolver = new HL7FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), "");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), new SearchParamRegistryDstu3(), "");
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderHL7();
         context.registerDataProvider("http://hl7.org/fhir", provider);

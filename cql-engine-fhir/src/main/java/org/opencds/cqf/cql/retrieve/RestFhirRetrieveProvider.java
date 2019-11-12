@@ -4,37 +4,37 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.hl7.fhir.instance.model.Bundle;
-
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
+import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 
-public class RestFhirRetrieveProvider extends FhirRetrieveProvider {
+public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
 	protected String endpoint;
-	protected IGenericClient fhirClient;
-	protected FhirContext fhirContext;
+	IGenericClient client;
 
-	public RestFhirRetrieveProvider(FhirContext fhirContext, String endpoint) {
+
+	public RestFhirRetrieveProvider(FhirContext fhirContext, ISearchParamRegistry searchParamRegistry, String endpoint) {
+		super(fhirContext, searchParamRegistry);
 		this.endpoint = endpoint;
-		this.fhirContext = fhirContext;
-        this.fhirClient = fhirContext.newRestfulGenericClient(endpoint);
+		this.client = this.fhirContext.newRestfulGenericClient(this.endpoint);
 	}
 
 	@Override
 	protected Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries) {
 		if (queries == null || queries.isEmpty()) {
             return Collections.emptyList();
-        }
+		}
+		
 		// No filters for the the dataType.
-		List<Bundle> bundles = new ArrayList<Bundle>();
+		List<IBaseBundle> bundles = new ArrayList<IBaseBundle>();
 		for (SearchParameterMap map : queries) {
-			Bundle bundle = this.fhirClient.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirContext))
-				.returnBundle(org.hl7.fhir.instance.model.Bundle.class).execute();
+			IBaseBundle bundle = this.client.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirContext)).execute();
 			bundles.add(bundle);
 		}
 
-		return new FhirBundlesCursor(fhirClient, bundles, dataType);
+		return new FhirBundlesCursor(client, bundles, dataType);
 	}
 }

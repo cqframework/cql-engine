@@ -17,6 +17,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu2;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -51,15 +53,16 @@ public abstract class FhirExecutionTestBase {
     @BeforeClass
     public void setup() {
         dstu2ModelResolver = new Dstu2FhirModelResolver();
-        dstu2RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(), "http://fhirtest.uhn.ca/baseDstu2");
+        dstu2RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2(), new SearchParamRegistryDstu2(),
+                "http://fhirtest.uhn.ca/baseDstu2");
         dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
         
         dstu3ModelResolver = new Dstu3FhirModelResolver();
-        dstu3RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), "http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        dstu3RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), new SearchParamRegistryDstu3(), "http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
         
         hl7ModelResolver = new HL7FhirModelResolver();
-        hl7RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), "http://fhirtest.uhn.ca/baseDstu2");
+        hl7RetrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu2Hl7Org(), new SearchParamRegistryDstu2(), "http://fhirtest.uhn.ca/baseDstu2");
         hl7Provider = new CompositeDataProvider(hl7ModelResolver, hl7RetrieveProvider);
     }
 

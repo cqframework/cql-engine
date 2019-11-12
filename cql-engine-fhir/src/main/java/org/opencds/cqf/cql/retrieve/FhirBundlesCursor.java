@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.retrieve;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.instance.model.Bundle;
+import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.opencds.cqf.cql.exception.UnknownElement;
 
 import java.util.Iterator;
@@ -9,17 +9,17 @@ import java.util.List;
 
 public class FhirBundlesCursor implements Iterable<Object> {
 
-    public  FhirBundlesCursor(IGenericClient fhirClient, List<Bundle> bundles) {
+    public  FhirBundlesCursor(IGenericClient fhirClient, List<IBaseBundle> bundles) {
         this(fhirClient, bundles, null);
     }
-    public FhirBundlesCursor(IGenericClient fhirClient, List<Bundle> bundles, String dataType) {
+    public FhirBundlesCursor(IGenericClient fhirClient, List<IBaseBundle> bundles, String dataType) {
         this.fhirClient = fhirClient;
         this.bundles = bundles;
         this.dataType = dataType;
     }
 
     private IGenericClient fhirClient;
-    private List<Bundle> bundles;
+    private List<IBaseBundle> bundles;
     private String dataType;
 
     /**
@@ -32,14 +32,14 @@ public class FhirBundlesCursor implements Iterable<Object> {
     }
 
     private class FhirBundlesIterator implements Iterator<Object> {
-        public FhirBundlesIterator(IGenericClient fhirClient, List<Bundle> bundles) {
+        public FhirBundlesIterator(IGenericClient fhirClient, List<IBaseBundle> bundles) {
             this.fhirClient = fhirClient;
             this.bundles = bundles;
             this.currentBundle = -1;
         }
 
         private IGenericClient fhirClient;
-        private List<Bundle> bundles;
+        private List<IBaseBundle> bundles;
         private int currentBundle;
         private Iterator<Object> currentIterator;
 
