@@ -14,7 +14,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
         this(FhirContext.forR4());
 	}
 
-	public R4FhirModelResolver(FhirContext fhirContext) {
+	private R4FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
         this.setPackageName("org.hl7.fhir.r4.model");
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.R4) {

@@ -14,7 +14,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
 		this(FhirContext.forDstu2());
 	}
 
-	public Dstu2FhirModelResolver(FhirContext fhirContext) {
+	private Dstu2FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
 
         this.setPackageName("org.hl7.fhir.instance.model");

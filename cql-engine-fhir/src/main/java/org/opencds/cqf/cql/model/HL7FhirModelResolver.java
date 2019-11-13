@@ -13,7 +13,7 @@ public class HL7FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTy
 		this(FhirContext.forDstu2Hl7Org());
     }
     
-    public HL7FhirModelResolver(FhirContext fhirContext) {
+    private  HL7FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
 
         this.setPackageName("org.hl7.fhir.instance.model");
