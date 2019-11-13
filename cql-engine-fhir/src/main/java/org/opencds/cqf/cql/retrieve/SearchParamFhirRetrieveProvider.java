@@ -229,10 +229,12 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
     protected RuntimeSearchParam getSearchParameter(String dataType, String path) {
         Map<String, RuntimeSearchParam> params = this.searchParamRegistry.getActiveSearchParams(dataType);
+
+        String combinedPath = String.join(".", dataType, path);
         
         for (Entry<String, RuntimeSearchParam> entry : params.entrySet()) {
             RuntimeSearchParam param = entry.getValue();
-            if (param.getStatus() != RuntimeSearchParamStatusEnum.RETIRED && param.getPath().replace("|", ".").equals(path))  {
+            if (param.getStatus() != RuntimeSearchParamStatusEnum.RETIRED && param.getPath().equals(combinedPath))  {
                 return param;
             }
         }
@@ -241,6 +243,14 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     }
 
     protected Pair<String, IQueryParameterType> getSearchParameter(String dataType, String path, String value) {
+        if (path == null || dataType == null) {
+            return null;
+        }
+
+        if (path == "id") {
+            return Pair.of("_id", new StringParam(value));
+        }
+
         RuntimeSearchParam searchParam = this.getSearchParameter(dataType, path);
         if (searchParam == null) {
             return null;
