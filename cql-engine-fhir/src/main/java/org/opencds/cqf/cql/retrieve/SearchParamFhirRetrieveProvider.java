@@ -256,7 +256,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             return null;
         }
 
-        String name = searchParam.getPath();
+        String name = searchParam.getName();
 
         switch (searchParam.getParamType()) {
 
