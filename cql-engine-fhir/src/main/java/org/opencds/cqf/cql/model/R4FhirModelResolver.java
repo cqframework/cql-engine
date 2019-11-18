@@ -103,6 +103,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             case "FinancialResourceStatusCodes": typeName = "ClaimResponse$ClaimResponseStatus"; break;
             case "SampledDataDataType": typeName = "StringType"; break;
             case "ClaimProcessingCodes": typeName = "ClaimResponse$RemittanceOutcome"; break;
+            case "vConfidentialityClassification": typeName = "Composition$DocumentConfidentiality"; break;
         }
 
         return super.typeToClass(typeName);
