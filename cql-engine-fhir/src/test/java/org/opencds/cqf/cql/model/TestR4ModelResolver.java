@@ -110,13 +110,14 @@ public class TestR4ModelResolver {
         resolver.resolveType("sequenceType");
 
 
-        // These are oddballs requiring manual mapping.
+        // These are oddballs requiring manual mapping. They may represent errors in the ModelInfo.
         resolver.resolveType("ConfidentialityClassification");
         resolver.resolveType("ContractResourceStatusCodes");
         resolver.resolveType("EventStatus");
         resolver.resolveType("FinancialResourceStatusCodes");
         resolver.resolveType("SampledDataDataType");
         resolver.resolveType("ClaimProcessingCodes");
+        resolver.resolveType("ContractResourcePublicationStatusCodes");
         
 
         // These are known glitches in the ModelInfo
