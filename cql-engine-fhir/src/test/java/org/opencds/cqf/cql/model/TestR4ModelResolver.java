@@ -14,6 +14,7 @@ import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
+import org.hl7.fhir.r4.model.ClaimResponse;
 import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
@@ -102,6 +103,12 @@ public class TestR4ModelResolver {
         // This tests the special case handling of "Codes".
         resolver.resolveType("ImmunizationStatusCodes");
 
+        // These have different capitalization conventions
+        resolver.resolveType("status");
+        resolver.resolveType("orientationType");
+        resolver.resolveType("strandType");
+        resolver.resolveType("sequenceType");
+
 
         // These are oddballs requiring manual mapping.
         resolver.resolveType("ConfidentialityClassification");
@@ -109,6 +116,7 @@ public class TestR4ModelResolver {
         resolver.resolveType("EventStatus");
         resolver.resolveType("FinancialResourceStatusCodes");
         resolver.resolveType("SampledDataDataType");
+        resolver.resolveType("ClaimProcessingCodes");
     }
 
     // This tests all the types that are present in the modelinfo

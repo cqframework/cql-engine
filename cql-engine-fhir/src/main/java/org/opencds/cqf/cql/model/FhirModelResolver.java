@@ -10,8 +10,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IAnyResource;
@@ -377,14 +375,16 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     private Class<?> deepSearch(String typeName) {
         // Special case for "Codes". This suffix is often removed from the HAPI type.
-        String codelessName = typeName.replace("Codes", "");
+        String codelessName = typeName.replace("Codes", "").toLowerCase();
+        String lowerName = typeName.toLowerCase();
+
 
         Collection<BaseRuntimeElementDefinition<?>> elements = this.fhirContext.getElementDefinitions();
         for  (BaseRuntimeElementDefinition<?> element : elements) {
             Class<?>[] innerClasses = element.getImplementingClass().getDeclaredClasses();
             for (Class<?> clazz : innerClasses) {
 
-                if (clazz.getSimpleName().equals(typeName) || clazz.getSimpleName().equals(codelessName)) {
+                if (clazz.getSimpleName().toLowerCase().equals(lowerName) || clazz.getSimpleName().toLowerCase().equals(codelessName)) {
                     return clazz;
                 }
             }

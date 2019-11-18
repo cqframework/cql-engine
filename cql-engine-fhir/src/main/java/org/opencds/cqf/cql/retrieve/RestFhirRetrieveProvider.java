@@ -12,34 +12,27 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
-	protected String endpoint;
-
-	private FhirContext fhirContext;
+	protected IGenericClient fhirClient;
 
 
-	public RestFhirRetrieveProvider(FhirContext fhirContext, ISearchParamRegistry searchParamRegistry, String endpoint) {
+	public RestFhirRetrieveProvider(ISearchParamRegistry searchParamRegistry, IGenericClient fhirClient) {
 		super(searchParamRegistry);
-		this.endpoint = endpoint;
-		this.fhirContext = fhirContext;
-
-		// TODO: Figure out how to validate that the searchParameter register and the context are on the same version of FHIR.
+		this.fhirClient = fhirClient;
+		// TODO: Figure out how to validate that the searchParameter registry and the context are on the same version of FHIR.
 	}
 
 	@Override
 	protected Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries) {
 		if (queries == null || queries.isEmpty()) {
-            return Collections.emptyList();
+			return Collections.emptyList();
 		}
-
-		IGenericClient client = this.fhirContext.newRestfulGenericClient(this.endpoint);
 		
-		// No filters for the the dataType.
 		List<IBaseBundle> bundles = new ArrayList<IBaseBundle>();
 		for (SearchParameterMap map : queries) {
-			IBaseBundle bundle = client.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirContext)).execute();
+			IBaseBundle bundle = this.fhirClient.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirClient.getFhirContext())).execute();
 			bundles.add(bundle);
 		}
 
-		return new FhirBundlesCursor(client, bundles, dataType);
+		return new FhirBundlesCursor(this.fhirClient, bundles, dataType);
 	}
 }

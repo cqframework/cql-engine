@@ -30,8 +30,10 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
+        FhirContext fhirContext = FhirContext.forDstu3();
+
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), new SearchParamRegistryDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParamRegistryDstu3(), fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
@@ -63,8 +65,10 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
+        FhirContext fhirContext = FhirContext.forDstu3();
+
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(FhirContext.forDstu3(), new SearchParamRegistryDstu3(), "http://fhirtest.uhn.ca/baseDstu3");
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParamRegistryDstu3(),  fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");

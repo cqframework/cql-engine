@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.model;
 
 import java.util.Calendar;
 
-import org.hl7.fhir.instance.model.Resource;
 import org.hl7.fhir.r4.model.*;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -103,6 +102,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             case "EventStatus": typeName = "Procedure$ProcedureStatus"; break;
             case "FinancialResourceStatusCodes": typeName = "ClaimResponse$ClaimResponseStatus"; break;
             case "SampledDataDataType": typeName = "StringType"; break;
+            case "ClaimProcessingCodes": typeName = "ClaimResponse$RemittanceOutcome"; break;
         }
 
         return super.typeToClass(typeName);
