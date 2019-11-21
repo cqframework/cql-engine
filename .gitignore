@@ -5,3 +5,6 @@
 *.class
 /cql-engine/target/
 /cql-engine-fhir/target/
+.project
+.settings
+.classpath

@@ -35,57 +35,36 @@ public class InValueSetEvaluator extends org.cqframework.cql.elm.execution.InVal
             return null;
         }
 
-        // Resolve ValueSetRef & CodeSystemRef -- Account for multiple codesystems represented within a valueset
         ValueSetDef vsd = resolveVSR(context, (ValueSetRef)valueset);
-        List<CodeSystemDef> codeSystemDefs = new ArrayList<>();
-        for (CodeSystemRef csr : vsd.getCodeSystem()) {
-            codeSystemDefs.add(resolveCSR(context, csr));
-        }
-
-        List<CodeSystemInfo> codeSystemInfos = new ArrayList<>();
-        if (codeSystemDefs.size() > 0) {
-            for (CodeSystemDef csd : codeSystemDefs) {
-                codeSystemInfos.add(new CodeSystemInfo().withId(csd.getId()).withVersion(csd.getVersion()));
-            }
-        }
-
-        // TODO: find better solution than this -- temporary solution
-        else {
-            codeSystemInfos.add(new CodeSystemInfo().withId(null).withVersion(null));
-        }
-
-        List<ValueSetInfo> valueSetInfos = new ArrayList<>();
-        for (CodeSystemInfo csi : codeSystemInfos) {
-            valueSetInfos.add(new ValueSetInfo().withId(vsd.getId()).withVersion(vsd.getVersion()).withCodeSystem(csi));
+        ValueSetInfo vsi = new ValueSetInfo().withId(vsd.getId()).withVersion(vsd.getVersion());
+        for (CodeSystemRef csr : vsd.getCodeSystem())
+        {
+            CodeSystemDef csd = resolveCSR(context, csr);
+            CodeSystemInfo csi = new CodeSystemInfo().withId(csd.getId()).withVersion(csd.getVersion());
+            vsi.getCodeSystems().add(csi);
         }
 
         TerminologyProvider provider = context.resolveTerminologyProvider();
 
         // perform operation
         if (code instanceof String) {
-            for (ValueSetInfo vsi : valueSetInfos) {
-                if (provider.in(new Code().withCode((String)code), vsi)) {
-                    return true;
-                }
+            if (provider.in(new Code().withCode((String)code), vsi)) {
+                return true;
             }
             return false;
         }
         else if (code instanceof Code) {
-            for (ValueSetInfo vsi : valueSetInfos) {
-                if (provider.in((Code)code, vsi)) {
-                    return true;
-                }
+            if (provider.in((Code)code, vsi)) {
+                return true;
             }
             return false;
         }
         else if (code instanceof Concept) {
-            for (ValueSetInfo vsi : valueSetInfos) {
-                for (Code codes : ((Concept)code).getCodes()) {
-                    if (codes == null) return null;
-                    if (provider.in(codes, vsi)) return true;
-                }
-                return false;
+            for (Code codes : ((Concept)code).getCodes()) {
+                if (codes == null) return null;
+                if (provider.in(codes, vsi)) return true;
             }
+            return false;
         }
 
         throw new InvalidOperatorArgument(
