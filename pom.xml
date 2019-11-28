@@ -159,8 +159,8 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>11</source>
+                        <target>11</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -168,13 +168,12 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
-                <!-- javadoc is currently broken for the project -->
-                <!-- <plugin>
+                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.1.1</version>
                     <configuration>
-                        <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                        <source>11</source>
                     </configuration>
                     <executions>
                         <execution>
@@ -184,7 +183,7 @@
                             </goals>
                         </execution>
                     </executions>
-                </plugin> -->
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
