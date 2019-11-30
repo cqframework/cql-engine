@@ -31,6 +31,11 @@ public class FhirTerminologyProvider implements TerminologyProvider {
         this.fhirContext = fhirContext;
     }
 
+    public FhirTerminologyProvider(IGenericClient fhirClient) {
+        this(fhirClient.getFhirContext());
+        this.fhirClient = fhirClient;
+    }
+
     private IClientInterceptor headerInjectionInterceptor;
 
     public FhirTerminologyProvider withInjectedHeader(String headerKey, String headerValue) {
