@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.execution;
 
 import org.cqframework.cql.elm.execution.ExpressionDef;
+import org.cqframework.cql.elm.execution.FunctionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.UsingDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
@@ -122,6 +123,15 @@ public class CqlEngine {
 
         for (String expression : expressions) {
             ExpressionDef def = context.resolveExpressionRef(expression);
+
+            // TODO: We should probably move this validation further up the chain.
+            // For example, we should tell the user that they've tried to evaluate a function def through incorrect
+            // CQL or input parameters. And the code that gather the list of expressions to evaluate together should
+            // not include function refs.
+            if (def instanceof FunctionDef) {
+                continue;
+            }
+            
             context.enterContext(def.getContext());
             Object object = def.evaluate(context);
             result.expressionResults.put(expression, object);
