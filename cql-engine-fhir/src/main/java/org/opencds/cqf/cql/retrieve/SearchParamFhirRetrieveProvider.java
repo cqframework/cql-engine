@@ -18,6 +18,7 @@ import ca.uhn.fhir.context.RuntimeSearchParam.RuntimeSearchParamStatusEnum;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.model.api.IQueryParameterType;
+import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
 import ca.uhn.fhir.rest.param.DateParam;
 import ca.uhn.fhir.rest.param.DateRangeParam;
 import ca.uhn.fhir.rest.param.NumberParam;
@@ -39,18 +40,19 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     }
 
     private static final int MAX_CODES_PER_QUERY = 1024;
-	protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
-	@Override
-	public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
-			String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
-			String dateLowPath, String dateHighPath, Interval dateRange) {
-		
-		List<SearchParameterMap> queries = this.setupQueries(context, contextPath, contextValue, dataType, 
-			templateId, codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
+    protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
-		return this.executeQueries(dataType, queries);
-	}
+    @Override
+    public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
+            String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
+            String dateLowPath, String dateHighPath, Interval dateRange) {
+
+        List<SearchParameterMap> queries = this.setupQueries(context, contextPath, contextValue, dataType, templateId,
+                codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
+
+        return this.executeQueries(dataType, queries);
+    }
 
     protected Pair<String, IQueryParameterType> getTemplateParam(String dataType, String templateId) {
         if (templateId == null || templateId.equals("")) {
@@ -61,8 +63,8 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         return null;
     }
 
-    protected Pair<String, DateRangeParam> getDateRangeParam(String dataType, String datePath, String dateLowPath, String dateHighPath, Interval dateRange) 
-    {
+    protected Pair<String, DateRangeParam> getDateRangeParam(String dataType, String datePath, String dateLowPath,
+            String dateHighPath, Interval dateRange) {
         if (dateRange == null) {
             return null;
         }
@@ -70,36 +72,38 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         DateParam low = null;
         DateParam high = null;
         if (dateRange.getLow() != null) {
-            low = new DateParam(ParamPrefixEnum.GREATERTHAN_OR_EQUALS, Date.from(((DateTime) dateRange.getLow()).getDateTime().toInstant()));
+            low = new DateParam(ParamPrefixEnum.GREATERTHAN_OR_EQUALS,
+                    Date.from(((DateTime) dateRange.getLow()).getDateTime().toInstant()));
         }
 
         if (dateRange.getHigh() != null) {
-            high = new DateParam(ParamPrefixEnum.LESSTHAN_OR_EQUALS, Date.from(((DateTime) dateRange.getHigh()).getDateTime().toInstant()));
+            high = new DateParam(ParamPrefixEnum.LESSTHAN_OR_EQUALS,
+                    Date.from(((DateTime) dateRange.getHigh()).getDateTime().toInstant()));
         }
 
         DateRangeParam rangeParam;
         if (low == null && high != null) {
             rangeParam = new DateRangeParam(high);
-        }
-        else if (high == null && low != null) {
+        } else if (high == null && low != null) {
             rangeParam = new DateRangeParam(low);
-        }
-        else {
+        } else {
             rangeParam = new DateRangeParam(low, high);
         }
 
         return Pair.of(datePath, rangeParam);
     }
 
-    protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath, Object contextValue) {
+    protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
+            Object contextValue) {
         if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
-            return this.getSearchParameter(dataType, contextPath, (String)contextValue);
+            return this.getSearchParameter(dataType, contextPath, (String) contextValue);
         }
 
         return null;
     }
 
-    protected Pair<String, List<TokenOrListParam>> getCodeParams(String dataType, String codePath, Iterable<Code> codes, String valueSet) {
+    protected Pair<String, List<TokenOrListParam>> getCodeParams(String dataType, String codePath, Iterable<Code> codes,
+            String valueSet) {
         if (valueSet != null && valueSet.startsWith("urn:oid:")) {
             valueSet = valueSet.replace("urn:oid:", "");
         }
@@ -112,28 +116,38 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             return null;
         }
 
-        List<TokenOrListParam> codeParamLists = this.getCodeParams(codePath, codes, valueSet);
+        // TODO: This assumes the code path will always be a token param.
+        List<TokenOrListParam> codeParamLists = this.getCodeParams(codes, valueSet);
         if (codeParamLists == null || codeParamLists.isEmpty()) {
             return null;
         }
 
-        return Pair.of(codePath, codeParamLists);
+        RuntimeSearchParam codeParam = this.getSearchParameter(dataType, codePath, RestSearchParameterTypeEnum.TOKEN);
+
+        if (codeParam == null) {
+            return null;
+        }
+
+        return Pair.of(codeParam.getName(), codeParamLists);
     }
 
-    // The code params will be either the literal set of codes in the event the data server doesn't have the referenced ValueSet
+    // The code params will be either the literal set of codes in the event the data
+    // server doesn't have the referenced ValueSet
     // (or doesn't support pulling and caching a ValueSet).
-    //  If the target server DOES support that then it's "dataType.codePath in ValueSet"
-    protected List<TokenOrListParam> getCodeParams(String codePath, Iterable<Code> codes, String valueSet) {
+    // If the target server DOES support that then it's "dataType.codePath in
+    // ValueSet"
+    protected List<TokenOrListParam> getCodeParams(Iterable<Code> codes, String valueSet) {
         if (valueSet != null) {
             if (isExpandValueSets()) {
                 if (this.terminologyProvider == null) {
-                    throw new IllegalArgumentException("Expand value sets cannot be used without a terminology provider and no terminology provider is set.");
+                    throw new IllegalArgumentException(
+                            "Expand value sets cannot be used without a terminology provider and no terminology provider is set.");
                 }
                 ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
                 codes = this.terminologyProvider.expand(valueSetInfo);
-            }
-            else {
-                return Collections.singletonList(new TokenOrListParam().addOr(new TokenParam(null, valueSet).setModifier(TokenParamModifier.IN)));
+            } else {
+                return Collections.singletonList(new TokenOrListParam()
+                        .addOr(new TokenParam(null, valueSet).setModifier(TokenParamModifier.IN)));
             }
         }
 
@@ -165,16 +179,19 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         return codeParamsList;
     }
 
-    protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue, String dataType, String templateId,
-			String codePath, Iterable<Code> codes, String valueSet, String datePath,
-			String dateLowPath, String dateHighPath, Interval dateRange) {
+    protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue,
+            String dataType, String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
+            String dateLowPath, String dateHighPath, Interval dateRange) {
 
         Pair<String, IQueryParameterType> templateParam = this.getTemplateParam(dataType, templateId);
-        Pair<String, IQueryParameterType> contextParam = this.getContextParam(dataType, context, contextPath, contextValue);
-        Pair<String, DateRangeParam> dateRangeParam = this.getDateRangeParam(dataType, datePath, dateLowPath, dateHighPath, dateRange);
+        Pair<String, IQueryParameterType> contextParam = this.getContextParam(dataType, context, contextPath,
+                contextValue);
+        Pair<String, DateRangeParam> dateRangeParam = this.getDateRangeParam(dataType, datePath, dateLowPath,
+                dateHighPath, dateRange);
         Pair<String, List<TokenOrListParam>> codeParams = this.getCodeParams(dataType, codePath, codes, valueSet);
 
-        // In the case we filtered to a valueSet without codes, there are no possible results.
+        // In the case we filtered to a valueSet without codes, there are no possible
+        // results.
         if (valueSet != null && (codeParams == null || codeParams.getValue().isEmpty())) {
             return Collections.emptyList();
         }
@@ -182,19 +199,16 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         return this.innerSetupQueries(templateParam, contextParam, dateRangeParam, codeParams);
     }
 
-    protected List<SearchParameterMap> innerSetupQueries(
-        Pair<String, IQueryParameterType> templateParam,
-        Pair<String, IQueryParameterType> contextParam,
-        Pair<String, DateRangeParam> dateRangeParam,
-        Pair<String, List<TokenOrListParam>> codeParams) {
+    protected List<SearchParameterMap> innerSetupQueries(Pair<String, IQueryParameterType> templateParam,
+            Pair<String, IQueryParameterType> contextParam, Pair<String, DateRangeParam> dateRangeParam,
+            Pair<String, List<TokenOrListParam>> codeParams) {
 
         if (codeParams == null || codeParams.getValue() == null || codeParams.getValue().isEmpty()) {
             return Collections.singletonList(this.getBaseMap(templateParam, contextParam, dateRangeParam));
         }
 
         List<SearchParameterMap> maps = new ArrayList<>();
-        for (TokenOrListParam tolp: codeParams.getValue())
-        {
+        for (TokenOrListParam tolp : codeParams.getValue()) {
             SearchParameterMap base = this.getBaseMap(templateParam, contextParam, dateRangeParam);
             base.add(codeParams.getKey(), tolp);
             maps.add(base);
@@ -203,11 +217,8 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         return maps;
     }
 
-    protected SearchParameterMap getBaseMap(        
-        Pair<String, IQueryParameterType> templateParam,
-        Pair<String, IQueryParameterType> contextParam,
-        Pair<String, DateRangeParam> dateRangeParam
-    ) {
+    protected SearchParameterMap getBaseMap(Pair<String, IQueryParameterType> templateParam,
+            Pair<String, IQueryParameterType> contextParam, Pair<String, DateRangeParam> dateRangeParam) {
 
         SearchParameterMap baseMap = new SearchParameterMap();
         baseMap.setLastUpdated(new DateRangeParam());
@@ -228,6 +239,10 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     }
 
     protected RuntimeSearchParam getSearchParameter(String dataType, String path) {
+        return this.getSearchParameter(dataType, path, (RestSearchParameterTypeEnum)null);
+    }
+
+    protected RuntimeSearchParam getSearchParameter(String dataType, String path, RestSearchParameterTypeEnum paramType) {
         Map<String, RuntimeSearchParam> params = this.searchParamRegistry.getActiveSearchParams(dataType);
 
         String combinedPath = String.join(".", dataType, path);
@@ -235,7 +250,9 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         for (Entry<String, RuntimeSearchParam> entry : params.entrySet()) {
             RuntimeSearchParam param = entry.getValue();
             if (param.getStatus() != RuntimeSearchParamStatusEnum.RETIRED && param.getPath().equals(combinedPath))  {
-                return param;
+                if (paramType == null || param.getParamType().equals(paramType)) {
+                    return param;
+                }
             }
         }
 
