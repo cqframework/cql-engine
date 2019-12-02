@@ -6,7 +6,7 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.hl7.fhir.dstu3.model.*;
 import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
+import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
 import org.opencds.cqf.cql.model.*;
 import org.opencds.cqf.cql.retrieve.*;
 import org.testng.Assert;
@@ -215,7 +215,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
         Context context = new Context(library);
 
-		dstu3RetrieveProvider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+		dstu3RetrieveProvider.setTerminologyProvider(new Dstu3FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
         //dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         context.enterContext("Patient");

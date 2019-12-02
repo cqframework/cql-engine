@@ -19,31 +19,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
 
-public class FhirTerminologyProvider implements TerminologyProvider {
+public class Dstu3FhirTerminologyProvider implements TerminologyProvider {
 
     private FhirContext fhirContext;
 
-    public FhirTerminologyProvider() {
+    public Dstu3FhirTerminologyProvider() {
         this.fhirContext = FhirContext.forDstu3();
     }
 
-    public FhirTerminologyProvider(FhirContext fhirContext) {
+    public Dstu3FhirTerminologyProvider(FhirContext fhirContext) {
         this.fhirContext = fhirContext;
     }
 
-    public FhirTerminologyProvider(IGenericClient fhirClient) {
+    public Dstu3FhirTerminologyProvider(IGenericClient fhirClient) {
         this(fhirClient.getFhirContext());
         this.fhirClient = fhirClient;
     }
 
     private IClientInterceptor headerInjectionInterceptor;
 
-    public FhirTerminologyProvider withInjectedHeader(String headerKey, String headerValue) {
+    public Dstu3FhirTerminologyProvider withInjectedHeader(String headerKey, String headerValue) {
         this.headerInjectionInterceptor = new HeaderInjectionInterceptor(headerKey, headerValue);
         return this;
     }
 
-    public FhirTerminologyProvider withInjectedHeaders(HashMap<String, String> headers) {
+    public Dstu3FhirTerminologyProvider withInjectedHeaders(HashMap<String, String> headers) {
         this.headerInjectionInterceptor = new HeaderInjectionInterceptor(headers);
         return this;
     }
@@ -57,7 +57,7 @@ public class FhirTerminologyProvider implements TerminologyProvider {
     public String getEndpoint() {
         return endpoint;
     }
-    public FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
+    public Dstu3FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
         this.endpoint = endpoint;
         if (!validation) {
             this.fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
@@ -93,7 +93,7 @@ public class FhirTerminologyProvider implements TerminologyProvider {
         this.password = password;
     }
 
-    public FhirTerminologyProvider withBasicAuth(String userName, String password) {
+    public Dstu3FhirTerminologyProvider withBasicAuth(String userName, String password) {
         this.userName = userName;
         this.password = password;
         return this;
