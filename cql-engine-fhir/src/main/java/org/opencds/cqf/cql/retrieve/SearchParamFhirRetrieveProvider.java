@@ -4,39 +4,31 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
 import ca.uhn.fhir.context.RuntimeSearchParam;
-import ca.uhn.fhir.context.RuntimeSearchParam.RuntimeSearchParamStatusEnum;
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
-import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
 import ca.uhn.fhir.rest.param.DateParam;
 import ca.uhn.fhir.rest.param.DateRangeParam;
-import ca.uhn.fhir.rest.param.NumberParam;
 import ca.uhn.fhir.rest.param.ParamPrefixEnum;
-import ca.uhn.fhir.rest.param.QuantityParam;
-import ca.uhn.fhir.rest.param.ReferenceParam;
-import ca.uhn.fhir.rest.param.StringParam;
 import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.TokenParamModifier;
-import ca.uhn.fhir.rest.param.UriParam;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
-    private ISearchParamRegistry searchParamRegistry;
+    private SearchParameterResolver searchParameterResolver;
 
-    public SearchParamFhirRetrieveProvider(ISearchParamRegistry searchParamRegistry) {
-        this.searchParamRegistry = searchParamRegistry;
+    public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
+        this.searchParameterResolver = searchParameterResolver;
     }
 
     private static final int MAX_CODES_PER_QUERY = 1024;
@@ -96,7 +88,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
             Object contextValue) {
         if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
-            return this.getSearchParameter(dataType, contextPath, (String) contextValue);
+            return this.searchParameterResolver.createSearchParameter(dataType, contextPath, (String) contextValue);
         }
 
         return null;
@@ -122,7 +114,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             return null;
         }
 
-        RuntimeSearchParam codeParam = this.getSearchParameter(dataType, codePath, RestSearchParameterTypeEnum.TOKEN);
+        RuntimeSearchParam codeParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, codePath, RestSearchParameterTypeEnum.TOKEN);
 
         if (codeParam == null) {
             return null;
@@ -236,67 +228,5 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         }
 
         return baseMap;
-    }
-
-    protected RuntimeSearchParam getSearchParameter(String dataType, String path) {
-        return this.getSearchParameter(dataType, path, (RestSearchParameterTypeEnum)null);
-    }
-
-    protected RuntimeSearchParam getSearchParameter(String dataType, String path, RestSearchParameterTypeEnum paramType) {
-        Map<String, RuntimeSearchParam> params = this.searchParamRegistry.getActiveSearchParams(dataType);
-
-        String combinedPath = String.join(".", dataType, path);
-        
-        for (Entry<String, RuntimeSearchParam> entry : params.entrySet()) {
-            RuntimeSearchParam param = entry.getValue();
-            if (param.getStatus() != RuntimeSearchParamStatusEnum.RETIRED && param.getPath().equals(combinedPath))  {
-                if (paramType == null || param.getParamType().equals(paramType)) {
-                    return param;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    protected Pair<String, IQueryParameterType> getSearchParameter(String dataType, String path, String value) {
-        if (path == null || dataType == null) {
-            return null;
-        }
-
-        if (path == "id") {
-            return Pair.of("_id", new StringParam(value));
-        }
-
-        RuntimeSearchParam searchParam = this.getSearchParameter(dataType, path);
-        if (searchParam == null) {
-            return null;
-        }
-
-        String name = searchParam.getName();
-
-        switch (searchParam.getParamType()) {
-
-            case TOKEN:
-                return Pair.of(name, new TokenParam(value));
-            case REFERENCE:
-                return Pair.of(name, new ReferenceParam(value));
-            case QUANTITY:
-                return Pair.of(name, new QuantityParam(value));
-            case STRING:
-                return Pair.of(name, new StringParam(value));
-            case NUMBER: 
-                return Pair.of(name, new NumberParam(value));
-            case URI:
-                return Pair.of(name, new UriParam(value));
-
-            // Don't know how to handle these yet.
-            case DATE:
-            case HAS:
-            case COMPOSITE:
-            case SPECIAL:
-        }
-
-        return null;
     }
 }

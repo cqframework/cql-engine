@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
-import ca.uhn.fhir.context.FhirContext;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
+
 import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
-import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
@@ -15,10 +15,10 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	protected IGenericClient fhirClient;
 
 
-	public RestFhirRetrieveProvider(ISearchParamRegistry searchParamRegistry, IGenericClient fhirClient) {
-		super(searchParamRegistry);
+	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
+		super(searchParameterResolver);
 		this.fhirClient = fhirClient;
-		// TODO: Figure out how to validate that the searchParameter registry and the context are on the same version of FHIR.
+		// TODO: Figure out how to validate that the searchParameterResolver and the context are on the same version of FHIR.
 	}
 
 	@Override

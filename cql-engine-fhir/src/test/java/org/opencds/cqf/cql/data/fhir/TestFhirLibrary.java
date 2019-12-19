@@ -8,6 +8,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
@@ -33,7 +34,7 @@ public class TestFhirLibrary {
         FhirContext fhirContext = FhirContext.forDstu3();
 
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParamRegistryDstu3(), fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu3()), fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");
@@ -68,7 +69,7 @@ public class TestFhirLibrary {
         FhirContext fhirContext = FhirContext.forDstu3();
 
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParamRegistryDstu3(),  fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu3()),  fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         //BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir3.healthintersections.com.au/open/");

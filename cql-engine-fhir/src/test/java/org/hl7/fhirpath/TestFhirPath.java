@@ -40,6 +40,7 @@ import org.opencds.cqf.cql.model.HL7FhirModelResolver;
 import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
 import org.testng.annotations.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,8 +50,8 @@ public class TestFhirPath {
 
     private FhirContext fhirContext = FhirContext.forDstu3();
     private Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
-    private RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(
-        new SearchParamRegistryDstu3(),
+    private RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(
+        new SearchParamRegistryDstu3()),
             fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
     private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 
@@ -314,7 +315,7 @@ public class TestFhirPath {
 
         Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
         FhirContext fhirContext = FhirContext.forDstu3();
-        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParamRegistryDstu3(),
+        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu3()),
                 fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
         CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         // BaseFhirDataProvider provider = new
@@ -349,7 +350,7 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
         Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(
-                new SearchParamRegistryDstu2(), FhirContext.forDstu2().newRestfulGenericClient(""));
+            new SearchParameterResolver(new SearchParamRegistryDstu2()), FhirContext.forDstu2().newRestfulGenericClient(""));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
@@ -379,7 +380,7 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
 
 		HL7FhirModelResolver modelResolver = new HL7FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParamRegistryDstu3(), FhirContext.forDstu2Hl7Org().newRestfulGenericClient(""));
+		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu3()), FhirContext.forDstu2Hl7Org().newRestfulGenericClient(""));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderHL7();
         context.registerDataProvider("http://hl7.org/fhir", provider);
