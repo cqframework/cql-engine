@@ -25,6 +25,10 @@ public class SearchParameterResolver {
     }
 
     public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path, RestSearchParameterTypeEnum paramType) {
+        if (dataType == null || path == null) {
+            return null;
+        }
+
         Map<String, RuntimeSearchParam> params = this.searchParamRegistry.getActiveSearchParams(dataType);
 
         String combinedPath = String.join(".", dataType, path);
@@ -42,10 +46,6 @@ public class SearchParameterResolver {
     }
 
     public Pair<String, IQueryParameterType> createSearchParameter(String dataType, String path, String value) {
-        if (path == null || dataType == null) {
-            return null;
-        }
-
         RuntimeSearchParam searchParam = this.getSearchParameterDefinition(dataType, path);
         if (searchParam == null) {
             return null;

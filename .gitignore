@@ -11,3 +11,7 @@ target
 .flattened-pom.xml
 org.eclipse.m2e.core.prefs
 
+core.*
+heapdump.*
+javacore.*
+Snap.*

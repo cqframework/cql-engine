@@ -9,6 +9,7 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
 import org.opencds.cqf.cql.model.*;
 import org.opencds.cqf.cql.retrieve.*;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
