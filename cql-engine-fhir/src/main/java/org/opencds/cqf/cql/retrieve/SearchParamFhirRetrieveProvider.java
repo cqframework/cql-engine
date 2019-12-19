@@ -31,7 +31,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         this.searchParameterResolver = searchParameterResolver;
     }
 
-    private static final int MAX_CODES_PER_QUERY = 1024;
+    private static final int MAX_CODES_PER_QUERY = 64;
 
     protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 

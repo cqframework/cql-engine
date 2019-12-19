@@ -9,7 +9,6 @@ import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
 
 
 public class TestSearchParameterResolver {
-
     @Test
     public void testReturnsNullForNullPath() {
         SearchParameterResolver resolver = new SearchParameterResolver(new SearchParamRegistryDstu3());

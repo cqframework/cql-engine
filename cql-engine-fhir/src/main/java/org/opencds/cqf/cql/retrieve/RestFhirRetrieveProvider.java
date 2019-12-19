@@ -33,6 +33,13 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 			bundles.add(bundle);
 		}
 
-		return new FhirBundlesCursor(this.fhirClient, bundles, dataType);
+		// TODO: evaluate this lazily in case the engine only needs the first element
+		List<Object> objects = new ArrayList<>();
+		for (IBaseBundle b : bundles) {
+			FhirBundleCursor cursor = new FhirBundleCursor(fhirClient, b, dataType);
+			cursor.forEach(objects::add);
+		}
+
+		return objects;
 	}
 }
