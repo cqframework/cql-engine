@@ -383,8 +383,8 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         for  (BaseRuntimeElementDefinition<?> element : elements) {
             Class<?>[] innerClasses = element.getImplementingClass().getDeclaredClasses();
             for (Class<?> clazz : innerClasses) {
-
-                if (clazz.getSimpleName().toLowerCase().equals(lowerName) || clazz.getSimpleName().toLowerCase().equals(codelessName)) {
+                String clazzLowerName = clazz.getSimpleName().toLowerCase();
+                if (clazzLowerName.equals(lowerName) || clazzLowerName.equals(codelessName)) {
                     return clazz;
                 }
             }
