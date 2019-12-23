@@ -21,24 +21,35 @@ import java.net.URL;
 
 public class CqlLibraryReader {
 
+    private static JAXBContext context;
+    private static Unmarshaller unmarshaller;
+
     // Performance enhancement additions ~ start
     public static Unmarshaller getUnmarshaller() throws JAXBException {
         // This is supposed to work based on this link:
         // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
         // Override the unmarshal to use the XXXEvaluator classes
         // This doesn't work exactly how it's described in the link above, but this is functional
-        JAXBContext context = JAXBContext.newInstance(ObjectFactory.class);
-        Unmarshaller u = context.createUnmarshaller();
-        try {
-            // https://bugs.eclipse.org/bugs/show_bug.cgi?id=406032
-            //https://javaee.github.io/jaxb-v2/doc/user-guide/ch03.html#compiling-xml-schema-adding-behaviors
-            // for jre environment
-            u.setProperty("com.sun.xml.bind.ObjectFactory", new ObjectFactoryEx());
-        } catch (javax.xml.bind.PropertyException e) {
-            // for jdk environment
-            u.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+        if (context == null)
+        {
+            context = JAXBContext.newInstance(ObjectFactory.class);
         }
-        return u;
+
+        if (unmarshaller == null) {
+            unmarshaller = context.createUnmarshaller();
+            try {
+                // https://bugs.eclipse.org/bugs/show_bug.cgi?id=406032
+                //https://javaee.github.io/jaxb-v2/doc/user-guide/ch03.html#compiling-xml-schema-adding-behaviors
+                // for jre environment
+                unmarshaller.setProperty("com.sun.xml.bind.ObjectFactory", new ObjectFactoryEx());
+            } catch (javax.xml.bind.PropertyException e) {
+                // for jdk environment
+                unmarshaller.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
+            }
+
+        }
+
+        return unmarshaller;
     }
 
     public static Library read(Unmarshaller u, File file) throws IOException, JAXBException {
