@@ -93,7 +93,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
     }
 
     @Override
-    protected Class<?> typeToClass(String typeName) {
+    public Class<?> resolveType(String typeName) {
 
         // TODO: Might be able to patch some of these by registering custom types in HAPI.
         switch(typeName) {
@@ -107,6 +107,6 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             case "ContractResourcePublicationStatusCodes": typeName = "Contract$ContractPublicationStatus"; break;
         }
 
-        return super.typeToClass(typeName);
+        return super.resolveType(typeName);
     }
 }

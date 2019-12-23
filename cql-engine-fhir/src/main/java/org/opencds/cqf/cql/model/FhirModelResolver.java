@@ -153,7 +153,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     @Override
     public Object createInstance(String typeName) {
-        return createInstance(typeToClass(typeName));
+        return createInstance(resolveType(typeName));
     }
 
     @Override
@@ -185,7 +185,42 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     @Override
     public Class<?> resolveType(String typeName) {
-        return typeToClass(typeName);
+            // dataTypes
+            BaseRuntimeElementDefinition<?> definition = this.fhirContext.getElementDefinition(typeName);
+            if (definition != null) {
+                return  definition.getImplementingClass();
+            }
+    
+            try {
+                // Resources
+                return this.fhirContext.getResourceDefinition(typeName).getImplementingClass();
+            }
+            catch (Exception e) {}
+            try {
+                // Special case for enumerations. They are often in the "Enumerations" class.
+                return Class.forName(String.format("%s.Enumerations$%s", packageName, typeName));
+            }
+            catch (ClassNotFoundException e) {}
+            try {
+                // Other Types in package.
+                return Class.forName(String.format("%s.%s", packageName, typeName));
+            }
+            catch (ClassNotFoundException e) {}
+    
+            // Scan all resources.
+            // Really, HAPI ought to register inner classes, right?
+            Class<?> clazz = deepSearch(typeName);
+            if (clazz != null) {
+                return clazz;
+            }
+            
+            try {
+                // Just give me SOMETHING.
+                return Class.forName(typeName);
+            }
+            catch (ClassNotFoundException e) {
+                throw new UnknownType(String.format("Could not resolve type %s. Primary package for this resolver is %s", typeName, packageName));
+            }
     }
 
     @Override
@@ -332,45 +367,6 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         throw new UnknownPath(String.format("Unable to resolve path %s for %s", path, definition.getName()));
-    }
-
-    protected Class<?> typeToClass(String typeName) {
-        // dataTypes
-        BaseRuntimeElementDefinition<?> definition = this.fhirContext.getElementDefinition(typeName);
-        if (definition != null) {
-            return  definition.getImplementingClass();
-        }
-
-        try {
-            // Resources
-            return this.fhirContext.getResourceDefinition(typeName).getImplementingClass();
-        }
-        catch (Exception e) {}
-        try {
-            // Special case for enumerations. They are often in the "Enumerations" class.
-            return Class.forName(String.format("%s.Enumerations$%s", packageName, typeName));
-        }
-        catch (ClassNotFoundException e) {}
-        try {
-            // Other Types in package.
-            return Class.forName(String.format("%s.%s", packageName, typeName));
-        }
-        catch (ClassNotFoundException e) {}
-
-        // Scan all resources.
-        // Really, HAPI ought to register inner classes, right?
-        Class<?> clazz = deepSearch(typeName);
-        if (clazz != null) {
-            return clazz;
-        }
-        
-        try {
-            // Just give me SOMETHING.
-            return Class.forName(typeName);
-        }
-        catch (ClassNotFoundException e) {
-            throw new UnknownType(String.format("Could not resolve type %s. Primary package for this resolver is %s", typeName, packageName));
-        }
     }
 
     private Class<?> deepSearch(String typeName) {

@@ -46,7 +46,6 @@ public class CqlLibraryReader {
                 // for jdk environment
                 unmarshaller.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
             }
-
         }
 
         return unmarshaller;

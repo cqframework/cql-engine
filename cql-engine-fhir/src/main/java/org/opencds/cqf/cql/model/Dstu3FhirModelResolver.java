@@ -83,7 +83,7 @@ public class Dstu3FhirModelResolver extends
     }
 
     @Override
-    protected Class<?> typeToClass(String typeName) {
+    public Class<?> resolveType(String typeName) {
 
         // TODO: Might be able to patch some of these by registering custom types in HAPI.
         switch(typeName) {
@@ -96,6 +96,6 @@ public class Dstu3FhirModelResolver extends
             case "SampledDataDataType": typeName = "StringType"; break;
         }
 
-        return super.typeToClass(typeName);
+        return super.resolveType(typeName);
     }
 }
