@@ -175,6 +175,10 @@ public class SystemDataProvider implements DataProvider {
             return false;
         }
 
+        if (left instanceof CqlType) {
+            return ((CqlType)left).equivalent(right);
+        }
+
         return left.equals(right);
     }
 

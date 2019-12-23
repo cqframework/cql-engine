@@ -47,31 +47,10 @@ public class Context {
     private Stack<Stack<Variable> > windows = new Stack<>();
     private Map<String, Library> libraries = new HashMap<>();
     private Stack<Library> currentLibrary = new Stack<>();
-//    private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
 
-    // TODO: This doesn't appear to be used. Can we remove it?
-    private Library library;
-
-    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime = 
+    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime =
             new org.opencds.cqf.cql.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
-
-    // public Context(Collection<Library> libraries) {
-    //     Library defaultLibrary = null;
-    //     for (Library library : libraries) {
-    //         if (defaultLibrary == null) {
-    //             defaultLibrary = library;
-    //         }
-    //         this.libraries.put(library.getIdentifier().getId(), library);
-    //     }
-
-    //     init(defaultLibrary);
-    // }
-
-    // public Context(Collection<Library> libraries, org.opencds.cqf.cql.runtime.DateTime evaluationDateTime) {
-    //     this(libraries);
-    //     this.evaluationDateTime = evaluationDateTime;
-    // }
 
     public Context(Library library) {
         init(library);
@@ -83,7 +62,6 @@ public class Context {
     }
 
     private void init(Library library) {
-        this.library = library;
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", new SystemDataProvider());
         libraryLoader = new DefaultLibraryLoader();
@@ -116,18 +94,6 @@ public class Context {
     public Object getExpressionResultFromCache(String name) {
         return this.expressions.get(name);
     }
-
-//    public void addLetExpression(String name, Expression result) {
-//        if (letExpressions.getElements().containsKey(name)) {
-//            return;
-//        }
-//
-//        letExpressions.getElements().put(name, result);
-//    }
-
-//    public void clearLetExpressions() {
-//        letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
-//    }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
         if (libraryLoader == null) {
@@ -193,17 +159,6 @@ public class Context {
 
         throw new CqlException(String.format("Could not resolve library reference '%s'.", libraryName));
     }
-
-//    public Expression resolveLetExpressionRef(String name) {
-//        for (String key : letExpressions.getElements().keySet()) {
-//            if (key.equals(name)) {
-//                return (Expression) letExpressions.getElements().get(key);
-//            }
-//        }
-//
-//        throw new CqlException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
-//                name, getCurrentLibrary().getIdentifier().getId()));
-//    }
 
     public ExpressionDef resolveExpressionRef(String name) {
 
@@ -273,7 +228,6 @@ public class Context {
 
     public Class resolveType(Object value) {
         if (value == null) {
-//            return Object.class;
             return null;
         }
 
@@ -289,6 +243,7 @@ public class Context {
         }
 
         // Primitives should just use the type
+        // BTR: Well, we should probably be explicit about all and only the types we expect
         if (packageName.startsWith("java")) {
             return value.getClass();
         }
