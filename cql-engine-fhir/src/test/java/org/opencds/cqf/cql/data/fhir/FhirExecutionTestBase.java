@@ -55,19 +55,19 @@ public abstract class FhirExecutionTestBase {
     public void setup() {
         dstu2ModelResolver = new Dstu2FhirModelResolver();
         FhirContext dstu2Context = FhirContext.forDstu2();
-        dstu2RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu2()),
+        dstu2RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu2Context),
                 dstu2Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
         dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
         
         dstu3ModelResolver = new Dstu3FhirModelResolver();
         FhirContext dstu3Context = FhirContext.forDstu3();
-        dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu3()), 
+        dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), 
         dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
         
         hl7ModelResolver = new HL7FhirModelResolver();
         FhirContext hl7Context = FhirContext.forDstu2Hl7Org();
-        hl7RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(new SearchParamRegistryDstu2()), 
+        hl7RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(hl7Context), 
         hl7Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
         hl7Provider = new CompositeDataProvider(hl7ModelResolver, hl7RetrieveProvider);
     }

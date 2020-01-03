@@ -1,10 +1,13 @@
 package org.opencds.cqf.cql.searchparam;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeSearchParam;
 import ca.uhn.fhir.jpa.searchparam.registry.ISearchParamRegistry;
 import ca.uhn.fhir.model.api.IQueryParameterType;
@@ -13,10 +16,10 @@ import ca.uhn.fhir.rest.param.*;
 
 public class SearchParameterResolver {
 
-    private ISearchParamRegistry searchParamRegistry;
+    private FhirContext context;
 
-    public SearchParameterResolver(ISearchParamRegistry searchParamRegistry) {
-        this.searchParamRegistry = searchParamRegistry;
+    public SearchParameterResolver(FhirContext context) {
+        this.context = context;
     }
 
     public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path) {
@@ -28,29 +31,31 @@ public class SearchParameterResolver {
             return null;
         }
 
-        Map<String, RuntimeSearchParam> params = this.searchParamRegistry.getActiveSearchParams(dataType);
-
-        // There are certain cases where the path changes depending on the requested data type
-        // MedicationRequest.medication.as(CodeableConcept)
-        // MedicationRequest.medication.as(Reference)
-        // So this handles the case that it's been written as such
-        String castPath = getCastPath(paramType);
-
-        String combinedPath = String.join(".", dataType, path);
-
-        if (castPath != null) {
-            castPath = String.join(".", combinedPath, castPath);
+        // Special case for system params. They need to be resolved by name.
+        // TODO: All the others like "_language"
+        String name = null;
+        if (path.equals("id")) {
+            name = "_id";
+            path = "";
         }
-        
-        // TODO: There's an option to get paths as parts, and comparing path segment by segment
-        // could be more robust. Something to think about.
-        for (Entry<String, RuntimeSearchParam> entry : params.entrySet()) {
-            RuntimeSearchParam param = entry.getValue();
-            if (param.getPath().equals(combinedPath) || (castPath != null && param.getPath().equals(castPath))) {
-                // Regardless of whether the path matches, if we've requested a specific type it must match
-                if (paramType == null || param.getParamType().equals(paramType)) {
-                    return param;
-                }
+
+        List<RuntimeSearchParam> params = this.context.getResourceDefinition(dataType).getSearchParams();
+
+        for (RuntimeSearchParam param : params) {
+            // If name matches, it's the one we want.
+            if (name != null && param.getName().equals(name))
+            {
+                return param;
+            }
+
+            // Filter out parameters that don't match our requested type.
+            if (paramType != null && !param.getParamType().equals(paramType)) {
+                continue;
+            } 
+
+            String normalizedPath = normalizePath(param.getPath());
+            if (path.equals(normalizedPath) ) {
+                return param;
             }
         }
 
@@ -58,12 +63,6 @@ public class SearchParameterResolver {
     }
 
     public Pair<String, IQueryParameterType> createSearchParameter(String dataType, String path, String value) {
-        // Special case for Id
-        // TODO: all the other "system" parameters (_language, etc.)
-        if (path.equals("id")) {
-            return Pair.of("_id", new TokenParam(value));
-        }
-
 
         RuntimeSearchParam searchParam = this.getSearchParameterDefinition(dataType, path);
         if (searchParam == null) {
@@ -97,20 +96,47 @@ public class SearchParameterResolver {
         return null;
     }
 
-    private String getCastPath(RestSearchParameterTypeEnum paramType)
-    {
-        if (paramType == null) {
-            return null;
+    // This is actually a lot of processing. We should cache search parameter resolutions.
+    private String normalizePath(String path) {
+        // TODO: What we really need is FhirPath parsing to just get the path
+        //MedicationAdministration.medication.as(CodeableConcept)
+        //MedicationAdministration.medication.as(Reference)
+        //(MedicationAdministration.medication as CodeableConcept)
+        //(MedicationAdministration.medication as Reference)
+
+        // Trim off outer parens
+        if (path.equals("(")) {
+            path = path.substring(1, path.length() - 1);
         }
 
-        switch(paramType) {
-            case TOKEN:
-                return "as(CodeableConcept)";
-            case REFERENCE:
-                return "as(Reference)";
+        // Trim off DataType
+        path = path.substring(path.indexOf(".") + 1, path.length());
 
-            default:
-                return null;
+
+        // Split into components
+        String[] pathSplit = path.split("\\.");
+        List<String> newPathParts = new ArrayList<>();
+
+        for (String p : pathSplit) {
+            // Skip the "as(X)" part.
+            if (p.startsWith("as(")) {
+                continue;
+            }
+
+            // Skip the "[x]" part.
+            if (p.startsWith("[x]")) {
+                continue;
+            }
+
+            // Filter out spaces and everything after "medication as Reference"
+            String[] ps = p.split(" ");
+            if (ps != null && ps.length > 0){
+                newPathParts.add(ps[0]);
+            }
         }
+
+        path = String.join(".", newPathParts);
+        return path;
+
     }
 }
