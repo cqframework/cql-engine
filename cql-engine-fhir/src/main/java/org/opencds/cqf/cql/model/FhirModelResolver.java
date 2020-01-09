@@ -327,6 +327,10 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             child = resolveChoiceProperty(definition, path);
         }
 
+        if (child == null) {
+            return null;
+        }
+
         List<IBase> values = child.getAccessor().getValues(base);
 
         if (values == null || values.isEmpty()) {
