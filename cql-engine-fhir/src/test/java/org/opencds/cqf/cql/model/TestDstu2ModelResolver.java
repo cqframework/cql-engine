@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.model;
 
 import org.testng.annotations.Test;
 
+import ca.uhn.fhir.model.dstu2.resource.Patient;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
@@ -164,5 +166,15 @@ public class TestDstu2ModelResolver {
         path = (String)resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
         assertTrue(path.equals("patient"));
+    }
+
+    @Test 
+    public void resolveMissingPropertyReturnsNull() {
+        ModelResolver resolver = new Dstu2FhirModelResolver();
+        
+        Patient p = new Patient();
+
+        Object result =resolver.resolvePath(p, "notapath");
+        assertNull(result);
     }
 }

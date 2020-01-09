@@ -15,6 +15,7 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.dstu3.model.Enumeration;
+import org.hl7.fhir.dstu3.model.Patient;
 import org.hl7.fhir.dstu3.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
 
@@ -225,5 +226,15 @@ public class TestDstu3ModelResolver {
         path = (String)resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
+    }
+
+    @Test 
+    public void resolveMissingPropertyReturnsNull() {
+        ModelResolver resolver = new Dstu3FhirModelResolver();
+        
+        Patient p = new Patient();
+
+        Object result =resolver.resolvePath(p, "notapath");
+        assertNull(result);
     }
 }

@@ -16,6 +16,7 @@ import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
 
@@ -243,5 +244,15 @@ public class TestR4ModelResolver {
         path = (String)resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
+    }
+
+    @Test 
+    public void resolveMissingPropertyReturnsNull() {
+        ModelResolver resolver = new R4FhirModelResolver();
+        
+        Patient p = new Patient();
+
+        Object result =resolver.resolvePath(p, "notapath");
+        assertNull(result);
     }
 }
