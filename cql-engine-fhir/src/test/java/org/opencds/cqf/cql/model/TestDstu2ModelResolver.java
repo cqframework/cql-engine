@@ -174,7 +174,7 @@ public class TestDstu2ModelResolver {
         
         Patient p = new Patient();
 
-        Object result =resolver.resolvePath(p, "notapath");
+        Object result = resolver.resolvePath(p, "notapath");
         assertNull(result);
     }
 }
