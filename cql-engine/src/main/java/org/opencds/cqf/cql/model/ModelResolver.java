@@ -6,6 +6,7 @@ public interface ModelResolver {
 
     void setPackageName(String packageName);
 
+    // Expected to return null whenever a path doesn't exist on the target.
     Object resolvePath(Object target, String path);
 
     Object getContextPath(String contextType, String targetType);

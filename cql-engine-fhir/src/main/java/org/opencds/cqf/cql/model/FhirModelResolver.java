@@ -264,6 +264,10 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             child = resolveChoiceProperty(definition, path);
         }
 
+        if (child == null) {
+            throw new DataProviderException(String.format("Unable to resolve path %s.", path));
+        }
+
         try {
             if (value instanceof Iterable) {
                 for (Object val : (Iterable<?>) value) {
@@ -323,6 +327,10 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             child = resolveChoiceProperty(definition, path);
         }
 
+        if (child == null) {
+            return null;
+        }
+
         List<IBase> values = child.getAccessor().getValues(base);
 
         if (values == null || values.isEmpty()) {
@@ -366,7 +374,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             }
         }
 
-        throw new UnknownPath(String.format("Unable to resolve path %s for %s", path, definition.getName()));
+        return null;
     }
 
     private Class<?> deepSearch(String typeName) {

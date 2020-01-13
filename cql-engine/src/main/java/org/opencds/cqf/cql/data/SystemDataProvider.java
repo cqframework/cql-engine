@@ -47,7 +47,7 @@ public class SystemDataProvider implements DataProvider {
         try {
             accessor = clazz.getMethod(accessorMethodName);
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            return null;
         }
         return accessor;
     }
@@ -85,6 +85,10 @@ public class SystemDataProvider implements DataProvider {
 
         Class<? extends Object> clazz = target.getClass();
         Method accessor = getReadAccessor(clazz, path);
+        if (accessor == null) {
+            return null;
+        }
+        
         try {
             return accessor.invoke(target);
         } catch (InvocationTargetException e) {
