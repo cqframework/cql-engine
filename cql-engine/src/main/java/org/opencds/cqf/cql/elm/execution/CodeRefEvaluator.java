@@ -6,6 +6,12 @@ public class CodeRefEvaluator extends org.cqframework.cql.elm.execution.CodeRef 
 
     @Override
     protected Object internalEvaluate(Context context) {
-        return context.resolveCodeRef(this.getName()).evaluate(context);
+        boolean enteredLibrary = context.enterLibrary(this.getLibraryName());
+        try {
+            return context.resolveCodeRef(this.getName()).evaluate(context);
+        }
+        finally {
+            context.exitLibrary(enteredLibrary);
+        }
     }
 }

@@ -29,13 +29,30 @@ public abstract class CqlExecutionTestBase<T> {
     Library library = null;
     private File xmlFile = null;
 
+    private static ModelManager modelManager;
+    protected static ModelManager getModelManager() {
+        if (modelManager == null) {
+            modelManager = new ModelManager();
+        }
+
+        return modelManager;
+    }
+
+    private static LibraryManager libraryManager;
+    protected static LibraryManager getLibraryManager() {
+        if (libraryManager == null) {
+            libraryManager =  new LibraryManager(getModelManager());
+            libraryManager.getLibrarySourceLoader().registerProvider(new TestLibrarySourceProvider());
+        }
+
+        return libraryManager;
+    }
+
     @BeforeMethod
     public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
         if (library == null) {
-            ModelManager modelManager = new ModelManager();
-            LibraryManager libraryManager = new LibraryManager(modelManager);
             UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
             try {
                 File cqlFile = new File(URLDecoder.decode(this.getClass().getResource(fileName + ".cql").getFile(), "UTF-8"));
@@ -44,7 +61,7 @@ public abstract class CqlExecutionTestBase<T> {
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
                 options.add(CqlTranslator.Options.EnableAnnotations);
                 options.add(CqlTranslator.Options.EnableLocators);
-                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
+                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, getModelManager(), getLibraryManager(), ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");
