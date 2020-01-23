@@ -8,8 +8,6 @@ import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
-import static org.junit.Assume.assumeTrue;
-
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumSet;
