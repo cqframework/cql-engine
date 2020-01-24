@@ -1,7 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
+import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.CqlTranslatorException.ErrorSeverity;
+import org.cqframework.cql.cql2elm.LibraryBuilder.SignatureLevel;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.elm.r1.ObjectFactory;
@@ -63,7 +66,7 @@ public class TestLibraryLoader implements LibraryLoader {
                 .withSystem(libraryIdentifier.getSystem())
                 .withVersion(libraryIdentifier.getVersion());
 
-        org.cqframework.cql.cql2elm.model.TranslatedLibrary translatedLibrary = libraryManager.resolveLibrary(identifier, errors);
+        org.cqframework.cql.cql2elm.model.TranslatedLibrary translatedLibrary = libraryManager.resolveLibrary(identifier, ErrorSeverity.Error, SignatureLevel.All, new CqlTranslator.Options[0], errors);
 
         String xml;
         try {
