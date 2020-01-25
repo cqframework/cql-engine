@@ -18,6 +18,7 @@ import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
+//import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
@@ -131,7 +132,7 @@ public class TestFhirPath {
         return libraryLoader;
     }
 
-    private Library translate(String cql) throws UcumException {
+    private org.cqframework.cql.elm.execution.Library translate(String cql) throws UcumException {
         ArrayList<CqlTranslator.Options> options = new ArrayList<>();
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
         UcumService ucumService = new UcumEssenceService(
@@ -195,7 +196,7 @@ public class TestFhirPath {
                 "library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
 
-        Library library = null;
+        org.cqframework.cql.elm.execution.Library library = null;
         // If the test expression is invalid, expect an error during translation and
         // fail if we don't get one
         boolean isInvalid = test.getExpression().isInvalid() != null && test.getExpression().isInvalid();
@@ -306,7 +307,7 @@ public class TestFhirPath {
     @Test
     public void testFhirHelpersStu3() throws UcumException {
         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
-        Library library = translate(cql);
+        org.cqframework.cql.elm.execution.Library library = translate(cql);
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
@@ -342,7 +343,7 @@ public class TestFhirPath {
     // @Test
     public void testFhirHelpersDstu2() throws UcumException {
         String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
-        Library library = translate(cql);
+        org.cqframework.cql.elm.execution.Library library = translate(cql);
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
         Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
@@ -372,7 +373,7 @@ public class TestFhirPath {
     //@Test
     public void testFhirHelpersHL7() throws UcumException {
         String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
-        Library library = translate(cql);
+        org.cqframework.cql.elm.execution.Library library = translate(cql);
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 

@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import org.hl7.fhir.instance.model.Encounter;
+
+//import org.hl7.fhir.instance.model.Encounter;
+import org.hl7.fhir.dstu2016may.model.Encounter;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.retrieve.FhirBundleCursor;
 import org.testng.Assert;
