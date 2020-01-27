@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.model;
 import org.hl7.fhir.dstu2.model.EnumFactory;
 import org.hl7.fhir.dstu2.model.Enumeration;
 import org.hl7.fhir.dstu2.model.Enumerations;
-//import org.hl7.fhir.dstu2.model.ResourceType;
 import org.testng.annotations.Test;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
@@ -18,9 +17,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.hl7.fhir.instance.model.EnumFactory;
-//import org.hl7.fhir.instance.model.Enumeration;
-//import org.hl7.fhir.instance.model.Enumerations.*;
+
 import org.opencds.cqf.cql.exception.UnknownType;
 
 public class TestDstu2ModelResolver {

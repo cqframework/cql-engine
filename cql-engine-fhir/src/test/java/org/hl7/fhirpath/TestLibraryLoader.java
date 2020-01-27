@@ -8,8 +8,6 @@ import org.cqframework.cql.cql2elm.LibraryBuilder.SignatureLevel;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.elm.r1.ObjectFactory;
-//import org.hl7.elm.r1.VersionedIdentifier;
-//import org.hl7.fhir.dstu3.model.Library;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 

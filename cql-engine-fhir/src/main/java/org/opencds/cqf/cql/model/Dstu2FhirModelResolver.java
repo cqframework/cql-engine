@@ -8,7 +8,6 @@ import java.util.Calendar;
 
 import org.hl7.fhir.dstu2.model.*;
 import org.hl7.fhir.instance.model.AnnotatedUuidType;
-//import org.hl7.fhir.instance.model.*;
 
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
