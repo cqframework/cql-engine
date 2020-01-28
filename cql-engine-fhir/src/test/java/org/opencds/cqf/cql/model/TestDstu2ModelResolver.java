@@ -28,7 +28,7 @@ public class TestDstu2ModelResolver {
             add(AdministrativeGender.class);
             add(AgeUnits.class);
             add(BindingStrength.class);
-            add(Enumerations.ConceptMapEquivalence.class);
+            add(ConceptMapEquivalence.class);
             add(DataAbsentReason.class);
             add(DataType.class);
             add(DocumentReferenceStatus.class);
@@ -71,7 +71,7 @@ public class TestDstu2ModelResolver {
             switch (type) {
                 case DOMAINRESOURCE:
                 case RESOURCE:
-                //case :
+                case NULL:
                     continue;
                 default:
             }
