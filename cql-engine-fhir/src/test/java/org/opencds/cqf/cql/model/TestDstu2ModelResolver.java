@@ -12,7 +12,7 @@ import static ca.uhn.fhir.model.dstu2.valueset.StructureDefinitionKindEnum.RESOU
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
-
+import org.hl7.fhir.dstu2.model.Enumerations.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,20 +25,20 @@ public class TestDstu2ModelResolver {
     // Couldn't find a way to automatically get the full list of enums.
     private static List<Class<?>> enums = new ArrayList<Class<?>>() {
         {
-            add(Enumerations.AdministrativeGender.class);
-            add(Enumerations.AgeUnits.class);
-            add(Enumerations.BindingStrength.class);
+            add(AdministrativeGender.class);
+            add(AgeUnits.class);
+            add(BindingStrength.class);
             add(Enumerations.ConceptMapEquivalence.class);
-            add(Enumerations.DataAbsentReason.class);
-            add(Enumerations.DataType.class);
-            add(Enumerations.DocumentReferenceStatus.class);
-            add(Enumerations.FHIRDefinedType.class);
-            add(Enumerations.MessageEvent.class);
-            add(Enumerations.NoteType.class);
-            add(Enumerations.RemittanceOutcome.class);
-            add(Enumerations.ResourceType.class);
-            add(Enumerations.SearchParamType.class);
-            add(Enumerations.SpecialValues.class);
+            add(DataAbsentReason.class);
+            add(DataType.class);
+            add(DocumentReferenceStatus.class);
+            add(FHIRDefinedType.class);
+            add(MessageEvent.class);
+            add(NoteType.class);
+            add(RemittanceOutcome.class);
+            add(ResourceType.class);
+            add(SearchParamType.class);
+            add(SpecialValues.class);
         }
     };
 
@@ -53,7 +53,7 @@ public class TestDstu2ModelResolver {
     public void resolveTypeTests() {
         ModelResolver resolver = new Dstu2FhirModelResolver();
 
-        for (Enumerations.DataType type : Enumerations.DataType.values()) {
+        for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
                 case BACKBONEELEMENT:
@@ -66,7 +66,7 @@ public class TestDstu2ModelResolver {
             resolver.resolveType(type.toCode());
         }
 
-        for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
+        for (ResourceType type : ResourceType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
                 case DOMAINRESOURCE:
@@ -76,7 +76,7 @@ public class TestDstu2ModelResolver {
                 default:
             }
 
-            resolver.resolveType(type);
+            resolver.resolveType(type.toCode());
         }
 
         for (Class<?> enumType : enums) {
@@ -88,7 +88,7 @@ public class TestDstu2ModelResolver {
     public void createInstanceTests() {
         ModelResolver resolver = new Dstu2FhirModelResolver();
 
-        for (Enumerations.DataType type : Enumerations.DataType.values()) {
+        for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
                 case BACKBONEELEMENT:
@@ -103,7 +103,7 @@ public class TestDstu2ModelResolver {
             assertNotNull(instance);
         }
 
-        for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
+        for (ResourceType type : ResourceType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
                 case DOMAINRESOURCE:
