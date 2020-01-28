@@ -73,6 +73,11 @@ define Concept3:
   Concept {
     codes: { Code3, Code4 }
   }
+define Concept4:
+  Concept {
+    codes: { Code1, Code2, Code3, Code4 }
+  }
+
 define C1:
   Code {
     code: 'ABC',
@@ -105,5 +110,8 @@ define CodeEquivalentTrue: Code1 ~ Code1
 define CodeEquivalentFalse: Code1 ~ Code2
 define ConceptEquivalentTrue: Concept1 ~ Concept1
 define ConceptEquivalentFalse: Concept1 ~ Concept2
+define ConceptEquivalentTrueDisplayMismatch: Concept2 ~ Concept3
+define ConceptEquivalentTrueIntersection1And4: Concept1 ~ Concept4
+define ConceptEquivalentTrueIntersection2And4: Concept2 ~ Concept4
 define CodeEquivalentNull: Code1 ~ null
 define ConceptEquivalentNull: Concept1 ~ null
