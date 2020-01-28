@@ -44,7 +44,6 @@ public abstract class FhirExecutionTestBase {
     protected Dstu3FhirModelResolver dstu3ModelResolver;
     protected RestFhirRetrieveProvider dstu3RetrieveProvider;
     protected CompositeDataProvider dstu3Provider;
-    protected HL7FhirModelResolver hl7ModelResolver;
     protected RestFhirRetrieveProvider hl7RetrieveProvider;
     protected CompositeDataProvider hl7Provider;
 
@@ -65,11 +64,10 @@ public abstract class FhirExecutionTestBase {
         dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
         
-        hl7ModelResolver = new HL7FhirModelResolver();
         FhirContext hl7Context = FhirContext.forDstu2Hl7Org();
         hl7RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(hl7Context), 
         hl7Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
-        hl7Provider = new CompositeDataProvider(hl7ModelResolver, hl7RetrieveProvider);
+        hl7Provider = new CompositeDataProvider(dstu2ModelResolver, hl7RetrieveProvider);
     }
 
     @BeforeMethod

@@ -34,7 +34,6 @@ import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.model.Dstu2FhirModelResolver;
 import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.model.HL7FhirModelResolver;
 import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -376,7 +375,7 @@ public class TestFhirPath {
         Context context = new Context(library);
         context.registerLibraryLoader(getLibraryLoader());
 
-		HL7FhirModelResolver modelResolver = new HL7FhirModelResolver();
+		Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
 		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), FhirContext.forDstu2Hl7Org().newRestfulGenericClient(""));
 		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderHL7();
