@@ -152,6 +152,15 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ConceptEquivalentNull").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeToConceptEquivalentFalse").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("CodeToConceptEquivalentTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("ConceptToConceptMismatchedDisplayTrue").getExpression().evaluate(context);
+        assertThat(result, is(true));
     }
 
     /**
