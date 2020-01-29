@@ -63,11 +63,7 @@ public abstract class FhirExecutionTestBase {
         dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), 
         dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
-        
-        FhirContext hl7Context = FhirContext.forDstu2Hl7Org();
-        hl7RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(hl7Context), 
-        hl7Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
-        hl7Provider = new CompositeDataProvider(dstu2ModelResolver, hl7RetrieveProvider);
+
     }
 
     @BeforeMethod

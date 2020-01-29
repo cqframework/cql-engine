@@ -94,6 +94,6 @@ public class TestLibraryLoader implements LibraryLoader {
 
     @Override
     public Library load(VersionedIdentifier libraryIdentifier) {
-        return loadLibrary(libraryIdentifier);
+        return resolveLibrary(libraryIdentifier);
     }
 }

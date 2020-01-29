@@ -18,6 +18,7 @@ import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
@@ -302,6 +303,7 @@ public class TestFhirPath {
 
     // TODO: Resolve Error: Could not load model information for model FHIR, version
     // 3.0.0 because version 1.0.2 is already loaded
+
     @Test
     public void testFhirHelpersStu3() throws UcumException {
         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
@@ -326,7 +328,7 @@ public class TestFhirPath {
         // new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 19, 8, 0}));
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
         // TODO: ModelInfo bug. Not aware of SimpleQuantity
-        //result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
         result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
@@ -368,32 +370,6 @@ public class TestFhirPath {
         result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
     }
 
-    //@Test
-    public void testFhirHelpersHL7() throws UcumException {
-        String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
-        Library library = translate(cql);
-        Context context = new Context(library);
-        context.registerLibraryLoader(getLibraryLoader());
-
-		Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), FhirContext.forDstu2Hl7Org().newRestfulGenericClient(""));
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-        //BaseFhirDataProvider provider = new FhirDataProviderHL7();
-        context.registerDataProvider("http://hl7.org/fhir", provider);
-
-        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToDecimal").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
-    }
 
     @Test
     public void testDateType() {

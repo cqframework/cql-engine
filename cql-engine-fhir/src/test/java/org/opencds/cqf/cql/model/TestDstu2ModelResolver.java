@@ -1,18 +1,17 @@
 package org.opencds.cqf.cql.model;
 
+import org.hl7.fhir.dstu2.model.Enumerations.*;
 import org.hl7.fhir.dstu2.model.EnumFactory;
 import org.hl7.fhir.dstu2.model.Enumeration;
-import org.hl7.fhir.dstu2.model.Enumerations;
-import org.testng.annotations.Test;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
-
 import static ca.uhn.fhir.model.dstu2.valueset.ResourceTypeEnum.DOMAINRESOURCE;
 import static ca.uhn.fhir.model.dstu2.valueset.StructureDefinitionKindEnum.RESOURCE;
+
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import org.testng.annotations.Test;
 import static org.testng.AssertJUnit.assertTrue;
-import org.hl7.fhir.dstu2.model.Enumerations.*;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;

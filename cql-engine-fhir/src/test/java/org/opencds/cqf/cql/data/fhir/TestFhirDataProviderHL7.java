@@ -20,21 +20,6 @@ public class TestFhirDataProviderHL7 extends FhirExecutionTestBase {
     }
 
 //    @Test
-    public void testHL7ProviderRetrieve() {
-		String contextPath = dstu2ModelResolver.getContextPath("Patient", "Encounter").toString();
-        FhirBundleCursor results = (FhirBundleCursor) hl7Provider.retrieve("Patient", contextPath, "2822", "Encounter", null, "code", null, null, null, null, null, null);
-
-        for (Object result : results) {
-            Encounter e = (Encounter) result;
-            if (!e.getPatient().getReference().contains("2822")) {
-                Assert.fail("Invalid patient id in Resource");
-            }
-        }
-
-        assertTrue(true);
-    }
-
-//    @Test
     public void testHL7ProviderString() {
         Object result = context.resolveExpressionRef("testString").getExpression().evaluate(context);
         assertTrue(result != null);
