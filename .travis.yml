@@ -5,8 +5,10 @@ jdk: openjdk11
 
 cache:
   directories:
-  - "$HOME/.cache"
+  - "$HOME/.m2"
 
+install:
+   - mvn install -U -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
 deploy:
   # deploy develop as a snapshot
