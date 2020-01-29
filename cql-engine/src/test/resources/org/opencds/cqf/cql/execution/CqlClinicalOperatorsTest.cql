@@ -94,6 +94,37 @@ define C2:
     version: '2017-05'
   }
 
+
+define DisplayTestCode1:
+  Code {
+    system: 'http://loinc.org',
+    code: '34567-8',
+    display: 'Display'
+  }
+
+define DisplayTestCode2:
+  Code {
+    system: 'http://loinc.org',
+    code: '34567-8',
+    display: 'Not-Display'
+  }
+
+define DisplayTestCode3:
+  Code {
+    system: 'http://loinc.org',
+    code: '34567-8'
+  }
+
+define DisplayTestConceptWithDisplay:
+    Concept {
+      codes: { DisplayTestCode1, DisplayTestCode2 }
+    }
+
+define DisplayTestConceptWithoutDisplay:
+      Concept {
+        codes: { DisplayTestCode3 }
+      }
+
 define Issue70A: C1 = C2
 define Issue70B: C1 ~ C2
 define CodeEqualTrue: Code1 = Code1
@@ -115,3 +146,7 @@ define ConceptEquivalentTrueIntersection1And4: Concept1 ~ Concept4
 define ConceptEquivalentTrueIntersection2And4: Concept2 ~ Concept4
 define CodeEquivalentNull: Code1 ~ null
 define ConceptEquivalentNull: Concept1 ~ null
+define CodeToConceptEquivalentTrue: Concept1 ~ Code1
+define CodeToConceptEquivalentFalse: Concept1 ~ Code3
+
+define ConceptToConceptMismatchedDisplayTrue: DisplayTestConceptWithDisplay ~ DisplayTestConceptWithoutDisplay
