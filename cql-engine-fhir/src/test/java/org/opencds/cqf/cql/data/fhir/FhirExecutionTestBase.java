@@ -44,8 +44,6 @@ public abstract class FhirExecutionTestBase {
     protected Dstu3FhirModelResolver dstu3ModelResolver;
     protected RestFhirRetrieveProvider dstu3RetrieveProvider;
     protected CompositeDataProvider dstu3Provider;
-    protected RestFhirRetrieveProvider hl7RetrieveProvider;
-    protected CompositeDataProvider hl7Provider;
 
     Library library = null;
     protected File xmlFile = null;

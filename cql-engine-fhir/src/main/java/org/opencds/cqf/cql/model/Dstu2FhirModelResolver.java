@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
 import java.util.Calendar;
 
 import org.hl7.fhir.dstu2.model.*;
-import org.hl7.fhir.instance.model.AnnotatedUuidType;
+import org.hl7.fhir.dstu2.model.AnnotatedUuidType;
 
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
@@ -18,7 +18,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
 	private Dstu2FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
 
-        this.setPackageName("org.hl7.fhir.instance.model");
+        this.setPackageName("org.hl7.fhir.dstu2.model");
         
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU2");
