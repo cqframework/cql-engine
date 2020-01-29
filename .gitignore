@@ -3,7 +3,6 @@
 *.iml
 /cql-engine/src/generated
 *.class
-
 target
 .project
 .settings
