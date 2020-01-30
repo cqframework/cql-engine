@@ -277,7 +277,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             else {
                 child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
             }
-        } catch (ConfigurationException ce) {
+        } catch (IllegalArgumentException le) {
             if (value.getClass().getSimpleName().equals("Quantity")) {
                 try {
                     value = this.castToSimpleQuantity((BaseType) value);
@@ -287,7 +287,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                 child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
             }
             else {
-                throw new DataProviderException(String.format("Configuration error encountered: %s", ce.getMessage()));
+                throw new DataProviderException(String.format("Configuration error encountered: %s", le.getMessage()));
             }
         }
     }
