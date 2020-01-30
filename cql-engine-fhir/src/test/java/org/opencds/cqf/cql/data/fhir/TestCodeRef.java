@@ -1,15 +1,14 @@
 package org.opencds.cqf.cql.data.fhir;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.terminology.fhir.FhirTerminologyProvider;
-import org.testng.annotations.Test;
+import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
 
 import static org.testng.AssertJUnit.assertTrue;
 
 public class TestCodeRef extends FhirExecutionTestBase {
 
-    private FhirTerminologyProvider terminologyProvider =
-            new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false);
+    private Dstu3FhirTerminologyProvider terminologyProvider =
+            new Dstu3FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false);
 
     // @Test
     public void CodeRefTest1() {

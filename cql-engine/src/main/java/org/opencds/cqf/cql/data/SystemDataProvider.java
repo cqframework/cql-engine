@@ -10,13 +10,18 @@ import java.math.BigDecimal;
 public class SystemDataProvider implements DataProvider {
 
     @Override
-    public Iterable<Object> retrieve(String context, Object contextValue, String dataType, String templateId,
-                                     String codePath, Iterable<Code> codes, String valueSet, String datePath,
-                                     String dateLowPath, String dateHighPath, Interval dateRange) {
+    public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
+            String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
+            String dateLowPath, String dateHighPath, Interval dateRange) {
         throw new IllegalArgumentException("SystemDataProvider does not support retrieval.");
     }
 
-    @Override
+	// @Override
+	// public boolean isPatientCompartment(String dataType) {
+	// 	return false;
+	// }
+
+	@Override
     public String getPackageName() {
         return "org.opencds.cqf.cql.runtime";
     }
@@ -26,7 +31,7 @@ public class SystemDataProvider implements DataProvider {
 
     }
 
-    private Field getProperty(Class clazz, String path) {
+    private Field getProperty(Class<?> clazz, String path) {
         try {
             Field field = clazz.getDeclaredField(path);
             return field;
@@ -35,19 +40,19 @@ public class SystemDataProvider implements DataProvider {
         }
     }
 
-    private Method getReadAccessor(Class clazz, String path) {
-        Field field = getProperty(clazz, path);
+    private Method getReadAccessor(Class<?> clazz, String path) {
+        // Field field = getProperty(clazz, path);
         String accessorMethodName = String.format("%s%s%s", "get", path.substring(0, 1).toUpperCase(), path.substring(1));
         Method accessor = null;
         try {
             accessor = clazz.getMethod(accessorMethodName);
         } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException(String.format("Could not determine accessor function for property %s of type %s", path, clazz.getSimpleName()));
+            return null;
         }
         return accessor;
     }
 
-    private Method getWriteAccessor(Class clazz, String path) {
+    private Method getWriteAccessor(Class<?> clazz, String path) {
         Field field = getProperty(clazz, path);
         String accessorMethodName = String.format("%s%s%s", "set", path.substring(0, 1).toUpperCase(), path.substring(1));
         Method accessor = null;
@@ -80,6 +85,10 @@ public class SystemDataProvider implements DataProvider {
 
         Class<? extends Object> clazz = target.getClass();
         Method accessor = getReadAccessor(clazz, path);
+        if (accessor == null) {
+            return null;
+        }
+        
         try {
             return accessor.invoke(target);
         } catch (InvocationTargetException e) {
@@ -106,7 +115,7 @@ public class SystemDataProvider implements DataProvider {
     }
 
     @Override
-    public Class resolveType(Object value) {
+    public Class<?> resolveType(Object value) {
         if (value == null) {
             return Object.class;
         }
@@ -115,7 +124,7 @@ public class SystemDataProvider implements DataProvider {
     }
 
     @Override
-    public Class resolveType(String typeName) {
+    public Class<?> resolveType(String typeName) {
         switch (typeName) {
             case "Boolean": return Boolean.class;
             case "Integer": return Integer.class;
@@ -125,6 +134,7 @@ public class SystemDataProvider implements DataProvider {
             case "Interval": return Interval.class;
             case "Tuple": return Tuple.class;
             case "DateTime": return DateTime.class;
+            case "Date": return Date.class;
             case "Time": return Time.class;
             default:
                 try {
@@ -135,9 +145,9 @@ public class SystemDataProvider implements DataProvider {
         }
     }
 
-    @Override
+	@Override
     public Object createInstance(String typeName) {
-        Class clazz = resolveType(typeName);
+        Class<?> clazz = resolveType(typeName);
         try {
             Object object = clazz.newInstance();
             return object;
@@ -169,6 +179,15 @@ public class SystemDataProvider implements DataProvider {
             return false;
         }
 
+        if (left instanceof CqlType) {
+            return ((CqlType)left).equivalent(right);
+        }
+
         return left.equals(right);
+    }
+
+    @Override
+    public Object getContextPath(String contextType, String targetType) {
+        return null;
     }
 }

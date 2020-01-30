@@ -9,8 +9,17 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
+import org.opencds.cqf.cql.data.CompositeDataProvider;
 import org.opencds.cqf.cql.execution.CqlLibraryReader;
+import org.opencds.cqf.cql.model.*;
+import org.opencds.cqf.cql.retrieve.*;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu2;
+import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -25,15 +34,43 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
 public abstract class FhirExecutionTestBase {
-    static Map<String, Library> libraries = new HashMap<>();
+	static Map<String, Library> libraries = new HashMap<>();
 
-    BaseFhirDataProvider dstu2Provider = new FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
-    BaseFhirDataProvider dstu3Provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
-//    BaseFhirDataProvider dstu3Provider = new FhirDataProviderStu3().setEndpoint("http://localhost:8080/cqf-ruler/baseDstu3");
-    BaseFhirDataProvider hl7Provider = new FhirDataProviderHL7().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
+
+    protected Dstu2FhirModelResolver dstu2ModelResolver;
+    protected RestFhirRetrieveProvider dstu2RetrieveProvider;
+    protected CompositeDataProvider dstu2Provider;
+    
+    protected Dstu3FhirModelResolver dstu3ModelResolver;
+    protected RestFhirRetrieveProvider dstu3RetrieveProvider;
+    protected CompositeDataProvider dstu3Provider;
+    protected HL7FhirModelResolver hl7ModelResolver;
+    protected RestFhirRetrieveProvider hl7RetrieveProvider;
+    protected CompositeDataProvider hl7Provider;
 
     Library library = null;
-    private File xmlFile = null;
+    protected File xmlFile = null;
+
+    @BeforeClass
+    public void setup() {
+        dstu2ModelResolver = new Dstu2FhirModelResolver();
+        FhirContext dstu2Context = FhirContext.forDstu2();
+        dstu2RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu2Context),
+                dstu2Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
+        dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
+        
+        dstu3ModelResolver = new Dstu3FhirModelResolver();
+        FhirContext dstu3Context = FhirContext.forDstu3();
+        dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), 
+        dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
+        dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
+        
+        hl7ModelResolver = new HL7FhirModelResolver();
+        FhirContext hl7Context = FhirContext.forDstu2Hl7Org();
+        hl7RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(hl7Context), 
+        hl7Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
+        hl7Provider = new CompositeDataProvider(hl7ModelResolver, hl7RetrieveProvider);
+    }
 
     @BeforeMethod
     public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {

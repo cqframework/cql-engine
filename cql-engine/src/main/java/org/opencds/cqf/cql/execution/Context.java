@@ -26,8 +26,8 @@ public class Context {
     }
 
     private boolean enableExpressionCache = false;
-    private LinkedHashMap expressions = new LinkedHashMap(15, 0.9f, true) {
-        protected boolean removeEldestEntry(Map.Entry eldest) {
+    private LinkedHashMap<String, Object> expressions = new LinkedHashMap<String, Object>(15, 0.9f, true) {
+        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
             return size() > 10;
         }
     };
@@ -47,12 +47,9 @@ public class Context {
     private Stack<Stack<Variable> > windows = new Stack<>();
     private Map<String, Library> libraries = new HashMap<>();
     private Stack<Library> currentLibrary = new Stack<>();
-//    private org.opencds.cqf.cql.runtime.Tuple letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
     private LibraryLoader libraryLoader;
 
-    private Library library;
-
-    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime = 
+    private org.opencds.cqf.cql.runtime.DateTime evaluationDateTime =
             new org.opencds.cqf.cql.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
 
     public Context(Library library) {
@@ -65,7 +62,6 @@ public class Context {
     }
 
     private void init(Library library) {
-        this.library = library;
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", new SystemDataProvider());
         libraryLoader = new DefaultLibraryLoader();
@@ -98,18 +94,6 @@ public class Context {
     public Object getExpressionResultFromCache(String name) {
         return this.expressions.get(name);
     }
-
-//    public void addLetExpression(String name, Expression result) {
-//        if (letExpressions.getElements().containsKey(name)) {
-//            return;
-//        }
-//
-//        letExpressions.getElements().put(name, result);
-//    }
-
-//    public void clearLetExpressions() {
-//        letExpressions = new org.opencds.cqf.cql.runtime.Tuple();
-//    }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
         if (libraryLoader == null) {
@@ -175,17 +159,6 @@ public class Context {
 
         throw new CqlException(String.format("Could not resolve library reference '%s'.", libraryName));
     }
-
-//    public Expression resolveLetExpressionRef(String name) {
-//        for (String key : letExpressions.getElements().keySet()) {
-//            if (key.equals(name)) {
-//                return (Expression) letExpressions.getElements().get(key);
-//            }
-//        }
-//
-//        throw new CqlException(String.format("Could not resolve let expression reference '%s' in library '%s'.",
-//                name, getCurrentLibrary().getIdentifier().getId()));
-//    }
 
     public ExpressionDef resolveExpressionRef(String name) {
 
@@ -255,7 +228,6 @@ public class Context {
 
     public Class resolveType(Object value) {
         if (value == null) {
-//            return Object.class;
             return null;
         }
 
@@ -271,6 +243,7 @@ public class Context {
         }
 
         // Primitives should just use the type
+        // BTR: Well, we should probably be explicit about all and only the types we expect
         if (packageName.startsWith("java")) {
             return value.getClass();
         }

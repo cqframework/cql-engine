@@ -3,7 +3,23 @@ sudo: false
 language: java
 jdk: openjdk11
 
-script:
-  - if [ "$TRAVIS_BRANCH" = "develop" ]; then mvn package test; fi
-  - if [ "$TRAVIS_BRANCH" = "master" ]; then mvn package test -P release; fi
-  - if [ "$TRAVIS_BRANCH" != "master" ] && [ "$TRAVIS_BRANCH" != "develop" ]; then mvn package test; fi
+cache:
+  directories:
+  - "$HOME/.m2"
+
+install:
+   - mvn install -U -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+
+deploy:
+  # deploy develop as a snapshot
+  - provider: script
+    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
+    skip_cleanup: true
+    on:
+      branch: develop
+  # deploy master to production
+  - provider: script
+    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -P release"
+    skip_cleanup: true
+    on:
+      branch: master

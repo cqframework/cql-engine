@@ -3,8 +3,14 @@
 *.iml
 /cql-engine/src/generated
 *.class
-/cql-engine/target/
-/cql-engine-fhir/target/
+target
 .project
 .settings
 .classpath
+.flattened-pom.xml
+org.eclipse.m2e.core.prefs
+
+core.*
+heapdump.*
+javacore.*
+Snap.*

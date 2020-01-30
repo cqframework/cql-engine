@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.data.fhir;
 
 import ca.uhn.fhir.model.dstu2.resource.Encounter;
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.retrieve.FhirBundleCursor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -16,16 +17,17 @@ public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
     public void before() {
         context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu2Provider);
-        BaseFhirDataProvider provider = new FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
+        //BaseFhirDataProvider provider = new FhirDataProviderDstu2().setEndpoint("http://fhirtest.uhn.ca/baseDstu2");
 //        FhirDataProviderDstu2 primitiveProvider = new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.primitive");
 //        context.registerDataProvider("http://hl7.org/fhir", primitiveProvider);
 //        FhirDataProviderDstu2 compositeProvider = new FhirDataProviderDstu2().withEndpoint("http://fhirtest.uhn.ca/baseDstu2").withPackageName("ca.uhn.fhir.model.dstu2.composite");
 //        context.registerDataProvider("http://hl7.org/fhir", compositeProvider);
     }
 
-    // @Test
+    //@Test
     public void testDstu2ProviderRetrieve() {
-        FhirBundleCursorDstu2 results = (FhirBundleCursorDstu2) dstu2Provider.retrieve("Patient", "2822", "Encounter", null, "code", null, null, null, null, null, null);
+		String contextPath = dstu2ModelResolver.getContextPath("Patient", "Encounter").toString();
+        FhirBundleCursor results = (FhirBundleCursor) dstu2Provider.retrieve("Patient", contextPath, "2822", "Encounter", null, "code", null, null, null, null, null, null);
 
         for (Object result : results) {
             Encounter e = (Encounter) result;
