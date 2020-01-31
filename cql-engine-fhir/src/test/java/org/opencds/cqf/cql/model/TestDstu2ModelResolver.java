@@ -1,20 +1,22 @@
 package org.opencds.cqf.cql.model;
 
-import org.testng.annotations.Test;
+import org.hl7.fhir.dstu2.model.Enumerations.*;
+import org.hl7.fhir.dstu2.model.EnumFactory;
+import org.hl7.fhir.dstu2.model.Enumeration;
 
 import ca.uhn.fhir.model.dstu2.resource.Patient;
+import static ca.uhn.fhir.model.dstu2.valueset.ResourceTypeEnum.DOMAINRESOURCE;
+import static ca.uhn.fhir.model.dstu2.valueset.StructureDefinitionKindEnum.RESOURCE;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import org.testng.annotations.Test;
 import static org.testng.AssertJUnit.assertTrue;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.hl7.fhir.instance.model.EnumFactory;
-import org.hl7.fhir.instance.model.Enumeration;
-import org.hl7.fhir.instance.model.Enumerations.*;
+
 import org.opencds.cqf.cql.exception.UnknownType;
 
 public class TestDstu2ModelResolver {
