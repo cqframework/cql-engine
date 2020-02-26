@@ -216,7 +216,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
         Context context = new Context(library);
 
-		dstu3RetrieveProvider.setTerminologyProvider(new Dstu3FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
+		dstu3RetrieveProvider.setTerminologyProvider(new Dstu3FhirTerminologyProvider(fhirClient));
         //dstu3Provider.setTerminologyProvider(new FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false));
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         context.enterContext("Patient");
