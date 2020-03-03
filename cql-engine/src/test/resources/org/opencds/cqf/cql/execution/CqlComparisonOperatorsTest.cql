@@ -205,3 +205,5 @@ define DateTimeNotEqTodayToday: Today() != Today()
 define DateTimeNotEqTodayYesterday: Today() != Today() - 1 days
 define TimeNotEq10A10A: @T10:00:00.000 != @T10:00:00.000
 define TimeNotEq10A10P: @T10:00:00.000 != @T22:00:00.000
+
+

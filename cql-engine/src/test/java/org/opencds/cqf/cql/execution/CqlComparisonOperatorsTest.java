@@ -170,12 +170,12 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         // TODO: Quantity unit comparison is not implemented yet
-        //result = context.resolveExpressionRef("GreaterM1CM1").getExpression().evaluate(context);
-        //assertThat(result, is(true));
+    //    result = context.resolveExpressionRef("GreaterM1CM1").getExpression().evaluate(context);
+    //    assertThat(result, is(true));
 
         // TODO: Quantity unit comparison is not implemented yet
-        //result = context.resolveExpressionRef("GreaterM1CM10").getExpression().evaluate(context);
-        //assertThat(result, is(true));
+    //    result = context.resolveExpressionRef("GreaterM1CM10").getExpression().evaluate(context);
+    //    assertThat(result, is(true));
 
         result = context.resolveExpressionRef("GreaterAA").getExpression().evaluate(context);
         assertThat(result, is(false));

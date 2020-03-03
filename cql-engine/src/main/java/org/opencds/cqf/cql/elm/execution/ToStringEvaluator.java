@@ -35,11 +35,12 @@ If the argument is null, the result is null.
 
 public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToString {
 
-    public static Object toString(Object operand) {
+    public static String toString(Object operand) {
         if (operand == null) {
+           // System.out.println("Null operand:"+operand.toString());
             return null;
         }
-
+       // System.out.println("Object:"+operand.toString());
         if (operand instanceof Integer) {
             return Integer.toString((Integer)operand);
         }
@@ -66,6 +67,7 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
         }
         // This is not standard - adding for test suite
         else {
+           // System.out.println("else case");
             return operand.toString();
         }
     }

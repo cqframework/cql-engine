@@ -51,6 +51,7 @@ public abstract class CqlExecutionTestBase<T> {
     @BeforeMethod
     public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {
         String fileName = this.getClass().getSimpleName();
+        System.out.println("Filename:"+fileName);
         library = libraries.get(fileName);
         if (library == null) {
             UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));

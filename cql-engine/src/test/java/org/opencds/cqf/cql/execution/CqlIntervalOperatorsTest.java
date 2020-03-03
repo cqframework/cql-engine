@@ -523,8 +523,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         // This is going to the InEvaluator for some reason
-        // result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+       // Object result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
+      //   assertThat(result, is(nullValue()));
 
         Object result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -1341,11 +1341,11 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("QuantityIntervalTestWidth5").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
 
-//        result = context.resolveExpressionRef("DateTimeWidth").getExpression().evaluate(context);
-//        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("20")).withUnit("days")));
-//
-//        result = context.resolveExpressionRef("TimeWidth").getExpression().evaluate(context);
-//        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("36000000")).withUnit("milliseconds")));
+       // result = context.resolveExpressionRef("DateTimeWidth").getExpression().evaluate(context);
+      //  Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("20")).withUnit("days")));
+
+     //  result = context.resolveExpressionRef("TimeWidth").getExpression().evaluate(context);
+     //   Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("36000000")).withUnit("milliseconds")));
     }
 
     /**

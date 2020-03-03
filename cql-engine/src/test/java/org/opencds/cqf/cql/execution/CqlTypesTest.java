@@ -191,8 +191,8 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         assertThat(result, is("\'I start with a single quote and end with a double quote\""));
 
         // NOTE: This test returns "\u0048\u0069" instead of the string equivalent "Hi"
-        // result = context.resolveExpressionRef("StringUnicodeTest").getExpression().evaluate(context);
-        // assertThat(result, is(new String("Hi")));
+         result = context.resolveExpressionRef("StringUnicodeTest").getExpression().evaluate(context);
+         assertThat(result, is(new String("Hi")));
     }
 
     /**

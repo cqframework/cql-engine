@@ -18,6 +18,7 @@ public class UpperEvaluator extends org.cqframework.cql.elm.execution.Upper {
         }
 
         if (operand instanceof String) {
+            //System.out.println("to Upper evaluator");
             return ((String) operand).toUpperCase();
         }
 

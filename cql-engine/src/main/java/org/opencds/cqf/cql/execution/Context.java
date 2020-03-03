@@ -283,6 +283,7 @@ public class Context {
                 break;
             }
         }
+      // System.out.println("Function Def matched:"+isMatch);
         if (isMatch && !argumentIterator.hasNext()) {
             return functionDef;
         }
@@ -297,6 +298,7 @@ public class Context {
         if (functionCache.containsKey(mangledFunctionName)) {
             for (FunctionDef functionDef : functionCache.get(mangledFunctionName)) {
                 if ((ret = resolveFunctionRef(functionDef, arguments)) != null) {
+                    //System.out.println("function ref 1");
                     break;
                 }
             }
@@ -309,14 +311,17 @@ public class Context {
                         FunctionDef candidate = resolveFunctionRef((FunctionDef) expressionDef, arguments);
                         if (candidate != null) {
                             ret = candidate;
+                           // System.out.println("function ref 2");
                         }
                         if (functionCache.containsKey(mangledFunctionName)) {
                             functionCache.get(mangledFunctionName).add((FunctionDef) expressionDef);
+                          //  System.out.println("function ref 3");
                         }
                         else {
                             List<FunctionDef> functionDefs = new ArrayList<>();
                             functionDefs.add((FunctionDef) expressionDef);
                             functionCache.put(mangledFunctionName, functionDefs);
+                           // System.out.println("function ref 4");
                         }
                     }
                 }

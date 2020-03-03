@@ -141,9 +141,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         // TODO: The asserted "correct" answer 1.0'g/cm3' is wrong;
         // the true correct answer is just 1.0 with no units or empty string unit.
-        // result = context.resolveExpressionRef("Divide1Q1Q").getExpression().evaluate(context);
-        // Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
-        // Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
+         result = context.resolveExpressionRef("Divide1Q1Q").getExpression().evaluate(context);
+         Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+         Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("Divide10I5D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2.0")));
@@ -445,9 +445,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("PredecessorOf101D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.00999999")));
 
-//        result = context.resolveExpressionRef("PredecessorOf1QCM").getExpression().evaluate(context);
-//        Assert.assertTrue(new BigDecimal("0.99999999").compareTo(((Quantity) result).getValue()) == 0);
-//        Assert.assertEquals("cm", ((Quantity) result).getUnit());
+        result = context.resolveExpressionRef("PredecessorOf1QCM").getExpression().evaluate(context);
+        Assert.assertTrue(new BigDecimal("0.99999999").compareTo(((Quantity) result).getValue()) == 0);
+        Assert.assertEquals("cm", ((Quantity) result).getUnit());
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("PredecessorOfJan12000").getExpression().evaluate(context);
