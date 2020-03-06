@@ -724,4 +724,16 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TruncatedDivide10By5D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2.0")));
     }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.LowBoundaryEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testLowBoundary() throws JAXBException {
+        Context context = new Context(library);
+        Object result;
+
+        result = context.resolveExpressionRef("LowBoundaryDate").getExpression().evaluate(context);
+        assertThat(result, is(new Date(2014, 01)));
+    }
 }
