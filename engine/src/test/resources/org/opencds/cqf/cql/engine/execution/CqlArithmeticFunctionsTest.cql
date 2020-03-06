@@ -58,6 +58,16 @@ define ExpNeg1  : Exp(-1)
 define Exp1000  : Exp(1000)
 define Exp1000D  : Exp(1000.0)
 
+//HighBoundary
+
+//define HighBoundaryDec : HighBoundary(1.587, 8) // 1.58799999
+//define HighBoundaryDate :HighBoundary(@2014, 6) // @2014-12
+//define HighBoundaryDateTime : HighBoundary(@2014-01-01T08, 17) // @2014-01-01T08:59:59.999
+//define HighBoundaryTime : HighBoundary(@T10:30, 9) // @T10:30:59.999
+//define HighBoundaryNull : HighBoundary(null, precision) // null
+//define HighBoundaryNullPrecision : HighBoundary(input 1.58888, null) // 1.58888999
+
+
 //Log
 define LogNullNull  : Log(null, null)
 define Log1BaseNull  : Log(1, null)
@@ -66,6 +76,16 @@ define Log1Base2  : Log(1, 2)
 define Log1Base100  : Log(1, 100)
 define Log16Base2  : Log(16, 2)
 define LogD125Base2  : Log(0.125, 2)
+
+//LowBoundary
+
+define LowBoundaryDec : LowBoundary(1.587, 8) // 1.58700000
+define LowBoundaryDate :LowBoundary(@2014, 6) // @2014-01
+define LowBoundaryDateTime : LowBoundary(@2014-01-01T08, 17) // @2014-01-01T08:01:01.001
+define LowBoundaryTime : LowBoundary(@T10:30, 9) // @T10:30:01.001
+define LowBoundaryNull : LowBoundary(null, precision) // null
+define LowBoundaryNullPrecision : LowBoundary(input 1.58888, null) // 1.58888000
+
 
 //Ln
 define LnNull  : Ln(null)
