@@ -2,9 +2,6 @@ package org.opencds.cqf.cql.runtime;
 
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.elm.execution.InEvaluator;
-import org.opencds.cqf.cql.elm.execution.IntersectEvaluator;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,38 +40,23 @@ public class Concept implements CqlType {
     }
 
     public Boolean equivalent(Object other) {
-        if (this.codes == null && ((Concept) other).codes == null)
-        {
-            return EquivalentEvaluator.equivalent(this.display, ((Concept) other).display);
-        }
         if (this.codes == null || ((Concept) other).codes == null)
         {
             return false;
         }
-        if (this.codes.size() != ((Concept) other).codes.size())
-        {
-            return false;
-        }
 
-        boolean match = false;
         for (Code code : this.codes)
         {
             for (Code otherCode : ((Concept) other).codes)
             {
                 if (EquivalentEvaluator.equivalent(code, otherCode))
                 {
-                    match = true;
-                    break;
+                    return true;
                 }
             }
-            if (!match)
-            {
-                return false;
-            }
-            match = false;
         }
 
-        return EquivalentEvaluator.equivalent(this.display, ((Concept) other).display);
+        return false;
     }
 
     public Boolean equal(Object other) {

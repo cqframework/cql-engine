@@ -201,7 +201,9 @@ public class CqlEngine {
                 libraryIdentifier.getId() + libraryIdentifier.getVersion() != null ? "-" + libraryIdentifier.getVersion() : ""));
         }
 
-        this.validateDataRequirements(library);
+        // TODO: Removed this validation pending more intelligent handling at the service layer
+        // For example, providing a mock or dummy data provider in the event there's no data store
+        //this.validateDataRequirements(library);
         this.validateTerminologyRequirements(library);
 
         // TODO: Optimization ?
