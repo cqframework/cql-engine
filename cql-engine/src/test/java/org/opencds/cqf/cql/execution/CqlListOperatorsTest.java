@@ -114,13 +114,13 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("DistinctEmptyList").getExpression().evaluate(context);
         assertThat(result, is(Collections.emptyList()));
 
-        // result = context.resolveExpressionRef("DistinctNullNullNull").getExpression().evaluate(context);
-        // assertThat(result, is(new ArrayList<Object>() {{
-        //     add(null);
-        // }}));
-        //
-        // result = context.resolveExpressionRef("DistinctANullANull").getExpression().evaluate(context);
-        // assertThat(result, is(Arrays.asList("a", null)));
+        result = context.resolveExpressionRef("DistinctNullNullNull").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>() {{
+             add(null);
+        }}));
+
+        result = context.resolveExpressionRef("DistinctANullANull").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList("a", null)));
 
         result = context.resolveExpressionRef("Distinct112233").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3)));
