@@ -403,7 +403,7 @@ public class TestFhirPath {
 
     // TODO: Resolve Error: Could not load model information for model FHIR, version
     // 3.0.0 because version 1.0.2 is already loaded
-
+    @Test
     public void testFhirHelpersStu3() throws UcumException {
         String cql = getStringFromResourceStream("stu3/TestFHIRHelpers.cql");
         Library library = translate(cql);
