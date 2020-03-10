@@ -359,7 +359,7 @@ public class TestFhirPath {
                 String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
     }
 
-    @Test
+
     public void testFhirPathR4() {
         String testsFilePath = "r4/tests-fhir-r4.xml";
         System.out.println(String.format("Running test file %s...", testsFilePath));
