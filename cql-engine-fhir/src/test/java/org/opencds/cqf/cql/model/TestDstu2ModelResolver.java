@@ -1,12 +1,8 @@
 package org.opencds.cqf.cql.model;
 
 import org.hl7.fhir.dstu2.model.Enumerations.*;
-import org.hl7.fhir.dstu2.model.EnumFactory;
-import org.hl7.fhir.dstu2.model.Enumeration;
-
-import ca.uhn.fhir.model.dstu2.resource.Patient;
-import static ca.uhn.fhir.model.dstu2.valueset.ResourceTypeEnum.DOMAINRESOURCE;
-import static ca.uhn.fhir.model.dstu2.valueset.StructureDefinitionKindEnum.RESOURCE;
+import org.hl7.fhir.dstu2.model.Enumerations.ResourceType;
+import org.hl7.fhir.dstu2.model.*;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -15,7 +11,6 @@ import static org.testng.AssertJUnit.assertTrue;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
 
 import org.opencds.cqf.cql.exception.UnknownType;
 

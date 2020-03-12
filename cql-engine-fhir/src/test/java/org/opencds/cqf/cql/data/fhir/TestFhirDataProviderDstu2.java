@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.model.dstu2.resource.Encounter;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.retrieve.FhirBundleCursor;
 import org.testng.Assert;
@@ -8,6 +7,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertTrue;
+
+import org.hl7.fhir.dstu2.model.Encounter;
 
 public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 
@@ -31,7 +32,7 @@ public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 
         for (Object result : results) {
             Encounter e = (Encounter) result;
-            if (!e.getPatient().getReference().getIdPart().equals("2822")) {
+            if (!e.getPatient().getIdElement().getIdPart().equals("2822")) {
                 Assert.fail("Invalid patient id in Resource");
             }
         }

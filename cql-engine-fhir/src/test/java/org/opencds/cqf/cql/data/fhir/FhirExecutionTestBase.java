@@ -18,8 +18,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
 import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu2;
-import ca.uhn.fhir.jpa.searchparam.registry.SearchParamRegistryDstu3;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
