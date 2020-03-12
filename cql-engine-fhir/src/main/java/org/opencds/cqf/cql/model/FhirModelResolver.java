@@ -19,11 +19,9 @@ import org.hl7.fhir.instance.model.api.IBaseElement;
 import org.hl7.fhir.instance.model.api.IBaseEnumeration;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.opencds.cqf.cql.model.ModelResolver;
 import org.opencds.cqf.cql.exception.DataProviderException;
 import org.opencds.cqf.cql.exception.InvalidCast;
 import org.opencds.cqf.cql.exception.InvalidPrecision;
-import org.opencds.cqf.cql.exception.UnknownPath;
 import org.opencds.cqf.cql.exception.UnknownType;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Precision;
@@ -33,7 +31,6 @@ import org.opencds.cqf.cql.runtime.Time;
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementDefinition;
-import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeChildChoiceDefinition;
 import ca.uhn.fhir.context.RuntimeChildResourceBlockDefinition;
@@ -43,6 +40,7 @@ import ca.uhn.fhir.context.RuntimeResourceDefinition;
 // TODO: Probably quite a bit of redundancy here. Probably only really need the BaseType and the PrimitiveType
 
 // TODO: type-to-class and contextPath resolutions are potentially expensive. Should add caching for those.
+@SuppressWarnings({"unchecked", "rawtypes" })
 public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, SimpleQuantityType, IdType, ResourceType, EnumerationType, EnumFactoryType>
         implements ModelResolver {
     public FhirModelResolver(FhirContext fhirContext) {
@@ -245,7 +243,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         if (target instanceof IBaseEnumeration && path.equals("value")) {
-            ((IBaseEnumeration)target).setValueAsString((String)value);
+            ((IBaseEnumeration<?>)target).setValueAsString((String)value);
             return;
         }
 
@@ -304,7 +302,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         if (target instanceof IBaseEnumeration && path.equals("value")) {
-            return ((IBaseEnumeration) target).getValueAsString();
+            return ((IBaseEnumeration<?>) target).getValueAsString();
         }
 
 
