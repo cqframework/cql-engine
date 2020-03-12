@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -59,6 +60,30 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("SortIntWithNullDesc2").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(3, 2, 1, null)));
+
+        result = context.resolveExpressionRef("intList").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(3, 2, 1)));
+
+        result = context.resolveExpressionRef("decimalList").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(new BigDecimal(3.8).setScale(1, RoundingMode.HALF_EVEN), new BigDecimal(2.4).setScale(1, RoundingMode.HALF_EVEN), new BigDecimal(1.9).setScale(1, RoundingMode.HALF_EVEN))));
+
+        //    result = context.resolveExpressionRef("quantityList").getExpression().evaluate(context);
+        //    assertThat(result, is(Arrays.asList(new Quantity().withValue(new BigDecimal("19.99")).withUnit("lbs") , new Quantity().withValue(new BigDecimal("17.33")).withUnit("lbs") ,  new Quantity().withValue(new BigDecimal("10.66")).withUnit("lbs") )));
+
+        result = context.resolveExpressionRef("dateTimeList").getExpression().evaluate(context);
+        List<DateTime> arrListDateTime = new ArrayList();
+        arrListDateTime.add(new DateTime(offset, 2016));
+        arrListDateTime.add(new DateTime(offset, 2015));
+        arrListDateTime.add(new DateTime(offset, 2010));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, arrListDateTime));
+
+
+        result = context.resolveExpressionRef("timeList").getExpression().evaluate(context);
+        List<Time> arrList = new ArrayList();
+        arrList.add(new Time(offset, 15, 59, 59, 999));
+        arrList.add(new Time(offset, 15, 12, 59, 999));
+        arrList.add(new Time(offset, 15, 12, 13, 999));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, arrList));
     }
 
     /**

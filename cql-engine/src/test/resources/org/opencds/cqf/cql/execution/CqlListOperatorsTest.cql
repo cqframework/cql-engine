@@ -271,8 +271,8 @@ define UnionDateTime: { DateTime(2001, 9, 11)} union {DateTime(2012, 5, 10), Dat
 define UnionTime: { @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } union { @T10:59:59.999 }
 
 // Sort
-/*define intList: { 3, 2, 1 }
+define intList: { 3, 2, 1 }
 define decimalList: { 3.8, 2.4, 1.9 }
-define quantityList: { 19.99 'lbs', 17.33 'lbs', 10.66 'lbs' }
+//define quantityList: { 19.99 'lbs', 17.33 'lbs', 10.66 'lbs' }
 define dateTimeList: { DateTime(2016), DateTime(2015), DateTime(2010) }
-define timeList: { @T15:59:59.999, @T15:12:59.999, @T15:12:13.999 }*/
+define timeList: { @T15:59:59.999, @T15:12:59.999, @T15:12:13.999 }
