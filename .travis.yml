@@ -5,21 +5,28 @@ jdk: openjdk11
 
 cache:
   directories:
-  - "$HOME/.m2"
+  - "$HOME/.m2/repository"
 
 install:
    - mvn install -U -DskipTests=true -Dmaven.javadoc.skip=true -B -V
 
+script:
+  # master or PRs into master, use the release profile
+  - 'if [[ "$TRAVIS_BRANCH" =~ master* ]]; then mvn test -B -P release; fi'
+  - 'if ! [[ "$TRAVIS_BRANCH" =~ master* ]]; then mvn test -B; fi'
+
+
+#NOTE: tests were already run as part of the script phase
 deploy:
   # deploy develop as a snapshot
   - provider: script
-    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
+    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -DskipTests=true"
     skip_cleanup: true
     on:
       branch: develop
   # deploy master to production
   - provider: script
-    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -P release"
+    script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -P release -DskipTests=true"
     skip_cleanup: true
     on:
       branch: master
