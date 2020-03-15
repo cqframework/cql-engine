@@ -1,7 +1,5 @@
 library Issue39 version '1'
 
-context Population
-
 // Interval
 define x:
     Interval[
@@ -11,7 +9,7 @@ define x:
             month from (@2017-12-20T11:00:00 + 1 day),
             day from (@2017-12-20T11:00:00 + 1 day),
             0, 0, 0, 0,
-            timezone from (@2017-12-20T11:00:00 + 1 day)
+            timezoneoffset from (@2017-12-20T11:00:00 + 1 day)
         )
     )
 define y: Interval [ @2017-12-20T11:00:00, @2017-12-20T23:59:59.999 ]

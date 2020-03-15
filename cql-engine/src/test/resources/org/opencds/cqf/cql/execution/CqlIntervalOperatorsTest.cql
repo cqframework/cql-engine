@@ -1,7 +1,5 @@
 library CqlIntervalOperatorsTest version '1'
 
-context Population
-
 //After
 define TestAfterNull: null as Integer after IntegerIntervalTest
 define IntegerIntervalAfterTrue: IntegerIntervalTest2 after IntegerIntervalTest

@@ -2,8 +2,6 @@ library StringOperator version '1'
 
 codesystem "LOINC": 'http://loinc.org'
 
-context Population
-
 //Combine
 define CombineNull : Combine(null)
 define CombineEmptyList : Combine({})

@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
-import java.time.OffsetTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -19,11 +19,9 @@ import org.hl7.fhir.instance.model.api.IBaseElement;
 import org.hl7.fhir.instance.model.api.IBaseEnumeration;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
-import org.opencds.cqf.cql.model.ModelResolver;
 import org.opencds.cqf.cql.exception.DataProviderException;
 import org.opencds.cqf.cql.exception.InvalidCast;
 import org.opencds.cqf.cql.exception.InvalidPrecision;
-import org.opencds.cqf.cql.exception.UnknownPath;
 import org.opencds.cqf.cql.exception.UnknownType;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Precision;
@@ -33,7 +31,6 @@ import org.opencds.cqf.cql.runtime.Time;
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementDefinition;
-import ca.uhn.fhir.context.ConfigurationException;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeChildChoiceDefinition;
 import ca.uhn.fhir.context.RuntimeChildResourceBlockDefinition;
@@ -428,7 +425,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     protected Time toTime(TimeType value) {
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ISO_TIME;
-        return new Time(OffsetTime.from(formatter.parse(this.timeToString(value))), Precision.MILLISECOND);
+        return new Time(LocalTime.from(formatter.parse(this.timeToString(value))), Precision.MILLISECOND);
     }
 
     protected DateTime toDateTime(BaseDateTimeType value, Integer calendarConstant) {

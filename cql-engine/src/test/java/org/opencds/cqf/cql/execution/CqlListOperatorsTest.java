@@ -141,8 +141,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("DistinctTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(20, 59, 59, 999)));
         assertThat(((List)result).size(), is(2));
     }
 
@@ -209,7 +209,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("ExceptTimeList").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(15, 59, 59, 999)));
         assertThat(((List)result).size(), is(1));
 
 //        result = context.resolveExpressionRef("ExceptNullRight").getExpression().evaluate(context);
@@ -268,8 +268,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("FlattenTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(20, 59, 59, 999)));
         assertThat(((List)result).size(), is(2));
     }
 
@@ -297,7 +297,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("FirstTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 59, 999)));
     }
 
     /**
@@ -446,7 +446,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("IndexerTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 59, 999)));
     }
 
 
@@ -505,8 +505,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(((ArrayList)result).size(), is(2));
 
         result = context.resolveExpressionRef("IntersectTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(20, 59, 59, 999)));
         assertThat(((ArrayList)result).size(), is(2));
     }
 
@@ -534,7 +534,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 12, 10)));
 
         result = context.resolveExpressionRef("LastTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(20, 59, 59, 999)));
     }
 
     /**
@@ -792,7 +792,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("SingletonFromTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 59, 999)));
     }
 
     /**
@@ -897,10 +897,10 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(((List)result).size(), is(3));
 
         result = context.resolveExpressionRef("UnionTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(offset, 20, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(2), new Time(offset, 12, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(3), new Time(offset, 10, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new Time(20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(2), new Time(12, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(3), new Time(10, 59, 59, 999)));
         assertThat(((List)result).size(), is(4));
     }
 }

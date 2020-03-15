@@ -1,7 +1,5 @@
 library ArithmeticFunctions version '1'
 
-context Population
-
 //Abs
 define AbsNull: Abs(null as Integer)
 define Abs0: Abs(0)
@@ -83,8 +81,8 @@ define LowBoundaryDec : LowBoundary(1.587, 8) // 1.58700000
 define LowBoundaryDate :LowBoundary(@2014, 6) // @2014-01
 define LowBoundaryDateTime : LowBoundary(@2014-01-01T08, 17) // @2014-01-01T08:01:01.001
 define LowBoundaryTime : LowBoundary(@T10:30, 9) // @T10:30:01.001
-define LowBoundaryNull : LowBoundary(null, precision) // null
-define LowBoundaryNullPrecision : LowBoundary(input 1.58888, null) // 1.58888000
+define LowBoundaryNull : LowBoundary(null as Decimal, 8) // null
+define LowBoundaryNullPrecision : LowBoundary(1.58888, null) // 1.58888000
 
 
 //Ln

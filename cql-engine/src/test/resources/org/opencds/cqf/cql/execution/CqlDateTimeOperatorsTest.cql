@@ -1,7 +1,5 @@
 library DateTimeOperator version '1'
 
-context Population
-
 //Add
 define DateTimeAdd5Years: DateTime(2005, 10, 10) + 5 years
 define DateTimeAddInvalidYears: DateTime(2005, 10, 10) + 8000 years
@@ -106,7 +104,7 @@ define DateTimeComponentFromHour: hour from DateTime(2003, 10, 29, 20, 50, 33, 9
 define DateTimeComponentFromMinute: minute from DateTime(2003, 10, 29, 20, 50, 33, 955)
 define DateTimeComponentFromSecond: second from DateTime(2003, 10, 29, 20, 50, 33, 955)
 define DateTimeComponentFromMillisecond: millisecond from DateTime(2003, 10, 29, 20, 50, 33, 955)
-define DateTimeComponentFromTimezone: timezone from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)
+define DateTimeComponentFromTimezone: timezoneoffset from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)
 define DateTimeComponentFromDate: date from DateTime(2003, 10, 29, 20, 50, 33, 955, 1)
 define TimeComponentFromHour: hour from @T23:20:15.555
 define TimeComponentFromMinute: minute from @T23:20:15.555
@@ -182,7 +180,7 @@ define DurationInWeeks2: weeks between @2012-03-10T22:05:09 and @2012-03-24T07:1
 define DurationInWeeks3: weeks between @2012-03-10T06:05:09 and @2012-03-24T07:19:33
 
 define TimeDurationBetweenHour: hours between @T20:26:15.555 and @T23:25:15.555
-define TimeDurationBetweenHourDiffPrecision: hours between @T06Z and @T07:00:00Z
+define TimeDurationBetweenHourDiffPrecision: hours between @T06 and @T07:00:00
 define TimeDurationBetweenMinute: minutes between @T23:20:16.555 and @T23:25:15.555
 define TimeDurationBetweenSecond: seconds between @T23:25:10.556 and @T23:25:15.555
 define TimeDurationBetweenMillis: milliseconds between @T23:25:25.555 and @T23:25:25.560

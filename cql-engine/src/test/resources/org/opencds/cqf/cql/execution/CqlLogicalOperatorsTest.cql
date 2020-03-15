@@ -1,7 +1,5 @@
 library LogicalOperator version '1'
 
-context Population
-
 //And
 define TrueAndTrue : true and true
 define TrueAndFalse : true and false

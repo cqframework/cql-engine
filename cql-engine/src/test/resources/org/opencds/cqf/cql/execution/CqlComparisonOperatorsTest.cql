@@ -1,7 +1,5 @@
 library ComparisonOperator version '1'
 
-context Population
-
 //Between
 define BetweenIntTrue: 4 between 2 and 6 
 

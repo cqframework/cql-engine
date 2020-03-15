@@ -4,8 +4,6 @@ codesystem "LOINC": 'http://loinc.org'
 
 valueset "Feeding Intention-Breast": '2.16.840.1.113762.1.4.1045.29'
 
-context Patient
-
 //CalculateAge
 define CalculateAgeYears: CalculateAgeInYears(DateTime(2010, 1, 1))
 define CalculateAgeMonths: CalculateAgeInMonths(DateTime(2010, 1, 1))

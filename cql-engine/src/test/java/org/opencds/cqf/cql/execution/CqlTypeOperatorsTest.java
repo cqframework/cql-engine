@@ -7,7 +7,6 @@ import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 import java.time.format.DateTimeParseException;
 
@@ -20,7 +19,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.AsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAs() throws JAXBException {
+    public void testAs() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AsQuantity").getExpression().evaluate(context);
@@ -48,7 +47,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ConvertEvaluator#evaluate(Context)}
      */
     @Test
-    public void testConvert() throws JAXBException {
+    public void testConvert() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerToDecimal").getExpression().evaluate(context);
@@ -68,7 +67,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
 
         result = context.resolveExpressionRef("StringToTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 14, 30, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(14, 30, 0, 0)));
 
         try {
             context.resolveExpressionRef("StringToDateTimeMalformed").getExpression().evaluate(context);
@@ -81,7 +80,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.IsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIs() throws JAXBException {
+    public void testIs() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerIsInteger").getExpression().evaluate(context);
@@ -95,7 +94,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToBooleanEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToBoolean() throws JAXBException {
+    public void testToBoolean() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("StringNoToBoolean").getExpression().evaluate(context);
@@ -107,7 +106,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToConceptEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToConcept() throws JAXBException {
+    public void testToConcept() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CodeToConcept1").getExpression().evaluate(context);
@@ -118,7 +117,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToDateTimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToDateTime() throws JAXBException {
+    public void testToDateTime() {
         // TODO: Fix timezone tests
         Context context = new Context(library);
 
@@ -160,7 +159,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToDecimalEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToDecimal() throws JAXBException {
+    public void testToDecimal() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("String25D5ToDecimal").getExpression().evaluate(context);
@@ -171,7 +170,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToIntegerEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToInteger() throws JAXBException {
+    public void testToInteger() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("StringNeg25ToInteger").getExpression().evaluate(context);
@@ -182,7 +181,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToQuantityEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToQuantity() throws JAXBException {
+    public void testToQuantity() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("String5D5CMToQuantity").getExpression().evaluate(context);
@@ -194,7 +193,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToStringEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToString() throws JAXBException {
+    public void testToString() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerNeg5ToString").getExpression().evaluate(context);
@@ -214,32 +213,13 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ToTimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToTime() throws JAXBException {
-        // TODO: fix timezone tests
+    public void testToTime() {
         Context context = new Context(library);
-
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
+        
         Object result = context.resolveExpressionRef("ToTime1").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(14, 30, 0, 0)));
 
-        result = context.resolveExpressionRef("ToTime2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal("5.5"), 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("5.5")));
-
-        result = context.resolveExpressionRef("ToTime3").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal("-5.75"), 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-5.75")));
-
-        result = context.resolveExpressionRef("ToTime4").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal(0), 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
-
-//        try {
-//            context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
-//            Assert.fail();
-//        } catch (DateTimeParseException iae) {
-//            // pass
-//        }
+        result = context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
+        Assert.assertNull(result);
     }
 }

@@ -1,7 +1,5 @@
 library TypeOperator version '1'
 
-context Population
-
 //As
 define AsQuantity: 45.5 'g' as Quantity
 define CastAsQuantity: cast 45.5 'g' as Quantity
@@ -51,7 +49,4 @@ define BooleanTrueToString: ToString(true)
 
 //ToTime
 define ToTime1: ToTime('T14:30:00.0')
-define ToTime2: ToTime('T14:30:00.0+05:30')
-define ToTime3: ToTime('T14:30:00.0-05:45')
-define ToTime4: ToTime('T14:30:00.0Z')
 define ToTimeMalformed: ToTime('T14-30-00.0')
