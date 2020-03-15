@@ -10,18 +10,30 @@ This project builds on that tooling to provide an open source Java-based evaluat
 
 This repository uses stable trunk methodology:
 
-|Branch|Description|Status|
-|----|----|----|
-|v12|CQL 1.2 Engine|Maintenance|
-|master|CQL 1.3 Engine|Release|
+|Branch|Description|Status|Version
+|----|----|----|----|
+|v12|CQL 1.2 Engine|Maintenance|1.2.20|
+|master|CQL 1.3 Engine|Release|1.3.11|
+|develop|CQL 1.3 Engine|Snapshot|1.3.12-SNAPSHOT|
+|&lt;feature&gt;|CQL 1.3 Engine|_as needed_|&lt;version&gt;-SNAPSHOT|
 
 # Commit Policy
 
-Changes to new features branches may be committed directly if desired, but PRs are preferred. Changes to master and maintenance branches must be done through an approved PR. Delete branches after merging to keep the repository clean.
+All new development takes place on &lt;feature&gt; branches off develop. Changes to new features branches may be committed directly if desired, but PRs are preferred. Once feature development on the branch is complete, the feature branch is submitted to develop as a PR. The PR is reviewed by maintainers and regression testing by the CI build occurs. Once the PR is merged to develop, the CI build publishes a SNAPSHOT. 
+
+Changes to master and maintenance branches must be done through an approved PR. Feature branches are merged to the develop branch for regression testing. Only the develop branch may be merged to master. Delete branches after merging to keep the repository clean.
+
+Commits to develop and master trigger a deployment to Maven Central. Master releases SHALL NOT have any SNAPSHOT dependencies.
+
+On merging in to develop, committers must ensure that:
+ 
+1. The `major`, `minor`, and `patch` build properties are incremented appropriately.
+2. Update the release on Github with appropriate change notes.
+3. Increment the `minor` build property on the develop branch (to be automated by [#316](https://github.com/DBCG/cql_engine/issues/316))
 
 # Release Policy
 
-This project uses [Semantic Versioning](http://semver.org), with the caveat that we track to the version of CQL the engine supports. Releases are published to Maven snapshot and public directories under the org.opencds.cqframework group id. Each release SHALL have a Release in Github. Pre-releases SHALL be marked as such and use the -SNAPSHOT version indicator. For any new release, a SNAPSHOT is released first and must pass integration testing in at least one external system prior to being promoted to a release. SNAPSHOTs may be published from any branch, but SHALL have incremented version numbers consistent with the branch and semantic versioning policies. Releases may only be published from the master or maintenance branch. Only one prior version is maintained at any given time.
+This project uses [Semantic Versioning](http://semver.org), with the caveat that we track to the version of CQL the engine supports. Releases are published to Maven snapshot and public directories under the org.opencds.cqframework group id. Each release SHALL have a Release in Github. Pre-releases SHALL be marked as such and use the -SNAPSHOT version indicator. For any new release, a SNAPSHOT is released first and must pass integration testing in at least one external system prior to being promoted to a release. SNAPSHOTs may be published from any branch, but SHALL have incremented version numbers consistent with the branch and semantic versioning policies. Releases may only be published from the master or maintenance branches. Only one prior version is maintained at any given time.
 
 # Roadmap
 
