@@ -150,7 +150,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 10, 6)));
 
         result = context.resolveExpressionRef("MaxTestTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(20, 59, 59, 999)));
     }
 
     /**
@@ -182,7 +182,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 9, 5)));
 
         result = context.resolveExpressionRef("MinTestTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 5, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 59, 59, 999)));
     }
 
     /**
@@ -200,7 +200,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 10, 5)));
 
         result = context.resolveExpressionRef("ModeTestTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 5, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 59, 59, 999)));
 
         result = context.resolveExpressionRef("ModeTestInteger").getExpression().evaluate(context);
         assertThat(result, is(9));

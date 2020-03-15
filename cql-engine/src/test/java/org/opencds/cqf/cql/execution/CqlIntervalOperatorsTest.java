@@ -216,15 +216,15 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 //        assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("TimeCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(offset, 1, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(offset, 15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getStart(), new Time(offset, 17, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getEnd(), new Time(offset, 22, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getStart(), new Time(17, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getEnd(), new Time(22, 59, 59, 999)));
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("TimeCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(offset, 1, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(offset, 15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
         assertThat(((List)result).size(), is(1));
     }
 
@@ -407,12 +407,12 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new DateTime(offset, 2012, 1, 16)));
 
         result = context.resolveExpressionRef("ExceptTimeInterval").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 5, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 8, 59, 59, 998)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(5, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(8, 59, 59, 998)));
 
         result = context.resolveExpressionRef("ExceptTime2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 11, 0, 0, 0)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 11, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(11, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(11, 59, 59, 999)));
     }
 
     /**
@@ -600,8 +600,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new DateTime(offset, 2012, 1, 10)));
 
         result = context.resolveExpressionRef("TimeIntersect").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 4, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 6, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(4, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(6, 59, 59, 999)));
 
     }
 
@@ -1184,8 +1184,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new DateTime(offset, 2016, 5, 2, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeIntervalTest").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 0, 0, 0, 0)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 23, 59, 59, 599)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(23, 59, 59, 599)));
 
         try {
             result = context.resolveExpressionRef("InvalidIntegerInterval").getExpression().evaluate(context);
@@ -1231,7 +1231,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 5, 1, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeIntervalStart").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(0, 0, 0, 0)));
     }
 
     /**
@@ -1315,8 +1315,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TimeUnion").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 5, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(5, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(20, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -1369,6 +1369,6 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 5, 2, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeIntervalEnd").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 599)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(23, 59, 59, 599)));
     }
 }

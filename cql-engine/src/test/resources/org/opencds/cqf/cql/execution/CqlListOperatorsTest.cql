@@ -1,7 +1,5 @@
 library ListOperator version '1'
 
-context Population
-
 //Sort
 define simpleList: {4, 5, 1, 6, 2, 1}
 define simpleListString: {'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}

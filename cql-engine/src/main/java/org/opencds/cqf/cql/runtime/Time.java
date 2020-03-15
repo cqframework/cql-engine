@@ -3,24 +3,17 @@ package org.opencds.cqf.cql.runtime;
 import org.opencds.cqf.cql.exception.InvalidTime;
 
 import javax.annotation.Nonnull;
-import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.OffsetTime;
-import java.time.ZoneOffset;
+import java.time.LocalTime;
 
 public class Time extends BaseTemporal {
 
-    private OffsetTime time;
-    public OffsetTime getTime() {
+    private LocalTime time;
+    public LocalTime getTime() {
         return time;
     }
-    public Time withTime(OffsetTime time) {
-        this.time = time;
-        return this;
-    }
 
-    public Time withEvaluationOffset(ZoneOffset evaluationOffset) {
-        this.evaluationOffset = evaluationOffset;
+    public Time withTime(LocalTime time) {
+        this.time = time;
         return this;
     }
 
@@ -29,32 +22,27 @@ public class Time extends BaseTemporal {
         return this;
     }
 
-    public Time(OffsetTime time, Precision precision) {
+    public Time(LocalTime time, Precision precision) {
         this.time = time;
         this.precision = precision;
     }
 
-    public Time(String dateString, ZoneOffset offset) {
-        // Handles case when Tz is not complete (T02:04:59.123+01)
-        if (dateString.matches("^T[0-2]\\d:[0-5]\\d:[0-5]\\d\\.\\d{3}(\\+|-)\\d{2}$")) {
+    public Time(String dateString) {
+        int size = 0;
+        if (dateString.matches("^T[0-2]\\d$")) {
             dateString += ":00";
+            size = -1;
         }
         dateString = dateString.replace("T", "");
-        String[] tzSplit = dateString.contains("Z") ? dateString.split("Z") : dateString.split("[+-]");
-        int size = tzSplit[0].split(":").length;
-        if (tzSplit[0].contains(".")) {
+        size += dateString.split(":").length;
+        if (dateString.contains(".")) {
             ++size;
         }
         precision = Precision.fromTimeIndex(size - 1);
-        if (tzSplit.length == 1 && !dateString.contains("Z")) {
-            dateString = TemporalHelper.autoCompleteDateTimeString(dateString, precision);
-            dateString += offset.getId();
-        }
-
-        time = OffsetTime.parse(dateString);
+        time = LocalTime.parse(dateString);
     }
 
-    public Time(BigDecimal offset, int ... timeElements) {
+    public Time(int ... timeElements) {
         if (timeElements.length == 0) {
             throw new InvalidTime("Time must include an hour");
         }
@@ -79,34 +67,27 @@ public class Time extends BaseTemporal {
         precision = Precision.fromTimeIndex(stringElements.length - 1);
         timeString = new StringBuilder().append(TemporalHelper.autoCompleteDateTimeString(timeString.toString(), precision));
 
-        if (offset == null) {
-            timeString.append(ZoneOffset.systemDefault().getRules().getStandardOffset(Instant.now()).getId());
-        }
-        else {
-            timeString.append(ZoneOffset.ofHoursMinutes(offset.intValue(), new BigDecimal("60").multiply(offset.remainder(BigDecimal.ONE)).intValue()).getId());
-        }
-
-        time = OffsetTime.parse(timeString.toString());
+        time = LocalTime.parse(timeString.toString());
     }
 
     public Time expandPartialMinFromPrecision(Precision thePrecision) {
-        OffsetTime ot = this.time.plusHours(0);
+        LocalTime ot = this.time.plusHours(0);
         for (int i = thePrecision.toTimeIndex() + 1; i < 4; ++i) {
             ot = ot.with(
                     Precision.fromTimeIndex(i).toChronoField(),
                     ot.range(Precision.fromTimeIndex(i).toChronoField()).getMinimum()
             );
         }
-        return new Time(ot, this.precision).withEvaluationOffset(this.evaluationOffset);
+        return new Time(ot, this.precision);
     }
 
     public Time expandPartialMin(Precision thePrecision) {
-        OffsetTime ot = this.getTime().plusHours(0);
-        return new Time(ot, thePrecision == null ? Precision.MILLISECOND : thePrecision).withEvaluationOffset(this.evaluationOffset);
+        LocalTime ot = this.getTime().plusHours(0);
+        return new Time(ot, thePrecision == null ? Precision.MILLISECOND : thePrecision);
     }
 
     public Time expandPartialMax(Precision thePrecision) {
-        OffsetTime ot = this.getTime().plusHours(0);
+        LocalTime ot = this.getTime().plusHours(0);
         for (int i = this.getPrecision().toTimeIndex() + 1; i < 4; ++i) {
             if (i <= thePrecision.toTimeIndex()) {
                 ot = ot.with(
@@ -121,7 +102,7 @@ public class Time extends BaseTemporal {
                 );
             }
         }
-        return new Time(ot, thePrecision == null ? Precision.MILLISECOND : thePrecision).withEvaluationOffset(this.evaluationOffset);
+        return new Time(ot, thePrecision == null ? Precision.MILLISECOND : thePrecision);
     }
 
     @Override
@@ -140,7 +121,6 @@ public class Time extends BaseTemporal {
     public Integer compare(BaseTemporal other, boolean forSort) {
         boolean differentPrecisions = this.getPrecision() != other.getPrecision();
 
-        Precision thePrecision;
         if (differentPrecisions) {
             Integer result = this.compareToPrecision(other, Precision.getHighestTimePrecision(this.precision, other.precision));
             if (result == null && forSort) {
@@ -159,8 +139,8 @@ public class Time extends BaseTemporal {
         boolean rightMeetsPrecisionRequirements = other.precision.toTimeIndex() >= thePrecision.toTimeIndex();
 
         // adjust dates to evaluation offset
-        OffsetTime leftTime = this.time.withOffsetSameInstant(evaluationOffset);
-        OffsetTime rightTime = ((Time) other).time.withOffsetSameInstant(evaluationOffset);
+        LocalTime leftTime = this.time;
+        LocalTime rightTime = ((Time) other).time;
 
         if (!leftMeetsPrecisionRequirements || !rightMeetsPrecisionRequirements) {
             thePrecision = Precision.getLowestTimePrecision(this.precision, other.precision);

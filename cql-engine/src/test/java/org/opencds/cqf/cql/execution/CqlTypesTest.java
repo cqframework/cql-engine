@@ -36,7 +36,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 4, 4)));
 
         result = context.resolveExpressionRef("AnyTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 9, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(9, 0, 0, 0)));
 
         result = context.resolveExpressionRef("AnyInterval").getExpression().evaluate(context);
         Assert.assertTrue(((Interval) result).equal(new Interval(2, true, 7, true)));
@@ -204,12 +204,12 @@ public class CqlTypesTest extends CqlExecutionTestBase {
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("TimeProper").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 25, 12, 863)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 25, 12, 863)));
 
         result = context.resolveExpressionRef("TimeAllMax").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(23, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeAllMin").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(0, 0, 0, 0)));
     }
 }

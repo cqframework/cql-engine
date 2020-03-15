@@ -21,8 +21,7 @@ define DecimalTenth: 0.1
 define StringTrue: 'true'
 define DateTimeX: @2012-02-15T12:10:59.456Z
 define DateTimeFX: DateTime(2012, 2, 15, 12, 10, 59, 456, 0)
-define TimeX: @T12:10:59.456Z
-define TimeFX: Time(12, 10, 59, 456, 0)
+define TimeX: @T12:10:59.456
 
 // DateTime
 define DateTime_Year: DateTime(2012)
@@ -39,7 +38,6 @@ define Time_Hour: Time(12)
 define Time_Minute: Time(12, 10)
 define Time_Second: Time(12, 10, 59)
 define Time_Millisecond: Time(12, 10, 59, 456)
-define Time_TimezoneOffset: Time(12, 10, 59, 456, -8.0)
 
 // Clinical
 define Clinical_quantity: 12 'a'
@@ -91,7 +89,7 @@ define List_IntList: { 9, 7, 8 }
 define List_DecimalList: { 1.0, 2.1, 3.2 }
 define List_StringList: { 'a', 'bee', 'see' }
 define List_DateTimeList: { @2012-02-15T12:10:59.456Z, @2012-03-15T12:10:59.456Z, @2012-04-15T12:10:59.456Z }
-define List_TimeList: { @T12:10:59.456Z, @T13:10:59.456Z, @T14:10:59.456Z }
+define List_TimeList: { @T12:10:59.456, @T13:10:59.456, @T14:10:59.456 }
 define List_QuantityList: { 1.0'm', 2.1'm', 3.2'm' }
 define List_CodeList: { Code1, Code2 }
 define List_ConceptList: { Concept { codes: { Code1 }, display: 'Test Concept' }, Concept { codes: { Code2 }, display: 'Another Test Concept' } }

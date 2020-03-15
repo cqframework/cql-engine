@@ -1047,8 +1047,6 @@ define FromString_dateStr: convert '2015-01-02' to Date
 define FromString_NullConvert: convert 'foo' to DateTime
 define FromString_ZDateTime: convert '2014-01-01T14:30:00.0Z' to DateTime // January 1st, 2014, 2:30PM UTC
 define FromString_TimezoneDateTime: convert '2014-01-01T14:30:00.0-07:00' to DateTime // January 1st, 2014, 2:30PM Mountain Standard (GMT-7:00)
-define FromString_ZTime: convert 'T14:30:00.0Z' to Time // 2:30PM UTC
-define FromString_TimezoneTime: convert 'T14:30:00.0-07:00' to Time // 2:30PM Mountain Standard (GMT-7:00)
 define FromString_timeStr: convert 'T12:30:00.000' to Time
 
 define test_FromString_stringStr: TestMessage(FromString_stringStr = 'str', 'FromString_stringStr', 'str', FromString_stringStr)
@@ -1069,8 +1067,6 @@ define test_FromString_dateStr: TestMessage(FromString_dateStr = Date(2015, 1, 2
 define test_FromString_NullConvert: TestMessage(FromString_NullConvert is null, 'FromString_NullConvert', 'null', toString(FromString_NullConvert))
 define test_FromString_ZDateTime: TestMessage(FromString_ZDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, 0), 'FromString_ZDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, 0)), toString(FromString_ZDateTime))
 define test_FromString_TimezoneDateTime: TestMessage(FromString_TimezoneDateTime = DateTime(2014, 1, 1, 14, 30, 0, 0, -7), 'FromString_TimezoneDateTime', toString(DateTime(2014, 1, 1, 14, 30, 0, 0, -7)), toString(FromString_TimezoneDateTime))
-define test_FromString_ZTime: TestMessage(FromString_ZTime = Time(14, 30, 0, 0, 0), 'FromString_ZTime', toString(Time(14, 30, 0, 0, 0)), toString(FromString_ZTime))
-define test_FromString_TimezoneTime: TestMessage(FromString_TimezoneTime = Time(14, 30, 0, 0, -7), 'FromString_TimezoneTime', toString(Time(14, 30, 0, 0, -7)), toString(FromString_TimezoneTime))
 define test_FromString_timeStr: TestMessage(FromString_timeStr = @T12:30:00.000, 'FromString_timeStr', toString(@T12:30:00.000), toString(FromString_timeStr))
 
 // FromInteger
@@ -1194,9 +1190,6 @@ define ToTime_TimeH: ToTime('T02')
 define ToTime_TimeHM: ToTime('T02:04')
 define ToTime_TimeHMS: ToTime('T02:04:59')
 define ToTime_TimeHMSMs: ToTime('T02:04:59.123')
-define ToTime_TimeHMSMsZ: ToTime('T02:04:59.123Z')
-define ToTime_TimeHMSMsTimezone: ToTime('T02:04:59.123+01')
-define ToTime_TimeHMSMsFullTimezone: ToTime('T02:04:59.123+01:00')
 define ToTime_IncorrectFormatTime: ToTime('10:00PM')
 define ToTime_InvalidTime: ToTime('25:99.000+00.00')
 define ToTime_HourTooHigh: ToTime('T24')
@@ -1208,9 +1201,6 @@ define test_ToTime_TimeH: TestMessage(ToTime_TimeH = @T02, 'ToTime_TimeH', toStr
 define test_ToTime_TimeHM: TestMessage(ToTime_TimeHM = @T02:04, 'ToTime_TimeHM', toString(@T02:04), toString(ToTime_TimeHM))
 define test_ToTime_TimeHMS: TestMessage(ToTime_TimeHMS = @T02:04:59, 'ToTime_TimeHMS', toString(@T02:04:59), toString(ToTime_TimeHMS))
 define test_ToTime_TimeHMSMs: TestMessage(ToTime_TimeHMSMs = @T02:04:59.123, 'ToTime_TimeHMSMs', toString(@T02:04:59.123), toString(ToTime_TimeHMSMs))
-define test_ToTime_TimeHMSMsZ: TestMessage(ToTime_TimeHMSMsZ = @T02:04:59.123Z, 'ToTime_TimeHMSMsZ', toString(@T02:04:59.123Z), toString(ToTime_TimeHMSMsZ))
-define test_ToTime_TimeHMSMsTimezone: TestMessage(ToTime_TimeHMSMsTimezone = @T02:04:59.123+01:00, 'ToTime_TimeHMSMsTimezone', toString(@T02:04:59.123+01:00), toString(ToTime_TimeHMSMsTimezone))
-define test_ToTime_TimeHMSMsFullTimezone: TestMessage(ToTime_TimeHMSMsFullTimezone = @T02:04:59.123+01:00, 'ToTime_TimeHMSMsFullTimezone', toString(@T02:04:59.123+01:00), toString(ToTime_TimeHMSMsFullTimezone))
 define test_ToTime_IncorrectFormatTime: TestMessage(ToTime_IncorrectFormatTime is null, 'ToTime_IncorrectFormatTime', 'null', toString(ToTime_IncorrectFormatTime))
 define test_ToTime_InvalidTime: TestMessage(ToTime_InvalidTime is null, 'ToTime_InvalidTime', 'null', toString(ToTime_InvalidTime))
 define test_ToTime_HourTooHigh: TestMessage(ToTime_HourTooHigh is null, 'ToTime_HourTooHigh', 'null', toString(ToTime_HourTooHigh))
@@ -1676,14 +1666,14 @@ define TimeFrom_Time: time from IdesOfMarch
 define TimeFrom_NoTime: time from DateTime(2000, 3, 15)
 define TimeFrom_NullDate: time from null
 
-define test_TimeFrom_Time: TestMessage(TimeFrom_Time = Time(13, 30, 25, 200, +1.0), 'TimeFrom_Time', toString(Time(13, 30, 25, 200, +1.0)), toString(TimeFrom_Time))
+define test_TimeFrom_Time: TestMessage(TimeFrom_Time = Time(13, 30, 25, 200), 'TimeFrom_Time', toString(Time(13, 30, 25, 200)), toString(TimeFrom_Time))
 define test_TimeFrom_NoTime: TestMessage(TimeFrom_NoTime is null, 'TimeFrom_NoTime', 'null', toString(TimeFrom_NoTime))
 define test_TimeFrom_NullDate: TestMessage(TimeFrom_NullDate is null, 'TimeFrom_NullDate', 'null', toString(TimeFrom_NullDate))
 
 // TimezoneFrom
-define TimezoneFrom_CentralEuropean: timezone from IdesOfMarch
-define TimezoneFrom_EasternStandard: timezone from DateTime(2000, 3, 15, 13, 30, 25, 200, -5.0)
-define TimezoneFrom_NullDate: timezone from (null as DateTime)
+define TimezoneFrom_CentralEuropean: timezoneoffset from IdesOfMarch
+define TimezoneFrom_EasternStandard: timezoneoffset from DateTime(2000, 3, 15, 13, 30, 25, 200, -5.0)
+define TimezoneFrom_NullDate: timezoneoffset from (null as DateTime)
 
 define test_TimezoneFrom_CentralEuropean: TestMessage(TimezoneFrom_CentralEuropean = 1.0, 'TimezoneFrom_CentralEuropean', toString(1.0), toString(TimezoneFrom_CentralEuropean))
 define test_TimezoneFrom_EasternStandard: TestMessage(TimezoneFrom_EasternStandard = -5.0, 'TimezoneFrom_EasternStandard', toString(-5.0), toString(TimezoneFrom_EasternStandard))
@@ -4175,50 +4165,50 @@ define test_DateTimeIvlExpand_NullClose: TestMessage(DateTimeIvlExpand_NullClose
 define test_DateTimeIvlExpand_BadPerGram: TestMessage(DateTimeIvlExpand_BadPerGram is null, 'DateTimeIvlExpand_BadPerGram', 'null', toString(DateTimeIvlExpand_BadPerGram))
 
 // TimeIntervalExpand
-define TimeMsPrecPerHourExpected: { Interval[@T01:00:00.000+00:00, @T01:59:59.999+00:00], Interval[@T02:00:00.000+00:00, @T02:59:59.999+00:00] }
-define TimeMsPrecPerMinuteExpected: { Interval[@T01:00:00.000+00:00, @T01:00:59.999+00:00], Interval[@T01:01:00.000+00:00, @T01:01:59.999+00:00] }
-define TimeMsPrecPerSecondExpected: { Interval[@T01:00:00.000+00:00, @T01:00:00.999+00:00], Interval[@T01:00:01.000+00:00, @T01:00:01.999+00:00] }
-define TimeMsPrecPerMillisecondExpected: { Interval[@T01:00:00.000+00:00, @T01:00:00.000+00:00], Interval[@T01:00:00.001+00:00, @T01:00:00.001+00:00] }
-define TimeIvlExpand_MsPrecPerHour: expand { Interval[@T01:00:00.000+00:00, @T03:00:00.000+00:00] } per hour
-define TimeIvlExpand_MsPrecPerMinute: expand { Interval[@T01:00:00.000+00:00, @T01:02:00.000+00:00] } per minute
-define TimeIvlExpand_MsPrecPerSecond: expand { Interval[@T01:00:00.000+00:00, @T01:00:02.000+00:00] } per second
-define TimeIvlExpand_MsPrecPerMillisecond: expand { Interval[@T01:00:00.000+00:00, @T01:00:00.001+00:00] } per millisecond
+define TimeMsPrecPerHourExpected: { Interval[@T01:00:00.000, @T01:59:59.999], Interval[@T02:00:00.000, @T02:59:59.999] }
+define TimeMsPrecPerMinuteExpected: { Interval[@T01:00:00.000, @T01:00:59.999], Interval[@T01:01:00.000, @T01:01:59.999] }
+define TimeMsPrecPerSecondExpected: { Interval[@T01:00:00.000, @T01:00:00.999], Interval[@T01:00:01.000, @T01:00:01.999] }
+define TimeMsPrecPerMillisecondExpected: { Interval[@T01:00:00.000, @T01:00:00.000], Interval[@T01:00:00.001, @T01:00:00.001] }
+define TimeIvlExpand_MsPrecPerHour: expand { Interval[@T01:00:00.000, @T03:00:00.000] } per hour
+define TimeIvlExpand_MsPrecPerMinute: expand { Interval[@T01:00:00.000, @T01:02:00.000] } per minute
+define TimeIvlExpand_MsPrecPerSecond: expand { Interval[@T01:00:00.000, @T01:00:02.000] } per second
+define TimeIvlExpand_MsPrecPerMillisecond: expand { Interval[@T01:00:00.000, @T01:00:00.001] } per millisecond
 
 define test_TimeIvlExpand_MsPrecPerHour: TestMessage(TimeIvlExpand_MsPrecPerHour = TimeMsPrecPerHourExpected, 'TimeIvlExpand_MsPrecPerHour', toString(TimeMsPrecPerHourExpected), toString(TimeIvlExpand_MsPrecPerHour))
 define test_TimeIvlExpand_MsPrecPerMinute: TestMessage(TimeIvlExpand_MsPrecPerMinute = TimeMsPrecPerMinuteExpected, 'TimeIvlExpand_MsPrecPerMinute', toString(TimeMsPrecPerMinuteExpected), toString(TimeIvlExpand_MsPrecPerMinute))
 define test_TimeIvlExpand_MsPrecPerSecond: TestMessage(TimeIvlExpand_MsPrecPerSecond = TimeMsPrecPerSecondExpected, 'TimeIvlExpand_MsPrecPerSecond', toString(TimeMsPrecPerSecondExpected), toString(TimeIvlExpand_MsPrecPerSecond))
 define test_TimeIvlExpand_MsPrecPerMillisecond: TestMessage(TimeIvlExpand_MsPrecPerMillisecond = TimeMsPrecPerMillisecondExpected, 'TimeIvlExpand_MsPrecPerMillisecond', toString(TimeMsPrecPerMillisecondExpected), toString(TimeIvlExpand_MsPrecPerMillisecond))
 
-define TimeSecPrecPerHourExpected: { Interval[@T01:00:00+00:00, @T01:59:59+00:00], Interval[@T02:00:00+00:00, @T02:59:59+00:00] }
-define TimeSecPrecPerMinuteExpected: { Interval[@T01:00:00+00:00, @T01:00:59+00:00], Interval[@T01:01:00+00:00, @T01:01:59+00:00] }
-define TimeSecPrecPerSecondExpected: { Interval[@T01:00:00+00:00, @T01:00:00+00:00], Interval[@T01:00:01+00:00, @T01:00:01+00:00] }
-define TimeIvlExpand_SecPrecPerHour: expand { Interval[@T01:00:00+00:00, @T03:00:00+00:00] } per hour
-define TimeIvlExpand_SecPrecPerMinute: expand { Interval[@T01:00:00+00:00, @T01:02:00+00:00] } per minute
-define TimeIvlExpand_SecPrecPerSecond: expand { Interval[@T01:00:00+00:00, @T01:00:01+00:00] } per second
-define TimeIvlExpand_SecPrecPerMillisecond: expand { Interval[@T01:00:00+00:00, @T01:00:00+00:00] } per millisecond
+define TimeSecPrecPerHourExpected: { Interval[@T01:00:00, @T01:59:59], Interval[@T02:00:00, @T02:59:59] }
+define TimeSecPrecPerMinuteExpected: { Interval[@T01:00:00, @T01:00:59], Interval[@T01:01:00, @T01:01:59] }
+define TimeSecPrecPerSecondExpected: { Interval[@T01:00:00, @T01:00:00], Interval[@T01:00:01, @T01:00:01] }
+define TimeIvlExpand_SecPrecPerHour: expand { Interval[@T01:00:00, @T03:00:00] } per hour
+define TimeIvlExpand_SecPrecPerMinute: expand { Interval[@T01:00:00, @T01:02:00] } per minute
+define TimeIvlExpand_SecPrecPerSecond: expand { Interval[@T01:00:00, @T01:00:01] } per second
+define TimeIvlExpand_SecPrecPerMillisecond: expand { Interval[@T01:00:00, @T01:00:00] } per millisecond
 
 define test_TimeIvlExpand_SecPrecPerHour: TestMessage(TimeIvlExpand_SecPrecPerHour = TimeSecPrecPerHourExpected, 'TimeIvlExpand_SecPrecPerHour', toString(TimeSecPrecPerHourExpected), toString(TimeIvlExpand_SecPrecPerHour))
 define test_TimeIvlExpand_SecPrecPerMinute: TestMessage(TimeIvlExpand_SecPrecPerMinute = TimeSecPrecPerMinuteExpected, 'TimeIvlExpand_SecPrecPerMinute', toString(TimeSecPrecPerMinuteExpected), toString(TimeIvlExpand_SecPrecPerMinute))
 define test_TimeIvlExpand_SecPrecPerSecond: TestMessage(TimeIvlExpand_SecPrecPerSecond = TimeSecPrecPerSecondExpected, 'TimeIvlExpand_SecPrecPerSecond', toString(TimeSecPrecPerSecondExpected), toString(TimeIvlExpand_SecPrecPerSecond))
 define test_TimeIvlExpand_SecPrecPerMillisecond: TestMessage(TimeIvlExpand_SecPrecPerMillisecond is null, 'TimeIvlExpand_SecPrecPerMillisecond', 'null', toString(TimeIvlExpand_SecPrecPerMillisecond))
 
-define TimeMinPrecPerHourExpected: { Interval[@T01:00+00:00, @T01:59+00:00], Interval[@T02:00+00:00, @T02:59+00:00] }
-define TimeMinPrecPerMinuteExpected: { Interval[@T01:00+00:00, @T01:00+00:00], Interval[@T01:01+00:00, @T01:01+00:00] }
-define TimeIvlExpand_MinPrecPerHour: expand { Interval[@T01:00+00:00, @T03:00+00:00] } per hour
-define TimeIvlExpand_MinPrecPerMinute: expand { Interval[@T01:00+00:00, @T01:01+00:00] } per minute
-define TimeIvlExpand_MinPrecPerSecond: expand { Interval[@T01:00+00:00, @T01:00+00:00] } per second
-define TimeIvlExpand_MinPrecPerMillisecond: expand { Interval[@T01:00+00:00, @T01:00+00:00] } per millisecond
+define TimeMinPrecPerHourExpected: { Interval[@T01:00, @T01:59], Interval[@T02:00, @T02:59] }
+define TimeMinPrecPerMinuteExpected: { Interval[@T01:00, @T01:00], Interval[@T01:01, @T01:01] }
+define TimeIvlExpand_MinPrecPerHour: expand { Interval[@T01:00, @T03:00] } per hour
+define TimeIvlExpand_MinPrecPerMinute: expand { Interval[@T01:00, @T01:01] } per minute
+define TimeIvlExpand_MinPrecPerSecond: expand { Interval[@T01:00, @T01:00] } per second
+define TimeIvlExpand_MinPrecPerMillisecond: expand { Interval[@T01:00, @T01:00] } per millisecond
 
 define test_TimeIvlExpand_MinPrecPerHour: TestMessage(TimeIvlExpand_MinPrecPerHour = TimeMinPrecPerHourExpected, 'TimeIvlExpand_MinPrecPerHour', toString(TimeMinPrecPerHourExpected), toString(TimeIvlExpand_MinPrecPerHour))
 define test_TimeIvlExpand_MinPrecPerMinute: TestMessage(TimeIvlExpand_MinPrecPerMinute = TimeMinPrecPerMinuteExpected, 'TimeIvlExpand_MinPrecPerMinute', toString(TimeMinPrecPerMinuteExpected), toString(TimeIvlExpand_MinPrecPerMinute))
 define test_TimeIvlExpand_MinPrecPerSecond: TestMessage(TimeIvlExpand_MinPrecPerSecond is null, 'TimeIvlExpand_MinPrecPerSecond', 'null', toString(TimeIvlExpand_MinPrecPerSecond))
 define test_TimeIvlExpand_MinPrecPerMillisecond: TestMessage(TimeIvlExpand_MinPrecPerMillisecond is null, 'TimeIvlExpand_MinPrecPerMillisecond', 'null', toString(TimeIvlExpand_MinPrecPerMillisecond))
 
-define TimeHourPrecPerHourExpected: { Interval[@T01+00:00, @T01+00:00], Interval[@T02+00:00, @T02+00:00] }
-define TimeIvlExpand_HourPrecPerHour: expand { Interval[@T01+00:00, @T02+00:00] } per hour
-define TimeIvlExpand_HourPrecPerMinute: expand { Interval[@T01+00:00, @T01+00:00] } per minute
-define TimeIvlExpand_HourPrecPerSecond: expand { Interval[@T01+00:00, @T01+00:00] } per second
-define TimeIvlExpand_HourPrecPerMillisecond: expand { Interval[@T01+00:00, @T01+00:00] } per millisecond
+define TimeHourPrecPerHourExpected: { Interval[@T01, @T01], Interval[@T02, @T02] }
+define TimeIvlExpand_HourPrecPerHour: expand { Interval[@T01, @T02] } per hour
+define TimeIvlExpand_HourPrecPerMinute: expand { Interval[@T01, @T01] } per minute
+define TimeIvlExpand_HourPrecPerSecond: expand { Interval[@T01, @T01] } per second
+define TimeIvlExpand_HourPrecPerMillisecond: expand { Interval[@T01, @T01] } per millisecond
 
 define test_TimeIvlExpand_HourPrecPerHour: TestMessage(TimeIvlExpand_HourPrecPerHour = TimeHourPrecPerHourExpected, 'TimeIvlExpand_HourPrecPerHour', toString(TimeHourPrecPerHourExpected), toString(TimeIvlExpand_HourPrecPerHour))
 define test_TimeIvlExpand_HourPrecPerMinute: TestMessage(TimeIvlExpand_HourPrecPerMinute is null, 'TimeIvlExpand_HourPrecPerMinute', 'null', toString(TimeIvlExpand_HourPrecPerMinute))
