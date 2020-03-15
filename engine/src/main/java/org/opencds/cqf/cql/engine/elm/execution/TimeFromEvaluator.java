@@ -1,11 +1,10 @@
-package org.opencds.cqf.cql.engine.elm.execution;
+package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.engine.execution.Context;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Precision;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Precision;
+import org.opencds.cqf.cql.runtime.Time;
 
 /*
 time from(argument DateTime) Time
@@ -35,7 +34,7 @@ public class TimeFromEvaluator extends org.cqframework.cql.elm.execution.TimeFro
                 minute = ((DateTime)operand).getDateTime().getMinute();
             }
             else {
-                return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour);
+                return new Time(hour);
             }
 
             int second;
@@ -43,7 +42,7 @@ public class TimeFromEvaluator extends org.cqframework.cql.elm.execution.TimeFro
                 second = ((DateTime)operand).getDateTime().getSecond();
             }
             else {
-                return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute);
+                return new Time(hour, minute);
             }
 
             int millisecond;
@@ -51,10 +50,10 @@ public class TimeFromEvaluator extends org.cqframework.cql.elm.execution.TimeFro
                 millisecond = ((DateTime)operand).getDateTime().get(Precision.MILLISECOND.toChronoField());
             }
             else {
-                return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute, second);
+                return new Time(hour, minute, second);
             }
 
-            return new Time(TemporalHelper.zoneToOffset(((DateTime)operand).getDateTime().getOffset()), hour, minute, second, millisecond);
+            return new Time(hour, minute, second, millisecond);
         }
 
         throw new InvalidOperatorArgument(

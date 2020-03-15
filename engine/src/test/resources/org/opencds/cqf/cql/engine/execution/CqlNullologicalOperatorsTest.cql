@@ -1,7 +1,5 @@
 library NullologicalOperator version '1'
 
-context Population
-
 //Coalesce
 define CoalesceANull : Coalesce('a', null)
 define CoalesceNullA : Coalesce(null, 'a')

@@ -442,7 +442,7 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public TimeFrom createTimeFrom() { return new TimeFromEvaluator(); }
 
     @Override
-    public TimezoneFrom createTimezoneFrom() { return new TimezoneFromEvaluator(); }
+    public TimezoneOffsetFrom createTimezoneOffsetFrom() { return new TimezoneOffsetFromEvaluator(); }
 
     @Override
     public Today createToday() { return new TodayEvaluator(); }

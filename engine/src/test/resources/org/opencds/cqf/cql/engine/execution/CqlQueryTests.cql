@@ -1,7 +1,5 @@
 library CqlQueryTests version '1'
 
-context Patient
-
 // #204: Unexpected results
 // list [1:1] [A, B, C, D]
 // RightShift [4:1] [null, A, B, C]

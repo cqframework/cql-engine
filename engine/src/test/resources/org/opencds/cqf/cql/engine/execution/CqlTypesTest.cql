@@ -2,8 +2,6 @@ library Types version '1'
 
 codesystem "LOINC": 'http://loinc.org'
 
-context Population
-
 //Any
 define AnyInteger: 5
 define AnyDecimal: 5.0

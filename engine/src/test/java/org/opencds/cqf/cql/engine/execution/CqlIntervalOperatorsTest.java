@@ -1,25 +1,21 @@
-package org.opencds.cqf.cql.engine.execution;
+package org.opencds.cqf.cql.execution;
+
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.runtime.*;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Interval;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.AfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestAfter() {
@@ -96,7 +92,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.BeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.BeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestBefore() {
@@ -173,7 +169,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.CollapseEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CollapseEvaluator#evaluate(Context)}
      */
     @Test
     public void TestCollapse() {
@@ -182,58 +178,58 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(1, true, 10, true)));
-        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(12, true, 19, true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 10, true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(12, true, 19, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(1, true, 19, true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 19, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse3").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(4, true, 8, true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(4, true, 8, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse4").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(4, true, 6, true)));
-        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(8, true, 10, true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(4, true, 6, true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(8, true, 10, true)));
 
         result = context.resolveExpressionRef("DecimalIntervalCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
-        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true)));
 
         result = context.resolveExpressionRef("DecimalIntervalCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("4.0"), true, new BigDecimal("8.0"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("4.0"), true, new BigDecimal("8.0"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
-        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true)));
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new DateTime(offset, 2012, 1, 25)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getStart(), new DateTime(offset, 2012, 5, 10)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getEnd(), new DateTime(offset, 2012, 5, 30)));
-        assertThat(((List<?>)result).size(), is(2));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new DateTime(offset, 2012, 1, 25)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getStart(), new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getEnd(), new DateTime(offset, 2012, 5, 30)));
+        assertThat(((List)result).size(), is(2));
 
 //        result = context.resolveExpressionRef("DateTimeCollapse2").getExpression().evaluate(context);
-//        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
-//        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new DateTime(offset, 2012, 5, 25)));
-//        assertThat(((List<?>)result).size(), is(1));
+//        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
+//        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new DateTime(offset, 2012, 5, 25)));
+//        assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("TimeCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new Time(offset, 1, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new Time(offset, 15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getStart(), new Time(offset, 17, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getEnd(), new Time(offset, 22, 59, 59, 999)));
-        assertThat(((List<?>)result).size(), is(2));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getStart(), new Time(17, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getEnd(), new Time(22, 59, 59, 999)));
+        assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("TimeCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new Time(offset, 1, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new Time(offset, 15, 59, 59, 999)));
-        assertThat(((List<?>)result).size(), is(1));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
+        assertThat(((List)result).size(), is(1));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ContainsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ContainsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestContains() {
@@ -243,7 +239,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TestNullElement1").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TestNullElement2").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -289,7 +285,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.EndsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EndsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEnds() {
@@ -333,7 +329,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEqual() {
@@ -374,7 +370,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ExceptEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ExceptEvaluator#evaluate(Context)}
      */
     @Test
     public void TestExcept() {
@@ -411,23 +407,23 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new DateTime(offset, 2012, 1, 16)));
 
         result = context.resolveExpressionRef("ExceptTimeInterval").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 5, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 8, 59, 59, 998)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(5, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(8, 59, 59, 998)));
 
         result = context.resolveExpressionRef("ExceptTime2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 11, 0, 0, 0)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 11, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(11, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(11, 59, 59, 999)));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.InEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.InEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIn() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TestInNull").getExpression().evaluate(context);
-        assertThat(result, is(false));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TestInNullEnd").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -479,7 +475,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.IncludesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IncludesEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIncludes() {
@@ -520,17 +516,17 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.IncludedInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IncludedInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIncludedIn() {
         Context context = new Context(library);
 
         // This is going to the InEvaluator for some reason
-        Object result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        // result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
+        // assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("IntegerIntervalIncludedInFalse").getExpression().evaluate(context);
@@ -571,16 +567,16 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.IntersectEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IntersectEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIntersect() {
         Context context = new Context(library);
 
-        Object result = context.resolveExpressionRef("TestIntersectNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        // result = context.resolveExpressionRef("TestIntersectNull").getExpression().evaluate(context);
+        // assertThat(result, is(nullValue()));
 
-        result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).equal(new Interval(4, true, 10, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalIntersectTestNull").getExpression().evaluate(context);
@@ -604,13 +600,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new DateTime(offset, 2012, 1, 10)));
 
         result = context.resolveExpressionRef("TimeIntersect").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 4, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 6, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(4, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(6, 59, 59, 999)));
 
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEquivalent() {
@@ -648,7 +644,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.MeetsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MeetsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestMeets() {
@@ -692,7 +688,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.MeetsBeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MeetsBeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestMeetsBefore() {
@@ -736,7 +732,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.MeetsAfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MeetsAfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestMeetsAfter() {
@@ -780,7 +776,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.NotEqualEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
     public void TestNotEqual() {
@@ -818,7 +814,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.SameOrAfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.SameOrAfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOnOrAfter() {
@@ -850,7 +846,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.SameOrBeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.SameOrBeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOnOrBefore() {
@@ -882,7 +878,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.OverlapsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.OverlapsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOverlaps() {
@@ -926,7 +922,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.OverlapsBeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.OverlapsBeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOverlapsBefore() {
@@ -970,7 +966,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.OverlapsAfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.OverlapsAfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOverlapsAfter() {
@@ -1014,7 +1010,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.PointFromEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.PointFromEvaluator#evaluate(Context)}
      */
     @Test
     public void TestPointFrom() {
@@ -1033,7 +1029,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ProperlyIncludesEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperlyIncludes() {
@@ -1074,7 +1070,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperContainsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ProperContainsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperContains() {
@@ -1100,7 +1096,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ProperInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperIn() {
@@ -1126,7 +1122,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperlyIncludedIn() {
@@ -1167,7 +1163,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.IntervalEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.IntervalEvaluator#evaluate(Context)}
      */
     @Test
     public void TestInterval() {
@@ -1188,8 +1184,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new DateTime(offset, 2016, 5, 2, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeIntervalTest").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 0, 0, 0, 0)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 23, 59, 59, 599)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(23, 59, 59, 599)));
 
         try {
             result = context.resolveExpressionRef("InvalidIntegerInterval").getExpression().evaluate(context);
@@ -1215,7 +1211,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.StartEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.StartEvaluator#evaluate(Context)}
      */
     @Test
     public void TestStart() {
@@ -1235,11 +1231,11 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 5, 1, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeIntervalStart").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(0, 0, 0, 0)));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.StartsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.StartsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestStarts() {
@@ -1283,7 +1279,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.UnionEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.UnionEvaluator#evaluate(Context)}
      */
     @Test
     public void TestUnion() {
@@ -1319,15 +1315,15 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TimeUnion").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(offset, 5, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getStart(), new Time(5, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)result).getEnd(), new Time(20, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeUnionNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.WidthEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.WidthEvaluator#evaluate(Context)}
      */
     @Test
     public void TestWidth() {
@@ -1353,7 +1349,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.EndEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.EndEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEnd() {
@@ -1373,6 +1369,6 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 5, 2, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeIntervalEnd").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 599)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(23, 59, 59, 599)));
     }
 }

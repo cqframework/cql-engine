@@ -54,10 +54,10 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("TimeCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 5, 15, 33, 556)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 15, 33, 556)));
 
         result = context.resolveExpressionRef("TimeListCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 5, 15, 33, 556)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 15, 33, 556)));
     }
 
     /**

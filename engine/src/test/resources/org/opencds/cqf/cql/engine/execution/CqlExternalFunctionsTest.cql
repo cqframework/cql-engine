@@ -1,7 +1,5 @@
 library CqlExternalFunctionsTest version '1'
 
-context Population
-
 // MyMath
 
 define function MyPlus(x Integer, y Integer) returns Integer : external
