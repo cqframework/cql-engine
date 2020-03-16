@@ -42,6 +42,16 @@ define ConvertsToQuantityDecimalTrue: ConvertsToQuantity(1.0)
 define ConvertsToQuantityRatioTrue: ConvertsToQuantity(1.0'mg':2.0'mg')
 define ConvertsToQuantityNull: ConvertsToQuantity(null)
 
+define ConvertsToStringBoolean: ConvertsToString(true)
+define ConvertsToStringInteger: ConvertsToString(1)
+define ConvertsToStringDecimal: ConvertsToString(1.1)
+define ConvertsToStringQuantity: ConvertsToString(1.1'mg')
+define ConvertsToStringRatio: ConvertsToString(1.1'mg':3.1'mg')
+define ConvertsToStringDate: ConvertsToString(@2012-01-01)
+define ConvertsToStringDateTime: ConvertsToString(@2012-01-01T01:01)
+define ConvertsToStringTime: ConvertsToString(@T01:01)
+define ConvertsToStringNull: ConvertsToString(null)
+
 //Is
 define IntegerIsInteger: 5 is Integer
 define StringIsInteger: '5' is Integer

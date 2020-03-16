@@ -191,6 +191,41 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToStringEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToString() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToStringBoolean").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringInteger").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringDecimal").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringQuantity").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringRatio").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringDate").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringDateTime").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringTime").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.IsEvaluator#evaluate(Context)}
      */
     @Test
