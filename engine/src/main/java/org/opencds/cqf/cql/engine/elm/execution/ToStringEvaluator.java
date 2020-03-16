@@ -1,12 +1,9 @@
-package org.opencds.cqf.cql.engine.elm.execution;
+package org.opencds.cqf.cql.elm.execution;
+
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.*;
 
 import java.math.BigDecimal;
-
-import org.opencds.cqf.cql.engine.execution.Context;
-import org.opencds.cqf.cql.engine.runtime.Date;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.Time;
 
 /*
 
@@ -49,9 +46,9 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
         else if (operand instanceof Quantity) {
             return String.format("%s %s%s%s", ((Quantity)operand).getValue().toString(), "'", ((Quantity)operand).getUnit(), "'");
         }
-//        else if (operand instanceof Ratio) {
-//            TODO
-//        }
+        else if (operand instanceof Ratio) {
+            return operand.toString();
+        }
         else if (operand instanceof Boolean) {
             return Boolean.toString((Boolean)operand);
         }

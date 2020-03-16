@@ -13,19 +13,19 @@ The result of the operator is the value of the argument converted to the target 
   If there is no valid conversion from the actual value to the target type, the result is null.
 
 The following table lists the conversions supported in CQL:
-From\To	  Boolean	  Integer	  Decimal	  Quantity	String	 Datetime	 Time	 Code	Concept
-Boolean	    N/A	        -	        -	         -	   Explicit	    -	      -	      -	      -
-Integer	     -	       N/A	     Implicit	     -	   Explicit	    -	      -	      -	      -
-Decimal	     -	        -	       N/A	         -	   Explicit	    - 	      -	      -	      -
-Quantity	 -	        -	        -	         N/A   Explicit	    -	      -	      -	      -
-Ratio   	 -	        -	        -	         N/A   Explicit	    -	      -	      -	      -
-String	  Explicit   Explicit	 Explicit	  Explicit	 N/A	 Explicit   Explicit  -	      -
-Date    	 -	        -	        -	          -	   Explicit	   N/A	    Implicit  -	      -
-Datetime	 -	        -	        -	          -	   Explicit	   N/A	      -	      -	      -
-Time	     -	        -	        -	          -	   Explicit	    -	     N/A	  -	      -
-Code	     -	        -	        -	          -	      -	        -	      -	     N/A   Implicit
-Concept	     -	        -	        -	          -	      -	        -	      -	      -	     N/A
-List<Code>   -	        -	        -	          -	      -	        -	      -	      -	   Explicit
+From\To	  Boolean	  Integer	  Decimal	  Quantity  Ratio	  String   Date 	 Datetime	 Time	    Code	Concept  List<Code>
+Boolean	    N/A	        -	        -	          -	      -      Explicit	 -           -	       -	      -	      -          -
+Integer	     -	       N/A	     Implicit	  Implicit	  -	     Explicit	 -           -	       -	      -       -          -
+Decimal	     -	        -	       N/A	      Implicit	  - 	 Explicit 	 -           -	       -	      -       -          -
+Quantity	 -	        -	        -	         N/A      -	     Explicit	 -           -	       -	      -       -          -
+Ratio   	 -	        -	        -	          -      N/A     Explicit    -           -	       -	      -	      -	         -
+String	  Explicit   Explicit	 Explicit	  Explicit Explicit    N/A	   Explicit  Explicit   Explicit      -	      -          -
+Date    	 -	        -	        -	          -	      -      Explicit	N/A      Implicit      -          -	      -          -
+Datetime	 -	        -	        -	          -	      -      Explicit  Explicit    N/A         -	      -	      -	         -
+Time	     -	        -	        -	          -	      -      Explicit	 -           -	      N/A	      -	      -          -
+Code	     -	        -	        -	          -	      -         -	     -           -	       -	     N/A   Implicit      -
+Concept	     -	        -	        -	          -	      -         -	     -           -	       -	      -	     N/A      Explicit
+List<Code>   -	        -	        -	          -	      -         -	     -           -	       -	      -	   Explicit     N/A
 
 For conversions between date/time and string values, ISO-8601 standard format is used:
 yyyy-MM-ddThh:mm:ss.fff(Z | +/- hh:mm)

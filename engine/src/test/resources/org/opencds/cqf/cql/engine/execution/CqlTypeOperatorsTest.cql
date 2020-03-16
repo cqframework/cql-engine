@@ -41,6 +41,10 @@ define StringNeg25ToInteger: ToInteger('-25')
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
 
+//ToRatio
+define ToRatioIsValid: ToRatio('1.0 \'mg\':2.0 \'mg\'')
+define ToRatioIsNull: ToRatio('1.0 \'mg\';2.0 \'mg\'')
+
 //ToString
 define IntegerNeg5ToString: ToString(-5)
 define Decimal18D55ToString: ToString(18.55)

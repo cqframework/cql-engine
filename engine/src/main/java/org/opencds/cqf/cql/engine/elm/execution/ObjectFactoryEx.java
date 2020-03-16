@@ -379,6 +379,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public QueryLetRef createQueryLetRef() { return new QueryLetRefEvaluator(); }
 
     @Override
+    public Ratio createRatio() { return new RatioEvaluator(); }
+
+    @Override
     public Repeat createRepeat() { return new RepeatEvaluator(); }
 
     @Override
@@ -470,6 +473,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public ToQuantity createToQuantity() { return new ToQuantityEvaluator(); }
+
+    @Override
+    public ToRatio createToRatio() { return new ToRatioEvaluator(); }
 
     @Override
     public ToString createToString() { return new ToStringEvaluator(); }
