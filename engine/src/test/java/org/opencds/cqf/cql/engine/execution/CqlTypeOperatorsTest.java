@@ -173,6 +173,32 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToQuantityEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToQuantity() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToQuantityStringTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityStringFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityIntegerTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityDecimalTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityRatioTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.IsEvaluator#evaluate(Context)}
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsEvaluator#evaluate(Context)}
      */
