@@ -102,6 +102,23 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToDateEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToDate() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToDateTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.IsEvaluator#evaluate(Context)}
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsEvaluator#evaluate(Context)}
      */
@@ -148,7 +165,10 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
-        Object result = context.resolveExpressionRef("ToDateTime1").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("ToDateTime0").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1)));
+
+        result = context.resolveExpressionRef("ToDateTime1").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
@@ -172,13 +192,8 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal(0), 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
-//        try {
-//            context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
-//            Assert.fail();
-//        } catch (DateTimeParseException iae) {
-//            // pass
-//        }
-
+        result = context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
     }
 
     /**

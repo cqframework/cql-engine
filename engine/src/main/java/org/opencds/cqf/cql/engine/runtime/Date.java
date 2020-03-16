@@ -3,6 +3,9 @@ package org.opencds.cqf.cql.engine.runtime;
 import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.time.temporal.ChronoField;
 
 import org.opencds.cqf.cql.engine.exception.InvalidDate;
 
@@ -46,6 +49,7 @@ public class Date extends BaseTemporal {
 
     public Date(String dateString) {
         precision = Precision.fromDateIndex(dateString.split("-").length - 1);
+        dateString = TemporalHelper.autoCompleteDateString(dateString, precision);
         setDate(LocalDate.parse(dateString));
     }
 
