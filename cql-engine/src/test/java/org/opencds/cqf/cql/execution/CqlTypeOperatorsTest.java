@@ -111,6 +111,23 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToDateTimeEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToDateTime() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToDateTimeTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateTimeFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateTimeNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.IsEvaluator#evaluate(Context)}
      */
     @Test

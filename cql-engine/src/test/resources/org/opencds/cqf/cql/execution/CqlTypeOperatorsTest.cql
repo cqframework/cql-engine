@@ -13,7 +13,7 @@ define StringToDateTime: convert '2014-01-01' to DateTime
 define StringToTime: convert 'T14:30:00.0' to Time
 define StringToDateTimeMalformed: convert '2014/01/01' to DateTime
 
-//ConvertsTo
+//ConvertsTo[x]
 define ConvertsToBooleanTrue: ConvertsToBoolean('TRUE')
 define ConvertsToBooleanFalse: ConvertsToBoolean('AFFIRMATIVE')
 define ConvertsToBooleanNull: ConvertsToBoolean(null)
@@ -21,6 +21,10 @@ define ConvertsToBooleanNull: ConvertsToBoolean(null)
 define ConvertsToDateTrue: ConvertsToDate('2014-01')
 define ConvertsToDateFalse: ConvertsToDate('January 2014')
 define ConvertsToDateNull: ConvertsToDate(null)
+
+define ConvertsToDateTimeTrue: ConvertsToDateTime('2014-01-01T01')
+define ConvertsToDateTimeFalse: ConvertsToDateTime('January 2014')
+define ConvertsToDateTimeNull: ConvertsToDateTime(null)
 
 //Is
 define IntegerIsInteger: 5 is Integer
