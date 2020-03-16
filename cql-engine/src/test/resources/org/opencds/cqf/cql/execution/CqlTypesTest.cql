@@ -52,6 +52,9 @@ define QuantityTest: 150.2 '[lb_av]'
 define QuantityTest2: 2.5589 '{eskimo kisses}'
 define QuantityFractionalTooBig: 5.999999999 'g'
 
+//Ratio
+define RatioTest: 150.2'[lb_av]':2.5589'{eskimo kisses}'
+
 //String
 // Problem here -- escape chars included in result string
 define StringTestEscapeQuotes: '\'I start with a single quote and end with a double quote\"'
