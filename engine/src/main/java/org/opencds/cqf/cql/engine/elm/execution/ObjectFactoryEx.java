@@ -100,6 +100,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ConvertsToDateTime createConvertsToDateTime() { return new ConvertsToDateTimeEvaluator(); }
 
     @Override
+    public ConvertsToDecimal createConvertsToDecimal() { return new ConvertsToDecimalEvaluator(); }
+
+    @Override
     public Count createCount() { return new CountEvaluator(); }
 
     @Override
