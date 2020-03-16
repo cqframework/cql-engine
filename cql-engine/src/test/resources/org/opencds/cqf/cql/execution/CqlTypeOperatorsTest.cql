@@ -22,9 +22,14 @@ define ConvertsToDateTrue: ConvertsToDate('2014-01')
 define ConvertsToDateFalse: ConvertsToDate('January 2014')
 define ConvertsToDateNull: ConvertsToDate(null)
 
-define ConvertsToDateTimeTrue: ConvertsToDateTime('2014-01-01T01')
+define ConvertsToDateTimeStringTrue: ConvertsToDateTime('2014-01-01T01')
+define ConvertsToDateTimeDateTrue: ConvertsToDateTime(@2014-01-01)
 define ConvertsToDateTimeFalse: ConvertsToDateTime('January 2014')
 define ConvertsToDateTimeNull: ConvertsToDateTime(null)
+
+define ConvertsToDecimalTrue: ConvertsToDecimal('+1')
+define ConvertsToDecimalFalse: ConvertsToDecimal('+-1')
+define ConvertsToDecimalNull: ConvertsToDecimal(null)
 
 //Is
 define IntegerIsInteger: 5 is Integer

@@ -2,7 +2,9 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
@@ -40,8 +42,23 @@ public class ConvertsToDateTimeEvaluator extends org.cqframework.cql.elm.executi
             return true;
         }
 
+        else if (argument instanceof Date) {
+            try {
+                new DateTime(
+                        TemporalHelper.getDefaultOffset(),
+                        ((Date) argument).getDate().getYear(),
+                        ((Date) argument).getDate().getMonthValue(),
+                        ((Date) argument).getDate().getDayOfMonth(),
+                        0, 0, 0, 0
+                );
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }
+
         throw new InvalidOperatorArgument(
-                "ConvertsToDateTime(String)",
+                "ConvertsToDateTime(String) or ConvertsToDateTime(Date)",
                 String.format("ConvertsToDateTime(%s)", argument.getClass().getName())
         );
     }
