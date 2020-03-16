@@ -77,6 +77,12 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("QuantityEqDiffPrecision").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("RatioEqual").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("RatioNotEqual").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
         // TODO: Quantity unit comparison is not implemented yet
         // result = context.resolveExpressionRef("QuantityEqCM1M01").getExpression().evaluate(context);
         // assertThat(result, is(true));
@@ -537,6 +543,12 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("EquivEqCM1CM1").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("RatioEquivalent").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("RatioNotEquivalent").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         // TODO: Quantity unit comparison is not implemented yet
         //result = context.resolveExpressionRef("EquivEqCM1M01").getExpression().evaluate(context);

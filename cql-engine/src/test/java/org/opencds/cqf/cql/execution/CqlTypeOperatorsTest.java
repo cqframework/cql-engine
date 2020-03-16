@@ -316,7 +316,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
-        Assert.assertFalse((Boolean) result);
+        Assert.assertNull(result);
     }
 
     /**
