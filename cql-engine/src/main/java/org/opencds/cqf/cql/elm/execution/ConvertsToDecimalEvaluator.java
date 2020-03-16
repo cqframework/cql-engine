@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
+
 /*
 
     ConvertsToDecimal(argument String) Boolean
@@ -12,9 +15,6 @@ package org.opencds.cqf.cql.elm.execution;
     If the argument is null, the result is null.
 
 */
-
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.execution.Context;
 
 public class ConvertsToDecimalEvaluator extends org.cqframework.cql.elm.execution.ConvertsToDecimal {
 

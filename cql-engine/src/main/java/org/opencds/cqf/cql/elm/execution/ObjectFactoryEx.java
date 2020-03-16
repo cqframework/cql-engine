@@ -103,6 +103,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ConvertsToDecimal createConvertsToDecimal() { return new ConvertsToDecimalEvaluator(); }
 
     @Override
+    public ConvertsToInteger createConvertsToInteger() { return new ConvertsToIntegerEvaluator(); }
+
+    @Override
     public Count createCount() { return new CountEvaluator(); }
 
     @Override

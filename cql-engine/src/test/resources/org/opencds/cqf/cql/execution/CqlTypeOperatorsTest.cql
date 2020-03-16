@@ -31,6 +31,10 @@ define ConvertsToDecimalTrue: ConvertsToDecimal('+1')
 define ConvertsToDecimalFalse: ConvertsToDecimal('+-1')
 define ConvertsToDecimalNull: ConvertsToDecimal(null)
 
+define ConvertsToIntegerTrue: ConvertsToInteger('+1')
+define ConvertsToIntegerFalse: ConvertsToInteger('+-1')
+define ConvertsToIntegerNull: ConvertsToInteger(null)
+
 //Is
 define IntegerIsInteger: 5 is Integer
 define StringIsInteger: '5' is Integer
