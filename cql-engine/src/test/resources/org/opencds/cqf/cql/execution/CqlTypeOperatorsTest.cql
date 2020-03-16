@@ -35,6 +35,13 @@ define ConvertsToIntegerTrue: ConvertsToInteger('+1')
 define ConvertsToIntegerFalse: ConvertsToInteger('+-1')
 define ConvertsToIntegerNull: ConvertsToInteger(null)
 
+define ConvertsToQuantityStringTrue: ConvertsToQuantity('-0.1 \'mg\'')
+define ConvertsToQuantityStringFalse: ConvertsToQuantity('+-0.1 \'mg\'')
+define ConvertsToQuantityIntegerTrue: ConvertsToQuantity(1)
+define ConvertsToQuantityDecimalTrue: ConvertsToQuantity(1.0)
+define ConvertsToQuantityRatioTrue: ConvertsToQuantity(1.0'mg':2.0'mg')
+define ConvertsToQuantityNull: ConvertsToQuantity(null)
+
 //Is
 define IntegerIsInteger: 5 is Integer
 define StringIsInteger: '5' is Integer

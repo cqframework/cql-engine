@@ -94,7 +94,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
             return (Quantity) DivideEvaluator.divide(((Ratio) operand).getNumerator(), ((Ratio) operand).getDenominator());
         }
 
-        throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String values.", operand.getClass().getName()));
+        throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String, Integer, Decimal, or Ratio values.", operand.getClass().getName()));
     }
 
     @Override
