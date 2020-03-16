@@ -53,7 +53,7 @@ public class ToDateTimeEvaluator extends org.cqframework.cql.elm.execution.ToDat
                 return new DateTime((String) operand, context.getEvaluationDateTime().getEvaluationOffset())
                         .withEvaluationOffset(context.getEvaluationDateTime().getEvaluationOffset());
             } catch (DateTimeParseException dtpe) {
-                return false;
+                return null;
             }
         }
 
