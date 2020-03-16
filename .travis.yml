@@ -19,8 +19,8 @@ script:
 
 ## export GPG details
 before_deploy:
-  - echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import
-  - echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust
+  - 'if [[ "$TRAVIS_BRANCH" =~ master* ]]; echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi'
+  - 'if [[ "$TRAVIS_BRANCH" =~ master* ]]; echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi'
 
 # NOTE: tests were already run as part of the script phase
 deploy:
