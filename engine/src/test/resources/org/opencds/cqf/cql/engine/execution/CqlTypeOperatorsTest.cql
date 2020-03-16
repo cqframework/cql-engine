@@ -13,6 +13,11 @@ define StringToDateTime: convert '2014-01-01' to DateTime
 define StringToTime: convert 'T14:30:00.0' to Time
 define StringToDateTimeMalformed: convert '2014/01/01' to DateTime
 
+//ConvertsTo
+define ConvertsToBooleanTrue: ConvertsToBoolean('TRUE')
+define ConvertsToBooleanFalse: ConvertsToBoolean('AFFIRMATIVE')
+define ConvertsToBooleanNull: ConvertsToBoolean(null)
+
 //Is
 define IntegerIsInteger: 5 is Integer
 define StringIsInteger: '5' is Integer
