@@ -4,25 +4,24 @@ import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Ratio;
 
 /*
-*
-ToRatio(argument String) Ratio
 
-* Description:
-The ToRatio operator converts the value of its argument to a Ratio value. The operator accepts strings using the following format:
-<quantity>:<quantity>
+    ToRatio(argument String) Ratio
 
-where <quantity> is the format used to by the ToQuantity operator.
+    The ToRatio operator converts the value of its argument to a Ratio value. The operator accepts strings using the following format:
+    <quantity>:<quantity>
 
-If the input string is not formatted correctly, or cannot be interpreted as a valid Ratio value, the result is null.
+    where <quantity> is the format used to by the ToQuantity operator.
 
-If the argument is null, the result is null.
+    If the input string is not formatted correctly, or cannot be interpreted as a valid Ratio value, the result is null.
 
-The following examples illustrate the behavior of the ToRatio operator:
+    If the argument is null, the result is null.
 
-define IsValid: ToRatio('1.0 \'mg\':2.0 \'mg\'')
-define IsNull: ToRatio('1.0 \'mg\';2.0 \'mg\'')
-*
-* */
+    The following examples illustrate the behavior of the ToRatio operator:
+
+    define IsValid: ToRatio('1.0 \'mg\':2.0 \'mg\'')
+    define IsNull: ToRatio('1.0 \'mg\';2.0 \'mg\'')
+
+*/
 
 public class ToRatioEvaluator extends org.cqframework.cql.elm.execution.ToRatio {
 

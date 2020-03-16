@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Ratio;
 
 /*
 
@@ -21,8 +20,8 @@ public class RatioEvaluator extends org.cqframework.cql.elm.execution.Ratio {
 
     @Override
     protected Object internalEvaluate(Context context) {
-        Quantity numerator = (Quantity) getNumerator().internalEvaluate(context);
-        Quantity denominator = (Quantity) getDenominator().internalEvaluate(context);
+        Quantity numerator = (Quantity) getNumerator().evaluate(context);
+        Quantity denominator = (Quantity) getDenominator().evaluate(context);
 
         return new org.opencds.cqf.cql.runtime.Ratio().setNumerator(numerator).setDenominator(denominator);
     }
