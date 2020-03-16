@@ -18,6 +18,10 @@ define ConvertsToBooleanTrue: ConvertsToBoolean('TRUE')
 define ConvertsToBooleanFalse: ConvertsToBoolean('AFFIRMATIVE')
 define ConvertsToBooleanNull: ConvertsToBoolean(null)
 
+define ConvertsToDateTrue: ConvertsToDate('2014-01')
+define ConvertsToDateFalse: ConvertsToDate('January 2014')
+define ConvertsToDateNull: ConvertsToDate(null)
+
 //Is
 define IntegerIsInteger: 5 is Integer
 define StringIsInteger: '5' is Integer
@@ -29,6 +33,7 @@ define StringNoToBoolean: ToBoolean('NO')
 define CodeToConcept1: ToConcept(Code { code: '8480-6' })
 
 //ToDateTime
+define ToDateTime0: ToDateTime('2014-01')
 define ToDateTime1: ToDateTime('2014-01-01')
 define ToDateTime2: ToDateTime('2014-01-01T12:05')
 define ToDateTime3: ToDateTime('2014-01-01T12:05:05.955')
