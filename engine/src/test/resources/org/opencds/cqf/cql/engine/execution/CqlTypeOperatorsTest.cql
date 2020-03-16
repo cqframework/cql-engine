@@ -52,6 +52,10 @@ define ConvertsToStringDateTime: ConvertsToString(@2012-01-01T01:01)
 define ConvertsToStringTime: ConvertsToString(@T01:01)
 define ConvertsToStringNull: ConvertsToString(null)
 
+define ConvertsToTimeTrue: ConvertsToTime('01:30')
+define ConvertsToTimeFalse: ConvertsToTime('01-30')
+define ConvertsToTimeNull: ConvertsToTime(null)
+
 //Is
 define IntegerIsInteger: 5 is Integer
 define StringIsInteger: '5' is Integer

@@ -112,6 +112,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ConvertsToString createConvertsToString() { return new ConvertsToStringEvaluator(); }
 
     @Override
+    public ConvertsToTime createConvertsToTime() { return new ConvertsToTimeEvaluator(); }
+
+    @Override
     public Count createCount() { return new CountEvaluator(); }
 
     @Override
