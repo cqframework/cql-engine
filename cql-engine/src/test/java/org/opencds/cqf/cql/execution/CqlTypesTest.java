@@ -6,9 +6,7 @@ import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
-import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.HashMap;
 
@@ -19,7 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 public class CqlTypesTest extends CqlExecutionTestBase {
 
     @Test
-    public void testAny() throws JAXBException {
+    public void testAny() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AnyInteger").getExpression().evaluate(context);
@@ -52,7 +50,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     }
 
     @Test
-    public void testBoolean() throws JAXBException {
+    public void testBoolean() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("BooleanTestTrue").getExpression().evaluate(context);
@@ -68,7 +66,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.CodeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCode() throws JAXBException {
+    public void testCode() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CodeLiteral").getExpression().evaluate(context);
@@ -82,7 +80,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ConceptEvaluator#evaluate(Context)}
      */
     @Test
-    public void testConcept() throws JAXBException {
+    public void testConcept() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ConceptTest").getExpression().evaluate(context);
@@ -93,7 +91,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.DateTimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDateTime() throws JAXBException {
+    public void testDateTime() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeNull").getExpression().evaluate(context);
@@ -123,8 +121,8 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2015, 2, 10)));
 
         result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)result).getStart().equals(19));
-        Assert.assertTrue(((Interval)result).getEnd().equals(49));
+        Assert.assertEquals(((Interval) result).getStart(), 19);
+        Assert.assertEquals(((Interval) result).getEnd(), 49);
 
         result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1, 1, 1, 0, 0, 0, 0)));
@@ -134,7 +132,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     }
 
     @Test
-    public void testDecimal() throws JAXBException {
+    public void testDecimal() {
         Context context = new Context(library);
         // NOTE: these should result in compile-time decimal number is too large error, but they do not...
         Object result = context.resolveExpressionRef("DecimalUpperBoundExcept").getExpression().evaluate(context);
@@ -152,7 +150,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
     }
 
     @Test
-    public void testInteger() throws JAXBException {
+    public void testInteger() {
         Context context = new Context(library);
         // NOTE: These result in compile-time integer number is too large error, which is correct
         // Object result = context.resolveExpressionRef("IntegerUpperBoundExcept").getExpression().evaluate(context);
@@ -169,7 +167,7 @@ public class CqlTypesTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.QuantityEvaluator#evaluate(Context)}
      */
     @Test
-    public void testQuantity() throws JAXBException {
+    public void testQuantity() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("QuantityTest").getExpression().evaluate(context);
@@ -183,8 +181,20 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.99999999")).withUnit("g")));
     }
 
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.RatioEvaluator#evaluate(Context)}
+     */
     @Test
-    public void testString() throws JAXBException {
+    public void testRatio() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("RatioTest").getExpression().evaluate(context);
+        Assert.assertTrue(((Ratio) result).getNumerator().equal(new Quantity().withValue(new BigDecimal("150.2")).withUnit("[lb_av]")));
+        Assert.assertTrue(((Ratio) result).getDenominator().equal(new Quantity().withValue(new BigDecimal("2.5589")).withUnit("{eskimo kisses}")));
+    }
+
+    @Test
+    public void testString() {
         Context context = new Context(library);
         // NOTE: The escape characters (i.e. the backslashes) remain in the string...
         Object result = context.resolveExpressionRef("StringTestEscapeQuotes").getExpression().evaluate(context);
@@ -199,10 +209,9 @@ public class CqlTypesTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.TimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTime() throws JAXBException {
+    public void testTime() {
         Context context = new Context(library);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("TimeProper").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 25, 12, 863)));
 

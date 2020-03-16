@@ -186,7 +186,21 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("String5D5CMToQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.5")).withUnit("cm")));
+    }
 
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.ToRatioEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testToRatio() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ToRatioIsValid").getExpression().evaluate(context);
+        Assert.assertTrue(((Ratio) result).getNumerator().equal(new Quantity().withValue(new BigDecimal("1.0")).withUnit("mg")));
+        Assert.assertTrue(((Ratio) result).getDenominator().equal(new Quantity().withValue(new BigDecimal("2.0")).withUnit("mg")));
+
+        result = context.resolveExpressionRef("ToRatioIsNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
     }
 
     /**
