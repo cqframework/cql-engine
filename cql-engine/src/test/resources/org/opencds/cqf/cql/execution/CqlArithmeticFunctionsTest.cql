@@ -137,6 +137,13 @@ define Negate1D : -(1.0)
 define NegateNeg1D : -(-1.0)
 define Negate1CM : -(1'cm')
 
+//Precision
+define PrecisionDecimal5: Precision(1.58700) //5
+define PrecisionDateYear: Precision(@2014) // 4
+define PrecisionDateTimeMs: Precision(@2014-01-05T10:30:00.000) // 17
+define PrecisionTimeMinute: Precision(@T10:30) // 4
+define PrecisionTimeMs: Precision(@T10:30:00.000) // 9
+
 //Predecessor
 define PredecessorNull: predecessor of (null as Integer)
 define PredecessorOf0: predecessor of 0
