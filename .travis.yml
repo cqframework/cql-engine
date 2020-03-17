@@ -28,12 +28,14 @@ deploy:
   - provider: script
     script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -DskipTests=true"
     cleanup: false
+    skip_cleanup: true # this is the current correct option, soon to be deprecated by the above
     on:
       branch: develop
   # deploy master to production
   - provider: script
     script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy -P release -DskipTests=true"
     cleanup: false
+    skip_cleanup: true # this is the current correct option, soon to be deprecated by the above
     on:
       branch: master
 
