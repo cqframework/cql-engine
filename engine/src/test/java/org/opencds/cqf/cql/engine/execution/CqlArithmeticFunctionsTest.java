@@ -1,33 +1,26 @@
-package org.opencds.cqf.cql.engine.execution;
+package org.opencds.cqf.cql.execution;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.comparesEqualTo;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-
-import java.math.BigDecimal;
-
-import javax.xml.bind.JAXBException;
-
-import org.opencds.cqf.cql.engine.elm.execution.AbsEvaluator;
-import org.opencds.cqf.cql.engine.elm.execution.AddEvaluator;
-import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.engine.exception.CqlException;
-import org.opencds.cqf.cql.engine.exception.UndefinedResult;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
-import org.opencds.cqf.cql.engine.runtime.Value;
+import org.opencds.cqf.cql.elm.execution.AbsEvaluator;
+import org.opencds.cqf.cql.elm.execution.AddEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.CqlException;
+import org.opencds.cqf.cql.exception.UndefinedResult;
+import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import javax.xml.bind.JAXBException;
+import java.math.BigDecimal;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.AbsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AbsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAbs() throws JAXBException {
+    public void testAbs() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AbsNull").getExpression().evaluate(context);
@@ -59,10 +52,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.AddEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.AddEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAdd() throws JAXBException {
+    public void testAdd() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("AddNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -91,10 +84,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.CeilingEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.CeilingEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCeiling() throws JAXBException {
+    public void testCeiling() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("CeilingNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -119,10 +112,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.DivideEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.DivideEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDivide() throws JAXBException {
+    public void testDivide() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("DivideNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -164,10 +157,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.FloorEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.FloorEvaluator#evaluate(Context)}
      */
     @Test
-    public void testFloor() throws JAXBException {
+    public void testFloor() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("FloorNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -195,10 +188,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ExpEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ExpEvaluator#evaluate(Context)}
      */
     @Test
-    public void testExp() throws JAXBException {
+    public void testExp() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("ExpNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -229,10 +222,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.LogEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.LogEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLog() throws JAXBException {
+    public void testLog() {
         Context context = new Context(library);
         Object result;
 
@@ -259,10 +252,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.LnEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.LnEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLn() throws JAXBException {
+    public void testLn() {
         Context context = new Context(library);
         Object result;
 
@@ -295,10 +288,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.MaxEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MaxEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMaximum() throws JAXBException {
+    public void testMaximum() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("IntegerMaxValue").getExpression().evaluate(context);
         assertThat(result, is(Integer.MAX_VALUE));
@@ -315,10 +308,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.MinEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MinEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMinimum() throws JAXBException {
+    public void testMinimum() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("IntegerMinValue").getExpression().evaluate(context);
         assertThat(result, is(Integer.MIN_VALUE));
@@ -335,10 +328,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ModuloEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.ModuloEvaluator#evaluate(Context)}
      */
     @Test
-    public void testModulo() throws JAXBException {
+    public void testModulo() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("ModuloNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -366,10 +359,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.MultiplyEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.MultiplyEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMultiply() throws JAXBException {
+    public void testMultiply() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("MultiplyNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -390,10 +383,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.NegateEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.NegateEvaluator#evaluate(Context)}
      */
     @Test
-    public void testNegate() throws JAXBException {
+    public void testNegate() {
         Context context = new Context(library);
         Object result;
 
@@ -430,10 +423,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.PredecessorEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.PredecessorEvaluator#evaluate(Context)}
      */
     @Test
-    public void testPredecessor() throws JAXBException {
+    public void testPredecessor() {
         Context context = new Context(library);
         Object result;
 
@@ -477,10 +470,32 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.PowerEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.PrecisionEvaluator#evaluate(Context)}
      */
     @Test
-    public void testPower() throws JAXBException {
+    public void testPrecision() {
+        Context context = new Context(library);
+        Object result = context.resolveExpressionRef("PrecisionDecimal5").getExpression().evaluate(context);
+        Assert.assertEquals(result, 5);
+
+        result = context.resolveExpressionRef("PrecisionDateYear").getExpression().evaluate(context);
+        Assert.assertEquals(result, 4);
+
+        result = context.resolveExpressionRef("PrecisionDateTimeMs").getExpression().evaluate(context);
+        Assert.assertEquals(result, 17);
+
+        result = context.resolveExpressionRef("PrecisionTimeMinute").getExpression().evaluate(context);
+        Assert.assertEquals(result, 4);
+
+        result = context.resolveExpressionRef("PrecisionTimeMs").getExpression().evaluate(context);
+        Assert.assertEquals(result, 9);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.PowerEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testPower() {
         Context context = new Context(library);
         Object result;
 
@@ -525,10 +540,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.RoundEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.RoundEvaluator#evaluate(Context)}
      */
     @Test
-    public void testRound() throws JAXBException {
+    public void testRound() {
         Context context = new Context(library);
         Object result;
 
@@ -567,10 +582,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.SubtractEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSubtract() throws JAXBException {
+    public void testSubtract() {
         Context context = new Context(library);
         Object result;
 
@@ -592,10 +607,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.SuccessorEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.SuccessorEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSuccessor() throws JAXBException {
+    public void testSuccessor() {
         Context context = new Context(library);
         Object result;
 
@@ -637,10 +652,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.TruncateEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.TruncateEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTruncate() throws JAXBException {
+    public void testTruncate() {
         Context context = new Context(library);
         Object result;
 
@@ -682,10 +697,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.TruncatedDivideEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.elm.execution.TruncatedDivideEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTruncatedDivide() throws JAXBException {
+    public void testTruncatedDivide() {
         Context context = new Context(library);
         Object result;
 
@@ -736,7 +751,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.LowBoundaryEvaluator#evaluate(Context)}
      */
     //@Test
-    public void testLowBoundary() throws JAXBException {
+    public void testLowBoundary() {
         Context context = new Context(library);
         Object result;
 

@@ -373,6 +373,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Power createPower() { return new PowerEvaluator(); }
 
     @Override
+    public Precision createPrecision() { return new PrecisionEvaluator(); }
+
+    @Override
     public Predecessor createPredecessor() { return new PredecessorEvaluator(); }
 
     @Override
