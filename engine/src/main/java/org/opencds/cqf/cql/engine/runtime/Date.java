@@ -73,7 +73,7 @@ public class Date extends BaseTemporal {
         return (Date) new Date(ld.getYear(), ld.getMonthValue(), ld.getDayOfMonth()).setPrecision(thePrecision);
     }
 
-    private Date expandPartialMax(Precision thePrecision) {
+    public Date expandPartialMax(Precision thePrecision) {
         LocalDate ld = this.getDate().plusYears(0);
         for (int i = this.getPrecision().toDateIndex() + 1; i < 3; ++i) {
             if (i <= thePrecision.toDateIndex()) {
