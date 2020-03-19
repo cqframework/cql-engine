@@ -1211,6 +1211,23 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.SizeEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void TestSize() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("SizeTest").getExpression().evaluate(context);
+        assertThat(result, is(5));
+
+        result = context.resolveExpressionRef("SizeTestEquivalent").getExpression().evaluate(context);
+        assertThat(result, is(5));
+
+        result = context.resolveExpressionRef("SizeIsNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.StartEvaluator#evaluate(Context)}
      */
     @Test
