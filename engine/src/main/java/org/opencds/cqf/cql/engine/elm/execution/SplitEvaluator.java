@@ -1,11 +1,11 @@
-package org.opencds.cqf.cql.engine.elm.execution;
+package org.opencds.cqf.cql.elm.execution;
 
+import org.apache.commons.lang3.StringUtils;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 Split(stringToSplit String, separator String) List<String>
@@ -29,7 +29,7 @@ public class SplitEvaluator extends org.cqframework.cql.elm.execution.Split {
                 result.add(stringToSplit);
             }
             else {
-                Collections.addAll(result, ((String) stringToSplit).split((String) separator));
+                Collections.addAll(result, StringUtils.split(((String) stringToSplit), (String) separator));
             }
             return result;
         }

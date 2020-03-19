@@ -448,6 +448,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Split createSplit() { return new SplitEvaluator(); }
 
     @Override
+    public SplitOnMatches createSplitOnMatches() { return new SplitOnMatchesEvaluator(); }
+
+    @Override
     public Start createStart() { return new StartEvaluator(); }
 
     @Override
