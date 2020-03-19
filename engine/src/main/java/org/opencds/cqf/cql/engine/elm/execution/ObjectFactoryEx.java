@@ -283,6 +283,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Log createLog() { return new LogEvaluator(); }
 
     @Override
+    public LowBoundary createLowBoundary() { return new LowBoundaryEvaluator(); }
+
+    @Override
     public Lower createLower() { return new LowerEvaluator(); }
 
     @Override
