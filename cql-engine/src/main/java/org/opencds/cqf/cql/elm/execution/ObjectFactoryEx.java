@@ -91,6 +91,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Convert createConvert() { return new ConvertEvaluator(); }
 
     @Override
+    public ConvertQuantity createConvertQuantity() { return new ConvertQuantityEvaluator(); }
+
+    @Override
     public ConvertsToBoolean createConvertsToBoolean() { return new ConvertsToBooleanEvaluator(); }
 
     @Override
