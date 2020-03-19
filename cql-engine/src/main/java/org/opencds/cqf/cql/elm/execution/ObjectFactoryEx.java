@@ -439,6 +439,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public SingletonFrom createSingletonFrom() { return new SingletonFromEvaluator(); }
 
     @Override
+    public Size createSize() { return new SizeEvaluator(); }
+
+    @Override
     public Slice createSlice() { return new SliceEvaluator(); }
 
     @Override
