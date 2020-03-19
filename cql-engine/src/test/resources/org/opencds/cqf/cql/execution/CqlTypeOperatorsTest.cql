@@ -5,6 +5,10 @@ define AsQuantity: 45.5 'g' as Quantity
 define CastAsQuantity: cast 45.5 'g' as Quantity
 define AsDateTime: DateTime(2014, 01, 01) as DateTime
 
+//ConvertQuantity
+define ConvertQuantity: ConvertQuantity(5 'mg', 'g')
+define ConvertSyntax: convert 5 'mg' to 'g'
+
 //Convert
 define IntegerToDecimal: convert 5 to Decimal
 define IntegerToString: convert 5 to String
