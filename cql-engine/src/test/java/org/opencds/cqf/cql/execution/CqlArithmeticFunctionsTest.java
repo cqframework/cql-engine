@@ -288,6 +288,33 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.LowBoundaryEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testLowBoundary() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("LowBoundaryDec").getExpression().evaluate(context);
+        Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("1.58700000")), 0);
+
+        result = context.resolveExpressionRef("LowBoundaryDate").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2014, 1)));
+
+        result = context.resolveExpressionRef("LowBoundaryDateTime").getExpression().evaluate(context);
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 8, 0, 0, 0)));
+
+        result = context.resolveExpressionRef("LowBoundaryTime").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 30, 0, 0)));
+
+        result = context.resolveExpressionRef("LowBoundaryNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+
+        result = context.resolveExpressionRef("LowBoundaryNullPrecision").getExpression().evaluate(context);
+        Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("1.58888000")), 0);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.MaxEvaluator#evaluate(Context)}
      */
     @Test
@@ -297,7 +324,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(Integer.MAX_VALUE));
 
         result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
-        Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("9999999999999999999999999999.99999999")) == 0);
+        Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("9999999999999999999999999999.99999999")), 0);
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeMaxValue").getExpression().evaluate(context);
@@ -745,17 +772,5 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TruncatedDivide10By5D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2.0")));
-    }
-
-    /**
-     * {@link org.opencds.cqf.cql.elm.execution.LowBoundaryEvaluator#evaluate(Context)}
-     */
-    //@Test
-    public void testLowBoundary() {
-        Context context = new Context(library);
-        Object result;
-
-        result = context.resolveExpressionRef("LowBoundaryDate").getExpression().evaluate(context);
-        assertThat(result, is(new Date(2014, 01)));
     }
 }

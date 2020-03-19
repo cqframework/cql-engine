@@ -76,14 +76,12 @@ define Log16Base2  : Log(16, 2)
 define LogD125Base2  : Log(0.125, 2)
 
 //LowBoundary
-
-define LowBoundaryDec : LowBoundary(1.587, 8) // 1.58700000
-define LowBoundaryDate :LowBoundary(@2014, 6) // @2014-01
-define LowBoundaryDateTime : LowBoundary(@2014-01-01T08, 17) // @2014-01-01T08:01:01.001
-define LowBoundaryTime : LowBoundary(@T10:30, 9) // @T10:30:01.001
-define LowBoundaryNull : LowBoundary(null as Decimal, 8) // null
-define LowBoundaryNullPrecision : LowBoundary(1.58888, null) // 1.58888000
-
+define LowBoundaryDec : LowBoundary(1.587, 8)
+define LowBoundaryDate :LowBoundary(@2014, 6)
+define LowBoundaryDateTime : LowBoundary(@2014-01-01T08, 17)
+define LowBoundaryTime : LowBoundary(@T10:30, 9)
+define LowBoundaryNull : LowBoundary(null as Decimal, 8)
+define LowBoundaryNullPrecision : LowBoundary(1.58888, null)
 
 //Ln
 define LnNull  : Ln(null)
