@@ -78,7 +78,15 @@ define SplitNullNull : Split(null, null)
 define SplitNullComma : Split(null, ',')
 define SplitABNull : Split('a,b', null)
 define SplitABDash : Split('a,b', '-')
+define SplitABSpace : Split('a b', ' ')
 define SplitABComma : Split('a,b', ',')
+
+//SplitOnMatches
+define SplitMatchesNullNull : SplitOnMatches(null, null)
+define SplitMatchesNullComma : SplitOnMatches(null, ',')
+define SplitMatchesABNull : SplitOnMatches('a,b', null)
+define SplitMatchesABSpaceRegex : SplitOnMatches('a b', '\\s')
+define SplitMatchesABComma : SplitOnMatches('a,b', ',')
 
 //StartsWith
 define StartsWithNull: StartsWith(null, null)

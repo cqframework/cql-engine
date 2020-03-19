@@ -14,7 +14,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.CombineEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCombine() throws JAXBException {
+    public void testCombine() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CombineNull").getExpression().evaluate(context);
@@ -34,7 +34,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ConcatenateEvaluator#evaluate(Context)}
      */
     @Test
-    public void testConcatenate() throws JAXBException {
+    public void testConcatenate() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ConcatenateNullNull").getExpression().evaluate(context);
@@ -57,7 +57,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.EndsWithEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEndsWith() throws JAXBException {
+    public void testEndsWith() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("EndsWithNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -73,7 +73,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.IndexerEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIndexer() throws JAXBException {
+    public void testIndexer() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IndexerNullNull").getExpression().evaluate(context);
@@ -102,7 +102,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.MatchesEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMatches() throws JAXBException {
+    public void testMatches() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("MatchesNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
@@ -133,7 +133,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.LastPositionOfEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLastPositionOf() throws JAXBException {
+    public void testLastPositionOf() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LastPositionOfNull").getExpression().evaluate(context);
@@ -156,7 +156,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.LengthEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLength() throws JAXBException {
+    public void testLength() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LengthNullString").getExpression().evaluate(context);
@@ -176,7 +176,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.LowerEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLower() throws JAXBException {
+    public void testLower() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LowerNull").getExpression().evaluate(context);
@@ -199,7 +199,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.PositionOfEvaluator#evaluate(Context)}
      */
     @Test
-    public void testPositionOf() throws JAXBException {
+    public void testPositionOf() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("PositionOfNullNull").getExpression().evaluate(context);
@@ -225,7 +225,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.ReplaceMatchesEvaluator#evaluate(Context)}
      */
     @Test
-    public void testReplaceMatches() throws JAXBException {
+    public void testReplaceMatches() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ReplaceMatchesNull").getExpression().evaluate(context);
@@ -245,7 +245,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.SplitEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSplit() throws JAXBException {
+    public void testSplit() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SplitNullNull").getExpression().evaluate(context);
@@ -260,7 +260,33 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("SplitABDash").getExpression().evaluate(context);
         assertThat(result, is(new ArrayList<Object>(Collections.singletonList("a,b"))));
 
+        result = context.resolveExpressionRef("SplitABSpace").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Arrays.asList("a", "b"))));
+
         result = context.resolveExpressionRef("SplitABComma").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Arrays.asList("a", "b"))));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.elm.execution.SplitEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testSplitOnMatches() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("SplitMatchesNullNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("SplitMatchesNullComma").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
+        result = context.resolveExpressionRef("SplitMatchesABNull").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Collections.singletonList("a,b"))));
+
+        result = context.resolveExpressionRef("SplitMatchesABSpaceRegex").getExpression().evaluate(context);
+        assertThat(result, is(new ArrayList<Object>(Arrays.asList("a", "b"))));
+
+        result = context.resolveExpressionRef("SplitMatchesABComma").getExpression().evaluate(context);
         assertThat(result, is(new ArrayList<Object>(Arrays.asList("a", "b"))));
     }
 
@@ -268,7 +294,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.StartsWithEvaluator#evaluate(Context)}
      */
     @Test
-    public void testStartsWith() throws JAXBException {
+    public void testStartsWith() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("StartsWithNull").getExpression().evaluate(context);
@@ -291,7 +317,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.SubstringEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSubstring() throws JAXBException {
+    public void testSubstring() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SubstringNullNull").getExpression().evaluate(context);
@@ -329,7 +355,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.elm.execution.UpperEvaluator#evaluate(Context)}
      */
     @Test
-    public void testUpper() throws JAXBException {
+    public void testUpper() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("UpperNull").getExpression().evaluate(context);
