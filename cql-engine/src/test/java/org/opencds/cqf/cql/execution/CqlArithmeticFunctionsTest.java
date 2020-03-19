@@ -222,6 +222,33 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.elm.execution.HighBoundaryEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testHighBoundary() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("HighBoundaryDec").getExpression().evaluate(context);
+        Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("1.58799999")), 0);
+
+        result = context.resolveExpressionRef("HighBoundaryDate").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2014, 12)));
+
+        result = context.resolveExpressionRef("HighBoundaryDateTime").getExpression().evaluate(context);
+        BigDecimal offset = TemporalHelper.getDefaultOffset();
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 8, 59, 59, 999)));
+
+        result = context.resolveExpressionRef("HighBoundaryTime").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 30, 59, 999)));
+
+        result = context.resolveExpressionRef("HighBoundaryNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+
+        result = context.resolveExpressionRef("HighBoundaryNullPrecision").getExpression().evaluate(context);
+        Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("1.58888999")), 0);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.elm.execution.LogEvaluator#evaluate(Context)}
      */
     @Test

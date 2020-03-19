@@ -58,12 +58,12 @@ define Exp1000D  : Exp(1000.0)
 
 //HighBoundary
 
-//define HighBoundaryDec : HighBoundary(1.587, 8) // 1.58799999
-//define HighBoundaryDate :HighBoundary(@2014, 6) // @2014-12
-//define HighBoundaryDateTime : HighBoundary(@2014-01-01T08, 17) // @2014-01-01T08:59:59.999
-//define HighBoundaryTime : HighBoundary(@T10:30, 9) // @T10:30:59.999
-//define HighBoundaryNull : HighBoundary(null, precision) // null
-//define HighBoundaryNullPrecision : HighBoundary(input 1.58888, null) // 1.58888999
+define HighBoundaryDec : HighBoundary(1.587, 8)
+define HighBoundaryDate :HighBoundary(@2014, 6)
+define HighBoundaryDateTime : HighBoundary(@2014-01-01T08, 17)
+define HighBoundaryTime : HighBoundary(@T10:30, 9)
+define HighBoundaryNull : HighBoundary(null as Decimal, 8)
+define HighBoundaryNullPrecision : HighBoundary(1.58888, null)
 
 
 //Log
