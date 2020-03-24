@@ -14,16 +14,15 @@ import javax.xml.bind.JAXBException;
 
 import ca.uhn.fhir.context.FhirContext;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.*;
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.hl7.fhir.dstu3.model.*;
+import org.hl7.fhir.r4.model.Resource;
 import org.hl7.fhir.dstu3.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.Tests;
@@ -34,7 +33,7 @@ import org.opencds.cqf.cql.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.execution.LibraryLoader;
 import org.opencds.cqf.cql.model.Dstu2FhirModelResolver;
 import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.model.HL7FhirModelResolver;
+import org.opencds.cqf.cql.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.DateTime;
@@ -52,6 +51,13 @@ public class TestFhirPath {
             fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
     private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 
+
+    private FhirContext fhirContextR4 = FhirContext.forR4();
+    private R4FhirModelResolver r4FhirModelResolver = new R4FhirModelResolver();
+    private RestFhirRetrieveProvider r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContextR4),
+            fhirContextR4.newRestfulGenericClient("http://fhirtest.uhn.ca/baseR4"));
+    private CompositeDataProvider providerR4 = new CompositeDataProvider(r4FhirModelResolver, r4RetrieveProvider);
+
     // private BaseFhirDataProvider provider = new
     // FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
     // BaseFhirDataProvider provider = new
@@ -64,12 +70,19 @@ public class TestFhirPath {
             InputStream testsFileRaw = TestFhirPath.class.getResourceAsStream(testsFilePath);
             return JAXB.unmarshal(testsFileRaw, Tests.class);
         } catch (Exception e) {
+            //e.printStackTrace();
             throw new IllegalArgumentException("Couldn't load tests file [" + testsFilePath + "]: " + e.toString());
+
         }
     }
 
-    private Resource loadResourceFile(String resourceFilePath) {
-        return (Resource) fhirContext.newXmlParser()
+    private org.hl7.fhir.dstu3.model.Resource loadResourceFile(String resourceFilePath) {
+        return (org.hl7.fhir.dstu3.model.Resource) fhirContext.newXmlParser()
+                .parseResource(new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
+    }
+
+    private org.hl7.fhir.r4.model.Resource loadResourceFileR4(String resourceFilePath) {
+        return (Resource) fhirContextR4.newXmlParser()
                 .parseResource(new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
     }
 
@@ -78,22 +91,22 @@ public class TestFhirPath {
         if (test.getOutput() != null) {
             for (org.hl7.fhirpath.tests.Output output : test.getOutput()) {
                 switch (output.getType()) {
-                case BOOLEAN:
-                    results.add(Boolean.valueOf(output.getValue()));
-                    break;
-                case DATE:
-                    results.add(new DateTime(output.getValue(),
-                            ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
-                    break;
-                case INTEGER:
-                    results.add(Integer.valueOf(output.getValue()));
-                    break;
-                case STRING:
-                    results.add(output.getValue());
-                    break;
-                case CODE:
-                    results.add(new Code().withCode(output.getValue()));
-                    break;
+                    case BOOLEAN:
+                        results.add(Boolean.valueOf(output.getValue()));
+                        break;
+                    case DATE:
+                        results.add(new DateTime(output.getValue(),
+                                ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
+                        break;
+                    case INTEGER:
+                        results.add(Integer.valueOf(output.getValue()));
+                        break;
+                    case STRING:
+                        results.add(output.getValue());
+                        break;
+                    case CODE:
+                        results.add(new Code().withCode(output.getValue()));
+                        break;
                 }
             }
         }
@@ -118,6 +131,7 @@ public class TestFhirPath {
             libraryManager = new LibraryManager(getModelManager());
             libraryManager.getLibrarySourceLoader().clearProviders();
             libraryManager.getLibrarySourceLoader().registerProvider(new TestLibrarySourceProvider());
+            libraryManager.getLibrarySourceLoader().registerProvider(new FhirLibrarySourceProvider());
         }
         return libraryManager;
     }
@@ -144,7 +158,7 @@ public class TestFhirPath {
                 TrackBack tb = error.getLocator();
                 String lines = tb == null ? "[n/a]"
                         : String.format("[%d:%d, %d:%d]", tb.getStartLine(), tb.getStartChar(), tb.getEndLine(),
-                                tb.getEndChar());
+                        tb.getEndChar());
                 errors.add(lines + error.getMessage());
             }
             throw new IllegalArgumentException(errors.toString());
@@ -190,7 +204,7 @@ public class TestFhirPath {
 
     private void runStu3Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
         String resourceFilePath = "stu3/input/" + test.getInputfile();
-        Resource resource = loadResourceFile(resourceFilePath);
+        org.hl7.fhir.dstu3.model.Resource resource = loadResourceFile(resourceFilePath);
         String cql = String.format(
                 "library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
@@ -219,6 +233,67 @@ public class TestFhirPath {
             context.registerLibraryLoader(getLibraryLoader());
 
             context.registerDataProvider("http://hl7.org/fhir", provider);
+
+            context.setParameter(null, resource.fhirType(), resource);
+
+            Object result = context.resolveExpressionRef("Test").evaluate(context);
+            Iterable<Object> actualResults;
+            if (result instanceof Iterable) {
+                actualResults = (Iterable<Object>) result;
+            } else {
+                List results = new ArrayList<>();
+                results.add(result);
+                actualResults = results;
+            }
+
+            Iterable<Object> expectedResults = loadExpectedResults(test);
+            Iterator<Object> actualResultsIterator = actualResults.iterator();
+            for (Object expectedResult : expectedResults) {
+                if (actualResultsIterator.hasNext()) {
+                    Object actualResult = actualResultsIterator.next();
+                    Boolean comparison = compareResults(expectedResult, actualResult);
+                    if (comparison == null || !comparison) {
+                        throw new RuntimeException("Actual result is not equal to expected result.");
+                    }
+                } else {
+                    throw new RuntimeException("Actual result is not equal to expected result.");
+                }
+            }
+        }
+    }
+
+
+    private void runR4Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
+        String resourceFilePath = "r4/input/" + test.getInputfile();
+        org.hl7.fhir.r4.model.Resource resource = loadResourceFileR4(resourceFilePath);
+        String cql = String.format(
+                "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers parameter %s %s define Test: %s",
+                resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
+
+        Library library = null;
+        // If the test expression is invalid, expect an error during translation and
+        // fail if we don't get one
+        boolean isInvalid = test.getExpression().isInvalid() != null && test.getExpression().isInvalid();
+
+        if (isInvalid) {
+            boolean testPassed = false;
+            try {
+                library = translate(cql);
+            } catch (Exception e) {
+                testPassed = true;
+            }
+
+            if (!testPassed) {
+                throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
+            }
+        } else {
+            library = translate(cql);
+
+            Context context = new Context(library);
+
+            context.registerLibraryLoader(getLibraryLoader());
+
+            context.registerDataProvider("http://hl7.org/fhir", providerR4);
 
             context.setParameter(null, resource.fhirType(), resource);
 
@@ -279,6 +354,31 @@ public class TestFhirPath {
             }
             // System.out.println(String.format("Finished test group %s.",
             // group.getName()));
+        }
+        System.out.println(
+                String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
+    }
+
+
+    public void testFhirPathR4() {
+        String testsFilePath = "r4/tests-fhir-r4.xml";
+        System.out.println(String.format("Running test file %s...", testsFilePath));
+        Tests tests = loadTestsFile(testsFilePath);
+        int testCounter = 0;
+        int passCounter = 0;
+        for (Group group : tests.getGroup()) {
+            System.out.println(String.format("Running test group %s...", group.getName()));
+            for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
+                testCounter += 1;
+                try {
+                    runR4Test(test);
+                    passCounter += 1;
+                    System.out.println(String.format("Test %s passed.", test.getName()));
+                } catch (Exception e) {
+                    System.out
+                            .println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
+                }
+            }
         }
         System.out.println(
                 String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
@@ -347,8 +447,8 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
         Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(
-            new SearchParameterResolver(fhirContext), FhirContext.forDstu2().newRestfulGenericClient(""));
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+                new SearchParameterResolver(fhirContext), FhirContext.forDstu2().newRestfulGenericClient(""));
+        CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
@@ -369,32 +469,6 @@ public class TestFhirPath {
         result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
     }
 
-    //@Test
-    public void testFhirHelpersHL7() throws UcumException {
-        String cql = getStringFromResourceStream("Dstu2/TestFHIRHelpersDstu2.cql");
-        Library library = translate(cql);
-        Context context = new Context(library);
-        context.registerLibraryLoader(getLibraryLoader());
-
-		HL7FhirModelResolver modelResolver = new HL7FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), FhirContext.forDstu2Hl7Org().newRestfulGenericClient(""));
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-        //BaseFhirDataProvider provider = new FhirDataProviderHL7();
-        context.registerDataProvider("http://hl7.org/fhir", provider);
-
-        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestRangeToInterval").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToCode").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToConcept").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToString").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestRequestStatusToString").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToDateTime").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToTime").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToInteger").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToDecimal").getExpression().evaluate(context);
-        result = context.resolveExpressionRef("TestToBoolean").getExpression().evaluate(context);
-    }
 
     @Test
     public void testDateType() {
