@@ -21,18 +21,15 @@ import java.util.ArrayList;
 
 public class R4FhirTerminologyProvider implements TerminologyProvider {
 
-    private FhirContext fhirContext;
+    private IGenericClient fhirClient;
 
-    public R4FhirTerminologyProvider() {
-        this.fhirContext = FhirContext.forDstu3();
-    }
+    public R4FhirTerminologyProvider() { }
 
-    public R4FhirTerminologyProvider(FhirContext fhirContext) {
-        this.fhirContext = fhirContext;
-    }
-
+    /**
+     *
+     * @param fhirClient - an IGenericCLient that has endpoint and authentication already defined and set.
+     */
     public R4FhirTerminologyProvider(IGenericClient fhirClient) {
-        this(fhirClient.getFhirContext());
         this.fhirClient = fhirClient;
     }
 
@@ -48,55 +45,8 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
         return this;
     }
 
-    private IGenericClient fhirClient;
     public IGenericClient getFhirClient() {
-        return fhirClient;
-    }
-
-    private String endpoint;
-    public String getEndpoint() {
-        return endpoint;
-    }
-    public R4FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
-        this.endpoint = endpoint;
-        if (!validation) {
-            this.fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-        }
-        fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 10000);
-        fhirClient = fhirContext.newRestfulGenericClient(endpoint);
-
-        if (this.headerInjectionInterceptor != null) {
-            fhirClient.registerInterceptor(headerInjectionInterceptor);
-        }
-
-        if (userName != null && password != null) {
-            BasicAuthInterceptor basicAuth = new BasicAuthInterceptor(userName, password);
-            fhirClient.registerInterceptor(basicAuth);
-        }
-        return this;
-    }
-
-    // TODO: Obviously don't want to do this, just a quick-fix for now
-    private String userName;
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    private String password;
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public R4FhirTerminologyProvider withBasicAuth(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-        return this;
+        return this.fhirClient;
     }
 
     @Override
