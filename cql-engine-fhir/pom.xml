@@ -28,13 +28,31 @@
             <artifactId>cql-engine</artifactId>
             <version>${revision}</version>
         </dependency>
-        <!-- TODO: This brings in all the structures dependencies, plus the searchparam dependencies, 
-        plus much more we could slim this down by only including the specific depedencies we need-->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
-            <artifactId>hapi-fhir-jpaserver-base</artifactId>
+            <artifactId>hapi-fhir-client</artifactId>
             <version>${hapi.version}</version>
-        </dependency>
+		</dependency>
+        <dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu2</artifactId>
+			<version>${hapi.version}</version>
+		</dependency>
+        <dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
+			<version>${hapi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-dstu3</artifactId>
+			<version>${hapi.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-structures-r4</artifactId>
+			<version>${hapi.version}</version>
+		</dependency>
     </dependencies>
 
     <build>
