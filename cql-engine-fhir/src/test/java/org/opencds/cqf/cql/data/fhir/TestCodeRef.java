@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.data.fhir;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
 
@@ -7,8 +9,9 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class TestCodeRef extends FhirExecutionTestBase {
 
+    private IGenericClient fhirClient = FhirContext.forDstu3().newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
     private Dstu3FhirTerminologyProvider terminologyProvider =
-            new Dstu3FhirTerminologyProvider().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3", false);
+            new Dstu3FhirTerminologyProvider(fhirClient);
 
     // @Test
     public void CodeRefTest1() {

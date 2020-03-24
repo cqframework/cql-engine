@@ -2,14 +2,11 @@ package org.opencds.cqf.cql.terminology.fhir;
 
 import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import org.hl7.fhir.dstu3.model.*;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 import java.net.MalformedURLException;
@@ -21,18 +18,20 @@ import java.util.ArrayList;
 
 public class Dstu3FhirTerminologyProvider implements TerminologyProvider {
 
-    private FhirContext fhirContext;
+    private IGenericClient fhirClient;
 
     public Dstu3FhirTerminologyProvider() {
-        this.fhirContext = FhirContext.forDstu3();
     }
 
-    public Dstu3FhirTerminologyProvider(FhirContext fhirContext) {
-        this.fhirContext = fhirContext;
-    }
-
+    /**
+     *
+     * @param fhirClient - an IGenericCLient that has endpoint and authentication already defined and set.
+     */
     public Dstu3FhirTerminologyProvider(IGenericClient fhirClient) {
-        this(fhirClient.getFhirContext());
+        this.fhirClient = fhirClient;
+    }
+
+    public void setFhirClient(IGenericClient fhirClient) {
         this.fhirClient = fhirClient;
     }
 
@@ -48,55 +47,8 @@ public class Dstu3FhirTerminologyProvider implements TerminologyProvider {
         return this;
     }
 
-    private IGenericClient fhirClient;
     public IGenericClient getFhirClient() {
         return fhirClient;
-    }
-
-    private String endpoint;
-    public String getEndpoint() {
-        return endpoint;
-    }
-    public Dstu3FhirTerminologyProvider setEndpoint(String endpoint, boolean validation) {
-        this.endpoint = endpoint;
-        if (!validation) {
-            this.fhirContext.getRestfulClientFactory().setServerValidationMode(ServerValidationModeEnum.NEVER);
-        }
-        fhirContext.getRestfulClientFactory().setSocketTimeout(1200 * 10000);
-        fhirClient = fhirContext.newRestfulGenericClient(endpoint);
-
-        if (this.headerInjectionInterceptor != null) {
-            fhirClient.registerInterceptor(headerInjectionInterceptor);
-        }
-
-        if (userName != null && password != null) {
-            BasicAuthInterceptor basicAuth = new BasicAuthInterceptor(userName, password);
-            fhirClient.registerInterceptor(basicAuth);
-        }
-        return this;
-    }
-
-    // TODO: Obviously don't want to do this, just a quick-fix for now
-    private String userName;
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    private String password;
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Dstu3FhirTerminologyProvider withBasicAuth(String userName, String password) {
-        this.userName = userName;
-        this.password = password;
-        return this;
     }
 
     @Override

@@ -109,11 +109,11 @@ define UpperB : Upper('B')
 define UpperAB : Upper('aB')
 
 // toString tests
-define QuantityToString: 125 'cm'
-define DateTimeToString1: DateTime(2000, 1, 1)
-define DateTimeToString2: DateTime(2000, 1, 1, 15, 25, 25, 300)
-define DateTimeToString3: DateTime(2000, 1, 1, 8, 25, 25, 300, -7)
-define TimeToString1: @T09:30:01.003
+define QuantityToString: ToString(125 'cm')
+define DateTimeToString1: ToString(DateTime(2000, 1, 1))
+define DateTimeToString2: ToString(DateTime(2000, 1, 1, 15, 25, 25, 300))
+define DateTimeToString3: ToString(DateTime(2000, 1, 1, 8, 25, 25, 300, -7))
+define TimeToString1: ToString(@T09:30:01.003)
 define TupleToString: Tuple { this: 'is', a: 123, test: 25 'g' }
 define IntervalToString: Interval [ DateTime(1999, 12, 31), DateTime(2000, 1, 1) ]
 define UncertaintyToString: difference in months between DateTime(2005) and DateTime(2006, 7)
