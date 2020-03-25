@@ -5,9 +5,9 @@ import java.util.Collections;
 import java.util.List;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
+import org.opencds.cqf.cql.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
 
-import ca.uhn.fhir.jpa.searchparam.SearchParameterMap;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
