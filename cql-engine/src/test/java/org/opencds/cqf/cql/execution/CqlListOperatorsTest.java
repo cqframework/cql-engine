@@ -80,9 +80,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("timeList").getExpression().evaluate(context);
         List<Time> arrList = new ArrayList();
-        arrList.add(new Time(offset, 15, 59, 59, 999));
-        arrList.add(new Time(offset, 15, 12, 59, 999));
-        arrList.add(new Time(offset, 15, 12, 13, 999));
+        arrList.add(new Time(15, 59, 59, 999));
+        arrList.add(new Time(15, 12, 59, 999));
+        arrList.add(new Time(15, 12, 13, 999));
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, arrList));
     }
 
