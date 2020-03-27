@@ -139,7 +139,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
                 codes = this.terminologyProvider.expand(valueSetInfo);
             } else {
                 return Collections.singletonList(new TokenOrListParam()
-                        .addOr(new TokenParam(null, valueSet).setModifier(TokenParamModifier.IN)));
+                        .addOr(new TokenParam(valueSet).setModifier(TokenParamModifier.IN)));
             }
         }
 
@@ -151,7 +151,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
         TokenOrListParam codeParams = null;
         int codeCount = 0;
-        for (Code code : codes) {
+        for (Object code : codes) {
             if (codeCount % MAX_CODES_PER_QUERY == 0) {
                 if (codeParams != null) {
                     codeParamsList.add(codeParams);
@@ -161,7 +161,15 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             }
 
             codeCount++;
-            codeParams.addOr(new TokenParam(code.getSystem(), code.getCode()));
+            if (code instanceof Code) {
+                Code c = (Code)code;
+                codeParams.addOr(new TokenParam(c.getSystem(), c.getCode()));
+            } 
+            else if (code instanceof String) {
+                String s = (String)code;
+                codeParams.add(new TokenParam(s));
+            }
+
         }
 
         if (codeParams != null) {
