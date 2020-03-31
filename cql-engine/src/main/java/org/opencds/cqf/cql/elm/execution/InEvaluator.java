@@ -35,7 +35,16 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
 {
     public static Boolean in(Object left, Object right, String precision)
     {
-        if (left == null || right == null)
+        if (left == null )
+        {
+            return null;
+        }
+
+        if(left != null && right == null)
+        {
+            return false;
+        }
+        else if(left == null || right == null)
         {
             return null;
         }

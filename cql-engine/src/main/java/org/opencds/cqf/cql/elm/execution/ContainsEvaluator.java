@@ -39,6 +39,13 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
+        if(left == null && right != null){
+            return false;
+        }
+        else if(left != null && right == null){
+            return null;
+        }
+
         if (left == null && right == null) {
             return null;
         }

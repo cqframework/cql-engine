@@ -36,8 +36,12 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
 {
     public static Object except(Object left, Object right)
     {
-        if (left == null || right == null)
+        if (left == null )
         {
+            return null;
+        }
+
+        if(!(left instanceof Iterable) && right == null){
             return null;
         }
 
