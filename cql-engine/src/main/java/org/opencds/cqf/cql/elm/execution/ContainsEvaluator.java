@@ -42,11 +42,7 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         if(left == null && right != null){
             return false;
         }
-        else if(left != null && right == null){
-            return null;
-        }
-
-        if (left == null && right == null) {
+        if ( right == null) {
             return null;
         }
 

@@ -44,7 +44,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
         {
             return false;
         }
-        else if(left == null || right == null)
+        else if(left == null && right == null)
         {
             return null;
         }
