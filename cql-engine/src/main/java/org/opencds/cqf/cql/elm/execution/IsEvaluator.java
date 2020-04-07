@@ -1,8 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Quantity;
-import java.math.BigDecimal;
 
 /*
 is<T>(argument Any) Boolean

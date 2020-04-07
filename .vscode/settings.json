@@ -12,9 +12,12 @@
     ],
     "java.test.defaultConfig": "Profiling",
     "cSpell.words": [
+        "BACKBONEELEMENT",
         "Codeable",
+        "DOMAINRESOURCE",
         "Dstu",
         "Fhir",
+        "SNOMED",
         "hapi",
         "ucum"
     ]

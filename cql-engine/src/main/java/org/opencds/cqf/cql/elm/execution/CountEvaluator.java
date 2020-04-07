@@ -1,8 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.Iterator;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import java.util.Iterator;
 
 /*
 Count(argument List<T>) Integer

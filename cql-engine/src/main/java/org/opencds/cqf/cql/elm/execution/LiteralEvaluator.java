@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.exception.InvalidLiteral;
 import org.opencds.cqf.cql.execution.Context;
-
-import java.math.BigDecimal;
 
 public class LiteralEvaluator extends org.cqframework.cql.elm.execution.Literal {
 

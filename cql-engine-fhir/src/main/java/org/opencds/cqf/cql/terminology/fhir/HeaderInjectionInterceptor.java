@@ -7,13 +7,13 @@
 
 package org.opencds.cqf.cql.terminology.fhir;
 
-import ca.uhn.fhir.rest.client.api.IClientInterceptor;
-import ca.uhn.fhir.rest.client.api.IHttpRequest;
-import ca.uhn.fhir.rest.client.api.IHttpResponse;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import ca.uhn.fhir.rest.client.api.IClientInterceptor;
+import ca.uhn.fhir.rest.client.api.IHttpRequest;
+import ca.uhn.fhir.rest.client.api.IHttpResponse;
 
 public class HeaderInjectionInterceptor implements IClientInterceptor {
 

@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.ValueSetRef;
-import org.cqframework.cql.elm.execution.ValueSetDef;
-import org.cqframework.cql.elm.execution.CodeSystemRef;
 import org.cqframework.cql.elm.execution.CodeSystemDef;
+import org.cqframework.cql.elm.execution.CodeSystemRef;
+import org.cqframework.cql.elm.execution.ValueSetDef;
+import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Code;
@@ -11,8 +11,6 @@ import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import java.util.List;
-import java.util.ArrayList;
 
 /*
 in(code String, valueset ValueSetRef) Boolean

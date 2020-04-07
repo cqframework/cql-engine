@@ -1,14 +1,4 @@
 package org.opencds.cqf.cql.execution;
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
-import java.util.List;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class Issue213 extends CqlExecutionTestBase {
     // @Test

@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Time;
-
-import java.math.BigDecimal;
 
 /*
 

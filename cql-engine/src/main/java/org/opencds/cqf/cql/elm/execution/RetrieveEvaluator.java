@@ -1,16 +1,15 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.cqframework.cql.elm.execution.ValueSetDef;
+import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.runtime.Interval;
-import org.cqframework.cql.elm.execution.ValueSetRef;
-import org.cqframework.cql.elm.execution.ValueSetDef;
-
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retrieve {
 

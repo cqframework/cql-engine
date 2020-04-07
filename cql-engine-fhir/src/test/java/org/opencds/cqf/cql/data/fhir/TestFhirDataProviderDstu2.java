@@ -1,14 +1,12 @@
 package org.opencds.cqf.cql.data.fhir;
 
+import static org.testng.Assert.assertTrue;
+
+import org.hl7.fhir.dstu2.model.Encounter;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.retrieve.FhirBundleCursor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertTrue;
-
-import org.hl7.fhir.dstu2.model.Encounter;
 
 public class TestFhirDataProviderDstu2 extends FhirExecutionTestBase {
 

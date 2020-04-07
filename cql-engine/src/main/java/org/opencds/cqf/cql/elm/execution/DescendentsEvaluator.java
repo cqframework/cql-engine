@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Tuple;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class DescendentsEvaluator extends org.cqframework.cql.elm.execution.Descendents {
 

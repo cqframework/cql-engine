@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.stream.StreamSupport;
+
 import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-
-import java.util.stream.StreamSupport;
 
 /*
 *** LIST NOTES ***

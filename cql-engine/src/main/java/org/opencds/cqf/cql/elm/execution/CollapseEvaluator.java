@@ -1,10 +1,14 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.*;
-
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
+import org.opencds.cqf.cql.runtime.CqlList;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Quantity;
 
 /*
 collapse(argument List<Interval<T>>) List<Interval<T>>

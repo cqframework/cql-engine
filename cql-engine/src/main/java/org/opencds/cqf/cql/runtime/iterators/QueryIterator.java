@@ -1,13 +1,11 @@
 package org.opencds.cqf.cql.runtime.iterators;
 
-import org.opencds.cqf.cql.elm.execution.QueryEvaluator;
-import org.opencds.cqf.cql.execution.Context;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import java.util.Map;
+
+import org.opencds.cqf.cql.execution.Context;
 
 /**
  * Created by Bryn on 8/11/2019.

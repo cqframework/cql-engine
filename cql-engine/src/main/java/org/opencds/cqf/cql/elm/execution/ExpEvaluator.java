@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.exception.UndefinedResult;
 import org.opencds.cqf.cql.execution.Context;
-
-import java.math.BigDecimal;
 
 /*
 Exp(argument Decimal) Decimal

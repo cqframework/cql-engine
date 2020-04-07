@@ -1,11 +1,13 @@
 package org.opencds.cqf.cql.execution;
 
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
 
 public class Issue33 extends CqlExecutionTestBase {
     @Test

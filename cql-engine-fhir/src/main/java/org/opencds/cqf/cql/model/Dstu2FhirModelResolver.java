@@ -1,13 +1,21 @@
 package org.opencds.cqf.cql.model;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
-
 import java.lang.reflect.Field;
 import java.util.Calendar;
 
-import org.hl7.fhir.dstu2.model.*;
 import org.hl7.fhir.dstu2.model.AnnotatedUuidType;
+import org.hl7.fhir.dstu2.model.Base;
+import org.hl7.fhir.dstu2.model.BaseDateTimeType;
+import org.hl7.fhir.dstu2.model.EnumFactory;
+import org.hl7.fhir.dstu2.model.Enumeration;
+import org.hl7.fhir.dstu2.model.Enumerations;
+import org.hl7.fhir.dstu2.model.IdType;
+import org.hl7.fhir.dstu2.model.Resource;
+import org.hl7.fhir.dstu2.model.SimpleQuantity;
+import org.hl7.fhir.dstu2.model.TimeType;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 

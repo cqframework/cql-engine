@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.ArrayList;
+
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Code;
-
-import java.util.ArrayList;
 
 /*
 structured type Concept

@@ -1,10 +1,11 @@
 package org.opencds.cqf.cql.runtime;
 
+import java.math.BigDecimal;
+
 import javax.annotation.Nonnull;
+
 import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-
-import java.math.BigDecimal;
 
 public class Quantity implements CqlType, Comparable<Quantity> {
 

@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
+import java.util.List;
+
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 public class Issue208 extends CqlExecutionTestBase {
     @Test

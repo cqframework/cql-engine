@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.time.format.DateTimeParseException;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Date;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.Precision;
-
-import java.time.format.DateTimeParseException;
 
 /*
 

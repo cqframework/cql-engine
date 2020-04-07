@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Quantity;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.runtime.Quantity;
 
 /*
 Variance(argument List<Decimal>) Decimal

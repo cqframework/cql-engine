@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.exception;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
-
 public class CqlException extends RuntimeException
 {
     public CqlException(String message)

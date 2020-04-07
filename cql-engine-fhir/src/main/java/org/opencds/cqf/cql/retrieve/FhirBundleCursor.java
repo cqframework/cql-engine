@@ -1,14 +1,14 @@
 package org.opencds.cqf.cql.retrieve;
 
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.util.BundleUtil;
+import java.util.Iterator;
+import java.util.List;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.exception.UnknownElement;
 
-import java.util.Iterator;
-import java.util.List;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.util.BundleUtil;
 
 public class FhirBundleCursor implements Iterable<Object> {
 

@@ -1,13 +1,12 @@
 package org.opencds.cqf.cql.execution;
 
-import org.testng.annotations.Test;
-
-
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 
 import org.opencds.cqf.cql.runtime.Code;
+import org.testng.annotations.Test;
 
 public class IncludedCodeRefTest extends CqlExecutionTestBase {
     @Test

@@ -1,9 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.execution.Context;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
 
 /*
 mod(left Integer, right Integer) Integer

@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.searchparam;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import org.testng.annotations.Test;
 

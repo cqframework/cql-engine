@@ -1,10 +1,9 @@
 package org.opencds.cqf.cql.data;
 
-import org.opencds.cqf.cql.data.SystemDataProvider;
-import org.opencds.cqf.cql.runtime.*;
-import org.testng.annotations.Test;
-
 import static org.junit.Assert.assertNull;
+
+import org.opencds.cqf.cql.runtime.Date;
+import org.testng.annotations.Test;
 
 public class SystemDataProviderTest {
 

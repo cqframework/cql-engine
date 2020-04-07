@@ -1,18 +1,25 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.elm.execution.AsEvaluator;
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.exception.InvalidCast;
-import org.opencds.cqf.cql.runtime.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
-import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 import java.time.format.DateTimeParseException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import javax.xml.bind.JAXBException;
+
+import org.opencds.cqf.cql.elm.execution.AsEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidCast;
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.Concept;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Tuple;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
 

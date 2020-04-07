@@ -1,9 +1,9 @@
 package org.hl7.fhirpath;
 
+import java.io.InputStream;
+
 import org.cqframework.cql.cql2elm.LibrarySourceProvider;
 import org.hl7.elm.r1.VersionedIdentifier;
-
-import java.io.InputStream;
 
 public class TestLibrarySourceProvider implements LibrarySourceProvider {
     @Override

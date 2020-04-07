@@ -1,9 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
 import org.cqframework.cql.elm.execution.CaseItem;
 import org.cqframework.cql.elm.execution.Expression;
-import org.opencds.cqf.cql.runtime.Value;
+import org.opencds.cqf.cql.execution.Context;
 
 /*
 

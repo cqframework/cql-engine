@@ -2,10 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.exception.CqlException;
-import org.opencds.cqf.cql.exception.CqlExceptionHandler;
 import org.opencds.cqf.cql.execution.Context;
-
-import java.util.function.Function;
 
 public class Executable
 {

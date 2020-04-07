@@ -2,8 +2,8 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.Concept;
 import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.Concept;
 
 /*
 ToConcept(argument Code) Concept

@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.execution;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.Tuple;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class CqlQueryTests extends CqlExecutionTestBase
 {

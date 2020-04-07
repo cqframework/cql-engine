@@ -1,14 +1,14 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.runtime.Code;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import javax.xml.bind.JAXBException;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import org.opencds.cqf.cql.runtime.Code;
+import org.testng.annotations.Test;
 
 public class CqlLibraryTest extends CqlExecutionTestBase {
 

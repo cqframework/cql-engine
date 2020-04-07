@@ -2,9 +2,6 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.execution.Context;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class MatchesEvaluator extends org.cqframework.cql.elm.execution.Matches {
 
     public static Object matches(String argument, String pattern) {

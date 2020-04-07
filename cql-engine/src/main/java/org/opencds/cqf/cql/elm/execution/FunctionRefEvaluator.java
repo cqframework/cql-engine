@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 import org.cqframework.cql.elm.execution.Expression;
 import org.cqframework.cql.elm.execution.FunctionDef;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class FunctionRefEvaluator extends org.cqframework.cql.elm.execution.FunctionRef {
 
