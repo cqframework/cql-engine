@@ -63,6 +63,7 @@
                         <arg>-npa</arg>
                         <arg>-XautoInheritance</arg>
                         <arg>-XautoInheritance-xmlTypesExtend=org.opencds.cqf.cql.elm.execution.Executable</arg>
+                        <arg>-Xannotate</arg>
                     </args>
                     <plugins>
                         <plugin>
@@ -73,7 +74,12 @@
                         <plugin>
                             <groupId>org.jvnet.jaxb2_commons</groupId>
                             <artifactId>jaxb2-basics</artifactId>
-                            <version>0.9.4</version>
+                            <version>0.12.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics-annotate</artifactId>
+                            <version>1.1.0</version>
                         </plugin>
                     </plugins>
                     <generateDirectory>src/generated/java</generateDirectory>

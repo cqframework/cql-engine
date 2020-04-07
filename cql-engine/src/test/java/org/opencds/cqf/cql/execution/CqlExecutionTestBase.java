@@ -24,7 +24,7 @@ import java.util.Map;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-public abstract class CqlExecutionTestBase<T> {
+public abstract class CqlExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
     Library library = null;
     private File xmlFile = null;
