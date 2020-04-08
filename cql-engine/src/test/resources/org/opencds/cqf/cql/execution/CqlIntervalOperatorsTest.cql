@@ -167,7 +167,7 @@ define TimeIncludesTrue: Interval[@T05:59:59.999, @T10:59:59.999] includes Inter
 define TimeIncludesFalse: Interval[@T05:59:59.999, @T10:59:59.999] includes Interval[@T04:59:59.999, @T09:59:59.999]
 
 //Included In
-//define TestIncludedInNull: null included in IntegerIntervalTest
+define TestIncludedInNull: null included in IntegerIntervalTest
 define IntegerIntervalIncludedInTrue: IntegerIntervalTest4 included in IntegerIntervalTest
 define IntegerIntervalIncludedInFalse: IntegerIntervalTest3 included in IntegerIntervalTest
 define DecimalIntervalIncludedInTrue: DecimalIntervalTest3 included in DecimalIntervalTest
@@ -186,7 +186,7 @@ define DateTimeIncludedInPrecisionNull:
     Interval [@2017-09-01T00:00:00, @2017-09-01T00:00:00] included in millisecond of Interval [@2017-09-01T00:00:00.000, @2017-12-30T23:59:59.999]
 
 //Intersect
-//define TestIntersectNull: IntegerIntervalTest intersect Interval[5, null)
+define TestIntersectNull: IntegerIntervalTest intersect Interval[5, null)
 define IntegerIntervalIntersectTest4to10: IntegerIntervalTest intersect IntegerIntervalTest4
 define IntegerIntervalIntersectTestNull: IntegerIntervalTest intersect IntegerIntervalTest2
 define DecimalIntervalIntersectTest4to10: DecimalIntervalTest intersect DecimalIntervalTest3

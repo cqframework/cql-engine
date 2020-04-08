@@ -4528,8 +4528,8 @@ define Exists_NullExists: exists (null)
 
 define test_Exists_EmptyList: TestMessage(not Exists_EmptyList, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
 define test_Exists_FullList: TestMessage(Exists_FullList, 'Exists_FullList', toString(true), toString(Exists_FullList))
-define test_Exists_ListWithOneNull: TestMessage(not Exists_ListWithOneNull, 'Exists_ListWithOneNull', toString(false), toString(Exists_ListWithOneNull))
-define test_Exists_ListWithTwoNulls: TestMessage(not Exists_ListWithTwoNulls, 'Exists_ListWithTwoNulls', toString(false), toString(Exists_ListWithTwoNulls))
+define test_Exists_ListWithOneNull: TestMessage(Exists_ListWithOneNull, 'Exists_ListWithOneNull', toString(true), toString(Exists_ListWithOneNull))
+define test_Exists_ListWithTwoNulls: TestMessage(Exists_ListWithTwoNulls, 'Exists_ListWithTwoNulls', toString(true), toString(Exists_ListWithTwoNulls))
 define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
 define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
 define test_Exists_NullExists: TestMessage(not Exists_NullExists, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
@@ -4613,7 +4613,7 @@ define test_Except_MultipleNullExcept: TestMessage(Except_MultipleNullExcept = {
 define test_Except_SomethingExceptNothing: TestMessage(Except_SomethingExceptNothing = {1,2,3,4,5}, 'Except_SomethingExceptNothing', toString({1,2,3,4,5}), toString(Except_SomethingExceptNothing))
 define test_Except_NothingExceptSomething: TestMessage(Except_NothingExceptSomething = List<Integer>{}, 'Except_NothingExceptSomething', toString(List<Integer>{}), toString(Except_NothingExceptSomething))
 define test_Except_ExceptTuples: TestMessage(Except_ExceptTuples = {Tuple{a: 1}, Tuple{a: 3}}, 'Except_ExceptTuples', toString({Tuple{a: 1}, Tuple{a: 3}}), toString(Except_ExceptTuples))
-define test_Except_ExceptNull: TestMessage(Except_ExceptNull is null, 'Except_ExceptNull', 'null', toString(Except_ExceptNull))
+define test_Except_ExceptNull: TestMessage(Except_ExceptNull = {1, 2, 3, 4, 5}, 'Except_ExceptNull', toString({1, 2, 3, 4, 5}), toString(Except_ExceptNull))
 define test_Except_NullExcept: TestMessage(Except_NullExcept is null, 'Except_NullExcept', 'null', toString(Except_NullExcept))
 
 // Intersect
@@ -4689,7 +4689,7 @@ define test_In_IsNotIn: TestMessage(not In_IsNotIn, 'In_IsNotIn', toString(false
 define test_In_TupleIsIn: TestMessage(In_TupleIsIn, 'In_TupleIsIn', toString(true), toString(In_TupleIsIn))
 define test_In_TupleIsNotIn: TestMessage(not In_TupleIsNotIn, 'In_TupleIsNotIn', toString(false), toString(In_TupleIsNotIn))
 define test_In_NullIn: TestMessage(In_NullIn is null, 'In_NullIn', 'null', toString(In_NullIn))
-define test_In_InNull: TestMessage(In_InNull is null, 'In_InNull', 'null', toString(In_InNull))
+define test_In_InNull: TestMessage(not In_InNull, 'In_InNull', toString(false), toString(In_InNull))
 define test_In_NullNotIn: TestMessage(In_NullNotIn is null, 'In_NullNotIn', 'null', toString(In_NullNotIn))
 
 // Contains
@@ -4705,8 +4705,8 @@ define test_Contains_IsIn: TestMessage(Contains_IsIn, 'Contains_IsIn', toString(
 define test_Contains_IsNotIn: TestMessage(not Contains_IsNotIn, 'Contains_IsNotIn', toString(false), toString(Contains_IsNotIn))
 define test_Contains_TupleIsIn: TestMessage(Contains_TupleIsIn, 'Contains_TupleIsIn', toString(true), toString(Contains_TupleIsIn))
 define test_Contains_TupleIsNotIn: TestMessage(not Contains_TupleIsNotIn, 'Contains_TupleIsNotIn', toString(false), toString(Contains_TupleIsNotIn))
+define test_Contains_InNull: TestMessage(not Contains_InNull, 'Contains_InNull', toString(false), toString(Contains_InNull))
 define test_Contains_NullIn: TestMessage(Contains_NullIn is null, 'Contains_NullIn', 'null', toString(Contains_NullIn))
-define test_Contains_InNull: TestMessage(Contains_InNull is null, 'Contains_InNull', 'null', toString(Contains_InNull))
 define test_Contains_NullNotIn: TestMessage(Contains_NullNotIn is null, 'Contains_NullNotIn', 'null', toString(Contains_NullNotIn))
 
 // Includes

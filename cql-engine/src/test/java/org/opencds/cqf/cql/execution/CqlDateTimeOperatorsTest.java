@@ -432,8 +432,8 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DifferenceInMinutesA").getExpression().evaluate(context);
         assertThat(result, is(45));
 
-//        result = context.resolveExpressionRef("DifferenceInDaysA").getExpression().evaluate(context);
-//        assertThat(result, is(1));
+        result = context.resolveExpressionRef("DifferenceInDaysA").getExpression().evaluate(context);
+        assertThat(result, is(0));
 
         result = context.resolveExpressionRef("DifferenceInHoursAA").getExpression().evaluate(context);
         assertThat(result, is(1));
@@ -441,8 +441,8 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DifferenceInMinutesAA").getExpression().evaluate(context);
         assertThat(result, is(45));
 
-//        result = context.resolveExpressionRef("DifferenceInDaysAA").getExpression().evaluate(context);
-//        assertThat(result, is(1));
+        result = context.resolveExpressionRef("DifferenceInDaysAA").getExpression().evaluate(context);
+        assertThat(result, is(0));
     }
 
     /**

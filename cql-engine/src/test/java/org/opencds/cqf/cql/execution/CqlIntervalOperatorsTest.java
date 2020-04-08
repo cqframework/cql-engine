@@ -239,7 +239,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TestNullElement1").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("TestNullElement2").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -423,7 +423,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TestInNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("TestInNullEnd").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -523,10 +523,10 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         // This is going to the InEvaluator for some reason
-        // result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        Object result = context.resolveExpressionRef("TestIncludedInNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-        Object result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIncludedInTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("IntegerIntervalIncludedInFalse").getExpression().evaluate(context);
@@ -573,10 +573,10 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     public void TestIntersect() {
         Context context = new Context(library);
 
-        // result = context.resolveExpressionRef("TestIntersectNull").getExpression().evaluate(context);
-        // assertThat(result, is(nullValue()));
+        Object result = context.resolveExpressionRef("TestIntersectNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-        Object result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("IntegerIntervalIntersectTest4to10").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).equal(new Interval(4, true, 10, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalIntersectTestNull").getExpression().evaluate(context);

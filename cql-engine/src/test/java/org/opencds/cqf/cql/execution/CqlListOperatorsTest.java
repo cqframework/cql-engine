@@ -237,8 +237,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new Time(offset, 15, 59, 59, 999)));
         assertThat(((List)result).size(), is(1));
 
-//        result = context.resolveExpressionRef("ExceptNullRight").getExpression().evaluate(context);
-//        assertThat(result, is(Arrays.asList(1, 4)));
+        result = context.resolveExpressionRef("ExceptNullRight").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(1, 4)));
     }
 
     /**
@@ -251,8 +251,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("ExistsEmpty").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-//        result = context.resolveExpressionRef("ExistsListNull").getExpression().evaluate(context);
-//        assertThat(result, is(true));
+        result = context.resolveExpressionRef("ExistsListNull").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("Exists1").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -332,14 +332,14 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     public void testIn() throws JAXBException {
         Context context = new Context(library);
 
-        Object result;// = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
-//        assertThat(result, is(false));
+        Object result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-//        result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
-//        assertThat(result, is(true));
+        result = context.resolveExpressionRef("InNullAnd1Null").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
 
-//        result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
-//        assertThat(result, is(false));
+        result = context.resolveExpressionRef("In1Null").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("In1And12").getExpression().evaluate(context);
         assertThat(result, is(true));
