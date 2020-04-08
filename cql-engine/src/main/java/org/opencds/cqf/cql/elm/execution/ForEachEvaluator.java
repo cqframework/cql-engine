@@ -14,7 +14,7 @@ public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach 
         }
 
         List<Object> retVal = new ArrayList<>();
-        for (Object o : (Iterable) source) {
+        for (Object o : (Iterable<?>) source) {
             retVal.add(context.resolvePath(o, element.toString()));
         }
         return retVal;

@@ -261,28 +261,28 @@ public class CqlTestSuite {
 
         result = context.resolveExpressionRef("List_BoolList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
-        Boolean listComp = CqlList.equal((Iterable) result, Arrays.asList(true, false, true));
+        Boolean listComp = CqlList.equal((Iterable<?>) result, Arrays.asList(true, false, true));
         Assert.assertTrue(listComp != null && listComp);
 
         result = context.resolveExpressionRef("List_IntList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
-        listComp = CqlList.equal((Iterable) result, Arrays.asList(9, 7, 8));
+        listComp = CqlList.equal((Iterable<?>) result, Arrays.asList(9, 7, 8));
         Assert.assertTrue(listComp != null && listComp);
 
         result = context.resolveExpressionRef("List_DecimalList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
-        listComp = CqlList.equal((Iterable) result, Arrays.asList(new BigDecimal("1.0"), new BigDecimal("2.1"), new BigDecimal("3.2")));
+        listComp = CqlList.equal((Iterable<?>) result, Arrays.asList(new BigDecimal("1.0"), new BigDecimal("2.1"), new BigDecimal("3.2")));
         Assert.assertTrue(listComp != null && listComp);
 
         result = context.resolveExpressionRef("List_StringList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
-        listComp = CqlList.equal((Iterable) result, Arrays.asList("a", "bee", "see"));
+        listComp = CqlList.equal((Iterable<?>) result, Arrays.asList("a", "bee", "see"));
         Assert.assertTrue(listComp != null && listComp);
 
         result = context.resolveExpressionRef("List_DateTimeList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new DateTime(new BigDecimal("0.0"), 2012, 2, 15, 12, 10, 59, 456),
                         new DateTime(new BigDecimal("0.0"), 2012, 3, 15, 12, 10, 59, 456),
@@ -294,7 +294,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_TimeList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new Time(new BigDecimal("0.0"), 12, 10, 59, 456),
                         new Time(new BigDecimal("0.0"), 13, 10, 59, 456),
@@ -306,7 +306,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_QuantityList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new Quantity().withValue(new BigDecimal("1.0")).withUnit("m"),
                         new Quantity().withValue(new BigDecimal("2.1")).withUnit("m"),
@@ -318,7 +318,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_CodeList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new Code().withCode("12345").withSystem("http://loinc.org").withVersion("1").withDisplay("Test Code"),
                         new Code().withCode("123456").withSystem("http://loinc.org").withVersion("1").withDisplay("Another Test Code")
@@ -329,7 +329,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_ConceptList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new Concept().withCode(
                                 new Code().withCode("12345").withSystem("http://loinc.org").withVersion("1").withDisplay("Test Code")
@@ -351,7 +351,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_TupleList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new Tuple().withElements(elements), new Tuple().withElements(elements2)
 
@@ -362,7 +362,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_ListList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(Arrays.asList(1,2,3), Arrays.asList("a", "b", "c"))
         );
         Assert.assertTrue(listComp != null && listComp);
@@ -370,7 +370,7 @@ public class CqlTestSuite {
         result = context.resolveExpressionRef("List_IntervalList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
         listComp = CqlList.equal(
-                (Iterable) result,
+                (Iterable<?>) result,
                 Arrays.asList(
                         new Interval(1, true, 5, true), new Interval(5, false, 9, false), new Interval(8, true, 10, false)
                 )
@@ -379,12 +379,12 @@ public class CqlTestSuite {
 
         result = context.resolveExpressionRef("List_MixedList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
-        listComp = CqlList.equal((Iterable) result, Arrays.asList(1, "two", 3));
+        listComp = CqlList.equal((Iterable<?>) result, Arrays.asList(1, "two", 3));
         Assert.assertTrue(listComp != null && listComp);
 
         result = context.resolveExpressionRef("List_EmptyList").evaluate(context);
         Assert.assertTrue(result instanceof Iterable);
-        listComp = CqlList.equal((Iterable) result, Collections.EMPTY_LIST);
+        listComp = CqlList.equal((Iterable<?>) result, Collections.EMPTY_LIST);
         Assert.assertTrue(listComp != null && listComp);
     }
 

@@ -25,7 +25,7 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
         }
 
         if (source instanceof Iterable) {
-            Iterable elements = (Iterable) source;
+            Iterable<?> elements = (Iterable<?>) source;
             Object avg = null;
             int size = 1;
 

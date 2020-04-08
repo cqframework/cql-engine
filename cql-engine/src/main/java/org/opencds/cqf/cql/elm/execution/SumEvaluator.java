@@ -22,7 +22,7 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
         }
 
         if (source instanceof Iterable) {
-            Iterable elements = (Iterable)source;
+            Iterable<?> elements = (Iterable<?>)source;
             Object sum = null;
             for (Object element : elements) {
                 if (element == null) {

@@ -76,6 +76,7 @@ public class CqlLibraryReader {
         return read(u, toSource(reader));
     }
 
+    @SuppressWarnings("unchecked")
     public static Library read(Unmarshaller u, Source source) throws JAXBException {
         Object result = u.unmarshal(source);
         return ((JAXBElement<Library>)result).getValue();
@@ -106,6 +107,7 @@ public class CqlLibraryReader {
         return read(toSource(reader));
     }
 
+    @SuppressWarnings("unchecked")
     public static Library read(Source source) throws JAXBException {
         Unmarshaller u = getUnmarshaller();
         Object result = u.unmarshal(source);

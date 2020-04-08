@@ -32,7 +32,7 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
         }
 
         else if (left instanceof Iterable) {
-            List leftList = (List) left;
+            List<?> leftList = (List<?>) left;
 
             for (Object element : leftList) {
                 Boolean isElementInList = EquivalentEvaluator.equivalent(element, right);

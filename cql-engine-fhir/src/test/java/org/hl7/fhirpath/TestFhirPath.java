@@ -195,7 +195,7 @@ public class TestFhirPath {
     private Boolean compareResults(Object expectedResult, Object actualResult) {
         // Perform FHIR system-defined type conversions
         if (actualResult instanceof Enumeration) {
-            actualResult = new Code().withCode(((Enumeration) actualResult).getValueAsString());
+            actualResult = new Code().withCode(((Enumeration<?>) actualResult).getValueAsString());
         } else if (actualResult instanceof BooleanType) {
             actualResult = ((BooleanType) actualResult).getValue();
         } else if (actualResult instanceof IntegerType) {
@@ -218,6 +218,7 @@ public class TestFhirPath {
         return EqualEvaluator.equal(expectedResult, actualResult);
     }
 
+    @SuppressWarnings("unchecked")
     private void runStu3Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
         String resourceFilePath = "stu3/input/" + test.getInputfile();
         org.hl7.fhir.dstu3.model.Resource resource = loadResourceFile(resourceFilePath);
@@ -257,7 +258,7 @@ public class TestFhirPath {
             if (result instanceof Iterable) {
                 actualResults = (Iterable<Object>) result;
             } else {
-                List results = new ArrayList<>();
+                List<Object> results = new ArrayList<>();
                 results.add(result);
                 actualResults = results;
             }
@@ -278,7 +279,7 @@ public class TestFhirPath {
         }
     }
 
-
+    @SuppressWarnings("unchecked")
     private void runR4Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
         String resourceFilePath = "r4/input/" + test.getInputfile();
         org.hl7.fhir.r4.model.Resource resource = loadResourceFileR4(resourceFilePath);
@@ -318,7 +319,7 @@ public class TestFhirPath {
             if (result instanceof Iterable) {
                 actualResults = (Iterable<Object>) result;
             } else {
-                List results = new ArrayList<>();
+                List<Object> results = new ArrayList<Object>();
                 results.add(result);
                 actualResults = results;
             }
@@ -435,8 +436,8 @@ public class TestFhirPath {
         // FhirDataProviderStu3().setEndpoint("http://fhirtest.uhn.ca/baseDstu3");
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
-        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         // TODO - fix
+        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         // Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(),
         // new Partial(DateTime.getFields(6), new int[] {2017, 5, 6, 18, 8, 0}));
         // Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(),
@@ -468,8 +469,8 @@ public class TestFhirPath {
         //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);
 
-        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
         // TODO - millis shouldn't be populated - issue with DateTime.fromJavaDate(Date date)
+        Object result = context.resolveExpressionRef("TestPeriodToInterval").getExpression().evaluate(context);
 //        Assert.assertEquals(((DateTime)((Interval) result).getStart()).getPartial(), new Partial(DateTime.getFields(7), new int[] {2017, 5, 6, 18, 8, 0, 0}));
 //        Assert.assertEquals(((DateTime)((Interval) result).getEnd()).getPartial(), new Partial(DateTime.getFields(7), new int[] {2017, 5, 6, 19, 8, 0, 0}));
         result = context.resolveExpressionRef("TestToQuantity").getExpression().evaluate(context);

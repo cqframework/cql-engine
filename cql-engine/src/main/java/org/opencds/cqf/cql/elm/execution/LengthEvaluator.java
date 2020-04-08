@@ -28,7 +28,7 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
         }
 
         if (operand instanceof Iterable) {
-            return listLength((Iterable) operand);
+            return listLength((Iterable<?>) operand);
         }
 
         throw new InvalidOperatorArgument(
@@ -45,7 +45,7 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
         return operand.length();
     }
 
-    public static Integer listLength(Iterable operand) {
+    public static Integer listLength(Iterable<?> operand) {
         if (operand == null) {
             return 0;
         }
@@ -63,7 +63,7 @@ public class LengthEvaluator extends org.cqframework.cql.elm.execution.Length {
                 return stringLength((String) operand);
             }
             else {
-                return listLength((Iterable) operand);
+                return listLength((Iterable<?>) operand);
             }
         }
 

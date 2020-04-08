@@ -27,7 +27,7 @@ public class StdDevEvaluator extends org.cqframework.cql.elm.execution.StdDev {
 
         if (source instanceof Iterable) {
 
-            if (((List) source).isEmpty()) {
+            if (((List<?>) source).isEmpty()) {
                 return null;
             }
 

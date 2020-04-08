@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.exception;
 
 public class InvalidOperatorArgument extends CqlException
 {
+    private static final long serialVersionUID = 1L;
+
     public InvalidOperatorArgument(String message)
     {
         super(message);

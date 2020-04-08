@@ -27,7 +27,7 @@ public class CoalesceEvaluator extends org.cqframework.cql.elm.execution.Coalesc
 
                 if (operand instanceof Iterable && operands.size() == 1) {
 
-                    for (Object obj : ((Iterable) operand)) {
+                    for (Object obj : ((Iterable<?>) operand)) {
                         if (obj != null) {
                             return obj;
                         }

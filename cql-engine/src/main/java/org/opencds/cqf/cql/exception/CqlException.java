@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.exception;
 
 public class CqlException extends RuntimeException
 {
+    private static final long serialVersionUID = 1L;
+
     public CqlException(String message)
     {
         super(message);

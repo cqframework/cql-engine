@@ -29,7 +29,7 @@ Note that the order of elements does not matter for the purposes of determining 
 
 public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
-    public static Object properlyIncudedIn(Object left, Object right, String precision) {
+    public static Object properlyIncludedIn(Object left, Object right, String precision) {
         if (left == null && right == null) {
             return null;
         }
@@ -38,13 +38,13 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
             if (left == null) {
                 return right instanceof Interval
                         ? ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
-                        : ProperlyIncludesEvaluator.listProperlyIncludes((Iterable) right, null);
+                        : ProperlyIncludesEvaluator.listProperlyIncludes((Iterable<?>) right, null);
             }
 
             if (right == null) {
                 return left instanceof Interval
                         ? ProperlyIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
-                        : ProperlyIncludesEvaluator.listProperlyIncludes(null, (Iterable) left);
+                        : ProperlyIncludesEvaluator.listProperlyIncludes(null, (Iterable<?>) left);
             }
 
             return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
@@ -63,6 +63,6 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return properlyIncudedIn(left, right, precision);
+        return properlyIncludedIn(left, right, precision);
     }
 }

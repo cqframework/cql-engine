@@ -22,7 +22,7 @@ public class CodeUtil {
     private static List<Code> tryIterableThenConcept(FhirContext fhirContext, Object object) {
         List<Code> codes = new ArrayList<Code>();
         if(object instanceof Iterable) {
-            for (Object concept : (Iterable)object) {
+            for (Object concept : (Iterable<?>)object) {
                 codes.addAll(tryConceptThenCoding(fhirContext, (IBase)concept));
             }
         }
@@ -81,7 +81,7 @@ public class CodeUtil {
         return codes;
     }
 
-    private static BaseRuntimeElementDefinition getElementDefinition(FhirContext fhirContext, String ElementName) {
+    private static BaseRuntimeElementDefinition<?> getElementDefinition(FhirContext fhirContext, String ElementName) {
         BaseRuntimeElementDefinition<?> def = fhirContext.getElementDefinition(ElementName);
         return def;
     }
@@ -118,7 +118,7 @@ public class CodeUtil {
 			throw new IllegalArgumentException("Non-primitive value encountered while trying to access primitive value.");
 		}
 		else {
-			return ((IPrimitiveType)baseValue).getValueAsString();
+			return ((IPrimitiveType<?>)baseValue).getValueAsString();
 		}
 	}
 

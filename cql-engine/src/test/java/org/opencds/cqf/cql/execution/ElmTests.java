@@ -31,13 +31,13 @@ public class ElmTests {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("TestFilter").getExpression().evaluate(context);
 
-        Assert.assertTrue(((List) result).size() == 2);
+        Assert.assertTrue(((List<?>) result).size() == 2);
     }
 
     @Test
     public void TestLibraryLoad() {
         try {
-            Library library = CqlLibraryReader.read(ElmTests.class.getResourceAsStream("CMS53Draft/PrimaryPCIReceivedWithin90MinutesofHospitalArrival-7.0.001.xml"));
+            CqlLibraryReader.read(ElmTests.class.getResourceAsStream("CMS53Draft/PrimaryPCIReceivedWithin90MinutesofHospitalArrival-7.0.001.xml"));
         } catch (IOException | JAXBException e) {
             throw new IllegalArgumentException("Error reading ELM: " + e.getMessage());
         }

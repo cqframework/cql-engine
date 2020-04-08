@@ -156,9 +156,10 @@ public class SystemDataProvider implements DataProvider {
     public Object createInstance(String typeName) {
         Class<?> clazz = resolveType(typeName);
         try {
-            Object object = clazz.newInstance();
+            Object object = clazz.getDeclaredConstructor().newInstance();
             return object;
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | InvocationTargetException | 
+            ExceptionInInitializerError | IllegalAccessException | SecurityException | NoSuchMethodException e) {
             throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
         }
     }

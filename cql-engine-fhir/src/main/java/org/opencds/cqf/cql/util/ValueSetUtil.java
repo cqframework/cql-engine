@@ -247,7 +247,7 @@ public class ValueSetUtil {
 			throw new IllegalArgumentException("Non-primitive value encountered while trying to access primitive value.");
 		}
 		else {
-			return ((IPrimitiveType)baseValue).getValueAsString();
+			return ((IPrimitiveType<?>)baseValue).getValueAsString();
 		}
 	}
 

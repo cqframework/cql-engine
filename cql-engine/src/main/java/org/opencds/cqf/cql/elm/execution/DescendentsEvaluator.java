@@ -21,7 +21,7 @@ public class DescendentsEvaluator extends org.cqframework.cql.elm.execution.Desc
 
     public static Object getDescendents(Object source) {
         if (source instanceof Iterable) {
-            for (Object element : (Iterable) source) {
+            for (Object element : (Iterable<?>) source) {
                 descendents.add(getDescendents(element));
             }
         }

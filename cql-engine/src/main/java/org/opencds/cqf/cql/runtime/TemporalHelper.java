@@ -13,7 +13,6 @@ public class TemporalHelper {
 
     public static String[] normalizeDateTimeElements(int ... elements) {
         String[] ret = new String[elements.length];
-        String strElement = "";
         for (int i = 0; i < elements.length; ++i) {
             switch (i) {
                 case 0: ret[i] = addLeadingZeroes(elements[i], 4); break;
@@ -27,7 +26,6 @@ public class TemporalHelper {
 
     public static String[] normalizeTimeElements(int ... elements) {
         String[] ret = new String[elements.length];
-        String strElement = "";
         for (int i = 0; i < elements.length; ++i) {
             switch (i) {
                 case 3: ret[i] = addLeadingZeroes(elements[i], 3); break;

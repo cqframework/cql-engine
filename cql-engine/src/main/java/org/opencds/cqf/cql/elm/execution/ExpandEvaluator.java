@@ -217,6 +217,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Object internalEvaluate(Context context)
     {
         Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);

@@ -13,12 +13,12 @@ public class Issue223 extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("Access Flattened List of List Items").getExpression().evaluate(context);
-        List list = (List)result;
+        List<?> list = (List<?>)result;
         assertThat(list.size(), is(1));
         assertThat(list.get(0), is(true));
 
         result = context.resolveExpressionRef("Access Flattened List of List Items in a Single Query").getExpression().evaluate(context);
-        list = (List)result;
+        list = (List<?>)result;
         assertThat(list.size(), is(1));
         assertThat(list.get(0), is(true));
     }

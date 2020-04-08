@@ -18,7 +18,7 @@ public class LastEvaluator extends org.cqframework.cql.elm.execution.Last {
         }
 
         Object result = null;
-        for (Object element : (Iterable) source) {
+        for (Object element : (Iterable<?>) source) {
             result = element;
         }
 

@@ -26,6 +26,7 @@ import org.testng.annotations.Test;
 public class CqlTypesTest extends CqlExecutionTestBase {
 
     @Test
+    @SuppressWarnings("serial")
     public void testAny() throws JAXBException {
         Context context = new Context(library);
 

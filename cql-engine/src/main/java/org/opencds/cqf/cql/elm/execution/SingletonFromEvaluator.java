@@ -23,7 +23,7 @@ public class SingletonFromEvaluator extends org.cqframework.cql.elm.execution.Si
         Object result = null;
         boolean first = true;
         if (operand instanceof Iterable) {
-            for (Object element : (Iterable) operand) {
+            for (Object element : (Iterable<?>) operand) {
                 if (first) {
                     result = element;
                     first = false;

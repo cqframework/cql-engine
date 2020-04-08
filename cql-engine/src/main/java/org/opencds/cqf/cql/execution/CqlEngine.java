@@ -209,24 +209,24 @@ public class CqlEngine {
         return library;
     }
 
-    private void validateDataRequirements(Library library) {
-        if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
-        {
-            for (UsingDef using : library.getUsings().getDef()) {
-                // Skip system using since the context automatically registers that.
-                if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
-                {
-                    continue;
-                }
+    // private void validateDataRequirements(Library library) {
+    //     if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
+    //     {
+    //         for (UsingDef using : library.getUsings().getDef()) {
+    //             // Skip system using since the context automatically registers that.
+    //             if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
+    //             {
+    //                 continue;
+    //             }
 
-                if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
-                    throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
-                    this.getLibraryDescription(library.getIdentifier()),
-                    using.getUri()));
-                }
-            }
-        }
-    }
+    //             if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
+    //                 throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
+    //                 this.getLibraryDescription(library.getIdentifier()),
+    //                 using.getUri()));
+    //             }
+    //         }
+    //     }
+    // }
 
     private void validateTerminologyRequirements(Library library) {
         if ((library.getCodeSystems() != null && library.getCodeSystems().getDef() != null && !library.getCodeSystems().getDef().isEmpty()) || 

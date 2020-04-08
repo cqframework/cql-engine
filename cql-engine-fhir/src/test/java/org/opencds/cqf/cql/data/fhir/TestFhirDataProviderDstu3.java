@@ -226,6 +226,6 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
         context.setContextValue("Patient", "81ee6581-02b9-44de-b026-7401bf36643a");
 
         Object result = context.resolveExpressionRef("GetProvenance").getExpression().evaluate(context);
-        Assert.assertTrue(result instanceof List && ((List) result).size() == 1);
+        Assert.assertTrue(result instanceof List && ((List<?>) result).size() == 1);
     }
 }

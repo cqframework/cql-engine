@@ -15,10 +15,18 @@
         "BACKBONEELEMENT",
         "Codeable",
         "DOMAINRESOURCE",
+        "Descendents",
         "Dstu",
         "Fhir",
         "SNOMED",
+        "Schuler",
+        "elems",
+        "fhirpath",
         "hapi",
-        "ucum"
+        "hardcoding",
+        "indexth",
+        "inputfile",
+        "ucum",
+        "unpair"
     ]
 }

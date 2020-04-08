@@ -12,9 +12,9 @@ public class SortDescendingTest extends CqlExecutionTestBase {
         Context context = new Context(library);
         
         Object result = context.resolveExpressionRef("sorted list of numbers descending").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), 9));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), 4));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), 2));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), 1));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>) result).get(0), 9));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>) result).get(1), 4));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>) result).get(2), 2));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>) result).get(3), 1));
     }
 }

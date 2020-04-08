@@ -43,7 +43,7 @@ public class TestFhirLibrary {
 
         Object result = context.resolveExpressionRef("BP: Systolic").evaluate(context);
         assertThat(result, instanceOf(Iterable.class));
-        for (Object element : (Iterable)result) {
+        for (Object element : (Iterable<?>)result) {
             assertThat(element, instanceOf(Observation.class));
             Observation observation = (Observation)element;
             assertThat(observation.getCode().getCoding().get(0).getCode(), is("8480-6"));
@@ -51,7 +51,7 @@ public class TestFhirLibrary {
 
         result = context.resolveExpressionRef("BP: Diastolic").evaluate(context);
         assertThat(result, instanceOf(Iterable.class));
-        for (Object element : (Iterable)result) {
+        for (Object element : (Iterable<?>)result) {
             assertThat(element, instanceOf(Observation.class));
             Observation observation = (Observation)element;
             assertThat(observation.getCode().getCoding().get(0).getCode(), is("8462-4"));
@@ -78,7 +78,7 @@ public class TestFhirLibrary {
 
         Object result = context.resolveExpressionRef("Breastfeeding Intention Assessment").evaluate(context);
         assertThat(result, instanceOf(Iterable.class));
-        for (Object element : (Iterable)result) {
+        for (Object element : (Iterable<?>)result) {
             assertThat(element, instanceOf(RiskAssessment.class));
         }
     }

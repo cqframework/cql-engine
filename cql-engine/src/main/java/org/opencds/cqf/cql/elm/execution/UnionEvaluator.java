@@ -69,11 +69,11 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
         else if (left instanceof Iterable) {
             // List Logic
             List<Object> result = new ArrayList<>();
-            for (Object leftElement : (Iterable)left) {
+            for (Object leftElement : (Iterable<?>)left) {
                 result.add(leftElement);
             }
 
-            for (Object rightElement : (Iterable)right) {
+            for (Object rightElement : (Iterable<?>)right) {
                 result.add(rightElement);
             }
             return DistinctEvaluator.distinct(result);

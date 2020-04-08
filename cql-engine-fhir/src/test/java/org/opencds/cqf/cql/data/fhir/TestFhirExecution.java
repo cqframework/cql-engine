@@ -13,7 +13,7 @@ public class TestFhirExecution extends FhirExecutionTestBase {
         Context context = new Context(library);
         context.registerDataProvider("http://hl7.org/fhir", dstu3Provider);
         Object result = context.resolveExpressionRef("testCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue((Integer)((List) result).get(0) == 72);
+        Assert.assertTrue((Integer)((List<?>) result).get(0) == 72);
     }
 
     // @Test

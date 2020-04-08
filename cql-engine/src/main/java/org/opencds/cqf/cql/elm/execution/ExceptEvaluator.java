@@ -115,8 +115,8 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
 
         else if (left instanceof Iterable)
         {
-            Iterable leftArr = (Iterable)left;
-            Iterable rightArr = (Iterable)right;
+            Iterable<?> leftArr = (Iterable<?>)left;
+            Iterable<?> rightArr = (Iterable<?>)right;
 
             List<Object> result = new ArrayList<>();
             Boolean in;

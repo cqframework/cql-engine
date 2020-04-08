@@ -42,6 +42,7 @@ import org.testng.annotations.Test;
 public class TestR4ModelResolver {
 
     // Couldn't find a way to automatically get the full list of enums.
+    @SuppressWarnings("serial")
     private static List<Class<?>> enums = new ArrayList<Class<?>>() {
         {
             add(AbstractType.class);

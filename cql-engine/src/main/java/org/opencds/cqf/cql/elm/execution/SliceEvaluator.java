@@ -46,8 +46,8 @@ public class SliceEvaluator extends org.cqframework.cql.elm.execution.Slice {
         if (source instanceof Iterable) {
             List<Object> ret = new ArrayList<>();
 
-            if (end == null || end > ((List) source).size()) {
-                end = ((List) source).size();
+            if (end == null || end > ((List<?>) source).size()) {
+                end = ((List<?>) source).size();
             }
 
             if (end < 0) {
@@ -55,7 +55,7 @@ public class SliceEvaluator extends org.cqframework.cql.elm.execution.Slice {
             }
 
             for (; start < end; ++start) {
-                ret.add(((List) source).get(start));
+                ret.add(((List<?>) source).get(start));
             }
 
             return ret;

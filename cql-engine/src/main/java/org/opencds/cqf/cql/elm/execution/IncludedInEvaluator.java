@@ -18,7 +18,7 @@ The included in operator for intervals returns true if the first interval is com
 This operator uses the semantics described in the Start and End operators to determine interval boundaries.
 If precision is specified and the point type is a date/time type, comparisons used in the operation are performed at the specified precision.
 If either argument is null, the result is null.
-Note that during is a synonym for included in and may be used to invoke the same operation whever included in may appear.
+Note that during is a synonym for included in and may be used to invoke the same operation whenever included in may appear.
 
 *** NOTES FOR LIST ***
 included in(left List<T>, right list<T>) Boolean
@@ -37,7 +37,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
             return intervalIncludedIn((Interval) left, (Interval) right, precision);
         }
         if (left instanceof Iterable && right instanceof Iterable) {
-            return listIncludedIn((Iterable) left, (Iterable) right);
+            return listIncludedIn((Iterable<?>) left, (Iterable<?>) right);
         }
 
         throw new InvalidOperatorArgument(
@@ -89,7 +89,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         );
     }
 
-    public static Boolean listIncludedIn(Iterable left, Iterable right) {
+    public static Boolean listIncludedIn(Iterable<?> left, Iterable<?> right) {
         if (left == null) {
             return true;
         }
@@ -122,13 +122,13 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         if (left == null) {
             return right instanceof Interval
                     ? intervalIncludedIn(null, (Interval) right, precision)
-                    : listIncludedIn(null, (Iterable) right);
+                    : listIncludedIn(null, (Iterable<?>) right);
         }
 
         if (right == null) {
             return left instanceof Interval
                     ? intervalIncludedIn((Interval) left, null, precision)
-                    : listIncludedIn((Iterable) left, null);
+                    : listIncludedIn((Iterable<?>) left, null);
         }
 
         return includedIn(left, right, precision);

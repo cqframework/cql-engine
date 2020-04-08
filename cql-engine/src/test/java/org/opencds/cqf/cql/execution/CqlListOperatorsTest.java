@@ -22,6 +22,7 @@ import org.opencds.cqf.cql.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+@SuppressWarnings("rawtypes")
 public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
     @Test
@@ -74,7 +75,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         //    assertThat(result, is(Arrays.asList(new Quantity().withValue(new BigDecimal("19.99")).withUnit("lbs") , new Quantity().withValue(new BigDecimal("17.33")).withUnit("lbs") ,  new Quantity().withValue(new BigDecimal("10.66")).withUnit("lbs") )));
 
         result = context.resolveExpressionRef("dateTimeList").getExpression().evaluate(context);
-        List<DateTime> arrListDateTime = new ArrayList();
+        List<DateTime> arrListDateTime = new ArrayList<>();
         arrListDateTime.add(new DateTime(offset, 2016));
         arrListDateTime.add(new DateTime(offset, 2015));
         arrListDateTime.add(new DateTime(offset, 2010));
@@ -82,7 +83,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
 
         result = context.resolveExpressionRef("timeList").getExpression().evaluate(context);
-        List<Time> arrList = new ArrayList();
+        List<Time> arrList = new ArrayList<>();
         arrList.add(new Time(offset, 15, 59, 59, 999));
         arrList.add(new Time(offset, 15, 12, 59, 999));
         arrList.add(new Time(offset, 15, 12, 13, 999));
@@ -135,7 +136,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     /**
      * {@link org.opencds.cqf.cql.elm.execution.DistinctEvaluator#evaluate(Context)}
      */
-    @Test
+    @Test    
+    @SuppressWarnings("serial")
     public void testDistinct() throws JAXBException {
         Context context = new Context(library);
 

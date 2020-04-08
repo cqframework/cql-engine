@@ -15,7 +15,7 @@ public class AnyInValueSetEvaluator extends org.cqframework.cql.elm.execution.An
         if (codes instanceof Iterable)
         {
             Object result;
-            for (Object code : (Iterable) codes)
+            for (Object code : (Iterable<?>) codes)
             {
                 result = InValueSetEvaluator.inValueSet(context, code, valueset);
                 if (result instanceof Boolean && (Boolean) result)

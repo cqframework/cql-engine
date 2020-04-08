@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.lang.reflect.InvocationTargetException;
+
 import org.opencds.cqf.cql.exception.InvalidConversion;
 import org.opencds.cqf.cql.execution.Context;
 
@@ -38,24 +40,25 @@ For specific semantics for each conversion, refer to the explicit conversion ope
 
 public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert {
 
-    private Class resolveType(Context context) {
+    private Class<?> resolveType(Context context) {
         if (this.getToTypeSpecifier() != null) {
             return context.resolveType(this.getToTypeSpecifier());
         }
         return context.resolveType(this.getToType());
     }
 
-    private static Object convert(Object operand, Class type) {
+    private static Object convert(Object operand, Class<?> type) {
         if (operand == null) {
             return null;
         }
 
         try {
             if (type.isInstance(operand)) {
-                Class cls = operand.getClass();
-                return cls.newInstance();
+                Class<?> cls = operand.getClass();
+                return cls.getDeclaredConstructor().newInstance();
             }
-        } catch (InstantiationException | IllegalAccessException e) {
+        } catch (InstantiationException | InvocationTargetException | 
+            ExceptionInInitializerError | IllegalAccessException | SecurityException | NoSuchMethodException e) {
             throw new InvalidConversion("Error during conversion: " + e.getMessage());
         }
 
@@ -65,7 +68,7 @@ public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert 
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-        Class type = resolveType(context);
+        Class<?> type = resolveType(context);
 
         return convert(operand, type);
     }

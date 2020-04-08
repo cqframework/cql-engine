@@ -17,7 +17,7 @@ public class FirstEvaluator extends org.cqframework.cql.elm.execution.First {
             return null;
         }
 
-        for (Object element : (Iterable) source) {
+        for (Object element : (Iterable<?>) source) {
             return element;
         }
 

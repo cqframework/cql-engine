@@ -17,6 +17,7 @@ import org.opencds.cqf.cql.runtime.iterators.QueryIterator;
 
 public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
+    @SuppressWarnings("unchecked")
     public Iterable<Object> ensureIterable(Object source) {
         if (source instanceof Iterable) {
             return (Iterable<Object>) source;
@@ -149,10 +150,11 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected Object internalEvaluate(Context context) {
 
-        ArrayList<Iterator> sources = new ArrayList<Iterator>();
+        ArrayList<Iterator<Object>> sources = new ArrayList<Iterator<Object>>();
         ArrayList<Variable> variables = new ArrayList<Variable>();
         ArrayList<Variable> letVariables = new ArrayList<Variable>();
         List<Object> result = new ArrayList<>();
