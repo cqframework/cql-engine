@@ -1,16 +1,5 @@
 package org.opencds.cqf.cql.execution;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.ObjectFactory;
-import org.opencds.cqf.cql.elm.execution.ObjectFactoryEx;
-import org.opencds.cqf.cql.exception.CqlException;
-
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,6 +7,18 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.ObjectFactory;
+import org.opencds.cqf.cql.elm.execution.ObjectFactoryEx;
+import org.opencds.cqf.cql.exception.CqlException;
 
 public class CqlLibraryReader {
 

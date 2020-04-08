@@ -1,12 +1,17 @@
 package org.opencds.cqf.cql.execution;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import javax.xml.bind.JAXBException;
-import java.util.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+
+import javax.xml.bind.JAXBException;
+
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 

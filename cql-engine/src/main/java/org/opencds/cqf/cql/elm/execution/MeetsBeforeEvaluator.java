@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.elm.execution;
 
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.runtime.Interval;
 
 /*
 meets before _precision_ (left Interval<T>, right Interval<T>) Boolean

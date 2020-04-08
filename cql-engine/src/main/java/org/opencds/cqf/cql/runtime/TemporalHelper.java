@@ -1,13 +1,13 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Objects;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class TemporalHelper {
 

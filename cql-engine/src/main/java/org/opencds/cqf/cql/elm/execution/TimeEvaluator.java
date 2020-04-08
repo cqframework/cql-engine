@@ -1,8 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
-
 import java.math.BigDecimal;
+
+import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
 

@@ -1,11 +1,12 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
+import static org.testng.AssertJUnit.assertTrue;
+
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
 
-import static org.testng.AssertJUnit.assertTrue;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class TestCodeRef extends FhirExecutionTestBase {
 

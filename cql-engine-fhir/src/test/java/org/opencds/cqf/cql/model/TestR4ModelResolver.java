@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.model;
 
-import org.testng.annotations.Test;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
@@ -14,11 +12,32 @@ import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
-import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.Enumerations.AbstractType;
+import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.r4.model.Enumerations.AgeUnits;
+import org.hl7.fhir.r4.model.Enumerations.BindingStrength;
+import org.hl7.fhir.r4.model.Enumerations.ConceptMapEquivalence;
+import org.hl7.fhir.r4.model.Enumerations.DataAbsentReason;
+import org.hl7.fhir.r4.model.Enumerations.DataType;
+import org.hl7.fhir.r4.model.Enumerations.DefinitionResourceType;
+import org.hl7.fhir.r4.model.Enumerations.DocumentReferenceStatus;
+import org.hl7.fhir.r4.model.Enumerations.EventResourceType;
+import org.hl7.fhir.r4.model.Enumerations.FHIRAllTypes;
+import org.hl7.fhir.r4.model.Enumerations.FHIRDefinedType;
+import org.hl7.fhir.r4.model.Enumerations.FHIRVersion;
+import org.hl7.fhir.r4.model.Enumerations.KnowledgeResourceType;
+import org.hl7.fhir.r4.model.Enumerations.MessageEvent;
+import org.hl7.fhir.r4.model.Enumerations.NoteType;
+import org.hl7.fhir.r4.model.Enumerations.PublicationStatus;
+import org.hl7.fhir.r4.model.Enumerations.RemittanceOutcome;
+import org.hl7.fhir.r4.model.Enumerations.RequestResourceType;
+import org.hl7.fhir.r4.model.Enumerations.ResourceType;
+import org.hl7.fhir.r4.model.Enumerations.SearchParamType;
+import org.hl7.fhir.r4.model.Enumerations.SpecialValues;
 import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
+import org.testng.annotations.Test;
 
 public class TestR4ModelResolver {
 
@@ -51,7 +70,7 @@ public class TestR4ModelResolver {
     };
 
     @Test(expectedExceptions = UnknownType.class)
-    public void resolverThrowsExecptionForUnknownType()
+    public void resolverThrowsExceptionForUnknownType()
     {
         ModelResolver resolver = new R4FhirModelResolver();
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
@@ -125,7 +144,7 @@ public class TestR4ModelResolver {
         resolver.resolveType("vConfidentialityClassification");
     }
 
-    // This tests all the types that are present in the modelinfo
+    // This tests all the types that are present in the ModelInfo
      @Test
     public void resolveModelInfoTests() {
         ModelResolver resolver = new R4FhirModelResolver();
@@ -138,7 +157,7 @@ public class TestR4ModelResolver {
             ClassInfo ci = (ClassInfo)ti;
             if (ci != null) {
                 switch (ci.getBaseType()) {
-                    // Astract classes
+                    // Abstract classes
                     case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
@@ -252,7 +271,7 @@ public class TestR4ModelResolver {
         
         Patient p = new Patient();
 
-        Object result = resolver.resolvePath(p, "notapath");
+        Object result = resolver.resolvePath(p, "not-a-path");
         assertNull(result);
     }
 }

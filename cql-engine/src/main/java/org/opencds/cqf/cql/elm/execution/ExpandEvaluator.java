@@ -1,12 +1,19 @@
 package org.opencds.cqf.cql.elm.execution;
 
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.*;
-
-import java.math.BigDecimal;
-import java.util.*;
+import org.opencds.cqf.cql.runtime.BaseTemporal;
+import org.opencds.cqf.cql.runtime.CqlList;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Precision;
+import org.opencds.cqf.cql.runtime.Quantity;
 
 /*
 

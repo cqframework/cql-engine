@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.execution.Context;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
 
 /*
 * The ELM Slice operation is the foundation for 3 CQL operators:

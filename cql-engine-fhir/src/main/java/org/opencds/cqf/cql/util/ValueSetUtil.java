@@ -1,14 +1,19 @@
 package org.opencds.cqf.cql.util;
 
-import ca.uhn.fhir.context.*;
-import ca.uhn.fhir.context.BaseRuntimeChildDefinition.IAccessor;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hl7.fhir.instance.model.api.IBase;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.opencds.cqf.cql.runtime.Code;
 
-import java.util.ArrayList;
-import java.util.List;
+import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
+import ca.uhn.fhir.context.BaseRuntimeChildDefinition.IAccessor;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.RuntimeChildResourceBlockDefinition;
+import ca.uhn.fhir.context.RuntimeResourceBlockDefinition;
+import ca.uhn.fhir.context.RuntimeResourceDefinition;
 
 public class ValueSetUtil {
 

@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.opencds.cqf.cql.exception.InvalidPrecision;
-
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+
+import org.opencds.cqf.cql.exception.InvalidPrecision;
 
 public enum Precision {
     YEAR,

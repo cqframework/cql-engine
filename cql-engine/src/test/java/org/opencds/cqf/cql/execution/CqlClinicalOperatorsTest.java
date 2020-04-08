@@ -1,16 +1,18 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.TemporalHelper;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-import org.opencds.cqf.cql.runtime.Interval;
-import javax.xml.bind.JAXBException;
-import java.lang.reflect.InvocationTargetException;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+
+import java.lang.reflect.InvocationTargetException;
+
+import javax.xml.bind.JAXBException;
+
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 

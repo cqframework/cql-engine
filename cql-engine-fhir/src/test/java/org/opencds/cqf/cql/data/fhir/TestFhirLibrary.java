@@ -1,5 +1,15 @@
 package org.opencds.cqf.cql.data.fhir;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+
+import javax.xml.bind.JAXBException;
+
 import org.cqframework.cql.elm.execution.Library;
 import org.hl7.fhir.dstu3.model.Observation;
 import org.hl7.fhir.dstu3.model.RiskAssessment;
@@ -11,15 +21,6 @@ import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.context.FhirContext;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.net.URLDecoder;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 public class TestFhirLibrary {
 

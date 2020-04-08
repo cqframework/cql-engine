@@ -1,11 +1,18 @@
 package org.opencds.cqf.cql.data;
 
-import org.opencds.cqf.cql.runtime.*;
-
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.CqlType;
+import org.opencds.cqf.cql.runtime.Date;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Tuple;
 
 public class SystemDataProvider implements DataProvider {
 

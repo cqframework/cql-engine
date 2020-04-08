@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.execution.Context;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.execution.Context;
 
 /*
 flatten(argument List<List<T>>) List<T>

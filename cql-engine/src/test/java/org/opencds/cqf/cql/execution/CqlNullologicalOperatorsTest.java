@@ -1,19 +1,20 @@
 package org.opencds.cqf.cql.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+import java.math.BigDecimal;
+import java.util.Collections;
+
+import javax.xml.bind.JAXBException;
+
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.runtime.DateTime;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.xml.bind.JAXBException;
-import java.math.BigDecimal;
-import java.util.Collections;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
 

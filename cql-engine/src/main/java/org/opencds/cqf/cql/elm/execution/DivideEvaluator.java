@@ -1,13 +1,13 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Interval;
 import org.opencds.cqf.cql.runtime.Quantity;
 import org.opencds.cqf.cql.runtime.Value;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /*
 /(left Decimal, right Decimal) Decimal

@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.cqframework.cql.elm.execution.Filter;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.execution.Variable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class FilterEvaluator extends Filter {
 

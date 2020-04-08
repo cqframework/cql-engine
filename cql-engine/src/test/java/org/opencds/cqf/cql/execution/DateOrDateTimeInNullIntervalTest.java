@@ -1,13 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+
+import org.testng.annotations.Test;
 
 public class DateOrDateTimeInNullIntervalTest extends CqlExecutionTestBase {
     @Test

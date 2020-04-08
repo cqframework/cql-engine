@@ -1,19 +1,26 @@
 package org.opencds.cqf.cql.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+import java.math.BigDecimal;
+
+import javax.xml.bind.JAXBException;
+
 import org.opencds.cqf.cql.elm.execution.AbsEvaluator;
 import org.opencds.cqf.cql.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.exception.UndefinedResult;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Value;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.xml.bind.JAXBException;
-import java.math.BigDecimal;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**

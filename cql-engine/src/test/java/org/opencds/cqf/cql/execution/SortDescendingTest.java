@@ -1,13 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class SortDescendingTest extends CqlExecutionTestBase {
     @Test

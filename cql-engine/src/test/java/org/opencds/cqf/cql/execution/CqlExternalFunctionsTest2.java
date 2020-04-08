@@ -1,15 +1,15 @@
 package org.opencds.cqf.cql.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
 import java.util.Arrays;
+
 import javax.xml.bind.JAXBException;
 
 import org.opencds.cqf.cql.data.SystemExternalFunctionProvider;
-import org.opencds.cqf.cql.execution.external.*;
-
+import org.opencds.cqf.cql.execution.external.MyMath2;
 import org.testng.annotations.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class CqlExternalFunctionsTest2 extends CqlExecutionTestBase {
 

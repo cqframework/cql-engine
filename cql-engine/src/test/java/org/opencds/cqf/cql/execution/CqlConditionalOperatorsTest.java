@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.execution;
 
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import javax.xml.bind.JAXBException;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.testng.annotations.Test;
 
 public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
 

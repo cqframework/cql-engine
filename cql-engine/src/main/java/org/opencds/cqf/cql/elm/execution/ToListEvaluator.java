@@ -1,7 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
 import java.util.Collections;
+
+import org.opencds.cqf.cql.execution.Context;
 
 public class ToListEvaluator extends org.cqframework.cql.elm.execution.ToList {
 

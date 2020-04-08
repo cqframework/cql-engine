@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.Arrays;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.BaseTemporal;
 import org.opencds.cqf.cql.runtime.Interval;
-
-import java.util.Arrays;
 
 /*
 *** NOTES FOR INTERVAL ***

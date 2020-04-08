@@ -10,14 +10,13 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.opencds.cqf.cql.Helpers;
-
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.opencds.cqf.cql.Helpers;
 import org.opencds.cqf.cql.runtime.Code;
-import org.opencds.cqf.cql.util.ValueSetUtil;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
+import org.opencds.cqf.cql.util.ValueSetUtil;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.parser.IParser;

@@ -1,12 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.Quantity;
-import org.opencds.cqf.cql.runtime.Value;
-
-import java.util.Iterator;
-import java.math.BigDecimal;
 
 /*
 Avg(argument List<Decimal>) Decimal

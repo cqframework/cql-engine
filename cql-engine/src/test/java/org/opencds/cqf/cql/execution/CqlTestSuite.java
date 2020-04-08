@@ -1,5 +1,20 @@
 package org.opencds.cqf.cql.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.math.BigDecimal;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+
+import javax.xml.bind.JAXBException;
+
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -11,25 +26,19 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.runtime.Code;
+import org.opencds.cqf.cql.runtime.Concept;
+import org.opencds.cqf.cql.runtime.CqlList;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.opencds.cqf.cql.runtime.Time;
+import org.opencds.cqf.cql.runtime.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.math.BigDecimal;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class CqlTestSuite {
 

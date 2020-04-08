@@ -1,18 +1,32 @@
 package org.opencds.cqf.cql.model;
 
-import org.hl7.fhir.dstu2.model.Enumerations.*;
-import org.hl7.fhir.dstu2.model.Enumerations.ResourceType;
-import org.hl7.fhir.dstu2.model.*;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import org.testng.annotations.Test;
 import static org.testng.AssertJUnit.assertTrue;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hl7.fhir.dstu2.model.EnumFactory;
+import org.hl7.fhir.dstu2.model.Enumeration;
+import org.hl7.fhir.dstu2.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.dstu2.model.Enumerations.AgeUnits;
+import org.hl7.fhir.dstu2.model.Enumerations.BindingStrength;
+import org.hl7.fhir.dstu2.model.Enumerations.ConceptMapEquivalence;
+import org.hl7.fhir.dstu2.model.Enumerations.DataAbsentReason;
+import org.hl7.fhir.dstu2.model.Enumerations.DataType;
+import org.hl7.fhir.dstu2.model.Enumerations.DocumentReferenceStatus;
+import org.hl7.fhir.dstu2.model.Enumerations.FHIRDefinedType;
+import org.hl7.fhir.dstu2.model.Enumerations.MessageEvent;
+import org.hl7.fhir.dstu2.model.Enumerations.NoteType;
+import org.hl7.fhir.dstu2.model.Enumerations.RemittanceOutcome;
+import org.hl7.fhir.dstu2.model.Enumerations.ResourceType;
+import org.hl7.fhir.dstu2.model.Enumerations.SearchParamType;
+import org.hl7.fhir.dstu2.model.Enumerations.SpecialValues;
+import org.hl7.fhir.dstu2.model.Patient;
 import org.opencds.cqf.cql.exception.UnknownType;
+import org.testng.annotations.Test;
 
 public class TestDstu2ModelResolver {
 

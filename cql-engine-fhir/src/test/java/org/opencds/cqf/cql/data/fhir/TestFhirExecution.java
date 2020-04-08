@@ -1,10 +1,9 @@
 package org.opencds.cqf.cql.data.fhir;
 
+import java.util.List;
+
 import org.opencds.cqf.cql.execution.Context;
 import org.testng.Assert;
-import org.testng.annotations.Test;
-
-import java.util.List;
 
 public class TestFhirExecution extends FhirExecutionTestBase {
 

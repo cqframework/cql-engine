@@ -1,5 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
 import org.cqframework.cql.elm.execution.ByColumn;
 import org.cqframework.cql.elm.execution.ByExpression;
@@ -9,8 +14,6 @@ import org.opencds.cqf.cql.execution.Variable;
 import org.opencds.cqf.cql.runtime.CqlList;
 import org.opencds.cqf.cql.runtime.Tuple;
 import org.opencds.cqf.cql.runtime.iterators.QueryIterator;
-
-import java.util.*;
 
 public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 

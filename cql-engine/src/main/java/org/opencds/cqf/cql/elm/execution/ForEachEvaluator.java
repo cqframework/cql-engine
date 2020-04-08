@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
 
-import org.opencds.cqf.cql.execution.Context;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opencds.cqf.cql.execution.Context;
 
 public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach {
 

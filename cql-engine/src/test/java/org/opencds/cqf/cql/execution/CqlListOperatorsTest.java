@@ -1,14 +1,10 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.TemporalHelper;
-import org.opencds.cqf.cql.runtime.Time;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.nullValue;
 
-import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -16,8 +12,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import javax.xml.bind.JAXBException;
+
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.opencds.cqf.cql.runtime.Time;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlListOperatorsTest extends CqlExecutionTestBase {
 

@@ -1,19 +1,24 @@
 package org.opencds.cqf.cql.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+import java.math.BigDecimal;
+
+import javax.xml.bind.JAXBException;
+
 import org.opencds.cqf.cql.elm.execution.AfterEvaluator;
 import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.exception.InvalidDateTime;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.runtime.Date;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.opencds.cqf.cql.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import javax.xml.bind.JAXBException;
-import java.math.BigDecimal;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
 

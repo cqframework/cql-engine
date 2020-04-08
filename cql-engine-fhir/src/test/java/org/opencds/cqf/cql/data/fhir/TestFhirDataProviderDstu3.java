@@ -1,21 +1,25 @@
 package org.opencds.cqf.cql.data.fhir;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.dstu3.model.*;
-import org.opencds.cqf.cql.data.CompositeDataProvider;
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
-import org.opencds.cqf.cql.model.*;
-import org.opencds.cqf.cql.retrieve.*;
-import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.testng.Assert.assertTrue;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.ListResource;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.opencds.cqf.cql.data.CompositeDataProvider;
+import org.opencds.cqf.cql.execution.Context;
+import org.opencds.cqf.cql.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.retrieve.FhirBundleCursor;
+import org.opencds.cqf.cql.retrieve.RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.terminology.fhir.Dstu3FhirTerminologyProvider;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 

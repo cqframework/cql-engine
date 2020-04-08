@@ -1,13 +1,23 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.opencds.cqf.cql.elm.execution.*;
-import org.opencds.cqf.cql.exception.InvalidInterval;
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-
-import javax.annotation.Nonnull;
 import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import javax.annotation.Nonnull;
+
+import org.opencds.cqf.cql.elm.execution.AndEvaluator;
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.elm.execution.GreaterEvaluator;
+import org.opencds.cqf.cql.elm.execution.IntersectEvaluator;
+import org.opencds.cqf.cql.elm.execution.MaxValueEvaluator;
+import org.opencds.cqf.cql.elm.execution.MinValueEvaluator;
+import org.opencds.cqf.cql.elm.execution.PredecessorEvaluator;
+import org.opencds.cqf.cql.elm.execution.SubtractEvaluator;
+import org.opencds.cqf.cql.elm.execution.SuccessorEvaluator;
+import org.opencds.cqf.cql.exception.InvalidInterval;
+import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 
 public class Interval implements CqlType, Comparable<Interval> {
 

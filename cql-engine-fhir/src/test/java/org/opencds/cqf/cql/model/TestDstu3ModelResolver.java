@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.model;
 
-import org.testng.annotations.Test;
-
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
@@ -15,9 +13,26 @@ import org.hl7.elm.r1.VersionedIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.dstu3.model.Enumeration;
+import org.hl7.fhir.dstu3.model.Enumerations.AbstractType;
+import org.hl7.fhir.dstu3.model.Enumerations.AdministrativeGender;
+import org.hl7.fhir.dstu3.model.Enumerations.AgeUnits;
+import org.hl7.fhir.dstu3.model.Enumerations.BindingStrength;
+import org.hl7.fhir.dstu3.model.Enumerations.ConceptMapEquivalence;
+import org.hl7.fhir.dstu3.model.Enumerations.DataAbsentReason;
+import org.hl7.fhir.dstu3.model.Enumerations.DataType;
+import org.hl7.fhir.dstu3.model.Enumerations.DocumentReferenceStatus;
+import org.hl7.fhir.dstu3.model.Enumerations.FHIRAllTypes;
+import org.hl7.fhir.dstu3.model.Enumerations.FHIRDefinedType;
+import org.hl7.fhir.dstu3.model.Enumerations.MessageEvent;
+import org.hl7.fhir.dstu3.model.Enumerations.NoteType;
+import org.hl7.fhir.dstu3.model.Enumerations.PublicationStatus;
+import org.hl7.fhir.dstu3.model.Enumerations.RemittanceOutcome;
+import org.hl7.fhir.dstu3.model.Enumerations.ResourceType;
+import org.hl7.fhir.dstu3.model.Enumerations.SearchParamType;
+import org.hl7.fhir.dstu3.model.Enumerations.SpecialValues;
 import org.hl7.fhir.dstu3.model.Patient;
-import org.hl7.fhir.dstu3.model.Enumerations.*;
 import org.opencds.cqf.cql.exception.UnknownType;
+import org.testng.annotations.Test;
 
 public class TestDstu3ModelResolver {
 

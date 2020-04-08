@@ -1,7 +1,8 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
 import java.util.HashMap;
+
+import org.opencds.cqf.cql.execution.Context;
 
 public class TupleEvaluator extends org.cqframework.cql.elm.execution.Tuple {
 

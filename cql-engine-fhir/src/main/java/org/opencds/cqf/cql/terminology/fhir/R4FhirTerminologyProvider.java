@@ -1,23 +1,29 @@
 package org.opencds.cqf.cql.terminology.fhir;
 
-import ca.uhn.fhir.rest.client.api.IClientInterceptor;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import ca.uhn.fhir.rest.client.api.ServerValidationModeEnum;
-import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
-import org.hl7.fhir.r4.model.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+
+import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.CodeSystem;
+import org.hl7.fhir.r4.model.CodeType;
+import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Parameters;
+import org.hl7.fhir.r4.model.StringType;
+import org.hl7.fhir.r4.model.UriType;
+import org.hl7.fhir.r4.model.ValueSet;
 import org.opencds.cqf.cql.runtime.Code;
 import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ArrayList;
+import ca.uhn.fhir.rest.client.api.IClientInterceptor;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 public class R4FhirTerminologyProvider implements TerminologyProvider {
 

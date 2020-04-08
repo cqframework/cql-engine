@@ -1,6 +1,31 @@
 package org.opencds.cqf.cql.execution;
 
-import org.cqframework.cql.elm.execution.*;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Stack;
+
+import javax.xml.namespace.QName;
+
+import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
+import org.cqframework.cql.elm.execution.CodeDef;
+import org.cqframework.cql.elm.execution.CodeSystemDef;
+import org.cqframework.cql.elm.execution.ExpressionDef;
+import org.cqframework.cql.elm.execution.FunctionDef;
+import org.cqframework.cql.elm.execution.IncludeDef;
+import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.ListTypeSpecifier;
+import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
+import org.cqframework.cql.elm.execution.OperandDef;
+import org.cqframework.cql.elm.execution.ParameterDef;
+import org.cqframework.cql.elm.execution.Tuple;
+import org.cqframework.cql.elm.execution.TypeSpecifier;
+import org.cqframework.cql.elm.execution.ValueSetDef;
+import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.data.DataProvider;
 import org.opencds.cqf.cql.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.data.SystemDataProvider;
@@ -8,11 +33,6 @@ import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.runtime.Precision;
 import org.opencds.cqf.cql.runtime.TemporalHelper;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
-
-import javax.xml.namespace.QName;
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.List;
 
 /**
  * NOTE: This class is thread-affine; it uses thread local storage to allow statics throughout the code base to access

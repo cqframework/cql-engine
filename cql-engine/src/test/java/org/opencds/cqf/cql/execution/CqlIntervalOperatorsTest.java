@@ -1,16 +1,20 @@
 package org.opencds.cqf.cql.execution;
 
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.runtime.DateTime;
+import org.opencds.cqf.cql.runtime.Interval;
+import org.opencds.cqf.cql.runtime.Quantity;
+import org.opencds.cqf.cql.runtime.TemporalHelper;
+import org.opencds.cqf.cql.runtime.Time;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 

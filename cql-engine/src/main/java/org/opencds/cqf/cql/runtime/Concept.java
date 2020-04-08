@@ -1,9 +1,10 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
 
 public class Concept implements CqlType {
     private String display;

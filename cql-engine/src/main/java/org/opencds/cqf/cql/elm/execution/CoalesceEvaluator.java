@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.cqframework.cql.elm.execution.Expression;
-import org.opencds.cqf.cql.execution.Context;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.cqframework.cql.elm.execution.Expression;
+import org.opencds.cqf.cql.execution.Context;
 
 /*
 Coalesce<T>(argument1 T, argument2 T) T

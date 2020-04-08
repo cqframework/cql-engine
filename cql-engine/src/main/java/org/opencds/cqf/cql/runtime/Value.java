@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.runtime;
 
-import org.opencds.cqf.cql.elm.execution.MaxValueEvaluator;
-import org.opencds.cqf.cql.elm.execution.MinValueEvaluator;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
+import org.opencds.cqf.cql.elm.execution.MaxValueEvaluator;
+import org.opencds.cqf.cql.elm.execution.MinValueEvaluator;
 
 public class Value {
 

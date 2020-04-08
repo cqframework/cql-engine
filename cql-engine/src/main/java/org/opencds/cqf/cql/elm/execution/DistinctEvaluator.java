@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.elm.execution;
 
-import org.opencds.cqf.cql.execution.Context;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.StreamSupport;
+
+import org.opencds.cqf.cql.execution.Context;
 
 /*
 distinct(argument List<T>) List<T>
