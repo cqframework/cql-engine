@@ -38,6 +38,7 @@ import org.opencds.cqf.cql.terminology.TerminologyProvider;
  * NOTE: This class is thread-affine; it uses thread local storage to allow statics throughout the code base to access
  * the context (such as equal and equivalent evaluators).
  */
+
 public class Context {
 
     private static ThreadLocal<Context> threadContext = new ThreadLocal<>();
@@ -46,6 +47,8 @@ public class Context {
     }
 
     private boolean enableExpressionCache = false;
+
+    @SuppressWarnings("serial")
     private LinkedHashMap<String, Object> expressions = new LinkedHashMap<String, Object>(15, 0.9f, true) {
         protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
             return size() > 10;
@@ -219,12 +222,12 @@ public class Context {
         return dataProvider.createInstance(typeName.getLocalPart());
     }
 
-    public Class resolveType(QName typeName) {
+    public Class<?> resolveType(QName typeName) {
         DataProvider dataProvider = resolveDataProvider(typeName);
         return dataProvider.resolveType(typeName.getLocalPart());
     }
 
-    public Class resolveType(TypeSpecifier typeSpecifier) {
+    public Class<?> resolveType(TypeSpecifier typeSpecifier) {
         if (typeSpecifier instanceof NamedTypeSpecifier) {
             return resolveType(((NamedTypeSpecifier)typeSpecifier).getName());
         }
@@ -246,7 +249,7 @@ public class Context {
         }
     }
 
-    public Class resolveType(Object value) {
+    public Class<?> resolveType(Object value) {
         if (value == null) {
             return null;
         }
@@ -272,7 +275,7 @@ public class Context {
         return dataProvider.resolveType(value);
     }
 
-    private Class resolveOperandType(OperandDef operandDef) {
+    private Class<?> resolveOperandType(OperandDef operandDef) {
         if (operandDef.getOperandTypeSpecifier() != null) {
             return resolveType(operandDef.getOperandTypeSpecifier());
         }
@@ -281,7 +284,7 @@ public class Context {
         }
     }
 
-    private boolean isType(Class argumentType, Class operandType) {
+    private boolean isType(Class<?> argumentType, Class<?> operandType) {
         return argumentType == null || operandType.isAssignableFrom(argumentType);
     }
 

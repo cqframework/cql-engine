@@ -51,7 +51,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
 
         if (right instanceof Iterable)
         {
-            return listIn(left, (Iterable) right);
+            return listIn(left, (Iterable<?>) right);
         }
 
         else if (right instanceof Interval)
@@ -91,17 +91,17 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
                 pointSameOrAfterStart = SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision);
             }
 
-            Boolean pointSamedOrBeforeEnd;
+            Boolean pointSameOrBeforeEnd;
             if (rightEnd == null && right.getHighClosed())
             {
-                pointSamedOrBeforeEnd = true;
+                pointSameOrBeforeEnd = true;
             }
             else
             {
-                pointSamedOrBeforeEnd = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
+                pointSameOrBeforeEnd = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
             }
 
-            return AndEvaluator.and(pointSameOrAfterStart, pointSamedOrBeforeEnd);
+            return AndEvaluator.and(pointSameOrAfterStart, pointSameOrBeforeEnd);
         }
 
         else if (AnyTrueEvaluator.anyTrue(Arrays.asList(EqualEvaluator.equal(left, right.getStart()), EqualEvaluator.equal(left, right.getEnd()))))
@@ -136,7 +136,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
         return AndEvaluator.and(greaterOrEqual, lessOrEqual);
     }
 
-    private static Boolean listIn(Object left, Iterable right)
+    private static Boolean listIn(Object left, Iterable<?> right)
     {
         Boolean isEqual;
         for (Object element : right)

@@ -70,6 +70,7 @@ public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Childre
         list = (List<Object>) FlattenEvaluator.flatten(list);
     }
 
+    @SuppressWarnings("unchecked")
     public static Object children(Object source) {
         if (source == null) {
             return null;

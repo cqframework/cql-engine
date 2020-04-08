@@ -26,8 +26,8 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
         }
 
         if (source instanceof Iterable) {
-            Iterable element = (Iterable) source;
-            Iterator itr = element.iterator();
+            Iterable<?> element = (Iterable<?>) source;
+            Iterator<?> itr = element.iterator();
 
             if (!itr.hasNext()) { // empty
                 return null;

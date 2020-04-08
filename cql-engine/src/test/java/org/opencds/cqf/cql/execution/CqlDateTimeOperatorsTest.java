@@ -1003,8 +1003,8 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     public void testTimeOfDay() throws JAXBException {
-        Context context = new Context(library);
         // TODO: uncomment once Time(x,x,x,x,x) format is fixed
+        //Context context = new Context(library);
         // Object result = context.resolveExpressionRef("TimeOfDayTest").getExpression().evaluate(context);
         // assertThat(((Time)result).getPartial().getValue(0), is(10));
     }

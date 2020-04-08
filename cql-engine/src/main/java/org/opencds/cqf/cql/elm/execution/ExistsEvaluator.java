@@ -12,6 +12,7 @@ If the argument is null, the result is null.
 
 public class ExistsEvaluator extends org.cqframework.cql.elm.execution.Exists {
 
+    @SuppressWarnings("unchecked")
     public static Object exists(Object operand) {
         Iterable<Object> value = (Iterable<Object>) operand;
 

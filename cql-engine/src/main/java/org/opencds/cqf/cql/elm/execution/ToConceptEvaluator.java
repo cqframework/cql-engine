@@ -23,7 +23,7 @@ public class ToConceptEvaluator extends org.cqframework.cql.elm.execution.ToConc
         Concept result = new Concept();
 
         if (operand instanceof Iterable) {
-            for (Object code : (Iterable) operand) {
+            for (Object code : (Iterable<?>) operand) {
                 result.withCode((Code)code);
             }
             return result;

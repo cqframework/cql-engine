@@ -17,7 +17,7 @@ If the argument is null, the result is null.
 public class DistinctEvaluator extends org.cqframework.cql.elm.execution.Distinct
 {
 
-    public static List<Object> distinct(Iterable source)
+    public static List<Object> distinct(Iterable<?> source)
     {
         if (source == null)
         {
@@ -47,6 +47,6 @@ public class DistinctEvaluator extends org.cqframework.cql.elm.execution.Distinc
     protected Object internalEvaluate(Context context)
     {
         Object value = this.getOperand().evaluate(context);
-        return distinct((Iterable)value);
+        return distinct((Iterable<?>)value);
     }
 }

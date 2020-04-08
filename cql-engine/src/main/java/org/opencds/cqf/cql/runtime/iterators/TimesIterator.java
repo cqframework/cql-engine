@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.runtime.iterators;
 
 import java.util.AbstractMap;
-import java.util.ArrayList;
+
 import java.util.Iterator;
-import java.util.List;
+
 
 /**
  * Created by Bryn on 8/11/2019.
@@ -12,7 +12,6 @@ public class TimesIterator implements Iterator<Object> {
 
     private Iterator<Object> left;
     private ResetIterator<Object> right;
-    private List<Object> rightData = new ArrayList<Object>();
     private boolean leftNeeded = true;
     private Object leftElement;
 

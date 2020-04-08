@@ -14,15 +14,15 @@ The flatten operator flattens a list of lists into a single list.
 
 public class FlattenEvaluator extends org.cqframework.cql.elm.execution.Flatten {
 
-    public static Object flatten(Object operand) {
+    public static List<Object> flatten(Object operand) {
         if (operand == null) {
             return null;
         }
 
         if (operand instanceof Iterable) {
             List<Object> resultList = new ArrayList<>();
-            for (Object element : (Iterable) operand) {
-                for (Object subElement : (Iterable) element) {
+            for (Object element : (Iterable<?>) operand) {
+                for (Object subElement : (Iterable<?>) element) {
                     resultList.add(subElement);
                 }
             }

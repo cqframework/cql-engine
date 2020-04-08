@@ -28,7 +28,7 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
 
         if (source instanceof Iterable) {
 
-            if (((List) source).isEmpty()) {
+            if (((List<?>) source).isEmpty()) {
                 return null;
             }
 
@@ -36,7 +36,7 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
 
             List<Object> newVals = new ArrayList<>();
 
-            for (Object element : (Iterable) source) {
+            for (Object element : (Iterable<?>) source) {
                 if (element != null) {
                     if (element instanceof BigDecimal || element instanceof Quantity) {
                         newVals.add(MultiplyEvaluator.multiply(

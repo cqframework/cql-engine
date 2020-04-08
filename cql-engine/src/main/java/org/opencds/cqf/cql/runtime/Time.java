@@ -141,7 +141,6 @@ public class Time extends BaseTemporal {
     public Integer compare(BaseTemporal other, boolean forSort) {
         boolean differentPrecisions = this.getPrecision() != other.getPrecision();
 
-        Precision thePrecision;
         if (differentPrecisions) {
             Integer result = this.compareToPrecision(other, Precision.getHighestTimePrecision(this.precision, other.precision));
             if (result == null && forSort) {

@@ -24,7 +24,7 @@ public class CombineEvaluator extends org.cqframework.cql.elm.execution.Combine 
         else {
             if (source instanceof Iterable) {
                 StringBuffer buffer = new StringBuffer("");
-                Iterator iterator = ((Iterable) source).iterator();
+                Iterator<?> iterator = ((Iterable<?>) source).iterator();
                 boolean first = true;
 
                 while (iterator.hasNext()) {

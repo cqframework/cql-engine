@@ -27,7 +27,7 @@ public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution
 
         if (source instanceof Iterable) {
 
-            if (((List) source).isEmpty()) {
+            if (((List<?>) source).isEmpty()) {
                 return null;
             }
 

@@ -30,8 +30,8 @@ public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
         }
 
         if (source instanceof Iterable) {
-            Iterable element = (Iterable)source;
-            Iterator itr = element.iterator();
+            Iterable<?> element = (Iterable<?>)source;
+            Iterator<?> itr = element.iterator();
 
             if (!itr.hasNext()) { // empty list
                 return null;

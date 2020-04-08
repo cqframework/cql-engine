@@ -13,6 +13,7 @@ import org.opencds.cqf.cql.runtime.Interval;
 
 public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retrieve {
 
+    @SuppressWarnings("unchecked")
     protected Object internalEvaluate(Context context) {
         DataProvider dataProvider = context.resolveDataProvider(this.dataType);
         Iterable<Code> codes = null;
@@ -60,7 +61,7 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
 
         //append list results to evaluatedResources list
         if (result instanceof List) {
-            for (Object element : (List)result) {
+            for (Object element : (List<?>)result) {
                 context.getEvaluatedResources().add(element);
             }
         }

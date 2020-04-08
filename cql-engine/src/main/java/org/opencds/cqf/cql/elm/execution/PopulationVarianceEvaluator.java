@@ -26,7 +26,7 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
 
         if (source instanceof Iterable) {
 
-            if (((List) source).isEmpty()) {
+            if (((List<?>) source).isEmpty()) {
                 return null;
             }
 
@@ -34,7 +34,7 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
 
             List<Object> newVals = new ArrayList<>();
 
-            ((List) source).forEach(ae -> newVals.add(
+            ((List<?>) source).forEach(ae -> newVals.add(
                     MultiplyEvaluator.multiply(
                             SubtractEvaluator.subtract(ae, mean),
                             SubtractEvaluator.subtract(ae, mean))

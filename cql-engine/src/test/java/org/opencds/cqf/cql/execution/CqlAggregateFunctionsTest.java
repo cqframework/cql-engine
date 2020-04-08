@@ -109,7 +109,6 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         }
         catch (InvalidOperatorArgument e) {
             // pass
-            String s = "s";
         }
     }
 

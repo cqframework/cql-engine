@@ -29,7 +29,7 @@ public class ProductEvaluator extends org.cqframework.cql.elm.execution.Product 
 
         if (source instanceof Iterable) {
             Object result = null;
-            for (Object element : (Iterable) source) {
+            for (Object element : (Iterable<?>) source) {
                 if (element == null) return null;
                 if (result == null) {
                     result = element;

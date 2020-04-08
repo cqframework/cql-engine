@@ -25,7 +25,7 @@ define RuntimeError:
 
 public class AsEvaluator extends org.cqframework.cql.elm.execution.As {
 
-    private Class resolveType(Context context) {
+    private Class<?> resolveType(Context context) {
         if (this.getAsTypeSpecifier() != null) {
             return context.resolveType(this.getAsTypeSpecifier());
         }
@@ -33,7 +33,7 @@ public class AsEvaluator extends org.cqframework.cql.elm.execution.As {
         return context.resolveType(this.getAsType());
     }
 
-    public Object as(Object operand, Class clazz) {
+    public Object as(Object operand, Class<?> clazz) {
 
         if (operand == null) {
             return null;
@@ -53,7 +53,7 @@ public class AsEvaluator extends org.cqframework.cql.elm.execution.As {
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-        Class clazz = resolveType(context);
+        Class<?> clazz = resolveType(context);
         return as(operand, clazz);
     }
 }

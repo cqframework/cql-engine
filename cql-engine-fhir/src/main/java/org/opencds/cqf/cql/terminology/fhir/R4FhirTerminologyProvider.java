@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 
 import org.hl7.fhir.r4.model.BooleanType;
@@ -21,7 +20,6 @@ import org.opencds.cqf.cql.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.terminology.ValueSetInfo;
 
-import ca.uhn.fhir.rest.client.api.IClientInterceptor;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
@@ -37,18 +35,6 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
      */
     public R4FhirTerminologyProvider(IGenericClient fhirClient) {
         this.fhirClient = fhirClient;
-    }
-
-    private IClientInterceptor headerInjectionInterceptor;
-
-    public R4FhirTerminologyProvider withInjectedHeader(String headerKey, String headerValue) {
-        this.headerInjectionInterceptor = new HeaderInjectionInterceptor(headerKey, headerValue);
-        return this;
-    }
-
-    public R4FhirTerminologyProvider withInjectedHeaders(HashMap<String, String> headers) {
-        this.headerInjectionInterceptor = new HeaderInjectionInterceptor(headers);
-        return this;
     }
 
     public IGenericClient getFhirClient() {

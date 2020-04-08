@@ -39,20 +39,20 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
         if (left == null) {
             return right instanceof Interval
                     ? intervalProperlyIncludes(null, (Interval) right, precision)
-                    : listProperlyIncludes(null, (Iterable) right);
+                    : listProperlyIncludes(null, (Iterable<?>) right);
         }
 
         if (right == null) {
             return left instanceof Interval
                     ? intervalProperlyIncludes((Interval) left, null, precision)
-                    : listProperlyIncludes((Iterable) left, null);
+                    : listProperlyIncludes((Iterable<?>) left, null);
         }
 
         if (left instanceof Interval && right instanceof Interval) {
             return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
         }
         if (left instanceof Iterable && right instanceof Iterable) {
-            return listProperlyIncludes((Iterable) left, (Iterable) right);
+            return listProperlyIncludes((Iterable<?>) left, (Iterable<?>) right);
         }
 
         throw new InvalidOperatorArgument(
@@ -88,7 +88,7 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
         );
     }
 
-    public static Boolean listProperlyIncludes(Iterable left, Iterable right) {
+    public static Boolean listProperlyIncludes(Iterable<?> left, Iterable<?> right) {
         if (left == null) {
             return false;
         }

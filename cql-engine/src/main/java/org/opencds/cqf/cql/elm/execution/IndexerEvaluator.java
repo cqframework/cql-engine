@@ -41,7 +41,7 @@ public class IndexerEvaluator extends org.cqframework.cql.elm.execution.Indexer 
         if (left instanceof Iterable) {
             if (right instanceof Integer) {
                 int index = -1;
-                for (Object element : (Iterable)left) {
+                for (Object element : (Iterable<?>)left) {
                     index++;
                     if ((Integer)right == index) {
                         return element;

@@ -37,6 +37,7 @@ import org.testng.annotations.Test;
 public class TestDstu3ModelResolver {
 
     // Couldn't find a way to automatically get the full list of enums.
+    @SuppressWarnings("serial")
     private static List<Class<?>> enums = new ArrayList<Class<?>>() {
         {
             add(AbstractType.class);
@@ -60,7 +61,7 @@ public class TestDstu3ModelResolver {
     };
 
     @Test(expectedExceptions = UnknownType.class)
-    public void resolverThrowsExecptionForUnknownType()
+    public void resolverThrowsExceptionForUnknownType()
     {
         ModelResolver resolver = new Dstu3FhirModelResolver();
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
@@ -103,7 +104,7 @@ public class TestDstu3ModelResolver {
     }
 
     @Test
-    // This tests all the types that are present in the modelinfo
+    // This tests all the types that are present in the ModelInfo.
     public void resolveModelInfoTests() {
         ModelResolver resolver = new Dstu3FhirModelResolver();
         ModelManager mm = new ModelManager();
@@ -115,7 +116,7 @@ public class TestDstu3ModelResolver {
             ClassInfo ci = (ClassInfo)ti;
             if (ci != null) {
                 switch (ci.getBaseType()) {
-                    // Astract classes
+                    // Abstract classes
                     case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
@@ -249,7 +250,7 @@ public class TestDstu3ModelResolver {
         
         Patient p = new Patient();
 
-        Object result = resolver.resolvePath(p, "notapath");
+        Object result = resolver.resolvePath(p, "not-a-path");
         assertNull(result);
     }
 }

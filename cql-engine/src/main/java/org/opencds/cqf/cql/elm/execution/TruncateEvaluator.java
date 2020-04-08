@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.elm.execution;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
@@ -23,10 +24,10 @@ public class TruncateEvaluator extends org.cqframework.cql.elm.execution.Truncat
         if (operand instanceof BigDecimal) {
             Double val = ((BigDecimal) operand).doubleValue();
             if (val < 0){
-                return ((BigDecimal) operand).setScale(0, BigDecimal.ROUND_CEILING).intValue();
+                return ((BigDecimal) operand).setScale(0, RoundingMode.CEILING).intValue();
             }
             else {
-                return ((BigDecimal) operand).setScale(0, BigDecimal.ROUND_FLOOR).intValue();
+                return ((BigDecimal) operand).setScale(0, RoundingMode.FLOOR).intValue();
             }
         }
 

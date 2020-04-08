@@ -11,13 +11,13 @@ import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -66,7 +66,7 @@ public class CqlEngineTests {
         return expressionMap;
     }
 
-    private Map<VersionedIdentifier, Set<String>> mergeExpressionMaps(Map<VersionedIdentifier, Set<String>>... maps) {
+    private Map<VersionedIdentifier, Set<String>> mergeExpressionMaps(Collection<Map<VersionedIdentifier, Set<String>>> maps) {
         Map<VersionedIdentifier, Set<String>> mergedMaps = new HashMap<VersionedIdentifier, Set<String>>();
         for (Map<VersionedIdentifier, Set<String>> map : maps) {
            mergedMaps.putAll(map);
@@ -81,23 +81,6 @@ public class CqlEngineTests {
 
     private VersionedIdentifier toExecutionIdentifier(String name, String version) {
         return new VersionedIdentifier().withId(name).withVersion(version);
-    }
-
-    private Map<String, String> getLibrariesAsXML(LibraryManager libraryManager) {
-        Map<String, String> result = new HashMap<String, String>();
-        for (Map.Entry<String, TranslatedLibrary> entry : libraryManager.getTranslatedLibraries().entrySet()) {
-            result.put(entry.getKey(), toXml(entry.getValue().getLibrary()));
-        }
-        return result;
-    }
-
-    private String toXml(org.hl7.elm.r1.Library library) {
-        try {
-            return convertToXml(library);
-        }
-        catch (JAXBException e) {
-            throw new IllegalArgumentException("Could not convert library to XML.", e);
-        }
     }
 
     public String convertToXml(org.hl7.elm.r1.Library library) throws JAXBException {
@@ -116,7 +99,7 @@ public class CqlEngineTests {
     
     @Test(expected = IllegalArgumentException.class)
     public void test_nullLibraryLoader_throwsException() {
-        CqlEngine engine = new CqlEngine(null);
+        new CqlEngine(null);
     }
 
     @Test
@@ -217,9 +200,9 @@ public class CqlEngineTests {
             executableLibraries.add(this.readXml(xml));
         }
 
-        Map<VersionedIdentifier, Set<String>> expressions = this.mergeExpressionMaps(
+        Map<VersionedIdentifier, Set<String>> expressions = this.mergeExpressionMaps(List.of(
             this.toExpressionMap(toExecutionIdentifier("Common", "1.0.0"), "Z"),
-            this.toExpressionMap(toExecutionIdentifier("Test", "1.0.0"), "X", "Y", "W")
+            this.toExpressionMap(toExecutionIdentifier("Test", "1.0.0"), "X", "Y", "W"))
         );
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(executableLibraries);

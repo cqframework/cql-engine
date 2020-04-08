@@ -10,17 +10,14 @@ import org.opencds.cqf.cql.execution.Context;
 /**
  * Created by Bryn on 8/11/2019.
  */
+
 public class QueryIterator implements Iterator<Object> {
 
-    private Context context;
-    private List<Iterator> sources;
     private Iterator<Object> sourceIterator;
     private ArrayList<Object> result;
 
-    public QueryIterator(Context context, List<Iterator> sources) {
-        this.context = context;
-        this.sources = sources;
-        this.result = new ArrayList(sources.size());
+    public QueryIterator(Context context, List<Iterator<Object>> sources) {
+        this.result = new ArrayList<>(sources.size());
 
         for (int i = sources.size() - 1; i >= 0; i--) {
             if (sourceIterator == null) {
@@ -50,8 +47,8 @@ public class QueryIterator implements Iterator<Object> {
 
     private void unpair(Object element, List<Object> target, int index) {
         if (element instanceof Map.Entry) {
-            unpair(((Map.Entry)element).getKey(), target, index);
-            unpair(((Map.Entry)element).getValue(), target, index + 1);
+            unpair(((Map.Entry<?,?>)element).getKey(), target, index);
+            unpair(((Map.Entry<?,?>)element).getValue(), target, index + 1);
         }
         else {
             target.set(index, element);

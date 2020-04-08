@@ -139,6 +139,7 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected Object internalEvaluate(Context context)
     {
         Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);

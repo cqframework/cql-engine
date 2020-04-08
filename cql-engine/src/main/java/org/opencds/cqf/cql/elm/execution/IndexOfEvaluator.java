@@ -22,7 +22,7 @@ public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf 
         int index = -1;
         boolean nullSwitch = false;
 
-        for (Object element : (Iterable)source) {
+        for (Object element : (Iterable<?>)source) {
             index++;
             Boolean equiv = EquivalentEvaluator.equivalent(element, elementToFind);
 

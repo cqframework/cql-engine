@@ -53,13 +53,13 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
         if (left == null) {
             return right instanceof Interval
                     ? IncludedInEvaluator.intervalIncludedIn((Interval) right, null, precision)
-                    : IncludedInEvaluator.listIncludedIn((Iterable) right, null);
+                    : IncludedInEvaluator.listIncludedIn((Iterable<?>) right, null);
         }
 
         if (right == null) {
             return left instanceof Interval
                     ? IncludedInEvaluator.intervalIncludedIn(null, (Interval) left, precision)
-                    : IncludedInEvaluator.listIncludedIn(null, (Iterable) left);
+                    : IncludedInEvaluator.listIncludedIn(null, (Iterable<?>) left);
         }
 
         return includes(left, right, precision);

@@ -22,8 +22,8 @@ public class AnyTrueEvaluator extends org.cqframework.cql.elm.execution.AnyTrue 
         }
 
         if (src instanceof Iterable) {
-            Iterable element = (Iterable)src;
-            Iterator elemsItr = element.iterator();
+            Iterable<?> element = (Iterable<?>)src;
+            Iterator<?> elemsItr = element.iterator();
 
             if (!elemsItr.hasNext()) { // empty list
                 return false;

@@ -21,7 +21,7 @@ public class FilterEvaluator extends Filter {
 
         if (source instanceof Iterable) {
 
-            for (Object obj : (List) source) {
+            for (Object obj : (List<?>) source) {
                 try {
                     // Hmmm... This is hard without the alias.
                     // TODO: verify this works for all cases -> will scope always be present?

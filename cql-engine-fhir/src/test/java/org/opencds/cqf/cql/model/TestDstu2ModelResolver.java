@@ -31,6 +31,7 @@ import org.testng.annotations.Test;
 public class TestDstu2ModelResolver {
 
     // Couldn't find a way to automatically get the full list of enums.
+    @SuppressWarnings("serial")
     private static List<Class<?>> enums = new ArrayList<Class<?>>() {
         {
             add(AdministrativeGender.class);
@@ -51,7 +52,7 @@ public class TestDstu2ModelResolver {
     };
 
     @Test(expectedExceptions = UnknownType.class)
-    public void resolverThrowsExecptionForUnknownType()
+    public void resolverThrowsExceptionForUnknownType()
     {
         ModelResolver resolver = new Dstu2FhirModelResolver();
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
@@ -185,7 +186,7 @@ public class TestDstu2ModelResolver {
         
         Patient p = new Patient();
 
-        Object result = resolver.resolvePath(p, "notapath");
+        Object result = resolver.resolvePath(p, "not-a-path");
         assertNull(result);
     }
 }
