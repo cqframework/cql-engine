@@ -60,6 +60,10 @@ public class CqlEngine {
             throw new IllegalArgumentException("libraryLoader can not be null.");
         }
 
+        if (options == null) {
+            this.options = EnumSet.noneOf(Options.class);
+        }
+
         this.libraryLoader = libraryLoader;
         this.dataProviders = dataProviders;
         this.terminologyProvider = terminologyProvider;
