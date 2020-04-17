@@ -1,0 +1,82 @@
+{
+    "annotation" : [ {
+      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+      "type" : "CqlToElmInfo"
+    } ],
+    "identifier" : {
+      "id" : "ANCFHIRDummy",
+      "version" : "0.1.0"
+    },
+    "schemaIdentifier" : {
+      "id" : "urn:hl7-org:elm",
+      "version" : "r1"
+    },
+    "usings" : {
+      "def" : [ {
+        "localIdentifier" : "System",
+        "uri" : "urn:hl7-org:elm-types:r1"
+      }, {
+        "localId" : "1",
+        "locator" : "3:1-3:26",
+        "localIdentifier" : "FHIR",
+        "uri" : "http://hl7.org/fhir",
+        "version" : "4.0.0"
+      } ]
+    },
+    "statements" : {
+      "def" : [ {
+        "locator" : "5:1-5:15",
+        "name" : "Patient",
+        "context" : "Patient",
+        "expression" : {
+          "type" : "SingletonFrom",
+          "operand" : {
+            "locator" : "5:1-5:15",
+            "dataType" : "{http://hl7.org/fhir}Patient",
+            "type" : "Retrieve"
+          }
+        }
+      }, {
+        "localId" : "3",
+        "locator" : "7:1-7:34",
+        "name" : "Observations",
+        "context" : "Patient",
+        "accessLevel" : "Public",
+        "annotation" : [ {
+          "type" : "Annotation",
+          "s" : {
+            "r" : "3",
+            "s" : [ {
+              "value" : [ "define ","Observations",": " ]
+            }, {
+              "r" : "2",
+              "s" : [ {
+                "value" : [ "[","Observation","]" ]
+              } ]
+            } ]
+          }
+        } ],
+        "resultTypeSpecifier" : {
+          "type" : "ListTypeSpecifier",
+          "elementType" : {
+            "name" : "{http://hl7.org/fhir}Observation",
+            "type" : "NamedTypeSpecifier"
+          }
+        },
+        "expression" : {
+          "localId" : "2",
+          "locator" : "7:22-7:34",
+          "dataType" : "{http://hl7.org/fhir}Observation",
+          "type" : "Retrieve",
+          "resultTypeSpecifier" : {
+            "type" : "ListTypeSpecifier",
+            "elementType" : {
+              "name" : "{http://hl7.org/fhir}Observation",
+              "type" : "NamedTypeSpecifier"
+            }
+          }
+        }
+      } ]
+    }
+ }
+
