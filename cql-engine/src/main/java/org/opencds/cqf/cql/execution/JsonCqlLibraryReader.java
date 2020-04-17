@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.cqframework.cql.elm.execution.*;
+import org.opencds.cqf.cql.elm.execution.LibraryWrapper;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -18,7 +19,7 @@ public class JsonCqlLibraryReader {
         simpleModule.setMixInAnnotation(TypeSpecifier.class, org.opencds.cqf.cql.elm.execution.TypeSpecifierMixin.class);
         simpleModule.setMixInAnnotation(ExpressionDef.class, org.opencds.cqf.cql.elm.execution.ExpressionDefMixin.class);
         mapper.registerModule(simpleModule);
-        Library result = mapper.readValue(reader, Library.class);
+        Library result = mapper.readValue(reader, LibraryWrapper.class).getLibrary();
         return result;
     }
 }
