@@ -72,4 +72,14 @@ public class ElmTests {
             throw new IllegalArgumentException("Error reading ELM: " + e.getMessage());
         }
     }
+
+    @Test
+    public void TestJsonTerminologyLibraryLoad() {
+        try {
+            Library library = JsonCqlLibraryReader.read(new InputStreamReader(ElmTests.class.getResourceAsStream("ANCFHIRTerminologyDummy.json")));
+            Assert.assertTrue(library != null);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Error reading ELM: " + e.getMessage());
+        }
+    }
 }

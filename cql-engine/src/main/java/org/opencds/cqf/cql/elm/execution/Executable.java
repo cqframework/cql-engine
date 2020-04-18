@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.elm.execution;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.exception.CqlExceptionHandler;
@@ -7,6 +8,7 @@ import org.opencds.cqf.cql.execution.Context;
 
 import java.util.function.Function;
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 public class Executable
 {
     public Object evaluate(Context context) throws CqlException
