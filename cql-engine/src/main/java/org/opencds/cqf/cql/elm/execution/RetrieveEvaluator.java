@@ -9,13 +9,15 @@ import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 
 
+import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
 
 public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retrieve {
 
     protected Object internalEvaluate(Context context) {
-        DataProvider dataProvider = context.resolveDataProvider(this.dataType);
+        QName dataType = context.fixupQName(this.dataType);
+        DataProvider dataProvider = context.resolveDataProvider(dataType);
         Iterable<Code> codes = null;
         String valueSet = null;
         if (this.getCodes() != null) {
@@ -54,9 +56,8 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
             dateRange = (Interval)this.getDateRange().evaluate(context);
         }
 
-
-		Object result = dataProvider.retrieve(context.getCurrentContext(), (String)dataProvider.getContextPath(context.getCurrentContext(), getDataType().getLocalPart()),
-				context.getCurrentContextValue(), getDataType().getLocalPart(), getTemplateId(),
+		Object result = dataProvider.retrieve(context.getCurrentContext(), (String)dataProvider.getContextPath(context.getCurrentContext(), dataType.getLocalPart()),
+				context.getCurrentContextValue(), dataType.getLocalPart(), getTemplateId(),
                 getCodeProperty(), codes, valueSet, getDateProperty(), getDateLowProperty(), getDateHighProperty(), dateRange);
 
         //append list results to evaluatedResources list
