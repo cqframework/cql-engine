@@ -10,11 +10,8 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -31,7 +28,6 @@ import org.cqframework.cql.cql2elm.CqlTranslatorException.ErrorSeverity;
 import org.cqframework.cql.cql2elm.LibraryBuilder.SignatureLevel;
 import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
 import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.elm.r1.ObjectFactory;
 import org.junit.Test;
 
@@ -60,27 +56,8 @@ public class CqlEngineTests {
         return CqlLibraryReader.read(new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     }
 
-    private Map<VersionedIdentifier, Set<String>> toExpressionMap(VersionedIdentifier libraryIdentifier, String... expressions) {
-        Map<VersionedIdentifier, Set<String>> expressionMap = new HashMap<>();
-        expressionMap.put(libraryIdentifier, new HashSet<String>(Arrays.asList(expressions)));
-        return expressionMap;
-    }
-
-    private Map<VersionedIdentifier, Set<String>> mergeExpressionMaps(Collection<Map<VersionedIdentifier, Set<String>>> maps) {
-        Map<VersionedIdentifier, Set<String>> mergedMaps = new HashMap<VersionedIdentifier, Set<String>>();
-        for (Map<VersionedIdentifier, Set<String>> map : maps) {
-           mergedMaps.putAll(map);
-        }
-
-        return mergedMaps;
-    }
-
     private org.hl7.elm.r1.VersionedIdentifier toElmIdentifier(String name, String version) {
         return new org.hl7.elm.r1.VersionedIdentifier().withId(name).withVersion(version);
-    }
-
-    private VersionedIdentifier toExecutionIdentifier(String name, String version) {
-        return new VersionedIdentifier().withId(name).withVersion(version);
     }
 
     public String convertToXml(org.hl7.elm.r1.Library library) throws JAXBException {
@@ -110,12 +87,10 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        EvaluationResult result = engine.evaluate(library.getIdentifier());
+        EvaluationResult result = engine.evaluate("Test");
 
-        assertNotNull(result);
-        assertEquals(result.libraryResults.size(), 1);
-
-        Object expResult = result.forLibrary(library.getIdentifier()).forExpression("X");
+ 
+        Object expResult = result.forExpression("X");
 
         assertThat(expResult, is(10));
     }
@@ -128,7 +103,7 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        engine.evaluate(library.getIdentifier());
+        engine.evaluate("Test");
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -139,7 +114,7 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        engine.evaluate(library.getIdentifier());
+        engine.evaluate("Test");
     }
 
     @Test
@@ -150,16 +125,14 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        EvaluationResult result = engine.evaluate(library.getIdentifier());
+        EvaluationResult result = engine.evaluate("Test");
 
         assertNotNull(result);
-        assertEquals(1, result.libraryResults.size());
-        assertEquals(2, result.forLibrary(library.getIdentifier()).expressionResults.size());
 
-        Object expResult = result.forLibrary(library.getIdentifier()).forExpression("X");
+        Object expResult = result.forExpression("X");
         assertThat(expResult, is(10));
 
-        expResult = result.forLibrary(library.getIdentifier()).forExpression("Y");
+        expResult = result.forExpression("Y");
         assertThat(expResult, is(4));
     }
 
@@ -171,13 +144,11 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        EvaluationResult result = engine.evaluate(this.toExpressionMap(library.getIdentifier(), "Y"));
+        EvaluationResult result = engine.evaluate("Test", Set.of("Y"));
 
         assertNotNull(result);
-        assertEquals(1, result.libraryResults.size());
-        assertEquals(1, result.forLibrary(library.getIdentifier()).expressionResults.size());
-        
-        Object expResult = result.forLibrary(library.getIdentifier()).forExpression("Y");
+
+        Object expResult = result.forExpression("Y");
         assertThat(expResult, is(4));
     }
 
@@ -200,25 +171,16 @@ public class CqlEngineTests {
             executableLibraries.add(this.readXml(xml));
         }
 
-        Map<VersionedIdentifier, Set<String>> expressions = this.mergeExpressionMaps(List.of(
-            this.toExpressionMap(toExecutionIdentifier("Common", "1.0.0"), "Z"),
-            this.toExpressionMap(toExecutionIdentifier("Test", "1.0.0"), "X", "Y", "W"))
-        );
-
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(executableLibraries);
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        EvaluationResult result = engine.evaluate(expressions);
+        EvaluationResult result = engine.evaluate("Test", Set.of("X", "Y", "W"));
 
         assertNotNull(result);
-        assertEquals(2, result.libraryResults.size());
-        assertEquals(1, result.forLibrary(executableLibraries.get(0).getIdentifier()).expressionResults.size());
-        assertThat(result.forLibrary(executableLibraries.get(0).getIdentifier()).forExpression("Z"), is(10));
-        
-        assertEquals(3, result.forLibrary(executableLibraries.get(1).getIdentifier()).expressionResults.size());
-        assertThat(result.forLibrary(executableLibraries.get(1).getIdentifier()).forExpression("X"), is(10));
-        assertThat(result.forLibrary(executableLibraries.get(1).getIdentifier()).forExpression("Y"), is(4));
-        assertThat(result.forLibrary(executableLibraries.get(1).getIdentifier()).forExpression("W"), is(15));
+        assertEquals(3, result.expressionResults.size());
+        assertThat(result.forExpression("X"), is(10));
+        assertThat(result.forExpression("Y"), is(4));
+        assertThat(result.forExpression("W"), is(15));
     }
 }
