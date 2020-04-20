@@ -231,7 +231,7 @@ public class Context {
         throw new CqlException("Cannot resolve identifier " + name);
     }
 
-    private QName fixupQName(QName typeName) {
+    public QName fixupQName(QName typeName) {
         // When a Json library is deserialized on Android
         if (typeName.getNamespaceURI() == null || typeName.getNamespaceURI().isEmpty()) {
             if (typeName.getLocalPart() != null && typeName.getLocalPart().startsWith("{")) {
