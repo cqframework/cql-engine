@@ -200,7 +200,7 @@ public class Context {
             if (typeName.getLocalPart() != null && typeName.getLocalPart().startsWith("{")) {
                 int closeIndex =  typeName.getLocalPart().indexOf('}');
                 if (closeIndex > 0 && typeName.getLocalPart().length() > closeIndex) {
-                    return new QName(typeName.getLocalPart().substring(1, closeIndex - 1), typeName.getLocalPart().substring(closeIndex + 1));
+                    return new QName(typeName.getLocalPart().substring(1, closeIndex), typeName.getLocalPart().substring(closeIndex + 1));
                 }
             }
         }
