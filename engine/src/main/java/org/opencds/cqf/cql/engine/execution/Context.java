@@ -231,12 +231,28 @@ public class Context {
         throw new CqlException("Cannot resolve identifier " + name);
     }
 
+    private QName fixupQName(QName typeName) {
+        // When a Json library is deserialized on Android
+        if (typeName.getNamespaceURI() == null || typeName.getNamespaceURI().isEmpty()) {
+            if (typeName.getLocalPart() != null && typeName.getLocalPart().startsWith("{")) {
+                int closeIndex =  typeName.getLocalPart().indexOf('}');
+                if (closeIndex > 0 && typeName.getLocalPart().length() > closeIndex) {
+                    return new QName(typeName.getLocalPart().substring(1, closeIndex - 1), typeName.getLocalPart().substring(closeIndex + 1));
+                }
+            }
+        }
+
+        return typeName;
+    }
+
     public Object createInstance(QName typeName) {
+        typeName = fixupQName(typeName);
         DataProvider dataProvider = resolveDataProvider(typeName);
         return dataProvider.createInstance(typeName.getLocalPart());
     }
 
     public Class<?> resolveType(QName typeName) {
+        typeName = fixupQName(typeName);
         DataProvider dataProvider = resolveDataProvider(typeName);
         return dataProvider.resolveType(typeName.getLocalPart());
     }
@@ -457,6 +473,7 @@ public class Context {
     }
 
     public DataProvider resolveDataProvider(QName dataType) {
+        dataType = fixupQName(dataType);
         DataProvider dataProvider = dataProviders.get(dataType.getNamespaceURI());
         if (dataProvider == null) {
             throw new CqlException(String.format("Could not resolve data provider for model '%s'.", dataType.getNamespaceURI()));
