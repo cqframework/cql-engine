@@ -4,6 +4,8 @@ import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.execution.Context;
 import org.opencds.cqf.cql.runtime.*;
 
+import javax.xml.namespace.QName;
+
 /*
 maximum<T>() T
 
@@ -49,7 +51,8 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
 
     @Override
     protected Object internalEvaluate(Context context) {
-        String type = getValueType().getLocalPart();
+        QName valueType = context.fixupQName(this.getValueType());
+        String type = valueType.getLocalPart();
         if (type == null) {
             return null;
         }
