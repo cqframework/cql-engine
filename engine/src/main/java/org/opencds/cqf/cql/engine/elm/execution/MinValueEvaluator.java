@@ -10,6 +10,8 @@ import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Value;
 
+import javax.xml.namespace.QName;
+
 /*
 minimum<T>() T
 
@@ -55,7 +57,8 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
 
     @Override
     protected Object internalEvaluate(Context context) {
-        String type = this.getValueType().getLocalPart();
+        QName valueType = context.fixupQName(this.getValueType());
+        String type = valueType.getLocalPart();
         if (type == null) {
             return null;
         }

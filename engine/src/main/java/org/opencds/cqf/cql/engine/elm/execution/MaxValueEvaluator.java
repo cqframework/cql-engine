@@ -10,6 +10,8 @@ import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Value;
 
+import javax.xml.namespace.QName;
+
 /*
 maximum<T>() T
 
@@ -55,7 +57,8 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
 
     @Override
     protected Object internalEvaluate(Context context) {
-        String type = getValueType().getLocalPart();
+        QName valueType = context.fixupQName(this.getValueType());
+        String type = valueType.getLocalPart();
         if (type == null) {
             return null;
         }
