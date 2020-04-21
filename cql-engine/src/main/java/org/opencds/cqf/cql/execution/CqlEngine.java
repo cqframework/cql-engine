@@ -14,6 +14,7 @@ import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.UsingDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.data.DataProvider;
+import org.opencds.cqf.cql.exception.CqlException;
 import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 /**
@@ -163,6 +164,10 @@ public class CqlEngine {
 
         for (String expression : expressions) {
             ExpressionDef def = context.resolveExpressionRef(expression);
+
+            if (def == null) {
+                throw new CqlException(String.format("Unable to resolve expression \"%s.\"", expression));
+            }
 
             // TODO: We should probably move this validation further up the chain.
             // For example, we should tell the user that they've tried to evaluate a function def through incorrect
