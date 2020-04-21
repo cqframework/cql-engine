@@ -54,15 +54,15 @@ public class CqlEngine {
         this(libraryLoader, null, null, null);
     }
 
-    public CqlEngine(LibraryLoader libraryLoader, TerminologyProvider terminologyProvider, Map<String, DataProvider> dataProviders) {
-        this(libraryLoader, terminologyProvider, dataProviders, null);
+    public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider) {
+        this(libraryLoader, dataProviders, terminologyProvider, null);
     }
 
     public CqlEngine(LibraryLoader libraryLoader, EnumSet<Options> engineOptions) {
         this(libraryLoader, null, null, null);
     }
 
-    public CqlEngine(LibraryLoader libraryLoader, TerminologyProvider terminologyProvider, Map<String, DataProvider> dataProviders, EnumSet<Options> engineOptions) {
+    public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider, EnumSet<Options> engineOptions) {
 
         if (libraryLoader == null) {
             throw new IllegalArgumentException("libraryLoader can not be null.");
