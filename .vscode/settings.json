@@ -11,13 +11,16 @@
         }
     ],
     "java.test.defaultConfig": "Profiling",
+    "java.jdt.ls.vmargs": "--patch-module=java.xml=xpp3-1.1.4c.jar -noverify -Xmx1G -XX:+UseG1GC -XX:+UseStringDeduplication -javaagent:\"/home/jp/.vscode/extensions/gabrielbb.vscode-lombok-1.0.1/server/lombok.jar\"",
     "cSpell.words": [
         "BACKBONEELEMENT",
         "Codeable",
+        "Cstor",
         "DOMAINRESOURCE",
         "Descendents",
         "Dstu",
         "Fhir",
+        "Multisource",
         "SNOMED",
         "Schuler",
         "elems",

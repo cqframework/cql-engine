@@ -1,7 +1,7 @@
 .DS_Store
 .idea
 *.iml
-/cql-engine/src/generated
+engine/src/generated
 *.class
 target
 .project
