@@ -125,18 +125,31 @@
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-structures-r4</artifactId>
                 <version>${hapi.version}</version>
-                <!-- This dependency is a split module, therefore breaks the java 9+ build
-                    currently working around this with the "patch-modules" flag -->
-                <!-- <exclusions>
-                        <exclusion>
-                            <groupId>xpp3</groupId>
-                            <artifactId>xpp3</artifactId>
-                        </exclusion>
-                        <exclusion>
-                            <groupId>xpp3</groupId>
-                            <artifactId>xpp3_xpath</artifactId>
-                        </exclusion>
-                    </exclusions> -->
+                <exclusions>
+                    <exclusion>
+                        <groupId>xpp3</groupId>
+                        <artifactId>xpp3</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xpp3</groupId>
+                        <artifactId>xpp3_xpath</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- These break the engine in certain environments due to the
+            fact that they include the javax.xml.namespace package, which creates
+            a split package. We may need to filter or exclude them at some point
+            in the future.-->
+            <dependency>
+                <groupId>xpp3</groupId>
+                <artifactId>xpp3</artifactId>
+                <version>1.1.4c</version>
+            </dependency>
+            <dependency>
+                <groupId>xpp3</groupId>
+                <artifactId>xpp3_xpath</artifactId>
+                <version>1.1.4c</version>
             </dependency>
 
 
