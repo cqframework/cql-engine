@@ -1,0 +1,44 @@
+<settings>
+  <servers>
+    <server>
+      <id>nexus</id>
+      <username>${env.NEXUS_USERNAME}</username>
+      <password>${env.NEXUS_PASSWORD}</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>deployment</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+        <properties>
+            <java-version>${env.JAVA_VERSION}</java-version>
+        </properties>
+        <repositories>
+          <repository>
+              <id>oss-sonatype</id>
+              <url>${env.FROM_SNAPSHOT_REPOSITORY}</url>
+              <snapshots>
+                  <enabled>true</enabled>
+              </snapshots>
+          </repository>
+          <repository>
+              <id>oss-sonatype-public</id>
+              <url>${env.FROM_CENTRAL_REPOSITORY}</url>
+          </repository>
+      </repositories>
+      <distributionManagement>
+          <snapshotRepository>
+              <id>nexus</id>
+              <url>${env.TO_SNAPSHOT_REPOSITORY}</url>
+          </snapshotRepository>
+
+          <repository>
+              <id>nexus</id>
+              <url>${env.TO_CENTRAL_REPOSITORY}</url>
+          </repository>
+      </distributionManagement>
+    </profile>
+  </profiles>
+</settings>

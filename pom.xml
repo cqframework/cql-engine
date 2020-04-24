@@ -46,6 +46,7 @@
         <version.major>1</version.major>
         <version.minor>3</version.minor>
         <version.patch>13</version.patch>
+        <java-version>11</java-version>
 
         <!-- NOTE: Building under the release profile automatically drops the -SNAPSHOT extension -->
         <revision>${version.major}.${version.minor}.${version.patch}-SNAPSHOT</revision>
@@ -263,8 +264,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <source>11</source>
-                        <target>11</target>
+                        <source>${java-version}</source>
+                        <target>${java-version}</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -285,7 +286,7 @@
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <version>3.2.0</version>
                     <configuration>
-                        <source>11</source>
+                        <source>${java-version}</source>
                     </configuration>
                     <executions>
                         <execution>
