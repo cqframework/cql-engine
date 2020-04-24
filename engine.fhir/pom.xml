@@ -18,10 +18,6 @@
     <description>CQL Engine FHIR providers</description>
     <url>https://github.com/DBCG/cql_engine/tree/master/cql-engine-fhir</url>
 
-    <properties>
-        <hapi.version>4.2.0</hapi.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
@@ -31,27 +27,22 @@
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-client</artifactId>
-            <version>${hapi.version}</version>
 		</dependency>
         <dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-structures-dstu2</artifactId>
-			<version>${hapi.version}</version>
 		</dependency>
         <dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-structures-hl7org-dstu2</artifactId>
-			<version>${hapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-structures-dstu3</artifactId>
-			<version>${hapi.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ca.uhn.hapi.fhir</groupId>
 			<artifactId>hapi-fhir-structures-r4</artifactId>
-			<version>${hapi.version}</version>
             <!-- This dependency is a split module, therefore breaks the java 9+ build
              currently working around this with the "patch-modules" flag -->
             <!-- <exclusions>
