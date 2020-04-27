@@ -292,7 +292,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     }
 
     // getters & setters
-    protected FhirContext getFhirContext() {
+    public FhirContext getFhirContext() {
         return this.fhirContext;
     }
 
