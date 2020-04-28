@@ -73,7 +73,7 @@ public abstract class FhirExecutionTestBase {
             LibraryManager libraryManager = new LibraryManager(modelManager);
             UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
             try {
-                File cqlFile = new File(URLDecoder.decode(this.getClass().getResource(fileName + ".cql").getFile(), "UTF-8"));
+                File cqlFile = new File(URLDecoder.decode(this.getClass().getResource("fhir/" + fileName + ".cql").getFile(), "UTF-8"));
 
                 ArrayList<CqlTranslator.Options> options = new ArrayList<>();
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);

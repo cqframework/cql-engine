@@ -1,7 +1,7 @@
-package org.opencds.cqf.cql.runtime;
+package org.opencds.cqf.cql.engine.runtime;
 
-import org.opencds.cqf.cql.elm.execution.EqualEvaluator;
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 
 public class Ratio implements CqlType {
 

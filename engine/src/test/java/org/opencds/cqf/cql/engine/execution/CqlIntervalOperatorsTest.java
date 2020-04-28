@@ -1,7 +1,7 @@
-package org.opencds.cqf.cql.execution;
+package org.opencds.cqf.cql.engine.execution;
 
-import org.opencds.cqf.cql.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.runtime.*;
+import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.AfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.AfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestAfter() {
@@ -92,7 +92,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.BeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.BeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestBefore() {
@@ -169,7 +169,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.CollapseEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.CollapseEvaluator#evaluate(Context)}
      */
     @Test
     public void TestCollapse() {
@@ -229,7 +229,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ContainsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ContainsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestContains() {
@@ -239,7 +239,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("TestNullElement1").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("TestNullElement2").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -285,7 +285,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.EndsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.EndsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEnds() {
@@ -329,7 +329,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.EqualEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEqual() {
@@ -370,7 +370,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ExceptEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ExceptEvaluator#evaluate(Context)}
      */
     @Test
     public void TestExcept() {
@@ -416,14 +416,14 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.InEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.InEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIn() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TestInNull").getExpression().evaluate(context);
-        assertThat(result, is(nullValue()));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("TestInNullEnd").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -516,7 +516,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IncludedInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.IncludedInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIncludedIn() {
@@ -567,7 +567,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IntersectEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.IntersectEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIntersect() {
@@ -606,7 +606,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.EquivalentEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEquivalent() {
@@ -644,7 +644,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.MeetsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.MeetsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestMeets() {
@@ -688,7 +688,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.MeetsBeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.MeetsBeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestMeetsBefore() {
@@ -732,7 +732,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.MeetsAfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.MeetsAfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestMeetsAfter() {
@@ -776,7 +776,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.NotEqualEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
     public void TestNotEqual() {
@@ -814,7 +814,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.SameOrAfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.SameOrAfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOnOrAfter() {
@@ -846,7 +846,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.SameOrBeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.SameOrBeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOnOrBefore() {
@@ -878,7 +878,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.OverlapsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.OverlapsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOverlaps() {
@@ -922,7 +922,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.OverlapsBeforeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.OverlapsBeforeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOverlapsBefore() {
@@ -966,7 +966,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.OverlapsAfterEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.OverlapsAfterEvaluator#evaluate(Context)}
      */
     @Test
     public void TestOverlapsAfter() {
@@ -1010,7 +1010,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.PointFromEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.PointFromEvaluator#evaluate(Context)}
      */
     @Test
     public void TestPointFrom() {
@@ -1029,7 +1029,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ProperlyIncludesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludesEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperlyIncludes() {
@@ -1070,7 +1070,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ProperContainsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperContainsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperContains() {
@@ -1096,7 +1096,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ProperInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperIn() {
@@ -1122,7 +1122,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperlyIncludedIn() {
@@ -1163,7 +1163,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IntervalEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.IntervalEvaluator#evaluate(Context)}
      */
     @Test
     public void TestInterval() {
@@ -1211,7 +1211,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.SizeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.SizeEvaluator#evaluate(Context)}
      */
     @Test
     public void TestSize() {
@@ -1228,7 +1228,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.StartEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.StartEvaluator#evaluate(Context)}
      */
     @Test
     public void TestStart() {
@@ -1252,7 +1252,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.StartsEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.StartsEvaluator#evaluate(Context)}
      */
     @Test
     public void TestStarts() {
@@ -1296,7 +1296,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.UnionEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.UnionEvaluator#evaluate(Context)}
      */
     @Test
     public void TestUnion() {
@@ -1340,7 +1340,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.WidthEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.WidthEvaluator#evaluate(Context)}
      */
     @Test
     public void TestWidth() {
@@ -1366,7 +1366,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.EndEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.EndEvaluator#evaluate(Context)}
      */
     @Test
     public void TestEnd() {

@@ -11,13 +11,7 @@ import javax.xml.bind.JAXBException;
 import org.opencds.cqf.cql.engine.elm.execution.AsEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
-import org.opencds.cqf.cql.engine.runtime.Code;
-import org.opencds.cqf.cql.engine.runtime.Concept;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
-import org.opencds.cqf.cql.engine.runtime.Tuple;
+import org.opencds.cqf.cql.engine.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -85,7 +79,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertQuantityEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertQuantityEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertQuantity() {
@@ -99,7 +93,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToBooleanEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToBooleanEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToBoolean() {
@@ -116,7 +110,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToDateEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToDateEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToDate() {
@@ -133,7 +127,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToDateTimeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToDateTimeEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToDateTime() {
@@ -153,7 +147,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToDecimalEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToDecimalEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToDecimal() {
@@ -170,7 +164,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToIntegerEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToIntegerEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToInteger() {
@@ -187,7 +181,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToQuantityEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToQuantityEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToQuantity() {
@@ -213,7 +207,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToStringEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToStringEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToString() {
@@ -248,7 +242,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConvertsToTimeEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToTimeEvaluator#evaluate(Context)}
      */
     @Test
     public void testConvertsToTime() {
@@ -265,7 +259,6 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IsEvaluator#evaluate(Context)}
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsEvaluator#evaluate(Context)}
      */
     @Test
@@ -376,7 +369,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ToRatioEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ToRatioEvaluator#evaluate(Context)}
      */
     @Test
     public void testToRatio() {

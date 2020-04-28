@@ -1,17 +1,9 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-<<<<<<< HEAD:engine/src/main/java/org/opencds/cqf/cql/engine/elm/execution/TimezoneFromEvaluator.java
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
-=======
-import org.opencds.cqf.cql.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.execution.Context;
-import org.opencds.cqf.cql.runtime.DateTime;
-import org.opencds.cqf.cql.runtime.TemporalHelper;
->>>>>>> f4ba29b6... Revving translator to 1.4 ... fixing broken tests - mostly errors due to updated Time type formatting:engine/src/main/java/org/opencds/cqf/cql/engine/elm/execution/TimezoneOffsetFromEvaluator.java
 
 /*
 timezoneoffset from(argument DateTime) Decimal

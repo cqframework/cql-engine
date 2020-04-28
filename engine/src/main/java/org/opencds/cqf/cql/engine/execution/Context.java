@@ -1,16 +1,8 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.cqframework.cql.elm.execution.*;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.opencds.cqf.cql.data.DataProvider;
-import org.opencds.cqf.cql.data.ExternalFunctionProvider;
-import org.opencds.cqf.cql.data.SystemDataProvider;
-import org.opencds.cqf.cql.exception.CqlException;
-import org.opencds.cqf.cql.runtime.Precision;
-import org.opencds.cqf.cql.runtime.TemporalHelper;
-import org.opencds.cqf.cql.terminology.TerminologyProvider;
 
 import javax.xml.namespace.QName;
 import java.time.OffsetDateTime;
@@ -20,8 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
-import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
 import org.cqframework.cql.elm.execution.CodeDef;

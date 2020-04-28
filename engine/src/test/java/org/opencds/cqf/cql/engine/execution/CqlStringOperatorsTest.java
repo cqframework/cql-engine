@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.execution;
+package org.opencds.cqf.cql.engine.execution;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -11,7 +11,7 @@ import static org.hamcrest.Matchers.nullValue;
 public class CqlStringOperatorsTest extends CqlExecutionTestBase {
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.CombineEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.CombineEvaluator#evaluate(Context)}
      */
     @Test
     public void testCombine() {
@@ -31,7 +31,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ConcatenateEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConcatenateEvaluator#evaluate(Context)}
      */
     @Test
     public void testConcatenate() {
@@ -54,7 +54,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.EndsWithEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.EndsWithEvaluator#evaluate(Context)}
      */
     @Test
     public void testEndsWith() {
@@ -70,7 +70,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IndexerEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.IndexerEvaluator#evaluate(Context)}
      */
     @Test
     public void testIndexer() {
@@ -99,7 +99,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.MatchesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.MatchesEvaluator#evaluate(Context)}
      */
     @Test
     public void testMatches() {
@@ -130,7 +130,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.LastPositionOfEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.LastPositionOfEvaluator#evaluate(Context)}
      */
     @Test
     public void testLastPositionOf() {
@@ -153,7 +153,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.LengthEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.LengthEvaluator#evaluate(Context)}
      */
     @Test
     public void testLength() {
@@ -173,7 +173,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.LowerEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.LowerEvaluator#evaluate(Context)}
      */
     @Test
     public void testLower() {
@@ -196,7 +196,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.PositionOfEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.PositionOfEvaluator#evaluate(Context)}
      */
     @Test
     public void testPositionOf() {
@@ -222,7 +222,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ReplaceMatchesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ReplaceMatchesEvaluator#evaluate(Context)}
      */
     @Test
     public void testReplaceMatches() {
@@ -242,7 +242,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.SplitEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.SplitEvaluator#evaluate(Context)}
      */
     @Test
     public void testSplit() {
@@ -268,7 +268,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.SplitEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.SplitEvaluator#evaluate(Context)}
      */
     @Test
     public void testSplitOnMatches() {
@@ -291,7 +291,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.StartsWithEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.StartsWithEvaluator#evaluate(Context)}
      */
     @Test
     public void testStartsWith() {
@@ -314,7 +314,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.SubstringEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.SubstringEvaluator#evaluate(Context)}
      */
     @Test
     public void testSubstring() {
@@ -352,7 +352,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.UpperEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.UpperEvaluator#evaluate(Context)}
      */
     @Test
     public void testUpper() {
@@ -386,7 +386,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
     // TODO: ConceptToString
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.ToStringEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator#evaluate(Context)}
      */
     @Test
     public void testToString() throws JAXBException {
