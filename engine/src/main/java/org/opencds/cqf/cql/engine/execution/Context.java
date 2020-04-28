@@ -1,5 +1,10 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import org.fhir.ucum.UcumEssenceService;
+import org.fhir.ucum.UcumException;
+import org.fhir.ucum.UcumService;
+
+import javax.xml.namespace.QName;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,8 +12,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
-
-import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
 import org.cqframework.cql.elm.execution.CodeDef;
@@ -75,6 +78,8 @@ public class Context {
     private org.opencds.cqf.cql.engine.runtime.DateTime evaluationDateTime =
             new org.opencds.cqf.cql.engine.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
 
+    private UcumService ucumService;
+
     public Context(Library library) {
         init(library);
     }
@@ -91,11 +96,20 @@ public class Context {
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
+        try {
+            ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+        } catch (UcumException ue) {
+            ucumService = null;
+        }
         threadContext.set(this);
     }
 
     public org.opencds.cqf.cql.engine.runtime.DateTime getEvaluationDateTime() {
         return this.evaluationDateTime;
+    }
+
+    public UcumService getUcumService() {
+        return ucumService;
     }
 
     public void setExpressionCaching(boolean yayOrNay) {

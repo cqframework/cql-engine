@@ -1,7 +1,5 @@
 library CqlIntervalOperatorsTest version '1'
 
-context Population
-
 //After
 define TestAfterNull: null as Integer after IntegerIntervalTest
 define IntegerIntervalAfterTrue: IntegerIntervalTest2 after IntegerIntervalTest
@@ -371,6 +369,11 @@ define DateTimeProperlyIncludedInTrue: Interval[DateTime(2012, 1, 16), DateTime(
 define DateTimeProperlyIncludedInFalse: Interval[DateTime(2012, 1, 16), DateTime(2012, 1, 29)] properly included in day of Interval[DateTime(2012, 1, 15), DateTime(2012, 1, 28)]
 define TimeProperlyIncludedInTrue: Interval[@T12:01:01.000, @T21:59:59.998] properly included in Interval[@T12:00:00.000, @T21:59:59.999]
 define TimeProperlyIncludedInFalse: Interval[@T12:01:01.000, @T22:00:00.000] properly included in Interval[@T12:00:00.000, @T21:59:59.999]
+
+//Size
+define SizeTest: Size(Interval[3, 7])
+define SizeTestEquivalent: Size(Interval[3, 8))
+define SizeIsNull: Size(null as Interval<Integer>)
 
 //Start
 define IntegerIntervalStart: start of IntegerIntervalTest

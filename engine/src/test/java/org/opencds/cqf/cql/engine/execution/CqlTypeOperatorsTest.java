@@ -6,18 +6,10 @@ import static org.hamcrest.Matchers.is;
 import java.math.BigDecimal;
 import java.time.format.DateTimeParseException;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.AsEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
-import org.opencds.cqf.cql.engine.runtime.Code;
-import org.opencds.cqf.cql.engine.runtime.Concept;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
-import org.opencds.cqf.cql.engine.runtime.Tuple;
+import org.opencds.cqf.cql.engine.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -27,7 +19,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAs() throws JAXBException {
+    public void testAs() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AsQuantity").getExpression().evaluate(context);
@@ -55,7 +47,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertEvaluator#evaluate(Context)}
      */
     @Test
-    public void testConvert() throws JAXBException {
+    public void testConvert() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerToDecimal").getExpression().evaluate(context);
@@ -75,7 +67,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
 
         result = context.resolveExpressionRef("StringToTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 14, 30, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(14, 30, 0, 0)));
 
         try {
             context.resolveExpressionRef("StringToDateTimeMalformed").getExpression().evaluate(context);
@@ -85,10 +77,190 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertQuantityEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertQuantity() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Quantity().withValue(new BigDecimal("0.005")).withUnit("g")));
+
+        result = context.resolveExpressionRef("ConvertSyntax").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Quantity().withValue(new BigDecimal("0.005")).withUnit("g")));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToBooleanEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToBoolean() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToBooleanTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToBooleanFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToBooleanNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToDateEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToDate() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToDateTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToDateTimeEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToDateTime() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToDateTimeStringTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateTimeDateTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateTimeFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDateTimeNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToDecimalEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToDecimal() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToDecimalTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDecimalFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToDecimalNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToIntegerEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToInteger() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToIntegerTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToIntegerFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToIntegerNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToQuantityEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToQuantity() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToQuantityStringTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityStringFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityIntegerTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityDecimalTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityRatioTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToQuantityNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToStringEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToString() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToStringBoolean").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringInteger").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringDecimal").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringQuantity").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringRatio").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringDate").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringDateTime").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringTime").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToTimeEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToTime() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToTimeTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToTimeFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToTimeNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIs() throws JAXBException {
+    public void testIs() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerIsInteger").getExpression().evaluate(context);
@@ -102,7 +274,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToBooleanEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToBoolean() throws JAXBException {
+    public void testToBoolean() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("StringNoToBoolean").getExpression().evaluate(context);
@@ -114,7 +286,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToConceptEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToConcept() throws JAXBException {
+    public void testToConcept() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CodeToConcept1").getExpression().evaluate(context);
@@ -125,12 +297,15 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToDateTimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToDateTime() throws JAXBException {
+    public void testToDateTime() {
         // TODO: Fix timezone tests
         Context context = new Context(library);
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
-        Object result = context.resolveExpressionRef("ToDateTime1").getExpression().evaluate(context);
+        Object result = context.resolveExpressionRef("ToDateTime0").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1)));
+
+        result = context.resolveExpressionRef("ToDateTime1").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
@@ -154,20 +329,15 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(new BigDecimal(0), 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
-//        try {
-//            context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
-//            Assert.fail();
-//        } catch (DateTimeParseException iae) {
-//            // pass
-//        }
-
+        result = context.resolveExpressionRef("ToDateTimeMalformed").getExpression().evaluate(context);
+        Assert.assertNull(result);
     }
 
     /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToDecimalEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToDecimal() throws JAXBException {
+    public void testToDecimal() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("String25D5ToDecimal").getExpression().evaluate(context);
@@ -178,7 +348,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToIntegerEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToInteger() throws JAXBException {
+    public void testToInteger() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("StringNeg25ToInteger").getExpression().evaluate(context);
@@ -189,19 +359,33 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToQuantityEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToQuantity() throws JAXBException {
+    public void testToQuantity() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("String5D5CMToQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.5")).withUnit("cm")));
+    }
 
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ToRatioEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testToRatio() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ToRatioIsValid").getExpression().evaluate(context);
+        Assert.assertTrue(((Ratio) result).getNumerator().equal(new Quantity().withValue(new BigDecimal("1.0")).withUnit("mg")));
+        Assert.assertTrue(((Ratio) result).getDenominator().equal(new Quantity().withValue(new BigDecimal("2.0")).withUnit("mg")));
+
+        result = context.resolveExpressionRef("ToRatioIsNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
     }
 
     /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToString() throws JAXBException {
+    public void testToString() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerNeg5ToString").getExpression().evaluate(context);
@@ -221,32 +405,13 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToTimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToTime() throws JAXBException {
-        // TODO: fix timezone tests
+    public void testToTime() {
         Context context = new Context(library);
-
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
+        
         Object result = context.resolveExpressionRef("ToTime1").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(14, 30, 0, 0)));
 
-        result = context.resolveExpressionRef("ToTime2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal("5.5"), 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("5.5")));
-
-        result = context.resolveExpressionRef("ToTime3").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal("-5.75"), 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-5.75")));
-
-        result = context.resolveExpressionRef("ToTime4").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(new BigDecimal(0), 14, 30, 0, 0)));
-        // assertThat(((Time)result).getTimezoneOffset(), is(new BigDecimal("-7")));
-
-//        try {
-//            context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
-//            Assert.fail();
-//        } catch (DateTimeParseException iae) {
-//            // pass
-//        }
+        result = context.resolveExpressionRef("ToTimeMalformed").getExpression().evaluate(context);
+        Assert.assertNull(result);
     }
 }

@@ -53,6 +53,14 @@ public class TemporalHelper {
         }
     }
 
+    public static String autoCompleteDateString(String dateString, Precision precision) {
+        switch (precision) {
+            case YEAR: return dateString + "-01-01";
+            case MONTH: return dateString + "-01";
+            default: return dateString;
+        }
+    }
+
     public static int[] cleanArray(Integer ... elements) {
         return Arrays.stream(elements).filter(Objects::nonNull).mapToInt(x -> x).toArray();
     }

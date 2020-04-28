@@ -91,6 +91,33 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Convert createConvert() { return new ConvertEvaluator(); }
 
     @Override
+    public ConvertQuantity createConvertQuantity() { return new ConvertQuantityEvaluator(); }
+
+    @Override
+    public ConvertsToBoolean createConvertsToBoolean() { return new ConvertsToBooleanEvaluator(); }
+
+    @Override
+    public ConvertsToDate createConvertsToDate() { return new ConvertsToDateEvaluator(); }
+
+    @Override
+    public ConvertsToDateTime createConvertsToDateTime() { return new ConvertsToDateTimeEvaluator(); }
+
+    @Override
+    public ConvertsToDecimal createConvertsToDecimal() { return new ConvertsToDecimalEvaluator(); }
+
+    @Override
+    public ConvertsToInteger createConvertsToInteger() { return new ConvertsToIntegerEvaluator(); }
+
+    @Override
+    public ConvertsToQuantity createConvertsToQuantity() { return new ConvertsToQuantityEvaluator(); }
+
+    @Override
+    public ConvertsToString createConvertsToString() { return new ConvertsToStringEvaluator(); }
+
+    @Override
+    public ConvertsToTime createConvertsToTime() { return new ConvertsToTimeEvaluator(); }
+
+    @Override
     public Count createCount() { return new CountEvaluator(); }
 
     @Override
@@ -181,6 +208,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public GreaterOrEqual createGreaterOrEqual() { return new GreaterOrEqualEvaluator(); }
 
     @Override
+    public HighBoundary createHighBoundary() { return new HighBoundaryEvaluator(); }
+
+    @Override
     public IdentifierRef createIdentifierRef() { return new IdentifierRefEvaluator(); }
 
     @Override
@@ -257,6 +287,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Log createLog() { return new LogEvaluator(); }
+
+    @Override
+    public LowBoundary createLowBoundary() { return new LowBoundaryEvaluator(); }
 
     @Override
     public Lower createLower() { return new LowerEvaluator(); }
@@ -349,6 +382,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Power createPower() { return new PowerEvaluator(); }
 
     @Override
+    public Precision createPrecision() { return new PrecisionEvaluator(); }
+
+    @Override
     public Predecessor createPredecessor() { return new PredecessorEvaluator(); }
 
     @Override
@@ -379,6 +415,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public QueryLetRef createQueryLetRef() { return new QueryLetRefEvaluator(); }
 
     @Override
+    public Ratio createRatio() { return new RatioEvaluator(); }
+
+    @Override
     public Repeat createRepeat() { return new RepeatEvaluator(); }
 
     @Override
@@ -403,10 +442,16 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public SingletonFrom createSingletonFrom() { return new SingletonFromEvaluator(); }
 
     @Override
+    public Size createSize() { return new SizeEvaluator(); }
+
+    @Override
     public Slice createSlice() { return new SliceEvaluator(); }
 
     @Override
     public Split createSplit() { return new SplitEvaluator(); }
+
+    @Override
+    public SplitOnMatches createSplitOnMatches() { return new SplitOnMatchesEvaluator(); }
 
     @Override
     public Start createStart() { return new StartEvaluator(); }
@@ -442,7 +487,7 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public TimeFrom createTimeFrom() { return new TimeFromEvaluator(); }
 
     @Override
-    public TimezoneFrom createTimezoneFrom() { return new TimezoneFromEvaluator(); }
+    public TimezoneOffsetFrom createTimezoneOffsetFrom() { return new TimezoneOffsetFromEvaluator(); }
 
     @Override
     public Today createToday() { return new TodayEvaluator(); }
@@ -470,6 +515,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public ToQuantity createToQuantity() { return new ToQuantityEvaluator(); }
+
+    @Override
+    public ToRatio createToRatio() { return new ToRatioEvaluator(); }
 
     @Override
     public ToString createToString() { return new ToStringEvaluator(); }

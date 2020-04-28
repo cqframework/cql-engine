@@ -1,7 +1,5 @@
 library ComparisonOperator version '1'
 
-context Population
-
 //Between
 define BetweenIntTrue: 4 between 2 and 6 
 
@@ -24,6 +22,8 @@ define SimpleEqFloat1Int2 : 1.0 = 2
 define QuantityEqCM1CM1 : 1'cm' = 1'cm'
 define QuantityEqCM1M01 : 1'cm' = 0.01'm'
 define QuantityEqDiffPrecision: 2.0'cm' = 2.00'cm'
+define RatioEqual: 1'cm':2'cm' = 1'cm':2'cm'
+define RatioNotEqual: 1'cm':2'cm' = 1.1'cm':2'cm'
 define TupleEqJohnJohn: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John' }
 define TupleEqJohnJohnFalse: Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } = Tuple { Id : 1, Name : 'John' }
 define TupleEqJohnJohnFalse2: Tuple { Id : 1, Name : 'John' } = Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' }
@@ -169,6 +169,8 @@ define EquivFloat1Int1              : 1.0 ~ 1
 define EquivFloat1Int2              : 1.0 ~ 2
 define EquivEqCM1CM1                : 1'cm' ~ 1'cm'
 define EquivEqCM1M01                : 1'cm' ~ 0.01'm'
+define RatioEquivalent              : 1'cm':2'cm' ~ 1'cm':2'cm'
+define RatioNotEquivalent           : 1'cm':2'cm' ~ 1.1'cm':2'cm'
 define EquivTupleJohnJohn           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }
 define EquivTupleJohnJohnWithNulls  : Tuple { Id : 1, Name : 'John', Position: null } ~ Tuple { Id : 1, Name : 'John', Position: null }
 define EquivTupleJohnJohnFalse      : Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } ~ Tuple { Id : 1, Name : 'John' }

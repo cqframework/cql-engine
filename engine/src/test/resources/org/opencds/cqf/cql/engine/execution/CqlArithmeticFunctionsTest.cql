@@ -1,7 +1,5 @@
 library ArithmeticFunctions version '1'
 
-context Population
-
 //Abs
 define AbsNull: Abs(null as Integer)
 define Abs0: Abs(0)
@@ -58,6 +56,16 @@ define ExpNeg1  : Exp(-1)
 define Exp1000  : Exp(1000)
 define Exp1000D  : Exp(1000.0)
 
+//HighBoundary
+
+define HighBoundaryDec : HighBoundary(1.587, 8)
+define HighBoundaryDate :HighBoundary(@2014, 6)
+define HighBoundaryDateTime : HighBoundary(@2014-01-01T08, 17)
+define HighBoundaryTime : HighBoundary(@T10:30, 9)
+define HighBoundaryNull : HighBoundary(null as Decimal, 8)
+define HighBoundaryNullPrecision : HighBoundary(1.58888, null)
+
+
 //Log
 define LogNullNull  : Log(null, null)
 define Log1BaseNull  : Log(1, null)
@@ -66,6 +74,14 @@ define Log1Base2  : Log(1, 2)
 define Log1Base100  : Log(1, 100)
 define Log16Base2  : Log(16, 2)
 define LogD125Base2  : Log(0.125, 2)
+
+//LowBoundary
+define LowBoundaryDec : LowBoundary(1.587, 8)
+define LowBoundaryDate :LowBoundary(@2014, 6)
+define LowBoundaryDateTime : LowBoundary(@2014-01-01T08, 17)
+define LowBoundaryTime : LowBoundary(@T10:30, 9)
+define LowBoundaryNull : LowBoundary(null as Decimal, 8)
+define LowBoundaryNullPrecision : LowBoundary(1.58888, null)
 
 //Ln
 define LnNull  : Ln(null)
@@ -118,6 +134,13 @@ define NegateNeg0D : -(-0.0)
 define Negate1D : -(1.0)
 define NegateNeg1D : -(-1.0)
 define Negate1CM : -(1'cm')
+
+//Precision
+define PrecisionDecimal5: Precision(1.58700) //5
+define PrecisionDateYear: Precision(@2014) // 4
+define PrecisionDateTimeMs: Precision(@2014-01-05T10:30:00.000) // 17
+define PrecisionTimeMinute: Precision(@T10:30) // 4
+define PrecisionTimeMs: Precision(@T10:30:00.000) // 9
 
 //Predecessor
 define PredecessorNull: predecessor of (null as Integer)

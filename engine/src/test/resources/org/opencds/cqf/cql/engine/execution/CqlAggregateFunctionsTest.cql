@@ -1,7 +1,5 @@
 library AggregateFunctions version '1'
 
-context Population
-
 //AllTrue
 define AllTrueAllTrue               : AllTrue({true,true})
 define AllTrueTrueFirst             : AllTrue({true,false})

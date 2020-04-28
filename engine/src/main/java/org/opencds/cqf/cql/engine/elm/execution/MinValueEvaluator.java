@@ -43,7 +43,7 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
             return new DateTime(TemporalHelper.getDefaultOffset(), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
         }
         if (type.endsWith("Time")) {
-            return new Time(TemporalHelper.getDefaultOffset(), 0, 0, 0, 0).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+            return new Time(0, 0, 0, 0);
         }
         // NOTE: Quantity min is not standard
         if (type.endsWith("Quantity")) {
@@ -73,7 +73,7 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
             return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 1, 1, 1, 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
         }
         if (type.endsWith("Time")) {
-            return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 0, 0, 0, 0).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+            return new Time(0, 0, 0, 0);
         }
 
         throw new InvalidOperatorArgument(String.format("The Minimum operator is not implemented for type %s", type));

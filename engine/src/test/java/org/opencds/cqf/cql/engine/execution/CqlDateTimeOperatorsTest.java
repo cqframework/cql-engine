@@ -99,26 +99,26 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016)));
 
         result = context.resolveExpressionRef("TimeAdd5Hours").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(20, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeAdd1Minute").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(16, 0, 59, 999)));
 
         result = context.resolveExpressionRef("TimeAdd1Second").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 0, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(16, 0, 0, 999)));
 
         result = context.resolveExpressionRef("TimeAdd1Millisecond").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(16, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeAdd5Hours1Minute").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 21, 0, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(21, 0, 59, 999)));
 
         // checking access ordering and returning correct result
         result = context.resolveExpressionRef("TimeAdd1Second").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 16, 0, 0, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(16, 0, 0, 999)));
 
         result = context.resolveExpressionRef("TimeAdd5hoursByMinute").evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 20, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(20, 59, 59, 999)));
     }
 
     /**
@@ -430,7 +430,6 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeDifferenceMillis").getExpression().evaluate(context);
         assertThat(result, is(-5));
 
-        // TODO: Uncomment once translator issue https://github.com/cqframework/clinical_quality_language/issues/256 is resolved
         result = context.resolveExpressionRef("DifferenceInHoursA").getExpression().evaluate(context);
         assertThat(result, is(1));
 
@@ -545,7 +544,6 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeDurationBetweenMillis").getExpression().evaluate(context);
         assertThat(result, is(5));
 
-        // TODO: Uncomment once translator issue https://github.com/cqframework/clinical_quality_language/issues/256 is resolved
         result = context.resolveExpressionRef("DurationInHoursA").getExpression().evaluate(context);
         assertThat(result, is(1));
 
@@ -968,22 +966,22 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2011)));
 
         result = context.resolveExpressionRef("TimeSubtract5Hours").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract1Minute").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 58, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 58, 59, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract1Second").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 58, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 58, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract1Millisecond").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 15, 59, 58, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 58, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract5Hours1Minute").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 58, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 58, 59, 999)));
 
         result = context.resolveExpressionRef("TimeSubtract5hoursByMinute").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 10, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 59, 59, 999)));
     }
 
     /**
@@ -993,9 +991,8 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testTime() throws JAXBException {
         Context context = new Context(library);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("TimeTest2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(offset, 23, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(23, 59, 59, 999)));
     }
 
     /**

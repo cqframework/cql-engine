@@ -2,8 +2,6 @@ library Types version '1'
 
 codesystem "LOINC": 'http://loinc.org'
 
-context Population
-
 //Any
 define AnyInteger: 5
 define AnyDecimal: 5.0
@@ -53,6 +51,9 @@ define IntegerProper: 5000
 define QuantityTest: 150.2 '[lb_av]'
 define QuantityTest2: 2.5589 '{eskimo kisses}'
 define QuantityFractionalTooBig: 5.999999999 'g'
+
+//Ratio
+define RatioTest: 150.2'[lb_av]':2.5589'{eskimo kisses}'
 
 //String
 // Problem here -- escape chars included in result string

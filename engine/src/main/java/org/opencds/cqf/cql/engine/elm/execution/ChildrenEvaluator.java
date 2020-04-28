@@ -58,8 +58,6 @@ public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Childre
         for (int i = 0; i < time.getPrecision().toTimeIndex() + 1; ++i) {
             list.add(time.getTime().get(Precision.fromTimeIndex(i).toChronoField()));
         }
-
-        list.add(TemporalHelper.zoneToOffset(time.getTime().getOffset()));
     }
 
     private static void addList(List<Object> list, List<Object> listToProcess) {

@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
-import java.time.OffsetTime;
+import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -427,7 +427,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     protected Time toTime(TimeType value) {
         java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ISO_TIME;
-        return new Time(OffsetTime.from(formatter.parse(this.timeToString(value))), Precision.MILLISECOND);
+        return new Time(LocalTime.from(formatter.parse(this.timeToString(value))), Precision.MILLISECOND);
     }
 
     protected DateTime toDateTime(BaseDateTimeType value, Integer calendarConstant) {

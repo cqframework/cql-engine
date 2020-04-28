@@ -43,7 +43,7 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
             return new DateTime(TemporalHelper.getDefaultOffset(), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
         }
         if (type.endsWith("Time")) {
-            return new Time(TemporalHelper.getDefaultOffset(), 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+            return new Time(23, 59, 59, 999);
         }
         // NOTE: Quantity max is not standard
         if (type.endsWith("Quantity")) {
@@ -73,7 +73,7 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
             return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
         }
         if (type.endsWith("Time")) {
-            return new Time(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+            return new Time(23, 59, 59, 999);
         }
         throw new InvalidOperatorArgument(String.format("The Maximum operator is not implemented for type %s", type));
     }

@@ -1,11 +1,13 @@
 library TypeOperator version '1'
 
-context Population
-
 //As
 define AsQuantity: 45.5 'g' as Quantity
 define CastAsQuantity: cast 45.5 'g' as Quantity
 define AsDateTime: DateTime(2014, 01, 01) as DateTime
+
+//ConvertQuantity
+define ConvertQuantity: ConvertQuantity(5 'mg', 'g')
+define ConvertSyntax: convert 5 'mg' to 'g'
 
 //Convert
 define IntegerToDecimal: convert 5 to Decimal
@@ -14,6 +16,49 @@ define StringToIntegerError: convert 'foo' to Integer
 define StringToDateTime: convert '2014-01-01' to DateTime
 define StringToTime: convert 'T14:30:00.0' to Time
 define StringToDateTimeMalformed: convert '2014/01/01' to DateTime
+
+//ConvertsTo[x]
+define ConvertsToBooleanTrue: ConvertsToBoolean('TRUE')
+define ConvertsToBooleanFalse: ConvertsToBoolean('AFFIRMATIVE')
+define ConvertsToBooleanNull: ConvertsToBoolean(null)
+
+define ConvertsToDateTrue: ConvertsToDate('2014-01')
+define ConvertsToDateFalse: ConvertsToDate('January 2014')
+define ConvertsToDateNull: ConvertsToDate(null)
+
+define ConvertsToDateTimeStringTrue: ConvertsToDateTime('2014-01-01T01')
+define ConvertsToDateTimeDateTrue: ConvertsToDateTime(@2014-01-01)
+define ConvertsToDateTimeFalse: ConvertsToDateTime('January 2014')
+define ConvertsToDateTimeNull: ConvertsToDateTime(null)
+
+define ConvertsToDecimalTrue: ConvertsToDecimal('+1')
+define ConvertsToDecimalFalse: ConvertsToDecimal('+-1')
+define ConvertsToDecimalNull: ConvertsToDecimal(null)
+
+define ConvertsToIntegerTrue: ConvertsToInteger('+1')
+define ConvertsToIntegerFalse: ConvertsToInteger('+-1')
+define ConvertsToIntegerNull: ConvertsToInteger(null)
+
+define ConvertsToQuantityStringTrue: ConvertsToQuantity('-0.1 \'mg\'')
+define ConvertsToQuantityStringFalse: ConvertsToQuantity('+-0.1 \'mg\'')
+define ConvertsToQuantityIntegerTrue: ConvertsToQuantity(1)
+define ConvertsToQuantityDecimalTrue: ConvertsToQuantity(1.0)
+define ConvertsToQuantityRatioTrue: ConvertsToQuantity(1.0'mg':2.0'mg')
+define ConvertsToQuantityNull: ConvertsToQuantity(null)
+
+define ConvertsToStringBoolean: ConvertsToString(true)
+define ConvertsToStringInteger: ConvertsToString(1)
+define ConvertsToStringDecimal: ConvertsToString(1.1)
+define ConvertsToStringQuantity: ConvertsToString(1.1'mg')
+define ConvertsToStringRatio: ConvertsToString(1.1'mg':3.1'mg')
+define ConvertsToStringDate: ConvertsToString(@2012-01-01)
+define ConvertsToStringDateTime: ConvertsToString(@2012-01-01T01:01)
+define ConvertsToStringTime: ConvertsToString(@T01:01)
+define ConvertsToStringNull: ConvertsToString(null)
+
+define ConvertsToTimeTrue: ConvertsToTime('01:30')
+define ConvertsToTimeFalse: ConvertsToTime('01-30')
+define ConvertsToTimeNull: ConvertsToTime(null)
 
 //Is
 define IntegerIsInteger: 5 is Integer
@@ -26,6 +71,7 @@ define StringNoToBoolean: ToBoolean('NO')
 define CodeToConcept1: ToConcept(Code { code: '8480-6' })
 
 //ToDateTime
+define ToDateTime0: ToDateTime('2014-01')
 define ToDateTime1: ToDateTime('2014-01-01')
 define ToDateTime2: ToDateTime('2014-01-01T12:05')
 define ToDateTime3: ToDateTime('2014-01-01T12:05:05.955')
@@ -43,6 +89,10 @@ define StringNeg25ToInteger: ToInteger('-25')
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
 
+//ToRatio
+define ToRatioIsValid: ToRatio('1.0 \'mg\':2.0 \'mg\'')
+define ToRatioIsNull: ToRatio('1.0 \'mg\';2.0 \'mg\'')
+
 //ToString
 define IntegerNeg5ToString: ToString(-5)
 define Decimal18D55ToString: ToString(18.55)
@@ -51,7 +101,4 @@ define BooleanTrueToString: ToString(true)
 
 //ToTime
 define ToTime1: ToTime('T14:30:00.0')
-define ToTime2: ToTime('T14:30:00.0+05:30')
-define ToTime3: ToTime('T14:30:00.0-05:45')
-define ToTime4: ToTime('T14:30:00.0Z')
 define ToTimeMalformed: ToTime('T14-30-00.0')

@@ -1,7 +1,5 @@
 library CqlExternalFunctionsTest version '2'
 
-context Population
-
 // MyMath2
 
 define function MyTimes(x Integer, y Integer) returns Integer : external

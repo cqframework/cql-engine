@@ -118,11 +118,7 @@ public class CqlTestSuite {
 
         result = context.resolveExpressionRef("TimeX").evaluate(context);
         Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(new BigDecimal("0.0"), 12, 10, 59, 456)));
-
-        result = context.resolveExpressionRef("TimeFX").evaluate(context);
-        Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(new BigDecimal("0.0"), 12, 10, 59, 456)));
+        Assert.assertTrue(((Time) result).equal(new Time(12, 10, 59, 456)));
 
         result = context.resolveExpressionRef("DateTime_Year").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
@@ -158,23 +154,19 @@ public class CqlTestSuite {
 
         result = context.resolveExpressionRef("Time_Hour").evaluate(context);
         Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(TemporalHelper.getDefaultOffset(), 12)));
+        Assert.assertTrue(((Time) result).equal(new Time(12)));
 
         result = context.resolveExpressionRef("Time_Minute").evaluate(context);
         Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(TemporalHelper.getDefaultOffset(), 12, 10)));
+        Assert.assertTrue(((Time) result).equal(new Time(12, 10)));
 
         result = context.resolveExpressionRef("Time_Second").evaluate(context);
         Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(TemporalHelper.getDefaultOffset(), 12, 10, 59)));
+        Assert.assertTrue(((Time) result).equal(new Time(12, 10, 59)));
 
         result = context.resolveExpressionRef("Time_Millisecond").evaluate(context);
         Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(TemporalHelper.getDefaultOffset(), 12, 10, 59, 456)));
-
-        result = context.resolveExpressionRef("Time_TimezoneOffset").evaluate(context);
-        Assert.assertTrue(result instanceof Time);
-        Assert.assertTrue(((Time) result).equal(new Time(new BigDecimal("-8.0"), 12, 10, 59, 456)));
+        Assert.assertTrue(((Time) result).equal(new Time(12, 10, 59, 456)));
 
         result = context.resolveExpressionRef("Clinical_quantity").evaluate(context);
         Assert.assertTrue(result instanceof Quantity);
@@ -296,9 +288,9 @@ public class CqlTestSuite {
         listComp = CqlList.equal(
                 (Iterable<?>) result,
                 Arrays.asList(
-                        new Time(new BigDecimal("0.0"), 12, 10, 59, 456),
-                        new Time(new BigDecimal("0.0"), 13, 10, 59, 456),
-                        new Time(new BigDecimal("0.0"), 14, 10, 59, 456)
+                        new Time(12, 10, 59, 456),
+                        new Time(13, 10, 59, 456),
+                        new Time(14, 10, 59, 456)
                 )
         );
         Assert.assertTrue(listComp != null && listComp);
