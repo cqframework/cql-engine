@@ -81,10 +81,10 @@
     </distributionManagement>
 
     <dependencyManagement>
-    <dependencies>
+        <dependencies>
 
-        <!-- JAXB related dependencies -->
-        <dependency>
+            <!-- JAXB related dependencies -->
+            <dependency>
                 <groupId>org.jvnet.jaxb2_commons</groupId>
                 <artifactId>jaxb2-basics</artifactId>
                 <version>0.12.0</version>
@@ -174,12 +174,12 @@
 
             <!-- Testing dependencies -->
             <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>cql-to-elm</artifactId>
-            <version>${cqframework.version}</version>
-            <!-- The scope of this dependency must remain as test.
+                <groupId>info.cqframework</groupId>
+                <artifactId>cql-to-elm</artifactId>
+                <version>${cqframework.version}</version>
+                <!-- The scope of this dependency must remain as test.
             There is an intentional separation between the CQL translator and the CQL engine -->
-            <scope>test</scope>
+                <scope>test</scope>
                 <!-- These are excluded because the engine is using the org.glassfish implmentation of jaxb, at a newer version -->
                 <exclusions>
                     <exclusion>
@@ -191,37 +191,37 @@
                         <artifactId>jaxb-impl</artifactId>
                     </exclusion>
                 </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <version>6.8.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>6.8.8</version>
                 <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>uk.co.datumedge</groupId>
-            <artifactId>hamcrest-json</artifactId>
-            <version>0.2</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hamcrest</groupId>
-                    <artifactId>hamcrest-core</artifactId>
-                </exclusion>
-            </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
                 <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
+            </dependency>
+            <dependency>
+                <groupId>uk.co.datumedge</groupId>
+                <artifactId>hamcrest-json</artifactId>
+                <version>0.2</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.hamcrest</groupId>
+                        <artifactId>hamcrest-core</artifactId>
+                    </exclusion>
+                </exclusions>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
                 <version>1.7.29</version>
                 <scope>test</scope>
-        </dependency>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -413,18 +413,18 @@
                     </configuration>
                     <executions>
                         <execution>
-                        <id>flatten</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>flatten</goal>
-                        </goals>
+                            <id>flatten</id>
+                            <phase>process-resources</phase>
+                            <goals>
+                                <goal>flatten</goal>
+                            </goals>
                         </execution>
                         <execution>
-                        <id>flatten.clean</id>
-                        <phase>clean</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
+                            <id>flatten.clean</id>
+                            <phase>clean</phase>
+                            <goals>
+                                <goal>clean</goal>
+                            </goals>
                         </execution>
                     </executions>
                 </plugin>
@@ -436,7 +436,7 @@
                         <execution>
                             <phase>package</phase>
                             <goals>
-                            <goal>shade</goal>
+                                <goal>shade</goal>
                             </goals>
                         </execution>
                     </executions>
@@ -444,19 +444,19 @@
                         <shadedArtifactAttached>true</shadedArtifactAttached>
                         <filters>
                             <filter>
-                            <artifact>*:*</artifact>
-                            <excludes>
-                                <exclude>META-INF/*.SF</exclude>
-                                <exclude>META-INF/*.DSA</exclude>
-                                <exclude>META-INF/*.RSA</exclude>
-                                <exclude>META-INF/*.txt</exclude>
-                                <exclude>META-INF/*.MF</exclude>
-                                <exclude>META-INF/LICENSE</exclude>
-                                <exclude>META-INF/NOTICE</exclude>
+                                <artifact>*:*</artifact>
+                                <excludes>
+                                    <exclude>META-INF/*.SF</exclude>
+                                    <exclude>META-INF/*.DSA</exclude>
+                                    <exclude>META-INF/*.RSA</exclude>
+                                    <exclude>META-INF/*.txt</exclude>
+                                    <exclude>META-INF/*.MF</exclude>
+                                    <exclude>META-INF/LICENSE</exclude>
+                                    <exclude>META-INF/NOTICE</exclude>
                                     <exclude>META-INF/LICENSE.md</exclude>
                                     <exclude>META-INF/NOTICE.md</exclude>
                                     <exclude>META-INF/DEPENDENCIES</exclude>
-                            </excludes>
+                                </excludes>
                             </filter>
                         </filters>
                     </configuration>
