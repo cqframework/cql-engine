@@ -430,7 +430,6 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeDifferenceMillis").getExpression().evaluate(context);
         assertThat(result, is(-5));
 
-        // TODO: Uncomment once translator issue https://github.com/cqframework/clinical_quality_language/issues/256 is resolved
         result = context.resolveExpressionRef("DifferenceInHoursA").getExpression().evaluate(context);
         assertThat(result, is(1));
 
@@ -545,7 +544,6 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeDurationBetweenMillis").getExpression().evaluate(context);
         assertThat(result, is(5));
 
-        // TODO: Uncomment once translator issue https://github.com/cqframework/clinical_quality_language/issues/256 is resolved
         result = context.resolveExpressionRef("DurationInHoursA").getExpression().evaluate(context);
         assertThat(result, is(1));
 
@@ -993,7 +991,6 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
     public void testTime() throws JAXBException {
         Context context = new Context(library);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("TimeTest2").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(23, 59, 59, 999)));
     }

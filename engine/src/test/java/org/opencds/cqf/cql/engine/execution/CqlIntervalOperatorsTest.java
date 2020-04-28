@@ -178,37 +178,37 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 10, true)));
-        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(12, true, 19, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(1, true, 10, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(12, true, 19, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(1, true, 19, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(1, true, 19, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse3").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(4, true, 8, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(4, true, 8, true)));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse4").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(4, true, 6, true)));
-        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(8, true, 10, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(4, true, 6, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(8, true, 10, true)));
 
         result = context.resolveExpressionRef("DecimalIntervalCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
-        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("10.0"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("12.0"), true, new BigDecimal("19.0"), true)));
 
         result = context.resolveExpressionRef("DecimalIntervalCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new BigDecimal("4.0"), true, new BigDecimal("8.0"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("4.0"), true, new BigDecimal("8.0"), true)));
 
         result = context.resolveExpressionRef("QuantityIntervalCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)((List) result).get(0)).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
-        Assert.assertTrue(((Interval)((List) result).get(1)).equal(new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("10.0")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new Quantity().withValue(new BigDecimal("12.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("19.0")).withUnit("g"), true)));
 
         BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new DateTime(offset, 2012, 1, 25)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getStart(), new DateTime(offset, 2012, 5, 10)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getEnd(), new DateTime(offset, 2012, 5, 30)));
-        assertThat(((List)result).size(), is(2));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new DateTime(offset, 2012, 1, 25)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getStart(), new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getEnd(), new DateTime(offset, 2012, 5, 30)));
+        assertThat(((List<?>)result).size(), is(2));
 
 //        result = context.resolveExpressionRef("DateTimeCollapse2").getExpression().evaluate(context);
 //        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new DateTime(offset, 2012, 1, 1)));
@@ -216,16 +216,16 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 //        assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("TimeCollapse").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getStart(), new Time(17, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(1)).getEnd(), new Time(22, 59, 59, 999)));
-        assertThat(((List)result).size(), is(2));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getStart(), new Time(17, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getEnd(), new Time(22, 59, 59, 999)));
+        assertThat(((List<?>)result).size(), is(2));
 
         result = context.resolveExpressionRef("TimeCollapse2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
-        assertThat(((List)result).size(), is(1));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new Time(1, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new Time(15, 59, 59, 999)));
+        assertThat(((List<?>)result).size(), is(1));
     }
 
     /**

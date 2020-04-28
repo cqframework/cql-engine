@@ -9,7 +9,6 @@ import org.opencds.cqf.cql.engine.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import javax.xml.bind.JAXBException;
 import java.math.BigDecimal;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -519,7 +518,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         try {
             result = context.resolveExpressionRef("PredecessorUnderflowT").getExpression().evaluate(context);
         } catch (RuntimeException re) {
-            assertThat(re.getMessage(), is("The result of the successor operation preceeds the minimum value allowed for the Time type"));
+            assertThat(re.getMessage(), is("The result of the successor operation precedes the minimum value allowed for the Time type"));
         }
     }
 

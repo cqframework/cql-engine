@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
 import org.fhir.ucum.Decimal;
-import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;

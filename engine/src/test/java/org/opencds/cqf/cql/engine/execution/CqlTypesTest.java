@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 public class CqlTypesTest extends CqlExecutionTestBase {
 
     @Test
+    @SuppressWarnings("serial")
     public void testAny() {
         Context context = new Context(library);
 

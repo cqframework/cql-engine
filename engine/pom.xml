@@ -34,6 +34,15 @@
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
         </dependency>
+        <!-- This depedency is adds to the javax.xml.namespace package which is not valid in Java 9+-->
+        <dependency>
+                <groupId>xpp3</groupId>
+                <artifactId>xpp3</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>xpp3</groupId>
+                <artifactId>xpp3_xpath</artifactId>
+            </dependency>
     </dependencies>
     <build>
         <plugins>

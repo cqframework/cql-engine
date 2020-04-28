@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.is;
 import java.math.BigDecimal;
 import java.time.format.DateTimeParseException;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.AsEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
