@@ -1,4 +1,4 @@
-package org.opencds.cqf.cql.elm.execution;
+package org.opencds.cqf.cql.engine.elm.execution;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -151,6 +151,7 @@ import org.cqframework.cql.elm.execution.*;
     @Type(value = TimeFromEvaluator.class, name = "TimeFrom"),
     @Type(value = TimeOfDayEvaluator.class, name = "TimeOfDay"),
     @Type(value = TimezoneFromEvaluator.class, name = "TimezoneFrom"),
+    @Type(value = TimezoneOffsetFromEvaluator.class, name = "TimezoneOffsetFrom"),
     @Type(value = ToBooleanEvaluator.class, name = "ToBoolean"),
     @Type(value = ToConceptEvaluator.class, name = "ToConcept"),
     @Type(value = ToDateEvaluator.class, name = "ToDate"),

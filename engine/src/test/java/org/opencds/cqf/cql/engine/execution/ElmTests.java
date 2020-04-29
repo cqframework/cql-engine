@@ -10,9 +10,9 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.elm.execution.ExpressionDefEvaluator;
-import org.opencds.cqf.cql.elm.execution.RetrieveEvaluator;
-import org.opencds.cqf.cql.elm.execution.SingletonFromEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.ExpressionDefEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.RetrieveEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.SingletonFromEvaluator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
