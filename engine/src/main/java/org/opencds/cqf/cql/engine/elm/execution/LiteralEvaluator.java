@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import javax.xml.namespace.QName;
 import java.math.BigDecimal;
 
 import org.opencds.cqf.cql.engine.exception.CqlException;
@@ -10,7 +11,8 @@ public class LiteralEvaluator extends org.cqframework.cql.elm.execution.Literal 
 
     @Override
     protected Object internalEvaluate(Context context) {
-        switch (this.getValueType().getLocalPart()) {
+        QName valueType = context.fixupQName(this.getValueType());
+        switch (valueType.getLocalPart()) {
             case "Boolean": return Boolean.parseBoolean(this.getValue());
             case "Integer":
                 int intValue;
@@ -30,7 +32,7 @@ public class LiteralEvaluator extends org.cqframework.cql.elm.execution.Literal 
                 }
                 return bigDecimalValue;
             case "String": return this.getValue();
-            default: throw new InvalidLiteral(String.format("Cannot construct literal value for type '%s'.", this.getValueType().toString()));
+            default: throw new InvalidLiteral(String.format("Cannot construct literal value for type '%s'.", valueType.toString()));
         }
     }
 }

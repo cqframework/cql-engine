@@ -1905,6 +1905,18 @@ If the argument is null, the result is null.</xs:documentation>
 			<xs:extension base="UnaryExpression"/>
 		</xs:complexContent>
 	</xs:complexType>
+	<!-- NOTE: This class is _not_ part of 1.4 ELM, it is included for backwards compatibility.
+	The TimezoneFrom operator in ELM was renamed to TimezoneOffsetFrom -->
+	<xs:complexType name="TimezoneFrom">
+		<xs:annotation>
+			<xs:documentation>The TimezoneFrom operator returns the timezone offset of the argument.
+
+				If the argument is null, the result is null.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="UnaryExpression"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="TimezoneOffsetFrom">
 		<xs:annotation>
 			<xs:documentation>The TimezoneOffsetFrom operator returns the timezone offset of the argument.
