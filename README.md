@@ -13,9 +13,9 @@ This repository uses stable trunk methodology:
 |Branch|Description|Status|Version
 |----|----|----|----|
 |v12|CQL 1.2 Engine|Maintenance|1.2.20|
-|master|CQL 1.3 Engine|Release|1.3.11|
-|develop|CQL 1.3 Engine|Snapshot|1.3.12-SNAPSHOT|
-|&lt;feature&gt;|CQL 1.3 Engine|_as needed_|&lt;version&gt;-SNAPSHOT|
+|master|CQL 1.3 Engine|Release|1.3.12.2|
+|develop|CQL 1.4 Engine|Snapshot|1.4.0-SNAPSHOT|
+|&lt;feature&gt;|CQL 1.4 Engine|_as needed_|&lt;version&gt;-SNAPSHOT|
 
 # Commit Policy
 
