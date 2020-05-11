@@ -243,7 +243,7 @@ public class CqlEngine {
 
         // TODO: Removed this validation pending more intelligent handling at the service layer
         // For example, providing a mock or dummy data provider in the event there's no data store
-        this.validateDataRequirements(library);
+        // this.validateDataRequirements(library);
         this.validateTerminologyRequirements(library);
 
 
