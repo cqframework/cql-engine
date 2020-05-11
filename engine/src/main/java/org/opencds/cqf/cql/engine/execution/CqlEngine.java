@@ -252,7 +252,7 @@ public class CqlEngine {
 
         if (library.getIncludes() != null && library.getIncludes().getDef() != null) {
             for (IncludeDef include : library.getIncludes().getDef()) {
-                this.loadAndValidate(libraryCache, new VersionedIdentifier().withId(include.getLocalIdentifier()).withVersion(include.getVersion()));
+                this.loadAndValidate(libraryCache, new VersionedIdentifier().withId(include.getPath()).withVersion(include.getVersion()));
             }
         }
 
