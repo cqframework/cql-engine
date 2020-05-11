@@ -144,6 +144,14 @@ public class TestR4ModelResolver {
 
         // These are known glitches in the ModelInfo
         resolver.resolveType("vConfidentialityClassification");
+
+        // This is a mapping for a value set that doesn't have a first-class enumeration
+        resolver.resolveType("CurrencyCode");
+        resolver.resolveType("MedicationAdministrationStatus");
+        resolver.resolveType("MedicationDispenseStatus");
+        resolver.resolveType("MedicationKnowledgeStatus");
+        resolver.resolveType("Messageheader_Response_Request");
+        resolver.resolveType("MimeType");
     }
 
     // This tests all the types that are present in the ModelInfo

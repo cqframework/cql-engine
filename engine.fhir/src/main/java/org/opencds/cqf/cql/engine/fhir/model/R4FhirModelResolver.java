@@ -36,7 +36,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
         // The context loads Resources on demand which can cause resolution to fail in certain cases
         // This forces all Resource types to be loaded.
-        for (Enumerations.ResourceType type :Enumerations.ResourceType.values()) {
+        for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
                 case DOMAINRESOURCE:
@@ -114,7 +114,15 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             case "ClaimProcessingCodes": typeName = "ClaimResponse$RemittanceOutcome"; break;
             case "vConfidentialityClassification": typeName = "Composition$DocumentConfidentiality"; break;
             case "ContractResourcePublicationStatusCodes": typeName = "Contract$ContractPublicationStatus"; break;
+            // CodeTypes - Bug in HAPI 4.2
+            case "CurrencyCode" : typeName = "CodeType"; break;
+            case "MedicationAdministrationStatus": typeName = "CodeType"; break;
+            case "MedicationDispenseStatus": typeName = "CodeType"; break;
+            case "MedicationKnowledgeStatus": typeName = "CodeType"; break;
+            case "Messageheader_Response_Request": typeName = "CodeType"; break;
+            case "MimeType": typeName = "CodeType"; break;
         }
+
 
         return super.resolveType(typeName);
     }
