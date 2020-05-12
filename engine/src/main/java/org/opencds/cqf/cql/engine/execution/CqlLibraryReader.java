@@ -26,7 +26,7 @@ public class CqlLibraryReader {
     private static Unmarshaller unmarshaller;
 
     // Performance enhancement additions ~ start
-    public static Unmarshaller getUnmarshaller() throws JAXBException {
+    public synchronized static Unmarshaller getUnmarshaller() throws JAXBException {
         // This is supposed to work based on this link:
         // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
         // Override the unmarshal to use the XXXEvaluator classes
@@ -77,7 +77,7 @@ public class CqlLibraryReader {
     }
 
     @SuppressWarnings("unchecked")
-    public static Library read(Unmarshaller u, Source source) throws JAXBException {
+    public synchronized static Library read(Unmarshaller u, Source source) throws JAXBException {
         Object result = u.unmarshal(source);
         return ((JAXBElement<Library>)result).getValue();
     }
@@ -108,7 +108,7 @@ public class CqlLibraryReader {
     }
 
     @SuppressWarnings("unchecked")
-    public static Library read(Source source) throws JAXBException {
+    public synchronized static Library read(Source source) throws JAXBException {
         Unmarshaller u = getUnmarshaller();
         Object result = u.unmarshal(source);
         return ((JAXBElement<Library>)result).getValue();
