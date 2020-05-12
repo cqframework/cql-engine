@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.execution;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.cqframework.cql.elm.execution.ExpressionDef;
@@ -45,8 +46,6 @@ public class CqlEngine {
     private TerminologyProvider terminologyProvider;
     private EnumSet<Options> engineOptions;
 
-    private Map<VersionedIdentifier, Library> libraryCache;
-
     public CqlEngine(LibraryLoader libraryLoader) {
         this(libraryLoader, null, null, null);
     }
@@ -73,7 +72,6 @@ public class CqlEngine {
         this.dataProviders = dataProviders;
         this.terminologyProvider = terminologyProvider;
         this.engineOptions = engineOptions;
-        this.libraryCache = new HashMap<>();
     }
 
     // TODO: Add debugging info as a parameter.
@@ -139,21 +137,21 @@ public class CqlEngine {
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
         // TODO: Figure out way to validate / invalidate library cache
-        this.libraryCache.clear();
+        Map<VersionedIdentifier, Library> libraryCache = new HashMap<>();
         
         if (libraryIdentifier == null) {
             throw new IllegalArgumentException("libraryIdentifier can not be null.");
         }
 
-        Library library = this.loadAndValidate(this.libraryCache, libraryIdentifier);
+        Library library = this.loadAndValidate(libraryCache, libraryIdentifier);
 
         if (expressions == null) {
             expressions = this.getExpressionSet(library);
         }
 
         // TODO: Some testing to see if it's more performant to reset a context rather than create a new one.
-        Context context = this.initializeContext(library);
-        this.setParametersForContext(context, contextParameter, parameters);
+        Context context = this.initializeContext(libraryCache, library);
+        this.setParametersForContext(libraryCache, context, contextParameter, parameters);
 
         return this.evaluateExpressions(context, expressions);
     }
@@ -184,13 +182,13 @@ public class CqlEngine {
         return result;
     }
 
-    private void setParametersForContext(Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
+    private void setParametersForContext(Map<VersionedIdentifier, Library> libraryCache, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
         if (contextParameter != null) {
             context.setContextValue(contextParameter.getLeft(), contextParameter.getRight());
         }
 
         if (parameters != null) {
-            for (VersionedIdentifier identifier : this.libraryCache.keySet()) {
+            for (VersionedIdentifier identifier : libraryCache.keySet()) {
                 for (Map.Entry<String, Object> parameterValue : parameters.entrySet()) {
                     context.setParameter(identifier.getId(), parameterValue.getKey(), parameterValue.getValue());
                 }
@@ -198,14 +196,14 @@ public class CqlEngine {
         }
     }
 
-    private Context initializeContext(Library library) {
+    private Context initializeContext(Map<VersionedIdentifier, Library> libraryCache, Library library) {
         // Context requires an initial library to init properly.
         // TODO: Allow context to be initialized with multiple libraries
         Context context = new Context(library);
 
         // TODO: Does the context actually need a library loaded if all the libraries are prefetched?
         // We'd have to make sure we include the dependencies too.
-        context.registerLibraryLoader(new InMemoryLibraryLoader(this.libraryCache.values()));
+        context.registerLibraryLoader(new InMemoryLibraryLoader(libraryCache.values()));
 
         if (this.engineOptions.contains(Options.EnableExpressionCaching)) {
             context.setExpressionCaching(true);
@@ -229,11 +227,8 @@ public class CqlEngine {
         if (libraryCache.containsKey(libraryIdentifier)) {
             return libraryCache.get(libraryIdentifier);
         }
-        else
-        {
-            library = this.libraryLoader.load(libraryIdentifier);
-            libraryCache.put(libraryIdentifier, library);
-        }
+
+        library = this.libraryLoader.load(libraryIdentifier);
 
         if (library == null) {
             throw new IllegalArgumentException(String.format("Unable to load library %s", 
@@ -255,6 +250,7 @@ public class CqlEngine {
             }
         }
 
+        libraryCache.put(libraryIdentifier, library);
         return library;
     }
 
