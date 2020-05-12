@@ -227,7 +227,7 @@ public class CqlEngine {
     private Library loadAndValidate(Map<VersionedIdentifier, Library> libraryCache, VersionedIdentifier libraryIdentifier) {
         Library library;
         if (libraryCache.containsKey(libraryIdentifier)) {
-            library = libraryCache.get(libraryIdentifier);
+            return libraryCache.get(libraryIdentifier);
         }
         else
         {
