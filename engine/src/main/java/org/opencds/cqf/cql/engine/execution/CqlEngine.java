@@ -138,6 +138,9 @@ public class CqlEngine {
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
+        // TODO: Figure out way to validate / invalidate library cache
+        this.libraryCache.clear();
+        
         if (libraryIdentifier == null) {
             throw new IllegalArgumentException("libraryIdentifier can not be null.");
         }
