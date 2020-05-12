@@ -1,10 +1,6 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.cqframework.cql.elm.execution.ExpressionDef;
@@ -297,7 +293,7 @@ public class CqlEngine {
     }
 
     private Set<String> getExpressionSet(Library library) {
-        Set<String> expressionNames = new HashSet<>();
+        Set<String> expressionNames = new LinkedHashSet<>();
         if (library.getStatements() != null && library.getStatements().getDef() != null) {
             for (ExpressionDef ed : library.getStatements().getDef()) {
                 expressionNames.add(ed.getName());
