@@ -22,6 +22,7 @@ import javax.xml.bind.Marshaller;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.CqlTranslatorException.ErrorSeverity;
 import org.cqframework.cql.cql2elm.LibraryBuilder.SignatureLevel;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -166,7 +167,7 @@ public class CqlEngineTests {
         List<CqlTranslatorException> errors = new ArrayList<>();
         List<Library> executableLibraries = new ArrayList<>();
         for (org.hl7.elm.r1.VersionedIdentifier id : libraries.keySet()) {
-            TranslatedLibrary translated = libraryManager.resolveLibrary(id, ErrorSeverity.Error, SignatureLevel.All, new CqlTranslator.Options[0], errors);
+            TranslatedLibrary translated = libraryManager.resolveLibrary(id, CqlTranslatorOptions.defaultOptions(), errors);
             String xml = this.convertToXml(translated.getLibrary());
             executableLibraries.add(this.readXml(xml));
         }

@@ -1,10 +1,16 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.testng.AssertJUnit.assertTrue;
+import static org.hamcrest.Matchers.is;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.cqframework.cql.cql2elm.ModelManager;
@@ -36,6 +42,7 @@ import org.hl7.fhir.r4.model.Enumerations.ResourceType;
 import org.hl7.fhir.r4.model.Enumerations.SearchParamType;
 import org.hl7.fhir.r4.model.Enumerations.SpecialValues;
 import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.VisionPrescription;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
@@ -154,9 +161,8 @@ public class TestR4ModelResolver {
         resolver.resolveType("MimeType");
     }
 
-    // This tests all the types that are present in the ModelInfo
      @Test
-    public void resolveModelInfoTests() {
+    public void modelInfo400Tests() {
         ModelResolver resolver = new R4FhirModelResolver();
         ModelManager mm = new ModelManager();
         Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.0"));
@@ -179,7 +185,52 @@ public class TestR4ModelResolver {
 
 
                 // TODO: The cause of failure for this is unknown.
-                // Need to figure out if it's a gap in happy,
+                // Need to figure out if it's a gap in HAPI,
+                // or if a manual mapping is required, or what.
+                switch(ci.getName()) {
+                    case "ItemInstance" : continue;
+                }
+
+                resolver.resolveType(ci.getName());
+            }
+        }
+    }
+
+    @Test
+    public void modelInfo401Tests() throws Exception {
+        ModelResolver resolver = new R4FhirModelResolver();
+        ModelManager mm = new ModelManager();
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.1"));
+
+        List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
+
+        for (TypeInfo ti : typeInfos) {
+            ClassInfo ci = (ClassInfo)ti;
+            if (ci != null) {
+
+                switch (ci.getName()) {
+                    // TODO: HAPI Doesn't have a ResourceContainer type
+                    case "ResourceContainer": continue;
+                    // Bugs in 4.0.1 model info
+                    case "DataElement constraint on ElementDefinition data type": continue;
+                    case "question": continue;
+                }
+
+                // Also bugs in the 4.0.1 model info
+                if (ci.getBaseType() == null) {
+                    continue;
+                }
+
+               
+
+                switch (ci.getBaseType()) {
+                    // Abstract classes
+                    case "FHIR.BackboneElement":
+                    case "FHIR.Element": continue;
+                }
+
+                // TODO: The cause of failure for this is unknown.
+                // Need to figure out if it's a gap in HAPI,
                 // or if a manual mapping is required, or what.
                 switch(ci.getName()) {
                     case "ItemInstance" : continue;
@@ -283,5 +334,38 @@ public class TestR4ModelResolver {
 
         Object result = resolver.resolvePath(p, "not-a-path");
         assertNull(result);
+    }
+
+    @Test 
+    public void resolveIdPropertyReturnsString() {
+        ModelResolver resolver = new R4FhirModelResolver();
+        
+        Patient p = new Patient();
+        p.setId("5");
+        var idType = p.getIdElement();
+
+        Object result = resolver.resolvePath(p, "id");
+        assertNotNull(result);
+        assertThat(result, is(idType));
+
+        result = resolver.resolvePath(p, "id.value");
+        assertNotNull(result);
+        assertThat(result, is("5"));
+    }
+
+    @Test
+    public void resolveDateTimeProviderReturnsDate() {
+
+        ModelResolver resolver = new R4FhirModelResolver();
+        
+        VisionPrescription vp = new VisionPrescription();
+        var time = new GregorianCalendar(1999, 3, 31).getTime();
+        vp.setDateWritten(time);
+
+        var dateTimeType = vp.getDateWrittenElement();
+
+        Object result = resolver.resolvePath(vp, "dateWritten");
+        assertNotNull(result);
+        assertThat(result, is(dateTimeType));
     }
 }
