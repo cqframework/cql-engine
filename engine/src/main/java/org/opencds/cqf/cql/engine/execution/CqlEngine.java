@@ -238,7 +238,7 @@ public class CqlEngine {
 
         if (library == null) {
             throw new IllegalArgumentException(String.format("Unable to load library %s", 
-                libraryIdentifier.getId() + libraryIdentifier.getVersion() != null ? "-" + libraryIdentifier.getVersion() : ""));
+                libraryIdentifier.getId() + (libraryIdentifier.getVersion() != null ? "-" + libraryIdentifier.getVersion() : "")));
         }
 
         // TODO: Removed this validation pending more intelligent handling at the service layer
