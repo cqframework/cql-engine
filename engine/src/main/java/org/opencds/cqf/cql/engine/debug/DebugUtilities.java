@@ -35,6 +35,10 @@ public class DebugUtilities {
             return sb.toString();
         }
 
-        return result.toString();
+        if (result != null) {
+            return result.toString();
+        }
+
+        return "<null>";
     }
 }
