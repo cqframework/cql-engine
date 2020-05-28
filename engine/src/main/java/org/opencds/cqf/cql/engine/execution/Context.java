@@ -34,6 +34,7 @@ import org.opencds.cqf.cql.engine.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.engine.data.SystemDataProvider;
 import org.opencds.cqf.cql.engine.debug.DebugMap;
 import org.opencds.cqf.cql.engine.debug.DebugResult;
+import org.opencds.cqf.cql.engine.debug.DebugUtilities;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.runtime.Precision;
@@ -114,6 +115,10 @@ public class Context {
     public void logDebugResult(Executable node, Object result) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result);
+
+        if (debugMap.getIsLoggingEnabled()) {
+            DebugUtilities.logDebugResult(node, this.getCurrentLibrary(), result);
+        }
     }
 
     public Context(Library library) {

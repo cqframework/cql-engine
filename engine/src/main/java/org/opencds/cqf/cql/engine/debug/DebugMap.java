@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DebugMap {
+
     private Map<String, DebugLibraryMapEntry> libraryMaps;
 
     public DebugMap() {
@@ -14,6 +15,11 @@ public class DebugMap {
     }
 
     public boolean shouldDebug(Executable node, Library currentLibrary) {
+        // TODO: Hack for now to enable verbose logging
+        if (isLoggingEnabled) {
+            return true;
+        }
+
         DebugLibraryMapEntry libraryMapEntry = libraryMaps.get(currentLibrary.getIdentifier().getId());
         if (libraryMapEntry != null) {
             return libraryMapEntry.shouldDebug(node);
@@ -24,5 +30,13 @@ public class DebugMap {
 
     public void addLibraryMapEntry(String libraryName, DebugLibraryMapEntry libraryMapEntry) {
         libraryMaps.put(libraryName, libraryMapEntry);
+    }
+
+    private boolean isLoggingEnabled;
+    public boolean getIsLoggingEnabled() {
+        return isLoggingEnabled;
+    }
+    public void setIsLoggingEnabled(boolean isLoggingEnabled) {
+        this.isLoggingEnabled = isLoggingEnabled;
     }
 }
