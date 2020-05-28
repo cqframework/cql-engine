@@ -15,8 +15,9 @@ public class DebugLibraryResultEntry {
         return this.libraryName;
     }
 
-    public DebugLibraryResultEntry() {
-        results = new HashMap<String, List<DebugResultEntry>>();
+    public DebugLibraryResultEntry(String libraryName) {
+        this.libraryName = libraryName;
+        this.results = new HashMap<String, List<DebugResultEntry>>();
     }
 
     private Map<String, List<DebugResultEntry>> results;
