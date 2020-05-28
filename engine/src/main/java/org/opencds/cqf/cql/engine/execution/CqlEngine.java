@@ -11,6 +11,7 @@ import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.UsingDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.data.DataProvider;
+import org.opencds.cqf.cql.engine.debug.DebugMap;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
@@ -104,38 +105,38 @@ public class CqlEngine {
     }
 
     public EvaluationResult evaluate(String libraryName, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
-        return this.evaluate(new VersionedIdentifier().withId(libraryName), expressions, contextParameter, parameters);
+        return this.evaluate(new VersionedIdentifier().withId(libraryName), expressions, contextParameter, parameters, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier) {
-        return this.evaluate(libraryIdentifier, null, null, null);
+        return this.evaluate(libraryIdentifier, null, null, null, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions) {
-        return this.evaluate(libraryIdentifier, expressions, null, null);
+        return this.evaluate(libraryIdentifier, expressions, null, null, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter) {
-        return this.evaluate(libraryIdentifier, expressions, contextParameter, null);
+        return this.evaluate(libraryIdentifier, expressions, contextParameter, null, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Map<String, Object> parameters) {
-        return this.evaluate(libraryIdentifier, expressions, null, parameters);
+        return this.evaluate(libraryIdentifier, expressions, null, parameters, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Pair<String, Object> contextParameter) {
-        return this.evaluate(libraryIdentifier, null, contextParameter, null);
+        return this.evaluate(libraryIdentifier, null, contextParameter, null, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
-        return this.evaluate(libraryIdentifier, null, contextParameter, parameters);
+        return this.evaluate(libraryIdentifier, null, contextParameter, parameters, null);
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Map<String, Object> parameters) {
-        return this.evaluate(libraryIdentifier, null, null, parameters);
+        return this.evaluate(libraryIdentifier, null, null, parameters, null);
     }
 
-    public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
+    public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters, DebugMap debugMap) {
         // TODO: Figure out way to validate / invalidate library cache
         Map<VersionedIdentifier, Library> libraryCache = new HashMap<>();
         
@@ -150,7 +151,7 @@ public class CqlEngine {
         }
 
         // TODO: Some testing to see if it's more performant to reset a context rather than create a new one.
-        Context context = this.initializeContext(libraryCache, library);
+        Context context = this.initializeContext(libraryCache, library, debugMap);
         this.setParametersForContext(libraryCache, context, contextParameter, parameters);
 
         return this.evaluateExpressions(context, expressions);
@@ -196,7 +197,7 @@ public class CqlEngine {
         }
     }
 
-    private Context initializeContext(Map<VersionedIdentifier, Library> libraryCache, Library library) {
+    private Context initializeContext(Map<VersionedIdentifier, Library> libraryCache, Library library, DebugMap debugMap) {
         // Context requires an initial library to init properly.
         // TODO: Allow context to be initialized with multiple libraries
         Context context = new Context(library);
@@ -218,6 +219,8 @@ public class CqlEngine {
                 context.registerDataProvider(pair.getKey(), pair.getValue());
             }
         }
+
+        context.setDebugMap(debugMap);
 
         return context;
     }
