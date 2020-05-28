@@ -8,8 +8,25 @@ import org.opencds.cqf.cql.engine.runtime.CqlType;
 public class DebugUtilities {
     public static void logDebugResult(Executable node, Library currentLibrary, Object result) {
         System.out.printf("%s.%s: %s%n", currentLibrary != null ? currentLibrary.getIdentifier().getId() : "unknown",
-                node instanceof Element ? ((Element)node).getLocalId() : node.getClass().toString(),
+                toDebugLocation(node),
                 toDebugString(result));
+    }
+
+    public static String toDebugLocation(Executable node) {
+        String result = "";
+        if (node instanceof Element) {
+            Element element = (Element)node;
+            if (element.getLocator() != null) {
+                result = element.getLocator();
+            }
+            if (element.getLocalId() != null) {
+                result += "(" + element.getLocalId() + ")";
+            }
+        }
+        else {
+            result = node.getClass().toString();
+        }
+        return result;
     }
 
     public static String toDebugString(Object result) {
