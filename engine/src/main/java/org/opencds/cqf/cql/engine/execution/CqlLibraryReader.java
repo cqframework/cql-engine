@@ -16,7 +16,6 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 
 import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.ObjectFactory;
 import org.opencds.cqf.cql.engine.elm.execution.ObjectFactoryEx;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 
@@ -27,26 +26,13 @@ public class CqlLibraryReader {
 
     // Performance enhancement additions ~ start
     public synchronized static Unmarshaller getUnmarshaller() throws JAXBException {
-        // This is supposed to work based on this link:
-        // https://jaxb.java.net/2.2.11/docs/ch03.html#compiling-xml-schema-adding-behaviors
-        // Override the unmarshal to use the XXXEvaluator classes
-        // This doesn't work exactly how it's described in the link above, but this is functional
         if (context == null)
         {
-            context = JAXBContext.newInstance(ObjectFactory.class);
+            context = JAXBContext.newInstance(ObjectFactoryEx.class);
         }
 
         if (unmarshaller == null) {
             unmarshaller = context.createUnmarshaller();
-            try {
-                // https://bugs.eclipse.org/bugs/show_bug.cgi?id=406032
-                //https://javaee.github.io/jaxb-v2/doc/user-guide/ch03.html#compiling-xml-schema-adding-behaviors
-                // for jre environment
-                unmarshaller.setProperty("com.sun.xml.bind.ObjectFactory", new ObjectFactoryEx());
-            } catch (javax.xml.bind.PropertyException e) {
-                // for jdk environment
-                unmarshaller.setProperty("com.sun.xml.internal.bind.ObjectFactory", new ObjectFactoryEx());
-            }
         }
 
         return unmarshaller;
@@ -107,11 +93,8 @@ public class CqlLibraryReader {
         return read(toSource(reader));
     }
 
-    @SuppressWarnings("unchecked")
     public synchronized static Library read(Source source) throws JAXBException {
-        Unmarshaller u = getUnmarshaller();
-        Object result = u.unmarshal(source);
-        return ((JAXBElement<Library>)result).getValue();
+        return read(getUnmarshaller(), source);
     }
 
     /**
