@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.NotImplementedException;
+import org.opencds.cqf.cql.engine.debug.DebugAction;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.Context;
 
@@ -11,9 +12,10 @@ public class Executable
     public Object evaluate(Context context) throws CqlException
     {
         try {
+            DebugAction action = context.shouldDebug(this);
             Object result = internalEvaluate(context);
-            if (context.shouldDebug(this)) {
-                context.logDebugResult(this, result);
+            if (action != DebugAction.NONE) {
+                context.logDebugResult(this, result, action);
             }
             return result;
         }

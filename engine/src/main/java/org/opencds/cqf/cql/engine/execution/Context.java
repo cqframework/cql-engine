@@ -32,9 +32,7 @@ import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.engine.data.SystemDataProvider;
-import org.opencds.cqf.cql.engine.debug.DebugMap;
-import org.opencds.cqf.cql.engine.debug.DebugResult;
-import org.opencds.cqf.cql.engine.debug.DebugUtilities;
+import org.opencds.cqf.cql.engine.debug.*;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.runtime.Precision;
@@ -98,9 +96,9 @@ public class Context {
         return this.debugResult;
     }
 
-    public boolean shouldDebug(Executable node) {
+    public DebugAction shouldDebug(Executable node) {
         if (this.debugMap == null) {
-            return false;
+            return DebugAction.NONE;
         }
 
         return debugMap.shouldDebug(node, this.getCurrentLibrary());
@@ -112,13 +110,9 @@ public class Context {
         }
     }
 
-    public void logDebugResult(Executable node, Object result) {
+    public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
-        debugResult.logDebugResult(node, this.getCurrentLibrary(), result);
-
-        if (debugMap.getIsLoggingEnabled()) {
-            DebugUtilities.logDebugResult(node, this.getCurrentLibrary(), result);
-        }
+        debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
     }
 
     public Context(Library library) {

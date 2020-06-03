@@ -13,7 +13,7 @@ public class DebugResult {
         libraryResults = new HashMap<String, DebugLibraryResultEntry>();
     }
 
-    public void logDebugResult(Executable node, Library currentLibrary, Object result) {
+    public void logDebugResult(Executable node, Library currentLibrary, Object result, DebugAction action) {
         try {
             DebugLibraryResultEntry libraryResultEntry = libraryResults.get(currentLibrary.getIdentifier().getId());
             if (libraryResultEntry == null) {
@@ -22,6 +22,10 @@ public class DebugResult {
             }
             if (libraryResultEntry != null) {
                 libraryResultEntry.logDebugResultEntry(node, result);
+            }
+
+            if (action == DebugAction.LOG) {
+                DebugUtilities.logDebugResult(node, currentLibrary, result);
             }
         }
         catch (Exception e) {
