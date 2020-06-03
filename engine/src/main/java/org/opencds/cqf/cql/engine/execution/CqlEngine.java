@@ -180,6 +180,8 @@ public class CqlEngine {
             result.expressionResults.put(expression, object);
         }
 
+        result.setDebugResult(context.getDebugResult());
+
         return result;
     }
 

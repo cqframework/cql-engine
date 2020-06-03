@@ -17,17 +17,35 @@ public class DebugLibraryResultEntry {
 
     public DebugLibraryResultEntry(String libraryName) {
         this.libraryName = libraryName;
-        this.results = new HashMap<String, List<DebugResultEntry>>();
+        this.results = new HashMap<DebugLocator, List<DebugResultEntry>>();
     }
 
-    private Map<String, List<DebugResultEntry>> results;
+    private Map<DebugLocator, List<DebugResultEntry>> results;
+
+    private void logDebugResult(DebugLocator locator, Object result) {
+        if (!results.containsKey(locator)) {
+            results.put(locator, new ArrayList<DebugResultEntry>());
+        }
+        List<DebugResultEntry> debugResults = results.get(locator);
+        debugResults.add(new DebugResultEntry(result));
+    }
 
     public void logDebugResultEntry(Executable node, Object result) {
-        String nodeId = ((Element)node).getLocalId();
-        if (!results.containsKey(nodeId)) {
-            results.put(nodeId, new ArrayList<DebugResultEntry>());
+        if (node instanceof Element) {
+            Element element = (Element)node;
+            if (element.getLocalId() != null) {
+                DebugLocator locator = new DebugLocator(DebugLocator.DebugLocatorType.NODE_ID, element.getLocalId());
+                logDebugResult(locator, result);
+            }
+
+            if (element.getLocator() != null) {
+                DebugLocator locator = new DebugLocator(Location.fromLocator(element.getLocator()));
+                logDebugResult(locator, result);
+            }
         }
-        List<DebugResultEntry> debugResults = results.get(nodeId);
-        debugResults.add(new DebugResultEntry(result));
+        else {
+            DebugLocator locator = new DebugLocator(DebugLocator.DebugLocatorType.NODE_TYPE, node.getClass().getSimpleName());
+            logDebugResult(locator, result);
+        }
     }
 }

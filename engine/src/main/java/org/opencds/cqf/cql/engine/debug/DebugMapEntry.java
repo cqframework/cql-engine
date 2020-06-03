@@ -1,12 +1,21 @@
 package org.opencds.cqf.cql.engine.debug;
 
 public class DebugMapEntry {
-    private String nodeId;
-    public String getNodeId() {
-        return this.nodeId;
+    private DebugLocator locator;
+    public DebugLocator getLocator() {
+        return locator;
     }
 
-    public DebugMapEntry(String nodeId) {
-        this.nodeId = nodeId;
+    private DebugAction action;
+    public DebugAction getAction() {
+        return this.action;
+    }
+
+    public DebugMapEntry(DebugLocator locator, DebugAction action) {
+        if (locator == null) {
+            throw new IllegalArgumentException("locator required");
+        }
+        this.locator = locator;
+        this.action = action;
     }
 }
