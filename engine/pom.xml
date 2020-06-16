@@ -66,8 +66,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <source>11</source>
-                    <subpackages>org.opencds.cqf.cql.engine</subpackages>
                     <excludePackageNames>org.cqframework.*</excludePackageNames>
                     <!-- There's a bug where the org.cqframework is not being excluded correctly, so this skips linting -->
                     <additionalOptions>

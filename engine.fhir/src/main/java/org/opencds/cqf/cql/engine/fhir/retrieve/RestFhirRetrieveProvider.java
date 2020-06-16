@@ -9,6 +9,7 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
+import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.param.TokenParam;
 
@@ -64,7 +65,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 			throw new IllegalArgumentException(String.format("Error querying %s. Queries by id must not have any other search criteria.", dataType));
 		}
 
-		var tokenList = map.get("_id").get(0);
+		List<IQueryParameterType> tokenList = map.get("_id").get(0);
 		if (tokenList == null || tokenList.isEmpty()) {
 			throw new IllegalArgumentException(String.format("Error querying %s. Attempted query by id but no id was specified.", dataType));
 		}
@@ -73,12 +74,12 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 			throw new IllegalArgumentException(String.format("Error querying %s. Attempted query by id but multiple ids were specified.", dataType));
 		}
 
-		var param = tokenList.get(0);
+		IQueryParameterType param = tokenList.get(0);
 		if (!(param instanceof TokenParam)) {
 			throw new IllegalArgumentException(String.format("Error querying %s. Attempted query by id but a non-token parameter was given.", dataType));
 		}
 
-		var id = ((TokenParam)param).getValue();
+		String id = ((TokenParam)param).getValue();
 
 		if (id == null) {
 			throw new IllegalArgumentException(String.format("Error querying %s. Attempted query by id but id was null.", dataType));

@@ -18,7 +18,9 @@ import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
+import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Enumerations.AbstractType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Enumerations.AgeUnits;
@@ -342,7 +344,7 @@ public class TestR4ModelResolver {
         
         Patient p = new Patient();
         p.setId("5");
-        var idType = p.getIdElement();
+        IdType idType = p.getIdElement();
 
         Object result = resolver.resolvePath(p, "id");
         assertNotNull(result);
@@ -359,10 +361,10 @@ public class TestR4ModelResolver {
         ModelResolver resolver = new R4FhirModelResolver();
         
         VisionPrescription vp = new VisionPrescription();
-        var time = new GregorianCalendar(1999, 3, 31).getTime();
+        Date time = new GregorianCalendar(1999, 3, 31).getTime();
         vp.setDateWritten(time);
 
-        var dateTimeType = vp.getDateWrittenElement();
+        DateTimeType dateTimeType = vp.getDateWrittenElement();
 
         Object result = resolver.resolvePath(vp, "dateWritten");
         assertNotNull(result);

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.cqframework.cql.elm.execution.*;
-import org.opencds.cqf.cql.elm.execution.LibraryWrapper;
+import org.opencds.cqf.cql.engine.elm.execution.LibraryWrapper;
 
 import java.io.IOException;
 import java.io.Reader;
