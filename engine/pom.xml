@@ -23,8 +23,8 @@
             <artifactId>jaxb2-basics</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
         </dependency>
         <dependency>
             <groupId>com.google.code.findbugs</groupId>

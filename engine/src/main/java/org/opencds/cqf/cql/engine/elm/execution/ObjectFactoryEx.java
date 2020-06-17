@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
+import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.*;
 
@@ -551,4 +554,12 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Xor createXor() { return new XorEvaluator(); }
+
+    // The JAXB implementations does not recursively search the superclass for annotations
+    @Override
+    @XmlElementDecl(namespace = "urn:hl7-org:elm:r1", name = "library")
+    public JAXBElement<Library> createLibrary(Library value) {
+        return new JAXBElement<Library>(new QName("urn:hl7-org:elm:r1", "library"), Library.class, null, value);
+    }
+
 }
