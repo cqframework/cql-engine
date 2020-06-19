@@ -92,9 +92,9 @@
             </dependency>
 
             <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>2.4.0-b180830.0438</version>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>org.eclipse.persistence.moxy</artifactId>
+                <version>2.7.7</version>
             </dependency>
 
             <dependency>
@@ -204,17 +204,6 @@
                 <!-- The scope of this dependency must remain as test.
             There is an intentional separation between the CQL translator and the CQL engine -->
                 <scope>test</scope>
-                <!-- These are excluded because the engine is using the org.glassfish implmentation of jaxb, at a newer version -->
-                <exclusions>
-                    <exclusion>
-                        <groupId>com.sun.xml.bind</groupId>
-                        <artifactId>jaxb-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.sun.xml.bind</groupId>
-                        <artifactId>jaxb-impl</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>
