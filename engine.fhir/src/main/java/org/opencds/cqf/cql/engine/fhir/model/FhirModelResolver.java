@@ -8,7 +8,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.TimeZone;
 
 import org.hl7.fhir.exceptions.FHIRException;
@@ -83,8 +85,8 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
             List<BaseRuntimeChildDefinition> children = resourceDefinition.getChildren();
             for (BaseRuntimeChildDefinition child : children) {
-
-                String path = this.innerGetContextPath(child, type);
+                Set<String> visitedElements = new HashSet<>();
+                String path = this.innerGetContextPath(visitedElements, child, type);
                 if (path != null) {
                     return path;
                 }
@@ -94,7 +96,10 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         return null;
     }
 
-    protected String innerGetContextPath(BaseRuntimeChildDefinition child, Class<? extends IBase> type) {
+    protected String innerGetContextPath(Set<String> visitedElements, BaseRuntimeChildDefinition child, Class<? extends IBase> type) {
+
+        visitedElements.add(child.getElementName());
+
         if (child instanceof RuntimeChildResourceDefinition) {
             RuntimeChildResourceDefinition resourceChild = (RuntimeChildResourceDefinition)child;
 
@@ -114,7 +119,11 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
             
             for (BaseRuntimeChildDefinition nextChild : element.getChildren()) {
-                String path = this.innerGetContextPath(nextChild, type);
+                if (visitedElements.contains(nextChild.getElementName())) {
+                    continue;
+                }
+
+                String path = this.innerGetContextPath(visitedElements, nextChild, type);
                 if (path != null) {
                     return String.join(".", currentName, path);
                 }

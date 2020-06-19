@@ -326,6 +326,9 @@ public class TestR4ModelResolver {
         path = (String)resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
+
+        path = (String)resolver.getContextPath("Patient", "ValueSet");
+        assertNull(path);
     }
 
     @Test 
