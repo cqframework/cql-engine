@@ -12,9 +12,15 @@ import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.runtime.*;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
+import org.testng.IObjectFactory;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.ObjectFactory;
 import org.testng.annotations.Test;
 
 import javax.xml.bind.JAXBException;
@@ -23,6 +29,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,10 +37,24 @@ import java.util.HashMap;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.powermock.api.mockito.PowerMockito.when;
 
+@PrepareForTest(TemporalHelper.class)
+@PowerMockIgnore({ "org.mockito.*", "com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "com.sun.org.apache.xalan.*"})
 public class CqlTestSuite {
 
     private final static Logger logger = LoggerFactory.getLogger(CqlTestSuite.class);
+
+    @ObjectFactory
+    public IObjectFactory getObjectFactory() {
+        return new org.powermock.modules.testng.PowerMockObjectFactory();
+    }
+
+    @BeforeMethod
+    public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {
+        PowerMockito.spy(TemporalHelper.class);
+        when(TemporalHelper.getDefaultZoneOffset()).thenReturn(ZoneOffset.of("-06:00"));
+    }
 
     // This test is for the various CQL operators
     @Test
