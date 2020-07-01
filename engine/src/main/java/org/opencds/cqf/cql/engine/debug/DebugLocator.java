@@ -37,7 +37,7 @@ public class DebugLocator {
     }
 
     private void guardLocator(String locator) {
-        if (locator == null || locator.isBlank()) {
+        if (locator == null || locator.trim().isEmpty()) {
             throw new IllegalArgumentException("nodeId locator required");
         }
     }

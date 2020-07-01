@@ -10,11 +10,12 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -23,8 +24,6 @@ import javax.xml.bind.Marshaller;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
-import org.cqframework.cql.cql2elm.CqlTranslatorException.ErrorSeverity;
-import org.cqframework.cql.cql2elm.LibraryBuilder.SignatureLevel;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
@@ -145,7 +144,7 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        EvaluationResult result = engine.evaluate("Test", Set.of("Y"));
+        EvaluationResult result = engine.evaluate("Test", new HashSet<>(Arrays.asList("Y")));
 
         assertNotNull(result);
 
@@ -176,7 +175,7 @@ public class CqlEngineTests {
 
         CqlEngine engine = new CqlEngine(libraryLoader);
 
-        EvaluationResult result = engine.evaluate("Test", Set.of("X", "Y", "W"));
+        EvaluationResult result = engine.evaluate("Test", new HashSet<>(Arrays.asList("X", "Y", "W")));
 
         assertNotNull(result);
         assertEquals(3, result.expressionResults.size());

@@ -116,7 +116,7 @@ public class Location {
     }
 
     public static Location fromLocator(String locator) {
-        if (locator == null || locator.isBlank()) {
+        if (locator == null || locator.trim().isEmpty()) {
             throw new IllegalArgumentException("locator required");
         }
 
