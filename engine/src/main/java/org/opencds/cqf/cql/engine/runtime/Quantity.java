@@ -64,6 +64,6 @@ public class Quantity implements CqlType, Comparable<Quantity> {
 
     @Override
     public String toString() {
-        return String.format("%s %s", getValue().toString(), getUnit());
+        return String.format("%s %s", getValue(), getUnit());
     }
 }
