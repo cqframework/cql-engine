@@ -44,7 +44,7 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
             return operand.toString();
         }
         else if (operand instanceof Quantity) {
-            return String.format("%s %s%s%s", ((Quantity)operand).getValue().toString(), "'", ((Quantity)operand).getUnit(), "'");
+            return operand.toString();
         }
         else if (operand instanceof Ratio) {
             return operand.toString();
