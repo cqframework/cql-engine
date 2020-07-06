@@ -5,14 +5,15 @@ import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Tuple implements CqlType {
 
-    protected HashMap<String, Object> elements;
+    protected LinkedHashMap<String, Object> elements;
 
     public Tuple() {
-        this.elements = new HashMap<>();
+        this.elements = new LinkedHashMap<>();
     }
 
     public Object getElement(String key) {
@@ -24,11 +25,11 @@ public class Tuple implements CqlType {
         return elements;
     }
 
-    public void setElements(HashMap<String, Object> elements) {
+    public void setElements(LinkedHashMap<String, Object> elements) {
         this.elements = elements;
     }
 
-    public Tuple withElements(HashMap<String, Object> elements) {
+    public Tuple withElements(LinkedHashMap<String, Object> elements) {
         setElements(elements);
         return this;
     }
