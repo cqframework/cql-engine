@@ -2,8 +2,10 @@ package org.opencds.cqf.cql.engine.runtime;
 
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class Tuple implements CqlType {
 
@@ -76,9 +78,13 @@ public class Tuple implements CqlType {
 
     @Override
     public String toString() {
+        if (elements.size() == 0) {
+            return "Tuple { : }";
+        }
+
         StringBuilder builder = new StringBuilder("Tuple {\n");
-        for (String key : elements.keySet()) {
-            builder.append("\t").append(key).append(" -> ").append(elements.get(key)).append("\n");
+        for (Map.Entry<String, Object> entry : elements.entrySet()) {
+            builder.append("\t\"").append(entry.getKey()).append("\": ").append(ToStringEvaluator.toString(entry.getValue())).append("\n");
         }
         return builder.append("}").toString();
     }
