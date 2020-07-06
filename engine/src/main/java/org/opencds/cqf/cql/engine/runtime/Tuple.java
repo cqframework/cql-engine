@@ -2,15 +2,18 @@ package org.opencds.cqf.cql.engine.runtime;
 
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class Tuple implements CqlType {
 
-    protected HashMap<String, Object> elements;
+    protected LinkedHashMap<String, Object> elements;
 
     public Tuple() {
-        this.elements = new HashMap<>();
+        this.elements = new LinkedHashMap<>();
     }
 
     public Object getElement(String key) {
@@ -22,11 +25,11 @@ public class Tuple implements CqlType {
         return elements;
     }
 
-    public void setElements(HashMap<String, Object> elements) {
+    public void setElements(LinkedHashMap<String, Object> elements) {
         this.elements = elements;
     }
 
-    public Tuple withElements(HashMap<String, Object> elements) {
+    public Tuple withElements(LinkedHashMap<String, Object> elements) {
         setElements(elements);
         return this;
     }
@@ -76,9 +79,13 @@ public class Tuple implements CqlType {
 
     @Override
     public String toString() {
+        if (elements.size() == 0) {
+            return "Tuple { : }";
+        }
+
         StringBuilder builder = new StringBuilder("Tuple {\n");
-        for (String key : elements.keySet()) {
-            builder.append("\t").append(key).append(" -> ").append(elements.get(key)).append("\n");
+        for (Map.Entry<String, Object> entry : elements.entrySet()) {
+            builder.append("\t\"").append(entry.getKey()).append("\": ").append(ToStringEvaluator.toString(entry.getValue())).append("\n");
         }
         return builder.append("}").toString();
     }

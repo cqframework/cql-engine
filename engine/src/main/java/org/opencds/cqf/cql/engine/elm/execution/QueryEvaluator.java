@@ -1,9 +1,6 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
 import org.cqframework.cql.elm.execution.ByColumn;
@@ -87,7 +84,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
 
     private Object constructResult(List<Variable> variables, List<Object> elements) {
         if (variables.size() > 1) {
-            HashMap<String,Object> elementMap = new HashMap<String, Object>();
+            LinkedHashMap<String,Object> elementMap = new LinkedHashMap<String, Object>();
             for (int i = 0; i < variables.size(); i++) {
                 elementMap.put(variables.get(i).getName(), variables.get(i).getValue());
             }

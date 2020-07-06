@@ -8,10 +8,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 import javax.xml.bind.JAXBException;
 
@@ -190,7 +187,7 @@ public class CqlTestSuite {
                 )
         );
 
-        HashMap<String, Object> elements = new HashMap<>();
+        LinkedHashMap<String, Object> elements = new LinkedHashMap<>();
         elements.put("a", 1);
         elements.put("b", 2);
         result = context.resolveExpressionRef("Structured_tuple").evaluate(context);
@@ -337,7 +334,7 @@ public class CqlTestSuite {
         elements.clear();
         elements.put("a", 1);
         elements.put("b", "2");
-        HashMap<String, Object> elements2 = new HashMap<>();
+        LinkedHashMap<String, Object> elements2 = new LinkedHashMap<>();
         elements2.put("x", 2);
         elements2.put("z", "3");
         result = context.resolveExpressionRef("List_TupleList").evaluate(context);
