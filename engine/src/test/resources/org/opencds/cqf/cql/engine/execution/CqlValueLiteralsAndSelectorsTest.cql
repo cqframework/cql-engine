@@ -69,3 +69,23 @@ define DecimalNegTenStep  : -0.0000001
 define DecimalTenthStep  : 0.000000001
 define DecimalPosTenthStep  : +0.000000001
 define DecimalNegTenthStep  : -0.000000001
+define DecimalMaxValue : 9999999999999999999999999999.99999999
+define DecimalPosMaxValue : +9999999999999999999999999999.99999999
+define DecimalMinValue: -9999999999999999999999999999.99999999
+
+define QuantityZero: 0 'g'
+define QuantityPosZero: +0 'g'
+define QuantityNegZero: -0 'g'
+define QuantityOne: 1.0 'g'
+define QuantityPosOne: +1.0 'g'
+define QuantityNegOne: -1.0 'g'
+define QuantitySmall: 0.05 'mg'
+define QuantityPosSmall: +0.05 'mg'
+define QuantityNegSmall: -0.05 'mg'
+define QuantityStep: 0.00000001 'mg'
+define QuantityPosStep: +0.00000001 'mg'
+define QuantityNegStep: -0.00000001 'mg'
+define QuantityMax: 9999999999999999999999999999.99999999 'mg'
+define QuantityPosMax: +9999999999999999999999999999.99999999 'mg'
+define QuantityMin: -9999999999999999999999999999.99999999 'mg'
+

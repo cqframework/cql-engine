@@ -20,6 +20,9 @@ public class RuntimeTests {
 
         q = new Quantity().withValue(new BigDecimal("1.0")).withUnit("g");
         assertThat(q.toString(), is("1.0 'g'"));
+
+        q = new Quantity().withValue(new BigDecimal("0.05")).withUnit("mg");
+        assertThat(q.toString(), is("0.05 'mg'"));
     }
 
     @Test

@@ -14,13 +14,14 @@ public class Value {
     public static final BigDecimal MIN_DECIMAL = new BigDecimal("-9999999999999999999999999999.99999999");
 
     public static BigDecimal verifyPrecision(BigDecimal value) {
+        // NOTE: The CQL specification does not mandate a maximum precision, it specifies a minimum precision,
+        // implementations are free to provide more precise values. However, for simplicity and to provide
+        // a consistent reference implementation, this engine applies the minimum precision as the maximum precision.
+        // NOTE: precision is often used loosely to mean "number of decimal places", which is not what BigDecimal.precision() means
+        // BigDecimal.scale() (when positive) is the number of digits to the right of the decimal
         // at most 8 decimal places
-        if (value.precision() > 8) {
+        if (value.scale() > 8) {
             return value.setScale(8, RoundingMode.FLOOR);
-        }
-
-        else if (value.precision() < 2) {
-            return value.setScale(1, RoundingMode.FLOOR);
         }
 
         return value;
