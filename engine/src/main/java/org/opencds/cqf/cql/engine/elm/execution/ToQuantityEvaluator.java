@@ -69,7 +69,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
             }
             try {
                 BigDecimal ret = new BigDecimal(number.toString());
-                if (Value.validateDecimal(ret) == null) {
+                if (Value.validateDecimal(ret, null) == null) {
                     return null;
                 }
                 return new Quantity().withValue(ret).withUnit(unit.toString());
@@ -79,13 +79,13 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
         }
         else if (operand instanceof Integer) {
             BigDecimal ret = new BigDecimal((Integer) operand);
-            if (Value.validateDecimal(ret) == null) {
+            if (Value.validateDecimal(ret, null) == null) {
                 return null;
             }
             return new Quantity().withValue(ret).withDefaultUnit();
         }
         else if (operand instanceof BigDecimal) {
-            if (Value.validateDecimal((BigDecimal) operand) == null) {
+            if (Value.validateDecimal((BigDecimal) operand, null) == null) {
                 return null;
             }
             return new Quantity().withValue((BigDecimal) operand).withDefaultUnit();

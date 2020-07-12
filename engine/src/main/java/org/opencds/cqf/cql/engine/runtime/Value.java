@@ -13,7 +13,7 @@ public class Value {
     public static final Integer MIN_INT = Integer.MIN_VALUE;
     public static final BigDecimal MIN_DECIMAL = new BigDecimal("-9999999999999999999999999999.99999999");
 
-    public static BigDecimal verifyPrecision(BigDecimal value) {
+    public static BigDecimal verifyPrecision(BigDecimal value, Integer targetScale) {
         // NOTE: The CQL specification does not mandate a maximum precision, it specifies a minimum precision,
         // implementations are free to provide more precise values. However, for simplicity and to provide
         // a consistent reference implementation, this engine applies the minimum precision as the maximum precision.
@@ -21,23 +21,30 @@ public class Value {
         // BigDecimal.scale() (when positive) is the number of digits to the right of the decimal
         // at most 8 decimal places
         if (value.scale() > 8) {
-            return value.setScale(8, RoundingMode.FLOOR);
+            value = value.setScale(8, RoundingMode.FLOOR);
+        }
+
+        if (value.scale() < 0) {
+            value = value.setScale(0, RoundingMode.FLOOR);
+        }
+
+        if (targetScale != null && value.scale() > targetScale) {
+            value = value.stripTrailingZeros();
         }
 
         return value;
     }
 
-    public static BigDecimal validateDecimal(BigDecimal ret) {
+    public static BigDecimal validateDecimal(BigDecimal ret, Integer targetScale) {
         if (ret.compareTo((BigDecimal) MaxValueEvaluator.maxValue("Decimal")) > 0) {
             return null;
         }
         else if (ret.compareTo((BigDecimal) MinValueEvaluator.minValue("Decimal")) < 0) {
             return null;
         }
-        else if (ret.precision() > 8) {
-            return ret.setScale(8, RoundingMode.DOWN);
+        else {
+            return verifyPrecision(ret, targetScale);
         }
-        return ret;
     }
 
     public static Integer validateInteger(Integer ret) {

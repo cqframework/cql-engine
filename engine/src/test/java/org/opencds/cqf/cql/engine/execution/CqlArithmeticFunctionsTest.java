@@ -307,7 +307,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("Ln1000").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"))));
+        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"), null)));
 
         result = context.resolveExpressionRef("Ln1000D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("6.90775527")));

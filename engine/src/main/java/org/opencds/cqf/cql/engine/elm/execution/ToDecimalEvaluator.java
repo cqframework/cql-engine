@@ -48,7 +48,7 @@ public class ToDecimalEvaluator extends org.cqframework.cql.elm.execution.ToDeci
                         return null;
                     }
                 }
-                return Value.validateDecimal(new BigDecimal((String)operand));
+                return Value.validateDecimal(new BigDecimal((String)operand), null);
             }
             catch (NumberFormatException nfe) {
                 return null;

@@ -19,7 +19,7 @@ public class QuantityEvaluator extends org.cqframework.cql.elm.execution.Quantit
 
     @Override
     protected Object internalEvaluate(Context context) {
-        BigDecimal value = Value.verifyPrecision(this.getValue());
+        BigDecimal value = Value.verifyPrecision(this.getValue(), null);
         return new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(value).withUnit(this.getUnit());
     }
 }
