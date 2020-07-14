@@ -21,6 +21,9 @@ public class DebugLibraryResultEntry {
     }
 
     private Map<DebugLocator, List<DebugResultEntry>> results;
+    public Map<DebugLocator, List<DebugResultEntry>> getResults() {
+        return results;
+    }
 
     private void logDebugResult(DebugLocator locator, Object result) {
         if (!results.containsKey(locator)) {

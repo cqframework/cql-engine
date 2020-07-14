@@ -39,7 +39,7 @@ public class LnEvaluator extends org.cqframework.cql.elm.execution.Ln {
                     throw new UndefinedResult(nfe.getMessage());
                 }
             }
-            return Value.verifyPrecision(retVal);
+            return Value.verifyPrecision(retVal, null);
         }
 
         throw new InvalidOperatorArgument(

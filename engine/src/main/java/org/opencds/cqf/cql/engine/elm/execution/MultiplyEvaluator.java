@@ -38,26 +38,26 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
 
     // *(Decimal, Decimal)
     else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-        return Value.verifyPrecision(((BigDecimal)left).multiply((BigDecimal)right));
+        return Value.verifyPrecision(((BigDecimal)left).multiply((BigDecimal)right), null);
     }
 
     // *(Quantity, Quantity)
     else if (left instanceof Quantity && right instanceof Quantity) {
       // TODO: unit multiplication i.e. cm*cm = cm^2
       String unit = ((Quantity) left).getUnit().equals("1") ? ((Quantity) right).getUnit() : ((Quantity) left).getUnit();
-      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()));
+      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()), null);
       return new Quantity().withValue(value).withUnit(unit);
     }
 
     // *(Decimal, Quantity)
     else if (left instanceof BigDecimal && right instanceof Quantity) {
-      BigDecimal value = Value.verifyPrecision(((BigDecimal)left).multiply(((Quantity)right).getValue()));
+      BigDecimal value = Value.verifyPrecision(((BigDecimal)left).multiply(((Quantity)right).getValue()), null);
       return ((Quantity) right).withValue(value);
     }
 
     // *(Quantity, Decimal)
     else if (left instanceof Quantity && right instanceof BigDecimal) {
-      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply((BigDecimal)right));
+      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply((BigDecimal)right), null);
       return ((Quantity) left).withValue(value);
     }
 

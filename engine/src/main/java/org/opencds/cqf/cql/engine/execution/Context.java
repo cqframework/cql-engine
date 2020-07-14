@@ -35,6 +35,7 @@ import org.opencds.cqf.cql.engine.data.SystemDataProvider;
 import org.opencds.cqf.cql.engine.debug.*;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
+import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
@@ -96,6 +97,14 @@ public class Context {
         return this.debugResult;
     }
 
+    public DebugAction shouldDebug(Exception e) {
+        if (this.debugMap == null) {
+            return DebugAction.NONE;
+        }
+
+        return debugMap.shouldDebug(e);
+    }
+
     public DebugAction shouldDebug(Executable node) {
         if (this.debugMap == null) {
             return DebugAction.NONE;
@@ -113,6 +122,26 @@ public class Context {
     public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
+    }
+
+    public void logDebugMessage(SourceLocator locator, String message) {
+        ensureDebugResult();
+        debugResult.logDebugError(new CqlException(message, locator, Severity.MESSAGE));
+    }
+
+    public void logDebugWarning(SourceLocator locator, String message) {
+        ensureDebugResult();
+        debugResult.logDebugError(new CqlException(message, locator, Severity.WARNING));
+    }
+
+    public void logDebugTrace(SourceLocator locator, String message) {
+        ensureDebugResult();
+        debugResult.logDebugError(new CqlException(message, locator, Severity.TRACE));
+    }
+
+    public void logDebugError(CqlException e) {
+        ensureDebugResult();
+        debugResult.logDebugError(e);
     }
 
     public Context(Library library) {
@@ -175,7 +204,7 @@ public class Context {
         this.libraryLoader = libraryLoader;
     }
 
-    private Library getCurrentLibrary() {
+    public Library getCurrentLibrary() {
         return currentLibrary.peek();
     }
 

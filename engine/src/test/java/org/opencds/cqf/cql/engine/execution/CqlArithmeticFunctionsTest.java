@@ -66,7 +66,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal("2.0")));
 
         result = context.resolveExpressionRef("Add1Q1Q").getExpression().evaluate(context);
-        Assert.assertEquals(new BigDecimal("2.0"), ((Quantity) result).getValue());
+        Assert.assertEquals(((Quantity) result).getValue(), new BigDecimal("2"));
         Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("AddIAndD").getExpression().evaluate(context);
@@ -135,13 +135,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("3.33333333")));
 
         result = context.resolveExpressionRef("Divide1Q1").getExpression().evaluate(context);
-        Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+        Assert.assertEquals(((Quantity) result).getValue(), new BigDecimal("1"));
         Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         // TODO: The asserted "correct" answer 1.0'g/cm3' is wrong;
         // the true correct answer is just 1.0 with no units or empty string unit.
         // result = context.resolveExpressionRef("Divide1Q1Q").getExpression().evaluate(context);
-        // Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+        // Assert.assertEquals(((Quantity) result).getValue(), new BigDecimal("1.0"));
         // Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("Divide10I5D").getExpression().evaluate(context);
@@ -307,7 +307,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("Ln1000").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"))));
+        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"), null)));
 
         result = context.resolveExpressionRef("Ln1000D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("6.90775527")));

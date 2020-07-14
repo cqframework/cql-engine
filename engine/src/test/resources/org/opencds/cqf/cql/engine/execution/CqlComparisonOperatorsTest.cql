@@ -17,6 +17,8 @@ define SimpleEqStringAStringA : 'a' = 'a'
 define SimpleEqStringAStringB : 'a' = 'b'
 define SimpleEqFloat1Float1 : 1.0 = 1.0
 define SimpleEqFloat1Float2 : 1.0 = 2.0
+define SimpleEqFloat1Float1WithZ : 1.0 = 1.00
+define SimpleEqFloat1Float1WithPrecisionAndZ : 1.50 = 1.55
 define SimpleEqFloat1Int1 : 1.0 = 1
 define SimpleEqFloat1Int2 : 1.0 = 2
 define QuantityEqCM1CM1 : 1'cm' = 1'cm'
@@ -165,6 +167,9 @@ define EquivStringAStringB          : 'a' ~ 'b'
 define EquivStringIgnoreCase        : 'Abel' ~ 'abel'
 define EquivFloat1Float1            : 1.0 ~ 1.0
 define EquivFloat1Float2            : 1.0 ~ 2.0
+define EquivFloat1Float1WithZ       : 1.0 ~ 1.00
+define EquivFloat1Float1WithPrecision : 1.5 ~ 1.55
+define EquivFloat1Float1WithPrecisionAndZ : 1.50 ~ 1.55
 define EquivFloat1Int1              : 1.0 ~ 1
 define EquivFloat1Int2              : 1.0 ~ 2
 define EquivEqCM1CM1                : 1'cm' ~ 1'cm'

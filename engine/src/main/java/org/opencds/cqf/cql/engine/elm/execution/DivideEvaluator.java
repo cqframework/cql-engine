@@ -31,7 +31,7 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
         }
 
         try {
-            return Value.verifyPrecision(left.divide(right));
+            return Value.verifyPrecision(left.divide(right), null);
         } catch (ArithmeticException e) {
             return left.divide(right, 8, RoundingMode.FLOOR);
         }
@@ -49,12 +49,12 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
 
         else if (left instanceof Quantity && right instanceof Quantity) {
             BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue());
-            return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity) left).getUnit());
+            return new Quantity().withValue(Value.verifyPrecision(value, null)).withUnit(((Quantity) left).getUnit());
         }
 
         else if (left instanceof Quantity && right instanceof BigDecimal) {
             BigDecimal value = divideHelper(((Quantity) left).getValue(), (BigDecimal) right);
-            return new Quantity().withValue(Value.verifyPrecision(value)).withUnit(((Quantity)left).getUnit());
+            return new Quantity().withValue(Value.verifyPrecision(value, null)).withUnit(((Quantity)left).getUnit());
         }
 
         else if (left instanceof Interval && right instanceof Interval) {

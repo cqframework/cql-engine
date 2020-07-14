@@ -30,7 +30,7 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
         }
 
         if (left instanceof BigDecimal) {
-            return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())));
+            return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())), null);
         }
 
         throw new InvalidOperatorArgument(
