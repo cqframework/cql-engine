@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.slf4j.Logger;
@@ -9,7 +10,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
 
     final static Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
 
-    public static Object message(Object source, Boolean condition, String code, String severity, String message) {
+    public static Object message(Context context, SourceLocator sourceLocator, Object source, Boolean condition, String code, String severity, String message) {
         if (severity == null) {
             severity = "message";
         }
@@ -20,17 +21,27 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
                 messageBuilder.append(code).append(": ");
             }
             switch (severity.toLowerCase()) {
-                case "message":
-                    logger.info(messageBuilder.append(message).toString()); break;
-                case "warning":
-                    logger.warn(messageBuilder.append(message).toString()); break;
-                case "trace":
-                    messageBuilder.append(message).append("\n").append(stripPHI(source).toString());
-                    logger.debug(messageBuilder.toString()); break;
-                case "error":
-                    messageBuilder.append(message).append("\n").append(stripPHI(source).toString());
-                    logger.error(messageBuilder.toString());
-                    throw new CqlException(messageBuilder.toString());
+                case "message": {
+                    String finalMessage = messageBuilder.append(message).toString();
+                    context.logDebugMessage(sourceLocator, finalMessage);
+                    logger.info(finalMessage); break;
+                }
+                case "warning": {
+                    String finalMessage = messageBuilder.append(message).toString();
+                    context.logDebugWarning(sourceLocator, finalMessage);
+                    logger.warn(finalMessage); break;
+                }
+                case "trace": {
+                    String finalMessage = messageBuilder.append(message).append("\n").append(stripPHI(source).toString()).toString();
+                    context.logDebugTrace(sourceLocator, finalMessage);
+                    logger.debug(finalMessage); break;
+                }
+                case "error": {
+                    String finalMessage = messageBuilder.append(message).append("\n").append(stripPHI(source).toString()).toString();
+                    // NOTE: debug logging happens through exception-handling
+                    logger.error(finalMessage);
+                    throw new CqlException(finalMessage);
+                }
             }
         }
         return source;
@@ -49,6 +60,8 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
         String severity = (String) getSeverity().evaluate(context);
         String message = (String) getMessage().evaluate(context);
 
-        return message(source, condition, code, severity, message);
+        return message(context, SourceLocator.fromNode(this, context.getCurrentLibrary()),
+                source, condition, code, severity, message
+        );
     }
 }

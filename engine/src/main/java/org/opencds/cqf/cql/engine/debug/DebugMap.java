@@ -19,6 +19,20 @@ public class DebugMap {
         exceptionTypeEntries = new HashMap<String, DebugMapEntry>();
     }
 
+    public DebugAction shouldDebug(Exception e) {
+        if (exceptionTypeEntries.size() == 0) {
+            return DebugAction.LOG;
+        }
+        else {
+            DebugMapEntry exceptionTypeEntry = exceptionTypeEntries.get(e.getClass().getSimpleName());
+            if (exceptionTypeEntry != null)
+                return exceptionTypeEntry.getAction();
+        }
+
+        // Exceptions are always logged (unless explicitly disabled by a DebugAction.NONE for the specific type)
+        return DebugAction.LOG;
+    }
+
     public DebugAction shouldDebug(Executable node, Library currentLibrary) {
         DebugLibraryMapEntry libraryMap = libraryMaps.get(currentLibrary.getIdentifier().getId());
         if (libraryMap != null) {
