@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
 
+import org.opencds.cqf.cql.engine.model.BaseModelResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
 import org.opencds.cqf.cql.engine.runtime.Date;
@@ -14,7 +15,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
 
-public class SystemDataProvider implements DataProvider {
+public class SystemDataProvider extends BaseModelResolver implements DataProvider {
 
     @Override
     public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,

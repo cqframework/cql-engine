@@ -35,6 +35,7 @@ import org.opencds.cqf.cql.engine.data.SystemDataProvider;
 import org.opencds.cqf.cql.engine.debug.*;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
+import org.opencds.cqf.cql.engine.exception.InvalidCast;
 import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
@@ -378,6 +379,40 @@ public class Context {
         }
     }
 
+    public Boolean is(Object operand, Class<?> type) {
+        if (operand == null) {
+            return null;
+        }
+
+        if (type.isAssignableFrom(operand.getClass())) {
+            return true;
+        }
+
+        DataProvider provider = resolveDataProvider(type.getPackage().getName(), false);
+        if (provider != null) {
+            return provider.is(operand, type);
+        }
+
+        return false;
+    }
+
+    public Object as(Object operand, Class<?> type, boolean isStrict) {
+        if (operand == null) {
+            return null;
+        }
+
+        if (type.isAssignableFrom(operand.getClass())) {
+            return operand;
+        }
+
+        DataProvider provider = resolveDataProvider(type.getPackage().getName(), false);
+        if (provider != null) {
+            return provider.as(operand, type, isStrict);
+        }
+
+        return null;
+    }
+
     private boolean isType(Class<?> argumentType, Class<?> operandType) {
         return argumentType == null || operandType.isAssignableFrom(argumentType);
     }
@@ -547,6 +582,10 @@ public class Context {
     }
 
     public DataProvider resolveDataProvider(String packageName) {
+        return resolveDataProvider(packageName, true);
+    }
+
+    public DataProvider resolveDataProvider(String packageName, boolean mustResolve) {
         DataProvider dataProvider = packageMap.get(packageName);
         if (dataProvider == null) {
             if (packageName.startsWith("ca.uhn.fhir.model.dstu2") || packageName.equals("ca.uhn.fhir.model.primitive"))
@@ -560,7 +599,10 @@ public class Context {
                     }
                 }
             }
-            throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
+
+            if (mustResolve) {
+                throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
+            }
         }
 
         return dataProvider;

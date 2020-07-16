@@ -11,15 +11,6 @@ If the run-time type of the argument is of the type being tested, the result of 
 */
 
 public class IsEvaluator extends org.cqframework.cql.elm.execution.Is {
-
-    public static Object is(Class<?> type, Object operand) {
-        if (operand == null) {
-            return null;
-        }
-
-        return type.isAssignableFrom(operand.getClass());
-    }
-
   private Class<?> resolveType(Context context) {
       if (this.getIsTypeSpecifier() != null) {
           return context.resolveType(this.getIsTypeSpecifier());
@@ -33,6 +24,6 @@ public class IsEvaluator extends org.cqframework.cql.elm.execution.Is {
     Object operand = getOperand().evaluate(context);
     Class<?> type = resolveType(context);
 
-    return is(type, operand);
+    return context.is(operand, type);
   }
 }

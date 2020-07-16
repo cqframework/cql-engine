@@ -26,6 +26,7 @@ import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.execution.CqlLibraryReader;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu2FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.testng.annotations.BeforeClass;
@@ -45,6 +46,10 @@ public abstract class FhirExecutionTestBase {
     protected RestFhirRetrieveProvider dstu3RetrieveProvider;
     protected CompositeDataProvider dstu3Provider;
 
+    protected R4FhirModelResolver r4ModelResolver;
+    protected RestFhirRetrieveProvider r4RetrieveProvider;
+    protected CompositeDataProvider r4Provider;
+
     Library library = null;
     protected File xmlFile = null;
 
@@ -61,6 +66,12 @@ public abstract class FhirExecutionTestBase {
         dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), 
         dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
+
+        r4ModelResolver = new R4FhirModelResolver();
+        FhirContext r4Context = FhirContext.forR4();
+        r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(r4Context),
+                r4Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu4"));
+        r4Provider = new CompositeDataProvider(r4ModelResolver, r4RetrieveProvider);
 
     }
 
