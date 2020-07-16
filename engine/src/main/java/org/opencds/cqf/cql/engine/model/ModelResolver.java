@@ -15,6 +15,10 @@ public interface ModelResolver {
 
     Class<?> resolveType(Object value);
 
+    Boolean is(Object value, Class<?> type);
+
+    Object as(Object value, Class<?> type, boolean isStrict);
+
 	Object createInstance(String typeName);
 
     void setValue(Object target, String path, Object value);
