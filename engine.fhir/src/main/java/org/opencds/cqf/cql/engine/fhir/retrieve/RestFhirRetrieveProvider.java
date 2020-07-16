@@ -10,18 +10,30 @@ import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
+import ca.uhn.fhir.rest.api.SearchStyleEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.param.TokenParam;
 
 public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
-	protected IGenericClient fhirClient;
+	private static final SearchStyleEnum DEFAULT_SEARCH_STYLE = SearchStyleEnum.GET;
 
+	protected IGenericClient fhirClient;
+	private SearchStyleEnum searchStyle;
 
 	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
 		super(searchParameterResolver);
+		// TODO: Figure out how to validate that the searchParameterResolver and the client are on the same version of FHIR.
 		this.fhirClient = fhirClient;
-		// TODO: Figure out how to validate that the searchParameterResolver and the context are on the same version of FHIR.
+		this.searchStyle = DEFAULT_SEARCH_STYLE;
+	}
+
+	public void setSearchStyle(SearchStyleEnum value) {
+		this.searchStyle = value;
+	}
+
+	public SearchStyleEnum getSearchStyle() {
+		return this.searchStyle;
 	}
 
 	@Override
@@ -56,7 +68,9 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 			return this.queryById(dataType, map);
 		}
 		else {
-			return this.fhirClient.search().byUrl(dataType + map.toNormalizedQueryString(this.fhirClient.getFhirContext())).execute();
+			return this.fhirClient.search()
+				.byUrl(dataType + map.toNormalizedQueryString(this.fhirClient.getFhirContext()))
+				.usingStyle(this.searchStyle).execute();
 		}
 	}
 

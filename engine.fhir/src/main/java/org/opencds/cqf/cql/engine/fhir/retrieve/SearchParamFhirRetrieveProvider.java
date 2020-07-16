@@ -26,13 +26,28 @@ import ca.uhn.fhir.rest.param.TokenParamModifier;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
+    private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
+
     private SearchParameterResolver searchParameterResolver;
+    private int maxCodesPerQuery;
 
     public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
+        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
     }
 
-    private static final int MAX_CODES_PER_QUERY = 64;
+    public void setMaxCodesPerQuery(int value) {
+
+        if (value < 1) {
+            throw new IllegalArgumentException("value must be > 0");
+        }
+
+        this.maxCodesPerQuery = value;
+    }
+
+    public int getMaxCodesPerQuery() {
+        return this.maxCodesPerQuery;
+    }
 
     protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
@@ -153,7 +168,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         TokenOrListParam codeParams = null;
         int codeCount = 0;
         for (Object code : codes) {
-            if (codeCount % MAX_CODES_PER_QUERY == 0) {
+            if (codeCount % this.maxCodesPerQuery == 0) {
                 if (codeParams != null) {
                     codeParamsList.add(codeParams);
                 }
