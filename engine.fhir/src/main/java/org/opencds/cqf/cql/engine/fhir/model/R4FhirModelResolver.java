@@ -266,4 +266,19 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
         return null;
     }
+
+    @Override
+    public Object getContextPath(String contextType, String targetType) {
+        if (targetType == null || contextType == null ) {
+            return null;
+        }
+
+        if (contextType != null && !(contextType.equals("Unspecified") || contextType.equals("Population"))) {
+            if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
+                return "subject";
+            }
+        }
+
+        return super.getContextPath(contextType, targetType);
+    }
 }
