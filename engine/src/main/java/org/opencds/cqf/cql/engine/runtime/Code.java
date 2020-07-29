@@ -62,7 +62,7 @@ public class Code implements CqlType {
         Boolean codeIsEqual = EqualEvaluator.equal(this.getCode(), ((Code) other).getCode());
         Boolean systemIsEqual = EqualEvaluator.equal(this.getSystem(), ((Code) other).getSystem());
         Boolean versionIsEqual = EqualEvaluator.equal(this.getVersion(), ((Code) other).getVersion());
-        Boolean displayIsEqual = EqualEvaluator.equal(this.getDisplay(), ((Code) other).getDisplay());
+        // Boolean displayIsEqual = EqualEvaluator.equal(this.getDisplay(), ((Code) other).getDisplay());
         if (codeIsEqual == null && this.code == null && ((Code) other).getCode() == null)
         {
             codeIsEqual = true;
@@ -75,12 +75,15 @@ public class Code implements CqlType {
         {
             versionIsEqual = true;
         }
-        if (displayIsEqual == null && this.display == null && ((Code) other).getDisplay() == null)
-        {
-            displayIsEqual = true;
-        }
-        return (codeIsEqual == null || systemIsEqual == null || versionIsEqual == null || displayIsEqual == null)
-                ? null : codeIsEqual && systemIsEqual && versionIsEqual && displayIsEqual;
+        // if (displayIsEqual == null && this.display == null && ((Code) other).getDisplay() == null)
+        // {
+        //     displayIsEqual = true;
+        // }
+        // return (codeIsEqual == null || systemIsEqual == null || versionIsEqual == null || displayIsEqual == null)
+        //         ? null : codeIsEqual && systemIsEqual && versionIsEqual && displayIsEqual;
+        return (codeIsEqual == null || systemIsEqual == null || versionIsEqual == null)
+                ? null : codeIsEqual && systemIsEqual && versionIsEqual;
+
     }
 
     @Override
