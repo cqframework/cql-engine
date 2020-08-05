@@ -63,6 +63,14 @@ public class TestSearchParameterResolver {
         assertEquals("type", param.getName());
     }
 
+    @Test void testDstu3DateSearchParams() {
+        SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forDstu3());
+
+        RuntimeSearchParam param = resolver.getSearchParameterDefinition("ProcedureRequest", "authoredOn", RestSearchParameterTypeEnum.DATE);
+        assertNotNull(param);
+        assertEquals("authored", param.getName());
+    }
+
     @Test void testR4SearchParams() {
         SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forR4());
 
@@ -102,5 +110,13 @@ public class TestSearchParameterResolver {
         param = resolver.getSearchParameterDefinition("Observation", "subject");
         assertNotNull(param);
         assertEquals("subject", param.getName());
+    }
+
+    @Test void testR4DateSearchParams() {
+        SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forR4());
+
+        RuntimeSearchParam param = resolver.getSearchParameterDefinition("ServiceRequest", "authoredOn", RestSearchParameterTypeEnum.DATE);
+        assertNotNull(param);
+        assertEquals("authored", param.getName());
     }
 }

@@ -98,7 +98,13 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             rangeParam = new DateRangeParam(low, high);
         }
 
-        return Pair.of(datePath, rangeParam);
+        RuntimeSearchParam dateParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, datePath, RestSearchParameterTypeEnum.DATE);
+
+        if (dateParam == null) {
+            return null;
+        }
+
+        return Pair.of(dateParam.getName(), rangeParam);
     }
 
     protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
