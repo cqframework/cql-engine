@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -10,8 +11,11 @@ import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
+import ca.uhn.fhir.model.dstu2.resource.Bundle.Entry;
 import ca.uhn.fhir.rest.api.SearchStyleEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.gclient.IQuery;
+import ca.uhn.fhir.rest.gclient.IUntypedQuery;
 import ca.uhn.fhir.rest.param.TokenParam;
 
 public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
@@ -68,9 +72,28 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 			return this.queryById(dataType, map);
 		}
 		else {
-			return this.fhirClient.search()
-				.byUrl(dataType + map.toNormalizedQueryString(this.fhirClient.getFhirContext()))
-				.usingStyle(this.searchStyle).execute();
+			IQuery<IBaseBundle> search = this.fhirClient.search().forResource(dataType);
+			for (Map.Entry<String, List<List<IQueryParameterType>>> entry : map.entrySet()) {
+				String name = entry.getKey();
+				if (name == null) {
+					continue;
+				}
+
+				List<List<IQueryParameterType>> value = entry.getValue();
+				if (value == null) {
+					continue;
+				}
+
+				for (List<IQueryParameterType> subList : value){
+					if (subList == null) {
+						continue;
+					}
+
+					search = search.where(Collections.singletonMap(name, subList));
+				}
+			}
+
+			return search.usingStyle(this.searchStyle).execute();
 		}
 	}
 
