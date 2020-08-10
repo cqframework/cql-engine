@@ -189,7 +189,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             } 
             else if (code instanceof String) {
                 String s = (String)code;
-                codeParams.add(new TokenParam(s));
+                codeParams.addOr(new TokenParam(s));
             }
 
         }
