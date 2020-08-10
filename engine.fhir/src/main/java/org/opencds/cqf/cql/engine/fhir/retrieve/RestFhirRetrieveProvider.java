@@ -103,6 +103,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
 					if (subList.size() == 1) {
 						flattened.add(subList.get(0));
+						continue;
 					}
 
 					// Sublists are logical "Ors"
