@@ -152,7 +152,7 @@ public class CqlEngine {
 
         // TODO: Some testing to see if it's more performant to reset a context rather than create a new one.
         Context context = this.initializeContext(libraryCache, library, debugMap);
-        this.setParametersForContext(libraryIdentifier, libraryCache, context, contextParameter, parameters);
+        this.setParametersForContext(library, context, contextParameter, parameters);
 
         return this.evaluateExpressions(context, expressions);
     }
@@ -185,16 +185,18 @@ public class CqlEngine {
         return result;
     }
 
-    private void setParametersForContext(VersionedIdentifier primaryLibrary, Map<VersionedIdentifier, Library> libraryCache, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
+    private void setParametersForContext(Library library, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
         if (contextParameter != null) {
             context.setContextValue(contextParameter.getLeft(), contextParameter.getRight());
         }
 
         if (parameters != null) {
-            for (VersionedIdentifier identifier : libraryCache.keySet()) {
-                String refName = identifier.getId().equals(primaryLibrary.getId()) ? null : identifier.getId();
-                for (Map.Entry<String, Object> parameterValue : parameters.entrySet()) {
-                    context.setParameter(refName, parameterValue.getKey(), parameterValue.getValue());
+            if (library.getIncludes() != null && library.getIncludes().getDef() != null) {
+                for (IncludeDef def : library.getIncludes().getDef()) {
+                    String name = def.getLocalIdentifier();
+                    for (Map.Entry<String, Object> parameterValue : parameters.entrySet()) {
+                        context.setParameter(name, parameterValue.getKey(), parameterValue.getValue());
+                    }
                 }
             }
         }
