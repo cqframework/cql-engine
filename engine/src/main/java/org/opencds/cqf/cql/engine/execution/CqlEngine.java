@@ -152,7 +152,7 @@ public class CqlEngine {
 
         // TODO: Some testing to see if it's more performant to reset a context rather than create a new one.
         Context context = this.initializeContext(libraryCache, library, debugMap);
-        this.setParametersForContext(libraryCache, context, contextParameter, parameters);
+        this.setParametersForContext(libraryIdentifier, libraryCache, context, contextParameter, parameters);
 
         return this.evaluateExpressions(context, expressions);
     }
@@ -185,15 +185,16 @@ public class CqlEngine {
         return result;
     }
 
-    private void setParametersForContext(Map<VersionedIdentifier, Library> libraryCache, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
+    private void setParametersForContext(VersionedIdentifier primaryLibrary, Map<VersionedIdentifier, Library> libraryCache, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
         if (contextParameter != null) {
             context.setContextValue(contextParameter.getLeft(), contextParameter.getRight());
         }
 
         if (parameters != null) {
             for (VersionedIdentifier identifier : libraryCache.keySet()) {
+                String refName = identifier.getId().equals(primaryLibrary.getId()) ? null : identifier.getId();
                 for (Map.Entry<String, Object> parameterValue : parameters.entrySet()) {
-                    context.setParameter(identifier.getId(), parameterValue.getKey(), parameterValue.getValue());
+                    context.setParameter(refName, parameterValue.getKey(), parameterValue.getValue());
                 }
             }
         }
