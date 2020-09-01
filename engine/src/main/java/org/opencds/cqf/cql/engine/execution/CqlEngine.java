@@ -1,14 +1,16 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.FunctionDef;
 import org.cqframework.cql.elm.execution.IncludeDef;
 import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.UsingDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.debug.DebugMap;
@@ -262,25 +264,25 @@ public class CqlEngine {
         return library;
     }
 
-    private void validateDataRequirements(Library library) {
-        // TODO: What we actually need here is a check of the actual retrieves.
-        if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
-        {
-            for (UsingDef using : library.getUsings().getDef()) {
-                // Skip system using since the context automatically registers that.
-                if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
-                {
-                    continue;
-                }
+    // private void validateDataRequirements(Library library) {
+    //     // TODO: What we actually need here is a check of the actual retrieves.
+    //     if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
+    //     {
+    //         for (UsingDef using : library.getUsings().getDef()) {
+    //             // Skip system using since the context automatically registers that.
+    //             if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
+    //             {
+    //                 continue;
+    //             }
 
-                if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
-                    throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
-                    this.getLibraryDescription(library.getIdentifier()),
-                    using.getUri()));
-                }
-            }
-        }
-    }
+    //             if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
+    //                 throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
+    //                 this.getLibraryDescription(library.getIdentifier()),
+    //                 using.getUri()));
+    //             }
+    //         }
+    //     }
+    // }
 
     private void validateTerminologyRequirements(Library library) {
         // TODO: Smarter validation would be to checkout and see if any retrieves

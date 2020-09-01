@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.model;
 
-import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
 
 public abstract class BaseModelResolver implements ModelResolver {

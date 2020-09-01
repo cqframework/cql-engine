@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.engine.debug;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.elm.execution.Executable;
-
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.elm.execution.Executable;
 
 public class DebugMap {
 
@@ -72,9 +71,9 @@ public class DebugMap {
         return libraryMap;
     }
 
-    private void addLibraryMapEntry(String libraryName, DebugLibraryMapEntry libraryMapEntry) {
-        libraryMaps.put(libraryName, libraryMapEntry);
-    }
+    // private void addLibraryMapEntry(String libraryName, DebugLibraryMapEntry libraryMapEntry) {
+    //     libraryMaps.put(libraryName, libraryMapEntry);
+    // }
 
     public void addDebugEntry(DebugLocator debugLocator, DebugAction action) {
         addDebugEntry(null, debugLocator, action);

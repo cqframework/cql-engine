@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 
 import org.opencds.cqf.cql.engine.execution.Context;

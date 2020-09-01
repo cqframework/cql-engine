@@ -1,13 +1,11 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
-import static org.junit.Assert.assertEquals;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.testng.AssertJUnit.assertTrue;
-import static org.hamcrest.Matchers.is;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -20,7 +18,6 @@ import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Enumeration;
-import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Enumerations.AbstractType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Enumerations.AgeUnits;
@@ -43,6 +40,7 @@ import org.hl7.fhir.r4.model.Enumerations.RequestResourceType;
 import org.hl7.fhir.r4.model.Enumerations.ResourceType;
 import org.hl7.fhir.r4.model.Enumerations.SearchParamType;
 import org.hl7.fhir.r4.model.Enumerations.SpecialValues;
+import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.VisionPrescription;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;

@@ -1,10 +1,5 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.fhir.ucum.UcumEssenceService;
-import org.fhir.ucum.UcumException;
-import org.fhir.ucum.UcumService;
-
-import javax.xml.namespace.QName;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
 import org.cqframework.cql.elm.execution.CodeDef;
@@ -29,13 +26,18 @@ import org.cqframework.cql.elm.execution.Tuple;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.fhir.ucum.UcumEssenceService;
+import org.fhir.ucum.UcumException;
+import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.engine.data.SystemDataProvider;
-import org.opencds.cqf.cql.engine.debug.*;
+import org.opencds.cqf.cql.engine.debug.DebugAction;
+import org.opencds.cqf.cql.engine.debug.DebugMap;
+import org.opencds.cqf.cql.engine.debug.DebugResult;
+import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
-import org.opencds.cqf.cql.engine.exception.InvalidCast;
 import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;

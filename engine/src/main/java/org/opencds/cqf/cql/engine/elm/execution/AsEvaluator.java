@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.opencds.cqf.cql.engine.exception.InvalidCast;
 import org.opencds.cqf.cql.engine.execution.Context;
 
 /*

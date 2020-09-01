@@ -11,6 +11,8 @@ target
 org.eclipse.m2e.core.prefs
 dependency-reduced-pom.xml
 
+*.versionsBackup
+
 core.*
 heapdump.*
 javacore.*
