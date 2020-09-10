@@ -110,7 +110,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
             Object contextValue) {
         if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
-            return this.searchParameterResolver.createSearchParameter(dataType, contextPath, (String) contextValue);
+            return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String) contextValue);
         }
 
         return null;

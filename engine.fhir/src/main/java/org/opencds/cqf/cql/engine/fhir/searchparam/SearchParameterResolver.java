@@ -64,7 +64,7 @@ public class SearchParameterResolver {
         return null;
     }
 
-    public Pair<String, IQueryParameterType> createSearchParameter(String dataType, String path, String value) {
+    public Pair<String, IQueryParameterType> createSearchParameter(String context, String dataType, String path, String value) {
 
         RuntimeSearchParam searchParam = this.getSearchParameterDefinition(dataType, path);
         if (searchParam == null) {
@@ -78,7 +78,7 @@ public class SearchParameterResolver {
             case TOKEN:
                 return Pair.of(name, new TokenParam(value));
             case REFERENCE:
-                return Pair.of(name, new ReferenceParam(value));
+                return Pair.of(name, new ReferenceParam(context, null, value));
             case QUANTITY:
                 return Pair.of(name, new QuantityParam(value));
             case STRING:
