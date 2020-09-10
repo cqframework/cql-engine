@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.engine.debug;
 
-import org.cqframework.cql.elm.execution.Element;
-import org.opencds.cqf.cql.engine.elm.execution.Executable;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import org.cqframework.cql.elm.execution.Element;
+import org.opencds.cqf.cql.engine.elm.execution.Executable;
 
 public class DebugLibraryMapEntry {
     private String libraryName;

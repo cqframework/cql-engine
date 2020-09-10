@@ -309,6 +309,7 @@ public class TestFhirPath {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private Iterable<Object> ensureIterable(Object result) {
         Iterable<Object> actualResults;
         if (result instanceof Iterable) {
@@ -321,7 +322,6 @@ public class TestFhirPath {
         return actualResults;
     }
 
-    @SuppressWarnings("unchecked")
     private void runR4Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
         String resourceFilePath = "r4/input/" + test.getInputfile();
         org.hl7.fhir.r4.model.Resource resource = loadResourceFileR4(resourceFilePath);

@@ -1,8 +1,9 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.ValueSetRef;

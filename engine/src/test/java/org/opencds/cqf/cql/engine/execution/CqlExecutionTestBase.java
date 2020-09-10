@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

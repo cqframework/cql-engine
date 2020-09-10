@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+
 import org.testng.annotations.Test;
 
 public class CqlFunctionTests extends CqlExecutionTestBase {
