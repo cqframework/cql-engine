@@ -3,13 +3,14 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
+
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.engine.debug.Location;
 import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
 
 public class RuntimeTests {
     @Test

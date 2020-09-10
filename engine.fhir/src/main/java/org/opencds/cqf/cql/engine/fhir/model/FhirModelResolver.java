@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
-import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 
@@ -442,7 +440,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             case Calendar.HOUR: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR));
             case Calendar.MINUTE: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
             case Calendar.SECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-            case Calendar.MILLISECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(calendar.SECOND), calendar.get(calendar.MILLISECOND));
+            case Calendar.MILLISECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND));
             default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
         }
     }

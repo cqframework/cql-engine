@@ -1,13 +1,13 @@
 package org.opencds.cqf.cql.engine.debug;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.elm.execution.Executable;
-import org.opencds.cqf.cql.engine.exception.CqlException;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.elm.execution.Executable;
+import org.opencds.cqf.cql.engine.exception.CqlException;
 
 public class DebugResult {
     private Map<String, DebugLibraryResultEntry> libraryResults;

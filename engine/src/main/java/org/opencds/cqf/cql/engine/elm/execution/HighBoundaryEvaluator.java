@@ -1,14 +1,14 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.Date;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.Time;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 
 /*
 

@@ -1,7 +1,6 @@
 .DS_Store
 .idea
 *.iml
-engine/src/generated
 *.class
 target
 .project

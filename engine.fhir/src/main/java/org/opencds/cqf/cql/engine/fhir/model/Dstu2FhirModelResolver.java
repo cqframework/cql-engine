@@ -3,11 +3,32 @@ package org.opencds.cqf.cql.engine.fhir.model;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 
-import org.hl7.fhir.dstu2.model.*;
+import org.hl7.fhir.dstu2.model.Age;
+import org.hl7.fhir.dstu2.model.AnnotatedUuidType;
+import org.hl7.fhir.dstu2.model.Base;
+import org.hl7.fhir.dstu2.model.BaseDateTimeType;
+import org.hl7.fhir.dstu2.model.Count;
+import org.hl7.fhir.dstu2.model.Distance;
+import org.hl7.fhir.dstu2.model.Duration;
+import org.hl7.fhir.dstu2.model.EnumFactory;
+import org.hl7.fhir.dstu2.model.Enumeration;
+import org.hl7.fhir.dstu2.model.Enumerations;
+import org.hl7.fhir.dstu2.model.IdType;
+import org.hl7.fhir.dstu2.model.IntegerType;
+import org.hl7.fhir.dstu2.model.OidType;
+import org.hl7.fhir.dstu2.model.PositiveIntType;
+import org.hl7.fhir.dstu2.model.Quantity;
+import org.hl7.fhir.dstu2.model.Resource;
+import org.hl7.fhir.dstu2.model.SimpleQuantity;
+import org.hl7.fhir.dstu2.model.StringType;
+import org.hl7.fhir.dstu2.model.TimeType;
+import org.hl7.fhir.dstu2.model.UnsignedIntType;
+import org.hl7.fhir.dstu2.model.UriType;
+import org.hl7.fhir.dstu2.model.UuidType;
+import org.opencds.cqf.cql.engine.exception.InvalidCast;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import org.opencds.cqf.cql.engine.exception.InvalidCast;
 
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 

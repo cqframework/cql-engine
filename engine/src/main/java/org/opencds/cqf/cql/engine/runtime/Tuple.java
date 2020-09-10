@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.engine.runtime;
 
-import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
-import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator;
-
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator;
 
 public class Tuple implements CqlType {
 

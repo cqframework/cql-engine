@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import javax.xml.namespace.QName;
+
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.Date;
@@ -9,8 +11,6 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Value;
-
-import javax.xml.namespace.QName;
 
 /*
 maximum<T>() T

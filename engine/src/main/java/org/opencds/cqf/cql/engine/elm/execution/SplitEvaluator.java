@@ -1,11 +1,12 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.apache.commons.lang3.StringUtils;
-import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
-import org.opencds.cqf.cql.engine.execution.Context;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
+import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 Split(stringToSplit String, separator String) List<String>

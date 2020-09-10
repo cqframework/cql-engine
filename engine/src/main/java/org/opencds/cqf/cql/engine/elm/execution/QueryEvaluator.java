@@ -1,6 +1,9 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import org.cqframework.cql.elm.execution.AliasedQuerySource;
 import org.cqframework.cql.elm.execution.ByColumn;

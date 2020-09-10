@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import java.math.BigDecimal;
+
 import org.fhir.ucum.Decimal;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
-
-import java.math.BigDecimal;
 
 /*
     convert <quantity> to <unit>
