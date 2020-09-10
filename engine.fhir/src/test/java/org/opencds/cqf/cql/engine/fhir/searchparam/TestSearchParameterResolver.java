@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.testng.annotations.Test;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.RuntimeSearchParam;
+import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
-
+import ca.uhn.fhir.rest.param.ReferenceParam;
 
 public class TestSearchParameterResolver {
     @Test
@@ -28,23 +30,23 @@ public class TestSearchParameterResolver {
         assertNull(param);
     }
 
-
-    @Test void testDstu3SearchParams() {
+    @Test
+    void testDstu3SearchParams() {
         SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forDstu3());
 
         RuntimeSearchParam param = resolver.getSearchParameterDefinition("Patient", "id");
         assertNotNull(param);
         assertEquals("_id", param.getName());
 
-        
-        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication", RestSearchParameterTypeEnum.TOKEN);
+        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication",
+                RestSearchParameterTypeEnum.TOKEN);
         assertNotNull(param);
         assertEquals("code", param.getName());
 
-        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication", RestSearchParameterTypeEnum.REFERENCE);
+        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication",
+                RestSearchParameterTypeEnum.REFERENCE);
         assertNotNull(param);
         assertEquals("medication", param.getName());
-
 
         param = resolver.getSearchParameterDefinition("Encounter", "period");
         assertNotNull(param);
@@ -63,27 +65,31 @@ public class TestSearchParameterResolver {
         assertEquals("type", param.getName());
     }
 
-    @Test void testDstu3DateSearchParams() {
+    @Test
+    void testDstu3DateSearchParams() {
         SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forDstu3());
 
-        RuntimeSearchParam param = resolver.getSearchParameterDefinition("ProcedureRequest", "authoredOn", RestSearchParameterTypeEnum.DATE);
+        RuntimeSearchParam param = resolver.getSearchParameterDefinition("ProcedureRequest", "authoredOn",
+                RestSearchParameterTypeEnum.DATE);
         assertNotNull(param);
         assertEquals("authored", param.getName());
     }
 
-    @Test void testR4SearchParams() {
+    @Test
+    void testR4SearchParams() {
         SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forR4());
 
         RuntimeSearchParam param = resolver.getSearchParameterDefinition("Patient", "id");
         assertNotNull(param);
         assertEquals("_id", param.getName());
 
-        
-        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication", RestSearchParameterTypeEnum.TOKEN);
+        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication",
+                RestSearchParameterTypeEnum.TOKEN);
         assertNotNull(param);
         assertEquals("code", param.getName());
 
-        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication", RestSearchParameterTypeEnum.REFERENCE);
+        param = resolver.getSearchParameterDefinition("MedicationAdministration", "medication",
+                RestSearchParameterTypeEnum.REFERENCE);
         assertNotNull(param);
         assertEquals("medication", param.getName());
 
@@ -112,11 +118,33 @@ public class TestSearchParameterResolver {
         assertEquals("subject", param.getName());
     }
 
-    @Test void testR4DateSearchParams() {
+    @Test
+    void testR4DateSearchParams() {
         SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forR4());
 
-        RuntimeSearchParam param = resolver.getSearchParameterDefinition("ServiceRequest", "authoredOn", RestSearchParameterTypeEnum.DATE);
+        RuntimeSearchParam param = resolver.getSearchParameterDefinition("ServiceRequest", "authoredOn",
+                RestSearchParameterTypeEnum.DATE);
         assertNotNull(param);
         assertEquals("authored", param.getName());
+    }
+
+    @Test
+    void testR4ReferenceParameter() {
+        FhirContext context = FhirContext.forR4();
+        SearchParameterResolver resolver = new SearchParameterResolver(context);
+        Pair<String, IQueryParameterType> actual = resolver.createSearchParameter("Patient", "Observation", "subject",
+                "123");
+
+        assertEquals("Patient/123", actual.getRight().getValueAsQueryToken(context));
+    }
+
+    @Test
+    void testR4TokenParameter() {
+        FhirContext context = FhirContext.forR4();
+        SearchParameterResolver resolver = new SearchParameterResolver(context);
+        Pair<String, IQueryParameterType> actual = resolver.createSearchParameter("Patient", "Observation", "code",
+                "123");
+
+        assertEquals("123", actual.getRight().getValueAsQueryToken(context));
     }
 }
