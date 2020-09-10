@@ -47,6 +47,31 @@ define IsNull: ToQuantity('444 \'cm')
 
 public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQuantity {
 
+    public static Quantity toQuantity(String str) {
+        StringBuilder number = new StringBuilder();
+        StringBuilder unit = new StringBuilder();
+        for (char c : str.toCharArray()) {
+            if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.length() == 0) {
+                number.append(c);
+            } else if (Character.isLetter(c) || c == '/') {
+                unit.append(c);
+            } else if (c == ' ' || c == '\'') {
+                // continue
+            } else {
+                throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
+            }
+        }
+        try {
+            BigDecimal ret = new BigDecimal(number.toString());
+            if (Value.validateDecimal(ret, null) == null) {
+                return null;
+            }
+            return new Quantity().withValue(ret).withUnit(unit.toString());
+        } catch (NumberFormatException nfe) {
+            return null;
+        }
+    }
+
     public static Quantity toQuantity(Object operand) {
         if (operand == null) {
             return null;
@@ -54,28 +79,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
 
         if (operand instanceof String) {
             String str = (String) operand;
-            StringBuilder number = new StringBuilder();
-            StringBuilder unit = new StringBuilder();
-            for (char c : str.toCharArray()) {
-                if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.length() == 0) {
-                    number.append(c);
-                } else if (Character.isLetter(c) || c == '/') {
-                    unit.append(c);
-                } else if (c == ' ' || c == '\'') {
-                    // continue
-                } else {
-                    throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
-                }
-            }
-            try {
-                BigDecimal ret = new BigDecimal(number.toString());
-                if (Value.validateDecimal(ret, null) == null) {
-                    return null;
-                }
-                return new Quantity().withValue(ret).withUnit(unit.toString());
-            } catch (NumberFormatException nfe) {
-                return null;
-            }
+            return toQuantity(str);
         }
         else if (operand instanceof Integer) {
             BigDecimal ret = new BigDecimal((Integer) operand);
