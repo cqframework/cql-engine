@@ -31,9 +31,7 @@ deploy:
   on:
     branch: master
 before_cache:
-- rm -rf $HOME/.m2/repository/org/opencds/cqf/cql-engine
-- rm -rf $HOME/.m2/repository/org/opencds/cqf/cql-engine-fhir
-- rm -rf $HOME/.m2/repository/org/opencds/cqf/cql-parent
+- rm -rf $HOME/.m2/repository/org/opencds/cqf/cql
 notifications:
   slack:
     - rooms:
