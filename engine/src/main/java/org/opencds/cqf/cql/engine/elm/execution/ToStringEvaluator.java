@@ -41,6 +41,10 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
             return null;
         }
 
+        if (operand instanceof String) {
+            return operand;
+        }
+
         if (operand instanceof Integer) {
             return Integer.toString((Integer)operand);
         }

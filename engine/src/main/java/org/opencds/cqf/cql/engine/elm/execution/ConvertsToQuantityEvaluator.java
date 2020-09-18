@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Ratio;
 
 /*
@@ -13,7 +14,7 @@ import org.opencds.cqf.cql.engine.runtime.Ratio;
     ConvertsToQuantity(argument Ratio) Boolean
     ConvertsToQuantity(argument String) Boolean
 
-    The ConvertsToQuantity operator returns true if its argument can be converted to a Quantity value. See the ToQuantity
+    The ConvertsToQuantity operator returns true if its argument is or can be converted to a Quantity value. See the ToQuantity
         operator for a description of the supported conversions.
 
     If the input string is not formatted correctly, or cannot be interpreted as a valid Quantity value, the result is false.
@@ -27,6 +28,10 @@ public class ConvertsToQuantityEvaluator extends org.cqframework.cql.elm.executi
     public static Boolean convertsToQuantity(Object argument) {
         if (argument == null) {
             return null;
+        }
+
+        if (argument instanceof Quantity) {
+            return true;
         }
 
         if (argument instanceof String || argument instanceof Ratio || argument instanceof BigDecimal || argument instanceof Integer)

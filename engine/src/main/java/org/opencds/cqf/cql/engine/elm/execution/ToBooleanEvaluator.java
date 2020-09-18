@@ -3,6 +3,8 @@ package org.opencds.cqf.cql.engine.elm.execution;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 
+import java.math.BigDecimal;
+
 /*
 ToBoolean(argument String) Boolean
 
@@ -19,6 +21,33 @@ public class ToBooleanEvaluator extends org.cqframework.cql.elm.execution.ToBool
 
     public static Object toBoolean(Object operand) {
         if (operand == null) {
+            return null;
+        }
+
+        if (operand instanceof Boolean) {
+            return operand;
+        }
+
+        if (operand instanceof Integer) {
+            if (((Integer)operand) == 1) {
+                return true;
+            }
+            if (((Integer)operand) == 0) {
+                return false;
+            }
+
+            return null;
+        }
+
+        if (operand instanceof BigDecimal) {
+            if (((BigDecimal)operand).compareTo(new BigDecimal("0.0")) == 0) {
+                return false;
+            }
+
+            if (((BigDecimal)operand).compareTo(new BigDecimal("1.0")) == 0) {
+                return true;
+            }
+
             return null;
         }
 

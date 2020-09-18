@@ -26,6 +26,14 @@ import org.opencds.cqf.cql.engine.runtime.Ratio;
 public class ToRatioEvaluator extends org.cqframework.cql.elm.execution.ToRatio {
 
     public static Object toRatio(Object operand) {
+        if (operand == null) {
+            return null;
+        }
+
+        if (operand instanceof Ratio) {
+            return operand;
+        }
+
         if (operand instanceof String) {
             String[] quantityStrings = ((String) operand).split(":");
             if (quantityStrings.length == 2) {

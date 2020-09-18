@@ -38,6 +38,10 @@ public class ToTimeEvaluator extends org.cqframework.cql.elm.execution.ToTime {
             return null;
         }
 
+        if (operand instanceof Time) {
+            return operand;
+        }
+
         if (operand instanceof String) {
             try {
                 return new Time((String) operand);

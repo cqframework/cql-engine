@@ -48,6 +48,10 @@ public class ToDateTimeEvaluator extends org.cqframework.cql.elm.execution.ToDat
             return null;
         }
 
+        if (operand instanceof DateTime) {
+            return operand;
+        }
+
         if (operand instanceof String) {
             try {
                 return new DateTime((String) operand, context.getEvaluationDateTime().getEvaluationOffset())

@@ -10,7 +10,7 @@ import org.opencds.cqf.cql.engine.runtime.Time;
 
     ConvertsToTime(argument String) Time
 
-    The ConvertsToTime operator returns true if its argument can be converted to a Time value. See the ToTime operator for
+    The ConvertsToTime operator returns true if its argument is or can be converted to a Time value. See the ToTime operator for
         a description of the supported conversions.
 
     If the input string is not formatted correctly, or does not represent a valid time-of-day value, the result is false.
@@ -24,6 +24,10 @@ public class ConvertsToTimeEvaluator extends org.cqframework.cql.elm.execution.C
     public static Boolean convertsToTime(Object argument) {
         if (argument == null) {
             return null;
+        }
+
+        if (argument instanceof Time) {
+            return true;
         }
 
         if (argument instanceof String) {

@@ -22,7 +22,7 @@ import org.opencds.cqf.cql.engine.runtime.Time;
     ConvertsToString(argument Time) Boolean
     Description:
 
-    The ConvertsToString operator returns true if its argument can be converted to a String value. See the ToString operator
+    The ConvertsToString operator returns true if its argument is or can be converted to a String value. See the ToString operator
         for a description of the supported conversions.
 
     If the argument is null, the result is null.
@@ -38,7 +38,7 @@ public class ConvertsToStringEvaluator extends org.cqframework.cql.elm.execution
 
         if (argument instanceof Boolean || argument instanceof Integer || argument instanceof BigDecimal
                 || argument instanceof Quantity || argument instanceof Ratio || argument instanceof Date
-                || argument instanceof DateTime || argument instanceof Time)
+                || argument instanceof DateTime || argument instanceof String || argument instanceof Time)
         {
             return true;
         }

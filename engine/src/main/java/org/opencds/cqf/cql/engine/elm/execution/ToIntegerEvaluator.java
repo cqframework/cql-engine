@@ -23,6 +23,14 @@ public class ToIntegerEvaluator extends org.cqframework.cql.elm.execution.ToInte
             return null;
         }
 
+        if (operand instanceof Boolean) {
+            return ((Boolean)operand) ? 1 : 0;
+        }
+
+        if (operand instanceof Integer) {
+            return operand;
+        }
+
         if (operand instanceof String) {
             try {
                 return Integer.parseInt((String) operand);
