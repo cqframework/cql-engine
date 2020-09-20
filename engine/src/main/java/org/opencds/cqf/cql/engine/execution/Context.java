@@ -58,11 +58,20 @@ public class Context {
     private boolean enableExpressionCache = false;
 
     @SuppressWarnings("serial")
-    private LinkedHashMap<String, Object> expressions = new LinkedHashMap<String, Object>(15, 0.9f, true) {
-        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
+    private LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>> expressions = new LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>>(10, 0.9f, true) {
+        protected boolean removeEldestEntry(Map.Entry<VersionedIdentifier, LinkedHashMap<String, Object>> eldestEntry) {
             return size() > 10;
         }
     };
+
+    @SuppressWarnings("serial")
+    private LinkedHashMap<String, Object> constructLibraryExpressionHashMap() {
+        return  new LinkedHashMap<String, Object>(15, 0.9f, true) {
+            protected boolean removeEldestEntry(Map.Entry<String, Object> eldestEntry) {
+                return size() > 15;
+            }
+        };
+    }
 
     private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
@@ -183,20 +192,32 @@ public class Context {
         this.enableExpressionCache = yayOrNay;
     }
 
-    public boolean isExpressionInCache(String name) {
-        return this.expressions.containsKey(name);
+    public boolean isExpressionInCache(VersionedIdentifier libraryId, String name) {
+        if (!this.expressions.containsKey(libraryId)) {
+            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
+        }
+
+        return this.expressions.get(libraryId).containsKey(name);
     }
 
     public boolean isExpressionCachingEnabled() {
         return this.enableExpressionCache;
     }
 
-    public void addExpressionToCache(String name, Object result) {
-        this.expressions.put(name, result);
+    public void addExpressionToCache(VersionedIdentifier libraryId, String name, Object result) {
+        if (!this.expressions.containsKey(libraryId)) {
+            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
+        }
+
+        this.expressions.get(libraryId).put(name, result);
     }
 
-    public Object getExpressionResultFromCache(String name) {
-        return this.expressions.get(name);
+    public Object getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
+        if (!this.expressions.containsKey(libraryId)) {
+            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
+        }
+
+        return this.expressions.get(libraryId).get(name);
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
