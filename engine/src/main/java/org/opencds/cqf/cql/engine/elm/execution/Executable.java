@@ -1,8 +1,10 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import org.apache.commons.lang3.NotImplementedException;
 import org.opencds.cqf.cql.engine.debug.DebugAction;
+import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.Context;
 
@@ -21,10 +23,23 @@ public class Executable
         }
         catch (Exception e) {
             if (e instanceof CqlException) {
+                CqlException ce = (CqlException)e;
+                if (ce.getSourceLocator() == null) {
+                    ce.setSourceLocator(SourceLocator.fromNode(this, context.getCurrentLibrary()));
+                    DebugAction action = context.shouldDebug(ce);
+                    if (action != DebugAction.NONE) {
+                        context.logDebugError(ce);
+                    }
+                }
                 throw e;
             }
             else {
-                throw new CqlException(e);
+                CqlException ce = new CqlException(e, SourceLocator.fromNode(this, context.getCurrentLibrary()));
+                DebugAction action = context.shouldDebug(ce);
+                if (action != DebugAction.NONE) {
+                    context.logDebugError(ce);
+                }
+                throw ce;
             }
         }
     }

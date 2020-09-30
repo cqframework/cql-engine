@@ -44,7 +44,7 @@
 
     <properties>
         <version.major>1</version.major>
-        <version.minor>4</version.minor>
+        <version.minor>5</version.minor>
         <version.patch>0</version.patch>
 
         <!-- NOTE: Building under the release profile automatically drops the -SNAPSHOT extension -->
@@ -52,8 +52,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.10.1</jackson.version>
-        <cqframework.version>1.4.9</cqframework.version>
-        <hapi.version>4.2.0</hapi.version>
+        <cqframework.version>1.5.0</cqframework.version>
+        <hapi.version>5.0.2</hapi.version>
     </properties>
 
     <repositories>
@@ -167,6 +167,21 @@
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-structures-r4</artifactId>
+                <version>${hapi.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xpp3</groupId>
+                        <artifactId>xpp3</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xpp3</groupId>
+                        <artifactId>xpp3_xpath</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+               <dependency>
+                <groupId>ca.uhn.hapi.fhir</groupId>
+                <artifactId>hapi-fhir-structures-r5</artifactId>
                 <version>${hapi.version}</version>
                 <exclusions>
                     <exclusion>

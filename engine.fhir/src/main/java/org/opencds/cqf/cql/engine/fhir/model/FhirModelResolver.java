@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.InvocationTargetException;
 import java.time.Instant;
-import java.time.LocalTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -27,7 +26,6 @@ import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 
@@ -422,10 +420,6 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     }
 
     // Transformations
-    protected DateTime toDateTime(java.util.Date result) {
-        return DateTime.fromJavaDate(result);
-    }
-
     protected DateTime toDateTime(BaseDateTimeType value) {
         return toDateTime(value, this.getCalendarConstant(value));
     }
@@ -434,9 +428,21 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         return toDate(value, this.getCalendarConstant(value));
     }
 
-    protected Time toTime(TimeType value) {
-        java.time.format.DateTimeFormatter formatter = java.time.format.DateTimeFormatter.ISO_TIME;
-        return new Time(LocalTime.from(formatter.parse(this.timeToString(value))), Precision.MILLISECOND);
+    protected org.opencds.cqf.cql.engine.runtime.Time toTime(BaseDateTimeType value) {
+        return toTime(value, this.getCalendarConstant(value));
+    }
+
+    protected Time toTime(BaseDateTimeType value, Integer calendarConstant) {
+        Calendar calendar = this.getCalendar(value);
+        //TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
+        //ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
+        switch (calendarConstant) {
+            case Calendar.HOUR: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR));
+            case Calendar.MINUTE: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
+            case Calendar.SECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
+            case Calendar.MILLISECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND));
+            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
+        }
     }
 
     protected DateTime toDateTime(BaseDateTimeType value, Integer calendarConstant) {
@@ -493,7 +499,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     }
 
     // TODO: Find HAPI registry of Primitive Type conversions
-    protected Object fromJavaPrimitive(Object value, Object target) {
+    public Object fromJavaPrimitive(Object value, Object target) {
         String simpleName = target.getClass().getSimpleName();
         switch(simpleName) {
             case "DateTimeType":
@@ -511,13 +517,13 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             return value;
         }
     }
-    
-    protected Object toJavaPrimitive(Object result, Object source) {
+
+    public Object toJavaPrimitive(Object result, Object source) {
         String simpleName = source.getClass().getSimpleName();
         switch (simpleName) {
             case "DateTimeType": return toDateTime((BaseDateTimeType)source);
             case "DateType": return toDate((BaseDateTimeType)source);
-            case "TimeType": return toTime((TimeType)source);
+            case "TimeType": return toTime((BaseDateTimeType)source);
             case "InstantType": return toDateTime((BaseDateTimeType)source);
             case "IdType": return this.idToString((IdType)source);
             default:

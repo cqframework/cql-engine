@@ -44,6 +44,10 @@
             <artifactId>hapi-fhir-structures-r4</artifactId>
         </dependency>
         <dependency>
+            <groupId>ca.uhn.hapi.fhir</groupId>
+            <artifactId>hapi-fhir-structures-r5</artifactId>
+        </dependency>
+        <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
         </dependency>
@@ -55,6 +59,54 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jvnet.jaxb2.maven2</groupId>
+                <artifactId>maven-jaxb2-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <schemaDirectory>${project.basedir}/src/test/resources/org/hl7/fhirpath/testSchema</schemaDirectory>
+                    <schemaIncludes>
+                        <include>testSchema.xsd</include>
+                    </schemaIncludes>
+                    <episode>false</episode>
+                    <args>
+                        <arg>-Xfluent-api</arg>
+                        <arg>-Xequals</arg>
+                        <arg>-XhashCode</arg>
+                        <arg>-XtoString</arg>
+                        <arg>-npa</arg>
+                        <arg>-Xannotate</arg>
+                    </args>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-fluent-api</artifactId>
+                            <version>3.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics</artifactId>
+                            <version>0.12.0</version>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.jvnet.jaxb2_commons</groupId>
+                            <artifactId>jaxb2-basics-annotate</artifactId>
+                            <version>1.1.0</version>
+                        </plugin>
+                    </plugins>
+                    <generatePackage>org.hl7.fhirpath.tests</generatePackage>
+                    <readOnly>false</readOnly>
+                    <markGenerated>false</markGenerated>
+                    <disableXmlSecurity>true</disableXmlSecurity>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>

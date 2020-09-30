@@ -47,6 +47,16 @@ public class CompositeDataProvider implements DataProvider {
 	}
 
     @Override
+    public Boolean is(Object value, Class<?> type) {
+        return this.modelResolver.is(value, type);
+    }
+
+    @Override
+    public Object as(Object value, Class<?> type, boolean isStrict) {
+        return this.modelResolver.as(value, type, isStrict);
+    }
+
+    @Override
     public Object createInstance(String typeName) {
         return this.modelResolver.createInstance(typeName);
     }

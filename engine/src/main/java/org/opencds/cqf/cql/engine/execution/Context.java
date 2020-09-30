@@ -1,10 +1,5 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.fhir.ucum.UcumEssenceService;
-import org.fhir.ucum.UcumException;
-import org.fhir.ucum.UcumService;
-
-import javax.xml.namespace.QName;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,6 +7,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+
+import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
 import org.cqframework.cql.elm.execution.CodeDef;
@@ -29,12 +26,19 @@ import org.cqframework.cql.elm.execution.Tuple;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.fhir.ucum.UcumEssenceService;
+import org.fhir.ucum.UcumException;
+import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.data.ExternalFunctionProvider;
 import org.opencds.cqf.cql.engine.data.SystemDataProvider;
-import org.opencds.cqf.cql.engine.debug.*;
+import org.opencds.cqf.cql.engine.debug.DebugAction;
+import org.opencds.cqf.cql.engine.debug.DebugMap;
+import org.opencds.cqf.cql.engine.debug.DebugResult;
+import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
+import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
@@ -54,11 +58,20 @@ public class Context {
     private boolean enableExpressionCache = false;
 
     @SuppressWarnings("serial")
-    private LinkedHashMap<String, Object> expressions = new LinkedHashMap<String, Object>(15, 0.9f, true) {
-        protected boolean removeEldestEntry(Map.Entry<String, Object> eldest) {
+    private LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>> expressions = new LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>>(10, 0.9f, true) {
+        protected boolean removeEldestEntry(Map.Entry<VersionedIdentifier, LinkedHashMap<String, Object>> eldestEntry) {
             return size() > 10;
         }
     };
+
+    @SuppressWarnings("serial")
+    private LinkedHashMap<String, Object> constructLibraryExpressionHashMap() {
+        return  new LinkedHashMap<String, Object>(15, 0.9f, true) {
+            protected boolean removeEldestEntry(Map.Entry<String, Object> eldestEntry) {
+                return size() > 15;
+            }
+        };
+    }
 
     private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
@@ -96,6 +109,14 @@ public class Context {
         return this.debugResult;
     }
 
+    public DebugAction shouldDebug(Exception e) {
+        if (this.debugMap == null) {
+            return DebugAction.NONE;
+        }
+
+        return debugMap.shouldDebug(e);
+    }
+
     public DebugAction shouldDebug(Executable node) {
         if (this.debugMap == null) {
             return DebugAction.NONE;
@@ -113,6 +134,26 @@ public class Context {
     public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
+    }
+
+    public void logDebugMessage(SourceLocator locator, String message) {
+        ensureDebugResult();
+        debugResult.logDebugError(new CqlException(message, locator, Severity.MESSAGE));
+    }
+
+    public void logDebugWarning(SourceLocator locator, String message) {
+        ensureDebugResult();
+        debugResult.logDebugError(new CqlException(message, locator, Severity.WARNING));
+    }
+
+    public void logDebugTrace(SourceLocator locator, String message) {
+        ensureDebugResult();
+        debugResult.logDebugError(new CqlException(message, locator, Severity.TRACE));
+    }
+
+    public void logDebugError(CqlException e) {
+        ensureDebugResult();
+        debugResult.logDebugError(e);
     }
 
     public Context(Library library) {
@@ -151,20 +192,32 @@ public class Context {
         this.enableExpressionCache = yayOrNay;
     }
 
-    public boolean isExpressionInCache(String name) {
-        return this.expressions.containsKey(name);
+    public boolean isExpressionInCache(VersionedIdentifier libraryId, String name) {
+        if (!this.expressions.containsKey(libraryId)) {
+            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
+        }
+
+        return this.expressions.get(libraryId).containsKey(name);
     }
 
     public boolean isExpressionCachingEnabled() {
         return this.enableExpressionCache;
     }
 
-    public void addExpressionToCache(String name, Object result) {
-        this.expressions.put(name, result);
+    public void addExpressionToCache(VersionedIdentifier libraryId, String name, Object result) {
+        if (!this.expressions.containsKey(libraryId)) {
+            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
+        }
+
+        this.expressions.get(libraryId).put(name, result);
     }
 
-    public Object getExpressionResultFromCache(String name) {
-        return this.expressions.get(name);
+    public Object getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
+        if (!this.expressions.containsKey(libraryId)) {
+            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
+        }
+
+        return this.expressions.get(libraryId).get(name);
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
@@ -175,7 +228,7 @@ public class Context {
         this.libraryLoader = libraryLoader;
     }
 
-    private Library getCurrentLibrary() {
+    public Library getCurrentLibrary() {
         return currentLibrary.peek();
     }
 
@@ -349,6 +402,40 @@ public class Context {
         }
     }
 
+    public Boolean is(Object operand, Class<?> type) {
+        if (operand == null) {
+            return null;
+        }
+
+        if (type.isAssignableFrom(operand.getClass())) {
+            return true;
+        }
+
+        DataProvider provider = resolveDataProvider(type.getPackage().getName(), false);
+        if (provider != null) {
+            return provider.is(operand, type);
+        }
+
+        return false;
+    }
+
+    public Object as(Object operand, Class<?> type, boolean isStrict) {
+        if (operand == null) {
+            return null;
+        }
+
+        if (type.isAssignableFrom(operand.getClass())) {
+            return operand;
+        }
+
+        DataProvider provider = resolveDataProvider(type.getPackage().getName(), false);
+        if (provider != null) {
+            return provider.as(operand, type, isStrict);
+        }
+
+        return null;
+    }
+
     private boolean isType(Class<?> argumentType, Class<?> operandType) {
         return argumentType == null || operandType.isAssignableFrom(argumentType);
     }
@@ -518,6 +605,10 @@ public class Context {
     }
 
     public DataProvider resolveDataProvider(String packageName) {
+        return resolveDataProvider(packageName, true);
+    }
+
+    public DataProvider resolveDataProvider(String packageName, boolean mustResolve) {
         DataProvider dataProvider = packageMap.get(packageName);
         if (dataProvider == null) {
             if (packageName.startsWith("ca.uhn.fhir.model.dstu2") || packageName.equals("ca.uhn.fhir.model.primitive"))
@@ -531,7 +622,10 @@ public class Context {
                     }
                 }
             }
-            throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
+
+            if (mustResolve) {
+                throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
+            }
         }
 
         return dataProvider;

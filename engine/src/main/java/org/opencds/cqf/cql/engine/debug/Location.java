@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.engine.debug;
 
-import java.nio.file.Path;
-
 /*
 Identifies a location in a source file
  */

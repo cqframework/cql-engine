@@ -26,10 +26,10 @@ public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
             Double value = Math.log(((BigDecimal)left).doubleValue());
 
             if (base == 0) {
-                return Value.verifyPrecision(new BigDecimal(value));
+                return Value.verifyPrecision(new BigDecimal(value), null);
             }
 
-            return Value.verifyPrecision(new BigDecimal(value / base));
+            return Value.verifyPrecision(new BigDecimal(value / base), null);
         }
 
         throw new InvalidOperatorArgument(

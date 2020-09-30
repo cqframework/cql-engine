@@ -1,10 +1,11 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.bind.JAXBException;
@@ -16,8 +17,6 @@ import org.opencds.cqf.cql.engine.elm.execution.SingletonFromEvaluator;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
 
 public class ElmTests {
 

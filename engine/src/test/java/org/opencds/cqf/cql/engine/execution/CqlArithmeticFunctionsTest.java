@@ -1,18 +1,26 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.engine.elm.execution.AbsEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.UndefinedResult;
-import org.opencds.cqf.cql.engine.runtime.*;
+import org.opencds.cqf.cql.engine.runtime.Date;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
+import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
+import org.opencds.cqf.cql.engine.runtime.Time;
+import org.opencds.cqf.cql.engine.runtime.Value;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-import java.math.BigDecimal;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
     /**
@@ -66,7 +74,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal("2.0")));
 
         result = context.resolveExpressionRef("Add1Q1Q").getExpression().evaluate(context);
-        Assert.assertEquals(new BigDecimal("2.0"), ((Quantity) result).getValue());
+        Assert.assertEquals(((Quantity) result).getValue(), new BigDecimal("2"));
         Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("AddIAndD").getExpression().evaluate(context);
@@ -135,13 +143,13 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("3.33333333")));
 
         result = context.resolveExpressionRef("Divide1Q1").getExpression().evaluate(context);
-        Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+        Assert.assertEquals(((Quantity) result).getValue(), new BigDecimal("1"));
         Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         // TODO: The asserted "correct" answer 1.0'g/cm3' is wrong;
         // the true correct answer is just 1.0 with no units or empty string unit.
         // result = context.resolveExpressionRef("Divide1Q1Q").getExpression().evaluate(context);
-        // Assert.assertEquals(new BigDecimal("1.0"), ((Quantity) result).getValue());
+        // Assert.assertEquals(((Quantity) result).getValue(), new BigDecimal("1.0"));
         // Assert.assertEquals("g/cm3", ((Quantity) result).getUnit());
 
         result = context.resolveExpressionRef("Divide10I5D").getExpression().evaluate(context);
@@ -307,7 +315,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("Ln1000").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"))));
+        assertThat((BigDecimal)result, comparesEqualTo(Value.verifyPrecision(new BigDecimal("6.90775527"), null)));
 
         result = context.resolveExpressionRef("Ln1000D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("6.90775527")));

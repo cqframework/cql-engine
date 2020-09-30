@@ -1,9 +1,10 @@
 package org.opencds.cqf.cql.engine.runtime;
 
-import org.opencds.cqf.cql.engine.exception.InvalidTime;
+import java.time.LocalTime;
 
 import javax.annotation.Nonnull;
-import java.time.LocalTime;
+
+import org.opencds.cqf.cql.engine.exception.InvalidTime;
 
 public class Time extends BaseTemporal {
 

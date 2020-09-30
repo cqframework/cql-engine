@@ -38,7 +38,7 @@ public class DebugUtilities {
             StringBuilder sb = new StringBuilder();
             sb.append("{");
             boolean first = true;
-            for (Object element : (Iterable)result) {
+            for (Object element : (Iterable<?>)result) {
                 sb.append(toDebugString(element));
                 if (first) {
                     first = false;

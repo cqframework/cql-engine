@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+
 import javax.xml.bind.JAXBException;
 
 import org.opencds.cqf.cql.engine.elm.execution.GreaterEvaluator;
@@ -63,6 +64,12 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("SimpleEqFloat1Float1").getExpression().evaluate(context);
         assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("SimpleEqFloat1Float1WithZ").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("SimpleEqFloat1Float1WithPrecisionAndZ").getExpression().evaluate(context);
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("SimpleEqFloat1Float2").getExpression().evaluate(context);
         assertThat(result, is(false));
@@ -536,6 +543,15 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("EquivFloat1Float2").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("EquivFloat1Float1WithZ").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("EquivFloat1Float1WithPrecision").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("EquivFloat1Float1WithPrecisionAndZ").getExpression().evaluate(context);
+        assertThat(result, is(true));
 
         result = context.resolveExpressionRef("EquivFloat1Int1").getExpression().evaluate(context);
         assertThat(result, is(true));

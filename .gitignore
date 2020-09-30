@@ -1,7 +1,6 @@
 .DS_Store
 .idea
 *.iml
-engine/src/generated
 *.class
 target
 .project
@@ -10,6 +9,8 @@ target
 .flattened-pom.xml
 org.eclipse.m2e.core.prefs
 dependency-reduced-pom.xml
+
+*.versionsBackup
 
 core.*
 heapdump.*

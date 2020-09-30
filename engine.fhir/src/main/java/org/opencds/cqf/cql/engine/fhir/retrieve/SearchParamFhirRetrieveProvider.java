@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
-import org.opencds.cqf.cql.engine.runtime.Code;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
+import org.opencds.cqf.cql.engine.runtime.Code;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
 import ca.uhn.fhir.context.RuntimeSearchParam;
@@ -26,13 +26,28 @@ import ca.uhn.fhir.rest.param.TokenParamModifier;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
+    private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
+
     private SearchParameterResolver searchParameterResolver;
+    private int maxCodesPerQuery;
 
     public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
+        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
     }
 
-    private static final int MAX_CODES_PER_QUERY = 64;
+    public void setMaxCodesPerQuery(int value) {
+
+        if (value < 1) {
+            throw new IllegalArgumentException("value must be > 0");
+        }
+
+        this.maxCodesPerQuery = value;
+    }
+
+    public int getMaxCodesPerQuery() {
+        return this.maxCodesPerQuery;
+    }
 
     protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
@@ -83,13 +98,19 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             rangeParam = new DateRangeParam(low, high);
         }
 
-        return Pair.of(datePath, rangeParam);
+        RuntimeSearchParam dateParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, datePath, RestSearchParameterTypeEnum.DATE);
+
+        if (dateParam == null) {
+            return null;
+        }
+
+        return Pair.of(dateParam.getName(), rangeParam);
     }
 
     protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
             Object contextValue) {
         if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
-            return this.searchParameterResolver.createSearchParameter(dataType, contextPath, (String) contextValue);
+            return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String) contextValue);
         }
 
         return null;
@@ -153,7 +174,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         TokenOrListParam codeParams = null;
         int codeCount = 0;
         for (Object code : codes) {
-            if (codeCount % MAX_CODES_PER_QUERY == 0) {
+            if (codeCount % this.maxCodesPerQuery == 0) {
                 if (codeParams != null) {
                     codeParamsList.add(codeParams);
                 }
@@ -168,7 +189,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             } 
             else if (code instanceof String) {
                 String s = (String)code;
-                codeParams.add(new TokenParam(s));
+                codeParams.addOr(new TokenParam(s));
             }
 
         }

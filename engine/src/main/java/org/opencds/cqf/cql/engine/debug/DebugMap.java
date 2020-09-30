@@ -1,11 +1,10 @@
 package org.opencds.cqf.cql.engine.debug;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.elm.execution.Executable;
-
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.elm.execution.Executable;
 
 public class DebugMap {
 
@@ -17,6 +16,20 @@ public class DebugMap {
         libraryMaps = new HashMap<String, DebugLibraryMapEntry>();
         nodeTypeEntries = new HashMap<String, DebugMapEntry>();
         exceptionTypeEntries = new HashMap<String, DebugMapEntry>();
+    }
+
+    public DebugAction shouldDebug(Exception e) {
+        if (exceptionTypeEntries.size() == 0) {
+            return DebugAction.LOG;
+        }
+        else {
+            DebugMapEntry exceptionTypeEntry = exceptionTypeEntries.get(e.getClass().getSimpleName());
+            if (exceptionTypeEntry != null)
+                return exceptionTypeEntry.getAction();
+        }
+
+        // Exceptions are always logged (unless explicitly disabled by a DebugAction.NONE for the specific type)
+        return DebugAction.LOG;
     }
 
     public DebugAction shouldDebug(Executable node, Library currentLibrary) {
@@ -58,9 +71,9 @@ public class DebugMap {
         return libraryMap;
     }
 
-    private void addLibraryMapEntry(String libraryName, DebugLibraryMapEntry libraryMapEntry) {
-        libraryMaps.put(libraryName, libraryMapEntry);
-    }
+    // private void addLibraryMapEntry(String libraryName, DebugLibraryMapEntry libraryMapEntry) {
+    //     libraryMaps.put(libraryName, libraryMapEntry);
+    // }
 
     public void addDebugEntry(DebugLocator debugLocator, DebugAction action) {
         addDebugEntry(null, debugLocator, action);

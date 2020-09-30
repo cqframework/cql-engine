@@ -1,13 +1,17 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.CqlList;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
 import org.opencds.cqf.cql.engine.runtime.Interval;
+import org.opencds.cqf.cql.engine.runtime.Value;
 
 /*
+https://cql.hl7.org/09-b-cqlreference.html#equivalent
+
 *** NOTES FOR CLINICAL OPERATORS ***
 ~(left Code, right Code) Boolean
 
@@ -33,6 +37,10 @@ The ~ operator for intervals returns true if and only if the intervals are over 
 
 The ~ operator for lists returns true if and only if the lists contain elements of the same type, have the same number of elements,
   and for each element in the lists, in order, the elements are equivalent.
+
+*** NOTES FOR DECIMAL ***
+For decimals, equivalent means the values are the same with the comparison done on values rounded to the precision of the
+least precise operand; trailing zeroes after the decimal are ignored in determining precision for equivalent comparison.
 */
 
 public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equivalent {
@@ -63,7 +71,13 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         }
 
         else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-            return ((BigDecimal) left).compareTo((BigDecimal) right) == 0;
+            BigDecimal leftDecimal = Value.verifyPrecision((BigDecimal)left, 0);
+            BigDecimal rightDecimal = Value.verifyPrecision((BigDecimal)right, 0);
+            int minScale = Math.min(leftDecimal.scale(), rightDecimal.scale());
+            if (minScale > 0) {
+                return leftDecimal.setScale(minScale, RoundingMode.FLOOR).compareTo(rightDecimal.setScale(minScale, RoundingMode.FLOOR)) == 0;
+            }
+            return leftDecimal.compareTo(rightDecimal) == 0;
         }
 
         if (left instanceof Iterable) {

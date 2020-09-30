@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.execution;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.comparesEqualTo;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -12,6 +13,7 @@ import javax.xml.bind.JAXBException;
 
 import org.junit.Assert;
 import org.opencds.cqf.cql.engine.exception.CqlException;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.testng.annotations.Test;
 
 public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
@@ -135,6 +137,93 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.QuantityEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testQuantity() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("QuantityZero").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0)));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("QuantityPosZero").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0)));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("QuantityNegZero").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0)));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("QuantityOne").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(1)));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("QuantityPosOne").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(1)));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("QuantityNegOne").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0).subtract(new BigDecimal(1))));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("QuantitySmall").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0.05).setScale(2, RoundingMode.HALF_EVEN)));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        result = context.resolveExpressionRef("QuantityPosSmall").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0.05).setScale(2, RoundingMode.HALF_EVEN)));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        result = context.resolveExpressionRef("QuantityNegSmall").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0).subtract(new BigDecimal(0.05).setScale(2, RoundingMode.HALF_EVEN))));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        result = context.resolveExpressionRef("QuantityStep").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0.00000001).setScale(8, RoundingMode.HALF_EVEN)));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        result = context.resolveExpressionRef("QuantityPosStep").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0.00000001).setScale(8, RoundingMode.HALF_EVEN)));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        result = context.resolveExpressionRef("QuantityNegStep").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(0).subtract(new BigDecimal(0.00000001).setScale(8, RoundingMode.HALF_EVEN))));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        //define QuantityMax: 9999999999999999999999999999.99999999 'mg'
+        result = context.resolveExpressionRef("QuantityMax").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("9999999999999999999999999999.99999999")));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        //define QuantityPosMax: +9999999999999999999999999999.99999999 'mg'
+        result = context.resolveExpressionRef("QuantityPosMax").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("9999999999999999999999999999.99999999")));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+        //define QuantityMin: -9999999999999999999999999999.99999999 'mg'
+        result = context.resolveExpressionRef("QuantityMin").getExpression().evaluate(context);
+        assertThat(result, instanceOf(Quantity.class));
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("-9999999999999999999999999999.99999999")));
+        assertThat(((Quantity)result).getUnit(), is("mg"));
+
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.LiteralEvaluator#evaluate(Context)}
      */
     @Test
@@ -145,10 +234,12 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
 
         result = context.resolveExpressionRef("DecimalPosZero").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(42.0).subtract(new BigDecimal(42.0))));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
+        //assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(42.0).subtract(new BigDecimal(42.0))));
 
         result = context.resolveExpressionRef("DecimalNegZero").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(42.0).subtract(new BigDecimal(42.0))));
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.0)));
+        //assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(42.0).subtract(new BigDecimal(42.0))));
 
         result = context.resolveExpressionRef("DecimalOne").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(BigDecimal.ONE));
@@ -223,31 +314,50 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(42.0).subtract(new BigDecimal(42.0))));
 
         result = context.resolveExpressionRef("DecimalOneStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalPosOneStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalNegOneStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(-1*Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(-1 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(-1*Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalTwoStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalPosTwoStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalNegTwoStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(-2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(-2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(8, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(-2 * Math.pow(10.0,-8)).setScale(8,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalTenStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(7, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(7, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalPosTenStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(7, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(7, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
 
         result = context.resolveExpressionRef("DecimalNegTenStep").getExpression().evaluate(context);
-        assertThat(((BigDecimal)result).setScale(7, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(-1*Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal(-1*Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+        //assertThat(((BigDecimal)result).setScale(7, RoundingMode.HALF_EVEN), comparesEqualTo(new BigDecimal(-1*Math.pow(10.0,-7)).setScale(7,RoundingMode.HALF_EVEN)));
+
+        //define DecimalMaxValue : 9999999999999999999999999999.99999999
+        result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal("9999999999999999999999999999.99999999")));
+        //define DecimalPosMaxValue : +9999999999999999999999999999.99999999
+        result = context.resolveExpressionRef("DecimalPosMaxValue").getExpression().evaluate(context);
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal("9999999999999999999999999999.99999999")));
+        //define DecimalMinValue: -9999999999999999999999999999.99999999
+        result = context.resolveExpressionRef("DecimalMinValue").getExpression().evaluate(context);
+        assertThat(((BigDecimal)result), comparesEqualTo(new BigDecimal("-9999999999999999999999999999.99999999")));
 
 //        try {
 //            context.resolveExpressionRef("DecimalTenthStep").getExpression().evaluate(context);
