@@ -14,7 +14,8 @@ This repository uses stable trunk methodology:
 |----|----|----|----|
 |v12|CQL 1.2 Engine|Obsolete|1.2.20|
 |v13|CQL 1.3 Engine|Maintenance|1.3.12.2|
-|master|CQL 1.4 Engine|Release|1.4.0|
+|v14|CQL 1.4 Engine|Maintenance|1.4.0|
+|master|CQL 1.5 Engine|Initial Release|1.5.0|
 |develop|CQL 1.5 Engine|Snapshot|1.5.0-SNAPSHOT|
 |&lt;feature&gt;|CQL 1.5 Engine|_as needed_|&lt;version&gt;-SNAPSHOT|
 
@@ -38,11 +39,10 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 
 # Roadmap
 
-* 1.3.9 - Improved exception handling and stable
-* 1.3.10 - Debugging/tracing/coverage
-* 1.3.11 - FHIR R4 Support
 * 1.4 - CQL 1.4 Support
-* 1.5 - CQL 1.5 Support (Enhanced retrieve, context-based retrieves, includes, search parameters)
+* 1.5 - CQL 1.5 Support
+* 1.5.0 - Initial release candidate
+* 1.5.1 - Enhanced retrieve: context-based retrieves, includes, search parameters
 
 # License
 
