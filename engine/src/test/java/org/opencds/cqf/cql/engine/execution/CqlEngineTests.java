@@ -96,6 +96,26 @@ public class CqlEngineTests {
         assertThat(expResult, is(10));
     }
 
+    @Test
+    public void test_simpleLibraryWithParam_returnsParamValue() throws IOException, JAXBException {
+        Library library = this.toLibrary("library Test version '1.0.0'\nparameter IntValue Integer\ndefine X:\nIntValue");
+
+        LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
+
+        CqlEngine engine = new CqlEngine(libraryLoader);
+
+        Map<String,Object> parameters = new HashMap<>();
+        parameters.put("IntValue", 10);
+
+        EvaluationResult result = engine.evaluate("Test", parameters);
+
+
+        Object expResult = result.forExpression("X");
+
+        assertThat(expResult, is(10));
+    }
+
+
     //@Test(expected = IllegalArgumentException.class)
     public void test_dataLibrary_noProvider_throwsException() throws IOException, JAXBException {
         Library library = this.toLibrary("library Test version '1.0.0'\nusing FHIR version '3.0.0'\ndefine X:\n5+5");
