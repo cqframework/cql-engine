@@ -193,6 +193,10 @@ public class CqlEngine {
         }
 
         if (parameters != null) {
+            for (Map.Entry<String, Object> parameterValue : parameters.entrySet()) {
+               context.setParameter(library.getLocalId(), parameterValue.getKey(), parameterValue.getValue());
+            }
+
             if (library.getIncludes() != null && library.getIncludes().getDef() != null) {
                 for (IncludeDef def : library.getIncludes().getDef()) {
                     String name = def.getLocalIdentifier();
