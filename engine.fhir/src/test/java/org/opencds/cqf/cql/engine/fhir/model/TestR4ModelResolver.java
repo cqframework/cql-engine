@@ -214,6 +214,7 @@ public class TestR4ModelResolver {
                     // Bugs in 4.0.1 model info
                     case "DataElement constraint on ElementDefinition data type": continue;
                     case "question": continue;
+                    case "allowedUnits": continue;
                 }
 
                 // Also bugs in the 4.0.1 model info
@@ -329,7 +330,7 @@ public class TestR4ModelResolver {
         assertNull(path);
 
         path = (String)resolver.getContextPath("Patient", "MedicationStatement");
-        assertTrue(path.equals("patient"));
+        assertTrue(path.equals("subject"));
     }
 
     @Test 

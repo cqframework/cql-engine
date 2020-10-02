@@ -245,7 +245,7 @@ public class TestDstu3ModelResolver {
         assertTrue(path.equals("subject"));
 
         path = (String)resolver.getContextPath("Patient", "MedicationStatement");
-        assertTrue(path.equals("patient"));
+        assertTrue(path.equals("subject"));
     }
 
     @Test 

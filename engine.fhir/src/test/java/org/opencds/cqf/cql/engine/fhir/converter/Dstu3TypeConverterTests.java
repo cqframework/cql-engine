@@ -227,7 +227,7 @@ public class Dstu3TypeConverterTests {
 
     @Test
     public void TestQuantityToFhirQuantity() {
-        org.hl7.fhir.dstu3.model.Quantity expected = new org.hl7.fhir.dstu3.model.Quantity(2.0).setUnit("ml")
+        org.hl7.fhir.dstu3.model.Quantity expected = new org.hl7.fhir.dstu3.model.Quantity(2.0).setCode("ml")
                 .setSystem("http://unitsofmeasure.org");
         org.hl7.fhir.dstu3.model.Quantity actual = (org.hl7.fhir.dstu3.model.Quantity) this.typeConverter
                 .toFhirQuantity(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"));
@@ -236,9 +236,9 @@ public class Dstu3TypeConverterTests {
 
     @Test
     public void TestRatioToFhirRatio() {
-        org.hl7.fhir.dstu3.model.Quantity expectedNumerator = new org.hl7.fhir.dstu3.model.Quantity(1.0).setUnit("ml")
+        org.hl7.fhir.dstu3.model.Quantity expectedNumerator = new org.hl7.fhir.dstu3.model.Quantity(1.0).setCode("ml")
                 .setSystem("http://unitsofmeasure.org");
-        org.hl7.fhir.dstu3.model.Quantity expectedDenominator = new org.hl7.fhir.dstu3.model.Quantity(2.0).setUnit("ml")
+        org.hl7.fhir.dstu3.model.Quantity expectedDenominator = new org.hl7.fhir.dstu3.model.Quantity(2.0).setCode("ml")
                 .setSystem("http://unitsofmeasure.org");
 
         org.hl7.fhir.dstu3.model.Ratio expected = new org.hl7.fhir.dstu3.model.Ratio().setNumerator(expectedNumerator)
@@ -314,8 +314,8 @@ public class Dstu3TypeConverterTests {
     @Test
     public void TestIntervalToFhirRange() {
         Range expected = new Range()
-                .setLow((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(2.0).setUnit("ml").setSystem("http://unitsofmeasure.org"))
-                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(5.0).setUnit("ml").setSystem("http://unitsofmeasure.org"));
+                .setLow((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(2.0).setCode("ml").setSystem("http://unitsofmeasure.org"))
+                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(5.0).setCode("ml").setSystem("http://unitsofmeasure.org"));
         Range actual = (Range) this.typeConverter
                 .toFhirRange(new Interval(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"), true,
                         new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true));
@@ -339,8 +339,8 @@ public class Dstu3TypeConverterTests {
         assertTrue(expectedPeriod.equalsDeep(actualPeriod));
 
         Range expectedRange = new Range()
-                .setLow((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(2.0).setUnit("ml").setSystem("http://unitsofmeasure.org"))
-                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(5.0).setUnit("ml").setSystem("http://unitsofmeasure.org"));
+                .setLow((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(2.0).setCode("ml").setSystem("http://unitsofmeasure.org"))
+                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu3.model.SimpleQuantity().setValue(5.0).setCode("ml").setSystem("http://unitsofmeasure.org"));
         Range actualRange = (Range) this.typeConverter
                 .toFhirInterval(new Interval(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"), true,
                         new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true));

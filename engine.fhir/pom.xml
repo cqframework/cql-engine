@@ -114,7 +114,7 @@
                 <configuration>
                     <includes>
                         <include>org.hl7.fhirpath.**</include>
-                        <include>org.opencds.cqf.cql.engine.data.fhir.**</include>
+                        <include>org.opencds.cqf.cql.engine.fhir.**</include>
                     </includes>
                 </configuration>
             </plugin>

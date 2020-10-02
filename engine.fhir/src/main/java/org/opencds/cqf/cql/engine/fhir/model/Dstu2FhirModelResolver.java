@@ -267,12 +267,6 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
             return null;
         }
 
-        if (contextType != null && !(contextType.equals("Unspecified") || contextType.equals("Population"))) {
-            if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
-                return "subject";
-            }
-        }
-
         return super.getContextPath(contextType, targetType);
     }
 }
