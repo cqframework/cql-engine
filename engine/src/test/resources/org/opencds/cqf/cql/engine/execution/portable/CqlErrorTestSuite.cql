@@ -55,8 +55,8 @@ library CqlErrorTestSuite version '2'
 **************************
 */
 
-define MinWrongType: minimum Quantity
-define MaxWrongType: maximum Quantity
+define MinWrongType: minimum Ratio
+define MaxWrongType: maximum Ratio
 define Successor_max_date: successor of DateTime(9999,12,31,23,59,59,999)
 define Successor_ofr: successor of 2147483647
 define Predecessor_min_date: predecessor of DateTime(0001,01,01,0,0,0,0)

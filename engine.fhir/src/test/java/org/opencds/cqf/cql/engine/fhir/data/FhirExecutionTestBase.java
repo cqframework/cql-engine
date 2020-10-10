@@ -3,9 +3,7 @@ package org.opencds.cqf.cql.engine.fhir.data;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,10 +11,8 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.*;
+import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
@@ -51,7 +47,7 @@ public abstract class FhirExecutionTestBase {
     protected CompositeDataProvider r4Provider;
 
     Library library = null;
-    protected File xmlFile = null;
+    //protected File xmlFile = null;
 
     @BeforeClass
     public void setup() {
@@ -82,6 +78,7 @@ public abstract class FhirExecutionTestBase {
         if (library == null) {
             ModelManager modelManager = new ModelManager();
             LibraryManager libraryManager = new LibraryManager(modelManager);
+            libraryManager.getLibrarySourceLoader().registerProvider(new FhirLibrarySourceProvider());
             UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
             try {
                 File cqlFile = new File(URLDecoder.decode(this.getClass().getResource("fhir/" + fileName + ".cql").getFile(), "UTF-8"));
@@ -105,6 +102,20 @@ public abstract class FhirExecutionTestBase {
 
                 assertThat(translator.getErrors().size(), is(0));
 
+                for (Map.Entry<String, TranslatedLibrary> entry : libraryManager.getTranslatedLibraries().entrySet()) {
+                    String xmlContent = translator.convertToXml(entry.getValue().getLibrary());
+                    StringReader sr = new StringReader(xmlContent);
+                    libraries.put(entry.getKey(), CqlLibraryReader.read(sr));
+                    if (entry.getKey().equals(fileName)) {
+                        library = libraries.get(entry.getKey());
+                    }
+                }
+
+                if (library == null) {
+                    library = CqlLibraryReader.read(new StringReader(translator.toXml()));
+                    libraries.put(fileName, library);
+                }
+/*
                 xmlFile = new File(cqlFile.getParent(), fileName + ".xml");
                 xmlFile.createNewFile();
 
@@ -112,12 +123,21 @@ public abstract class FhirExecutionTestBase {
                 pw.println(translator.toXml());
                 pw.println();
                 pw.close();
+*/
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+/*
             library = CqlLibraryReader.read(xmlFile);
             libraries.put(fileName, library);
+            for (Map.Entry<String, TranslatedLibrary> entry : libraryManager.getTranslatedLibraries().entrySet()) {
+                if (!entry.getKey().equals(fileName)) {
+                    StringWriter sw = new StringWriter();
+                    CqlLibraryReader.read()
+                    libraries.put(entry.getKey(), entry.getValue().getLibrary());
+                }
+            }
+*/
         }
     }
 }

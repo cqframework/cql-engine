@@ -45,7 +45,7 @@ public class ConvertsToDateTimeEvaluator extends org.cqframework.cql.elm.executi
         else if (argument instanceof Date) {
             try {
                 new DateTime(
-                        TemporalHelper.getDefaultOffset(),
+                        null,
                         ((Date) argument).getDate().getYear(),
                         ((Date) argument).getDate().getMonthValue(),
                         ((Date) argument).getDate().getDayOfMonth(),
@@ -66,6 +66,6 @@ public class ConvertsToDateTimeEvaluator extends org.cqframework.cql.elm.executi
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-        return convertsToDateTime(operand, context.getEvaluationDateTime().getEvaluationOffset());
+        return convertsToDateTime(operand, null);
     }
 }

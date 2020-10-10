@@ -9,10 +9,9 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 import javax.xml.bind.JAXBException;
 
@@ -49,7 +48,7 @@ public class CqlTestSuite {
     @Test
     public void testMainSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlTestSuite.cql");
-        Context context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2018, 1, 1, 7, 0, 0, 0));
+        Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
         if (library.getStatements() != null) {
             for (ExpressionDef expression : library.getStatements().getDef()) {
                 if (expression instanceof FunctionDef) {
@@ -66,7 +65,7 @@ public class CqlTestSuite {
     @Test
     public void testErrorSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlErrorTestSuite.cql");
-        Context context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2018, 1, 1, 7, 0, 0, 0));
+        Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
         if (library.getStatements() != null) {
             for (ExpressionDef expression : library.getStatements().getDef()) {
                 try {
@@ -86,7 +85,7 @@ public class CqlTestSuite {
     @Test
     public void testInternalTypeRepresentationSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlInternalTypeRepresentationSuite.cql");
-        Context context = new Context(library, new DateTime(TemporalHelper.getDefaultOffset(), 2018, 1, 1, 7, 0, 0, 0));
+        Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
         Object result;
 
         result = context.resolveExpressionRef("BoolTrue").evaluate(context);
@@ -123,31 +122,31 @@ public class CqlTestSuite {
 
         result = context.resolveExpressionRef("DateTime_Year").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012)));
 
         result = context.resolveExpressionRef("DateTime_Month").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012, 2)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012, 2)));
 
         result = context.resolveExpressionRef("DateTime_Day").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012, 2, 15)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012, 2, 15)));
 
         result = context.resolveExpressionRef("DateTime_Hour").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012, 2, 15, 12)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012, 2, 15, 12)));
 
         result = context.resolveExpressionRef("DateTime_Minute").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012, 2, 15, 12, 10)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012, 2, 15, 12, 10)));
 
         result = context.resolveExpressionRef("DateTime_Second").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012, 2, 15, 12, 10, 59)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012, 2, 15, 12, 10, 59)));
 
         result = context.resolveExpressionRef("DateTime_Millisecond").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
-        Assert.assertTrue(((DateTime) result).equal(new DateTime(TemporalHelper.getDefaultOffset(), 2012, 2, 15, 12, 10, 59, 456)));
+        Assert.assertTrue(((DateTime) result).equal(new DateTime(null, 2012, 2, 15, 12, 10, 59, 456)));
 
         result = context.resolveExpressionRef("DateTime_TimezoneOffset").evaluate(context);
         Assert.assertTrue(result instanceof DateTime);
@@ -201,7 +200,7 @@ public class CqlTestSuite {
         elements.clear();
         elements.put("class", "Portable CQL Test Suite");
         elements.put("versionNum", new BigDecimal("1.0"));
-        elements.put("date", new DateTime(TemporalHelper.getDefaultOffset(), 2018, 7, 18));
+        elements.put("date", new DateTime(null, 2018, 7, 18));
         elements.put("developer", "Christopher Schuler");
 
         result = context.resolveExpressionRef("Structured_TupleA").evaluate(context);
@@ -213,8 +212,8 @@ public class CqlTestSuite {
         Assert.assertTrue(
                 ((Interval) result).equal(
                         new Interval(
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2012, 1, 1), false,
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2013, 1, 1), false
+                                new DateTime(null, 2012, 1, 1), false,
+                                new DateTime(null, 2013, 1, 1), false
                         )
                 )
         );
@@ -224,8 +223,8 @@ public class CqlTestSuite {
         Assert.assertTrue(
                 ((Interval) result).equal(
                         new Interval(
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2012, 1, 1), false,
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2013, 1, 1), true
+                                new DateTime(null, 2012, 1, 1), false,
+                                new DateTime(null, 2013, 1, 1), true
                         )
                 )
         );
@@ -235,8 +234,8 @@ public class CqlTestSuite {
         Assert.assertTrue(
                 ((Interval) result).equal(
                         new Interval(
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2012, 1, 1), true,
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2013, 1, 1), false
+                                new DateTime(null, 2012, 1, 1), true,
+                                new DateTime(null, 2013, 1, 1), false
                         )
                 )
         );
@@ -246,8 +245,8 @@ public class CqlTestSuite {
         Assert.assertTrue(
                 ((Interval) result).equal(
                         new Interval(
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2012, 1, 1), true,
-                                new DateTime(TemporalHelper.getDefaultOffset(), 2013, 1, 1), true
+                                new DateTime(null, 2012, 1, 1), true,
+                                new DateTime(null, 2013, 1, 1), true
                         )
                 )
         );

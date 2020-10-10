@@ -29,6 +29,7 @@ import org.opencds.cqf.cql.engine.exception.InvalidCast;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
@@ -80,6 +81,10 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
 
     protected Integer getCalendarConstant(BaseDateTimeType dateTime) {
         return dateTime.getPrecision().getCalendarConstant();
+    }
+
+    protected void setCalendarConstant(BaseDateTimeType dateTime, BaseTemporal temporal) {
+        dateTime.setPrecision(toTemporalPrecisionEnum(temporal.getPrecision()));
     }
 
     protected String timeToString(TimeType time) {

@@ -29,7 +29,7 @@ public class CqlErrorsAndMessagingOperatorsTest extends CqlExecutionTestBase {
         try {
             result = context.resolveExpressionRef("TestMessageError").evaluate(context);
         } catch (RuntimeException re) {
-            Assert.assertEquals(re.getMessage(), "400: This is an error!\n4");
+            Assert.assertEquals(re.getMessage(), String.format("400: This is an error!%n4"));
         }
     }
 }

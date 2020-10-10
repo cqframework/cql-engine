@@ -1,17 +1,13 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.InvocationTargetException;
+import java.text.DateFormat;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.TimeZone;
+import java.util.*;
 
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -25,9 +21,7 @@ import org.opencds.cqf.cql.engine.exception.InvalidPrecision;
 import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
-import org.opencds.cqf.cql.engine.runtime.Time;
+import org.opencds.cqf.cql.engine.runtime.*;
 
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
@@ -54,6 +48,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     protected abstract SimpleQuantityType castToSimpleQuantity(BaseType base);
     protected abstract Calendar getCalendar(BaseDateTimeType dateTime);
     protected abstract Integer getCalendarConstant(BaseDateTimeType dateTime);
+    protected abstract void setCalendarConstant(BaseDateTimeType target, BaseTemporal value);
     protected abstract String idToString(IdType id);
     protected abstract String timeToString(TimeType time);
     protected abstract String getResourceType(ResourceType resource);
@@ -258,7 +253,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         IBase base = (IBase) target;
         BaseRuntimeElementCompositeDefinition<?> definition;
         if (base instanceof IPrimitiveType) {
-            ((IPrimitiveType) target).setValue(fromJavaPrimitive(value, base));
+            setPrimitiveValue(value, (IPrimitiveType)base);
             return;
         }
         else {
@@ -277,11 +272,11 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         try {
             if (value instanceof Iterable) {
                 for (Object val : (Iterable<?>) value) {
-                    child.getMutator().addValue(base, (IBase) fromJavaPrimitive(val, base));
+                    child.getMutator().addValue(base, setBaseValue(val, base));
                 }
             }
             else {
-                child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
+                child.getMutator().setValue(base, setBaseValue(value, base));
             }
         } catch (IllegalArgumentException le) {
             if (value.getClass().getSimpleName().equals("Quantity")) {
@@ -290,7 +285,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                 } catch (FHIRException e) {
                     throw new InvalidCast("Unable to cast Quantity to SimpleQuantity");
                 }
-                child.getMutator().setValue(base, (IBase) fromJavaPrimitive(value, base));
+                child.getMutator().setValue(base, setBaseValue(value, base));
             }
             else {
                 throw new DataProviderException(String.format("Configuration error encountered: %s", le.getMessage()));
@@ -428,28 +423,16 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         return toDate(value, this.getCalendarConstant(value));
     }
 
-    protected org.opencds.cqf.cql.engine.runtime.Time toTime(BaseDateTimeType value) {
-        return toTime(value, this.getCalendarConstant(value));
-    }
-
-    protected Time toTime(BaseDateTimeType value, Integer calendarConstant) {
-        Calendar calendar = this.getCalendar(value);
-        //TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
-        //ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
-        switch (calendarConstant) {
-            case Calendar.HOUR: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR));
-            case Calendar.MINUTE: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE));
-            case Calendar.SECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND));
-            case Calendar.MILLISECOND: return new org.opencds.cqf.cql.engine.runtime.Time(calendar.get(Calendar.HOUR), calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND));
-            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
-        }
+    protected org.opencds.cqf.cql.engine.runtime.Time toTime(TimeType value) {
+        return new Time(timeToString(value));
     }
 
     protected DateTime toDateTime(BaseDateTimeType value, Integer calendarConstant) {
         Calendar calendar = this.getCalendar(value);
 
-        TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
-        ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
+        //TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
+        //ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
+        ZoneOffset zoneOffset = ((GregorianCalendar)calendar).toZonedDateTime().getOffset();
         switch (calendarConstant) {
             case Calendar.YEAR: return new DateTime(
                     TemporalHelper.zoneToOffset(zoneOffset),
@@ -498,34 +481,80 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
     }
 
+    public IBase setBaseValue(Object value, IBase target) {
+        if (target instanceof IPrimitiveType) {
+            setPrimitiveValue(value, (IPrimitiveType)target);
+        }
+        return (IBase)value;
+    }
+
+    public void setPrimitiveValue(Object value, IPrimitiveType target) {
+        String simpleName = target.getClass().getSimpleName();
+        switch (simpleName) {
+            case "DateTimeType":
+            case "InstantType":
+                target.setValue(((DateTime)value).toJavaDate());
+                setCalendarConstant((BaseDateTimeType)target, (BaseTemporal)value);
+            break;
+            case "DateType":
+                target.setValue(((org.opencds.cqf.cql.engine.runtime.Date)value).toJavaDate());
+                setCalendarConstant((BaseDateTimeType)target, (BaseTemporal)value);
+            break;
+            case "TimeType":
+                target.setValue(value.toString());
+            break;
+            case "Base64BinaryType":
+                target.setValueAsString((String)value);
+            break;
+            default: target.setValue(value);
+        }
+    }
+
+    public TemporalPrecisionEnum toTemporalPrecisionEnum(Precision precision) {
+        switch (precision) {
+            case YEAR: return TemporalPrecisionEnum.YEAR;
+            case MONTH: return TemporalPrecisionEnum.MONTH;
+            case DAY: return TemporalPrecisionEnum.DAY;
+            case HOUR:
+            case MINUTE: return TemporalPrecisionEnum.MINUTE;
+            case SECOND: return TemporalPrecisionEnum.SECOND;
+            case MILLISECOND: return TemporalPrecisionEnum.MILLI;
+            default: throw new IllegalArgumentException(String.format("Unknown precision %s", precision.toString()));
+        }
+    }
+
+   /*
     // TODO: Find HAPI registry of Primitive Type conversions
     public Object fromJavaPrimitive(Object value, Object target) {
         String simpleName = target.getClass().getSimpleName();
         switch(simpleName) {
             case "DateTimeType":
+            case "InstantType":
+                return ((DateTime)value).toJavaDate();
             case "DateType":
-                DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
-                return java.util.Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
+                return ((org.opencds.cqf.cql.engine.runtime.Date)value).toJavaDate();
             case "TimeType":
-                return ((Time) value).getTime().toString();
+                return ((Time) value).toString();
         }
 
         if (value instanceof Time) {
-            return ((Time) value).getTime().toString();
+            return ((Time) value).toString();
         }
         else {
             return value;
         }
     }
+    */
 
     public Object toJavaPrimitive(Object result, Object source) {
         String simpleName = source.getClass().getSimpleName();
         switch (simpleName) {
+            case "InstantType":
             case "DateTimeType": return toDateTime((BaseDateTimeType)source);
             case "DateType": return toDate((BaseDateTimeType)source);
-            case "TimeType": return toTime((BaseDateTimeType)source);
-            case "InstantType": return toDateTime((BaseDateTimeType)source);
+            case "TimeType": return toTime((TimeType)source);
             case "IdType": return this.idToString((IdType)source);
+            case "Base64BinaryType": return ((IPrimitiveType)source).getValueAsString();
             default:
                 return result;
         }

@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 
 import javax.xml.bind.JAXBException;
@@ -47,12 +48,11 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("CoalesceLastList").getExpression().evaluate(context);
         assertThat(result, is(Collections.singletonList("a")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("DateTimeListCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("TimeCoalesce").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 15, 33, 556)));

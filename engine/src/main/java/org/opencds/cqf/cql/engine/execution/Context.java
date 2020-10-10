@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.execution;
 
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -39,6 +40,7 @@ import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.Severity;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
@@ -90,8 +92,9 @@ public class Context {
     private Stack<Library> currentLibrary = new Stack<>();
     private LibraryLoader libraryLoader;
 
-    private org.opencds.cqf.cql.engine.runtime.DateTime evaluationDateTime =
-            new org.opencds.cqf.cql.engine.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
+    private ZonedDateTime evaluationZonedDateTime;
+    private OffsetDateTime evaluationOffsetDateTime;
+    private DateTime evaluationDateTime;
 
     private UcumService ucumService;
 
@@ -157,11 +160,12 @@ public class Context {
     }
 
     public Context(Library library) {
+        setEvaluationDateTime(ZonedDateTime.now());
         init(library);
     }
 
-    public Context(Library library, org.opencds.cqf.cql.engine.runtime.DateTime evaluationDateTime) {
-        this.evaluationDateTime = evaluationDateTime;
+    public Context(Library library, ZonedDateTime evaluationZonedDateTime) {
+        setEvaluationDateTime(evaluationZonedDateTime);
         init(library);
     }
 
@@ -180,7 +184,21 @@ public class Context {
         threadContext.set(this);
     }
 
-    public org.opencds.cqf.cql.engine.runtime.DateTime getEvaluationDateTime() {
+    private void setEvaluationDateTime(ZonedDateTime evaluationZonedDateTime) {
+        this.evaluationZonedDateTime = evaluationZonedDateTime;
+        this.evaluationOffsetDateTime = evaluationZonedDateTime.toOffsetDateTime();
+        this.evaluationDateTime = new DateTime(evaluationOffsetDateTime);
+    }
+
+    public ZonedDateTime getEvaluationZonedDateTime() {
+        return this.evaluationZonedDateTime;
+    }
+
+    public OffsetDateTime getEvaluationOffsetDateTime() {
+        return this.evaluationOffsetDateTime;
+    }
+
+    public DateTime getEvaluationDateTime() {
         return this.evaluationDateTime;
     }
 
