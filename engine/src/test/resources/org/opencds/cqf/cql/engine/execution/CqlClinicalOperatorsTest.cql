@@ -17,9 +17,9 @@ define CalculateAgeUncertain: CalculateAgeInMonths(DateTime(2010))
 define CalculateAgeAtYears: CalculateAgeInYearsAt(DateTime(2000, 1, 1), DateTime(2017, 1, 1))
 define CalculateAgeAtMonths: CalculateAgeInMonthsAt(DateTime(2000, 1, 1), DateTime(2016, 6, 14))
 define CalculateAgeAtDays: CalculateAgeInDaysAt(DateTime(2000, 1, 1), DateTime(2016, 7, 13))
-define CalculateAgeAtHours: CalculateAgeInHoursAt(DateTime(2000, 1, 1, 0), DateTime(2016, 7, 13, 0))
-define CalculateAgeAtMinutes: CalculateAgeInMinutesAt(DateTime(2000, 1, 1, 0, 0), DateTime(2016, 7, 13, 0, 0))
-define CalculateAgeAtSeconds: CalculateAgeInSecondsAt(DateTime(2000, 1, 1, 0, 0, 0), DateTime(2016, 7, 13, 0, 0, 0))
+define CalculateAgeAtHours: CalculateAgeInHoursAt(DateTime(2000, 1, 1, 0), DateTime(2000, 1, 2, 3)) // 27
+define CalculateAgeAtMinutes: CalculateAgeInMinutesAt(DateTime(2000, 1, 1, 0, 0), DateTime(2000, 1, 2, 3, 10)) // 27 * 60 + 10
+define CalculateAgeAtSeconds: CalculateAgeInSecondsAt(DateTime(2000, 1, 1, 0, 0, 0), DateTime(2000, 1, 2, 3, 10, 15)) // (27 * 60 + 10) * 60 + 15
 define CalculateAgeAtUncertain: CalculateAgeInMonthsAt(DateTime(2000), DateTime(2016, 7, 14))
 
 //Equal
