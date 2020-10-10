@@ -18,7 +18,7 @@ codesystem "SNOMED-CT": 'http://snomed.info/sct'
 define function TestMessage(condition Boolean, testName String, expected String, result String):
   if condition
     then testName + ' TEST PASSED'
-  else Message('TEST SUITE FAILED', true, 'Test ' + testName + ' failed', 'Error', 'Expected ' + expected + ' Found ' + result)
+  else Message('TEST SUITE FAILED', true, 'Test ' + testName + ' failed', 'Warning', 'Expected ' + expected + ' Found ' + result)
 
 define function toString(value Boolean):
   if value is null
@@ -2225,8 +2225,8 @@ define DateMath_MinusThreeMilliseconds: June15th2013 - 3 milliseconds
 
 define test_DateMath_PlusThreeYears: TestMessage(DateMath_PlusThreeYears = DateTime(2016, 6, 15, 0, 0, 0, 0), 'DateMath_PlusThreeYears', toString(DateTime(2016, 6, 15, 0, 0, 0, 0)), toString(DateMath_PlusThreeYears))
 define test_DateMath_MinusThreeYears: TestMessage(DateMath_MinusThreeYears = DateTime(2010, 6, 15, 0, 0, 0, 0), 'DateMath_MinusThreeYears', toString(DateTime(2010, 6, 15, 0, 0, 0, 0)), toString(DateMath_MinusThreeYears))
-define test_DateMath_PlusEightMonths: TestMessage(DateMath_PlusEightMonths = DateTime(2014, 2, 15, 0, 0, 0, 0), 'DateMath_PlusEightMonths', toString(DateTime(2014, 2, 15, 0, 0, 0, 0)), toString(DateMath_PlusEightMonths))
-define test_DateMath_MinusEightMonths: TestMessage(DateMath_MinusEightMonths = DateTime(2012, 10, 15, 0, 0, 0, 0), 'DateMath_MinusEightMonths', toString(DateTime(2012, 10, 15, 0, 0, 0, 0)), toString(DateMath_MinusEightMonths))
+define test_DateMath_PlusEightMonths: TestMessage(DateMath_PlusEightMonths same day as DateTime(2014, 2, 15, 0, 0, 0, 0), 'DateMath_PlusEightMonths', toString(DateTime(2014, 2, 15, 0, 0, 0, 0)), toString(DateMath_PlusEightMonths))
+define test_DateMath_MinusEightMonths: TestMessage(DateMath_MinusEightMonths same day as DateTime(2012, 10, 15, 0, 0, 0, 0), 'DateMath_MinusEightMonths', toString(DateTime(2012, 10, 15, 0, 0, 0, 0)), toString(DateMath_MinusEightMonths))
 define test_DateMath_PlusThreeWeeks: TestMessage(DateMath_PlusThreeWeeks = DateTime(2013, 7, 6, 0, 0, 0, 0), 'DateMath_PlusThreeWeeks', toString(DateTime(2013, 7, 6, 0, 0, 0, 0)), toString(DateMath_PlusThreeWeeks))
 define test_DateMath_MinusThreeWeeks: TestMessage(DateMath_MinusThreeWeeks = DateTime(2013, 5, 25, 0, 0, 0, 0), 'DateMath_MinusThreeWeeks', toString(DateTime(2013, 5, 25, 0, 0, 0, 0)), toString(DateMath_MinusThreeWeeks))
 define test_DateMath_PlusTwentyDays: TestMessage(DateMath_PlusTwentyDays = DateTime(2013, 7, 5, 0, 0, 0, 0), 'DateMath_PlusTwentyDays', toString(DateTime(2013, 7, 5, 0, 0, 0, 0)), toString(DateMath_PlusTwentyDays))
@@ -3833,8 +3833,8 @@ define NullIvlCollapse_NullPerCollapse: collapse { Interval[1,4], Interval[4,7] 
 define NullIvlCollapse_DateTimeNullEndCollapseNoOverlap: collapse { DateTime1_2Interval, DateTime5_NullInterval }
 define NullIvlCollapse_DateTimeNullStartCollapseNoOverlap: collapse { DateTime9_10Interval, DateTimeNull_5Interval }
 define NullIvlCollapse_DateTimeNullStartEndCollapse: collapse { DateTimeNull_5Interval, DateTime1_10Interval, DateTime5_NullInterval }
-define NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: collapse QuantityMeterNullLowIntervalList per ToQuantity('1 \'cm\'')
-define NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: collapse QuantityMeterNullHighIntervalList per ToQuantity('1 \'cm\'')
+define NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: collapse QuantityMeterNullLowIntervalList per ToQuantity('1 \'m\'')
+define NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: collapse QuantityMeterNullHighIntervalList per ToQuantity('1 \'m\'')
 define NullIvlCollapse_CollapseQuantityIntervalListWithNulls: collapse QuantityIntervalListWithNulls
 define NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap: collapse QuantityIntervalListWithNullLowNoOverlap
 define NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap: collapse QuantityIntervalListWithNullHighNoOverlap

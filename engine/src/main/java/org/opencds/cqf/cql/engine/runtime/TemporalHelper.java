@@ -1,13 +1,14 @@
 package org.opencds.cqf.cql.engine.runtime;
 
 import java.math.BigDecimal;
-import java.time.Instant;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import org.apache.commons.lang3.StringUtils;
+import org.opencds.cqf.cql.engine.execution.Context;
 
 public class TemporalHelper {
 
@@ -61,6 +62,15 @@ public class TemporalHelper {
         }
     }
 
+    public static String autoCompleteTimeString(String timeString, Precision precision) {
+        switch (precision) {
+            case HOUR:
+            case MINUTE: return timeString + ":00.000";
+            case SECOND: return timeString + ".000";
+            default: return timeString;
+        }
+    }
+
     public static int[] cleanArray(Integer ... elements) {
         return Arrays.stream(elements).filter(Objects::nonNull).mapToInt(x -> x).toArray();
     }
@@ -70,12 +80,18 @@ public class TemporalHelper {
         return new BigDecimal(Double.toString(seconds/60f/60f));
     }
 
-    public static BigDecimal getDefaultOffset() {
-        return zoneToOffset(getDefaultZoneOffset());
+    public static ZonedDateTime toZonedDateTime(LocalDateTime localDateTime) {
+        Context c = Context.getContext();
+        if (c != null) {
+            return localDateTime.atZone(c.getEvaluationZonedDateTime().getZone());
+        }
+        else {
+            return localDateTime.atZone(TimeZone.getDefault().toZoneId());
+        }
     }
 
-    public static ZoneOffset getDefaultZoneOffset() {
-        return ZoneOffset.systemDefault().getRules().getStandardOffset(Instant.now());
+    public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime) {
+        return toZonedDateTime(localDateTime).toOffsetDateTime();
     }
 
     public static int weeksToDays(int weeks) {

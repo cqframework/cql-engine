@@ -78,13 +78,20 @@ public class DifferenceBetweenEvaluator extends org.cqframework.cql.elm.executio
             }
 
             if (left instanceof DateTime && right instanceof DateTime) {
-                return isWeeks
-                        ? (int) precision.toChronoUnit().between(
-                                ((DateTime) left).expandPartialMinFromPrecision(precision).getDateTime(),
-                                ((DateTime) right).expandPartialMinFromPrecision(precision).getDateTime()) / 7
-                        : (int) precision.toChronoUnit().between(
-                                ((DateTime) left).expandPartialMinFromPrecision(precision).getDateTime(),
-                                ((DateTime) right).expandPartialMinFromPrecision(precision).getDateTime());
+                if (precision.toDateTimeIndex() <= Precision.DAY.toDateTimeIndex()) {
+                    return isWeeks
+                            ? (int) precision.toChronoUnit().between(
+                                ((DateTime) left).expandPartialMinFromPrecision(precision).getDateTime().toLocalDate(),
+                                ((DateTime) right).expandPartialMinFromPrecision(precision).getDateTime().toLocalDate()) / 7
+                            : (int) precision.toChronoUnit().between(
+                                ((DateTime) left).expandPartialMinFromPrecision(precision).getDateTime().toLocalDate(),
+                                ((DateTime) right).expandPartialMinFromPrecision(precision).getDateTime().toLocalDate());
+                }
+                else {
+                    return (int) precision.toChronoUnit().between(
+                            ((DateTime) left).expandPartialMinFromPrecision(precision).getDateTime(),
+                            ((DateTime) right).expandPartialMinFromPrecision(precision).getDateTime());
+                }
             }
 
             if (left instanceof Date && right instanceof Date) {

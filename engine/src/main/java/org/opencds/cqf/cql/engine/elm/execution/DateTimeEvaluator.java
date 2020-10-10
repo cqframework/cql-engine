@@ -25,11 +25,8 @@ public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTim
             return null;
         }
 
-        BigDecimal offset;
-        if (this.getTimezoneOffset() == null) {
-            offset = TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset());
-        }
-        else {
+        BigDecimal offset = null;
+        if (this.getTimezoneOffset() != null) {
             offset = (BigDecimal) this.getTimezoneOffset().evaluate(context);
         }
 
@@ -45,7 +42,7 @@ public class DateTimeEvaluator extends org.cqframework.cql.elm.execution.DateTim
                             (this.getSecond() == null) ? null : (Integer) this.getSecond().evaluate(context),
                             (this.getMillisecond() == null) ? null : (Integer) this.getMillisecond().evaluate(context)
                     )
-            ).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
+            );
         }
         catch (DateTimeParseException e) {
             throw new InvalidDateTime(

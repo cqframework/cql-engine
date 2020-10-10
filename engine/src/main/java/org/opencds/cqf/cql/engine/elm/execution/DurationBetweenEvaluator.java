@@ -69,9 +69,14 @@ public class DurationBetweenEvaluator extends org.cqframework.cql.elm.execution.
             }
 
             if (left instanceof DateTime && right instanceof DateTime) {
-                return isWeeks
-                        ? (int) precision.toChronoUnit().between(((DateTime) left).getDateTime(), ((DateTime) right).getDateTime()) / 7
-                        : (int) precision.toChronoUnit().between(((DateTime) left).getDateTime(), ((DateTime) right).getDateTime());
+                if (precision.toDateTimeIndex() <= Precision.DAY.toDateTimeIndex()) {
+                    return isWeeks
+                            ? (int) precision.toChronoUnit().between(((DateTime) left).getDateTime().toLocalDateTime(), ((DateTime) right).getDateTime().toLocalDateTime()) / 7
+                            : (int) precision.toChronoUnit().between(((DateTime) left).getDateTime().toLocalDateTime(), ((DateTime) right).getDateTime().toLocalDateTime());
+                }
+                else {
+                    return (int) precision.toChronoUnit().between(((DateTime) left).getDateTime(), ((DateTime) right).getDateTime());
+                }
             }
 
             if (left instanceof Date && right instanceof Date) {

@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 
 import org.opencds.cqf.cql.engine.elm.execution.AbsEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.AddEvaluator;
@@ -242,8 +243,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2014, 12)));
 
         result = context.resolveExpressionRef("HighBoundaryDateTime").getExpression().evaluate(context);
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 8, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1, 8, 59, 59, 999)));
 
         result = context.resolveExpressionRef("HighBoundaryTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 30, 59, 999)));
@@ -335,8 +335,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2014, 1)));
 
         result = context.resolveExpressionRef("LowBoundaryDateTime").getExpression().evaluate(context);
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 8, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1, 8, 0, 0, 0)));
 
         result = context.resolveExpressionRef("LowBoundaryTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 30, 0, 0)));
@@ -360,9 +359,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
         Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("9999999999999999999999999999.99999999")), 0);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeMaxValue").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 9999, 12, 31, 23, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 9999, 12, 31, 23, 59, 59, 999)));
 
         result = context.resolveExpressionRef("TimeMaxValue").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(23, 59, 59, 999)));
@@ -380,9 +378,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DecimalMinValue").getExpression().evaluate(context);
         Assert.assertTrue(((BigDecimal) result).compareTo(new BigDecimal("-9999999999999999999999999999.99999999")) == 0);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeMinValue").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1, 1, 1, 0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 1, 1, 1, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("TimeMinValue").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(0, 0, 0, 0)));
@@ -510,9 +507,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 //        Assert.assertTrue(new BigDecimal("0.99999999").compareTo(((Quantity) result).getValue()) == 0);
 //        Assert.assertEquals("cm", ((Quantity) result).getUnit());
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("PredecessorOfJan12000").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1999, 12, 31)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 1999, 12, 31)));
 
         result = context.resolveExpressionRef("PredecessorOfNoon").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(11, 59, 59, 999)));
@@ -690,9 +686,8 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("SuccessorOf101D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.01000001")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("SuccessorOfJan12000").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2000, 1, 2)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2000, 1, 2)));
 
         result = context.resolveExpressionRef("SuccessorOfNoon").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(12, 0, 0, 1)));

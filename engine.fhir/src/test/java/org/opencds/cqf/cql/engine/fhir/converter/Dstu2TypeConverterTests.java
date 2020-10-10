@@ -213,15 +213,15 @@ public class Dstu2TypeConverterTests {
     public void TestDateTimeToFhirDateTime() {
         IPrimitiveType<java.util.Date> expectedDate = new DateTimeType("2019-02-03");
         IPrimitiveType<java.util.Date> actualDate = this.typeConverter
-                .toFhirDateTime(new DateTime("2019-02-03", ZoneOffset.UTC));
+                .toFhirDateTime(new DateTime("2019-02-03", null));
         assertEquals(expectedDate.getValue(), actualDate.getValue());
 
         expectedDate = new DateTimeType("2019");
-        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", ZoneOffset.UTC));
+        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", null));
         assertEquals(expectedDate.getValue(), actualDate.getValue());
 
         expectedDate = new DateTimeType("2019");
-        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", ZoneOffset.UTC));
+        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", null));
         assertEquals(expectedDate.getValue(), actualDate.getValue());
     }
 
@@ -299,7 +299,7 @@ public class Dstu2TypeConverterTests {
 
         expected = new Period().setStartElement(new DateTimeType("2019")).setEndElement(new DateTimeType("2020"));
         actual = (Period) this.typeConverter.toFhirPeriod(
-                new Interval(new DateTime("2019", ZoneOffset.UTC), true, new DateTime("2020", ZoneOffset.UTC), true));
+                new Interval(new DateTime("2019", null), true, new DateTime("2020", null), true));
         assertTrue(expected.equalsDeep(actual));
 
         actual = (Period) this.typeConverter.toFhirPeriod(null);

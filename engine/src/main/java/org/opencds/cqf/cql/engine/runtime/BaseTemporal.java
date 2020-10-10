@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.engine.runtime;
 
+import org.opencds.cqf.cql.engine.execution.Context;
+
 import java.time.ZoneOffset;
 
 public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> {
@@ -13,7 +15,8 @@ public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> 
         return this;
     }
 
-    ZoneOffset evaluationOffset = TemporalHelper.getDefaultZoneOffset();
+    ZoneOffset evaluationOffset; // = Context.getContext().getEvaluationDateTime().getEvaluationOffset();
+
     public ZoneOffset getEvaluationOffset() {
         return evaluationOffset;
     }

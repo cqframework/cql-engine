@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
@@ -35,9 +36,8 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("CastAsQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("45.5")).withUnit("g")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("AsDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1)));
 
         try {
             result = context.as(1, Tuple.class, true);
@@ -67,9 +67,8 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
             assertThat(nfe.getMessage(), is("Unable to convert given string to Integer"));
         }
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("StringToDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1)));
 
         result = context.resolveExpressionRef("StringToTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(14, 30, 0, 0)));
@@ -306,20 +305,19 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         // TODO: Fix timezone tests
         Context context = new Context(library);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("ToDateTime0").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1)));
 
         result = context.resolveExpressionRef("ToDateTime1").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTime2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 12, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1, 12, 5)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTime3").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 1, 1, 12, 5, 5, 955)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 1, 1, 12, 5, 5, 955)));
         // assertThat(((DateTime)result).getTimezoneOffset(), is(new BigDecimal("-7")));
 
         result = context.resolveExpressionRef("ToDateTime4").getExpression().evaluate(context);
