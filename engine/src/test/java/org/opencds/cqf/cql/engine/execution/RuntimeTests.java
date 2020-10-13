@@ -8,8 +8,10 @@ import java.math.BigDecimal;
 
 import org.opencds.cqf.cql.engine.debug.Location;
 import org.opencds.cqf.cql.engine.debug.SourceLocator;
+import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
+import org.opencds.cqf.cql.engine.exception.InvalidInterval;
 import org.testng.annotations.Test;
 
 public class RuntimeTests {
@@ -26,6 +28,13 @@ public class RuntimeTests {
 
         q = new Quantity().withValue(new BigDecimal("0.05")).withUnit("mg");
         assertThat(q.toString(), is("0.05 'mg'"));
+    }
+
+    @Test(expectedExceptions=InvalidInterval.class)
+    public void testIntervalOfQuantityWithDifferentUOM() {
+        Quantity s= new Quantity().withValue(new BigDecimal(10)).withUnit("mg/mL");
+        Quantity e = new Quantity().withValue(new BigDecimal(10)).withUnit("kg/m3");
+        Interval i = new Interval( s, true, e, true );
     }
 
     @Test
