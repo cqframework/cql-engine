@@ -49,8 +49,11 @@ public class Interval implements CqlType, Comparable<Interval> {
             }
         }
 
-        else if (low != null && high != null && GreaterEvaluator.greater(getStart(), getEnd())) {
-            throw new InvalidInterval("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
+        else if (low != null && high != null ) {
+            Boolean isStartGreater = GreaterEvaluator.greater(getStart(), getEnd());
+            if( isStartGreater == null || isStartGreater.equals(Boolean.TRUE) ) {
+                throw new InvalidInterval("Invalid Interval - the ending boundary must be greater than or equal to the starting boundary.");
+            }
         }
     }
 
