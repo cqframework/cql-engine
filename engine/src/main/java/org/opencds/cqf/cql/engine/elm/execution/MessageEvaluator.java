@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message {
 
-    final static Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
+    static final Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
 
     public static Object message(Context context, SourceLocator sourceLocator, Object source, Boolean condition, String code, String severity, String message) {
         if (severity == null) {

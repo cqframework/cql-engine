@@ -43,7 +43,7 @@ import org.testng.annotations.Test;
 
 public class CqlTestSuite {
 
-    private final static Logger logger = LoggerFactory.getLogger(CqlTestSuite.class);
+    private static final Logger logger = LoggerFactory.getLogger(CqlTestSuite.class);
 
     // This test is for the various CQL operators
     @Test
