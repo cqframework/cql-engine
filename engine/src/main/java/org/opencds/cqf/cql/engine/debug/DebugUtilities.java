@@ -6,7 +6,10 @@ import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
 
 public class DebugUtilities {
-    public static void logDebugResult(Executable node, Library currentLibrary, Object result) {
+	private DebugUtilities() {
+	}
+
+	public static void logDebugResult(Executable node, Library currentLibrary, Object result) {
         System.out.printf("%s.%s: %s%n", currentLibrary != null ? currentLibrary.getIdentifier().getId() : "unknown",
                 toDebugLocation(node),
                 toDebugString(result));

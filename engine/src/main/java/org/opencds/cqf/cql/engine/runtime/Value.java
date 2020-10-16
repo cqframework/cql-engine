@@ -13,7 +13,10 @@ public class Value {
     public static final Integer MIN_INT = Integer.MIN_VALUE;
     public static final BigDecimal MIN_DECIMAL = new BigDecimal("-9999999999999999999999999999.99999999");
 
-    public static BigDecimal verifyPrecision(BigDecimal value, Integer targetScale) {
+	private Value() {
+	}
+
+	public static BigDecimal verifyPrecision(BigDecimal value, Integer targetScale) {
         // NOTE: The CQL specification does not mandate a maximum precision, it specifies a minimum precision,
         // implementations are free to provide more precise values. However, for simplicity and to provide
         // a consistent reference implementation, this engine applies the minimum precision as the maximum precision.

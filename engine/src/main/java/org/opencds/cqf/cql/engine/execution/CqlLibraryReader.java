@@ -24,6 +24,9 @@ public class CqlLibraryReader {
     private static JAXBContext context;
     private static Unmarshaller unmarshaller;
 
+    private CqlLibraryReader() {
+    }
+
     // Performance enhancement additions ~ start
     public static synchronized Unmarshaller getUnmarshaller() throws JAXBException {
         if (context == null)
