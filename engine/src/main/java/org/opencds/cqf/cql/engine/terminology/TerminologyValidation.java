@@ -19,10 +19,10 @@ public class TerminologyValidation {
             "http://cancer.sanger.ac.uk/cancergenome/projects/cosmic", "http://www.lrg-sequence.org", "http://www.omim.org",
             "http://www.ncbi.nlm.nih.gov/pubmed", "http://www.pharmgkb.org", "http://clinicaltrials.gov", "http://www.ebi.ac.uk/ipd/imgt/hla/"));
 
-	private TerminologyValidation() {
-	}
+    private TerminologyValidation() {
+    }
 
-	public static void addSystem(String system) {
+    public static void addSystem(String system) {
         systems.add(system);
     }
 
