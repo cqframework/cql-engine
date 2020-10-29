@@ -24,8 +24,11 @@ public class CqlLibraryReader {
     private static JAXBContext context;
     private static Unmarshaller unmarshaller;
 
+    private CqlLibraryReader() {
+    }
+
     // Performance enhancement additions ~ start
-    public synchronized static Unmarshaller getUnmarshaller() throws JAXBException {
+    public static synchronized Unmarshaller getUnmarshaller() throws JAXBException {
         if (context == null)
         {
             context = JAXBContext.newInstance(ObjectFactoryEx.class);
@@ -63,7 +66,7 @@ public class CqlLibraryReader {
     }
 
     @SuppressWarnings("unchecked")
-    public synchronized static Library read(Unmarshaller u, Source source) throws JAXBException {
+    public static synchronized Library read(Unmarshaller u, Source source) throws JAXBException {
         Object result = u.unmarshal(source);
         return ((JAXBElement<Library>)result).getValue();
     }
@@ -93,7 +96,7 @@ public class CqlLibraryReader {
         return read(toSource(reader));
     }
 
-    public synchronized static Library read(Source source) throws JAXBException {
+    public static synchronized Library read(Source source) throws JAXBException {
         return read(getUnmarshaller(), source);
     }
 

@@ -12,7 +12,10 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 public class TemporalHelper {
 
-    public static String[] normalizeDateTimeElements(int ... elements) {
+    private TemporalHelper() {
+    }
+
+    public static String[] normalizeDateTimeElements(int... elements) {
         String[] ret = new String[elements.length];
         for (int i = 0; i < elements.length; ++i) {
             switch (i) {

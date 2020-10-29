@@ -14,6 +14,9 @@ import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.opencds.cqf.cql.engine.elm.execution.LibraryWrapper;
 
 public class JsonCqlLibraryReader {
+    private JsonCqlLibraryReader() {
+    }
+
     public static Library read(Reader reader) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JaxbAnnotationModule module = new JaxbAnnotationModule();
