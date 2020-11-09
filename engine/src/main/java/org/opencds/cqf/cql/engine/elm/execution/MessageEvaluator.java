@@ -1,5 +1,9 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.Context;
@@ -32,12 +36,12 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
                     logger.warn(finalMessage); break;
                 }
                 case "trace": {
-                    String finalMessage = messageBuilder.append(message).append(String.format("%n%s", stripPHI(source))).toString();
+                    String finalMessage = messageBuilder.append(message).append(String.format("%n%s", stripPHI(context, source))).toString();
                     context.logDebugTrace(sourceLocator, finalMessage);
                     logger.debug(finalMessage); break;
                 }
                 case "error": {
-                    String finalMessage = messageBuilder.append(message).append(String.format("%n%s", stripPHI(source))).toString();
+                    String finalMessage = messageBuilder.append(message).append(String.format("%n%s", stripPHI(context, source))).toString();
                     // NOTE: debug logging happens through exception-handling
                     logger.error(finalMessage);
                     throw new CqlException(finalMessage);
@@ -47,9 +51,12 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
         return source;
     }
 
-    private static Object stripPHI(Object source) {
-        // TODO
-        return source;
+    private String stripPHI(Context context, Object source) {
+        Optional<DataProvider> dataProvider = Optional.ofNullable(context.resolveDataProvider(source.getClass().getPackage().getName(), false));
+
+        return dataProvider.map(DataProvider::phiObfuscationSupplier).map(Supplier::get)
+                .map(obfuscator -> obfuscator.obfuscate(source))
+                .orElse("");
     }
 
     @Override
