@@ -10,7 +10,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
 
     static final Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
 
-    public static Object message(Context context, SourceLocator sourceLocator, Object source, Boolean condition, String code, String severity, String message) {
+    public Object message(Context context, SourceLocator sourceLocator, Object source, Boolean condition, String code, String severity, String message) {
         if (severity == null) {
             severity = "message";
         }
