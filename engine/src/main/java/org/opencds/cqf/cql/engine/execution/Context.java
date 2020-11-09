@@ -251,7 +251,11 @@ public class Context {
     }
 
     private Library resolveIncludeDef(IncludeDef includeDef) {
-        VersionedIdentifier libraryIdentifier = new VersionedIdentifier().withId(includeDef.getPath()).withVersion(includeDef.getVersion());
+        VersionedIdentifier libraryIdentifier = new VersionedIdentifier()
+            .withSystem(this.getUriPart(includeDef.getPath()))
+            .withId(this.getNamePart(includeDef.getPath()))
+            .withVersion(includeDef.getVersion());
+
         Library library = libraries.get(libraryIdentifier.getId());
         if (library == null) {
             library = libraryLoader.load(libraryIdentifier);
@@ -813,5 +817,23 @@ public class Context {
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         return dataProvider.objectEquivalent(left, right);
+    }
+
+    public String getUriPart(String namespaceQualifiedName) {
+        int i = namespaceQualifiedName.lastIndexOf('/');
+        if (i > 0) {
+            return namespaceQualifiedName.substring(0, i);
+        }
+
+        return null;
+    }
+
+    public String getNamePart(String namespaceQualifiedName) {
+        int i = namespaceQualifiedName.lastIndexOf("/");
+        if (i > 0) {
+            return namespaceQualifiedName.substring(i + 1);
+        }
+
+        return namespaceQualifiedName;
     }
 }
