@@ -159,17 +159,27 @@ public class Context {
 
     public Context(Library library) {
         setEvaluationDateTime(ZonedDateTime.now());
-        init(library);
+        init(library, new SystemDataProvider());
+    }
+
+    public Context(Library library, DataProvider systemDataProvider) {
+        setEvaluationDateTime(ZonedDateTime.now());
+        init(library, systemDataProvider);
     }
 
     public Context(Library library, ZonedDateTime evaluationZonedDateTime) {
         setEvaluationDateTime(evaluationZonedDateTime);
-        init(library);
+        init(library, new SystemDataProvider());
     }
 
-    private void init(Library library) {
+    public Context(Library library, ZonedDateTime evaluationZonedDateTime, DataProvider systemDataProvider) {
+        setEvaluationDateTime(evaluationZonedDateTime);
+        init(library, systemDataProvider);
+    }
+
+    private void init(Library library, DataProvider systemDataProvider) {
         pushWindow();
-        registerDataProvider("urn:hl7-org:elm-types:r1", new SystemDataProvider());
+        registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
