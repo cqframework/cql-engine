@@ -88,6 +88,12 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Concept createConcept() { return new ConceptEvaluator(); }
 
     @Override
+    public ConceptDef createConceptDef() { return new ConceptDefEvaluator(); }
+
+    @Override
+    public ConceptRef createConceptRef() { return new ConceptRefEvaluator(); }
+
+    @Override
     public Contains createContains() { return new ContainsEvaluator(); }
 
     @Override

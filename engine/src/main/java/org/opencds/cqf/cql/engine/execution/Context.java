@@ -14,6 +14,7 @@ import javax.xml.namespace.QName;
 import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
 import org.cqframework.cql.elm.execution.CodeDef;
 import org.cqframework.cql.elm.execution.CodeSystemDef;
+import org.cqframework.cql.elm.execution.ConceptDef;
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.FunctionDef;
 import org.cqframework.cql.elm.execution.IncludeDef;
@@ -295,6 +296,16 @@ public class Context {
         }
 
         throw new CqlException(String.format("Could not resolve code reference '%s'.", name));
+    }
+
+    public ConceptDef resolveConceptRef(String name) {
+        for (ConceptDef conceptDef : getCurrentLibrary().getConcepts().getDef()) {
+            if (conceptDef.getName().equals(name)) {
+                return conceptDef;
+            }
+        }
+
+        throw new CqlException(String.format("Could not resolve concept reference '%s'.", name));
     }
 
     private IncludeDef resolveLibraryRef(String libraryName) {
