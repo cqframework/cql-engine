@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
 import org.opencds.cqf.cql.engine.execution.Context;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
 
 /*
 TimeOfDay() Time

@@ -4,10 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.time.ZonedDateTime;
 
 import javax.xml.bind.JAXBException;
 
@@ -18,7 +15,6 @@ import org.opencds.cqf.cql.engine.exception.InvalidDateTime;
 import org.opencds.cqf.cql.engine.runtime.Date;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;

@@ -1,13 +1,15 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.InvocationTargetException;
-import java.text.DateFormat;
-import java.time.Instant;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -21,7 +23,11 @@ import org.opencds.cqf.cql.engine.exception.InvalidPrecision;
 import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
-import org.opencds.cqf.cql.engine.runtime.*;
+import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Precision;
+import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
+import org.opencds.cqf.cql.engine.runtime.Time;
 
 import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
 import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
@@ -31,6 +37,7 @@ import ca.uhn.fhir.context.RuntimeChildChoiceDefinition;
 import ca.uhn.fhir.context.RuntimeChildResourceBlockDefinition;
 import ca.uhn.fhir.context.RuntimeChildResourceDefinition;
 import ca.uhn.fhir.context.RuntimeResourceDefinition;
+import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 
 // TODO: Probably quite a bit of redundancy here. Probably only really need the BaseType and the PrimitiveType
 
@@ -110,7 +117,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             String currentName = resourceChild.getElementName();
             BaseRuntimeElementCompositeDefinition<?> element = resourceChild.getChildByName(currentName);
 
-            
+
             for (BaseRuntimeChildDefinition nextChild : element.getChildren()) {
                 if (visitedElements.contains(nextChild.getElementName())) {
                     continue;
@@ -191,7 +198,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             if (definition != null) {
                 return  definition.getImplementingClass();
             }
-    
+
             try {
                 // Resources
                 return this.fhirContext.getResourceDefinition(typeName).getImplementingClass();
@@ -207,14 +214,14 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                 return Class.forName(String.format("%s.%s", packageName, typeName));
             }
             catch (ClassNotFoundException e) {}
-    
+
             // Scan all resources.
             // Really, HAPI ought to register inner classes, right?
             Class<?> clazz = deepSearch(typeName);
             if (clazz != null) {
                 return clazz;
             }
-            
+
             try {
                 // Just give me SOMETHING.
                 return Class.forName(typeName);

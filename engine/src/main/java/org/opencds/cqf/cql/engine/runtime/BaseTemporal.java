@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.engine.runtime;
 
-import org.opencds.cqf.cql.engine.execution.Context;
-
 import java.time.ZoneOffset;
 
 public abstract class BaseTemporal implements CqlType, Comparable<BaseTemporal> {

@@ -25,11 +25,10 @@ import org.hl7.fhir.dstu3.model.UnsignedIntType;
 import org.hl7.fhir.dstu3.model.UriType;
 import org.hl7.fhir.dstu3.model.UuidType;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
+import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
-import org.opencds.cqf.cql.engine.runtime.Time;
 
 public class Dstu3FhirModelResolver extends
         FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {

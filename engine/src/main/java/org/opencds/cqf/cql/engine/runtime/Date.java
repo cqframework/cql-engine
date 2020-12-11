@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.engine.runtime;
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.TimeZone;
 
