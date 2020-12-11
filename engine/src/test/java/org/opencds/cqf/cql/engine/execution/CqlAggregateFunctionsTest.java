@@ -3,9 +3,7 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.util.Arrays;
 
 import javax.xml.bind.JAXBException;
@@ -16,7 +14,6 @@ import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;

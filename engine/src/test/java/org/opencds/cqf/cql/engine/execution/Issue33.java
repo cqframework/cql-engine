@@ -1,12 +1,8 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

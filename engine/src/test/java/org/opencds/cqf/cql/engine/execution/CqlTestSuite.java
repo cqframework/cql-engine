@@ -3,15 +3,17 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.TimeZone;
 
 import javax.xml.bind.JAXBException;
 
@@ -32,7 +34,6 @@ import org.opencds.cqf.cql.engine.runtime.CqlList;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
 import org.slf4j.Logger;

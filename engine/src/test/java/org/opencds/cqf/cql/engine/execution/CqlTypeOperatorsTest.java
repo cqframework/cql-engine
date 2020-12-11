@@ -3,9 +3,7 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
 import java.time.format.DateTimeParseException;
 
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
@@ -15,7 +13,6 @@ import org.opencds.cqf.cql.engine.runtime.Concept;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Ratio;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
 import org.testng.Assert;
@@ -410,7 +407,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void testToTime() {
         Context context = new Context(library);
-        
+
         Object result = context.resolveExpressionRef("ToTime1").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(14, 30, 0, 0)));
 

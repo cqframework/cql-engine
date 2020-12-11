@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>${revision}</version>
+        <version>1.5.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.fhir</artifactId>
+    <version>1.5.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>engine.fhir</name>
@@ -21,7 +22,7 @@
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
             <artifactId>engine</artifactId>
-            <version>${revision}</version>
+            <version>1.5.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -71,11 +72,12 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <addTestCompileSourceRoot>true</addTestCompileSourceRoot>
+                    <generateDirectory>target/generated-test-sources/xjc</generateDirectory>
                     <schemaDirectory>${project.basedir}/src/test/resources/org/hl7/fhirpath/testSchema</schemaDirectory>
                     <schemaIncludes>
                         <include>testSchema.xsd</include>
                     </schemaIncludes>
-                    <episode>false</episode>
                     <args>
                         <arg>-Xfluent-api</arg>
                         <arg>-Xequals</arg>
@@ -116,6 +118,45 @@
                         <include>org.hl7.fhirpath.**</include>
                         <include>org.opencds.cqf.cql.engine.fhir.**</include>
                     </includes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <excludePackageNames>org.hl7.fhirpath.tests</excludePackageNames>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <id>jacoco-check</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!-- generated code -->
+                    <excludes>
+                        <exclude>**/org/hl7/fhirpath/tests/**</exclude>
+                    </excludes>
+                    <rules>
+                        <rule>
+                            <element>BUNDLE</element>
+                            <limits>
+                                <limit>
+                                    <counter>LINE</counter>
+                                    <value>COVEREDRATIO</value>
+                                    <minimum>0.50</minimum>
+                                </limit>
+                            </limits>
+                        </rule>
+                    </rules>
                 </configuration>
             </plugin>
         </plugins>

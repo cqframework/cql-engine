@@ -2,7 +2,6 @@ package org.opencds.cqf.cql.engine.fhir.data;
 
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.testng.annotations.Test;
-import org.hl7.fhir.r4.model.*;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;

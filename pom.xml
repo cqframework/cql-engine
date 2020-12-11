@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
+<project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- This shared pom should be flattened away during the build -->
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>${revision}</version>
+    <version>1.5.1-SNAPSHOT</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
@@ -43,12 +42,6 @@
     </scm>
 
     <properties>
-        <version.major>1</version.major>
-        <version.minor>5</version.minor>
-        <version.patch>1</version.patch>
-
-        <!-- NOTE: Building under the release profile automatically drops the -SNAPSHOT extension -->
-        <revision>${version.major}.${version.minor}.${version.patch}-SNAPSHOT</revision>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.10.1</jackson.version>
@@ -179,7 +172,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-               <dependency>
+            <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-structures-r5</artifactId>
                 <version>${hapi.version}</version>
@@ -318,6 +311,10 @@
                         <source>1.8</source>
                         <target>1.8</target>
                         <release>8</release>
+                        <configuration>
+                            <failOnError>true</failOnError>
+                            <failOnWarning>true</failOnWarning>
+                        </configuration>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -438,66 +435,32 @@
                     <version>3.0.0</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>flatten-maven-plugin</artifactId>
-                    <version>1.1.0</version>
-                    <configuration>
-                        <updatePomFile>true</updatePomFile>
-                        <flattenMode>ossrh</flattenMode>
-                    </configuration>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>0.8.6</version>
                     <executions>
                         <execution>
-                            <id>flatten</id>
-                            <phase>process-resources</phase>
+                            <id>jacoco-initialize</id>
                             <goals>
-                                <goal>flatten</goal>
+                                <goal>prepare-agent</goal>
                             </goals>
                         </execution>
                         <execution>
-                            <id>flatten.clean</id>
-                            <phase>clean</phase>
+                            <id>jacoco-report</id>
+                            <phase>prepare-package</phase>
                             <goals>
-                                <goal>clean</goal>
+                                <goal>report</goal>
                             </goals>
                         </execution>
                     </executions>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>3.2.2</version>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <shadedArtifactAttached>true</shadedArtifactAttached>
-                        <filters>
-                            <filter>
-                                <artifact>*:*</artifact>
-                                <excludes>
-                                    <exclude>META-INF/*.SF</exclude>
-                                    <exclude>META-INF/*.DSA</exclude>
-                                    <exclude>META-INF/*.RSA</exclude>
-                                    <exclude>META-INF/*.txt</exclude>
-                                    <exclude>META-INF/*.MF</exclude>
-                                    <exclude>META-INF/LICENSE</exclude>
-                                    <exclude>META-INF/NOTICE</exclude>
-                                    <exclude>META-INF/LICENSE.md</exclude>
-                                    <exclude>META-INF/NOTICE.md</exclude>
-                                    <exclude>META-INF/DEPENDENCIES</exclude>
-                                </excludes>
-                            </filter>
-                        </filters>
-                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
@@ -515,27 +478,15 @@
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>flatten-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <inherited>false</inherited>
             </plugin>
         </plugins>
     </build>
 
-
     <profiles>
         <profile>
             <id>release</id>
-            <properties>
-                <revision>${version.major}.${version.minor}.${version.patch}</revision>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
@@ -549,17 +500,6 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>test-dependency-size</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-shade-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
