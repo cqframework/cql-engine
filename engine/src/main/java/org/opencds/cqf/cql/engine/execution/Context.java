@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getNamePart;
+import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getUriPart;
+
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -42,8 +45,6 @@ import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Precision;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 /**
@@ -253,8 +254,8 @@ public class Context {
 
     private Library resolveIncludeDef(IncludeDef includeDef) {
         VersionedIdentifier libraryIdentifier = new VersionedIdentifier()
-            .withSystem(this.getUriPart(includeDef.getPath()))
-            .withId(this.getNamePart(includeDef.getPath()))
+            .withSystem(getUriPart(includeDef.getPath()))
+            .withId(getNamePart(includeDef.getPath()))
             .withVersion(includeDef.getVersion());
 
         Library library = libraries.get(libraryIdentifier.getId());
@@ -828,23 +829,5 @@ public class Context {
 
         DataProvider dataProvider = resolveDataProvider(clazz.getPackage().getName());
         return dataProvider.objectEquivalent(left, right);
-    }
-
-    public String getUriPart(String namespaceQualifiedName) {
-        int i = namespaceQualifiedName.lastIndexOf('/');
-        if (i > 0) {
-            return namespaceQualifiedName.substring(0, i);
-        }
-
-        return null;
-    }
-
-    public String getNamePart(String namespaceQualifiedName) {
-        int i = namespaceQualifiedName.lastIndexOf("/");
-        if (i > 0) {
-            return namespaceQualifiedName.substring(i + 1);
-        }
-
-        return namespaceQualifiedName;
     }
 }
