@@ -1,5 +1,8 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getNamePart;
+import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getUriPart;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -44,7 +47,7 @@ public class CqlEngine {
         EnableExpressionCaching
     }
 
-    private LibraryLoader libraryLoader; 
+    private LibraryLoader libraryLoader;
     private Map<String, DataProvider> dataProviders;
     private TerminologyProvider terminologyProvider;
     private EnumSet<Options> engineOptions;
@@ -70,7 +73,7 @@ public class CqlEngine {
         if (engineOptions == null) {
             engineOptions = EnumSet.of(org.opencds.cqf.cql.engine.execution.CqlEngine.Options.EnableExpressionCaching);
         }
-    
+
         this.libraryLoader = libraryLoader;
         this.dataProviders = dataProviders;
         this.terminologyProvider = terminologyProvider;
@@ -141,7 +144,7 @@ public class CqlEngine {
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters, DebugMap debugMap) {
         // TODO: Figure out way to validate / invalidate library cache
         Map<VersionedIdentifier, Library> libraryCache = new HashMap<>();
-        
+
         if (libraryIdentifier == null) {
             throw new IllegalArgumentException("libraryIdentifier can not be null.");
         }
@@ -176,7 +179,7 @@ public class CqlEngine {
             if (def instanceof FunctionDef) {
                 continue;
             }
-            
+
             context.enterContext(def.getContext());
             Object object = def.evaluate(context);
             result.expressionResults.put(expression, object);
@@ -224,7 +227,7 @@ public class CqlEngine {
         if (this.terminologyProvider != null) {
             context.registerTerminologyProvider(this.terminologyProvider);
         }
-        
+
         if (this.dataProviders != null) {
             for (Map.Entry<String, DataProvider> pair : this.dataProviders.entrySet()) {
                 context.registerDataProvider(pair.getKey(), pair.getValue());
@@ -245,7 +248,7 @@ public class CqlEngine {
         library = this.libraryLoader.load(libraryIdentifier);
 
         if (library == null) {
-            throw new IllegalArgumentException(String.format("Unable to load library %s", 
+            throw new IllegalArgumentException(String.format("Unable to load library %s",
                 libraryIdentifier.getId() + (libraryIdentifier.getVersion() != null ? "-" + libraryIdentifier.getVersion() : "")));
         }
 
@@ -260,7 +263,11 @@ public class CqlEngine {
 
         if (library.getIncludes() != null && library.getIncludes().getDef() != null) {
             for (IncludeDef include : library.getIncludes().getDef()) {
-                this.loadAndValidate(libraryCache, new VersionedIdentifier().withId(include.getPath()).withVersion(include.getVersion()));
+                this.loadAndValidate(libraryCache,
+                    new VersionedIdentifier()
+                    .withSystem(getUriPart(include.getPath()))
+                    .withId(getNamePart(include.getPath()))
+                    .withVersion(include.getVersion()));
             }
         }
 
@@ -291,8 +298,8 @@ public class CqlEngine {
     private void validateTerminologyRequirements(Library library) {
         // TODO: Smarter validation would be to checkout and see if any retrieves
         // Use terminology, and to check for any codesystem lookups.
-        if ((library.getCodeSystems() != null && library.getCodeSystems().getDef() != null && !library.getCodeSystems().getDef().isEmpty()) || 
-            (library.getCodes() != null  && library.getCodes().getDef() != null && !library.getCodes().getDef().isEmpty()) || 
+        if ((library.getCodeSystems() != null && library.getCodeSystems().getDef() != null && !library.getCodeSystems().getDef().isEmpty()) ||
+            (library.getCodes() != null  && library.getCodes().getDef() != null && !library.getCodes().getDef().isEmpty()) ||
             (library.getValueSets() != null  && library.getValueSets().getDef() != null && !library.getValueSets().getDef().isEmpty())) {
             if (this.terminologyProvider == null) {
                 throw new IllegalArgumentException(String.format("Library %s has terminology requirements and no terminology provider is registered.",
