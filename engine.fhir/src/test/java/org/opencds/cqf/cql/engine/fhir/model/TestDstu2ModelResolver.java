@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 import java.lang.reflect.Field;
@@ -139,8 +139,8 @@ public class TestDstu2ModelResolver {
                 enumFactory.setAccessible(true);
                 EnumFactory<?> factory = (EnumFactory<?>)enumFactory.get(instance);
 
-                assertTrue(factory.getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName())); 
-            } 
+                assertTrue(factory.getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName()));
+            }
             catch(Exception e){
                 throw new AssertionError("error getting factory type. " + e.getMessage());
             }
@@ -186,10 +186,10 @@ public class TestDstu2ModelResolver {
 
     // This is a serious failure that needs to be addressed. There's some sort of mixup
     // between the dstu2 and hl7org dstu2 objects.
-    // @Test 
+    // @Test
     public void resolveMissingPropertyReturnsNull() {
         ModelResolver resolver = new Dstu2FhirModelResolver();
-        
+
         Patient p = new Patient();
 
         Object result = resolver.resolvePath(p, "not-a-path");

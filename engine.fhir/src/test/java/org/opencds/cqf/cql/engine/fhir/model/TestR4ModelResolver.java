@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.AssertJUnit.assertTrue;
 
 import java.util.ArrayList;
@@ -120,10 +120,10 @@ public class TestR4ModelResolver {
         }
     }
 
-    @Test 
+    @Test
     public void modelInfoSpecialCaseTests() {
         ModelResolver resolver = new R4FhirModelResolver();
-                
+
         // This tests resolution of inner classes. They aren't registered directly.
         resolver.resolveType("TestScriptRequestMethodCode");
         resolver.resolveType("FHIRDeviceStatus");
@@ -147,7 +147,7 @@ public class TestR4ModelResolver {
         resolver.resolveType("SampledDataDataType");
         resolver.resolveType("ClaimProcessingCodes");
         resolver.resolveType("ContractResourcePublicationStatusCodes");
-        
+
 
         // These are known glitches in the ModelInfo
         resolver.resolveType("vConfidentialityClassification");
@@ -222,7 +222,7 @@ public class TestR4ModelResolver {
                     continue;
                 }
 
-               
+
 
                 switch (ci.getBaseType()) {
                     // Abstract classes
@@ -281,7 +281,7 @@ public class TestR4ModelResolver {
             Enumeration<?> instance = (Enumeration<?>)resolver.createInstance(enumType.getSimpleName());
             assertNotNull(instance);
 
-            assertTrue(instance.getEnumFactory().getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName())); 
+            assertTrue(instance.getEnumFactory().getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName()));
         }
 
         // These are some inner classes that don't appear in the enums above
@@ -333,20 +333,20 @@ public class TestR4ModelResolver {
         assertTrue(path.equals("subject"));
     }
 
-    @Test 
+    @Test
     public void resolveMissingPropertyReturnsNull() {
         ModelResolver resolver = new R4FhirModelResolver();
-        
+
         Patient p = new Patient();
 
         Object result = resolver.resolvePath(p, "not-a-path");
         assertNull(result);
     }
 
-    @Test 
+    @Test
     public void resolveIdPropertyReturnsString() {
         ModelResolver resolver = new R4FhirModelResolver();
-        
+
         Patient p = new Patient();
         p.setId("5");
         IdType idType = p.getIdElement();
@@ -364,7 +364,7 @@ public class TestR4ModelResolver {
     public void resolveDateTimeProviderReturnsDate() {
 
         ModelResolver resolver = new R4FhirModelResolver();
-        
+
         VisionPrescription vp = new VisionPrescription();
         Date time = new GregorianCalendar(1999, 3, 31).getTime();
         vp.setDateWritten(time);

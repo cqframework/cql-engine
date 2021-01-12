@@ -2,8 +2,8 @@ package org.opencds.cqf.cql.engine.execution;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,12 +21,12 @@ import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
 import org.cqframework.cql.elm.execution.Library;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 public class CqlEngineTests extends TranslatingTestBase {
 
-    
-    @Test(expected = IllegalArgumentException.class)
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void test_nullLibraryLoader_throwsException() {
         new CqlEngine(null);
     }
@@ -41,7 +41,7 @@ public class CqlEngineTests extends TranslatingTestBase {
 
         EvaluationResult result = engine.evaluate("Test");
 
- 
+
         Object expResult = result.forExpression("X");
 
         assertThat(expResult, is(10));
@@ -78,7 +78,7 @@ public class CqlEngineTests extends TranslatingTestBase {
         engine.evaluate("Test");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void test_terminologyLibrary_noProvider_throwsException() throws IOException, JAXBException {
         Library library = this.toLibrary("library Test version '1.0.0'\nvalueset valueset \"Dummy Value Set\": \"http://localhost\"\ndefine X:\n5+5");
 
@@ -128,7 +128,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     public void test_twoLibraries_expressionsForEach() throws IOException, JAXBException {
 
         Map<org.hl7.elm.r1.VersionedIdentifier, String> libraries = new HashMap<>();
-        libraries.put(this.toElmIdentifier("Common", "1.0.0"), 
+        libraries.put(this.toElmIdentifier("Common", "1.0.0"),
             "library Common version '1.0.0'\ndefine Z:\n5+5\n");
         libraries.put(toElmIdentifier("Test", "1.0.0"),
             "library Test version '1.0.0'\ninclude Common version '1.0.0' named \"Common\"\ndefine X:\n5+5\ndefine Y: 2 + 2\ndefine W: \"Common\".Z + 5");
