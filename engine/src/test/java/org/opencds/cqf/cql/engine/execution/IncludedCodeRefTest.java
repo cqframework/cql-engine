@@ -3,7 +3,7 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
+import static org.testng.Assert.assertNotNull;
 
 
 import org.opencds.cqf.cql.engine.runtime.Code;

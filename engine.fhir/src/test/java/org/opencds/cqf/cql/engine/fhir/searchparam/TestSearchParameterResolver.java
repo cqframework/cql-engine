@@ -1,8 +1,8 @@
 package org.opencds.cqf.cql.engine.fhir.searchparam;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.testng.annotations.Test;

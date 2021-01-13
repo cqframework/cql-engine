@@ -44,9 +44,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jackson.version>2.10.1</jackson.version>
-        <cqframework.version>1.5.1-SNAPSHOT</cqframework.version>
-        <hapi.version>5.0.2</hapi.version>
+        <jackson.version>2.12.1</jackson.version>
+        <cqframework.version>1.5.1</cqframework.version>
+        <hapi.version>5.2.0</hapi.version>
     </properties>
 
     <repositories>
@@ -123,7 +123,7 @@
             <dependency>
                 <groupId>org.fhir</groupId>
                 <artifactId>ucum</artifactId>
-                <version>1.0.2</version>
+                <version>1.0.3</version>
                 <exclusions>
                     <exclusion>
                         <groupId>xpp3</groupId>

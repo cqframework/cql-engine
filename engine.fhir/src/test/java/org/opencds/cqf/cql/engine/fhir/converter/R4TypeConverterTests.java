@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.converter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.testng.Assert.assertTrue;
 
 import static org.hamcrest.Matchers.instanceOf;
 
@@ -587,7 +587,7 @@ public class R4TypeConverterTests {
     @Test
     public void TestRangeToCqlInterval() {
         Interval expected = new Interval(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"), true,
-        new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true); 
+        new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true);
         Interval actual = this.typeConverter
                 .toCqlInterval(new Range()
                 .setLow(new org.hl7.fhir.r4.model.Quantity(2.0).setUnit("ml").setSystem("http://unitsofmeasure.org"))
