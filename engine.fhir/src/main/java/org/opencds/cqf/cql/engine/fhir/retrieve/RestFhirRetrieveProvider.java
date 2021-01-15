@@ -43,8 +43,8 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
     @Override
     protected synchronized CapabilityStatementIndex getIndex() {
-        if (this.getIndex() == null) {
-            buildIndex();;
+        if (this.index == null) {
+            buildIndex();
         }
 
         return this.index;
