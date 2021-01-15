@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,14 +13,17 @@ import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseCoding;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.searchparam.CapabilityStatementIndex;
 import org.opencds.cqf.cql.engine.fhir.searchparam.CapabilityStatementIndexer;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
+import ca.uhn.fhir.rest.api.EncodingEnum;
 import ca.uhn.fhir.rest.api.SearchStyleEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
 import ca.uhn.fhir.rest.gclient.TokenClientParam;
@@ -53,7 +58,16 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
     protected synchronized void buildIndex() {
         CapabilityStatementIndexer indexer = new CapabilityStatementIndexer(this.fhirClient.getFhirContext());
 
-        this.index = indexer.index(this.fhirClient.capabilities().ofType(IBaseConformance.class).execute());
+        try {
+            IHttpRequest request = this.fhirClient.getHttpClient().createGetRequest(this.fhirClient.getFhirContext(), EncodingEnum.JSON);
+            request.setUri(this.fhirClient.getServerBase() + "/metadata");
+            Reader reader = request.execute().createReader();
+            this.index = indexer.index((IBaseConformance)this.fhirClient.getFhirContext().newJsonParser().parseResource(reader));
+
+        }
+        catch (IOException e) {
+            throw new DataProviderException(String.format("Reading CapabilityStatement failed with error: %s", e.getMessage()));
+        }
     }
 
 	public void setSearchStyle(SearchStyleEnum value) {
