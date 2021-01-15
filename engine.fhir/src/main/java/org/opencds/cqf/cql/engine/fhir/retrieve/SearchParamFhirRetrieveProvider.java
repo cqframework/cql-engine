@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.opencds.cqf.cql.engine.fhir.searchparam.CapabilityStatementIndex;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
@@ -47,6 +48,10 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
     public int getMaxCodesPerQuery() {
         return this.maxCodesPerQuery;
+    }
+
+    protected CapabilityStatementIndex getIndex() {
+        return null;
     }
 
     protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
@@ -98,7 +103,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             rangeParam = new DateRangeParam(low, high);
         }
 
-        RuntimeSearchParam dateParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, datePath, RestSearchParameterTypeEnum.DATE);
+        RuntimeSearchParam dateParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, datePath, RestSearchParameterTypeEnum.DATE, getIndex());
 
         if (dateParam == null) {
             return null;
@@ -110,7 +115,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
             Object contextValue) {
         if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
-            return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String) contextValue);
+            return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String) contextValue, getIndex());
         }
 
         return null;
@@ -136,7 +141,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             return null;
         }
 
-        RuntimeSearchParam codeParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, codePath, RestSearchParameterTypeEnum.TOKEN);
+        RuntimeSearchParam codeParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, codePath, RestSearchParameterTypeEnum.TOKEN, getIndex());
 
         if (codeParam == null) {
             return null;
@@ -186,7 +191,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             if (code instanceof Code) {
                 Code c = (Code)code;
                 codeParams.addOr(new TokenParam(c.getSystem(), c.getCode()));
-            } 
+            }
             else if (code instanceof String) {
                 String s = (String)code;
                 codeParams.addOr(new TokenParam(s));

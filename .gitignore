@@ -16,3 +16,4 @@ core.*
 heapdump.*
 javacore.*
 Snap.*
+jitdump.*

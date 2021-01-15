@@ -9,7 +9,10 @@ import java.util.function.BiFunction;
 
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseCoding;
+import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.IBaseResource;
+import org.opencds.cqf.cql.engine.fhir.searchparam.CapabilityStatementIndex;
+import org.opencds.cqf.cql.engine.fhir.searchparam.CapabilityStatementIndexer;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
@@ -26,15 +29,32 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	private static final SearchStyleEnum DEFAULT_SEARCH_STYLE = SearchStyleEnum.GET;
 
 	protected IGenericClient fhirClient;
-	private SearchStyleEnum searchStyle;
+    private SearchStyleEnum searchStyle;
+
+    private CapabilityStatementIndex index;
 
 	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
 		super(searchParameterResolver);
 		// TODO: Figure out how to validate that the searchParameterResolver and the
 		// client are on the same version of FHIR.
 		this.fhirClient = fhirClient;
-		this.searchStyle = DEFAULT_SEARCH_STYLE;
-	}
+        this.searchStyle = DEFAULT_SEARCH_STYLE;
+    }
+
+    @Override
+    protected synchronized CapabilityStatementIndex getIndex() {
+        if (this.getIndex() == null) {
+            buildIndex();;
+        }
+
+        return this.index;
+    }
+
+    protected synchronized void buildIndex() {
+        CapabilityStatementIndexer indexer = new CapabilityStatementIndexer(this.fhirClient.getFhirContext());
+
+        this.index = indexer.index(this.fhirClient.capabilities().ofType(IBaseConformance.class).execute());
+    }
 
 	public void setSearchStyle(SearchStyleEnum value) {
 		this.searchStyle = value;

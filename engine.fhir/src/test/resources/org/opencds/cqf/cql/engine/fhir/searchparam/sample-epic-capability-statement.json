@@ -1,0 +1,1176 @@
+{
+    "resourceType": "CapabilityStatement",
+    "status": "active",
+    "experimental": true,
+    "date": "2021-01-14T19:14:47Z",
+    "copyright": "Copyright Epic 1979-2020",
+    "kind": "instance",
+    "software": {
+        "name": "Epic",
+        "version": "November 2020",
+        "releaseDate": "2020-11-04"
+    },
+    "implementation": {
+        "description": "Epic App Orchard Current FHIR Server",
+        "url": "https://apporchard.epic.com/interconnect-aocurprd-oauth/api/FHIR/R4"
+    },
+    "fhirVersion": "4.0.0",
+    "format": [
+        "xml",
+        "json"
+    ],
+    "rest": [
+        {
+            "mode": "server",
+            "security": {
+                "extension": [
+                    {
+                        "extension": [
+                            {
+                                "valueUri": "https://apporchard.epic.com/interconnect-aocurprd-oauth/oauth2/authorize",
+                                "url": "authorize"
+                            },
+                            {
+                                "valueUri": "https://apporchard.epic.com/interconnect-aocurprd-oauth/oauth2/token",
+                                "url": "token"
+                            }
+                        ],
+                        "url": "http://fhir-registry.smarthealthit.org/StructureDefinition/oauth-uris"
+                    }
+                ],
+                "cors": true,
+                "service": [
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/restful-security-service",
+                                "code": "OAuth",
+                                "display": "OAuth"
+                            }
+                        ],
+                        "text": "OAuth"
+                    },
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/restful-security-service",
+                                "code": "SMART-on-FHIR",
+                                "display": "SMART-on-FHIR"
+                            }
+                        ],
+                        "text": "SMART-on-FHIR"
+                    },
+                    {
+                        "coding": [
+                            {
+                                "system": "http://terminology.hl7.org/CodeSystem/restful-security-service",
+                                "code": "Basic",
+                                "display": "Basic"
+                            }
+                        ],
+                        "text": "Basic"
+                    }
+                ]
+            },
+            "resource": [
+                {
+                    "type": "AdverseEvent",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "seriousness",
+                            "type": "token",
+                            "documentation": "Refine a search for AdverseEvent resources by seriousness of the event. Serious and Non-serious are the only supported values."
+                        },
+                        {
+                            "name": "study",
+                            "type": "reference",
+                            "documentation": "Search for AdverseEvent resources for a specified study ID."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for AdverseEvent resources for a specified patient ID."
+                        }
+                    ]
+                },
+                {
+                    "type": "AllergyIntolerance",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "clinical-status",
+                            "type": "token",
+                            "documentation": "Refine a search for AllergyIntolerance resources by clinicalStatus. Active is the only supported clinical status."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for AllergyIntolerance resources for a specified patient ID."
+                        }
+                    ]
+                },
+                {
+                    "type": "Binary",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "CarePlan",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Search for CarePlans of the given type. This is a required search parameter."
+                        },
+                        {
+                            "name": "encounter",
+                            "type": "reference",
+                            "documentation": "Refine a search for Encounter CarePlans to search only the encounters provided. Ignored if not searching for Encounter CarePlans."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for CarePlan resources using a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for CarePlan resources using a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "CareTeam",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for CareTeam resources using a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "status",
+                            "type": "token",
+                            "documentation": "Refine a search based on the CareTeam's status. Currently only active is supported."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for CareTeam resources using a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Condition",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Search for Condition resources by category. This is a required parameter."
+                        },
+                        {
+                            "name": "clinical-status",
+                            "type": "token",
+                            "documentation": "Refine a search for Condition resources by clinicalStatus. Only clinical statuses of resolved and active are supported."
+                        },
+                        {
+                            "name": "encounter",
+                            "type": "reference",
+                            "documentation": "Search for Condition resources for specific encounters."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Condition resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for Condition resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Consent",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Search for Consent resources by category. This is a required parameter."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Consent resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "status",
+                            "type": "token",
+                            "documentation": "Search for Consent resources by status. This is a required parameter."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for Consent resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Coverage",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "beneficiary",
+                            "type": "reference",
+                            "documentation": "Search for Coverage resource for a specific patient ID. You can use \"patient\" or \"beneficiary\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Coverage resource for a specific patient ID. You can use \"patient\" or \"beneficiary\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "CriteriaReview",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "update"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "Device",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "device-name",
+                            "type": "string",
+                            "documentation": "A string that will match the Device.deviceName.name field. Not case sensitive."
+                        },
+                        {
+                            "name": "manufacturer",
+                            "type": "string",
+                            "documentation": "Manufacturer of the device."
+                        },
+                        {
+                            "name": "model",
+                            "type": "string",
+                            "documentation": "Model number of the device."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "The patient in whom this device is implanted. This is a required parameter."
+                        },
+                        {
+                            "name": "udi-carrier",
+                            "type": "string",
+                            "documentation": "The UDI barcode string - matches static UDI."
+                        },
+                        {
+                            "name": "udi-di",
+                            "type": "string",
+                            "documentation": "The UDI device identifier (DI)."
+                        }
+                    ]
+                },
+                {
+                    "type": "DiagnosticReport",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "code",
+                            "type": "token",
+                            "documentation": "Refine a search for DiagnosticReport resources by LOINC code."
+                        },
+                        {
+                            "name": "date",
+                            "type": "date",
+                            "documentation": "Refine a search for DiagnosticReport resources by specifying a date or date range that a DiagnosticReport was resulted or recorded. Enter dates in ISO format (YYYY[-MM[-DD[THH:MM[:SS][TZ]]]]). Local server time is assumed if time zone information is not included."
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token",
+                            "documentation": "Refine search by specifying an identifier, such as the internal order ID or the accession number."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for DiagnosticReport resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for DiagnosticReport resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "DocumentReference",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Refine a search for DocumentReference resources by category."
+                        },
+                        {
+                            "name": "date",
+                            "type": "date",
+                            "documentation": "Further refine a search for a given set of DocumentReferences on a patient by specifying a date or date range in ISO format (YYYY[-MM[-DD[THH:MM[:SS][TZ]]]]]) that corresponds to the document creation time. Local server time is assumed if time zone information is not included."
+                        },
+                        {
+                            "name": "docstatus",
+                            "type": "token",
+                            "documentation": "Further refine a search for a given set of DocumentReferences on a patient by specifying a docStatus. By default, all docStatuses are returned."
+                        },
+                        {
+                            "name": "encounter",
+                            "type": "reference",
+                            "documentation": "Search for DocumentReference resources for a specified encounter ID."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for DocumentReference resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "period",
+                            "type": "date",
+                            "documentation": "Further refine a search for a given set of DocumentReferences on a patient by specifying a date or date range in ISO format (YYYY[-MM[-DD]]) that corresponds to the time of the service that is being documented."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for DocumentReference resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "type",
+                            "type": "token",
+                            "documentation": "Further refine a search for a given set of DocumentReferences on a patient by specifying a type code to return only documents of that type. Use the format: type=<system>|<code>"
+                        }
+                    ]
+                },
+                {
+                    "type": "Encounter",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "class",
+                            "type": "token",
+                            "documentation": "Refine a search for Encounter resources by class. By default, all classes are returned."
+                        },
+                        {
+                            "name": "date",
+                            "type": "date",
+                            "documentation": "Refine a search for Encounter resources by date. By default, all Encounters are returned. Enter dates in ISO format (YYYY[-MM[-DD[THH:MM[:SS][TZ]]]]]). Local server time is assumed if time zone information is not included."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Encounter resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for difference references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for Encounter resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for difference references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Endpoint",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "Goal",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Refines a search by Goal category."
+                        },
+                        {
+                            "name": "lifecycle-status",
+                            "type": "token",
+                            "documentation": "Refines a search based on Goal lifecycle status."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Patient resources for a specific patient ID. You can use \"patient\" or \"subject\" equivalently but they can't be used at the same time for different references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for Patient resources for a specific patient ID. You can use \"patient\" or \"subject\" equivalently but they can't be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Immunization",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "date",
+                            "type": "date",
+                            "documentation": "Refine a search for Immunization resources by vaccine administration date. Enter dates in ISO format (YYYY[-MM[-DD[THH:MM[:SS][TZ]]]]). Local server time is assumed if time zone information is not included."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Immunization resources for a specified patient ID."
+                        },
+                        {
+                            "name": "status",
+                            "type": "token",
+                            "documentation": "Refine a search for Immunization resources by status."
+                        }
+                    ]
+                },
+                {
+                    "type": "Location",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "Medication",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "MedicationRequest",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "authoredon",
+                            "type": "date",
+                            "documentation": "Further refine a search for MedicationRequest resources for a given patient by specifying a date or range of dates for when the medication was ordered. Note: all medications will be returned regardless of date range provided on the search."
+                        },
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Refine a search for MedicationRequest resources by category. By default, the search returns all categories. Categories of inpatient, outpatient, and community are supported."
+                        },
+                        {
+                            "name": "intent",
+                            "type": "token",
+                            "documentation": "Refine a search by intent. Only an intent of order is supported."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for MedicationRequest resources for a specified patient ID. You can use \"patient\" and \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "status",
+                            "type": "token",
+                            "documentation": "Refine a search for MedicationRequest resources by one or more statuses."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for MedicationRequest resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Observation",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        },
+                        {
+                            "code": "update"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "category",
+                            "type": "token",
+                            "documentation": "Refine a search for Observation resources by category. Only laboratory, vital-signs, social-history, core-characteristics, and LDA are supported."
+                        },
+                        {
+                            "name": "code",
+                            "type": "token",
+                            "documentation": "Refine a search for Observation resources by LOINC code or flowsheet row IDs."
+                        },
+                        {
+                            "name": "date",
+                            "type": "date",
+                            "documentation": "Refine a search for Observation resources by specifying a date or date range that a result- or vital sign-based Observation was resulted or recorded. Enter dates in ISO format (YYYY[-MM[-DD[THH:MM[:SS][TZ]]]]). Local server time is assumed if time zone information is not included."
+                        },
+                        {
+                            "name": "issued",
+                            "type": "date",
+                            "documentation": "Refine a search for Observation resources by specifying a date or date range that a social-history-based Observation was made available. Enter dates in ISO format (YYYY[-MM[-DD[THH:MM[:SS][TZ]]]]). Local server time is assumed if time zone information is not included."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Observation resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for Observation resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "Organization",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "Patient",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "address",
+                            "type": "string",
+                            "documentation": "Search for Patient resources using an address string."
+                        },
+                        {
+                            "name": "address-city",
+                            "type": "string",
+                            "documentation": "Search for Patient resources using the city for a patient's home address. You can use this parameter along with other address parameters."
+                        },
+                        {
+                            "name": "address-postalcode",
+                            "type": "string",
+                            "documentation": "Search for Patient resources using the postal code for a patient's home address. You can use this parameter along with other address parameters."
+                        },
+                        {
+                            "name": "address-state",
+                            "type": "string",
+                            "documentation": "Search for Patient resources using the state for a patient's home address. You can use this parameter along with other address parameters."
+                        },
+                        {
+                            "name": "birthdate",
+                            "type": "date",
+                            "documentation": "Search for Patient resources using a date of birth in ISO format (YYYY-MM-DD)."
+                        },
+                        {
+                            "name": "family",
+                            "type": "string",
+                            "documentation": "Search for Patient resources by family (last) name. You can use the family parameter along with other name parameters to search by a patient's name. Family name searching supports exact matching, \"sounds like\" matching, and patient aliases."
+                        },
+                        {
+                            "name": "gender",
+                            "type": "token",
+                            "documentation": "Search for Patient resources using the following gender codes: female, male, other, or unknown."
+                        },
+                        {
+                            "name": "given",
+                            "type": "string",
+                            "documentation": "Search for Patient resources by given (first) name.  You can use the given parameter along with other name parameters to search by a patient's name. Given name searching supports both exact and \"sounds like\" matches. Patient aliases and dominant name aliases (ex. Bob for Robert) are also supported."
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token",
+                            "documentation": "Search for Patient resources by a patient's identifier. You can use the identifier parameter as the only parameter in a search or in conjunction with other parameters. A patient's identifier must be in the format <code system>|<code> or <ID Type>|<ID>."
+                        },
+                        {
+                            "name": "own-name",
+                            "type": "string",
+                            "documentation": "Search for Patient resources by patient's own last name, usually used in non-US names. You can use the own-name parameter along with other name parameters to search by a patient's name."
+                        },
+                        {
+                            "name": "own-prefix",
+                            "type": "string",
+                            "documentation": "Search for Patient resources by patient's own last name prefix, usually used in non-US names. You can use the own-prefix parameter along with other name parameters to search by a patient's name, but own-name must also be included."
+                        },
+                        {
+                            "name": "partner-name",
+                            "type": "string",
+                            "documentation": "Search for Patient resources by patient's spouse's last name, usually used in non-US names. You can use the partner-name parameter along with other name parameters to search by a patient's name, but own-name must also be included."
+                        },
+                        {
+                            "name": "partner-prefix",
+                            "type": "string",
+                            "documentation": "Search for Patient resources by patient's spouse's last name prefix, usually used in non-US names. You can use the partner-prefix parameter along with other name parameters to search by a patient's name, but own-name must also be included."
+                        },
+                        {
+                            "name": "telecom",
+                            "type": "token",
+                            "documentation": "Search for Patient resources using a patient's home phone number, cell phone number, or email address."
+                        }
+                    ]
+                },
+                {
+                    "type": "Practitioner",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "address",
+                            "type": "string",
+                            "documentation": "Any part of an address (street, city, etc.) where a practitioner can be visited. When used, family is also required.  Only respected if no other address parameters are populated. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "address-city",
+                            "type": "string",
+                            "documentation": "The city where a practitioner can be visited. When used, address-state is also required. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "address-postalcode",
+                            "type": "string",
+                            "documentation": "The zip code where a practitioner can be found. When used, family is also required."
+                        },
+                        {
+                            "name": "address-state",
+                            "type": "string",
+                            "documentation": "The state where a practitioner can be found.  When used, family is also required.  Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "family",
+                            "type": "string",
+                            "documentation": "A practitioner's family (last) name. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "given",
+                            "type": "string",
+                            "documentation": "A practitioner's given (first) name.  When used, family is also required. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token",
+                            "documentation": "A practitioner's identifier in the format <code system>|<code>.  When this parameter is provided, all others (except _id) are ignored."
+                        },
+                        {
+                            "name": "name",
+                            "type": "string",
+                            "documentation": "Any part of a practitioner's name.  For full names, format should be first last. When specified, family and given are ignored. Only the first instance of this parameter is respected."
+                        }
+                    ]
+                },
+                {
+                    "type": "PractitionerRole",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "email",
+                            "type": "token",
+                            "documentation": "Refine a search for a PractitionerRole by entering a valid email address.  Code system is ignored."
+                        },
+                        {
+                            "name": "identifier",
+                            "type": "token",
+                            "documentation": "Search for PractitionerRoles using identifiers. A code system is required. The code must be prepended with URN:OID.  Some codes may need to be URL encoded prior to query."
+                        },
+                        {
+                            "name": "location",
+                            "type": "reference",
+                            "documentation": "Search for PractitionerRoles using a Location ID. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "organization",
+                            "type": "reference",
+                            "documentation": "Search for PractitionerRoles using an Organization ID. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "phone",
+                            "type": "token",
+                            "documentation": "Refine a search for a PractitionerRole by entering a valid phone number.  Code system is ignored."
+                        },
+                        {
+                            "name": "practitioner",
+                            "type": "reference",
+                            "documentation": "Search for PractitionerRoles for a specified Practitioner ID. Only the first instance of this parameter is respected."
+                        },
+                        {
+                            "name": "role",
+                            "type": "token",
+                            "documentation": "Refine a search for a PractitionerRole by entering a valid role.  System must be included."
+                        },
+                        {
+                            "name": "specialty",
+                            "type": "token",
+                            "documentation": "Search for PractitionerRoles for a given specialty.  A code system is required.  Depending on the organization, NUCC may be supported."
+                        },
+                        {
+                            "name": "telecom",
+                            "type": "token",
+                            "documentation": "Refine a search for a PractitionerRole for a specific telecom.  System must be specified as either 'phone' or 'email'"
+                        }
+                    ]
+                },
+                {
+                    "type": "Procedure",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "date",
+                            "type": "date",
+                            "documentation": "Refine a search for Procedure resources by specifying a date or date range that a Procedure was resulted. Enter dates in ISO format (YYYY[-MM[-DD]])."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search for Procedure resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search for Procedure resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "RelatedPerson",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "ResearchStudy",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "identifier",
+                            "type": "token",
+                            "documentation": "Search for the ResearchStudy resource for a specified study code."
+                        }
+                    ]
+                },
+                {
+                    "type": "ReviewCollection",
+                    "interaction": [
+                        {
+                            "code": "create"
+                        },
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "update"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported"
+                },
+                {
+                    "type": "ServiceRequest",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "encounter",
+                            "type": "reference",
+                            "documentation": "Search for ServiceRequest resources for specific encounters. If not provided, all ServiceRequest results are returned."
+                        },
+                        {
+                            "name": "patient",
+                            "type": "reference",
+                            "documentation": "Search ServiceRequest resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently, but they cannot be used at the same time for different references."
+                        },
+                        {
+                            "name": "requester",
+                            "type": "reference",
+                            "documentation": "Refine a search for ServiceRequest resources by individual making the request. By default, all ServiceRequests are returned."
+                        },
+                        {
+                            "name": "status",
+                            "type": "token",
+                            "documentation": "Refine a search for ServiceRequest resources by status. By default, all ServiceRequests are returned. Statuses of draft, active, completed, revoked, and unknown are supported."
+                        },
+                        {
+                            "name": "subject",
+                            "type": "reference",
+                            "documentation": "Search ServiceRequest resources for a specified patient ID. You can use \"patient\" or \"subject\" equivalently but they cannot be used at the same time for different references."
+                        }
+                    ]
+                },
+                {
+                    "type": "ValueSet",
+                    "interaction": [
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "readHistory": false,
+                    "updateCreate": false,
+                    "conditionalCreate": false,
+                    "conditionalRead": "not-supported",
+                    "conditionalUpdate": false,
+                    "conditionalDelete": "not-supported",
+                    "searchParam": [
+                        {
+                            "name": "context",
+                            "type": "string",
+                            "documentation": "Specify the context of the ValueSet. This uri is in the format: <ResourceName>.<ElementPath>  (Ex: DocumentReference.Type)"
+                        },
+                        {
+                            "name": "contextdirection",
+                            "type": "string",
+                            "documentation": "Specify the ContextDirection of the ValueSet. Either \"incoming\" or \"outgoing\""
+                        },
+                        {
+                            "name": "filter",
+                            "type": "string",
+                            "documentation": "Further refine the ValueSet context to a specific sub-resource. Ex: filter=category:clinical-notes"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

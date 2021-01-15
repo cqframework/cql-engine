@@ -25,10 +25,18 @@ public class SearchParameterResolver {
     }
 
     public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path) {
-        return this.getSearchParameterDefinition(dataType, path, (RestSearchParameterTypeEnum)null);
+        return this.getSearchParameterDefinition(dataType, path, (RestSearchParameterTypeEnum)null, null);
+    }
+
+    public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path, CapabilityStatementIndex index) {
+        return this.getSearchParameterDefinition(dataType, path, (RestSearchParameterTypeEnum)null, index);
     }
 
     public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path, RestSearchParameterTypeEnum paramType) {
+        return this.getSearchParameterDefinition(dataType, path, paramType, null);
+    }
+
+    public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path, RestSearchParameterTypeEnum paramType, CapabilityStatementIndex index) {
         if (dataType == null || path == null) {
             return null;
         }
@@ -47,17 +55,23 @@ public class SearchParameterResolver {
             // If name matches, it's the one we want.
             if (name != null && param.getName().equals(name))
             {
-                return param;
+                // Special case for _id. That turns into a direct read.
+                // When actually need the concept of a "query generator" or resolver to make this all work correctly
+                if (name.equals("_id") || index == null || index.supportsSearchParam(dataType, name)) {
+                    return param;
+                }
             }
 
             // Filter out parameters that don't match our requested type.
             if (paramType != null && !param.getParamType().equals(paramType)) {
                 continue;
-            } 
+            }
 
             String normalizedPath = normalizePath(param.getPath());
             if (path.equals(normalizedPath) ) {
-                return param;
+                if (index == null || index.supportsSearchParam(dataType, param.getName())) {
+                    return param;
+                }
             }
         }
 
@@ -65,6 +79,10 @@ public class SearchParameterResolver {
     }
 
     public Pair<String, IQueryParameterType> createSearchParameter(String context, String dataType, String path, String value) {
+        return this.createSearchParameter(context, dataType, path, value, null);
+    }
+
+    public Pair<String, IQueryParameterType> createSearchParameter(String context, String dataType, String path, String value, CapabilityStatementIndex index) {
 
         RuntimeSearchParam searchParam = this.getSearchParameterDefinition(dataType, path);
         if (searchParam == null) {
@@ -83,7 +101,7 @@ public class SearchParameterResolver {
                 return Pair.of(name, new QuantityParam(value));
             case STRING:
                 return Pair.of(name, new StringParam(value));
-            case NUMBER: 
+            case NUMBER:
                 return Pair.of(name, new NumberParam(value));
             case URI:
                 return Pair.of(name, new UriParam(value));

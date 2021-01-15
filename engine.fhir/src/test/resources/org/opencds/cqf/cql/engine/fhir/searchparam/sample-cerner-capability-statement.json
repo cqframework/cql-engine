@@ -1,0 +1,1103 @@
+{
+    "resourceType": "CapabilityStatement",
+    "url": "https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d/metadata",
+    "name": "CernerCapabilityStatement",
+    "title": "Cerner Capability Statement",
+    "status": "active",
+    "date": "2020-12-15",
+    "publisher": "Cerner",
+    "description": "Cerner implementation of FHIR on top of Millennium",
+    "kind": "instance",
+    "implementation": {
+        "description": "Cerner implementation of FHIR on top of Millennium",
+        "url": "https://fhir-open.cerner.com/r4/ec2458f2-1e24-41c8-b71b-0e701af7583d"
+    },
+    "fhirVersion": "4.0.0",
+    "format": [
+        "json",
+        "application/fhir+json"
+    ],
+    "patchFormat": [
+        "application/json-patch+json"
+    ],
+    "rest": [
+        {
+            "mode": "server",
+            "documentation": "Cerner implementation of FHIR on top of Millennium",
+            "security": {
+                "cors": true
+            },
+            "resource": [
+                {
+                    "type": "CapabilityStatement",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ]
+                },
+                {
+                    "type": "Account",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Account ids. It is a required field if the -guarantor or patient fields are not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Account-patient",
+                            "type": "reference",
+                            "documentation": "The entity that caused the expenses. It is a required field if the _id or -guarantor fields are not given. Must be set with identifier."
+                        },
+                        {
+                            "name": "-guarantor",
+                            "type": "reference",
+                            "documentation": "The entity that responsible for payment. It is a required field if the _id or patient fields are not given."
+                        },
+                        {
+                            "name": "type",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Account-type",
+                            "type": "string",
+                            "documentation": "The identifier for the account. Required in every search request."
+                        },
+                        {
+                            "name": "identifier",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Account-identifier",
+                            "type": "number",
+                            "documentation": "Statement Account number. Must be set with patients"
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' is set."
+                        }
+                    ]
+                },
+                {
+                    "type": "AllergyIntolerance",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of AllergyIntolerance ids. It is a required field if the patient field is not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Who the sensitivity is for. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "clinical-status",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/AllergyIntolerance-clinical-status",
+                            "type": "token",
+                            "documentation": "Certainty of the allergy or intolerance."
+                        }
+                    ]
+                },
+                {
+                    "type": "Appointment",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Appointment ids. Either the '_id' parameter or one of the 'patient', 'practitioner' or 'location' parameters must be set."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' is set."
+                        },
+                        {
+                            "name": "date",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Appointment-date",
+                            "type": "date",
+                            "documentation": "A date or date range from which to find appointments. This must be set when using patient, practitioner or location. The 'date' parameter may be provided once without a prefix or time component to imply a date range or once without a prefix and with a time component to search for appointments at a specific time. Alternately it may be provided twice with 'le' and 'gt' prefixes to search for appointments within a specific range. The date prefix pair must create a closed range."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Appointment-patient",
+                            "type": "reference",
+                            "documentation": "One of the individuals of the appointment is this patient. Either the '_id' parameter or one of the 'patient', 'practitioner' or 'location' parameters must be set."
+                        },
+                        {
+                            "name": "practitioner",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Appointment-practitioner",
+                            "type": "reference",
+                            "documentation": "One of the individuals of the appointment is this practitioner. Either the '_id' parameter or one of the 'patient', 'practitioner' or 'location' parameters must be set."
+                        },
+                        {
+                            "name": "location",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Appointment-location",
+                            "type": "reference",
+                            "documentation": "This location is listed in the participants of the appointment. Either the '_id' parameter or one of the 'patient', 'practitioner' or 'location' parameters must be set."
+                        },
+                        {
+                            "name": "status",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Appointment-status",
+                            "type": "token",
+                            "documentation": "The overall status of the appointment."
+                        }
+                    ]
+                },
+                {
+                    "type": "Binary",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ],
+                    "operation": [
+                        {
+                            "name": "autogen-ccd-if",
+                            "definition": {
+                                "initialized_fields": [
+                                    "display",
+                                    "reference"
+                                ],
+                                "display": "Generate Continuity of Care Document (CCD)",
+                                "reference": "https://fhir-ehr.cerner.com/r4/OperationDefinition/binary-autogen-ccd-if"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "CarePlan",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of CarePlan ids."
+                        },
+                        {
+                            "name": "date",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-date",
+                            "type": "date",
+                            "documentation": "A date range with which to find CarePlans. If used, the ‘date’ parameter must be provided twice. Once with a 'ge' prefix representing the earliest date, and once with a 'le’ prefix representing the latest date. The date prefix pair must create a closed range."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Who the careplan is for. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "category",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/CarePlan-category",
+                            "type": "token",
+                            "documentation": "The category of the careplan. Category assess-plan is supported as of now."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return. Not honored when '_id' is set."
+                        }
+                    ]
+                },
+                {
+                    "type": "CareTeam",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "CareTeam id supports only the single id. It is a required field if the patient or encounter fields are not given."
+                        },
+                        {
+                            "name": "category",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/CareTeam-category",
+                            "type": "token",
+                            "documentation": "The category of the careteam. Category Longitudinal (patient level) or Encounter is supported as of now."
+                        },
+                        {
+                            "name": "encounter",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-encounter",
+                            "type": "reference",
+                            "documentation": "The Encounter level CareTeam are displayed."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Who the careteam is for. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "status",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/CareTeam-status",
+                            "type": "token",
+                            "documentation": "The status of the CareTeam."
+                        }
+                    ]
+                },
+                {
+                    "type": "Condition",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Condition ids. It is a required field if the patient or subject fields are not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Who has the condition. It is a required field if the subject or _id fields are not given."
+                        },
+                        {
+                            "name": "subject",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Condition-subject",
+                            "type": "reference",
+                            "documentation": "Who has the condition. It is a required field if the patient or _id fields are not given."
+                        },
+                        {
+                            "name": "clinical-status",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Condition-clinical-status",
+                            "type": "token",
+                            "documentation": "The clinical status of the condition."
+                        },
+                        {
+                            "name": "category",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Condition-category",
+                            "type": "token",
+                            "documentation": "The category of the condition. Categories problem-list-item, encounter-diagnosis and health-concern are supported as of now."
+                        }
+                    ]
+                },
+                {
+                    "type": "Consent",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ]
+                },
+                {
+                    "type": "Coverage",
+                    "interaction": [
+                        {
+                            "code": "search-type"
+                        },
+                        {
+                            "code": "delete"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Coverage-patient",
+                            "type": "reference",
+                            "documentation": "Retrieve coverages for a patient."
+                        },
+                        {
+                            "name": "-encounter",
+                            "type": "reference",
+                            "documentation": "Retrieve coverages for an encounter."
+                        }
+                    ]
+                },
+                {
+                    "type": "Device",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Device ids. It is a required field if the patient field is not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Device-patient",
+                            "type": "reference",
+                            "documentation": "The patient to whom Device is affixed. It is a required field if the _id field is not given."
+                        }
+                    ]
+                },
+                {
+                    "type": "DocumentReference",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of DocumentReference ids. It is a required field if the patient field is not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient the document is about. It is a required field if the subject field is not given."
+                        },
+                        {
+                            "name": "encounter",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-encounter",
+                            "type": "reference",
+                            "documentation": "The Encounter in which the document was created."
+                        },
+                        {
+                            "name": "period",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/DocumentReference-date",
+                            "type": "date",
+                            "documentation": "A date range with which to find Documents. If used, the 'period' parameter must be provided twice. Once with a 'ge' prefix representing the earliest date, and once with a 'lt' prefix representing the latest date. The period prefix pair must create a closed range and cannot be equal to each other."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page."
+                        },
+                        {
+                            "name": "type",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-type",
+                            "type": "token",
+                            "documentation": "The kind of document (LOINC if possible)."
+                        }
+                    ],
+                    "operation": [
+                        {
+                            "name": "USCoreFetchDocumentReferences",
+                            "definition": {
+                                "initialized_fields": [
+                                    "display",
+                                    "reference"
+                                ],
+                                "display": "US Core Fetch DocumentReferences",
+                                "reference": "http://hl7.org/fhir/us/core/OperationDefinition/docref"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "type": "Encounter",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Encounter ids. It is a required field if the patient or subject fields are not given."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' is set."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient present at the encounter. It is a required field if the _id or subject fields are not given."
+                        },
+                        {
+                            "name": "subject",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Encounter-subject",
+                            "type": "reference",
+                            "documentation": "The patient present at the encounter. It is a required field if the _id or patient fields are not given."
+                        }
+                    ]
+                },
+                {
+                    "type": "Goal",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "Goal id supports only the single id. It is a required field if the patient field is not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Who has the goal is for. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "target-date",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/target-date",
+                            "type": "date",
+                            "documentation": "A date or date range from which to find Goals."
+                        }
+                    ]
+                },
+                {
+                    "type": "Immunization",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Immunization ids. It is a required field if the patient field is not given."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient for the vaccination record. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "date",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-date",
+                            "type": "date",
+                            "documentation": "Vaccination (non)-Administration Date."
+                        }
+                    ]
+                },
+                {
+                    "type": "Location",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Location ids."
+                        }
+                    ]
+                },
+                {
+                    "type": "MedicationRequest",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of MedicationRequest ids."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient to return MedicationRequests for. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "intent",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/MedicationRequest-intent",
+                            "type": "token",
+                            "documentation": "The intent of the MedicationRequest."
+                        },
+                        {
+                            "name": "status",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/medications-status",
+                            "type": "token",
+                            "documentation": "The status of the MedicationRequest."
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-lastUpdated",
+                            "type": "date",
+                            "documentation": "When the resource version last changed."
+                        },
+                        {
+                            "name": "-timing-boundsPeriod",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-dosageInstruction-timing-repeat-boundsPeriod",
+                            "type": "date",
+                            "documentation": "The date-time within the period the medication should be given to the patient. Must be prefixed by 'ge'."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' is set."
+                        }
+                    ]
+                },
+                {
+                    "type": "NutritionOrder",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of NutritionOrder ids."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient to return NutritionOrders for. It is a required field if the _id field is not given."
+                        },
+                        {
+                            "name": "status",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/NutritionOrder-status",
+                            "type": "token",
+                            "documentation": "The status of the NutritionOrder."
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-lastUpdated",
+                            "type": "date",
+                            "documentation": "When the resource version last changed."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' is set."
+                        }
+                    ]
+                },
+                {
+                    "type": "Observation",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient the observation is about. It is a required field if the subject field is not given."
+                        },
+                        {
+                            "name": "subject",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Observation-subject",
+                            "type": "reference",
+                            "documentation": "The patient subject the observation is about. It is a required field if the patient field is not given."
+                        },
+                        {
+                            "name": "category",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Observation-category",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of classifications of the type of observation."
+                        },
+                        {
+                            "name": "code",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-code",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of observation types."
+                        },
+                        {
+                            "name": "date",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-date",
+                            "type": "date",
+                            "documentation": "A date or date range from which to find observations. The 'date' parameter may be provided once without a prefix or time component to imply a date range or once without a prefix and with a time component to search for observations at a specific time. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes to search for observations within a specific range. The date and prefix pairs must create a closed range."
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-lastUpdated",
+                            "type": "date",
+                            "documentation": "A date or date range used to search for observations which were last updated in that period. The '_lastUpdated' parameter may be provided once without a prefix or time component to imply a date range or once without a prefix and with a time component to search for observations at a specific time. Alternately it may be provided twice with 'le', 'lt', 'ge', or 'gt' prefixes to search for observations within a specific range. The date and prefix pairs must create a closed range."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page."
+                        }
+                    ]
+                },
+                {
+                    "type": "OperationDefinition",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ]
+                },
+                {
+                    "type": "Organization",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Organization ids. It is a required field if the identifier field is not given"
+                        },
+                        {
+                            "name": "identifier",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Organization-identifier",
+                            "type": "token",
+                            "documentation": "The Organization's Identifier. It is a required field if the _id field is not given"
+                        }
+                    ]
+                },
+                {
+                    "type": "Patient",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Patient ids. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "identifier",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Patient-identifier",
+                            "type": "token",
+                            "documentation": "A patient identifier. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "name",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Patient-name",
+                            "type": "string",
+                            "documentation": "The beginning of any name of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "given",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-given",
+                            "type": "string",
+                            "documentation": "The beginning of the given name of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "family",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-family",
+                            "type": "string",
+                            "documentation": "The beginning of the family name of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "address-postalcode",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-address-postalcode",
+                            "type": "string",
+                            "documentation": "The postal code of the address of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "birthdate",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-birthdate",
+                            "type": "date",
+                            "documentation": "The date of birth of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "phone",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-phone",
+                            "type": "token",
+                            "documentation": "The value of the phone number of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "email",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-email",
+                            "type": "token",
+                            "documentation": "The value of the email address of the patient. Either the '_id' parameter, or a combination of 'identifier', 'birthdate', 'name', 'given', 'family', 'address-postalcode', 'phone', or 'email' parameters must be provided."
+                        },
+                        {
+                            "name": "gender",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/individual-gender",
+                            "type": "token",
+                            "documentation": "The administrative gender of the patient. Gender may only be provided if another parameter other than '_id' is provided"
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' or 'identifier' are set."
+                        }
+                    ]
+                },
+                {
+                    "type": "Person",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Person ids. It is a required field if the identifier field is not given"
+                        },
+                        {
+                            "name": "identifier",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Person-identifier",
+                            "type": "token",
+                            "documentation": "A person's Identifier. It is a required field if the _id field is not given"
+                        }
+                    ]
+                },
+                {
+                    "type": "Practitioner",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Practitioner ids. It is a required field if the identifier field is not given"
+                        },
+                        {
+                            "name": "identifier",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Practitioner-identifier",
+                            "type": "token",
+                            "documentation": "A practitioner's Identifier. It is a required field if the _id field is not given"
+                        }
+                    ]
+                },
+                {
+                    "type": "Procedure",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Procedure ids. It is a required field if the patient or subject fields are not given"
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Search by subject - a patient. It is a required field if the _id or subject fields are not given"
+                        },
+                        {
+                            "name": "subject",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "Search by subject. It is a required field if the _id or patient fields are not given"
+                        }
+                    ]
+                },
+                {
+                    "type": "Provenance",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Provenance ids. It is a required field if the target field is not given"
+                        },
+                        {
+                            "name": "target",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Provenance-target",
+                            "type": "reference",
+                            "documentation": "The resource(s) the Provenance is associated with. It is a required field if the _id field is not given"
+                        }
+                    ]
+                },
+                {
+                    "type": "RelatedPerson",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of RelatedPerson ids. It is a required field if the identifier or patient or -encounter fields are not given."
+                        },
+                        {
+                            "name": "identifier",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Patient-identifier",
+                            "type": "token",
+                            "documentation": "An Identifier of the RelatedPerson. It is a required field if the id or patient or -encounter fields are not given"
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient this related person is related to. It is a required field if the id or identifier or -encounter fields are not given"
+                        },
+                        {
+                            "name": "-encounter",
+                            "type": "reference",
+                            "documentation": "The encounter this related person is related to. It is a required field if the id or identifier or patient fields are not given"
+                        },
+                        {
+                            "name": "-relationship-level",
+                            "type": "token",
+                            "documentation": "The resource's relationship to either the patient or encounter level. Must be provided with Patient and Identifier searches."
+                        }
+                    ]
+                },
+                {
+                    "type": "Schedule",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Schedule ids. The '_id' parameter must be set."
+                        }
+                    ]
+                },
+                {
+                    "type": "ServiceRequest",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of ServiceRequest ids."
+                        },
+                        {
+                            "name": "patient",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-patient",
+                            "type": "reference",
+                            "documentation": "The patient to return ServiceRequests for. It is a required field if the subject or _id fields are not given."
+                        },
+                        {
+                            "name": "subject",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/ServiceRequest-subject",
+                            "type": "reference",
+                            "documentation": "Individual or Entity the service is ordered for. It is a required field if the patient or _id fields are not given."
+                        },
+                        {
+                            "name": "code",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/clinical-code",
+                            "type": "token",
+                            "documentation": "What is being requested/ordered."
+                        },
+                        {
+                            "name": "_lastUpdated",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-lastUpdated",
+                            "type": "date",
+                            "documentation": "When the resource version last changed."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. Not honored when '_id' is set."
+                        }
+                    ]
+                },
+                {
+                    "type": "Slot",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        },
+                        {
+                            "code": "search-type"
+                        }
+                    ],
+                    "searchInclude": [
+                        "Slot:schedule"
+                    ],
+                    "searchParam": [
+                        {
+                            "name": "_id",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-id",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of Slot ids. Either the '_id' parameter or 'service-type' must be set."
+                        },
+                        {
+                            "name": "start",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Slot-date",
+                            "type": "date",
+                            "documentation": "A date or date range from which the slots are to be retrieved. The 'start' parameter is required when service-type, schedule.actor, -location is provided. When provided, must use both 'lt' and 'ge' prefixes to search for slots within a specific range. Time component should be provided for both the instances. The date and prefix pairs must create a closed range."
+                        },
+                        {
+                            "name": "service-type",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Service-type",
+                            "type": "token",
+                            "documentation": "A single or comma separated list of appointment types that can be booked into the slot. Either the '_id' parameter or 'service-type' must be set."
+                        },
+                        {
+                            "name": "schedule.actor",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Slot-schedule.actor",
+                            "type": "reference",
+                            "documentation": "A single or comma separated list of schedule actors. Must be Practitioner actors."
+                        },
+                        {
+                            "name": "-location",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Slot-location",
+                            "type": "reference",
+                            "documentation": "A single or comma separated list of Location references."
+                        },
+                        {
+                            "name": "_count",
+                            "definition": "http://hl7.org/fhir/R4/SearchParameter/Resource-count",
+                            "type": "number",
+                            "documentation": "The maximum number of results to return in a page. This value should be in the range [5,200]. If no value is provided, a default page size of 50 will be used."
+                        }
+                    ]
+                },
+                {
+                    "type": "StructureDefinition",
+                    "interaction": [
+                        {
+                            "code": "read"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

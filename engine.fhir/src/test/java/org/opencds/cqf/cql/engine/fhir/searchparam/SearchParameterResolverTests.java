@@ -12,7 +12,7 @@ import ca.uhn.fhir.context.RuntimeSearchParam;
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
 
-public class TestSearchParameterResolver {
+public class SearchParameterResolverTests {
     @Test
     public void testReturnsNullPathReturnsNull() {
         SearchParameterResolver resolver = new SearchParameterResolver(FhirContext.forDstu3());
