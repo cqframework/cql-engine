@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+exit 0
+
 # Fail if any command fails or if there are unbound variables and check syntax
 set -euxo pipefail
 bash -n "$0"
@@ -21,6 +23,6 @@ if [[ "$TRAVIS_BRANCH" =~ master* ]]; then
     echo $GPG_SECRET_KEYS | base64 --decode| $GPG_EXECUTABLE --import;
     echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust;
     CMD="$CMD -P release"
-fi 
+fi
 
 eval $CMD
