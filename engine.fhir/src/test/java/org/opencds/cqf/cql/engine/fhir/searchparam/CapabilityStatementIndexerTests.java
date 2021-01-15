@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.fhir.searchparam;
 
-import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.r4.model.CapabilityStatement;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -12,8 +11,6 @@ import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public class CapabilityStatementIndexerTests {
-
-    IBaseConformance capabilityStatement;
     FhirContext fhirContext;
     CapabilityStatementIndexer capabilityStatementIndexer;
     IParser jsonParser;

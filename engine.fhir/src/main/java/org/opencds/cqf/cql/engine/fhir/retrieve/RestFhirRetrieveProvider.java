@@ -21,8 +21,10 @@ import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.EncodingEnum;
+import ca.uhn.fhir.rest.api.RequestTypeEnum;
 import ca.uhn.fhir.rest.api.SearchStyleEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import ca.uhn.fhir.rest.client.api.IHttpClient;
 import ca.uhn.fhir.rest.client.api.IHttpRequest;
 import ca.uhn.fhir.rest.gclient.ICriterion;
 import ca.uhn.fhir.rest.gclient.IQuery;
@@ -59,8 +61,9 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
         CapabilityStatementIndexer indexer = new CapabilityStatementIndexer(this.fhirClient.getFhirContext());
 
         try {
-            IHttpRequest request = this.fhirClient.getHttpClient().createGetRequest(this.fhirClient.getFhirContext(), EncodingEnum.JSON);
-            request.setUri(this.fhirClient.getServerBase() + "/metadata");
+            IHttpClient client = this.fhirClient.getFhirContext().getRestfulClientFactory()
+                .getHttpClient(new StringBuilder(this.fhirClient.getServerBase() + "/metadata"), null, null, RequestTypeEnum.GET, null);
+            IHttpRequest request = client.createGetRequest(this.fhirClient.getFhirContext(), EncodingEnum.JSON);
             Reader reader = request.execute().createReader();
             this.index = indexer.index((IBaseConformance)this.fhirClient.getFhirContext().newJsonParser().parseResource(reader));
 

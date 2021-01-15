@@ -124,6 +124,8 @@ public class SearchParameterResolver {
         //(MedicationAdministration.medication as CodeableConcept)
         //(MedicationAdministration.medication as Reference)
 
+        //MedicationRequest.subject.where(resolve() is Patient)"
+
         // Trim off outer parens
         if (path.equals("(")) {
             path = path.substring(1, path.length() - 1);
@@ -145,6 +147,10 @@ public class SearchParameterResolver {
 
             // Skip the "[x]" part.
             if (p.startsWith("[x]")) {
+                continue;
+            }
+
+            if (p.startsWith("where")) {
                 continue;
             }
 
