@@ -19,9 +19,9 @@ CMD="mvn deploy -T 4 -B -DskipTests=true"
 cp .travis.settings.xml $HOME/.m2/settings.xml
 
 # Import signing key
-if [[ "$TRAVIS_BRANCH" =~ master* ]]; then
+if [[ "$TRAVIS_BRANCH" =~ master ]]; then
     echo $GPG_SECRET_KEYS | base64 --decode| $GPG_EXECUTABLE --import;
-    echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust;
+    echo $GPG_OWNER_TRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust;
     CMD="$CMD -P release"
 fi
 
