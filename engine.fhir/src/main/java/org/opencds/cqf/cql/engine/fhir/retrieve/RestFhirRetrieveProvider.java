@@ -38,7 +38,15 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	protected IGenericClient fhirClient;
     private SearchStyleEnum searchStyle;
 
-    private CapabilityStatementIndex index;
+    CapabilityStatementIndex index;
+
+    private Map<String, CapabilityStatementIndex> capabilityStatementIndexCache;
+
+    public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient, Map<String, CapabilityStatementIndex> capabilityStatementIndexCache) {
+        this(searchParameterResolver, fhirClient);
+
+        this.capabilityStatementIndexCache = capabilityStatementIndexCache;
+    }
 
 	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
 		super(searchParameterResolver);
@@ -51,26 +59,33 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
     @Override
     protected synchronized CapabilityStatementIndex getIndex() {
         if (this.index == null) {
-            buildIndex();
+            loadIndex();
         }
 
         return this.index;
     }
 
-    protected synchronized void buildIndex() {
-        CapabilityStatementIndexer indexer = new CapabilityStatementIndexer(this.fhirClient.getFhirContext());
+    protected synchronized void loadIndex() {
+        if(this.capabilityStatementIndexCache.containsKey(this.fhirClient.getServerBase())) {
+            this.index = this.capabilityStatementIndexCache.get(this.fhirClient.getServerBase());
+            return;
+        }
 
+        CapabilityStatementIndexer indexer = new CapabilityStatementIndexer(this.fhirClient.getFhirContext());
+        IBaseConformance capabilityStatement = null;
         try {
             IHttpClient client = this.fhirClient.getFhirContext().getRestfulClientFactory()
                 .getHttpClient(new StringBuilder(this.fhirClient.getServerBase() + "/metadata"), null, null, RequestTypeEnum.GET, null);
             IHttpRequest request = client.createGetRequest(this.fhirClient.getFhirContext(), EncodingEnum.JSON);
             Reader reader = request.execute().createReader();
-            this.index = indexer.index((IBaseConformance)this.fhirClient.getFhirContext().newJsonParser().parseResource(reader));
-
+            capabilityStatement = (IBaseConformance)this.fhirClient.getFhirContext().newJsonParser().parseResource(reader);
         }
         catch (IOException e) {
             throw new DataProviderException(String.format("Reading CapabilityStatement failed with error: %s", e.getMessage()));
         }
+
+        this.index = indexer.index(capabilityStatement);
+        this.capabilityStatementIndexCache.put(this.fhirClient.getServerBase(), this.index);
     }
 
 	public void setSearchStyle(SearchStyleEnum value) {

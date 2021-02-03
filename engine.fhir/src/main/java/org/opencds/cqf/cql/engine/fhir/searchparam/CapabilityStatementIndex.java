@@ -1,8 +1,8 @@
 package org.opencds.cqf.cql.engine.fhir.searchparam;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class CapabilityStatementIndex {
@@ -15,9 +15,10 @@ public class CapabilityStatementIndex {
     }
 
     public void putResource(String resourceType, Set<String> interactions, Set<String> searchParams) {
+        Objects.requireNonNull(resourceType, "resourceType can not be null");
         CapabilityStatementIndexEntry entry = new CapabilityStatementIndexEntry();
-        entry.interactions = interactions != null ? interactions : new HashSet<>();
-        entry.searchParams = searchParams != null ? searchParams : new HashSet<>();
+        entry.interactions = interactions;
+        entry.searchParams = searchParams;
 
         this.entries.put(resourceType, entry);
     }
@@ -29,7 +30,7 @@ public class CapabilityStatementIndex {
     public Boolean supportsInteraction(String resourceType, String interaction) {
         CapabilityStatementIndexEntry entry = this.entries.get(resourceType);
 
-        if (entry == null) {
+        if (entry == null || entry.interactions == null) {
             return false;
         }
 
@@ -39,7 +40,7 @@ public class CapabilityStatementIndex {
     public Boolean supportsSearchParam(String resourceType, String searchParam) {
         CapabilityStatementIndexEntry entry = this.entries.get(resourceType);
 
-        if (entry == null) {
+        if (entry == null || entry.searchParams == null) {
             return false;
         }
 
