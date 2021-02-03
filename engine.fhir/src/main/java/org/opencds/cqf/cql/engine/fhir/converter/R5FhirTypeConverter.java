@@ -100,7 +100,7 @@ class R5FhirTypeConverter extends BaseFhirTypeConverter {
         }
 
         return new org.hl7.fhir.r5.model.Quantity()
-                .setSystem("http://unitsofmeasure.org").setUnit(value.getUnit()).setValue(value.getValue());
+                .setSystem("http://unitsofmeasure.org").setCode(value.getUnit()).setValue(value.getValue());
     }
 
     @Override

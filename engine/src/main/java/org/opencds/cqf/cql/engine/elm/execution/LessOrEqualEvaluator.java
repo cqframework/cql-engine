@@ -53,7 +53,8 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
           if (((Quantity) left).getValue() == null || ((Quantity) right).getValue() == null) {
               return null;
           }
-          return ((Quantity) left).compareTo((Quantity) right) <= 0;
+          Integer nullableCompareTo = ((Quantity)left).nullableCompareTo((Quantity)right);
+          return nullableCompareTo == null ? null : nullableCompareTo <= 0;
       }
 
       else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {

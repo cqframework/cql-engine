@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isA;
 import static org.hamcrest.Matchers.nullValue;
 
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import javax.xml.bind.JAXBException;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -41,18 +39,17 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("simpleSortStringDesc").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("zebra", "iguana", "back", "alligator", "aardvark", "Wolf", "Armadillo")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("SortDatesAsc").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), new DateTime(offset, 2012, 1, 1)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), new DateTime(offset, 2012, 1, 1, 12)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), new DateTime(offset, 2012, 10, 5)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), new DateTime(offset, 2012, 10, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), new DateTime(null, 2012, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), new DateTime(null, 2012, 1, 1, 12)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), new DateTime(null, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), new DateTime(null, 2012, 10, 5, 10)));
 
         result = context.resolveExpressionRef("SortDatesDesc").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), new DateTime(offset, 2012, 10, 5, 10)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), new DateTime(offset, 2012, 10, 5)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), new DateTime(offset, 2012, 1, 1, 12)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), new DateTime(offset, 2012, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(0), new DateTime(null, 2012, 10, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(1), new DateTime(null, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(2), new DateTime(null, 2012, 1, 1, 12)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List) result).get(3), new DateTime(null, 2012, 1, 1)));
 
         result = context.resolveExpressionRef("SortIntWithNullAsc1").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(null, 1, 2, 3)));
@@ -77,9 +74,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("dateTimeList").getExpression().evaluate(context);
         List<DateTime> arrListDateTime = new ArrayList<>();
-        arrListDateTime.add(new DateTime(offset, 2016));
-        arrListDateTime.add(new DateTime(offset, 2015));
-        arrListDateTime.add(new DateTime(offset, 2010));
+        arrListDateTime.add(new DateTime(null, 2016));
+        arrListDateTime.add(new DateTime(null, 2015));
+        arrListDateTime.add(new DateTime(null, 2010));
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, arrListDateTime));
 
 
@@ -165,10 +162,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DistinctABCABC").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList("a", "b", "c")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DistinctDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 10, 5)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2012, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(null, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(null, 2012, 1, 1)));
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("DistinctTime").getExpression().evaluate(context);
@@ -234,9 +230,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Except23And1234").getExpression().evaluate(context);
         assertThat(result, is(Collections.emptyList()));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("ExceptDateTimeList").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(null, 2012, 5, 10)));
         assertThat(((List)result).size(), is(1));
 
         result = context.resolveExpressionRef("ExceptTimeList").getExpression().evaluate(context);
@@ -292,10 +287,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("FlattenList12And34").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("FlattenDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 5, 10)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2014, 12, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(null, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(null, 2014, 12, 10)));
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("FlattenTime").getExpression().evaluate(context);
@@ -323,9 +317,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("First12").getExpression().evaluate(context);
         assertThat(result, is(1));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("FirstDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("FirstTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 59, 999)));
@@ -472,9 +465,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("IndexerNeg1Of12").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("IndexerDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("IndexerTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 59, 999)));
@@ -529,10 +521,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Intersect23And1234").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(2, 3)));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("IntersectDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2012, 5, 10)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2014, 12, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(null, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(null, 2014, 12, 10)));
         assertThat(((ArrayList)result).size(), is(2));
 
         result = context.resolveExpressionRef("IntersectTime").getExpression().evaluate(context);
@@ -560,9 +551,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Last12").getExpression().evaluate(context);
         assertThat(result, is(2));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("LastDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2014, 12, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2014, 12, 10)));
 
         result = context.resolveExpressionRef("LastTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(20, 59, 59, 999)));
@@ -818,9 +808,8 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
             assertThat(ex, isA(InvalidOperatorArgument.class));
         }
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("SingletonFromDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 10)));
 
         result = context.resolveExpressionRef("SingletonFromTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(15, 59, 59, 999)));
@@ -920,11 +909,10 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Union123And4").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("UnionDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(offset, 2001, 9, 11)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(offset, 2012, 5, 10)));
-        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(2), new DateTime(offset, 2014, 12, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(0), new DateTime(null, 2001, 9, 11)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(1), new DateTime(null, 2012, 5, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((List)result).get(2), new DateTime(null, 2014, 12, 10)));
         assertThat(((List)result).size(), is(3));
 
         result = context.resolveExpressionRef("UnionTime").getExpression().evaluate(context);

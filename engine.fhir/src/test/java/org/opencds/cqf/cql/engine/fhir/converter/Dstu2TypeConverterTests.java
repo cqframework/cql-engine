@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.converter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.testng.Assert.assertTrue;
 
 import static org.hamcrest.Matchers.instanceOf;
 
@@ -213,21 +213,21 @@ public class Dstu2TypeConverterTests {
     public void TestDateTimeToFhirDateTime() {
         IPrimitiveType<java.util.Date> expectedDate = new DateTimeType("2019-02-03");
         IPrimitiveType<java.util.Date> actualDate = this.typeConverter
-                .toFhirDateTime(new DateTime("2019-02-03", ZoneOffset.UTC));
+                .toFhirDateTime(new DateTime("2019-02-03", null));
         assertEquals(expectedDate.getValue(), actualDate.getValue());
 
         expectedDate = new DateTimeType("2019");
-        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", ZoneOffset.UTC));
+        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", null));
         assertEquals(expectedDate.getValue(), actualDate.getValue());
 
         expectedDate = new DateTimeType("2019");
-        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", ZoneOffset.UTC));
+        actualDate = this.typeConverter.toFhirDateTime(new DateTime("2019", null));
         assertEquals(expectedDate.getValue(), actualDate.getValue());
     }
 
     @Test
     public void TestQuantityToFhirQuantity() {
-        org.hl7.fhir.dstu2.model.Quantity expected = new org.hl7.fhir.dstu2.model.Quantity().setValue(new BigDecimal("2.0")).setUnit("ml")
+        org.hl7.fhir.dstu2.model.Quantity expected = new org.hl7.fhir.dstu2.model.Quantity().setValue(new BigDecimal("2.0")).setCode("ml")
                 .setSystem("http://unitsofmeasure.org");
         org.hl7.fhir.dstu2.model.Quantity actual = (org.hl7.fhir.dstu2.model.Quantity) this.typeConverter
                 .toFhirQuantity(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"));
@@ -236,9 +236,9 @@ public class Dstu2TypeConverterTests {
 
     @Test
     public void TestRatioToFhirRatio() {
-        org.hl7.fhir.dstu2.model.Quantity expectedNumerator = new org.hl7.fhir.dstu2.model.Quantity().setValue(new BigDecimal("1.0")).setUnit("ml")
+        org.hl7.fhir.dstu2.model.Quantity expectedNumerator = new org.hl7.fhir.dstu2.model.Quantity().setValue(new BigDecimal("1.0")).setCode("ml")
                 .setSystem("http://unitsofmeasure.org");
-        org.hl7.fhir.dstu2.model.Quantity expectedDenominator = new org.hl7.fhir.dstu2.model.Quantity().setValue(new BigDecimal("2.0")).setUnit("ml")
+        org.hl7.fhir.dstu2.model.Quantity expectedDenominator = new org.hl7.fhir.dstu2.model.Quantity().setValue(new BigDecimal("2.0")).setCode("ml")
                 .setSystem("http://unitsofmeasure.org");
 
         org.hl7.fhir.dstu2.model.Ratio expected = new org.hl7.fhir.dstu2.model.Ratio().setNumerator(expectedNumerator)
@@ -299,7 +299,7 @@ public class Dstu2TypeConverterTests {
 
         expected = new Period().setStartElement(new DateTimeType("2019")).setEndElement(new DateTimeType("2020"));
         actual = (Period) this.typeConverter.toFhirPeriod(
-                new Interval(new DateTime("2019", ZoneOffset.UTC), true, new DateTime("2020", ZoneOffset.UTC), true));
+                new Interval(new DateTime("2019", null), true, new DateTime("2020", null), true));
         assertTrue(expected.equalsDeep(actual));
 
         actual = (Period) this.typeConverter.toFhirPeriod(null);
@@ -314,8 +314,8 @@ public class Dstu2TypeConverterTests {
     @Test
     public void TestIntervalToFhirRange() {
         Range expected = new Range()
-                .setLow((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("2.0")).setUnit("ml").setSystem("http://unitsofmeasure.org"))
-                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("5.0")).setUnit("ml").setSystem("http://unitsofmeasure.org"));
+                .setLow((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("2.0")).setCode("ml").setSystem("http://unitsofmeasure.org"))
+                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("5.0")).setCode("ml").setSystem("http://unitsofmeasure.org"));
         Range actual = (Range) this.typeConverter
                 .toFhirRange(new Interval(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"), true,
                         new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true));
@@ -339,8 +339,8 @@ public class Dstu2TypeConverterTests {
         assertTrue(expectedPeriod.equalsDeep(actualPeriod));
 
         Range expectedRange = new Range()
-                .setLow((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("2.0")).setUnit("ml").setSystem("http://unitsofmeasure.org"))
-                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("5.0")).setUnit("ml").setSystem("http://unitsofmeasure.org"));
+                .setLow((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("2.0")).setCode("ml").setSystem("http://unitsofmeasure.org"))
+                .setHigh((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("5.0")).setCode("ml").setSystem("http://unitsofmeasure.org"));
         Range actualRange = (Range) this.typeConverter
                 .toFhirInterval(new Interval(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"), true,
                         new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true));
@@ -587,7 +587,7 @@ public class Dstu2TypeConverterTests {
     @Test
     public void TestRangeToCqlInterval() {
         Interval expected = new Interval(new Quantity().withValue(new BigDecimal("2.0")).withUnit("ml"), true,
-        new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true); 
+        new Quantity().withValue(new BigDecimal("5.0")).withUnit("ml"), true);
         Interval actual = this.typeConverter
                 .toCqlInterval(new Range()
                 .setLow((SimpleQuantity)new org.hl7.fhir.dstu2.model.SimpleQuantity().setValue(new BigDecimal("2.0")).setUnit("ml").setSystem("http://unitsofmeasure.org"))

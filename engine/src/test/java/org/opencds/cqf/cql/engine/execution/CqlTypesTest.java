@@ -16,7 +16,6 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Ratio;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
 import org.testng.Assert;
@@ -39,9 +38,8 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("AnyQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.0")).withUnit("g")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("AnyDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 4, 4)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 4, 4)));
 
         result = context.resolveExpressionRef("AnyTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(9, 0, 0, 0)));
@@ -123,22 +121,21 @@ public class CqlTypesTest extends CqlExecutionTestBase {
             // pass
         }
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeProper").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2016, 7, 7, 6, 25, 33, 910)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2016, 7, 7, 6, 25, 33, 910)));
 
         result = context.resolveExpressionRef("DateTimeIncomplete").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2015, 2, 10)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2015, 2, 10)));
 
         result = context.resolveExpressionRef("DateTimeUncertain").getExpression().evaluate(context);
         Assert.assertEquals(((Interval) result).getStart(), 19);
         Assert.assertEquals(((Interval) result).getEnd(), 49);
 
         result = context.resolveExpressionRef("DateTimeMin").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 1, 1, 1, 0, 0, 0, 0)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 1, 1, 1, 0, 0, 0, 0)));
 
         result = context.resolveExpressionRef("DateTimeMax").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 9999, 12, 31, 23, 59, 59, 999)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 9999, 12, 31, 23, 59, 59, 999)));
     }
 
     @Test

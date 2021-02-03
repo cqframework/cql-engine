@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 
@@ -15,7 +14,6 @@ import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -146,9 +144,8 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("MaxTestString").getExpression().evaluate(context);
         assertThat(result, is("zebra"));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("MaxTestDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 10, 6)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 10, 6)));
 
         result = context.resolveExpressionRef("MaxTestTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(20, 59, 59, 999)));
@@ -178,9 +175,8 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("MinTestString").getExpression().evaluate(context);
         assertThat(result, is("bye"));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("MinTestDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 9, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 9, 5)));
 
         result = context.resolveExpressionRef("MinTestTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 59, 59, 999)));
@@ -193,12 +189,11 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     public void testMode() throws JAXBException {
         Context context = new Context(library);
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         Object result = context.resolveExpressionRef("ModeTestDateTime").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 9, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 9, 5)));
 
         result = context.resolveExpressionRef("ModeTestDateTime2").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 10, 5)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 10, 5)));
 
         result = context.resolveExpressionRef("ModeTestTime").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 59, 59, 999)));

@@ -4,15 +4,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-
-import java.math.BigDecimal;
 import java.util.Collections;
 
 import javax.xml.bind.JAXBException;
 
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -47,12 +44,11 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("CoalesceLastList").getExpression().evaluate(context);
         assertThat(result, is(Collections.singletonList("a")));
 
-        BigDecimal offset = TemporalHelper.getDefaultOffset();
         result = context.resolveExpressionRef("DateTimeCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("DateTimeListCoalesce").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(offset, 2012, 5, 18)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012, 5, 18)));
 
         result = context.resolveExpressionRef("TimeCoalesce").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(5, 15, 33, 556)));

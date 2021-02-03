@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.AssertJUnit.assertTrue;
 
 import java.util.ArrayList;
@@ -131,14 +131,14 @@ public class TestDstu3ModelResolver {
             }
         }
     }
-    
+
     // This tests special case logic in the Model Resolver.
     // Ideally, these would all disappear with either registering custom types
     // on the FhirContext or generalized logic, or fixed-up ModelInfos
-    @Test 
+    @Test
     public void modelInfoSpecialCaseTests() {
         ModelResolver resolver = new Dstu3FhirModelResolver();
-                
+
         // This tests resolution of inner classes. They aren't registered directly.
         resolver.resolveType("TestScriptRequestMethodCode");
         resolver.resolveType("FHIRDeviceStatus");
@@ -198,7 +198,7 @@ public class TestDstu3ModelResolver {
             Enumeration<?> instance = (Enumeration<?>)resolver.createInstance(enumType.getSimpleName());
             assertNotNull(instance);
 
-            assertTrue(instance.getEnumFactory().getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName())); 
+            assertTrue(instance.getEnumFactory().getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName()));
         }
 
 
@@ -245,13 +245,13 @@ public class TestDstu3ModelResolver {
         assertTrue(path.equals("subject"));
 
         path = (String)resolver.getContextPath("Patient", "MedicationStatement");
-        assertTrue(path.equals("patient"));
+        assertTrue(path.equals("subject"));
     }
 
-    @Test 
+    @Test
     public void resolveMissingPropertyReturnsNull() {
         ModelResolver resolver = new Dstu3FhirModelResolver();
-        
+
         Patient p = new Patient();
 
         Object result = resolver.resolvePath(p, "not-a-path");

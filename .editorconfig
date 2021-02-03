@@ -1,0 +1,11 @@
+root = true
+
+[*]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+[{.travis.settings.xml,.travis.yml}]
+indent_style = space
+indent_size = 2
+

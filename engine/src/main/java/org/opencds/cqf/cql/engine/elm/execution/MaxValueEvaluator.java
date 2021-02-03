@@ -6,9 +6,7 @@ import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.Date;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Value;
 
@@ -38,11 +36,10 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
             return Value.MAX_DECIMAL;
         }
         if (type.endsWith("Date")) {
-            return new Date(9999, 12, 31).setPrecision(Precision.DAY);
+            return new Date(9999, 12, 31);
         }
-        // TODO - the temporal types are slightly limited here ... using system defaults for timezone instead of what's specified for evaluation
         if (type.endsWith("DateTime")) {
-            return new DateTime(TemporalHelper.getDefaultOffset(), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(TemporalHelper.getDefaultZoneOffset());
+            return new DateTime(null, 9999, 12, 31, 23, 59, 59, 999);
         }
         if (type.endsWith("Time")) {
             return new Time(23, 59, 59, 999);
@@ -59,25 +56,6 @@ public class MaxValueEvaluator extends org.cqframework.cql.elm.execution.MaxValu
     protected Object internalEvaluate(Context context) {
         QName valueType = context.fixupQName(this.getValueType());
         String type = valueType.getLocalPart();
-        if (type == null) {
-            return null;
-        }
-
-        if (type.endsWith("Integer")) {
-            return Value.MAX_INT;
-        }
-        if (type.endsWith("Decimal")) {
-            return Value.MAX_DECIMAL;
-        }
-        if (type.endsWith("Date")) {
-            return new Date(9999, 12, 31).setPrecision(Precision.DAY);
-        }
-        if (type.endsWith("DateTime")) {
-            return new DateTime(TemporalHelper.zoneToOffset(context.getEvaluationDateTime().getDateTime().getOffset()), 9999, 12, 31, 23, 59, 59, 999).withEvaluationOffset(context.getEvaluationDateTime().getDateTime().getOffset());
-        }
-        if (type.endsWith("Time")) {
-            return new Time(23, 59, 59, 999);
-        }
-        throw new InvalidOperatorArgument(String.format("The Maximum operator is not implemented for type %s", type));
+        return maxValue(type);
     }
 }

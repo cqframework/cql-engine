@@ -100,7 +100,7 @@ class Dstu3FhirTypeConverter extends BaseFhirTypeConverter {
         }
 
         return new org.hl7.fhir.dstu3.model.Quantity()
-                .setSystem("http://unitsofmeasure.org").setUnit(value.getUnit()).setValue(value.getValue());
+                .setSystem("http://unitsofmeasure.org").setCode(value.getUnit()).setValue(value.getValue());
     }
 
     @Override

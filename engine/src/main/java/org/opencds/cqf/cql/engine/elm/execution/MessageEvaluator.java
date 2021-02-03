@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message {
 
-    final static Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
+    static final Logger logger = LoggerFactory.getLogger(MessageEvaluator.class);
 
     public static Object message(Context context, SourceLocator sourceLocator, Object source, Boolean condition, String code, String severity, String message) {
         if (severity == null) {
@@ -32,12 +32,12 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
                     logger.warn(finalMessage); break;
                 }
                 case "trace": {
-                    String finalMessage = messageBuilder.append(message).append("\n").append(stripPHI(source).toString()).toString();
+                    String finalMessage = messageBuilder.append(message).append(String.format("%n%s", stripPHI(source))).toString();
                     context.logDebugTrace(sourceLocator, finalMessage);
                     logger.debug(finalMessage); break;
                 }
                 case "error": {
-                    String finalMessage = messageBuilder.append(message).append("\n").append(stripPHI(source).toString()).toString();
+                    String finalMessage = messageBuilder.append(message).append(String.format("%n%s", stripPHI(source))).toString();
                     // NOTE: debug logging happens through exception-handling
                     logger.error(finalMessage);
                     throw new CqlException(finalMessage);

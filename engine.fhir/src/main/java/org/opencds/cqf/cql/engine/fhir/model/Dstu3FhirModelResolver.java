@@ -25,6 +25,7 @@ import org.hl7.fhir.dstu3.model.UnsignedIntType;
 import org.hl7.fhir.dstu3.model.UriType;
 import org.hl7.fhir.dstu3.model.UuidType;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
+import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
@@ -78,6 +79,10 @@ public class Dstu3FhirModelResolver extends
 
     protected Integer getCalendarConstant(BaseDateTimeType dateTime) {
         return dateTime.getPrecision().getCalendarConstant();
+    }
+
+    protected void setCalendarConstant(BaseDateTimeType dateTime, BaseTemporal temporal) {
+        dateTime.setPrecision(toTemporalPrecisionEnum(temporal.getPrecision()));
     }
 
     protected String timeToString(TimeType time) {

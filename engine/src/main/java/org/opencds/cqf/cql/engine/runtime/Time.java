@@ -30,7 +30,7 @@ public class Time extends BaseTemporal {
 
     public Time(String dateString) {
         int size = 0;
-        if (dateString.matches("^T[0-2]\\d$")) {
+        if (dateString.matches("^T[0-2]\\d$") || dateString.matches("^[0-2]\\d$")) {
             dateString += ":00";
             size = -1;
         }
@@ -40,6 +40,7 @@ public class Time extends BaseTemporal {
             ++size;
         }
         precision = Precision.fromTimeIndex(size - 1);
+        dateString = TemporalHelper.autoCompleteTimeString(dateString, precision);
         time = LocalTime.parse(dateString);
     }
 

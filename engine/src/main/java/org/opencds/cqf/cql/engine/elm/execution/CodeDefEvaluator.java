@@ -9,6 +9,6 @@ public class CodeDefEvaluator extends org.cqframework.cql.elm.execution.CodeDef 
     @Override
     protected Object internalEvaluate(Context context) {
         CodeSystemInfo info = (CodeSystemInfo) getCodeSystem().evaluate(context);
-        return new Code().withCode(this.getId()).withSystem(info.getId()).withDisplay(this.getDisplay());
+        return new Code().withCode(this.getId()).withSystem(info.getId()).withDisplay(this.getDisplay()).withVersion(info.getVersion());
     }
 }

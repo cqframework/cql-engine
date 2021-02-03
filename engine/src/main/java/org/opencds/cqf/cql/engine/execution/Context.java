@@ -1,6 +1,10 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getNamePart;
+import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getUriPart;
+
 import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -13,6 +17,7 @@ import javax.xml.namespace.QName;
 import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
 import org.cqframework.cql.elm.execution.CodeDef;
 import org.cqframework.cql.elm.execution.CodeSystemDef;
+import org.cqframework.cql.elm.execution.ConceptDef;
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.FunctionDef;
 import org.cqframework.cql.elm.execution.IncludeDef;
@@ -39,8 +44,7 @@ import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.Severity;
-import org.opencds.cqf.cql.engine.runtime.Precision;
-import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 /**
@@ -90,8 +94,9 @@ public class Context {
     private Stack<Library> currentLibrary = new Stack<>();
     private LibraryLoader libraryLoader;
 
-    private org.opencds.cqf.cql.engine.runtime.DateTime evaluationDateTime =
-            new org.opencds.cqf.cql.engine.runtime.DateTime(OffsetDateTime.now().withOffsetSameInstant(TemporalHelper.getDefaultZoneOffset()), Precision.MILLISECOND);
+    private ZonedDateTime evaluationZonedDateTime;
+    private OffsetDateTime evaluationOffsetDateTime;
+    private DateTime evaluationDateTime;
 
     private UcumService ucumService;
 
@@ -157,11 +162,12 @@ public class Context {
     }
 
     public Context(Library library) {
+        setEvaluationDateTime(ZonedDateTime.now());
         init(library);
     }
 
-    public Context(Library library, org.opencds.cqf.cql.engine.runtime.DateTime evaluationDateTime) {
-        this.evaluationDateTime = evaluationDateTime;
+    public Context(Library library, ZonedDateTime evaluationZonedDateTime) {
+        setEvaluationDateTime(evaluationZonedDateTime);
         init(library);
     }
 
@@ -180,7 +186,21 @@ public class Context {
         threadContext.set(this);
     }
 
-    public org.opencds.cqf.cql.engine.runtime.DateTime getEvaluationDateTime() {
+    private void setEvaluationDateTime(ZonedDateTime evaluationZonedDateTime) {
+        this.evaluationZonedDateTime = evaluationZonedDateTime;
+        this.evaluationOffsetDateTime = evaluationZonedDateTime.toOffsetDateTime();
+        this.evaluationDateTime = new DateTime(evaluationOffsetDateTime);
+    }
+
+    public ZonedDateTime getEvaluationZonedDateTime() {
+        return this.evaluationZonedDateTime;
+    }
+
+    public OffsetDateTime getEvaluationOffsetDateTime() {
+        return this.evaluationOffsetDateTime;
+    }
+
+    public DateTime getEvaluationDateTime() {
         return this.evaluationDateTime;
     }
 
@@ -233,7 +253,11 @@ public class Context {
     }
 
     private Library resolveIncludeDef(IncludeDef includeDef) {
-        VersionedIdentifier libraryIdentifier = new VersionedIdentifier().withId(includeDef.getPath()).withVersion(includeDef.getVersion());
+        VersionedIdentifier libraryIdentifier = new VersionedIdentifier()
+            .withSystem(getUriPart(includeDef.getPath()))
+            .withId(getNamePart(includeDef.getPath()))
+            .withVersion(includeDef.getVersion());
+
         Library library = libraries.get(libraryIdentifier.getId());
         if (library == null) {
             library = libraryLoader.load(libraryIdentifier);
@@ -273,6 +297,16 @@ public class Context {
         }
 
         throw new CqlException(String.format("Could not resolve code reference '%s'.", name));
+    }
+
+    public ConceptDef resolveConceptRef(String name) {
+        for (ConceptDef conceptDef : getCurrentLibrary().getConcepts().getDef()) {
+            if (conceptDef.getName().equals(name)) {
+                return conceptDef;
+            }
+        }
+
+        throw new CqlException(String.format("Could not resolve concept reference '%s'.", name));
     }
 
     private IncludeDef resolveLibraryRef(String libraryName) {

@@ -102,7 +102,7 @@ class Dstu2FhirTypeConverter extends BaseFhirTypeConverter {
         }
 
         return new org.hl7.fhir.dstu2.model.Quantity()
-                .setSystem("http://unitsofmeasure.org").setUnit(value.getUnit()).setValue(value.getValue());
+                .setSystem("http://unitsofmeasure.org").setCode(value.getUnit()).setValue(value.getValue());
     }
 
     @Override
@@ -389,7 +389,7 @@ class Dstu2FhirTypeConverter extends BaseFhirTypeConverter {
     private SimpleQuantity toSimpleQuantity(org.hl7.fhir.dstu2.model.Quantity quantity) {
         SimpleQuantity simple = new SimpleQuantity();
         simple.setValue(quantity.getValue());
-        simple.setUnit(quantity.getUnit());
+        simple.setCode(quantity.getCode());
         simple.setSystem(quantity.getSystem());
         simple.setComparator(quantity.getComparator());
         return simple;
