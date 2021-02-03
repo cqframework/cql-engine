@@ -6,23 +6,23 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>1.5.1-SNAPSHOT</version>
+        <version>1.5.1</version>
     </parent>
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.fhir</artifactId>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.5.1</version>
     <packaging>jar</packaging>
 
     <name>engine.fhir</name>
     <description>CQL Engine FHIR providers</description>
-    <url>https://github.com/DBCG/cql_engine/tree/master/cql-engine-fhir</url>
+    <url>https://github.com/DBCG/cql_engine/tree/master/engine.fhir</url>
 
     <dependencies>
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
             <artifactId>engine</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
+            <version>1.5.1</version>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>

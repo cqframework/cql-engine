@@ -6,18 +6,18 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>1.5.1-SNAPSHOT</version>
+        <version>1.5.1</version>
     </parent>
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine</artifactId>
-    <version>1.5.1-SNAPSHOT</version>
+    <version>1.5.1</version>
 
     <packaging>jar</packaging>
 
     <name>engine</name>
     <description>CQL Engine</description>
-    <url>https://github.com/DBCG/cql_engine/tree/master/cql-engine</url>
+    <url>https://github.com/DBCG/cql_engine/tree/master/engine</url>
 
     <dependencies>
         <dependency>
