@@ -45,7 +45,8 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5 - CQL 1.5 Support
 * 1.5.0 - Initial release candidate
 * 1.5.1 - Minor maintenance/stability fixes
-* 1.5.2 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters
+* 1.5.2 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
+* 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
 
 ## License
 
