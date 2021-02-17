@@ -3,10 +3,13 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.Supplier;
 
+import org.opencds.cqf.cql.engine.data.SystemDataProvider;
+import org.opencds.cqf.cql.engine.elm.execution.obfuscate.PHIObfuscator;
+import org.opencds.cqf.cql.engine.elm.execution.obfuscate.RedactingPHIObfuscator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,7 +32,27 @@ public class CqlErrorsAndMessagingOperatorsTest extends CqlExecutionTestBase {
         try {
             result = context.resolveExpressionRef("TestMessageError").evaluate(context);
         } catch (RuntimeException re) {
-            Assert.assertEquals(re.getMessage(), String.format("400: This is an error!%n4"));
+            Assert.assertEquals(re.getMessage(), String.format("400: This is an error!%n"));
+        }
+    }
+
+    @Test
+    public void TestObfuscation() {
+        Context context = new Context(library, new CustomSystemDataProvider());
+
+        try {
+            context.resolveExpressionRef("TestMessageObfuscation").evaluate(context);
+        } catch (RuntimeException result) {
+            Assert.assertEquals(result.getMessage(),
+                                String.format("400: This source should be redacted%n%s",
+                                              RedactingPHIObfuscator.REDACTED_MESSAGE));
+        }
+    }
+
+    private static class CustomSystemDataProvider extends SystemDataProvider {
+        @Override
+        public Supplier<PHIObfuscator> phiObfuscationSupplier() {
+            return RedactingPHIObfuscator::new;
         }
     }
 }
