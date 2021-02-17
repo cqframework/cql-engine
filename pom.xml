@@ -41,7 +41,7 @@
     <scm>
         <connection>scm:git:git://github.com/DBCG/cql_engine.git</connection>
         <developerConnection>scm:git:ssh://github.com:DBCG/cql_engine.git</developerConnection>
-        <url>http://github.com/DBCG/cql_engine.git/tree/master</url>
+        <url>https://github.com/DBCG/cql_engine/tree/master</url>
     </scm>
 
     <properties>
