@@ -4,4 +4,4 @@
 set -euxo pipefail
 bash -n "$0"
 
-mvn versions:update-properties versions:use-releases versions:use-latest-releases
+mvn versions:update-properties versions:use-releases versions:use-latest-releases -Dexcludes=org.jvnet.jaxb2_commons:jaxb2-basics:jar:0.12.0
