@@ -10,7 +10,7 @@ import org.opencds.cqf.cql.engine.runtime.Date;
 
     ConvertsToDate(argument String) Boolean
 
-    The ConvertsToDate operator returns true if its argument can be converted to a Date value. See the ToDate operator
+    The ConvertsToDate operator returns true if its argument is or can be converted to a Date value. See the ToDate operator
         for a description of the supported conversions.
 
     If the input string is not formatted correctly, or does not represent a valid date value, the result is false.
@@ -26,6 +26,10 @@ public class ConvertsToDateEvaluator extends org.cqframework.cql.elm.execution.C
     public static Boolean convertsToDate(Object argument) {
         if (argument == null) {
             return null;
+        }
+
+        if (argument instanceof Date) {
+            return true;
         }
 
         if (argument instanceof String) {

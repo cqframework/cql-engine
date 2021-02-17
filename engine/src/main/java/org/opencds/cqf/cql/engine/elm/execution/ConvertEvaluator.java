@@ -14,9 +14,9 @@ The result of the operator is the value of the argument converted to the target 
 
 The following table lists the conversions supported in CQL:
 From\To	  Boolean	  Integer	  Decimal	  Quantity  Ratio	  String   Date 	 Datetime	 Time	    Code	Concept  List<Code>
-Boolean	    N/A	        -	        -	          -	      -      Explicit	 -           -	       -	      -	      -          -
-Integer	     -	       N/A	     Implicit	  Implicit	  -	     Explicit	 -           -	       -	      -       -          -
-Decimal	     -	        -	       N/A	      Implicit	  - 	 Explicit 	 -           -	       -	      -       -          -
+Boolean	    N/A	     Explicit	 Explicit	      -       -      Explicit	 -           -	       -	      -	      -          -
+Integer	  Explicit      N/A	     Implicit	  Implicit	  -	     Explicit	 -           -	       -	      -       -          -
+Decimal	  Explicit      -	       N/A	      Implicit	  - 	 Explicit 	 -           -	       -	      -       -          -
 Quantity	 -	        -	        -	         N/A      -	     Explicit	 -           -	       -	      -       -          -
 Ratio   	 -	        -	        -	          -      N/A     Explicit    -           -	       -	      -	      -	         -
 String	  Explicit   Explicit	 Explicit	  Explicit Explicit    N/A	   Explicit  Explicit   Explicit      -	      -          -

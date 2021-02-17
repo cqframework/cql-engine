@@ -441,15 +441,22 @@ public class TestFhirPath {
         System.out.println(String.format("Running test file %s...", testsFilePath));
         Tests tests = loadTestsFile(testsFilePath);
         int testCounter = 0;
+        int skipCounter = 0;
         int passCounter = 0;
         for (Group group : tests.getGroup()) {
             System.out.println(String.format("Running test group %s...", group.getName()));
             for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
                 testCounter += 1;
                 try {
-                    runR4Test(test);
-                    passCounter += 1;
-                    System.out.println(String.format("Test %s passed.", test.getName()));
+                    if (test.getVersion() != null && test.getVersion().equals("2.1.0")) {
+                        System.out.println(String.format("Test %s skipped (unsupported version).", test.getName()));
+                        skipCounter += 1;
+                    }
+                    else {
+                        runR4Test(test);
+                        passCounter += 1;
+                        System.out.println(String.format("Test %s passed.", test.getName()));
+                    }
                 } catch (Exception e) {
                     System.out
                             .println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
@@ -457,7 +464,7 @@ public class TestFhirPath {
             }
         }
         System.out.println(
-                String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
+                String.format("Tests file %s passed %s of %s tests (%s skipped).", testsFilePath, passCounter, testCounter, skipCounter));
     }
 
     private String getStringFromResourceStream(String resourceName) {

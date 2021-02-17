@@ -13,7 +13,7 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
     ConvertsToDateTime(argument Date) Boolean
     ConvertsToDateTime(argument String) Boolean
 
-    The ConvertsToDateTime operator returns true if its argument can be converted to a DateTime value. See the ToDateTime
+    The ConvertsToDateTime operator returns true if its argument is or can be converted to a DateTime value. See the ToDateTime
         operator for a description of the supported conversions.
 
     If the input string is not formatted correctly, or does not represent a valid DateTime value, the result is false.
@@ -30,6 +30,10 @@ public class ConvertsToDateTimeEvaluator extends org.cqframework.cql.elm.executi
     public static Boolean convertsToDateTime(Object argument, ZoneOffset offset) {
         if (argument == null) {
             return null;
+        }
+
+        if (argument instanceof DateTime) {
+            return true;
         }
 
         if (argument instanceof String) {

@@ -34,6 +34,10 @@ public class ToDateEvaluator extends org.cqframework.cql.elm.execution.ToDate {
             return null;
         }
 
+        if (operand instanceof Date) {
+            return operand;
+        }
+
         if (operand instanceof String) {
             try {
                 return new Date((String) operand);

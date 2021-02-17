@@ -77,6 +77,10 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
             return null;
         }
 
+        if (operand instanceof Quantity) {
+            return (Quantity)operand;
+        }
+
         if (operand instanceof String) {
             String str = (String) operand;
             return toQuantity(str);

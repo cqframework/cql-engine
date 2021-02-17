@@ -4,11 +4,13 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 
+import java.math.BigDecimal;
+
 /*
 
     ConvertsToBoolean(argument String) Boolean
 
-    The ConvertsToBoolean operator returns true if its argument can be converted to a Boolean value. See the ToBoolean
+    The ConvertsToBoolean operator returns true if its argument is or can be converted to a Boolean value. See the ToBoolean
         operator for a description of the supported conversions.
 
     If the input cannot be interpreted as a valid Boolean value, the result is false.
@@ -25,6 +27,20 @@ public class ConvertsToBooleanEvaluator extends org.cqframework.cql.elm.executio
     public static Boolean convertsToBoolean(Object argument) {
         if (argument == null) {
             return null;
+        }
+
+        if (argument instanceof Boolean) {
+            return true;
+        }
+
+        if (argument instanceof Integer) {
+            Integer value = (Integer)argument;
+            return (value == 0 || value == 1);
+        }
+
+        if (argument instanceof BigDecimal) {
+            BigDecimal value = (BigDecimal)argument;
+            return (value.compareTo(new BigDecimal("1.0")) == 0 || value.compareTo(new BigDecimal("0.0")) == 0);
         }
 
         if (argument instanceof String) {
