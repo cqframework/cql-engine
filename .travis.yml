@@ -9,9 +9,23 @@ cache:
 install:
 - ./scripts/install.sh
 script:
-- ./scripts/build.sh
+- ./scripts/test.sh
 before_cache:
 - rm -rf $HOME/.m2/repository/org/opencds/cqf/cql
+after_success:
+- ./scripts/deploy.sh
+deploy:
+  provider: releases
+  api_key:
+    secure: b1sDrdEZcKENRDizYSaaQMbXet2vCS34AMm1MVZptjr0r2dqvogN2VfLUhCGTLNDkoogBry6oN2b6v4g1joK9Vv6C6Vi/9fXJRECl7Ccg98JBBOT1ii2zsBIr2o5Jwa2y/F7ukm+OkQEAHlxVRDuu9xpBVULkWGuVa47TnJEXBJQAdA1WE6z5HTFEbro8ES4wyFo3Ngugulw2WaDEyx0RiFSC/4uKjAZ7uCS12RrjF9l16bpLYIkgeItMk3WqQWzQG4TOwSVOyDcIOAKQeMyLEXc0gqYuwvdsqPgoqSbOfzfggaZYKgIBrMwFDFSFQHouDPMU1tBLVKR2UL5/eXY1nfbaZgDsQ7frojeerFn2yLl94uqLGQ8XS7ilTs0LY66/6EvVHX2KesEwC0OV/sW3TWDRyEthsT4ATdhVxzn6YOAVKxjg99JxIXg5XiZ1NyRWFJc3Z5J5oZcKgQdDi8zLhX6dlSBU+kjB/jyJ/0sL7ONwPkKbGuV3IC/w5+C5K78SUoNoCwJ4bcuBOguXSShl8Nff2ZM0oYmXnuFdbvtwe6JMtPCSO9zVjC22d+wmruqbdbtTOLoouIT6HKkNteu3FiAbo/VwL08/aKLTw+jaH/rNEF54f237zQ4oyI6ZSaYN9thjEPXcbslh9GivpuHeMEyHMaCowkla11bC5bQNtk=
+  file_glob: true
+  file: "target/**/*.jar"
+  skip_cleanup: true
+  name: CQL Engine $TRAVIS_TAG
+  overwrite: true
+  target_commitish: $TRAVIS_COMMIT
+  on:
+    tags: true
 notifications:
   slack:
     - rooms:
@@ -22,4 +36,4 @@ notifications:
       - secure: ZQknG9N6kaPDhrRBdOfHWS5zvFoLRrNX1aJff3NKagXVOONjMyvkpfgfleVnnLbiQ/sxjpjBgLrBAVRaSCNEHxyVFwLwlKxNzJb3sndaj/0+sOgCeOjC/RSFTaOz+Rv1T8ezJI1MMqOiVBJHPcpTdndcNQzJT30nAHqKXkeqWgXE/g444RmV5aYCziInDSjLX08f5GPF+hjY9kT+JGDLYaLcNFTdWi6TkUmYM8XjRtGW1d7Gv4hXCdK0i8tm0/p5gdZ0njx5GiegTrNfB5FWKmA3Z9ZZugPb84tgsXSsNP3ps3fA9Hp3kBwDTDCBLrbX2LB5fOHrHUg1N6sghDGcwMru4OeQ6g3H0lxBM7uy1ZpvH7DGGfPSY3FkOrQBIiGnyF5SQg+Qi7TPeTgF+Nb80UAcpupBhQS1u8P65eyqNXdbPszrFSQFKhFU5NwalniUasWyVFfOkjB/dBqUgkO9vOFwQdjZw+bMmH9j3qqmSDrpHU1NHW4SJmjZWDhEfuYG9F02S9Xinr8egzwAx0K7NdDuPpOT+fzfGfFib/835lj3ZUJPfZNXucw8AoDQfiLd08k4lsIGr8W6DRcQPzM/YAPoOVgDjkevx9OXMFRhPr6yB54J17dn4y6RpjLkgemi+o/XvYDI+7WwN17skbof1qV0g0mbqGJx41aw5Tqbgkg=
       on_success: never
       on_failure: always
-  
+
