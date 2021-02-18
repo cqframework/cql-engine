@@ -53,6 +53,16 @@ The implementers are active on the official FHIR [Zulip chat for CQL](https://ch
 
 Inquires for commercial support can be directed to [info@alphora.com](info@alphora.com).
 
+## Related Projects
+
+[Clinical Quality Language](https://github.com/cqframework/clinical_quality_language) - Tooling in support of the CQL specification, including the CQL verifier/translator used in this project.
+
+[CQL Evaluator](https://github.com/DBCG/cql-evaluator) - Integrates the CQL Translator and this CQL Engine into an execution environment, and provides implementations of operations defined by FHIR IGs.
+
+[CQL Support for Atom](https://atom.io/packages/language-cql) - Open source CQL IDE with syntax highlighting, linting, and local CQL evaluation.
+
+[CQF Ruler](https://github.com/DBCG/cqf-ruler) - Integrates this CQL Engine into the HAPI FHIR server, providing CQL Library evaluation, among other functionality.
+
 ## License
 
 Copyright 2016 University of Utah
