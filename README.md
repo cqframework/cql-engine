@@ -1,6 +1,6 @@
 # CQL Evaluation Engine
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.opencds.cqf.cql/engine/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.opencds.cqf.cql/engine) [![Build Status](https://www.travis-ci.com/DBCG/cql_engine.svg?branch=master)](https://www.travis-ci.com/DBCG/cql_engine)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.opencds.cqf.cql/engine/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.opencds.cqf.cql/engine) [![Build Status](https://www.travis-ci.com/DBCG/cql_engine.svg?branch=master)](https://www.travis-ci.com/DBCG/cql_engine) [![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://chat.fhir.org/#narrow/stream/179220-cql)
 
 The HL7 Clinical Quality Language specification is designed to enable accurate authoring and automated sharing of computable knowledge artifacts including quality measures, decision support rules, orders sets and documentation templates. The specification is constructed using a layered approach informed by modern programming language and compiler design which facilitates the development of language processing applications including static analysis, translation, and evaluation.
 
@@ -44,6 +44,14 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.1 - Minor maintenance/stability fixes
 * 1.5.2 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
 * 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
+
+## Getting Help
+
+Bugs and feature requests can be filed with [Github Issues](https://github.com/DBCG/cql_engine/issues).
+
+The implementers are active on the official FHIR [Zulip chat for CQL](https://chat.fhir.org/#narrow/stream/179220-cql).
+
+Inquires for commercial support can be directed to [info@alphora.com](info@alphora.com).
 
 ## License
 
