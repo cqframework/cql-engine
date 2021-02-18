@@ -314,16 +314,14 @@
                         <source>1.8</source>
                         <target>1.8</target>
                         <release>8</release>
-                        <configuration>
-                            <failOnError>true</failOnError>
-                            <failOnWarning>true</failOnWarning>
-                            <compilerArgs>
-                                <arg>-Xlint:all</arg>
-                                <!-- This fixes a boostrapclass path warning which the "release" property fixes on Java 9+ -->
-                                <arg>-Xlint:-options</arg>
-                                <arg>-Werror</arg>
-                            </compilerArgs>
-                        </configuration>
+                        <failOnError>true</failOnError>
+                        <failOnWarning>true</failOnWarning>
+                        <compilerArgs>
+                            <arg>-Xlint:all</arg>
+                            <!-- This fixes a boostrapclass path warning which the "release" property fixes on Java 9+ -->
+                            <arg>-Xlint:-options</arg>
+                            <arg>-Werror</arg>
+                        </compilerArgs>
                     </configuration>
                 </plugin>
                 <plugin>
