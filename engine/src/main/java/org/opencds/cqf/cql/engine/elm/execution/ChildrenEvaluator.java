@@ -65,7 +65,7 @@ public class ChildrenEvaluator extends org.cqframework.cql.elm.execution.Childre
             list.add(children(o));
         }
 
-        list = (List<Object>) FlattenEvaluator.flatten(list);
+        list = FlattenEvaluator.flatten(list);
     }
 
     @SuppressWarnings("unchecked")

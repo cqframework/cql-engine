@@ -73,7 +73,7 @@ class Dstu2FhirTypeConverter extends BaseFhirTypeConverter {
         }
 
         DateTimeFormatter dtf = DateTimeFormatter.ISO_DATE_TIME;
-        java.util.Date date = java.util.Date.from(Instant.from(dtf.parse(((DateTime) value).getDateTime().toString())));
+        java.util.Date date = java.util.Date.from(Instant.from(dtf.parse(value.getDateTime().toString())));
         return new DateTimeType(date);
     }
 
@@ -380,7 +380,7 @@ class Dstu2FhirTypeConverter extends BaseFhirTypeConverter {
 			cal = new GregorianCalendar();
 		}
         cal.setTime(dateTimeType.getValue());
-        
+
         return cal;
     }
 
