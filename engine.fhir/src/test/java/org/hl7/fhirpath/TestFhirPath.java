@@ -108,6 +108,7 @@ public class TestFhirPath {
                         break;
                     case DECIMAL:
                         results.add(new BigDecimal(output.getValue()));
+                        break;
                     case DATE:
                         results.add(new Date(output.getValue()));
                         break;

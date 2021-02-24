@@ -186,6 +186,14 @@ public class Interval implements CqlType, Comparable<Interval> {
     }
 
     @Override
+    public int hashCode() {
+        return (31 * (lowClosed ? 1 : 0))
+            + (47 * (highClosed ? 1 : 0))
+            + (13 * (low != null ? low.hashCode() : 0))
+            + (89 * (high != null ? high.hashCode() : 0));
+    }
+
+    @Override
     public String toString() {
         if (getStart() == null) {
 
