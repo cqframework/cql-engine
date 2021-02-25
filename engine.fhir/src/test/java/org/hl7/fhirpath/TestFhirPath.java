@@ -492,7 +492,7 @@ public class TestFhirPath {
                         System.out.printf("\nTest %s skipped (unsupported version).", test.getName());
                         skipCounter += 1;
                     } else {
-                        // runCqlTest(test) ?
+                        runR4Test(test);
                         passCounter += 1;
                         System.out.printf("\nTest %s passed.", test.getName());
                     }
