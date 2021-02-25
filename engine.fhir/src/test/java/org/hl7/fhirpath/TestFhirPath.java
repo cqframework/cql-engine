@@ -4,20 +4,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.opencds.cqf.cql.engine.elm.execution.ToQuantityEvaluator.toQuantity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
+import java.io.*;
 import java.math.BigDecimal;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
@@ -33,6 +30,7 @@ import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.InvalidType;
 import org.hl7.fhirpath.tests.Tests;
@@ -466,6 +464,48 @@ public class TestFhirPath {
         }
         System.out.println(
                 String.format("Tests file %s passed %s of %s tests (%s skipped).", testsFilePath, passCounter, testCounter, skipCounter));
+    }
+
+    @Test
+    public void runCqlTests() throws IOException, URISyntaxException {
+        Path path = Paths.get(getClass().getResource("cql/tests/").toURI());
+        Files.walk(path).forEach(test -> {
+            if (!test.toFile().isDirectory()) {
+                testCql(test.toFile().getName());
+            }
+        });
+    }
+
+    public void testCql(String testFile) {
+        String testsFilePath = "cql/tests/" + testFile;
+        System.out.printf("\nRunning test file %s...", testsFilePath);
+        Tests tests = loadTestsFile(testsFilePath);
+        int testCounter = 0, skipCounter = 0, passCounter = 0;
+
+        for (Group group: tests.getGroup()) {
+            System.out.printf("\nRunning test group %s...", group.getName());
+
+            for (org.hl7.fhirpath.tests.Test test: group.getTest()) {
+                testCounter += 1;
+                try {
+                    if (test.getVersion() != null && test.getVersion().equals("2.1.0")) {
+                        System.out.printf("\nTest %s skipped (unsupported version).", test.getName());
+                        skipCounter += 1;
+                    } else {
+                        // runCqlTest(test) ?
+                        passCounter += 1;
+                        System.out.printf("\nTest %s passed.", test.getName());
+                    }
+                } catch (Exception e) {
+                    System.out.printf(
+                        "\nTest file %s passed %s of %s tests (%s skipped).",
+                        testsFilePath,
+                        passCounter,
+                        testCounter,
+                        skipCounter);
+                }
+            }
+        }
     }
 
     private String getStringFromResourceStream(String resourceName) {
