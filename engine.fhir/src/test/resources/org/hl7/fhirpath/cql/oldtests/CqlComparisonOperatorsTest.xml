@@ -25,7 +25,7 @@
 			<output>false</output>
 		</test>
 		<test name="SimpleEqNullNull">
-			<expression>null as String = null</expression>
+			<expression>null = null</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleEqTrueNull">
@@ -576,7 +576,7 @@
 			<output>false</output>
 		</test>
 		<test name="EquivNullNull">
-			<expression>null as String ~ null</expression>
+			<expression>null ~ null</expression>
 			<output>true</output>
 		</test>
 		<test name="EquivTrueNull">
@@ -679,7 +679,7 @@
 			<output>true</output>
 		</test>
 		<test name="SimpleNotEqNullNull">
-			<expression>null as String != null</expression>
+			<expression>null != null</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleNotEqTrueNull">

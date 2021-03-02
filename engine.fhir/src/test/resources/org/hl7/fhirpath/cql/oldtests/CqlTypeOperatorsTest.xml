@@ -12,7 +12,7 @@
 		</test>
 		<test name="AsDateTime">
 			<expression>DateTime(2014, 01, 01) as DateTime</expression>
-			<output>@2014-01-01T</output>
+			<output>@2014-01-01</output>
 		</test>
 	</group>
 	<group name="Convert">
@@ -30,7 +30,7 @@
 		</test>
 		<test name="StringToDateTime">
 			<expression>convert '2014-01-01' to DateTime</expression>
-			<output>@2014-01-01T</output>
+			<output>@2014-01-01</output>
 		</test>
 		<test name="StringToTime">
 			<expression>convert 'T14:30:00.0' to Time</expression>
@@ -70,7 +70,7 @@
 	<group name="ToDateTime">
 		<test name="ToDateTime1">
 			<expression>ToDateTime('2014-01-01')</expression>
-			<output>@2014-01-01T</output>
+			<output>@2014-01-01</output>
 		</test>
 		<test name="ToDateTime2">
 			<expression>ToDateTime('2014-01-01T12:05')</expression>
@@ -82,15 +82,15 @@
 		</test>
 		<test name="ToDateTime4">
 			<expression>ToDateTime('2014-01-01T12:05:05.955+01:30')</expression>
-			<output>@2014-01-01T12:05:05.955+01:30</output>
+			<output>@2014-01-01T12:05:05.955</output>
 		</test>
 		<test name="ToDateTime5">
 			<expression>ToDateTime('2014-01-01T12:05:05.955-01:15')</expression>
-			<output>@2014-01-01T12:05:05.955-01:15</output>
+			<output>@2014-01-01T12:05:05.955</output>
 		</test>
 		<test name="ToDateTime6">
 			<expression>ToDateTime('2014-01-01T12:05:05.955Z')</expression>
-			<output>@2014-01-01T12:05:05.955+00:00</output>
+			<output>@2014-01-01T12:05:05.955</output>
 		</test>
 		<test name="ToDateTimeMalformed">
 			<expression invalid="true">ToDateTime('2014/01/01T12:05:05.955Z')</expression>
@@ -111,7 +111,7 @@
 	</group>
 	<group name="ToQuantity">
 		<test name="String5D5CMToQuantity">
-			<expression>ToQuantity('5.5 \'cm\'')</expression>
+			<expression>ToQuantity('5.5 cm')</expression>
 			<output>5.5'cm'</output>
 		</test>
 	</group>
@@ -126,7 +126,7 @@
 		</test>
 		<test name="Quantity5D5CMToString">
 			<expression>ToString(5.5 'cm')</expression>
-			<output>'5.5 \'cm\''</output>
+			<output>'5.5cm'</output>
 		</test>
 		<test name="BooleanTrueToString">
 			<expression>ToString(true)</expression>

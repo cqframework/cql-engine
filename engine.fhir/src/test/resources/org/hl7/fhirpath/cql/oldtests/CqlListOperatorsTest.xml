@@ -26,26 +26,6 @@
 			<expression>({ DateTime(2012, 10, 5, 10), DateTime(2012, 1, 1), DateTime(2012, 1, 1, 12), DateTime(2012, 10, 5) }) S sort desc</expression>
 			<output>{DateTime(2012, 10, 5, 10), DateTime(2012, 10, 5), DateTime(2012, 1, 1, 12), DateTime(2012, 1, 1)}</output>
 		</test>
-		<test name="intList">
-			<expression>{ 3, 2, 1 }</expression>
-			<output>{3, 2, 1}</output>
-		</test>
-		<test name="decimalList">
-			<expression>{ 3.8, 2.4, 1.9 }</expression>
-			<output>{3.8, 2.4, 1.9}</output>
-		</test>
-		<test name="quantityList">
-			<expression>{ 19.99 '[lb_av]', 17.33 '[lb_av]', 10.66 '[lb_av]' }</expression>
-			<output>{19.99 '[lb_av]', 17.33 '[lb_av]', 10.66 '[lb_av]'}</output>
-		</test>
-		<test name="dateTimeList">
-			<expression>{ DateTime(2016), DateTime(2015), DateTime(2010) }</expression>
-			<output>{@2016T, @2015T, @2010T}</output>
-		</test>
-		<test name="timeList">
-			<expression>{ @T15:59:59.999, @T15:12:59.999, @T15:12:13.999 }</expression>
-			<output>{@T15:59:59.999, @T15:12:59.999, @T15:12:13.999}</output>
-		</test>
 	</group>
 	<group name="Contains">
 		<test name="ContainsABNullHasNull">
@@ -95,11 +75,11 @@
 		</test>
 		<test name="DistinctNullNullNull">
 			<expression>distinct { null, null, null}</expression>
-			<output>{ null }</output>
+			<output>{}</output>
 		</test>
 		<test name="DistinctANullANull">
 			<expression>distinct { 'a', null, 'a', null}</expression>
-			<output>{'a', null}</output>
+			<output>{'a'}</output>
 		</test>
 		<test name="Distinct112233">
 			<expression>distinct { 1, 1, 2, 2, 3, 3}</expression>
@@ -132,11 +112,11 @@
 			<output>null</output>
 		</test>
 		<test name="EqualEmptyListNull">
-			<expression>{} as List&lt;String&gt; = null</expression>
+			<expression>{} = null</expression>
 			<output>null</output>
 		</test>
 		<test name="EqualNullEmptyList">
-			<expression>null = {} as List&lt;String&gt;</expression>
+			<expression>null = {}</expression>
 			<output>null</output>
 		</test>
 		<test name="EqualEmptyListAndEmptyList">
@@ -174,7 +154,7 @@
 	</group>
 	<group name="Except">
 		<test name="ExceptEmptyListAndEmptyList">
-			<expression>{} except {}</expression>
+			<expression>Except({}, {})</expression>
 			<output>{}</output>
 		</test>
 		<test name="Except1234And23">
@@ -187,7 +167,7 @@
 		</test>
 		<test name="ExceptDateTimeList">
 			<expression>{ DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }</expression>
-			<output>{@2012-05-10T}</output>
+			<output>{@2012-05-10}</output>
 		</test>
 		<test name="ExceptTimeList">
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } except { @T20:59:59.999, @T12:59:59.999 }</expression>
@@ -353,7 +333,7 @@
 		</test>
 		<test name="IncludesNullLeft">
 			<expression>null includes {2}</expression>
-			<output>null</output>
+			<output>false</output>
 		</test>
 		<!-- this test is going to the ContainsEvaluator -->
 		<test name="IncludesNullRight">
@@ -405,7 +385,7 @@
 		</test>
 		<test name="IncludedInNullRight">
 			<expression>{'s', 'a', 'm'} included in null</expression>
-			<output>null</output>
+			<output>false</output>
 		</test>
 	</group>
 	<group name="Indexer">
@@ -442,7 +422,7 @@
 	<group name="IndexOf">
 		<test name="IndexOfEmptyNull">
 			<expression>IndexOf({}, null)</expression>
-			<output>null</output>
+			<output>-1</output>
 		</test>
 		<test name="IndexOfNullEmpty">
 			<expression>IndexOf(null, {})</expression>
@@ -450,7 +430,7 @@
 		</test>
 		<test name="IndexOfNullIn1Null">
 			<expression>IndexOf({ 1, null }, null)</expression>
-			<output>null</output>
+			<output>1</output>
 		</test>
 		<test name="IndexOf1In12">
 			<expression>IndexOf({ 1, 2 }, 1)</expression>
@@ -488,7 +468,7 @@
 		</test>
 		<test name="IntersectDateTime">
 			<expression>{ DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) } intersect { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2000, 5, 5) }</expression>
-			<output>{@2012-05-10T, @2014-12-10T}</output>
+			<output>{@2012-05-10, @2014-12-10}</output>
 		</test>
 		<test name="IntersectTime">
 			<expression>{ @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 } intersect { @T01:29:15.156, @T15:59:59.999, @T20:59:59.999 }</expression>
@@ -547,7 +527,7 @@
 			<output>6</output>
 		</test>
 		<test name="LengthNullList">
-			<expression>Length(null as List&lt;Any&gt;)</expression>
+			<expression>Length(null as String)</expression>
 			<output>0</output>
 		</test>
 	</group>
@@ -585,7 +565,7 @@
 		</test>
 		<test name="EquivalentDateTimeNull">
 			<expression>{DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} ~ {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10), null}</expression>
-			<output>false</output>
+			<output>null</output>
 		</test>
 		<test name="EquivalentDateTimeFalse">
 			<expression>{DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} ~ {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 1)}</expression>
@@ -597,7 +577,7 @@
 		</test>
 		<test name="EquivalentTimeNull">
 			<expression>{ @T15:59:59.999, @T20:59:59.999 } ~ { @T15:59:59.999, @T20:59:59.999, null }</expression>
-			<output>false</output>
+			<output>null</output>
 		</test>
 		<test name="EquivalentTimeFalse">
 			<expression>{ @T15:59:59.999, @T20:59:59.999 } ~ { @T15:59:59.999, @T20:59:59.995 }</expression>
@@ -724,7 +704,7 @@
 		</test>
 		<test name="ProperlyIncludesNullLeft">
 			<expression>null properly includes {2}</expression>
-			<output>null</output>
+			<output>false</output>
 		</test>
 	</group>
 	<group name="ProperlyIncludedIn">
@@ -766,7 +746,7 @@
 		</test>
 		<test name="ProperlyIncludedInNulRight">
 			<expression>{'s', 'u', 'n'} properly included in null</expression>
-			<output>null</output>
+			<output>false</output>
 		</test>
 	</group>
 	<group name="SingletonFrom">
@@ -872,7 +852,7 @@
 		</test>
 		<test name="UnionListNullAndListNull">
 			<expression>{ null } union { null }</expression>
-			<output>{null}</output>
+			<output>{null, null}</output>
 		</test>
 		<test name="Union123AndEmpty">
 			<expression>{ 1, 2, 3 } union {}</expression>
@@ -880,7 +860,7 @@
 		</test>
 		<test name="Union123And2">
 			<expression>{ 1, 2, 3 } union { 2 }</expression>
-			<output>{1, 2, 3}</output>
+			<output>{1, 2, 3, 2}</output>
 		</test>
 		<test name="Union123And4">
 			<expression>{ 1, 2, 3 } union { 4 }</expression>
@@ -888,11 +868,33 @@
 		</test>
 		<test name="UnionDateTime">
 			<expression>{ DateTime(2001, 9, 11)} union {DateTime(2012, 5, 10), DateTime(2014, 12, 10) }</expression>
-			<output>{@2001-09-11T, @2012-05-10T, @2014-12-10T}</output>
+			<output>{@2001-09-11, @2012-05-10, @2014-12-10}</output>
 		</test>
 		<test name="UnionTime">
 			<expression>{ @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } union { @T10:59:59.999 }</expression>
 			<output>{@T15:59:59.999, @T20:59:59.999, @T12:59:59.999, @T10:59:59.999}</output>
+		</test>
+	</group>
+	<group name="Sort">
+		<test name="intList">
+			<expression>{ 3, 2, 1 }</expression>
+			<output>{3, 2, 1}</output>
+		</test>
+		<test name="decimalList">
+			<expression>{ 3.8, 2.4, 1.9 }</expression>
+			<output>{3.8, 2.4, 1.9}</output>
+		</test>
+		<test name="quantityList">
+			<expression>{ 19.99 'lbs', 17.33 'lbs', 10.66 'lbs' }</expression>
+			<output>{19.99 'lbs', 17.33 'lbs', 10.66 'lbs'}</output>
+		</test>
+		<test name="dateTimeList">
+			<expression>{ DateTime(2016), DateTime(2015), DateTime(2010) }</expression>
+			<output>{@2016, @2015, @2010}</output>
+		</test>
+		<test name="timeList">
+			<expression>{ @T15:59:59.999, @T15:12:59.999, @T15:12:13.999 }</expression>
+			<output>{@T15:59:59.999, @T15:12:59.999, @T15:12:13.999}</output>
 		</test>
 	</group>
 </tests>

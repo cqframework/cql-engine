@@ -8,7 +8,7 @@
 		</test>
 		<test name="CombineEmptyList">
 			<expression>Combine({})</expression>
-			<output>null</output>
+			<output>''</output>
 		</test>
 		<test name="CombineABC">
 			<expression>Combine({'a', 'b', 'c'})</expression>
@@ -112,7 +112,7 @@
 	<group name="Length">
 		<test name="LengthNullString">
 			<expression>Length(null as String)</expression>
-			<output>null</output>
+			<output>0</output>
 			<!-- cast is required due to ambiguity with Length(String) and Length(List&lt;Any&gt;) -->
 		</test>
 		<test name="LengthEmptyString">
@@ -339,7 +339,7 @@
 	<group name="toString tests">
 		<test name="QuantityToString">
 			<expression>ToString(125 'cm')</expression>
-			<output>'125 \'cm\''</output>
+			<output>'125cm'</output>
 		</test>
 		<test name="DateTimeToString1">
 			<expression>ToString(DateTime(2000, 1, 1))</expression>
@@ -351,7 +351,7 @@
 		</test>
 		<test name="DateTimeToString3">
 			<expression>ToString(DateTime(2000, 1, 1, 8, 25, 25, 300, -7))</expression>
-			<output>'2000-01-01T08:25:25.300-07:00'</output>
+			<output>'2000-01-01T08:25:25.300'</output>
 		</test>
 		<test name="TimeToString1">
 			<expression>ToString(@T09:30:01.003)</expression>

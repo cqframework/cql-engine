@@ -342,6 +342,7 @@ public class TestFhirPath {
                 library = translate(cql);
             }
             catch (Exception e) {
+                System.out.println("Catch on translate(cql) setting testPassed = true");
                 testPassed = true;
             }
 
@@ -356,8 +357,9 @@ public class TestFhirPath {
             context.setParameter(null, resource.fhirType(), resource);
 
             Object result = null;
-            boolean testPassed = false;
             String message = null;
+            boolean testPassed = false;
+
             try {
                 result = context.resolveExpressionRef("Test").evaluate(context);
                 testPassed = invalidType.equals(InvalidType.FALSE);
@@ -474,6 +476,105 @@ public class TestFhirPath {
                 testCql(test.toFile().getName());
             }
         });
+    }
+
+    /**
+     * Passing tests
+     * testCqlAggregateFunctions()
+     * testCqlAggregate()
+     * testCqlArithmeticFunctions()
+     * testCqlComparisonOperators()
+     * testCqlConditionalOperators()
+     * testCqlDateTimeOperators()
+     * testCqlErrorsAndMessagingOperators()
+     * testCqlIntervalOperators()
+     * testCqlListOperators()
+     * testCqlLogicalOperators()
+     * testCqlNullologicalOperators()
+     * testCqlStringOperators()
+     * testCqlTypeOperators()
+     * testvalueLiteralsAndSelectors()
+     * testCqlTypes()
+     */
+
+    /**
+     * Failing/not running at all
+     */
+
+    @Test
+    public void testCqlAggregateFunctions() {
+        testCql("CqlAggregateFunctionsTest.xml");
+    }
+
+    @Test
+    public void testCqlAggregate() {
+        testCql("CqlAggregateTest.xml");
+    }
+
+    @Test
+    public void testCqlArithmeticFunctions() {
+        testCql("CqlArithmeticFunctionsTest.xml");
+    }
+
+    @Test
+    public void testCqlComparisonOperators() {
+        testCql("CqlComparisonOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlConditionalOperators() {
+        testCql("CqlConditionalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlDateTimeOperatorsTest() {
+        testCql("CqlDateTimeOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlErrorsAndMessagingOperators() {
+        testCql("CqlErrorsAndMessagingOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlIntervalOperatorsTest() {
+        testCql("CqlIntervalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlListOperators() {
+        testCql("CqlListOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlLogicalOperators() {
+        testCql("CqlLogicalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlNullologicalOperators() {
+        testCql("CqlNullologicalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlStringOperators() {
+        testCql("CqlStringOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlTypeOperators() {
+        testCql("CqlTypeOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlTypes() {
+        testCql("cqlTypesTest.xml");
+    }
+
+    // One of these things is not like the others. Not sure if this is meant to be indicative of something.
+    @Test
+    public void testValueLiteralsAndSelectors() {
+        testCql("valueLiteralsAndSelectors.xml");
     }
 
     public void testCql(String testFile) {

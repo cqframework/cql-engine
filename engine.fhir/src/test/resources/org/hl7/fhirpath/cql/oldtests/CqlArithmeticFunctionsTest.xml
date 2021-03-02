@@ -237,7 +237,7 @@
 		</test>
 		<test name="Log1Base1">
 			<expression>Log(1, 1)</expression>
-			<output>null</output>
+			<output>0.0</output>
 		</test>
 		<test name="Log1Base2">
 			<expression>Log(1, 2)</expression>
@@ -273,6 +273,7 @@
 			<expression>LowBoundary(@T10:30, 9)</expression>
 			<output>@T10:30:00.000</output>
 		</test>
+	</group>
 	</group>
 	<group name="Ln">
 		<test name="LnNull">
@@ -397,8 +398,8 @@
 			<output>0.5</output>
 		</test>
 		<test name="ModuloQuantity">
-			<expression>3.5 'cm' mod 3 'cm'</expression>
-			<output>0.5 'cm'</output>
+			<expression>3.5 'gm' mod 3 'gm'</expression>
+			<output>0.5 'gm'</output>
 		</test>
 	</group>
 	<group name="Multiply">
@@ -527,7 +528,7 @@
 		</test>
 		<test name="PredecessorOfJan12000">
 			<expression>predecessor of DateTime(2000,1,1)</expression>
-			<output>@1999-12-31T</output>
+			<output>@1999-12-31</output>
 		</test>
 		<test name="PredecessorOfNoon">
 			<expression>predecessor of @T12:00:00.000</expression>
@@ -699,7 +700,7 @@
 		</test>
 		<test name="SuccessorOfJan12000">
 			<expression>successor of DateTime(2000,1,1)</expression>
-			<output>@2000-01-02T</output>
+			<output>@2000-01-02</output>
 		</test>
 		<test name="SuccessorOfNoon">
 			<expression>successor of @T12:00:00.000</expression>
@@ -826,8 +827,8 @@
 			<output>2.0</output>
 		</test>
 		<test name="TruncatedDivide10d1ByNeg3D1Quantity">
-			<expression>10.1 'cm' div -3.1 'cm'</expression>
-			<output>-3.0 'cm'</output>
+			<expression>10.1 'gm' div -3.1 'gm'</expression>
+			<output>-3.0 'gm'</output>
 		</test>
 	</group>
 </tests>

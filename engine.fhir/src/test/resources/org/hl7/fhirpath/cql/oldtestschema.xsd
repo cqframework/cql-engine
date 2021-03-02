@@ -132,7 +132,7 @@
 					<xs:annotation>
 						<xs:documentation>The type of the expected output.</xs:documentation>
 					</xs:annotation>
-				<xs:attribute>
+				</xs:attribute>
 			</xs:extension>
 		</xs:simpleContent>
 	</xs:complexType>
@@ -166,6 +166,6 @@
 					<xs:documentation>Indicates the test is expected to produce a runtime error.</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-		</xs:restrction>
+		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>
