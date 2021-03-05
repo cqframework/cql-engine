@@ -4,15 +4,15 @@
 	<group>
 		<test name="TestMessageInfo">
 			<expression>Message(1, true, '100', 'Message', 'Test Message')</expression>
-			<output>1</output>
+			<output type="integer">1</output>
 		</test>
 		<test name="TestMessageWarn">
 			<expression>Message(2, true, '200', 'Warning', 'You have been warned!')</expression>
-			<output>2</output>
+			<output type="integer">2</output>
 		</test>
 		<test name="TestMessageTrace">
 			<expression>Message({3, 4, 5}, true, '300', 'Trace', 'This is a trace')</expression>
-			<output>{3, 4, 5}</output>
+			<output type="None">{3, 4, 5}</output>
 		</test>
 		<test name="TestMessageError">
 			<expression invalid="true">Message(3 + 1, true, '400', 'Error', 'This is an error!')</expression>

@@ -4,7 +4,7 @@
 	<group name="AggregateTests">
 		<test name="FactorialOfFive">
 			<expression>({ 1, 2, 3, 4, 5 }) Num aggregate Result starting 1: Result * Num</expression>
-			<output>120</output>
+			<output type="integer">120</output>
 		</test>
     <test name="RolledOutIntervals">
       <expression>MedicationRequestIntervals M
@@ -14,7 +14,7 @@
           E: S + duration in days of X
         return Interval[S, E]
     })</expression>
-      <output>TODO</output>
+      <output type="None">TODO</output>
       <!-- Translation Error: Could not resolve identifier MedicationRequestIntervals in the current library. -->
     </test>
   </group>

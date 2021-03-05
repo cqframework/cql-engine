@@ -4,25 +4,25 @@
 	<group name="As">
 		<test name="AsQuantity">
 			<expression>45.5 'g' as Quantity</expression>
-			<output>45.5 'g'</output>
+			<output type="string">45.5 'g'</output>
 		</test>
 		<test name="CastAsQuantity">
 			<expression>cast 45.5 'g' as Quantity</expression>
-			<output>45.5 'g'</output>
+			<output type="string">45.5 'g'</output>
 		</test>
 		<test name="AsDateTime">
 			<expression>DateTime(2014, 01, 01) as DateTime</expression>
-			<output>@2014-01-01T</output>
+			<output type="dateTime">@2014-01-01T</output>
 		</test>
 	</group>
 	<group name="Convert">
 		<test name="IntegerToDecimal">
 			<expression>convert 5 to Decimal</expression>
-			<output>5.0</output>
+			<output type="decimal">5.0</output>
 		</test>
 		<test name="IntegerToString">
 			<expression>convert 5 to String</expression>
-			<output>'5'</output>
+			<output type="string">'5'</output>
 		</test>
 		<test name="StringToIntegerError">
 			<expression invalid="true">convert 'foo' to Integer</expression>
@@ -30,11 +30,11 @@
 		</test>
 		<test name="StringToDateTime">
 			<expression>convert '2014-01-01' to DateTime</expression>
-			<output>@2014-01-01T</output>
+			<output type="dateTime">@2014-01-01T</output>
 		</test>
 		<test name="StringToTime">
 			<expression>convert 'T14:30:00.0' to Time</expression>
-			<output>@T14:30:00.000</output>
+			<output type="dateTime">@T14:30:00.000</output>
 		</test>
 		<test name="StringToDateTimeMalformed">
 			<expression invalid="true">convert '2014/01/01' to DateTime</expression>
@@ -44,23 +44,23 @@
 	<group name="Is">
 		<test name="IntegerIsInteger">
 			<expression>5 is Integer</expression>
-			<output>true</output>
+			<output type="boolean">true</output>
 		</test>
 		<test name="StringIsInteger">
 			<expression>'5' is Integer</expression>
-			<output>false</output>
+			<output type="boolean">false</output>
 		</test>
 	</group>
 	<group name="ToBoolean">
 		<test name="StringNoToBoolean">
 			<expression>ToBoolean('NO')</expression>
-			<output>false</output>
+			<output type="boolean">false</output>
 		</test>
 	</group>
 	<group name="ToConcept">
 		<test name="CodeToConcept1">
 			<expression>ToConcept(Code { code: '8480-6' })</expression>
-			<output>
+			<output type="None">
 				Concept {
 					codes: Code { code: '8480-6' }
 				}
@@ -70,27 +70,27 @@
 	<group name="ToDateTime">
 		<test name="ToDateTime1">
 			<expression>ToDateTime('2014-01-01')</expression>
-			<output>@2014-01-01T</output>
+			<output type="dateTime">@2014-01-01T</output>
 		</test>
 		<test name="ToDateTime2">
 			<expression>ToDateTime('2014-01-01T12:05')</expression>
-			<output>@2014-01-01T12:05</output>
+			<output type="dateTime">@2014-01-01T12:05</output>
 		</test>
 		<test name="ToDateTime3">
 			<expression>ToDateTime('2014-01-01T12:05:05.955')</expression>
-			<output>@2014-01-01T12:05:05.955</output>
+			<output type="dateTime">@2014-01-01T12:05:05.955</output>
 		</test>
 		<test name="ToDateTime4">
 			<expression>ToDateTime('2014-01-01T12:05:05.955+01:30')</expression>
-			<output>@2014-01-01T12:05:05.955+01:30</output>
+			<output type="dateTime">@2014-01-01T12:05:05.955+01:30</output>
 		</test>
 		<test name="ToDateTime5">
 			<expression>ToDateTime('2014-01-01T12:05:05.955-01:15')</expression>
-			<output>@2014-01-01T12:05:05.955-01:15</output>
+			<output type="dateTime">@2014-01-01T12:05:05.955-01:15</output>
 		</test>
 		<test name="ToDateTime6">
 			<expression>ToDateTime('2014-01-01T12:05:05.955Z')</expression>
-			<output>@2014-01-01T12:05:05.955+00:00</output>
+			<output type="dateTime">@2014-01-01T12:05:05.955+00:00</output>
 		</test>
 		<test name="ToDateTimeMalformed">
 			<expression invalid="true">ToDateTime('2014/01/01T12:05:05.955Z')</expression>
@@ -100,55 +100,55 @@
 	<group name="ToDecimal">
 		<test name="String25D5ToDecimal">
 			<expression>ToDecimal('+25.5')</expression>
-			<output>25.5</output>
+			<output type="decimal">25.5</output>
 		</test>
 	</group>
 	<group name="ToInteger">
 		<test name="StringNeg25ToInteger">
 			<expression>ToInteger('-25')</expression>
-			<output>-25</output>
+			<output type="integer">-25</output>
 		</test>
 	</group>
 	<group name="ToQuantity">
 		<test name="String5D5CMToQuantity">
 			<expression>ToQuantity('5.5 \'cm\'')</expression>
-			<output>5.5'cm'</output>
+			<output type="quantity">5.5'cm'</output>
 		</test>
 	</group>
 	<group name="ToString">
 		<test name="IntegerNeg5ToString">
 			<expression>ToString(-5)</expression>
-			<output>'-5'</output>
+			<output type="string">'-5'</output>
 		</test>
 		<test name="Decimal18D55ToString">
 			<expression>ToString(18.55)</expression>
-			<output>'18.55'</output>
+			<output type="string">'18.55'</output>
 		</test>
 		<test name="Quantity5D5CMToString">
 			<expression>ToString(5.5 'cm')</expression>
-			<output>'5.5 \'cm\''</output>
+			<output type="quantity">'5.5 \'cm\''</output>
 		</test>
 		<test name="BooleanTrueToString">
 			<expression>ToString(true)</expression>
-			<output>'true'</output>
+			<output type="boolean">'true'</output>
 		</test>
 	</group>
 	<group name="ToTime">
 		<test name="ToTime1">
 			<expression>ToTime('T14:30:00.0')</expression>
-			<output>@T14:30:00.000</output>
+			<output type="dateTime">@T14:30:00.000</output>
 		</test>
 		<test name="ToTime2">
 			<expression>ToTime('T14:30:00.0+05:30')</expression>
-			<output>@T14:30:00.000</output>
+			<output type="dateTime">@T14:30:00.000</output>
 		</test>
 		<test name="ToTime3">
 			<expression>ToTime('T14:30:00.0-05:45')</expression>
-			<output>@T14:30:00.000</output>
+			<output type="dateTime">@T14:30:00.000</output>
 		</test>
 		<test name="ToTime4">
 			<expression>ToTime('T14:30:00.0Z')</expression>
-			<output>@T14:30:00.000</output>
+			<output type="dateTime">@T14:30:00.000</output>
 		</test>
 		<test name="ToTimeMalformed">
 			<expression invalid="true">ToTime('T14-30-00.0')</expression>
