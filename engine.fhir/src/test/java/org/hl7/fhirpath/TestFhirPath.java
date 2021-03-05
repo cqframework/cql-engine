@@ -100,6 +100,9 @@ public class TestFhirPath {
         List<Object> results = new ArrayList<>();
         if (test.getOutput() != null) {
             for (org.hl7.fhirpath.tests.Output output : test.getOutput()) {
+                if (output.getType() == null) {
+                    throw new IllegalArgumentException(String.format("Could not load expected results for test (output type not specified): %s", test.getName()));
+                }
                 switch (output.getType()) {
                     case BOOLEAN:
                         results.add(Boolean.valueOf(output.getValue()));
@@ -322,11 +325,20 @@ public class TestFhirPath {
     }
 
     private void runR4Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
-        String resourceFilePath = "r4/input/" + test.getInputfile();
-        org.hl7.fhir.r4.model.Resource resource = loadResourceFileR4(resourceFilePath);
-        String cql = String.format(
+        String cql = null;
+        org.hl7.fhir.r4.model.Resource resource = null;
+        if (test.getInputfile() != null) {
+            String resourceFilePath = "r4/input/" + test.getInputfile();
+            resource = loadResourceFileR4(resourceFilePath);
+            cql = String.format(
                 "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
+        }
+        else {
+            cql = String.format(
+                "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers define Test: %s",
+                test.getExpression().getValue());
+        }
 
         Library library = null;
         // If the test expression is invalid, expect an error during translation and
@@ -354,7 +366,9 @@ public class TestFhirPath {
             Context context = new Context(library);
             context.registerLibraryLoader(getLibraryLoader());
             context.registerDataProvider("http://hl7.org/fhir", providerR4);
-            context.setParameter(null, resource.fhirType(), resource);
+            if (resource != null) {
+                context.setParameter(null, resource.fhirType(), resource);
+            }
 
             Object result = null;
             String message = null;
@@ -466,16 +480,6 @@ public class TestFhirPath {
         }
         System.out.println(
                 String.format("Tests file %s passed %s of %s tests (%s skipped).", testsFilePath, passCounter, testCounter, skipCounter));
-    }
-
-    @Test
-    public void runCqlTests() throws IOException, URISyntaxException {
-        Path path = Paths.get(getClass().getResource("cql/tests/").toURI());
-        Files.walk(path).forEach(test -> {
-            if (!test.toFile().isDirectory()) {
-                testCql(test.toFile().getName());
-            }
-        });
     }
 
     /**
@@ -598,6 +602,7 @@ public class TestFhirPath {
                         System.out.printf("\nTest %s passed.", test.getName());
                     }
                 } catch (Exception e) {
+                    System.out.printf("\nUnexpected exception occurred running test %s: %s", test.getName(), e.getMessage());
                     System.out.printf(
                         "\nTest file %s passed %s of %s tests (%s skipped).",
                         testsFilePath,
