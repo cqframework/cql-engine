@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.execution;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
@@ -19,6 +20,7 @@ public class JsonCqlLibraryReader {
 
     public static Library read(Reader reader) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JaxbAnnotationModule module = new JaxbAnnotationModule();
         mapper.registerModule(module);
         SimpleModule simpleModule = new SimpleModule();

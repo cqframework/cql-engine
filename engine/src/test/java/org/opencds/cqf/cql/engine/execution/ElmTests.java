@@ -123,6 +123,7 @@ public class ElmTests {
         // Regression inputs are annual update measure Xml for QDM and FHIR
         testElmDeserialization("qdm");
         testElmDeserialization("fhir");
+        testElmDeserialization("qdm2020");
     }
 
     private static boolean equivalent(Library left, Library right) {
