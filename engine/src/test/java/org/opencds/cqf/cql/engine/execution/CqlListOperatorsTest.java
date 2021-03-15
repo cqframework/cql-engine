@@ -284,6 +284,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("FlattenListNullAndNull").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(null, null)));
 
+        result = context.resolveExpressionRef("FlattenNullAndListNull").getExpression().evaluate(context);
+        assertThat(result, is(Arrays.asList(null, null)));
+
         result = context.resolveExpressionRef("FlattenList12And34").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 2, 3, 4)));
 
