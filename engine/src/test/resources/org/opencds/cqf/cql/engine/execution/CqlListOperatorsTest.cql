@@ -73,6 +73,7 @@ define ExistsNull: Exists(null)
 //Flatten
 define FlattenEmpty: Flatten({{},{}})
 define FlattenListNullAndNull: Flatten({{null}, {null}})
+define FlattenNullAndListNull: Flatten({null, {null}})
 define FlattenList12And34: Flatten({{1,2}, {3,4}})
 define FlattenDateTime: Flatten({ {DateTime(2012, 5, 10)}, {DateTime(2014, 12, 10)} })
 define FlattenTime: Flatten({ {@T15:59:59.999}, {@T20:59:59.999} })
