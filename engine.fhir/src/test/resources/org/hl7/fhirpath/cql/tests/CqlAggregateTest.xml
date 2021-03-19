@@ -14,7 +14,6 @@
           E: S + duration in days of X
         return Interval[S, E]
     })</expression>
-      <output type="None">TODO</output>
       <!-- Translation Error: Could not resolve identifier MedicationRequestIntervals in the current library. -->
     </test>
   </group>

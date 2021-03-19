@@ -4,15 +4,15 @@
 	<group name="Sort">
 		<test name="simpleSortAsc">
 			<expression>({4, 5, 1, 6, 2, 1}) sL sort asc</expression>
-			<output type="None">{1, 1, 2, 4, 5, 6}</output>
+			<output type="code">{1, 1, 2, 4, 5, 6}</output>
 		</test>
 		<test name="simpleSortDesc">
 			<expression>({4, 5, 1, 6, 2, 1}) sL sort desc</expression>
-			<output type="None">{6, 5, 4, 2, 1, 1}</output>
+			<output type="code">{6, 5, 4, 2, 1, 1}</output>
 		</test>
 		<test name="simpleSortStringAsc">
 			<expression>({'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}) sls sort asc</expression>
-			<output type="string">{'Armadillo', 'Wolf', 'aardvark', 'alligator', 'back', 'iguana', 'zebra'}</output>
+			<output type="code">{'Armadillo', 'Wolf', 'aardvark', 'alligator', 'back', 'iguana', 'zebra'}</output>
 		</test>
 		<test name="simpleSortStringDesc">
 			<expression>({'back', 'aardvark', 'alligator', 'zebra', 'iguana', 'Wolf', 'Armadillo'}) sls sort desc</expression>
@@ -28,11 +28,11 @@
 		</test>
 		<test name="intList">
 			<expression>{ 3, 2, 1 }</expression>
-			<output type="None">{3, 2, 1}</output>
+			<output type="code">{3, 2, 1}</output>
 		</test>
 		<test name="decimalList">
 			<expression>{ 3.8, 2.4, 1.9 }</expression>
-			<output type="None">{3.8, 2.4, 1.9}</output>
+			<output type="code">{3.8, 2.4, 1.9}</output>
 		</test>
 		<test name="quantityList">
 			<expression>{ 19.99 '[lb_av]', 17.33 '[lb_av]', 10.66 '[lb_av]' }</expression>
@@ -50,7 +50,7 @@
 	<group name="Contains">
 		<test name="ContainsABNullHasNull">
 			<expression>{ 'a', 'b', null } contains null</expression>
-			<output type="None">null</output>
+			<output type="boolean">true</output>
 		</test>
 		<test name="ContainsNullFirst">
 			<expression>{ null, 'b', 'c' } contains 'a'</expression>
@@ -84,18 +84,18 @@
 	<group name="Descendents">
 		<test name="DescendentsEmptyList">
 			<expression>(null).descendents()</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<!-- TODO: how to call without fhirpath syntax -->
 	</group>
 	<group name="Distinct">
 		<test name="DistinctEmptyList">
 			<expression>distinct {}</expression>
-			<output type="None">{}</output>
+			<output type="code">{}</output>
 		</test>
 		<test name="DistinctNullNullNull">
 			<expression>distinct { null, null, null}</expression>
-			<output type="None">{ null }</output>
+			<output type="code">{ null }</output>
 		</test>
 		<test name="DistinctANullANull">
 			<expression>distinct { 'a', null, 'a', null}</expression>
@@ -103,11 +103,11 @@
 		</test>
 		<test name="Distinct112233">
 			<expression>distinct { 1, 1, 2, 2, 3, 3}</expression>
-			<output type="None">{1,2,3}</output>
+			<output type="code">{1,2,3}</output>
 		</test>
 		<test name="Distinct123123">
 			<expression>distinct { 1, 2, 3, 1, 2, 3}</expression>
-			<output type="None">{1,2,3}</output>
+			<output type="code">{1,2,3}</output>
 		</test>
 		<test name="DistinctAABBCC">
 			<expression>distinct { 'a', 'a', 'b', 'b', 'c', 'c'}</expression>
@@ -129,15 +129,15 @@
 	<group name="Equal">
 		<test name="EqualNullNull">
 			<expression>{null} = {null}</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<test name="EqualEmptyListNull">
 			<expression>{} as List&lt;String&gt; = null</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<test name="EqualNullEmptyList">
 			<expression>null = {} as List&lt;String&gt;</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<test name="EqualEmptyListAndEmptyList">
 			<expression>{} = {}</expression>
@@ -175,15 +175,15 @@
 	<group name="Except">
 		<test name="ExceptEmptyListAndEmptyList">
 			<expression>{} except {}</expression>
-			<output type="None">{}</output>
+			<output type="code">{}</output>
 		</test>
 		<test name="Except1234And23">
 			<expression>{ 1, 2, 3, 4 } except { 2, 3 }</expression>
-			<output type="None">{ 1, 4 }</output>
+			<output type="code">{ 1, 4 }</output>
 		</test>
 		<test name="Except23And1234">
 			<expression>{ 2, 3 } except { 1, 2, 3, 4 }</expression>
-			<output type="None">{}</output>
+			<output type="code">{}</output>
 		</test>
 		<test name="ExceptDateTimeList">
 			<expression>{ DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }</expression>
@@ -195,7 +195,7 @@
 		</test>
 		<test name="ExceptNullRight">
 			<expression>{ 1, 4 } except null</expression>
-			<output type="None">{1, 4}</output>
+			<output type="code">{1, 4}</output>
 		</test>
 	</group>
 	<group name="Exists">
@@ -231,15 +231,15 @@
 	<group name="Flatten">
 		<test name="FlattenEmpty">
 			<expression>Flatten({{},{}})</expression>
-			<output type="None">{}</output>
+			<output type="code">{}</output>
 		</test>
 		<test name="FlattenListNullAndNull">
 			<expression>Flatten({{null}, {null}})</expression>
-			<output type="None">{null, null}</output>
+			<output type="code">{null, null}</output>
 		</test>
 		<test name="FlattenList12And34">
 			<expression>Flatten({{1,2}, {3,4}})</expression>
-			<output type="None">{1,2,3,4}</output>
+			<output type="code">{1,2,3,4}</output>
 		</test>
 		<test name="FlattenDateTime">
 			<expression>Flatten({ {DateTime(2012, 5, 10)}, {DateTime(2014, 12, 10)} })</expression>
@@ -253,11 +253,11 @@
 	<group name="First">
 		<test name="FirstEmpty">
 			<expression>First({})</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<test name="FirstNull1">
 			<expression>First({ null, 1 })</expression>
-			<output type="None">null</output>
+			<output type="">null</output>
 		</test>
 		<test name="First1Null">
 			<expression>First({ 1, null })</expression>
@@ -279,11 +279,11 @@
 	<group name="In">
 		<test name="InNullEmpty">
 			<expression>null in {}</expression>
-			<output type="None">null</output>
+			<output type="boolean">null</output>
 		</test>
 		<test name="InNullAnd1Null">
 			<expression>null in { 1, null }</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<test name="In1Null">
 			<expression>1 in null</expression>
@@ -353,12 +353,12 @@
 		</test>
 		<test name="IncludesNullLeft">
 			<expression>null includes {2}</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 		<!-- this test is going to the ContainsEvaluator -->
 		<test name="IncludesNullRight">
 			<expression>{'s', 'a', 'm'} includes null</expression>
-			<output type="None">null</output>
+			<output type="code">null</output>
 		</test>
 	</group>
 	<group name="IncludedIn">

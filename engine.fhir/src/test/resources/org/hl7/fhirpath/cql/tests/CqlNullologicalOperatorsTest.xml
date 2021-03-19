@@ -4,7 +4,7 @@
 	<group name="Coalesce">
 		<test name="CoalesceANull">
 			<expression>Coalesce('a', null)</expression>
-			<output type="string">'a'</output>
+			<output type="Expression">'a'</output>
 		</test>
 		<test name="CoalesceNullA">
 			<expression>Coalesce(null, 'a')</expression>
@@ -12,7 +12,6 @@
 		</test>
 		<test name="CoalesceEmptyList">
 			<expression>Coalesce({})</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="CoalesceListFirstA">
 			<expression>Coalesce({'a', null, null})</expression>

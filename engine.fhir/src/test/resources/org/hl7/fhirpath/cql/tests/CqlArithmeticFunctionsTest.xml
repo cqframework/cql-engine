@@ -767,7 +767,7 @@
 	<group name="Truncated Divide">
 		<test name="TruncatedDivideNull">
 			<expression>(null as Integer) div (null as Integer)</expression>
-			<output type="None">null</output>
+			<output type="boolean">null</output>
 		</test>
 		<test name="TruncatedDivide2By1">
 			<expression>2 div 1</expression>

@@ -59,8 +59,8 @@ def main():
 
 
     for test in dir_list[2]:
+        refactored_file = test.split('.xml')[0] + '_refactor.xml'
         reconstructed_test = ''
-        print(test)
         if test[-3:] != 'xml':
             continue
 
@@ -69,15 +69,34 @@ def main():
         #     sys.exit()
         
         with open(test, 'r') as input_file:
-            for line in input_file.readlines():
-                if '<output>' in line:
-                    print()
-                    reconstructed_test = reconstructed_test + parse_tag(line, 'output', get_value(line))
-                else:
-                    reconstructed_test = reconstructed_test + line
-        
-        with open(test, 'w') as testWrite:
-            testWrite.write(reconstructed_test)
+            all_lines = input_file.readlines() 
+            output_temp = ''
+            for idx, line in enumerate(all_lines):
+                reconstructed_output = ''
+                try:
+                    
+                    if 'expression' in line and 'type="None">null' in all_lines[idx + 1]:
+                        print(all_lines[idx + 1])
+                        test_expression = line.split("<expression>")[1].split("</expression>")[0]
+                        print('\n------------------------')
+                        print(f'\n{test_expression}')
+                        print('\n------------------------')
+                        user_defined_type = input('What would you type this expression?\n-> ')
+                        reconstructed_output = f'<output type="{user_defined_type}">null</output>'
+
+                        if user_defined_type == 'nuke':
+                            reconstructed_test = reconstructed_test + line
+                            all_lines[idx+1] = ''
+                        else:
+                            reconstructed_test = reconstructed_test + reconstructed_output
+                            all_lines[idx + 1] = reconstructed_output
+                    else:
+                        reconstructed_test = reconstructed_test + line
+                except:
+                    print('Out of range, next file time.')
+        with open(refactored_file, 'w') as testWrite:
+           testWrite.write(reconstructed_test)
+           print(f'Wrote new file {refactored_file}.')
 
 
 if __name__ == '__main__':

@@ -14,11 +14,15 @@ import java.nio.file.Paths;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.SchemaOutputResolver;
 
+import com.sun.jdi.CharType;
+import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.FhirLibrarySourceProvider;
@@ -31,8 +35,10 @@ import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhirpath.tests.Expression;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.InvalidType;
+import org.hl7.fhirpath.tests.Output;
 import org.hl7.fhirpath.tests.Tests;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
@@ -52,6 +58,8 @@ import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.annotations.Test;
 
 import ca.uhn.fhir.context.FhirContext;
+import org.w3._1999.xhtml.P;
+import sun.lwawt.macosx.CSystemTray;
 
 public class TestFhirPath {
 
@@ -131,6 +139,10 @@ public class TestFhirPath {
                         break;
                     case QUANTITY:
                         results.add(toQuantity(output.getValue()));
+                        break;
+                    case EXPRESSION:
+                        results.add(output.getValue());
+                        break;
                 }
             }
         }
@@ -204,6 +216,10 @@ public class TestFhirPath {
         // Perform FHIR system-defined type conversions
         if (actualResult instanceof Enumeration) {
             actualResult = ((Enumeration<?>) actualResult).getValueAsString();
+        } else if (actualResult instanceof ArrayList) {
+            actualResult = ((ArrayList<?>) actualResult).toString();
+        } else if (actualResult instanceof Expression) {
+            actualResult = ((Expression) actualResult).getValue();
         } else if (actualResult instanceof BooleanType) {
             actualResult = ((BooleanType) actualResult).getValue();
         } else if (actualResult instanceof IntegerType) {
@@ -214,6 +230,7 @@ public class TestFhirPath {
             actualResult = ((StringType) actualResult).getValue();
         } else if (actualResult instanceof BaseDateTimeType) {
             actualResult = r4FhirModelResolver.toJavaPrimitive(actualResult, actualResult);
+            System.out.println(String.format("\nDATE TIME ACTUAL RESUlT %s", actualResult));
         } else if (actualResult instanceof Quantity) {
             Quantity quantity = (Quantity) actualResult;
             actualResult = new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(quantity.getValue())
@@ -300,6 +317,9 @@ public class TestFhirPath {
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
+                    System.out.println(String.format(
+                        "Expected (%s) %n Actual (%s)",
+                        expectedResult, actualResult));
                     Boolean comparison = compareResults(expectedResult, actualResult);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
@@ -320,6 +340,38 @@ public class TestFhirPath {
             List<Object> results = new ArrayList<Object>();
             results.add(result);
             actualResults = results;
+        }
+        return actualResults;
+    }
+
+    private Iterable<Object> stringToArray(String input, String expected) {
+        Iterable<Object> actualResults;
+        System.out.println(String.format("stringToArrayInput(%s)", input));
+
+        try {
+            if (expected.contains("{'")) {
+                String tmp = "{";
+                Iterator<String> inputIterator = Arrays.stream(
+                    input.replace("[", "").replace("]", "").replace(" ", "").split(",")).iterator();
+
+                while (inputIterator.hasNext()) {
+                    String next = inputIterator.next();
+                    if (!inputIterator.hasNext()) {
+                        tmp += "'" + next + "'";
+                    } else {
+                        tmp += "'" + next + "', ";
+                    }
+                }
+                tmp += "}";
+                return ensureIterable((Object)Stream.of(tmp).collect(Collectors.toList()));
+            }
+            actualResults = ensureIterable((Object)Stream.of(input
+                .replace("[", "{")
+                .replace("]", "}"))
+                .collect(Collectors.toList()));
+        } catch (Exception e) {
+//            throw new RuntimeException(String.format("Exception -> %s can't be a list.", input));
+            return ensureIterable(input);
         }
         return actualResults;
     }
@@ -388,7 +440,11 @@ public class TestFhirPath {
                     throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
                 }
                 else {
-                    throw new RuntimeException(String.format("Unexpected exception thrown for test %s: %s.", test.getName(), message));
+                    throw new RuntimeException(String.format(
+                        "Unexpected exception thrown for test %s: %s. Expected -> %s | Result -> %s",
+                        test.getName(),
+                        message));
+
                 }
             }
 
@@ -396,16 +452,50 @@ public class TestFhirPath {
                 result = ExistsEvaluator.exists(ensureIterable(result));
             }
 
-            Iterable<Object> actualResults = ensureIterable(result);
 
+            Iterable<Object> actualResults;
+            Iterator<Object> actualResultsIterator;
             Iterable<Object> expectedResults = loadExpectedResults(test);
-            Iterator<Object> actualResultsIterator = actualResults.iterator();
+            Library tmpLibrary = null;
+            Context tmpContext = null;
+
             for (Object expectedResult : expectedResults) {
+                String resultAsString = expectedResult.toString();
+
+                if (resultAsString.charAt(0) == '{' && resultAsString.charAt(resultAsString.length() - 1) == '}') {
+                    actualResults = stringToArray(result.toString(), expectedResult.toString());
+                } else {
+                    actualResults = ensureIterable(result);
+                    System.out.println(String.format(
+                        "%n firstChar(%s) %n %n secondChar(%s)%n",
+                        resultAsString.charAt(0),
+                        resultAsString.charAt(resultAsString.length() - 1)));
+                }
+
+                actualResultsIterator = actualResults.iterator();
+
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
+
+                    tmpLibrary = translate(
+                        "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers define Test: " + (String)expectedResult);
+
+                    tmpContext = new Context(tmpLibrary);
+                    tmpContext.registerLibraryLoader(getLibraryLoader());
+                    tmpContext.registerDataProvider("http://hl7.org/fhir", providerR4);
+//                    expectedResult = tmpContext.resolveExpressionRef("Test").evaluate(tmpContext);
+
+                    System.out.println(String.format(
+                        "Expected (%s) %n Actual (%s)",
+                        expectedResult, actualResult));
+                    System.out.println("Expected Result toString(); " + expectedResult.toString());
+                    System.out.println("Actual Result toString(); " + actualResult.toString());
                     Boolean comparison = compareResults(expectedResult, actualResult);
                     if (comparison == null || !comparison) {
-                        throw new RuntimeException("Actual result is not equal to expected result.");
+                        throw new RuntimeException(String.format(
+                            "Actual result is not equal to expected result. Expected -> %s | Got -> %s",
+                            test.getOutput().get(0).getValue(),
+                            result.toString()));
                     }
                 } else {
                     throw new RuntimeException("Actual result is not equal to expected result.");
@@ -581,6 +671,77 @@ public class TestFhirPath {
         testCql("valueLiteralsAndSelectors.xml");
     }
 
+    public void runCqlTest(org.hl7.fhirpath.tests.Test test) throws UcumException {
+        String cql = null;
+        Resource resource = null;
+        boolean testPassed = false;
+        String predeterminedOutput;
+
+        if (test.getInputfile() != null) {
+            System.out.println("getInputfile() was null");
+            String resourceFilePath = "/cql/tests/" + test.getInputfile();
+            resource = loadResourceFileR4(resourceFilePath);
+            cql = String.format(
+                "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers parameter %s %s define Test: %s",
+                test.getExpression().getValue());
+        }
+        else {
+            System.out.println("getInputfile() was not null");
+            cql = String.format(
+                "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers define Test: %s",
+                test.getExpression().getValue());
+        }
+
+        Library library = new Library();
+        InvalidType invalidType = test.getExpression().getInvalid();
+
+        if (invalidType == null) {
+            invalidType = InvalidType.FALSE;
+        }
+
+        if (invalidType.equals(InvalidType.SEMANTIC)) {
+            try {
+                library = translate(cql);
+            }
+            catch (Exception e) {
+                System.out.println("Catch on translateCql.");
+                testPassed = true;
+            }
+
+            if (!testPassed)
+                throw new RuntimeException(String.format("Expected exception not thrown for test %s", test.getName()));
+        }
+        else {
+            library = translate(cql);
+            Context context = new Context(library);
+            context.registerLibraryLoader(getLibraryLoader());
+            context.registerDataProvider("http://hl7.org/fhir", providerR4);
+            if (resource != null) {
+                context.setParameter(null, resource.fhirType(), resource);
+            }
+
+            String message = null;
+            Object result = null;
+
+            try {
+                result = context.resolveExpressionRef("Test").evaluate(context);
+                Output testOutput = test.getOutput().get(0);
+                String debug = null;
+                if (testOutput.toString().equals("null")) {
+                    System.out.println(String.format(
+                        "%s : %s",
+                        testOutput.toString(),
+                        result.toString()));
+                }
+                if (result.equals(testOutput))
+                    testPassed = invalidType.equals(InvalidType.TRUE);
+            }
+            catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void testCql(String testFile) {
         String testsFilePath = "cql/tests/" + testFile;
         System.out.printf("\nRunning test file %s...", testsFilePath);
@@ -597,6 +758,7 @@ public class TestFhirPath {
                         System.out.printf("\nTest %s skipped (unsupported version).", test.getName());
                         skipCounter += 1;
                     } else {
+//                        runCqlTest(test);
                         runR4Test(test);
                         passCounter += 1;
                         System.out.printf("\nTest %s passed.", test.getName());

@@ -26,15 +26,12 @@
 		</test>
 		<test name="SimpleEqNullNull">
 			<expression>null as String = null</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="SimpleEqTrueNull">
 			<expression>true = null</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="SimpleEqNullTrue">
 			<expression>null = true</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="SimpleEqInt1Int1">
 			<expression>1 = 1</expression>
@@ -127,7 +124,6 @@
 		</test>
 		<test name="DateTimeEqNull">
 			<expression>DateTime(null) = DateTime(null)</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="DateTimeUTC">
 			<expression>@2014-01-25T14:30:14.559+01:00 = @2014-01-25T14:30:14.559+01:00</expression>
@@ -231,7 +227,6 @@
 		</test>
 		<test name="UncertaintyGreaterNull">
 			<expression>DateTime(2014) &gt; DateTime(2014, 2, 15)</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="UncertaintyGreaterTrue">
 			<expression>DateTime(2015) &gt; DateTime(2014, 2, 15)</expression>
@@ -339,7 +334,6 @@
 		</test>
 		<test name="UncertaintyGreaterEqualNull">
 			<expression>DateTime(2014) &gt;= DateTime(2014, 2, 15)</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="UncertaintyGreaterEqualTrue">
 			<expression>DateTime(2015) &gt;= DateTime(2014, 2, 15)</expression>
@@ -439,7 +433,6 @@
 		</test>
 		<test name="UncertaintyLessNull">
 			<expression>DateTime(2014) &lt; DateTime(2014, 2, 15)</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="UncertaintyLessTrue">
 			<expression>DateTime(2013) &lt; DateTime(2014, 2, 15)</expression>
@@ -547,7 +540,6 @@
 		</test>
 		<test name="UncertaintyLessEqualNull">
 			<expression>DateTime(2014) &lt;= DateTime(2014, 2, 15)</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="UncertaintyLessEqualTrue">
 			<expression>DateTime(2013) &lt;= DateTime(2014, 2, 15)</expression>
@@ -680,15 +672,12 @@
 		</test>
 		<test name="SimpleNotEqNullNull">
 			<expression>null as String != null</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="SimpleNotEqTrueNull">
 			<expression>true != null</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="SimpleNotEqNullTrue">
 			<expression>null != true</expression>
-			<output type="None">null</output>
 		</test>
 		<test name="SimpleNotEqInt1Int1">
 			<expression>1 != 1</expression>

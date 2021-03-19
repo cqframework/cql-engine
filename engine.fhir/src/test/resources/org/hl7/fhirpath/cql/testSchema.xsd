@@ -147,6 +147,8 @@
 			<xs:enumeration value="quantity"/>
 			<xs:enumeration value="string"/>
 			<xs:enumeration value="time"/>
+            <xs:enumeration value="long"/>
+            <xs:enumeration value="expression"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="InvalidType">
