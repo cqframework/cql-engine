@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.engine.fhir.terminology;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -109,24 +107,34 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
                 .andParameter("system", new UriType(codeSystem.getId()))
                 .execute();
 
+        StringType display = (StringType) respParam.getParameter("display");
+
         return code.withSystem(codeSystem.getId())
-                .withDisplay(((StringType)respParam.getParameter().get(1).getValue()).getValue());
+                .withDisplay(display != null ? display.getValue() : null );
     }
 
     public Boolean resolveByUrl(ValueSetInfo valueSet) {
-        try {
-            URL url = new URL(valueSet.getId());
-            Bundle searchResults = fhirClient.search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(url.toString())).returnBundle(Bundle.class).execute();
-            if (searchResults.hasEntry()) {
-                if (searchResults.getEntryFirstRep().hasResource()) {
-                    valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
-                }
+        if (valueSet.getVersion() != null
+                || (valueSet.getCodeSystems() != null && valueSet.getCodeSystems().size() > 0)) {
+            if (!(valueSet.getCodeSystems().size() == 1 && valueSet.getCodeSystems().get(0).getVersion() == null)) {
+                throw new UnsupportedOperationException(String.format(
+                        "Could not expand value set %s; version and code system bindings are not supported at this time.",
+                        valueSet.getId()));
             }
-            else {
-                return null;
+        }
+        
+        if (valueSet.getId().startsWith("urn:oid:")) {
+            valueSet.setId(valueSet.getId().replace("urn:oid:", ""));
+        } else if (valueSet.getId().startsWith("http:") || valueSet.getId().startsWith("https:")) {
+            Bundle searchResults = fhirClient.search().forResource(ValueSet.class)
+                    .where(ValueSet.URL.matches().value(valueSet.getId())).returnBundle(Bundle.class).execute();
+            if (searchResults.isEmpty()) {
+                throw new IllegalArgumentException(String.format("Could not resolve value set %s.", valueSet.getId()));
+            } else if (searchResults.getEntry().size() == 1) {
+                valueSet.setId(searchResults.getEntryFirstRep().getResource().getId());
+            } else {
+                throw new IllegalArgumentException("Found more than 1 ValueSet with url: " + valueSet.getId());
             }
-        } catch (MalformedURLException e) {
-            // continue
         }
 
         return true;
