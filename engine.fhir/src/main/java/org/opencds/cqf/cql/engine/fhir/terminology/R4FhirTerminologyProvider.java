@@ -131,7 +131,7 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
             if (searchResults.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Could not resolve value set %s.", valueSet.getId()));
             } else if (searchResults.getEntry().size() == 1) {
-                valueSet.setId(searchResults.getEntryFirstRep().getResource().getId());
+                valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
             } else {
                 throw new IllegalArgumentException("Found more than 1 ValueSet with url: " + valueSet.getId());
             }
