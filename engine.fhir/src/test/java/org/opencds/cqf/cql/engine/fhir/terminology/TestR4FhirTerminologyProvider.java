@@ -185,9 +185,9 @@ public class TestR4FhirTerminologyProvider extends R4FhirTest {
 		code.setDisplay(TEST_DISPLAY);
 		
 		Parameters parameters = new Parameters();
-		parameters.getParameterFirstRep().setName("name").setValue(new StringType(code.getCode()));
-		parameters.getParameterFirstRep().setName("version").setValue(new StringType(info.getVersion()));
-		parameters.getParameterFirstRep().setName("display").setValue(new StringType(code.getDisplay()));
+		parameters.addParameter().setName("name").setValue(new StringType(code.getCode()));
+		parameters.addParameter().setName("version").setValue(new StringType(info.getVersion()));
+		parameters.addParameter().setName("display").setValue(new StringType(code.getDisplay()));
 		
 		mockFhirPost("/CodeSystem/$lookup", parameters);
 		
