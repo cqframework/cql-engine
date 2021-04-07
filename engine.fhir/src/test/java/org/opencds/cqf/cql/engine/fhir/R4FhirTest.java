@@ -30,7 +30,7 @@ import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 public abstract class R4FhirTest {
     private static FhirContext FHIR_CONTEXT = FhirContext.forR4();
     private static IParser FHIR_PARSER = FHIR_CONTEXT.newJsonParser().setPrettyPrint(true);
-    private static int HTTP_PORT = 8080;
+    private static int HTTP_PORT = 0;
 
     // emulate wiremock's junit.WireMockRule with testng features
     WireMockServer wireMockServer;
@@ -38,7 +38,7 @@ public abstract class R4FhirTest {
     
     @BeforeMethod()
     public void start() {
-        wireMockServer = new WireMockServer();
+        wireMockServer = new WireMockServer(getHttpPort());
         wireMockServer.start();
         WireMock.configureFor("localhost", getHttpPort());
         wireMock = new WireMock("localhost", getHttpPort());

@@ -108,19 +108,19 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
                 .execute();
 
         StringType display = (StringType) respParam.getParameter("display");
+        if( display != null ) {
+        	code.withDisplay( display.getValue() );
+        }
 
-        return code.withSystem(codeSystem.getId())
-                .withDisplay(display != null ? display.getValue() : null );
+        return code.withSystem(codeSystem.getId());
     }
 
     public Boolean resolveByUrl(ValueSetInfo valueSet) {
         if (valueSet.getVersion() != null
                 || (valueSet.getCodeSystems() != null && valueSet.getCodeSystems().size() > 0)) {
-            if (!(valueSet.getCodeSystems().size() == 1 && valueSet.getCodeSystems().get(0).getVersion() == null)) {
-                throw new UnsupportedOperationException(String.format(
-                        "Could not expand value set %s; version and code system bindings are not supported at this time.",
-                        valueSet.getId()));
-            }
+            throw new UnsupportedOperationException(String.format(
+                    "Could not expand value set %s; version and code system bindings are not supported at this time.",
+                    valueSet.getId()));
         }
         
         if (valueSet.getId().startsWith("urn:oid:")) {
@@ -128,7 +128,7 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
         } else if (valueSet.getId().startsWith("http:") || valueSet.getId().startsWith("https:")) {
             Bundle searchResults = fhirClient.search().forResource(ValueSet.class)
                     .where(ValueSet.URL.matches().value(valueSet.getId())).returnBundle(Bundle.class).execute();
-            if (searchResults.isEmpty()) {
+            if (searchResults.getEntry().isEmpty()) {
                 throw new IllegalArgumentException(String.format("Could not resolve value set %s.", valueSet.getId()));
             } else if (searchResults.getEntry().size() == 1) {
                 valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
