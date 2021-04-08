@@ -145,7 +145,7 @@ public abstract class R4FhirTest {
         bundle.setTotal(resources != null ? resources.length : 0);
         if( resources != null ) {
             for (Resource l : resources) {
-                bundle.addEntry().setResource(l).setFullUrl("/" + l.getIdBase() + "/" + l.getId());
+                bundle.addEntry().setResource(l).setFullUrl("/" + l.fhirType() + "/" + l.getId());
             }
         }
         return bundle;
