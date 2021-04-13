@@ -47,7 +47,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jackson.version>2.12.2</jackson.version>
+        <jackson.version>2.12.3</jackson.version>
         <cqframework.version>1.5.2</cqframework.version>
         <hapi.version>5.3.0</hapi.version>
     </properties>
