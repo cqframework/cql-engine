@@ -1,7 +1,5 @@
 package org.opencds.cqf.cql.engine.fhir.terminology;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +23,9 @@ import ca.uhn.fhir.rest.server.exceptions.ResourceNotFoundException;
 
 public class R4FhirTerminologyProvider implements TerminologyProvider {
 
+    private static final String URN_UUID = "urn:uuid:";
+    private static final String URN_OID = "urn:oid:";
+    
     private IGenericClient fhirClient;
 
     public R4FhirTerminologyProvider() { }
@@ -84,6 +85,7 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
                 .onInstance(new IdType("ValueSet", valueSet.getId()))
                 .named("expand")
                 .withNoParameters(Parameters.class)
+                .useHttpGet()
                 .execute();
 
         ValueSet expanded = (ValueSet) respParam.getParameter().get(0).getResource();
@@ -109,24 +111,57 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
                 .andParameter("system", new UriType(codeSystem.getId()))
                 .execute();
 
-        return code.withSystem(codeSystem.getId())
-                .withDisplay(((StringType)respParam.getParameter().get(1).getValue()).getValue());
+        StringType display = (StringType) respParam.getParameter("display");
+        if( display != null ) {
+        	code.withDisplay( display.getValue() );
+        }
+
+        return code.withSystem(codeSystem.getId());
     }
 
     public Boolean resolveByUrl(ValueSetInfo valueSet) {
-        try {
-            URL url = new URL(valueSet.getId());
-            Bundle searchResults = fhirClient.search().forResource(ValueSet.class).where(ValueSet.URL.matches().value(url.toString())).returnBundle(Bundle.class).execute();
-            if (searchResults.hasEntry()) {
-                if (searchResults.getEntryFirstRep().hasResource()) {
-                    valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
+        if (valueSet.getVersion() != null
+                || (valueSet.getCodeSystems() != null && valueSet.getCodeSystems().size() > 0)) {
+            throw new UnsupportedOperationException(String.format(
+                    "Could not expand value set %s; version and code system bindings are not supported at this time.",
+                    valueSet.getId()));
+        }
+        
+        // https://github.com/DBCG/cql_engine/pull/462 - Use a search path of URL, identifier, and then resource id
+        Bundle searchResults = fhirClient.search().forResource(ValueSet.class)
+                .where(ValueSet.URL.matches().value(valueSet.getId())).returnBundle(Bundle.class).execute();
+        if( ! searchResults.hasEntry() ) {
+            searchResults = fhirClient.search().forResource(ValueSet.class)
+                .where(ValueSet.IDENTIFIER.exactly().code(valueSet.getId())).returnBundle(Bundle.class).execute();
+            if( ! searchResults.hasEntry() ) {
+                String id = valueSet.getId();
+                if( id.startsWith(URN_OID) ) { 
+                    id = id.replace(URN_OID, "");
+                } else if( id.startsWith(URN_UUID)) {
+                    id = id.replace(URN_UUID, "");
+                } 
+                
+                searchResults = new Bundle();
+                // If we reached this point and it looks like it might
+                // be a FHIR resource ID, we will try to read it. 
+                // See https://www.hl7.org/fhir/datatypes.html#id
+                if( id.matches("[A-Za-z0-9\\-\\.]{1,64}") ) {
+                    try {
+                        ValueSet vs = fhirClient.read().resource(ValueSet.class).withId(id).execute();
+                        searchResults.addEntry().setResource(vs);
+                    } catch( ResourceNotFoundException rnfe ) {
+                        // intentionally empty 
+                    }
                 }
             }
-            else {
-                return null;
-            }
-        } catch (MalformedURLException e) {
-            // continue
+        }
+        
+        if (!searchResults.hasEntry()) {
+            throw new IllegalArgumentException(String.format("Could not resolve value set %s.", valueSet.getId()));
+        } else if (searchResults.getEntry().size() == 1) {
+            valueSet.setId(searchResults.getEntryFirstRep().getResource().getIdElement().getIdPart());
+        } else {
+            throw new IllegalArgumentException("Found more than 1 ValueSet with url: " + valueSet.getId());
         }
 
         return true;
