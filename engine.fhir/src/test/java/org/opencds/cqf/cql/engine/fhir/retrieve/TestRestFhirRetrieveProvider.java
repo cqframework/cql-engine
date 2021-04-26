@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import static ca.uhn.fhir.util.UrlUtil.escapeUrlParam;
 import static org.testng.Assert.assertEquals;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -17,7 +19,6 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Ignore;
 import org.testng.annotations.Test;
 
 import ca.uhn.fhir.rest.client.api.IGenericClient;
@@ -82,7 +83,6 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
     }
     
     @Test
-    @Ignore
     public void userSpecifiedPageSizeIsUsedWhenDateQuery() {
        /**
         * As best as I can tell, the date range optimized queries are
@@ -94,10 +94,17 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         
         Interval interval = new Interval(new DateTime(start), true, new DateTime(end), false);
         
-        mockFhirSearch("/Condition?subject=" + escapeUrlParam("Patient/123") + "&_count=500");
+        // The dates will be rendered in the URL in the build machine's local
+        // time zone, so the URL value might fluctuate from one environment to another.
+        // We could try to match that formatting logic to get an exact URL, but it isn't
+        // necessary for what we are trying to achieve here, so we just accept any date
+        // string.
+        mockFhirInteraction(get(urlMatching("/Condition\\?subject=" + escapeUrlParam("Patient/123") + 
+                "&onset-date=ge2020[^&]+&onset-date=le[^&]+" + 
+                "&_count=500")), makeBundle());
         
         provider.setPageSize(500);
-        provider.retrieve("Patient", "subject", "123", "Condition", null, "code", null, null, "onset-date", null, null, interval);
+        provider.retrieve("Patient", "subject", "123", "Condition", null, "code", null, null, "onset", null, null, interval);
     } 
     
     @Test
