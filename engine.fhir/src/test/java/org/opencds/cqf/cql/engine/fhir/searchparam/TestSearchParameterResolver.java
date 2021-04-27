@@ -125,6 +125,22 @@ public class TestSearchParameterResolver {
                 RestSearchParameterTypeEnum.DATE);
         assertNotNull(param);
         assertEquals("authored", param.getName());
+        
+        param = resolver.getSearchParameterDefinition("Condition", "onset", RestSearchParameterTypeEnum.DATE);
+        assertNotNull(param);
+        assertEquals("onset-date", param.getName());
+        
+        param = resolver.getSearchParameterDefinition("Condition", "abatement", RestSearchParameterTypeEnum.DATE);
+        assertNotNull(param);
+        assertEquals("abatement-date", param.getName());
+        
+        param = resolver.getSearchParameterDefinition("Observation", "effective", RestSearchParameterTypeEnum.DATE);
+        assertNotNull(param);
+        assertEquals("date", param.getName());
+        
+        param = resolver.getSearchParameterDefinition("Observation", "value", RestSearchParameterTypeEnum.DATE);
+        assertNotNull(param);
+        assertEquals("value-date", param.getName());
     }
 
     @Test

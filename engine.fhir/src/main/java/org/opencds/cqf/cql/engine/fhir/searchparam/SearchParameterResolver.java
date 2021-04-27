@@ -1,7 +1,9 @@
 package org.opencds.cqf.cql.engine.fhir.searchparam;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -105,40 +107,59 @@ public class SearchParameterResolver {
         //MedicationAdministration.medication.as(Reference)
         //(MedicationAdministration.medication as CodeableConcept)
         //(MedicationAdministration.medication as Reference)
+        //Condition.onset.as(Age) | Condition.onset.as(Range)
+        //Observation.code | Observation.component.code
 
         // Trim off outer parens
         if (path.equals("(")) {
             path = path.substring(1, path.length() - 1);
         }
 
-        // Trim off DataType
-        path = path.substring(path.indexOf(".") + 1, path.length());
+        Set<String> normalizedParts = new HashSet<String>();
+        String [] orParts = path.split("\\|");
+        for( String part : orParts ) {
+            path = part.trim();
+
+            // Trim off DataType
+            path = path.substring(path.indexOf(".") + 1, path.length());
 
 
-        // Split into components
-        String[] pathSplit = path.split("\\.");
-        List<String> newPathParts = new ArrayList<>();
+            // Split into components
+            String[] pathSplit = path.split("\\.");
+            List<String> newPathParts = new ArrayList<>();
 
-        for (String p : pathSplit) {
-            // Skip the "as(X)" part.
-            if (p.startsWith("as(")) {
-                continue;
+            for (String p : pathSplit) {
+                // Skip the "as(X)" part.
+                if (p.startsWith("as(")) {
+                    continue;
+                }
+
+                // Skip the "[x]" part.
+                if (p.startsWith("[x]")) {
+                    continue;
+                }
+
+                // Filter out spaces and everything after "medication as Reference"
+                String[] ps = p.split(" ");
+                if (ps != null && ps.length > 0){
+                    newPathParts.add(ps[0]);
+                }
             }
 
-            // Skip the "[x]" part.
-            if (p.startsWith("[x]")) {
-                continue;
-            }
-
-            // Filter out spaces and everything after "medication as Reference"
-            String[] ps = p.split(" ");
-            if (ps != null && ps.length > 0){
-                newPathParts.add(ps[0]);
-            }
+            path = String.join(".", newPathParts);
+            normalizedParts.add(path);
         }
 
-        path = String.join(".", newPathParts);
-        return path;
-
+        // This handles cases such as /Condition?onset-age and /Condition?onset-date
+        // where there are multiple underlying representations of the same property
+        // (e.g. Condition.onset.as(Age) | Condition.onset.as(Range)), but
+        // will punt on something like /Observation?combo-code where the underlying
+        // representation maps to multiple places in a nested hierarchy (e.g.
+        // Observation.code | Observation.component.code ).
+        if( normalizedParts.size() == 1 ) {
+            return normalizedParts.iterator().next();
+        } else {
+            return null;
+        }
     }
 }

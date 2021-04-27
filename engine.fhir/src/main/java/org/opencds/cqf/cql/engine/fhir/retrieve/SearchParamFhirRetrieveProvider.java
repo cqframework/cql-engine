@@ -114,7 +114,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         RuntimeSearchParam dateParam = this.searchParameterResolver.getSearchParameterDefinition(dataType, datePath, RestSearchParameterTypeEnum.DATE);
 
         if (dateParam == null) {
-            return null;
+            throw new UnsupportedOperationException(String.format("Could not resolve a search parameter with date type for %s.%s ", dataType, datePath));
         }
 
         return Pair.of(dateParam.getName(), rangeParam);
