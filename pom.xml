@@ -330,7 +330,6 @@
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
-                        <release>8</release>
                         <failOnError>true</failOnError>
                         <failOnWarning>true</failOnWarning>
                         <compilerArgs>
@@ -538,6 +537,25 @@
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>java-9</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <release>8</release>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
             </build>
         </profile>
     </profiles>
