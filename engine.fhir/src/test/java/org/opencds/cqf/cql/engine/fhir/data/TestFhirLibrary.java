@@ -21,6 +21,7 @@ import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class TestFhirLibrary {
 
@@ -31,7 +32,7 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
-        FhirContext fhirContext = FhirContext.forDstu3();
+        FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.DSTU3);
 
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
 		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
@@ -66,7 +67,7 @@ public class TestFhirLibrary {
 
         Context context = new Context(library);
 
-        FhirContext fhirContext = FhirContext.forDstu3();
+        FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.DSTU3);
 
 		Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
 		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),  fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));

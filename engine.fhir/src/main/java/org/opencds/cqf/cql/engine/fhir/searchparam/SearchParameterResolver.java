@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.tuple.Pair;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.RuntimeSearchParam;
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
@@ -55,7 +56,7 @@ public class SearchParameterResolver {
             // Filter out parameters that don't match our requested type.
             if (paramType != null && !param.getParamType().equals(paramType)) {
                 continue;
-            } 
+            }
 
             String normalizedPath = normalizePath(param.getPath());
             if (path.equals(normalizedPath) ) {
@@ -85,7 +86,7 @@ public class SearchParameterResolver {
                 return Pair.of(name, new QuantityParam(value));
             case STRING:
                 return Pair.of(name, new StringParam(value));
-            case NUMBER: 
+            case NUMBER:
                 return Pair.of(name, new NumberParam(value));
             case URI:
                 return Pair.of(name, new UriParam(value));

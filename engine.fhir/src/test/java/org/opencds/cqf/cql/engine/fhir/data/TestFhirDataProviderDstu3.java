@@ -19,11 +19,12 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
-    private FhirContext fhirContext = FhirContext.forDstu3();
+    private FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.DSTU3);
     private  IGenericClient fhirClient = fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
 
     // @Test

@@ -34,6 +34,8 @@ import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
 	public R4FhirModelResolver() {
+        // This ModelResolver makes specific alterations to the FhirContext,
+        // so it's unable to use a cached version.
         this(FhirContext.forR4());
 	}
 
@@ -44,7 +46,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             throw new IllegalArgumentException("The supplied context is not configured for R4");
         }
     }
-    
+
     protected void initialize() {
         // HAPI has some bugs where it's missing annotations on certain types. This patches that.
         this.fhirContext.registerCustomType(AnnotatedUuidType.class);
@@ -75,7 +77,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
         return super.resolveProperty(target, path);
     }
-    
+
     protected Boolean equalsDeep(Base left, Base right) {
         return left.equalsDeep(right);
     }
