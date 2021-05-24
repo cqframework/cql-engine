@@ -34,6 +34,8 @@ import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
 	public Dstu2FhirModelResolver() {
+        // This ModelResolver makes specific alterations to the FhirContext,
+        // so it's unable to use a cached version.
 		this(FhirContext.forDstu2());
 	}
 
@@ -41,7 +43,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
         super(fhirContext);
 
         this.setPackageName("org.hl7.fhir.dstu2.model");
-        
+
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU2");
         }
@@ -66,7 +68,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
             this.fhirContext.getResourceDefinition(type.toCode());
         }
     }
-    
+
     protected Boolean equalsDeep(Base left, Base right) {
         return left.equalsDeep(right);
     }

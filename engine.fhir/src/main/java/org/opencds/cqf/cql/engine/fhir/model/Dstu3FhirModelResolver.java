@@ -34,6 +34,8 @@ public class Dstu3FhirModelResolver extends
         FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
     public Dstu3FhirModelResolver() {
+        // This ModelResolver makes specific alterations to the FhirContext,
+        // so it's unable to use a cached version.
         this(FhirContext.forDstu3());
     }
 

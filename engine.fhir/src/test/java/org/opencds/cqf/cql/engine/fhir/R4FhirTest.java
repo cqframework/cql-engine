@@ -23,42 +23,43 @@ import com.github.tomakehurst.wiremock.client.MappingBuilder;
 import com.github.tomakehurst.wiremock.client.WireMock;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.LoggingInterceptor;
 
 public abstract class R4FhirTest {
-    private static FhirContext FHIR_CONTEXT = FhirContext.forR4();
+    private static FhirContext FHIR_CONTEXT = FhirContext.forCached(FhirVersionEnum.R4);
     private static IParser FHIR_PARSER = FHIR_CONTEXT.newJsonParser().setPrettyPrint(true);
     private static int HTTP_PORT = 0;
 
     // emulate wiremock's junit.WireMockRule with testng features
     WireMockServer wireMockServer;
     WireMock wireMock;
-    
+
     @BeforeMethod()
     public void start() {
         wireMockServer = new WireMockServer(getHttpPort());
         wireMockServer.start();
         WireMock.configureFor("localhost", getHttpPort());
         wireMock = new WireMock("localhost", getHttpPort());
-        
+
         mockFhirRead( "/metadata", getCapabilityStatement() );
     }
-    
+
     @AfterMethod
     public void stop() {
         wireMockServer.stop();
     }
-    
+
     public FhirContext getFhirContext() {
         return FHIR_CONTEXT;
     }
-    
+
     public IParser getFhirParser() {
         return FHIR_PARSER;
     }
-    
+
     public int getHttpPort() {
         if( HTTP_PORT == 0 ) {
             try(ServerSocket socket = new ServerSocket(0)) {
@@ -69,18 +70,18 @@ public abstract class R4FhirTest {
         }
         return HTTP_PORT;
     }
-    
-    public IGenericClient newClient() {        
+
+    public IGenericClient newClient() {
         IGenericClient client = getFhirContext().newRestfulGenericClient(String.format("http://localhost:%d/", getHttpPort()));
-        
+
         LoggingInterceptor logger = new LoggingInterceptor();
         logger.setLogRequestSummary(true);
         logger.setLogResponseBody(true);
         client.registerInterceptor(logger);
-        
+
         return client;
     }
-    
+
     public void mockNotFound(String resource) {
         OperationOutcome outcome = new OperationOutcome();
         outcome.getText().setStatusAsString("generated");
@@ -93,7 +94,7 @@ public abstract class R4FhirTest {
         String resourcePath = "/" + resource.fhirType() + "/" + resource.getId();
         mockFhirInteraction( resourcePath, resource );
     }
-    
+
     public void mockFhirRead( String path, Resource resource ) {
         mockFhirRead( path, resource, 200 );
     }
@@ -107,7 +108,7 @@ public abstract class R4FhirTest {
         MappingBuilder builder = get(urlEqualTo(path));
         mockFhirInteraction( builder,  makeBundle( resources ) );
     }
-    
+
     public void mockFhirPost( String path, Resource resource ) {
         mockFhirInteraction( post(urlEqualTo(path)), resource, 200 );
     }
@@ -117,7 +118,7 @@ public abstract class R4FhirTest {
     }
 
     public void mockFhirInteraction( MappingBuilder builder, Resource resource ) {
-        mockFhirInteraction( builder, resource, 200 ); 
+        mockFhirInteraction( builder, resource, 200 );
     }
 
     public void mockFhirInteraction( MappingBuilder builder, Resource resource, int statusCode ) {
@@ -139,7 +140,7 @@ public abstract class R4FhirTest {
         return makeBundle( resources.toArray(new Resource[resources.size()]));
     }
 
-    public Bundle makeBundle(Resource... resources) {        
+    public Bundle makeBundle(Resource... resources) {
         Bundle bundle = new Bundle();
         bundle.setType(Bundle.BundleType.SEARCHSET);
         bundle.setTotal(resources != null ? resources.length : 0);
