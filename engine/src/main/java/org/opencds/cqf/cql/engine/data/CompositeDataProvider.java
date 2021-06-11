@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.engine.data;
 
+import java.util.List;
+
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.RetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -15,15 +17,26 @@ public class CompositeDataProvider implements DataProvider {
         this.retrieveProvider = retrieveProvider;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getPackageName() {
         return this.modelResolver.getPackageName();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setPackageName(String packageName) {
         this.modelResolver.setPackageName(packageName);
+    }
 
+    @Override
+    public List<String> getPackageNames() {
+        return this.modelResolver.getPackageNames();
+    }
+
+    @Override
+    public void setPackageNames(List<String> packageNames) {
+        this.modelResolver.setPackageNames(packageNames);
     }
 
     @Override

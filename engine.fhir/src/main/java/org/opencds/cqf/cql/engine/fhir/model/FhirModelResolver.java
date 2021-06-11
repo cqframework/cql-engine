@@ -164,11 +164,13 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         return createInstance(resolveType(typeName));
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String getPackageName() {
         return packageName;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setPackageName(String packageName) {
         this.packageName = packageName;

@@ -544,8 +544,14 @@ public class Context {
         if (ret != null) {
             return ret;
         }
-        throw new CqlException(String.format("Could not resolve call to operator '%s' in library '%s'.",
-                name, getCurrentLibrary().getIdentifier().getId()));
+        
+        StringBuilder argStr = new StringBuilder();
+        if( arguments != null ) {
+            arguments.forEach( a -> argStr.append( (argStr.length() > 0) ? ", " : "" ).append( resolveType(a).getName() ) );
+        }
+        
+        throw new CqlException(String.format("Could not resolve call to operator '%s(%s)' in library '%s'.",
+                name, argStr.toString(), getCurrentLibrary().getIdentifier().getId()));
     }
 
     private ParameterDef resolveParameterRef(String name) {
@@ -635,7 +641,7 @@ public class Context {
 
     public void registerDataProvider(String modelUri, DataProvider dataProvider) {
         dataProviders.put(modelUri, dataProvider);
-        packageMap.put(dataProvider.getPackageName(), dataProvider);
+        dataProvider.getPackageNames().forEach( pn -> packageMap.put( pn, dataProvider ) );
     }
 
     public DataProvider resolveDataProvider(QName dataType) {
@@ -652,6 +658,7 @@ public class Context {
         return resolveDataProvider(packageName, true);
     }
 
+    @SuppressWarnings("deprecation")
     public DataProvider resolveDataProvider(String packageName, boolean mustResolve) {
         DataProvider dataProvider = packageMap.get(packageName);
         if (dataProvider == null) {
