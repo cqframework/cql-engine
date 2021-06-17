@@ -4,13 +4,18 @@ import org.cqframework.cql.elm.execution.Element;
 import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DebugUtilities {
+
+    private static Logger logger = LoggerFactory.getLogger(DebugUtilities.class);
+
     private DebugUtilities() {
     }
 
     public static void logDebugResult(Executable node, Library currentLibrary, Object result) {
-        System.out.printf("%s.%s: %s%n", currentLibrary != null ? currentLibrary.getIdentifier().getId() : "unknown",
+        logger.debug("{}.{}: {}", currentLibrary != null ? currentLibrary.getIdentifier().getId() : "unknown",
                 toDebugLocation(node),
                 toDebugString(result));
     }
