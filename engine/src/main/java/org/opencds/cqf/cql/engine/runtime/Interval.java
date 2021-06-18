@@ -195,13 +195,10 @@ public class Interval implements CqlType, Comparable<Interval> {
 
     @Override
     public String toString() {
-        if (getStart() == null) {
-
-        }
         return String.format("Interval%s%s, %s%s",
                 getLowClosed() ? "[" : "(",
-                getStart() == null ? "null" : getStart().toString(),
-                getEnd() == null ? "null" : getEnd().toString(),
+                getLow() == null ? "null" : getLow().toString(),
+                getHigh() == null ? "null" : getHigh().toString(),
                 getHighClosed() ? "]" : ")"
         );
     }
