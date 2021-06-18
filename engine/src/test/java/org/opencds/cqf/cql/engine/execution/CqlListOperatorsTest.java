@@ -253,7 +253,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("ExistsListNull").getExpression().evaluate(context);
-        assertThat(result, is(true));
+        assertThat(result, is(false));
 
         result = context.resolveExpressionRef("Exists1").getExpression().evaluate(context);
         assertThat(result, is(true));
