@@ -41,7 +41,13 @@ import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 
 // TODO: Probably quite a bit of redundancy here. Probably only really need the BaseType and the PrimitiveType
 
-// TODO: type-to-class and contextPath resolutions are potentially expensive. Should add caching for those.
+/*
+ * type-to-class and contextPath resolutions are potentially expensive and can be cached
+ * for improved performance.
+ *
+ * See <a href="https://github.com/DBCG/cql-evaluator/blob/master/evaluator.engine/src/main/java/org/opencds/cqf/cql/evaluator/engine/model/CachingModelResolverDecorator.java"/>
+ * for a decorator that adds caching logic for ModelResolvers.
+ */
 @SuppressWarnings({"unchecked", "rawtypes" })
 public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, SimpleQuantityType, IdType, ResourceType, EnumerationType, EnumFactoryType>
         implements ModelResolver {
