@@ -654,6 +654,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Subtract1And1").getExpression().evaluate(context);
         assertThat(result, is(0));
 
+        result = context.resolveExpressionRef("Subtract1And1Long").getExpression().evaluate(context);
+        assertThat(result, is(0L));
+
         result = context.resolveExpressionRef("Subtract1DAnd2D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(-1.0)));
 

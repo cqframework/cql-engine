@@ -186,6 +186,7 @@ define RoundNeg1D6: Round(-1.6)
 //Subtract
 define SubtractNull: 1 - null
 define Subtract1And1 : 1 - 1
+define Subtract1And1Long : 10L - 10L
 define Subtract1DAnd2D : 1.0 - 2.0
 define Subtract1CMAnd2CM : 1.0 'cm' - 2.0 'cm'
 define Subtract2And11D: 2 - 1.1
