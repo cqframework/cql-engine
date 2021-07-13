@@ -120,6 +120,7 @@ define ModuloDResult: 3.5 mod 3
 //Multiply
 define MultiplyNull: 1 * null
 define Multiply1By1 : 1 * 1
+define Multiply2By3Long : 20L * 30L
 define Multiply1DBy2D : 1.0 * 2.0
 define Multiply1IBy2D: 1 * 2.0
 define Multiply1CMBy2CM : 1.0 'cm' * 2.0 'cm'

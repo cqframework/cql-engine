@@ -430,6 +430,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Multiply1By1").getExpression().evaluate(context);
         assertThat(result, is(1));
 
+        result = context.resolveExpressionRef("Multiply2By3Long").getExpression().evaluate(context);
+        assertThat(result, is(6L));
+
         result = context.resolveExpressionRef("Multiply1DBy2D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(2.0)));
 
