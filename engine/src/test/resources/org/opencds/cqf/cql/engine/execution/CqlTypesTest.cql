@@ -4,6 +4,7 @@ codesystem "LOINC": 'http://loinc.org'
 
 //Any
 define AnyInteger: 5
+define AnyLong: 123L
 define AnyDecimal: 5.0
 define AnyQuantity: 5.0 'g'
 define AnyDateTime: DateTime(2012, 4, 4)
