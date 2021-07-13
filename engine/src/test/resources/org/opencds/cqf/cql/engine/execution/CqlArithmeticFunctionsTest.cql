@@ -11,6 +11,7 @@ define Abs1cm: Abs(-1.0'cm')
 //Add
 define AddNull: 1 + null
 define Add11: 1 + 1
+define Add12Long: 10L + 20L
 define Add1D1D: 1.0 + 1.0
 define Add1Q1Q: 1'g/cm3' + 1'g/cm3'
 define AddIAndD: 1 + 2.0

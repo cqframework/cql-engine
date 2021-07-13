@@ -69,6 +69,10 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Add11").getExpression().evaluate(context);
         assertThat(result, is(2));
 
+        //until fix for long parsing is merged the following 10L + 20L be considered as 1L + 2L
+        result = context.resolveExpressionRef("Add12Long").getExpression().evaluate(context);
+        assertThat(result, is(3L));
+
         result = context.resolveExpressionRef("Add1D1D").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("2.0")));
 
