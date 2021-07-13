@@ -139,6 +139,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Divide11").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.0")));
 
+        result = context.resolveExpressionRef("Divide11Long").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.0")));
+
         result = context.resolveExpressionRef("Divide1d1d").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("1.0")));
 

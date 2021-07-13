@@ -30,6 +30,7 @@ define DivideNull: 1 / null
 define Divide10: 1 / 0
 define Divide01: 0 / 1
 define Divide11: 1 / 1
+define Divide11Long: 11L / 11L
 define Divide1d1d: 1.0 / 1.0
 define Divide103: 10 / 3
 define Divide1Q1: 1'g/cm3' / 1.0
