@@ -1,7 +1,7 @@
 library ComparisonOperator version '1'
 
 //Between
-define BetweenIntTrue: 4 between 2 and 6 
+define BetweenIntTrue: 4 between 2 and 6
 
 //Equal
 define SimpleEqTrueTrue : true = true
@@ -101,6 +101,8 @@ define UncertaintyGreaterEqualFalse: DateTime(2013) >= DateTime(2014, 2, 15)
 //Less
 define LessZZ        : 0 < 0
 define LessZ1        : 0 < 1
+define LessLong      : 00L < 10L
+define LessLongNeg   : -30L < -20L
 define LessZNeg1     : 0 < -1
 define LessDecZZ     : 0.0 < 0.0
 define LessDecZ1     : 0.0 < 1.0

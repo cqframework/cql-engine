@@ -40,6 +40,7 @@ define MedianTestDecimal: Median({6.0, 5.0, 4.0, 3.0, 2.0, 1.0})
 
 //Min
 define MinTestInteger: Min({5, 12, 1, 15, 0, 4, 90, 44})
+define MinTestLong: Min({50L, 120L, 10L, 150L, 00L, 40L, 900L, 440L})
 define MinTestString: Min({'hi', 'bye', 'zebra'})
 define MinTestDateTime: Min({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6) })
 define MinTestTime: Min({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })

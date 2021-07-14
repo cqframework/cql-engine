@@ -7,6 +7,7 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 Min(argument List<Integer>) Integer
+Min(argument List<Long>) Long
 Min(argument List<Decimal>) Decimal
 Min(argument List<Quantity>) Quantity
 Min(argument List<Date>) Date
@@ -57,8 +58,8 @@ public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
         }
 
         throw new InvalidOperatorArgument(
-                "Min(List<Integer>), Min(List<Decimal>), Min(List<Quantity>), Min(List<Date>), Min(List<DateTime>), Min(List<Time>) or Min(List<String>)",
-                String.format("Min(%s)", source.getClass().getName())
+            "Min(List<Integer>), Min(List<Long>), Min(List<Decimal>), Min(List<Quantity>), Min(List<Date>), Min(List<DateTime>), Min(List<Time>) or Min(List<String>)",
+            String.format("Min(%s)", source.getClass().getName())
         );
     }
 

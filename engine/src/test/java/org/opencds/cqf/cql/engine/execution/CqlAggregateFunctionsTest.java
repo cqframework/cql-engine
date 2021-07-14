@@ -172,6 +172,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("MinTestInteger").getExpression().evaluate(context);
         assertThat(result, is(0));
 
+        result = context.resolveExpressionRef("MinTestLong").getExpression().evaluate(context);
+        assertThat(result, is(0L));
+
         result = context.resolveExpressionRef("MinTestString").getExpression().evaluate(context);
         assertThat(result, is("bye"));
 
