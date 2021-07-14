@@ -8,6 +8,7 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 mod(left Integer, right Integer) Integer
+mod(left Long, right Long) Long
 mod(left Decimal, right Decimal) Decimal
 
 The mod operator computes the remainder of the division of its arguments.
@@ -29,6 +30,13 @@ public class ModuloEvaluator extends org.cqframework.cql.elm.execution.Modulo {
             return (Integer)left % (Integer)right;
         }
 
+        if (left instanceof Long) {
+            if ((Long)right == 0L) {
+                return null;
+            }
+            return (Long)left % (Long)right;
+        }
+
         if (left instanceof BigDecimal) {
             if (right == new BigDecimal("0.0")) {
                 return null;
@@ -37,7 +45,7 @@ public class ModuloEvaluator extends org.cqframework.cql.elm.execution.Modulo {
         }
 
         throw new InvalidOperatorArgument(
-                "Modulo(Integer, Integer) or Modulo(Decimal, Decimal)",
+                "Modulo(Integer, Integer), Modulo(Long, Long) or Modulo(Decimal, Decimal)",
                 String.format("Modulo(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }

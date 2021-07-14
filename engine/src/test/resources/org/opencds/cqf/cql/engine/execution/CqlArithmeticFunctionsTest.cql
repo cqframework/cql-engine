@@ -112,6 +112,7 @@ define TimeMaxValue: maximum Time
 define ModuloNull  : 1 mod null
 define Modulo0By0  : 0 mod 0
 define Modulo4By2  : 4 mod 2
+define Modulo4By2Long  : 40L mod 20L
 define Modulo4DBy2D  : 4.0 mod 2.0
 define Modulo10By3  : 10 mod 3
 define Modulo10DBy3D  : 10.0 mod 3.0
