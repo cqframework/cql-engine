@@ -34,6 +34,7 @@ define CountTestNull: Count({})
 
 //Max
 define MaxTestInteger: Max({ 5, 12, 1, 15, 0, 4, 90, 44 })
+define MaxTestLong: Max({ 50L, 120L, 10L, 150L, 00L, 40L, 900L, 440L })
 define MaxTestString: Max({ 'hi', 'bye', 'zebra' })
 define MaxTestDateTime: Max({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 6) })
 define MaxTestTime: Max({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 })

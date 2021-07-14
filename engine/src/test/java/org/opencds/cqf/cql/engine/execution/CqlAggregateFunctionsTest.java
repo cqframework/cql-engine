@@ -152,6 +152,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("MaxTestInteger").getExpression().evaluate(context);
         assertThat(result, is(90));
 
+        result = context.resolveExpressionRef("MaxTestLong").getExpression().evaluate(context);
+        assertThat(result, is(90L));
+
         result = context.resolveExpressionRef("MaxTestString").getExpression().evaluate(context);
         assertThat(result, is("zebra"));
 

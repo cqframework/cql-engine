@@ -7,6 +7,7 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 Max(argument List<Integer>) Integer
+Max(argument List<Long>) Integer
 Max(argument List<Decimal>) Decimal
 Max(argument List<Quantity>) Quantity
 Max(argument List<Date>) Date
@@ -58,8 +59,8 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
         }
 
         throw new InvalidOperatorArgument(
-                "Max(List<Integer>), Max(List<Decimal>, Max(List<Quantity>), Max(List<Date>), Max(List<DateTime>), Max(List<Time>) or Max(List<String>))",
-                String.format("Max(%s)", source.getClass().getName())
+            "Max(List<Integer>), Max(List<Long>, Max(List<Decimal>, Max(List<Quantity>), Max(List<Date>), Max(List<DateTime>), Max(List<Time>) or Max(List<String>))",
+            String.format("Max(%s)", source.getClass().getName())
         );
     }
 
