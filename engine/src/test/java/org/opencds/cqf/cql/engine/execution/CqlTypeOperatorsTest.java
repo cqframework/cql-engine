@@ -172,6 +172,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("ConvertsToIntegerTrue").getExpression().evaluate(context);
         Assert.assertTrue((Boolean) result);
 
+        result = context.resolveExpressionRef("ConvertsToIntegerLong").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
         result = context.resolveExpressionRef("ConvertsToIntegerFalse").getExpression().evaluate(context);
         Assert.assertFalse((Boolean) result);
 

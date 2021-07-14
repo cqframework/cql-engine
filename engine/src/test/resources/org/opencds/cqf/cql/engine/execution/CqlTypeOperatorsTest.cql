@@ -36,6 +36,7 @@ define ConvertsToDecimalFalse: ConvertsToDecimal('+-1')
 define ConvertsToDecimalNull: ConvertsToDecimal(null)
 
 define ConvertsToIntegerTrue: ConvertsToInteger('+1')
+define ConvertsToIntegerLong: ConvertsToInteger(1230L)
 define ConvertsToIntegerFalse: ConvertsToInteger('+-1')
 define ConvertsToIntegerNull: ConvertsToInteger(null)
 
