@@ -471,6 +471,12 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Negate1").getExpression().evaluate(context);
         assertThat(result, is(-1));
 
+        result = context.resolveExpressionRef("Negate1Long").getExpression().evaluate(context);
+        assertThat(result, is(-1L));
+
+        result = context.resolveExpressionRef("NegateMaxLong").getExpression().evaluate(context);
+        assertThat(result, is(-9223372036854775808L));
+
         result = context.resolveExpressionRef("NegateNeg1").getExpression().evaluate(context);
         assertThat(result, is(1));
 

@@ -132,6 +132,8 @@ define NegateNull: -(null as Integer)
 define Negate0 : -0
 define NegateNeg0 : -(-0)
 define Negate1 : -1
+define Negate1Long : -10L
+define NegateMaxLong : -92233720368547758070L
 define NegateNeg1 : -(-1)
 define Negate0D : -(0.0)
 define NegateNeg0D : -(-0.0)
