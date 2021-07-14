@@ -205,6 +205,7 @@ define Subtract2And11D: 2 - 1.1
 define SuccessorNull: successor of (null as Integer)
 define SuccessorOf0: successor of 0
 define SuccessorOf1: successor of 1
+define SuccessorOf1Long: successor of 10L
 define SuccessorOf1D: successor of 1.0
 define SuccessorOf101D: successor of 1.01
 define SuccessorOfJan12000: successor of DateTime(2000,1,1)
