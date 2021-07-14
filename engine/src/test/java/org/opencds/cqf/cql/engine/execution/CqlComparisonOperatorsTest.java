@@ -436,6 +436,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("LessOrEqualZ1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("LessOrEqualZ1Long").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         result = context.resolveExpressionRef("LessOrEqualZNeg1").getExpression().evaluate(context);
         assertThat(result, is(false));
 

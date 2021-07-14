@@ -132,6 +132,7 @@ define UncertaintyLessFalse: DateTime(2015) < DateTime(2014, 2, 15)
 //Less Or Equal
 define LessOrEqualZZ        : 0 <= 0
 define LessOrEqualZ1        : 0 <= 1
+define LessOrEqualZ1Long    : 00L <= 10L
 define LessOrEqualZNeg1     : 0 <= -1
 define LessOrEqualDecZZ     : 0.0 <= 0.0
 define LessOrEqualDecZ1     : 0.0 <= 1.0
