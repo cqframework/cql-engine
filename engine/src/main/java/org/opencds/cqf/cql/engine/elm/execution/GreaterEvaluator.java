@@ -11,6 +11,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 /*
 
 >(left Integer, right Integer) Boolean
+>(left Long, right Long) Boolean
 >(left Decimal, right Decimal) Boolean
 >(left Quantity, right Quantity) Boolean
 >(left Date, right Date) Boolean
@@ -51,6 +52,10 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
             return ((Integer) left).compareTo((Integer) right) > 0;
         }
 
+        if (left instanceof Long && right instanceof Long) {
+            return ((Long) left).compareTo((Long) right) > 0;
+        }
+
         else if (left instanceof BigDecimal && right instanceof BigDecimal) {
             return ((BigDecimal) left).compareTo((BigDecimal) right) > 0;
         }
@@ -88,8 +93,8 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
         }
 
         throw new InvalidOperatorArgument(
-                "Greater(Integer, Integer) Greater(Decimal, Decimal), Greater(Quantity, Quantity), Greater(Date, Date), Greater(DateTime, DateTime), Greater(Time, Time) or Greater(String, String)",
-                String.format("Greater(%s, %s)", left, right)
+            "Greater(Integer, Integer), Greater(Long, Long), Greater(Decimal, Decimal), Greater(Quantity, Quantity), Greater(Date, Date), Greater(DateTime, DateTime), Greater(Time, Time) or Greater(String, String)",
+            String.format("Greater(%s, %s)", left, right)
         );
     }
 

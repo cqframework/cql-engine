@@ -47,6 +47,7 @@ define TimeEq10A10P: @T10:00:00.000 = @T22:00:00.000
 //Greater
 define GreaterZZ        : 0 > 0
 define GreaterZ1        : 0 > 1
+define GreaterLong      : 00L > 10L
 define GreaterZNeg1     : 0 > -1
 define GreaterDecZZ     : 0.0 > 0.0
 define GreaterDecZ1     : 0.0 > 1.0

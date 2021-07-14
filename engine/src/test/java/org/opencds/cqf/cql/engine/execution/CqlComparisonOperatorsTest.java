@@ -160,6 +160,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("GreaterZZ").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef("GreaterLong").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
         result = context.resolveExpressionRef("GreaterZ1").getExpression().evaluate(context);
         assertThat(result, is(false));
 
