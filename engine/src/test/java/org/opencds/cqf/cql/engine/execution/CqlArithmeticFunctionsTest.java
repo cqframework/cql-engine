@@ -573,6 +573,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Power2To2").getExpression().evaluate(context);
         assertThat(result, is(4));
 
+        result = context.resolveExpressionRef("Power2To2Long").getExpression().evaluate(context);
+        assertThat(result, is(4L));
+
         result = context.resolveExpressionRef("PowerNeg2To2").getExpression().evaluate(context);
         assertThat(result, is(4));
 
@@ -596,6 +599,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("Power2To4").getExpression().evaluate(context);
         assertThat(result, is(16));
+
+        result = context.resolveExpressionRef("Power2To3Long").getExpression().evaluate(context);
+        assertThat(result, is(8L));
 
         result = context.resolveExpressionRef("Power2DTo4D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("16.0")));
