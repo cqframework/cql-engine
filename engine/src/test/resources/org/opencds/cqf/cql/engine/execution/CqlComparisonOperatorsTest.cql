@@ -75,6 +75,7 @@ define UncertaintyGreaterFalse: DateTime(2013) > DateTime(2014, 2, 15)
 //Greater Or Equal
 define GreaterOrEqualZZ        : 0 >= 0
 define GreaterOrEqualZ1        : 0 >= 1
+define GreaterOrEqualZ1Long    : 00L >= 10L
 define GreaterOrEqualZNeg1     : 0 >= -1
 define GreaterOrEqualDecZZ     : 0.0 >= 0.0
 define GreaterOrEqualDecZ1     : 0.0 >= 1.0
