@@ -48,6 +48,7 @@ define ConvertsToQuantityNull: ConvertsToQuantity(null)
 
 define ConvertsToStringBoolean: ConvertsToString(true)
 define ConvertsToStringInteger: ConvertsToString(1)
+define ConvertsToStringLong: ConvertsToString(10L)
 define ConvertsToStringDecimal: ConvertsToString(1.1)
 define ConvertsToStringQuantity: ConvertsToString(1.1'mg')
 define ConvertsToStringRatio: ConvertsToString(1.1'mg':3.1'mg')
