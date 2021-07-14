@@ -13,6 +13,7 @@ define SimpleEqTrueNull : true = null
 define SimpleEqNullTrue : null = true
 define SimpleEqInt1Int1 : 1 = 1
 define SimpleEqInt1Int2 : 1 = 2
+define SimpleEqInt1Int2Long : 10L = 20L
 define SimpleEqStringAStringA : 'a' = 'a'
 define SimpleEqStringAStringB : 'a' = 'b'
 define SimpleEqFloat1Float1 : 1.0 = 1.0
