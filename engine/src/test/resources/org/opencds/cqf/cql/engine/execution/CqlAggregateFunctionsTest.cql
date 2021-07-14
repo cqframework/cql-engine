@@ -61,6 +61,7 @@ define StdDevTest1: StdDev({ 1.0, 2.0, 3.0, 4.0, 5.0 })
 
 //Sum
 define SumTest1: Sum({ 6.0, 2.0, 3.0, 4.0, 5.0 })
+define SumTestLong: Sum({ 60L, 20L, 30L, 40L, 50L })
 define SumTestQuantity: Sum({1 'ml',2 'ml',3 'ml',4 'ml',5 'ml'})
 define SumTestNull: Sum({ null, 1, null })
 
