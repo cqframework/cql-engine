@@ -96,6 +96,7 @@ define Ln1000D  : Ln(1000.0)
 
 //MinValue
 define IntegerMinValue: minimum Integer
+define LongMinValue: minimum Long
 define DecimalMinValue: minimum Decimal
 define QuantityMinValue: minimum Quantity
 define DateTimeMinValue: minimum DateTime
