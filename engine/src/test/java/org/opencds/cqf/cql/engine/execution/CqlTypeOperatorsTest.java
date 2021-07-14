@@ -391,6 +391,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("IntegerNeg5ToString").getExpression().evaluate(context);
         assertThat(result, is("-5"));
 
+        result = context.resolveExpressionRef("LongNeg5ToString").getExpression().evaluate(context);
+        assertThat(result, is("-5"));
+
         result = context.resolveExpressionRef("Decimal18D55ToString").getExpression().evaluate(context);
         assertThat(result, is("18.55"));
 

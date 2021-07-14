@@ -95,6 +95,7 @@ define ToRatioIsNull: ToRatio('1.0 \'mg\';2.0 \'mg\'')
 
 //ToString
 define IntegerNeg5ToString: ToString(-5)
+define LongNeg5ToString: ToString(-50L)
 define Decimal18D55ToString: ToString(18.55)
 define Quantity5D5CMToString: ToString(5.5 'cm')
 define BooleanTrueToString: ToString(true)
