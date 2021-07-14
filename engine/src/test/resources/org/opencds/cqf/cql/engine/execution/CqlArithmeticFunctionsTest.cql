@@ -104,6 +104,7 @@ define TimeMinValue: minimum Time
 
 //MaxValue
 define IntegerMaxValue: maximum Integer
+define LongMaxValue: maximum Long
 define DecimalMaxValue: maximum Decimal
 define QuantityMaxValue: maximum Quantity
 define DateTimeMaxValue: maximum DateTime

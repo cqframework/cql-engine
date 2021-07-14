@@ -361,6 +361,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("IntegerMaxValue").getExpression().evaluate(context);
         assertThat(result, is(Integer.MAX_VALUE));
 
+        result = context.resolveExpressionRef("LongMaxValue").getExpression().evaluate(context);
+        assertThat(result, is(Long.MAX_VALUE));
+
         result = context.resolveExpressionRef("DecimalMaxValue").getExpression().evaluate(context);
         Assert.assertEquals(((BigDecimal) result).compareTo(new BigDecimal("9999999999999999999999999999.99999999")), 0);
 
