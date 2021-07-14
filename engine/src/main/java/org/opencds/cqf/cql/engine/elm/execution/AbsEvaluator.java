@@ -8,6 +8,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 
 /*
 Abs(argument Integer) Integer
+Abs(argument Long) Integer
 Abs(argument Decimal) Decimal
 Abs(argument Quantity) Quantity
 
@@ -27,6 +28,10 @@ public class AbsEvaluator extends org.cqframework.cql.elm.execution.Abs {
             return  Math.abs((Integer)operand);
         }
 
+        else if (operand instanceof Long) {
+            return Math.abs((Long) operand);
+        }
+
         else if (operand instanceof BigDecimal) {
             return ((BigDecimal)operand).abs();
         }
@@ -36,8 +41,8 @@ public class AbsEvaluator extends org.cqframework.cql.elm.execution.Abs {
         }
 
         throw new InvalidOperatorArgument(
-                "Abs(Integer), Abs(Decimal) or Abs(Quantity)",
-                String.format("Abs(%s)", operand.getClass().getName())
+            "Abs(Integer), Abs(Long), Abs(Decimal) or Abs(Quantity)",
+            String.format("Abs(%s)", operand.getClass().getName())
         );
     }
 

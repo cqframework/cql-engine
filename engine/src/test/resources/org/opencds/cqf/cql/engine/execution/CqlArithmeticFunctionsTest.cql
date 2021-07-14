@@ -4,6 +4,7 @@ library ArithmeticFunctions version '1'
 define AbsNull: Abs(null as Integer)
 define Abs0: Abs(0)
 define AbsNeg1: Abs(-1)
+define AbsNeg1Long: Abs(-10L)
 define AbsNeg1Dec: Abs(-1.0)
 define Abs0Dec: Abs(0.0)
 define Abs1cm: Abs(-1.0'cm')
