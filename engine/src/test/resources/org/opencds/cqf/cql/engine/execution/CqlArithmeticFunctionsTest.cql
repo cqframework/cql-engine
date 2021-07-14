@@ -74,6 +74,7 @@ define Log1BaseNull  : Log(1, null)
 define Log1Base1  : Log(1, 1)
 define Log1Base2  : Log(1, 2)
 define Log1Base100  : Log(1, 100)
+define Log1Base100Long  : Log(10L, 1000L)
 define Log16Base2  : Log(16, 2)
 define LogD125Base2  : Log(0.125, 2)
 
