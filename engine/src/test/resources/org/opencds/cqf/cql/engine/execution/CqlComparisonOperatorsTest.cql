@@ -203,6 +203,7 @@ define SimpleNotEqTrueNull : true != null
 define SimpleNotEqNullTrue : null != true
 define SimpleNotEqInt1Int1 : 1 != 1
 define SimpleNotEqInt1Int2 : 1 != 2
+define SimpleNotEqInt1Int2Long : 10L != 20L
 define SimpleNotEqStringAStringA : 'a' != 'a'
 define SimpleNotEqStringAStringB : 'a' != 'b'
 define SimpleNotEqFloat1Float1 : 1.0 != 1.0
