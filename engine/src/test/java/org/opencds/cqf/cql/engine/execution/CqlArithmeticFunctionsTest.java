@@ -218,6 +218,9 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("Exp1").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp(1d))));
 
+        result = context.resolveExpressionRef("Exp1Long").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp(1d))));
+
         result = context.resolveExpressionRef("ExpNeg1").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(Math.exp((double) -1))));
 
