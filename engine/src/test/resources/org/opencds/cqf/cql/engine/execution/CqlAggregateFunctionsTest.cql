@@ -23,6 +23,9 @@ define AnyTrueEmptyList             : AnyTrue({})
 //Avg
 define AvgTest1: Avg({ 1.0, 2.0, 3.0, 6.0 })
 
+//Product
+define Product_Long: Product({50L, 40L, 50L})
+
 //Count
 define CountTest1: Count({ 15, 5, 99, null, 1 })
 define CountTestDateTime: Count({ DateTime(2014), DateTime(2001), DateTime(2010) })

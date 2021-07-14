@@ -112,6 +112,17 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProductEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testProduct() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("Product_Long").getExpression().evaluate(context);
+        assertThat(result, is(100L));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.CountEvaluator#evaluate(Context)}
      */
     @Test
