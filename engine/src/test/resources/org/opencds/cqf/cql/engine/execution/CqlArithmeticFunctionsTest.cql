@@ -154,6 +154,7 @@ define PrecisionTimeMs: Precision(@T10:30:00.000) // 9
 define PredecessorNull: predecessor of (null as Integer)
 define PredecessorOf0: predecessor of 0
 define PredecessorOf1: predecessor of 1
+define PredecessorOf1Long: predecessor of 10L
 define PredecessorOf1D: predecessor of 1.0
 define PredecessorOf101D: predecessor of 1.01
 define PredecessorOf1QCM: predecessor of 1.0 'cm'

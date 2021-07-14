@@ -17,8 +17,8 @@ predecessor of<T>(argument T) T
 
 The predecessor operator returns the predecessor of the argument.
   For example, the predecessor of 2 is 1. If the argument is already the minimum value for the type, a run-time error is thrown.
-The predecessor operator is defined for the Integer, Decimal, DateTime, and Time types.
-For Integer, predecessor is equivalent to subtracting 1.
+The predecessor operator is defined for the Integer, Long, Decimal, DateTime, and Time types.
+For Integer, Long predecessor is equivalent to subtracting 1.
 For Decimal, predecessor is equivalent to subtracting the minimum precision value for the Decimal type, or 10^-08.
 For DateTime and Time values, predecessor is equivalent to subtracting a time-unit quantity for the lowest specified precision of the value.
   For example, if the DateTime is fully specified, predecessor is equivalent to subtracting 1 millisecond;
@@ -38,6 +38,12 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
                 throw new TypeUnderflow("The result of the predecessor operation precedes the minimum value allowed for the Integer type");
             }
             return ((Integer)value) - 1;
+        }
+        else if (value instanceof Long) {
+            if ((Long) value <= Value.MIN_LONG) {
+                throw new TypeUnderflow("The result of the predecessor operation precedes the minimum value allowed for the Long type");
+            }
+            return ((Long) value) - 1;
         }
         else if (value instanceof BigDecimal) {
             if (((BigDecimal) value).compareTo(Value.MIN_DECIMAL) <= 0) {
