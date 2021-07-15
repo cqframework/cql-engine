@@ -412,6 +412,12 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ModuloDResult").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0.5)));
+
+        result = context.resolveExpressionRef("Modulo10By3Quantity").getExpression().evaluate(context);
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal(1.0)));
+
+        result = context.resolveExpressionRef("Modulo10By0Quantity").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
     }
 
     /**

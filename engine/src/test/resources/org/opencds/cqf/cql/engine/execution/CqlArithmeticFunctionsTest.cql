@@ -115,6 +115,8 @@ define Modulo10By3  : 10 mod 3
 define Modulo10DBy3D  : 10.0 mod 3.0
 define Modulo10IBy3D: 10 mod 3.0
 define ModuloDResult: 3.5 mod 3
+define Modulo10By3Quantity: 10.0 'g' mod 3.0 'g'
+define Modulo10By0Quantity: 10.0 'g' mod 0.0 'g'
 
 //Multiply
 define MultiplyNull: 1 * null
