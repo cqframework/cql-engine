@@ -805,5 +805,16 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TruncatedDivide10By5D").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2.0")));
+
+        result = context.resolveExpressionRef("TruncatedDivide10By5DQuantity").getExpression().evaluate(context);
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("2.0")));
+        assertThat(((Quantity)result).getUnit(), is("g"));
+
+        result = context.resolveExpressionRef("TruncatedDivide414By206DQuantity").getExpression().evaluate(context);
+        assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("2.0")));
+        assertThat(((Quantity)result).getUnit(), is("m"));
+
+        result = context.resolveExpressionRef("TruncatedDivide10By0DQuantity").getExpression().evaluate(context);
+        assertThat(result, nullValue());
     }
 }

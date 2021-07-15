@@ -231,3 +231,6 @@ define TruncatedDivide2ByNeg1: 2 div -1
 define TruncatedDivide10ByNeg3: 10 div -3
 define TruncatedDivide10d1ByNeg3D1: 10.1 div -3.1
 define TruncatedDivide10By5D: 10 div 5.0
+define TruncatedDivide10By5DQuantity: 10.0 'g' div 5.0 'g'
+define TruncatedDivide414By206DQuantity: 4.14 'm' div 2.06 'm'
+define TruncatedDivide10By0DQuantity: 10.0 'g' div 0.0 'g'
