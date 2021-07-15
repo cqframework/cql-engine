@@ -5,10 +5,12 @@ import java.math.BigDecimal;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.Interval;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
 
 /*
 div(left Integer, right Integer) Integer
 div(left Decimal, right Decimal) Decimal
+div(left Quantity, right Quantity) Quantity
 
 The div operator performs truncated division of its arguments.
 When invoked with mixed Integer and Decimal arguments, the Integer argument will be implicitly converted to Decimal.
@@ -38,6 +40,15 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
             return ((BigDecimal)left).divideAndRemainder((BigDecimal)right)[0];
         }
 
+        else if (left instanceof Quantity) {
+            if (EqualEvaluator.equal(((Quantity) right).getValue(), new BigDecimal("0.0"))) {
+                return null;
+            }
+            return new Quantity()
+                .withUnit(((Quantity) left).getUnit())
+                .withValue(((Quantity) left).getValue().divideAndRemainder(((Quantity) right).getValue())[0]);
+        }
+
         else if (left instanceof Interval && right instanceof Interval) {
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
@@ -46,8 +57,8 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
         }
 
         throw new InvalidOperatorArgument(
-                "TruncatedDivide(Integer, Integer) or TruncatedDivide(Decimal, Decimal)",
-                String.format("TruncatedDivide(%s, %s)", left.getClass().getName(), right.getClass().getName())
+            "TruncatedDivide(Integer, Integer), TruncatedDivide(Decimal, Decimal),  TruncatedDivide(Quantity, Quantity)",
+            String.format("TruncatedDivide(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
 
