@@ -136,6 +136,10 @@ public class Context {
         }
     }
 
+    public void clearExpressions() {
+        this.expressions.clear();
+    }
+
     public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
@@ -185,6 +189,8 @@ public class Context {
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
+        this.clearExpressions();
+
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
@@ -544,12 +550,12 @@ public class Context {
         if (ret != null) {
             return ret;
         }
-        
+
         StringBuilder argStr = new StringBuilder();
         if( arguments != null ) {
             arguments.forEach( a -> argStr.append( (argStr.length() > 0) ? ", " : "" ).append( resolveType(a).getName() ) );
         }
-        
+
         throw new CqlException(String.format("Could not resolve call to operator '%s(%s)' in library '%s'.",
                 name, argStr.toString(), getCurrentLibrary().getIdentifier().getId()));
     }
