@@ -77,6 +77,10 @@ public class Context {
         };
     }
 
+    public void enableExpressionCache() {
+        this.expressions.clear();
+    }
+
     private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
         return evaluatedResources;
