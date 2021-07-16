@@ -385,6 +385,12 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("IntegerIntervalExcept1to3").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 3, true)));
 
+        result = context.resolveExpressionRef("IntegerIntervalExcept4to6").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)result).equal(new Interval(-4, false, 6, false)));
+
+        result = context.resolveExpressionRef("IntegerIntervalExceptNullOutNull").getExpression().evaluate(context);
+        assertThat(result, is(nullValue()));
+
         result = context.resolveExpressionRef("IntegerIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
@@ -477,7 +483,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.elm.execution.IncludesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.IncludesEvaluator#evaluate(Context)}
      */
     @Test
     public void TestIncludes() {
