@@ -70,7 +70,6 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
 
         List<Interval> expansion = new ArrayList<>();
         Object start = interval.getStart();
-        Object end = addPer(start, per);
 
         if ((start instanceof Integer || start instanceof BigDecimal)
                 && !per.getUnit().equals("1"))
@@ -84,11 +83,15 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return expansion;
         }
 
-        while (LessOrEqualEvaluator.lessOrEqual(PredecessorEvaluator.predecessor(end), interval.getEnd()))
+        Object end = addPer(start, per);
+        Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);
+
+        while (LessOrEqualEvaluator.lessOrEqual(predecessorOfEnd, interval.getEnd()))
         {
-            expansion.add(new Interval(start, true, end, false));
+            expansion.add(new Interval(start, true, predecessorOfEnd, true));
             start = end;
             end = addPer(start, per);
+            predecessorOfEnd = PredecessorEvaluator.predecessor(end);
         }
 
         return expansion;
@@ -116,12 +119,14 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             Interval unit = null;
             Object start = interval.getStart();
             Object end = AddEvaluator.add(start, per);
+            Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);
             for (int j = 0; j < (Integer) i; ++j)
             {
-                unit = new Interval(start, true, end, false);
+                unit = new Interval(start, true, predecessorOfEnd, true);
                 expansion.add(unit);
                 start = end;
                 end = AddEvaluator.add(start, per);
+                predecessorOfEnd = PredecessorEvaluator.predecessor(end);
             }
 
             if (unit != null)
@@ -129,7 +134,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
                 i = DurationBetweenEvaluator.duration(unit.getEnd(), interval.getEnd(), Precision.fromString(precision));
                 if (i instanceof Integer && (Integer) i == 1)
                 {
-                    expansion.add(new Interval(start, true, end, false));
+                    expansion.add(new Interval(start, true, PredecessorEvaluator.predecessor(end), true));
                 }
             }
             else

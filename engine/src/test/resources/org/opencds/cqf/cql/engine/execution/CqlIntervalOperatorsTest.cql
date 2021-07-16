@@ -50,6 +50,13 @@ define DateTimeBeforeFalse: Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)
 define TimeBeforeTrue: Interval[@T15:59:59.999, @T20:59:59.999] before @T22:59:59.999
 define TimeBeforeFalse: Interval[@T15:59:59.999, @T20:59:59.999] before @T10:59:59.999
 
+//Expand
+define TestIntegerIntervalExpand: expand {Interval[4,6]}
+define TestDecimalIntervalExpand: expand {Interval[4.0,6]}
+define TestDateIntervalExpandClosedPerDay: expand { Interval[@2018-01-01, @2018-01-03] } per day
+define TestDateIntervalExpandClosedPerWeekEmpty: expand { Interval[@2018-01-01, @2018-01-03] } per week
+define TestDateIntervalExpandClosedPerWeek: expand { Interval[@2018-01-01, @2018-01-10] } per week
+
 //Collapse
 define TestCollapseNull: collapse null as List<Interval<Integer>>
 define IntegerIntervalCollapse: collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }

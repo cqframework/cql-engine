@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.runtime.Date;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
@@ -170,6 +171,44 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TimeBeforeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ExpandEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testExpand() {
+        Context context = new Context(library);
+        Object result;
+
+        result = context.resolveExpressionRef("TestIntegerIntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(4, true, 4, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(5, true, 5, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(2)).equal(new Interval(6, true, 6, true)));
+
+        result = context.resolveExpressionRef("TestDecimalIntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("4.0"), true,  new BigDecimal("4.99999999"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("5.0"), true,  new BigDecimal("5.99999999"), true)));
+
+        result = context.resolveExpressionRef("TestDateIntervalExpandClosedPerDay").getExpression().evaluate(context);
+        Interval interval = ((Interval)((List<?>)result).get(0));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getStart(), new Date(2018, 1, 1)));
+        Assert.assertTrue(interval.getLowClosed() && interval.getHighClosed());
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getEnd(), new Date(2018, 1, 1)));
+        interval = ((Interval)((List<?>)result).get(1));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getStart(), new Date(2018, 1, 2)));
+        Assert.assertTrue(interval.getLowClosed() && interval.getHighClosed());
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getEnd(), new Date(2018, 1, 2)));
+
+
+        result = context.resolveExpressionRef("TestDateIntervalExpandClosedPerWeekEmpty").getExpression().evaluate(context);
+        Assert.assertTrue(((List)result).isEmpty());
+
+        result = context.resolveExpressionRef("TestDateIntervalExpandClosedPerWeek").getExpression().evaluate(context);
+        interval = ((Interval)((List<?>)result).get(0));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getStart(), new Date(2018, 1, 1)));
+        Assert.assertTrue(interval.getLowClosed() && interval.getHighClosed());
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getEnd(), new Date(2018, 1, 7)));
     }
 
     /**
