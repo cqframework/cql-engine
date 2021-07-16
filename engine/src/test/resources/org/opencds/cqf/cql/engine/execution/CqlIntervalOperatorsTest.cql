@@ -119,7 +119,9 @@ define TimeEqualFalse: Interval[@T05:59:59.999, @T10:59:59.999] = Interval[@T05:
 //Except
 define TestExceptNull: null as Interval<Integer> except null as Interval<Integer>
 define IntegerIntervalExcept1to3: IntegerIntervalTest except IntegerIntervalTest4
+define IntegerIntervalExcept4to6: IntegerIntervalTest6 except IntegerIntervalTest7
 define IntegerIntervalExceptNull: Interval[1, 10] except Interval[3, 7]
+define IntegerIntervalExceptNullOutNull: Interval[1, 10] except null as Interval<Integer>
 define DecimalIntervalExcept1to3: DecimalIntervalTest except DecimalIntervalTest3
 define DecimalIntervalExceptNull: Interval[1.0, 10.0] except Interval[3.0, 7.0]
 define QuantityIntervalExcept1to4: QuantityIntervalTest except QuantityIntervalTest3
@@ -423,6 +425,8 @@ define IntegerIntervalTest2: Interval[11, 20]
 define IntegerIntervalTest3: Interval[44, 50]
 define IntegerIntervalTest4: Interval[4, 10]
 define IntegerIntervalTest5: Interval[4, 15]
+define IntegerIntervalTest6: Interval(-4, 6)
+define IntegerIntervalTest7: Interval(7, 12)
 define DecimalIntervalTest: Interval[1.0, 10.0]
 define DecimalIntervalTest2: Interval[11.0, 20.0]
 define DecimalIntervalTest3: Interval[4.0, 10.0]
