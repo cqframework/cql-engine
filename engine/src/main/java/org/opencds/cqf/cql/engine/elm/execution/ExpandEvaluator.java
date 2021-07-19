@@ -83,15 +83,23 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return expansion;
         }
 
-        Object end = addPer(start, per);
-        Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);
 
-        while (LessOrEqualEvaluator.lessOrEqual(predecessorOfEnd, interval.getEnd()))
-        {
-            expansion.add(new Interval(start, true, predecessorOfEnd, true));
-            start = end;
-            end = addPer(start, per);
-            predecessorOfEnd = PredecessorEvaluator.predecessor(end);
+
+        if (start instanceof Integer) {
+            Object end = addPer(start, per);
+            Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);
+
+            while (LessOrEqualEvaluator.lessOrEqual(predecessorOfEnd, interval.getEnd())) {
+                expansion.add(new Interval(start, true, predecessorOfEnd, true));
+                start = end;
+                end = addPer(start, per);
+                predecessorOfEnd = PredecessorEvaluator.predecessor(end);
+            }
+        } else if(start instanceof BigDecimal) {
+            while (LessOrEqualEvaluator.lessOrEqual(start, interval.getEnd())) {
+                expansion.add(new Interval(start, true, start, true));
+                start = addPer(start, per);
+            }
         }
 
         return expansion;
@@ -168,33 +176,19 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return intervals;
         }
 
+        boolean isTemporal =
+            intervals.get(0).getStart() instanceof BaseTemporal
+                || intervals.get(0).getEnd() instanceof BaseTemporal;
+
+        if(per == null) {
+            per = determinePer(intervals.get(0), isTemporal);
+        }
+
+
         // collapses overlapping intervals
         intervals = CollapseEvaluator.collapse(intervals, new Quantity().withValue(BigDecimal.ZERO).withUnit(per == null ? "1" : per.getUnit()));
 
-        boolean isTemporal =
-                intervals.get(0).getStart() instanceof BaseTemporal
-                        || intervals.get(0).getEnd() instanceof BaseTemporal;
-
         intervals.sort(new CqlList().valueSort);
-
-        if (per == null)
-        {
-            if (isTemporal)
-            {
-                per = new Quantity()
-                        .withValue(new BigDecimal("1.0"))
-                        .withUnit(
-                                BaseTemporal.getLowestPrecision(
-                                        (BaseTemporal) intervals.get(0).getStart(),
-                                        (BaseTemporal) intervals.get(0).getEnd()
-                                )
-                        );
-            }
-            else
-            {
-                per = new Quantity().withValue(new BigDecimal("1.0")).withDefaultUnit();
-            }
-        }
 
         String precision = per.getUnit().equals("1") ? null : per.getUnit();
 
@@ -219,6 +213,47 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
         }
 
         return set.isEmpty() ? new ArrayList<>() : new ArrayList<>(set);
+    }
+
+    /*
+      The number with the fewest decimal places determines the per for decimal.
+        [1, 45] -> 1        // scale 0
+        [1.0, 2.0] -> .1    //scale 1
+        [1.000001, 2] -> 1   //scale 0
+        [1.0, 2.01] -> .1    // scale 1
+        [1, 2.010101010] -> 1  //scale 0
+        [2.01010101, 1] -> 1   //scale 0
+        [1.00, 2.00] -> .01   //scale 2
+        [1.00, 2.0005] -> .01  //scale 2
+     */
+    private static Quantity determinePer(Interval interval, boolean isTemporal) {
+        Quantity per = null;
+
+        if (isTemporal) {
+            per = new Quantity()
+                .withValue(new BigDecimal("1.0"))
+                .withUnit(
+                    BaseTemporal.getLowestPrecision(
+                        (BaseTemporal) interval.getStart(),
+                        (BaseTemporal) interval.getEnd()
+                    )
+                );
+        } else {
+            per = new Quantity().withDefaultUnit();
+            int scale;
+            if ((interval.getStart() instanceof BigDecimal)) {
+                scale = ((BigDecimal) interval.getStart()).scale();
+                if (((BigDecimal) interval.getEnd()).scale() < scale) {
+                    scale = ((BigDecimal) interval.getEnd()).scale();
+                }
+                BigDecimal d = BigDecimal.valueOf(Math.pow(10.0, BigDecimal.valueOf(scale).doubleValue()));
+                per.withValue(BigDecimal.ONE.divide(d));
+            } else {
+                per = new Quantity().withValue(new BigDecimal("1.0"));
+            }
+
+        }
+        return per;
     }
 
     @Override

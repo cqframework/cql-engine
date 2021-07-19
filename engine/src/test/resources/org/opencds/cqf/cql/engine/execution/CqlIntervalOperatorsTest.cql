@@ -56,6 +56,12 @@ define TestDecimalIntervalExpand: expand {Interval[4.0,6]}
 define TestDateIntervalExpandClosedPerDay: expand { Interval[@2018-01-01, @2018-01-03] } per day
 define TestDateIntervalExpandClosedPerWeekEmpty: expand { Interval[@2018-01-01, @2018-01-03] } per week
 define TestDateIntervalExpandClosedPerWeek: expand { Interval[@2018-01-01, @2018-01-10] } per week
+define TestDecimal2IntervalExpand: expand {Interval[1.0, 2.0]}
+define TestDecimal3IntervalExpand: expand {Interval[1.000001, 2]}
+define TestDecimal4IntervalExpand: expand {Interval[1.0, 2.01]}
+define TestDecimal5IntervalExpand: expand {Interval[1, 2.0101201]}
+define TestDecimal6IntervalExpand: expand {Interval[1.00, 2.00]}
+define TestDecimal7IntervalExpand: expand {Interval[1.00, 2.0005]}
 
 //Collapse
 define TestCollapseNull: collapse null as List<Interval<Integer>>
