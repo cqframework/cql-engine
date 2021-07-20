@@ -103,7 +103,7 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
       For 5.0 the return in 0.1
       For 5.03 the return is 0.01
      */
-    private static BigDecimal determinePrecessionPer(BigDecimal value) {
+    public static BigDecimal determinePrecessionPer(BigDecimal value) {
         int scale = value.scale();
         BigDecimal d = BigDecimal.valueOf(Math.pow(10.0, BigDecimal.valueOf(scale).doubleValue()));
         return BigDecimal.ONE.divide(d);

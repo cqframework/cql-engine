@@ -71,7 +71,7 @@ define IntegerIntervalCollapse2: collapse { Interval[1,2], Interval[3,7], Interv
 define IntegerIntervalCollapse3: collapse { Interval[4,6], Interval[7,8] }
 define IntegerIntervalCollapse4: collapse { Interval[4,6], Interval[4,5], Interval[8,10] }
 define DecimalIntervalCollapse: collapse { Interval[1.0,5.0], Interval[3.0,7.0], Interval[12.0,19.0], Interval[7.0,10.0] }
-define DecimalIntervalCollapse2: collapse { Interval[4.0,6.0], Interval[6.00000001,8.0] }
+define DecimalIntervalCollapse2: collapse { Interval[4.0,6.0], Interval[6.1,8.0] }
 define QuantityIntervalCollapse: collapse { Interval[1.0 'g',5.0 'g'], Interval[3.0 'g',7.0 'g'], Interval[12.0 'g',19.0 'g'], Interval[7.0 'g',10.0 'g'] }
 define DateTimeCollapse: collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 10), DateTime(2012, 1, 25)], Interval[DateTime(2012, 5, 10), DateTime(2012, 5, 25)], Interval[DateTime(2012, 5, 20), DateTime(2012, 5, 30)] }
 define DateTimeCollapse2: collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 16), DateTime(2012, 5, 25)] }

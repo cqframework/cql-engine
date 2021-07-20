@@ -43,7 +43,7 @@ public class SuccessorEvaluator extends org.cqframework.cql.elm.execution.Succes
             if (((BigDecimal) value).compareTo(Value.MAX_DECIMAL) >= 0) {
                 throw new TypeOverflow("The result of the successor operation exceeds the maximum value allowed for the Decimal type");
             }
-            return ((BigDecimal)value).add(new BigDecimal("0.00000001"));
+            return ((BigDecimal)value).add(PredecessorEvaluator.determinePrecessionPer((BigDecimal)value));
         }
         // NOTE: Quantity successor is not standard - including it for simplicity
         else if (value instanceof Quantity) {
