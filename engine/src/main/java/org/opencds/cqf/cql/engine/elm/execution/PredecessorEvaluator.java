@@ -43,7 +43,7 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
             if (((BigDecimal) value).compareTo(Value.MIN_DECIMAL) <= 0) {
                 throw new TypeUnderflow("The result of the predecessor operation precedes the minimum value allowed for the Decimal type");
             }
-            return ((BigDecimal)value).subtract(new BigDecimal("0.00000001"));
+            return ((BigDecimal)value).subtract(determinePrecessionPer(((BigDecimal) value)));
         }
         // NOTE: Quantity successor is not standard - including it for simplicity
         else if (value instanceof Quantity) {
@@ -96,6 +96,17 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
         }
 
         throw new InvalidOperatorArgument(String.format("The Predecessor operation is not implemented for type %s", value.getClass().getName()));
+    }
+
+    /*
+      The function return predecessor steps based on decimal precision.
+      For 5.0 the return in 0.1
+      For 5.03 the return is 0.01
+     */
+    private static BigDecimal determinePrecessionPer(BigDecimal value) {
+        int scale = value.scale();
+        BigDecimal d = BigDecimal.valueOf(Math.pow(10.0, BigDecimal.valueOf(scale).doubleValue()));
+        return BigDecimal.ONE.divide(d);
     }
 
     @Override

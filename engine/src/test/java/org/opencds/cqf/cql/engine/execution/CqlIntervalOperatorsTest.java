@@ -462,13 +462,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("DecimalIntervalExcept1to3").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.99999999"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.9"), true)));
 
         result = context.resolveExpressionRef("DecimalIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("QuantityIntervalExcept1to4").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.99999999")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.9")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("Except12").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 2, true)));
