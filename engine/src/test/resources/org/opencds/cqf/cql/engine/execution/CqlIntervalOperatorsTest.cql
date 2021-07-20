@@ -62,6 +62,7 @@ define TestDecimal4IntervalExpand: expand {Interval[1.0, 2.01]}
 define TestDecimal5IntervalExpand: expand {Interval[1, 2.0101201]}
 define TestDecimal6IntervalExpand: expand {Interval[1.00, 2.00]}
 define TestDecimal7IntervalExpand: expand {Interval[1.00, 2.0005]}
+define TestDecimal8IntervalExpand: expand {Interval[1.00, 2.0005]} per 0.3
 
 //Collapse
 define TestCollapseNull: collapse null as List<Interval<Integer>>

@@ -83,8 +83,6 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return expansion;
         }
 
-
-
         if (start instanceof Integer) {
             Object end = addPer(start, per);
             Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);

@@ -234,6 +234,9 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.00"), true,  new BigDecimal("1.00"), true)));
         Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.01"), true,  new BigDecimal("1.01"), true)));
 
+        result = context.resolveExpressionRef("TestDecimal8IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.00"), true,  new BigDecimal("1.00"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.30"), true,  new BigDecimal("1.30"), true)));
     }
 
     /**
