@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -94,9 +95,22 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
                 predecessorOfEnd = PredecessorEvaluator.predecessor(end);
             }
         } else if(start instanceof BigDecimal) {
-            while (LessOrEqualEvaluator.lessOrEqual(start, interval.getEnd())) {
-                expansion.add(new Interval(start, true, start, true));
-                start = addPer(start, per);
+
+            int precision = determineMinPrecision((BigDecimal) start, (BigDecimal) interval.getEnd());
+            BigDecimal startDecimal = truncateToPrecision((BigDecimal) start, precision) ;
+            BigDecimal endDecimal = truncateToPrecision((BigDecimal) interval.getEnd(), precision) ;
+            BigDecimal end = (BigDecimal) addPer(startDecimal, per);
+            BigDecimal predecessorOfEnd = (BigDecimal) PredecessorEvaluator.predecessor(end);
+
+            if(end.compareTo(endDecimal) == 0) {
+                expansion.add(new Interval(startDecimal, true, end, true));
+                return expansion;
+            }
+            while (LessOrEqualEvaluator.lessOrEqual(predecessorOfEnd, endDecimal)) {
+                expansion.add(new Interval(startDecimal, true, predecessorOfEnd, true));
+                startDecimal = (BigDecimal) end;
+                end = (BigDecimal) addPer(startDecimal, per);
+                predecessorOfEnd = (BigDecimal) PredecessorEvaluator.predecessor(end);
             }
         }
 
@@ -238,12 +252,9 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
                 );
         } else {
             per = new Quantity().withDefaultUnit();
-            int scale;
+
             if ((interval.getStart() instanceof BigDecimal)) {
-                scale = ((BigDecimal) interval.getStart()).scale();
-                if (((BigDecimal) interval.getEnd()).scale() < scale) {
-                    scale = ((BigDecimal) interval.getEnd()).scale();
-                }
+                int scale = determineMinPrecision(((BigDecimal) interval.getStart()), ((BigDecimal) interval.getEnd()));
                 BigDecimal d = BigDecimal.valueOf(Math.pow(10.0, BigDecimal.valueOf(scale).doubleValue()));
                 per.withValue(BigDecimal.ONE.divide(d));
             } else {
@@ -252,6 +263,14 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
 
         }
         return per;
+    }
+
+    private static int determineMinPrecision(BigDecimal start, BigDecimal end) {
+        return Math.min(start.scale(), end.scale());
+    }
+
+    private static BigDecimal truncateToPrecision(BigDecimal value, int scale) {
+        return value.setScale(scale, RoundingMode.DOWN);
     }
 
     @Override

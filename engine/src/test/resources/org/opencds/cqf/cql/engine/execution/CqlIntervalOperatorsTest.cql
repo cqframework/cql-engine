@@ -51,11 +51,12 @@ define TimeBeforeTrue: Interval[@T15:59:59.999, @T20:59:59.999] before @T22:59:5
 define TimeBeforeFalse: Interval[@T15:59:59.999, @T20:59:59.999] before @T10:59:59.999
 
 //Expand
-define TestIntegerIntervalExpand: expand {Interval[4,6]}
-define TestDecimalIntervalExpand: expand {Interval[4.0,6]}
+
 define TestDateIntervalExpandClosedPerDay: expand { Interval[@2018-01-01, @2018-01-03] } per day
 define TestDateIntervalExpandClosedPerWeekEmpty: expand { Interval[@2018-01-01, @2018-01-03] } per week
 define TestDateIntervalExpandClosedPerWeek: expand { Interval[@2018-01-01, @2018-01-10] } per week
+define TestIntegerIntervalExpand: expand {Interval[4,6]}
+define TestDecimalIntervalExpand: expand {Interval[4.0,6]}
 define TestDecimal2IntervalExpand: expand {Interval[1.0, 2.0]}
 define TestDecimal3IntervalExpand: expand {Interval[1.000001, 2]}
 define TestDecimal4IntervalExpand: expand {Interval[1.0, 2.01]}
