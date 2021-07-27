@@ -571,7 +571,6 @@ public class Context {
     }
 
     public void setParameter(String libraryName, String name, Object value) {
-        clearExpressions();
         boolean enteredLibrary = enterLibrary(libraryName);
         try {
             String fullName = libraryName != null ? String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name) : name;
@@ -731,8 +730,17 @@ public class Context {
     }
 
     public void setContextValue(String context, Object contextValue) {
-        clearExpressions();
+        if (hasContextValueChanged(context, contextValue)) {
+            clearExpressions();
+        }
         contextValues.put(context, contextValue);
+    }
+
+    private boolean hasContextValueChanged(String context, Object contextValue) {
+        if (contextValues.containsKey(context)) {
+            return !contextValues.get(context).equals(contextValue);
+        }
+        return true;
     }
 
     public Object getCurrentContextValue() {

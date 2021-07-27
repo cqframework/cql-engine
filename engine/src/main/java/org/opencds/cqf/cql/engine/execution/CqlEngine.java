@@ -195,10 +195,6 @@ public class CqlEngine {
     }
 
     private void setParametersForContext(Library library, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
-        if(context != null) {
-            context.clearExpressions();
-        }
-
         if (contextParameter != null) {
             context.setContextValue(contextParameter.getLeft(), contextParameter.getRight());
         }
