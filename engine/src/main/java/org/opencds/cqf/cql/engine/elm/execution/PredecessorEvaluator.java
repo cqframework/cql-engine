@@ -43,7 +43,7 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
             if (((BigDecimal) value).compareTo(Value.MIN_DECIMAL) <= 0) {
                 throw new TypeUnderflow("The result of the predecessor operation precedes the minimum value allowed for the Decimal type");
             }
-            return ((BigDecimal)value).subtract(determinePrecessionPer(((BigDecimal) value)));
+            return ((BigDecimal)value).subtract(determinePrecisionPer(((BigDecimal) value)));
         }
         // NOTE: Quantity successor is not standard - including it for simplicity
         else if (value instanceof Quantity) {
@@ -103,7 +103,7 @@ public class PredecessorEvaluator extends org.cqframework.cql.elm.execution.Pred
       For 5.0 the return in 0.1
       For 5.03 the return is 0.01
      */
-    public static BigDecimal determinePrecessionPer(BigDecimal value) {
+    public static BigDecimal determinePrecisionPer(BigDecimal value) {
         int scale = value.scale();
         BigDecimal d = BigDecimal.valueOf(Math.pow(10.0, BigDecimal.valueOf(scale).doubleValue()));
         return BigDecimal.ONE.divide(d);
