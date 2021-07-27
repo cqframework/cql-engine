@@ -187,14 +187,14 @@ public class CqlEngine {
 
         result.setDebugResult(context.getDebugResult());
 
-        return result;
-    }
-
-    private void setParametersForContext(Library library, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
         if(context != null) {
             context.clearExpressions();
         }
 
+        return result;
+    }
+
+    private void setParametersForContext(Library library, Context context, Pair<String, Object> contextParameter, Map<String, Object> parameters) {
         if (contextParameter != null) {
             context.setContextValue(contextParameter.getLeft(), contextParameter.getRight());
         }

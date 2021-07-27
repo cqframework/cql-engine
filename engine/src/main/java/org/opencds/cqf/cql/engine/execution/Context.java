@@ -189,7 +189,6 @@ public class Context {
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
-        this.clearExpressions();
 
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
