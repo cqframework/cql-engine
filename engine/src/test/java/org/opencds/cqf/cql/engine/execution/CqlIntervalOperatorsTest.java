@@ -179,7 +179,8 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void TestCollapse() {
         Context context = new Context(library);
-        Object result = context.resolveExpressionRef("TestCollapseNull").getExpression().evaluate(context);
+        Object result;
+        result = context.resolveExpressionRef("TestCollapseNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalCollapse").getExpression().evaluate(context);
@@ -227,6 +228,12 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(((List)result).size(), is(2));
 
         result = context.resolveExpressionRef("DateTimeCollapse4").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new Date( 2018, 1, 1)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new Date(2018, 8, 28)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getStart(), new Date(2018, 8, 30)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(1)).getEnd(), new Date(2018, 10, 15)));
+
+        result = context.resolveExpressionRef("DateTimeCollapse5").getExpression().evaluate(context);
         System.out.println(result);
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getStart(), new Date( 2018, 1, 1)));
         Assert.assertTrue(EquivalentEvaluator.equivalent(((Interval)((List<?>)result).get(0)).getEnd(), new Date(2018, 8, 28)));
@@ -676,8 +683,9 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     @Test
     public void TestMeets() {
         Context context = new Context(library);
+        Object result;
 
-        Object result = context.resolveExpressionRef("TestMeetsNull").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("TestMeetsNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("IntegerIntervalMeetsTrue").getExpression().evaluate(context);
