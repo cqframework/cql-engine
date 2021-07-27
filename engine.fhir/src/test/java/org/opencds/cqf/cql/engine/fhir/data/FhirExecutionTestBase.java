@@ -104,7 +104,7 @@ public abstract class FhirExecutionTestBase {
                 assertThat(translator.getErrors().size(), is(0));
 
                 for (Map.Entry<String, TranslatedLibrary> entry : libraryManager.getTranslatedLibraries().entrySet()) {
-                    String xmlContent = translator.convertToXml(entry.getValue().getLibrary());
+                    String xmlContent = CqlTranslator.convertToXml(entry.getValue().getLibrary());
                     StringReader sr = new StringReader(xmlContent);
                     libraries.put(entry.getKey(), CqlLibraryReader.read(sr));
                     if (entry.getKey().equals(fileName)) {
