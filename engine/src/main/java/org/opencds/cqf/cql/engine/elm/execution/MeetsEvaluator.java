@@ -46,6 +46,7 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
                 precision = tempPrecision;
             }
 
+            //the following blocks adds 1 with the left and check if it is same as right when both params are of type DateTime/Time
             if (left instanceof DateTime && right instanceof DateTime) {
                 DateTime dt = new DateTime(((DateTime) left).getDateTime().plus(1, Precision.fromString(precision).toChronoUnit()), ((BaseTemporal) left).getPrecision());
                 return SameAsEvaluator.sameAs(dt, right, precision);
@@ -60,7 +61,7 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
         if (isMax != null && isMax) {
             return false;
         }
-
+        //the following gets the successor of left and check with Equal for params Date
         return EqualEvaluator.equal(SuccessorEvaluator.successor(left), right);
     }
 

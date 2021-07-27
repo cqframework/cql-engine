@@ -104,6 +104,10 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
         {
             Interval applyPer = getIntervalWithPerApplied(intervals.get(i), per);
 
+            if(isTemporal) {
+                applyPer = intervals.get(i);
+            }
+
             Boolean doMerge = AnyTrueEvaluator.anyTrue(
                     Arrays.asList(
                             OverlapsEvaluator.overlaps(applyPer, intervals.get(i+1), precision),
