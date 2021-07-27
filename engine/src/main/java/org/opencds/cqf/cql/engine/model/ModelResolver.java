@@ -15,17 +15,19 @@ public interface ModelResolver {
     /**
      * @deprecated Use getPackageNames() instead
      */
+    @Deprecated
     String getPackageName();
 
     /**
      * @deprecated Use setPackageNames#String instead
      */
+    @Deprecated
     void setPackageName(String packageName);
 
     /**
      * Return the package names of Java objects supported by this model
      *
-     * @return list of Java package names for model objects that 
+     * @return list of Java package names for model objects that
      * support this model.
      */
     default List<String> getPackageNames() {
@@ -40,7 +42,7 @@ public interface ModelResolver {
      */
     default void setPackageNames(List<String> packageNames) {
         // Intentionally empty. This provides backwards
-        // compatability for models that implement a single
+        // compatibility for models that implement a single
         // package name and still use the get/setPackageName
         // methods.
     }
@@ -53,7 +55,7 @@ public interface ModelResolver {
      * model definition and passed to the ELM file during CQL to ELM
      * translation.
      *
-     * @return result of the provided expression. Null is expected whenever a path doesn't 
+     * @return result of the provided expression. Null is expected whenever a path doesn't
      * exist on the target.
      */
     Object resolvePath(Object target, String path);
@@ -72,7 +74,7 @@ public interface ModelResolver {
      * Resolve the Java class that corresponds to the given model type
      *
      * @param typeName Model type name. In the ELM, model objects
-     * are namespaced (e.g. FHIR.Patient), but the namespace is 
+     * are namespaced (e.g. FHIR.Patient), but the namespace is
      * removed prior to calling this method, so the input would just
      * be Patient.
      * @return Class object that represents the specified model type
@@ -89,7 +91,7 @@ public interface ModelResolver {
     Class<?> resolveType(Object value);
 
     /**
-     * Check whether or not a specified value instance is of the 
+     * Check whether or not a specified value instance is of the
      * specified type.
      *
      * @param value
@@ -99,7 +101,7 @@ public interface ModelResolver {
     Boolean is(Object value, Class<?> type);
 
     /**
-     * Cast the specified value to the specified type. When type 
+     * Cast the specified value to the specified type. When type
      * conversion is not possible, null should be returned unless
      * the isStrict flag is set to true wherein an Exception will
      * be thrown.

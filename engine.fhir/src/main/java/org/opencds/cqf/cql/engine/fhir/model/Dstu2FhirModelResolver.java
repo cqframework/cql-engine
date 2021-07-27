@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import org.hl7.fhir.dstu2.model.Age;
@@ -41,9 +42,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
 
 	private Dstu2FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
-
-        this.setPackageName("org.hl7.fhir.dstu2.model");
-
+        this.setPackageNames(Arrays.asList("ca.uhn.fhir.model.dstu2", "org.hl7.fhir.dstu2.model", "ca.uhn.fhir.model.primitive"));
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU2");
         }

@@ -48,7 +48,7 @@ import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
  * See <a href="https://github.com/DBCG/cql-evaluator/blob/master/evaluator.engine/src/main/java/org/opencds/cqf/cql/evaluator/engine/model/CachingModelResolverDecorator.java"/>
  * for a decorator that adds caching logic for ModelResolvers.
  */
-@SuppressWarnings({"unchecked", "rawtypes" })
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, SimpleQuantityType, IdType, ResourceType, EnumerationType, EnumFactoryType>
         implements ModelResolver {
     public FhirModelResolver(FhirContext fhirContext) {
@@ -57,26 +57,36 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     }
 
     protected abstract void initialize();
-    protected abstract Boolean equalsDeep(BaseType left, BaseType right);
-    protected abstract SimpleQuantityType castToSimpleQuantity(BaseType base);
-    protected abstract Calendar getCalendar(BaseDateTimeType dateTime);
-    protected abstract Integer getCalendarConstant(BaseDateTimeType dateTime);
-    protected abstract void setCalendarConstant(BaseDateTimeType target, BaseTemporal value);
-    protected abstract String idToString(IdType id);
-    protected abstract String timeToString(TimeType time);
-    protected abstract String getResourceType(ResourceType resource);
-    protected abstract EnumerationType enumConstructor(EnumFactoryType factory);
-    protected abstract Boolean enumChecker(Object object);
-    protected abstract Class<?> enumFactoryTypeGetter(EnumerationType enumeration);
 
-    protected String packageName;
+    protected abstract Boolean equalsDeep(BaseType left, BaseType right);
+
+    protected abstract SimpleQuantityType castToSimpleQuantity(BaseType base);
+
+    protected abstract Calendar getCalendar(BaseDateTimeType dateTime);
+
+    protected abstract Integer getCalendarConstant(BaseDateTimeType dateTime);
+
+    protected abstract void setCalendarConstant(BaseDateTimeType target, BaseTemporal value);
+
+    protected abstract String idToString(IdType id);
+
+    protected abstract String timeToString(TimeType time);
+
+    protected abstract String getResourceType(ResourceType resource);
+
+    protected abstract EnumerationType enumConstructor(EnumFactoryType factory);
+
+    protected abstract Boolean enumChecker(Object object);
+
+    protected abstract Class<?> enumFactoryTypeGetter(EnumerationType enumeration);
 
     // Data members
     protected FhirContext fhirContext;
 
+    protected List<String> packageNames;
 
     public Object getContextPath(String contextType, String targetType) {
-        if (targetType == null || contextType == null ) {
+        if (targetType == null || contextType == null) {
             return null;
         }
 
@@ -87,7 +97,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
             RuntimeResourceDefinition resourceDefinition = this.fhirContext.getResourceDefinition(targetType);
             Object theValue = this.createInstance(contextType);
-            Class<? extends IBase> type = (Class<? extends IBase>)theValue.getClass();
+            Class<? extends IBase> type = (Class<? extends IBase>) theValue.getClass();
 
             List<BaseRuntimeChildDefinition> children = resourceDefinition.getChildren();
             for (BaseRuntimeChildDefinition child : children) {
@@ -102,12 +112,13 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         return null;
     }
 
-    protected String innerGetContextPath(Set<String> visitedElements, BaseRuntimeChildDefinition child, Class<? extends IBase> type) {
+    protected String innerGetContextPath(Set<String> visitedElements, BaseRuntimeChildDefinition child,
+            Class<? extends IBase> type) {
 
         visitedElements.add(child.getElementName());
 
         if (child instanceof RuntimeChildResourceDefinition) {
-            RuntimeChildResourceDefinition resourceChild = (RuntimeChildResourceDefinition)child;
+            RuntimeChildResourceDefinition resourceChild = (RuntimeChildResourceDefinition) child;
 
             for (Class<?> resourceClass : resourceChild.getResourceTypes()) {
                 if (resourceClass.equals(type)) {
@@ -119,10 +130,9 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         if (child instanceof RuntimeChildResourceBlockDefinition) {
-            RuntimeChildResourceBlockDefinition resourceChild = (RuntimeChildResourceBlockDefinition)child;
+            RuntimeChildResourceBlockDefinition resourceChild = (RuntimeChildResourceBlockDefinition) child;
             String currentName = resourceChild.getElementName();
             BaseRuntimeElementCompositeDefinition<?> element = resourceChild.getChildByName(currentName);
-
 
             for (BaseRuntimeChildDefinition nextChild : element.getChildren()) {
                 if (visitedElements.contains(nextChild.getElementName())) {
@@ -170,16 +180,30 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         return createInstance(resolveType(typeName));
     }
 
+    @Override
+    public List<String> getPackageNames() {
+        return this.packageNames;
+    }
+
+    @Override
+    public void setPackageNames(List<String> packageNames) {
+        this.packageNames = packageNames;
+    }
+
     @SuppressWarnings("deprecation")
     @Override
     public String getPackageName() {
-        return packageName;
+        if (packageNames != null && !packageNames.isEmpty()) {
+            return packageNames.get(0);
+        }
+
+        return null;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public void setPackageName(String packageName) {
-        this.packageName = packageName;
+        throw new UnsupportedOperationException("Use setPackageNames to set the packages names for this resolver");
     }
 
     @Override
@@ -201,42 +225,48 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     @Override
     public Class<?> resolveType(String typeName) {
-            // dataTypes
-            BaseRuntimeElementDefinition<?> definition = this.fhirContext.getElementDefinition(typeName);
-            if (definition != null) {
-                return  definition.getImplementingClass();
-            }
+        // dataTypes
+        BaseRuntimeElementDefinition<?> definition = this.fhirContext.getElementDefinition(typeName);
+        if (definition != null) {
+            return definition.getImplementingClass();
+        }
 
+        try {
+            // Resources
+            return this.fhirContext.getResourceDefinition(typeName).getImplementingClass();
+        } catch (Exception e) {
+        }
+
+        // Special case for enumerations. They are often in the "Enumerations" class.
+        for (String packageName : this.packageNames) {
             try {
-                // Resources
-                return this.fhirContext.getResourceDefinition(typeName).getImplementingClass();
-            }
-            catch (Exception e) {}
-            try {
-                // Special case for enumerations. They are often in the "Enumerations" class.
                 return Class.forName(String.format("%s.Enumerations$%s", packageName, typeName));
+            } catch (ClassNotFoundException e) {
             }
-            catch (ClassNotFoundException e) {}
+        }
+
+        // Other Types in package.
+        for (String packageName : this.packageNames) {
             try {
-                // Other Types in package.
                 return Class.forName(String.format("%s.%s", packageName, typeName));
+            } catch (ClassNotFoundException e) {
             }
-            catch (ClassNotFoundException e) {}
+        }
 
-            // Scan all resources.
-            // Really, HAPI ought to register inner classes, right?
-            Class<?> clazz = deepSearch(typeName);
-            if (clazz != null) {
-                return clazz;
-            }
+        // Scan all resources.
+        // Really, HAPI ought to register inner classes, right?
+        Class<?> clazz = deepSearch(typeName);
+        if (clazz != null) {
+            return clazz;
+        }
 
-            try {
-                // Just give me SOMETHING.
-                return Class.forName(typeName);
-            }
-            catch (ClassNotFoundException e) {
-                throw new UnknownType(String.format("Could not resolve type %s. Primary package for this resolver is %s", typeName, packageName));
-            }
+        try {
+            // Just give me SOMETHING.
+            return Class.forName(typeName);
+        } catch (ClassNotFoundException e) {
+            throw new UnknownType(String.format("Could not resolve type %s. Primary package(s) for this resolver are %s",
+                    typeName, String.join(",", this.packageNames)));
+        }
     }
 
     @Override
@@ -261,17 +291,16 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         if (target instanceof IBaseEnumeration && path.equals("value")) {
-            ((IBaseEnumeration<?>)target).setValueAsString((String)value);
+            ((IBaseEnumeration<?>) target).setValueAsString((String) value);
             return;
         }
 
         IBase base = (IBase) target;
         BaseRuntimeElementCompositeDefinition<?> definition;
         if (base instanceof IPrimitiveType) {
-            setPrimitiveValue(value, (IPrimitiveType)base);
+            setPrimitiveValue(value, (IPrimitiveType) base);
             return;
-        }
-        else {
+        } else {
             definition = resolveRuntimeDefinition(base);
         }
 
@@ -289,8 +318,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                 for (Object val : (Iterable<?>) value) {
                     child.getMutator().addValue(base, setBaseValue(val, base));
                 }
-            }
-            else {
+            } else {
                 child.getMutator().setValue(base, setBaseValue(value, base));
             }
         } catch (IllegalArgumentException le) {
@@ -301,8 +329,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                     throw new InvalidCast("Unable to cast Quantity to SimpleQuantity");
                 }
                 child.getMutator().setValue(base, setBaseValue(value, base));
-            }
-            else {
+            } else {
                 throw new DataProviderException(String.format("Configuration error encountered: %s", le.getMessage()));
             }
         }
@@ -323,7 +350,6 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             return ((IBaseEnumeration<?>) target).getValueAsString();
         }
 
-
         // TODO: Consider using getResourceType everywhere?
         if (target instanceof IAnyResource && this.getResourceType((ResourceType) target).equals(path)) {
             return target;
@@ -333,8 +359,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         BaseRuntimeElementCompositeDefinition<?> definition;
         if (base instanceof IPrimitiveType) {
             return toJavaPrimitive(path.equals("value") ? ((IPrimitiveType<?>) target).getValue() : target, base);
-        }
-        else {
+        } else {
             definition = resolveRuntimeDefinition(base);
         }
 
@@ -354,8 +379,8 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         if (child instanceof RuntimeChildChoiceDefinition && !child.getElementName().equalsIgnoreCase(path)) {
-            if (!values.get(0).getClass().getSimpleName().equalsIgnoreCase(child.getChildByName(path).getImplementingClass().getSimpleName()))
-            {
+            if (!values.get(0).getClass().getSimpleName()
+                    .equalsIgnoreCase(child.getChildByName(path).getImplementingClass().getSimpleName())) {
                 return null;
             }
         }
@@ -373,14 +398,17 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         }
 
         else if (base instanceof ICompositeType) {
-            return (BaseRuntimeElementCompositeDefinition<ICompositeType>) getFhirContext().getElementDefinition(base.getClass());
+            return (BaseRuntimeElementCompositeDefinition<ICompositeType>) getFhirContext()
+                    .getElementDefinition(base.getClass());
         }
 
-        throw new UnknownType(String.format("Unable to resolve the runtime definition for %s", base.getClass().getName()));
+        throw new UnknownType(
+                String.format("Unable to resolve the runtime definition for %s", base.getClass().getName()));
     }
 
-    protected BaseRuntimeChildDefinition resolveChoiceProperty(BaseRuntimeElementCompositeDefinition<?> definition, String path) {
-        for (Object child :  definition.getChildren()) {
+    protected BaseRuntimeChildDefinition resolveChoiceProperty(BaseRuntimeElementCompositeDefinition<?> definition,
+            String path) {
+        for (Object child : definition.getChildren()) {
             if (child instanceof RuntimeChildChoiceDefinition) {
                 RuntimeChildChoiceDefinition choiceDefinition = (RuntimeChildChoiceDefinition) child;
 
@@ -398,9 +426,8 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         String codelessName = typeName.replace("Codes", "").toLowerCase();
         String lowerName = typeName.toLowerCase();
 
-
         Collection<BaseRuntimeElementDefinition<?>> elements = this.fhirContext.getElementDefinitions();
-        for  (BaseRuntimeElementDefinition<?> element : elements) {
+        for (BaseRuntimeElementDefinition<?> element : elements) {
             Class<?>[] innerClasses = element.getImplementingClass().getDeclaredClasses();
             for (Class<?> clazz : innerClasses) {
                 String clazzLowerName = clazz.getSimpleName().toLowerCase();
@@ -418,14 +445,15 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         try {
             if (clazz.isEnum()) {
                 Class<?> factoryClass = this.resolveType(clazz.getName() + "EnumFactory");
-                EnumFactoryType factory = (EnumFactoryType)this.createInstance(factoryClass);
+                EnumFactoryType factory = (EnumFactoryType) this.createInstance(factoryClass);
                 return this.enumConstructor(factory);
             }
 
             return clazz.getDeclaredConstructor().newInstance();
-        }
-        catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
-            throw new UnknownType(String.format("Could not create an instance of class %s.\nRoot cause: %s", clazz.getName(), e.getMessage()));
+        } catch (NoSuchMethodException | InvocationTargetException | InstantiationException
+                | IllegalAccessException e) {
+            throw new UnknownType(String.format("Could not create an instance of class %s.\nRoot cause: %s",
+                    clazz.getName(), e.getMessage()));
         }
     }
 
@@ -445,62 +473,68 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
     protected DateTime toDateTime(BaseDateTimeType value, Integer calendarConstant) {
         Calendar calendar = this.getCalendar(value);
 
-        //TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
-        //ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
-        ZoneOffset zoneOffset = ((GregorianCalendar)calendar).toZonedDateTime().getOffset();
+        // TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() :
+        // calendar.getTimeZone();
+        // ZoneOffset zoneOffset =
+        // tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
+        ZoneOffset zoneOffset = ((GregorianCalendar) calendar).toZonedDateTime().getOffset();
         switch (calendarConstant) {
-            case Calendar.YEAR: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    calendar.get(Calendar.YEAR)
-            );
-            case Calendar.MONTH: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1
-            );
-            case Calendar.DAY_OF_MONTH: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH)
-            );
-            case Calendar.HOUR_OF_DAY: return new DateTime(
-                TemporalHelper.zoneToOffset(zoneOffset),
-                calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY)
-            );
-            case Calendar.MINUTE: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE)
-            );
-            case Calendar.SECOND: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND)
-            );
-            case Calendar.MILLISECOND: return new DateTime(
-                    TemporalHelper.zoneToOffset(zoneOffset),
-                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
-                    calendar.get(Calendar.MINUTE), calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND)
-            );
-            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
+            case Calendar.YEAR:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR));
+            case Calendar.MONTH:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1);
+            case Calendar.DAY_OF_MONTH:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+            case Calendar.HOUR_OF_DAY:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY));
+            case Calendar.MINUTE:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+            case Calendar.SECOND:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+                        calendar.get(Calendar.SECOND));
+            case Calendar.MILLISECOND:
+                return new DateTime(TemporalHelper.zoneToOffset(zoneOffset), calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH),
+                        calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+                        calendar.get(Calendar.SECOND), calendar.get(Calendar.MILLISECOND));
+            default:
+                throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
         }
     }
 
     protected org.opencds.cqf.cql.engine.runtime.Date toDate(BaseDateTimeType value, Integer calendarConstant) {
         Calendar calendar = this.getCalendar(value);
-        //TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() : calendar.getTimeZone();
-        //ZoneOffset zoneOffset = tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
+        // TimeZone tz = calendar.getTimeZone() == null ? TimeZone.getDefault() :
+        // calendar.getTimeZone();
+        // ZoneOffset zoneOffset =
+        // tz.toZoneId().getRules().getStandardOffset(calendar.toInstant());
         switch (calendarConstant) {
-            case Calendar.YEAR: return new org.opencds.cqf.cql.engine.runtime.Date(calendar.get(Calendar.YEAR));
-            case Calendar.MONTH: return new org.opencds.cqf.cql.engine.runtime.Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1);
-            case Calendar.DAY_OF_MONTH: return new org.opencds.cqf.cql.engine.runtime.Date(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
-            default: throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
+            case Calendar.YEAR:
+                return new org.opencds.cqf.cql.engine.runtime.Date(calendar.get(Calendar.YEAR));
+            case Calendar.MONTH:
+                return new org.opencds.cqf.cql.engine.runtime.Date(calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1);
+            case Calendar.DAY_OF_MONTH:
+                return new org.opencds.cqf.cql.engine.runtime.Date(calendar.get(Calendar.YEAR),
+                        calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.DAY_OF_MONTH));
+            default:
+                throw new InvalidPrecision(String.format("Invalid temporal precision %s", calendarConstant));
         }
     }
 
     public IBase setBaseValue(Object value, IBase target) {
         if (target instanceof IPrimitiveType) {
-            setPrimitiveValue(value, (IPrimitiveType)target);
+            setPrimitiveValue(value, (IPrimitiveType) target);
         }
-        return (IBase)value;
+        return (IBase) value;
     }
 
     public void setPrimitiveValue(Object value, IPrimitiveType target) {
@@ -508,68 +542,70 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         switch (simpleName) {
             case "DateTimeType":
             case "InstantType":
-                target.setValue(((DateTime)value).toJavaDate());
-                setCalendarConstant((BaseDateTimeType)target, (BaseTemporal)value);
-            break;
+                target.setValue(((DateTime) value).toJavaDate());
+                setCalendarConstant((BaseDateTimeType) target, (BaseTemporal) value);
+                break;
             case "DateType":
-                target.setValue(((org.opencds.cqf.cql.engine.runtime.Date)value).toJavaDate());
-                setCalendarConstant((BaseDateTimeType)target, (BaseTemporal)value);
-            break;
+                target.setValue(((org.opencds.cqf.cql.engine.runtime.Date) value).toJavaDate());
+                setCalendarConstant((BaseDateTimeType) target, (BaseTemporal) value);
+                break;
             case "TimeType":
                 target.setValue(value.toString());
-            break;
+                break;
             case "Base64BinaryType":
-                target.setValueAsString((String)value);
-            break;
-            default: target.setValue(value);
+                target.setValueAsString((String) value);
+                break;
+            default:
+                target.setValue(value);
         }
     }
 
     public TemporalPrecisionEnum toTemporalPrecisionEnum(Precision precision) {
         switch (precision) {
-            case YEAR: return TemporalPrecisionEnum.YEAR;
-            case MONTH: return TemporalPrecisionEnum.MONTH;
-            case DAY: return TemporalPrecisionEnum.DAY;
+            case YEAR:
+                return TemporalPrecisionEnum.YEAR;
+            case MONTH:
+                return TemporalPrecisionEnum.MONTH;
+            case DAY:
+                return TemporalPrecisionEnum.DAY;
             case HOUR:
-            case MINUTE: return TemporalPrecisionEnum.MINUTE;
-            case SECOND: return TemporalPrecisionEnum.SECOND;
-            case MILLISECOND: return TemporalPrecisionEnum.MILLI;
-            default: throw new IllegalArgumentException(String.format("Unknown precision %s", precision.toString()));
+            case MINUTE:
+                return TemporalPrecisionEnum.MINUTE;
+            case SECOND:
+                return TemporalPrecisionEnum.SECOND;
+            case MILLISECOND:
+                return TemporalPrecisionEnum.MILLI;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown precision %s", precision.toString()));
         }
     }
 
-   /*
-    // TODO: Find HAPI registry of Primitive Type conversions
-    public Object fromJavaPrimitive(Object value, Object target) {
-        String simpleName = target.getClass().getSimpleName();
-        switch(simpleName) {
-            case "DateTimeType":
-            case "InstantType":
-                return ((DateTime)value).toJavaDate();
-            case "DateType":
-                return ((org.opencds.cqf.cql.engine.runtime.Date)value).toJavaDate();
-            case "TimeType":
-                return ((Time) value).toString();
-        }
-
-        if (value instanceof Time) {
-            return ((Time) value).toString();
-        }
-        else {
-            return value;
-        }
-    }
-    */
+    /*
+     * // TODO: Find HAPI registry of Primitive Type conversions public Object
+     * fromJavaPrimitive(Object value, Object target) { String simpleName =
+     * target.getClass().getSimpleName(); switch(simpleName) { case "DateTimeType":
+     * case "InstantType": return ((DateTime)value).toJavaDate(); case "DateType":
+     * return ((org.opencds.cqf.cql.engine.runtime.Date)value).toJavaDate(); case
+     * "TimeType": return ((Time) value).toString(); }
+     *
+     * if (value instanceof Time) { return ((Time) value).toString(); } else {
+     * return value; } }
+     */
 
     public Object toJavaPrimitive(Object result, Object source) {
         String simpleName = source.getClass().getSimpleName();
         switch (simpleName) {
             case "InstantType":
-            case "DateTimeType": return toDateTime((BaseDateTimeType)source);
-            case "DateType": return toDate((BaseDateTimeType)source);
-            case "TimeType": return toTime((TimeType)source);
-            case "IdType": return this.idToString((IdType)source);
-            case "Base64BinaryType": return ((IPrimitiveType)source).getValueAsString();
+            case "DateTimeType":
+                return toDateTime((BaseDateTimeType) source);
+            case "DateType":
+                return toDate((BaseDateTimeType) source);
+            case "TimeType":
+                return toTime((TimeType) source);
+            case "IdType":
+                return this.idToString((IdType) source);
+            case "Base64BinaryType":
+                return ((IPrimitiveType) source).getValueAsString();
             default:
                 return result;
         }
