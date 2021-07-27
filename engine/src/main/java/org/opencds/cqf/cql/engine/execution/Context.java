@@ -571,6 +571,7 @@ public class Context {
     }
 
     public void setParameter(String libraryName, String name, Object value) {
+        clearExpressions();
         boolean enteredLibrary = enterLibrary(libraryName);
         try {
             String fullName = libraryName != null ? String.format("%s.%s", getCurrentLibrary().getIdentifier().getId(), name) : name;
@@ -730,6 +731,7 @@ public class Context {
     }
 
     public void setContextValue(String context, Object contextValue) {
+        clearExpressions();
         contextValues.put(context, contextValue);
     }
 
