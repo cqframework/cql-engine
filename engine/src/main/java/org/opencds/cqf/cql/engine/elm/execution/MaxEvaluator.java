@@ -7,7 +7,7 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 Max(argument List<Integer>) Integer
-Max(argument List<Long>) Integer
+Max(argument List<Long>) Long
 Max(argument List<Decimal>) Decimal
 Max(argument List<Quantity>) Quantity
 Max(argument List<Date>) Date
