@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.util.Calendar;
+import java.util.Arrays;
 
 import org.hl7.fhir.dstu3.model.Age;
 import org.hl7.fhir.dstu3.model.AnnotatedUuidType;
@@ -41,7 +42,7 @@ public class Dstu3FhirModelResolver extends
 
     private Dstu3FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
-        this.setPackageName("org.hl7.fhir.dstu3.model");
+        this.setPackageNames(Arrays.asList("org.hl7.fhir.dstu3.model"));
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU3) {
             throw new IllegalArgumentException("The supplied context is not configured for DSTU3");
         }

@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.util.Calendar;
+import java.util.Arrays;
 
 import org.hl7.fhir.r4.model.Age;
 import org.hl7.fhir.r4.model.AnnotatedUuidType;
@@ -41,7 +42,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
 	private R4FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
-        this.setPackageName("org.hl7.fhir.r4.model");
+        this.setPackageNames(Arrays.asList("org.hl7.fhir.r4.model"));
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.R4) {
             throw new IllegalArgumentException("The supplied context is not configured for R4");
         }

@@ -136,6 +136,10 @@ public class Context {
         }
     }
 
+    public void clearExpressions() {
+        this.expressions.clear();
+    }
+
     public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
@@ -185,6 +189,7 @@ public class Context {
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
+
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
@@ -544,12 +549,12 @@ public class Context {
         if (ret != null) {
             return ret;
         }
-        
+
         StringBuilder argStr = new StringBuilder();
         if( arguments != null ) {
             arguments.forEach( a -> argStr.append( (argStr.length() > 0) ? ", " : "" ).append( resolveType(a).getName() ) );
         }
-        
+
         throw new CqlException(String.format("Could not resolve call to operator '%s(%s)' in library '%s'.",
                 name, argStr.toString(), getCurrentLibrary().getIdentifier().getId()));
     }
@@ -654,6 +659,15 @@ public class Context {
         return dataProvider;
     }
 
+    public DataProvider resolveDataProviderByModelUri(String modelUri) {
+        DataProvider dataProvider = dataProviders.get(modelUri);
+        if (dataProvider == null) {
+            throw new CqlException(String.format("Could not resolve data provider for model '%s'.", modelUri));
+        }
+
+        return dataProvider;
+    }
+
     public DataProvider resolveDataProvider(String packageName) {
         return resolveDataProvider(packageName, true);
     }
@@ -661,22 +675,8 @@ public class Context {
     @SuppressWarnings("deprecation")
     public DataProvider resolveDataProvider(String packageName, boolean mustResolve) {
         DataProvider dataProvider = packageMap.get(packageName);
-        if (dataProvider == null) {
-            if (packageName.startsWith("ca.uhn.fhir.model.dstu2") || packageName.equals("ca.uhn.fhir.model.primitive"))
-            {
-                for (DataProvider provider : dataProviders.values()) {
-                    if (provider.getPackageName().startsWith("ca.uhn.fhir.model.dstu2")
-                            || provider.getPackageName().equals("ca.uhn.fhir.model.primitive"))
-                    {
-                        provider.setPackageName(packageName);
-                        return provider;
-                    }
-                }
-            }
-
-            if (mustResolve) {
-                throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
-            }
+        if (dataProvider == null && mustResolve) {
+            throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
         }
 
         return dataProvider;
@@ -725,7 +725,17 @@ public class Context {
     }
 
     public void setContextValue(String context, Object contextValue) {
+        if (hasContextValueChanged(context, contextValue)) {
+            clearExpressions();
+        }
         contextValues.put(context, contextValue);
+    }
+
+    private boolean hasContextValueChanged(String context, Object contextValue) {
+        if (contextValues.containsKey(context)) {
+            return !contextValues.get(context).equals(contextValue);
+        }
+        return true;
     }
 
     public Object getCurrentContextValue() {

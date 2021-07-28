@@ -61,6 +61,10 @@ define DecimalIntervalCollapse2: collapse { Interval[4.0,6.0], Interval[6.000000
 define QuantityIntervalCollapse: collapse { Interval[1.0 'g',5.0 'g'], Interval[3.0 'g',7.0 'g'], Interval[12.0 'g',19.0 'g'], Interval[7.0 'g',10.0 'g'] }
 define DateTimeCollapse: collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 10), DateTime(2012, 1, 25)], Interval[DateTime(2012, 5, 10), DateTime(2012, 5, 25)], Interval[DateTime(2012, 5, 20), DateTime(2012, 5, 30)] }
 define DateTimeCollapse2: collapse { Interval[DateTime(2012, 1, 1), DateTime(2012, 1, 15)], Interval[DateTime(2012, 1, 16), DateTime(2012, 5, 25)] }
+define DateTimeCollapse3: collapse { Interval[DateTime(2018,1,1), DateTime(2018,8,28)], Interval[DateTime(2018,8,30), DateTime(2018,10,15)] }
+define DateTimeCollapse4: collapse { Interval[@2018-01-01, @2018-08-28], Interval[@2018-08-30, @2018-10-15] }
+define DateTimeCollapse5: collapse { Interval[@2018-01-01, @2018-08-28], Interval[@2018-08-30, @2018-10-15] } per day
+define DateTimeCollapse6: collapse { Interval[@2018-01-01, @2018-08-29], Interval[@2018-08-30, @2018-10-15] }
 define TimeCollapse: collapse { Interval[@T01:59:59.999, @T10:59:59.999], Interval[@T08:59:59.999, @T15:59:59.999], Interval[@T17:59:59.999, @T20:59:59.999], Interval[@T18:59:59.999, @T22:59:59.999] }
 define TimeCollapse2: collapse { Interval[@T01:59:59.999, @T10:59:59.999], Interval[@T11:00:00.000, @T15:59:59.999] }
 
