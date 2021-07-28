@@ -65,4 +65,18 @@ public class Value {
         }
         return ret.intValue();
     }
+
+    public static Long validateLong(Long ret) {
+        if (ret > MAX_LONG || ret < MIN_LONG) {
+            return null;
+        }
+        return ret;
+    }
+
+    public static Long validateLong(Double ret) {
+        if (ret > MAX_LONG || ret < MIN_LONG) {
+            return null;
+        }
+        return ret.longValue();
+    }
 }

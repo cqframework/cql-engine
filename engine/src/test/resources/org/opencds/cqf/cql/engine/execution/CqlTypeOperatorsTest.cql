@@ -88,6 +88,12 @@ define String25D5ToDecimal: ToDecimal('+25.5')
 //ToInteger
 define StringNeg25ToInteger: ToInteger('-25')
 
+//ToLong
+define String123ToLong: ToLong('123')
+
+//ConvertsToLong
+define String123ConvertsToLong: ConvertsToLong('123')
+
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
 

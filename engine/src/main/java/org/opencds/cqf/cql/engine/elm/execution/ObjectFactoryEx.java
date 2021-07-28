@@ -520,6 +520,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ToInteger createToInteger() { return new ToIntegerEvaluator(); }
 
     @Override
+    public ToLong createToLong() { return new ToLongEvaluator(); }
+
+    @Override
     public ToList createToList() { return new ToListEvaluator(); }
 
     @Override

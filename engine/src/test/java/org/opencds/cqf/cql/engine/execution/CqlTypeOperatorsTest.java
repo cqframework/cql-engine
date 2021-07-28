@@ -362,6 +362,29 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ToLongEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testToLong() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("String123ToLong").getExpression().evaluate(context);
+        assertThat(result, is(123));
+    }
+
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToLongEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToLong() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("String123ConvertsToLong").getExpression().evaluate(context);
+        assertThat(result, is(123));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToQuantityEvaluator#evaluate(Context)}
      */
     @Test
