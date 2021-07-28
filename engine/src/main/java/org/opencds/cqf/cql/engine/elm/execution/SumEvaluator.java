@@ -5,6 +5,7 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
 Sum(argument List<Integer>) Integer
+Sum(argument List<Long>) Long
 Sum(argument List<Decimal>) Decimal
 Sum(argument List<Quantity>) Quantity
 
@@ -41,8 +42,8 @@ public class SumEvaluator extends org.cqframework.cql.elm.execution.Sum {
         }
 
         throw new InvalidOperatorArgument(
-                "Sum(List<Integer>), Sum(List<Decimal>) or Sum(List<Quantity>)",
-                String.format("Sum(%s)", source.getClass().getName())
+            "Sum(List<Integer>), Sum(List<Long>), Sum(List<Decimal>) or Sum(List<Quantity>)",
+            String.format("Sum(%s)", source.getClass().getName())
         );
     }
 

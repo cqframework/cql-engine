@@ -172,6 +172,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("ConvertsToIntegerTrue").getExpression().evaluate(context);
         Assert.assertTrue((Boolean) result);
 
+        result = context.resolveExpressionRef("ConvertsToIntegerLong").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
         result = context.resolveExpressionRef("ConvertsToIntegerFalse").getExpression().evaluate(context);
         Assert.assertFalse((Boolean) result);
 
@@ -216,6 +219,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue((Boolean) result);
 
         result = context.resolveExpressionRef("ConvertsToStringInteger").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringLong").getExpression().evaluate(context);
         Assert.assertTrue((Boolean) result);
 
         result = context.resolveExpressionRef("ConvertsToStringDecimal").getExpression().evaluate(context);
@@ -389,6 +395,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerNeg5ToString").getExpression().evaluate(context);
+        assertThat(result, is("-5"));
+
+        result = context.resolveExpressionRef("LongNeg5ToString").getExpression().evaluate(context);
         assertThat(result, is("-5"));
 
         result = context.resolveExpressionRef("Decimal18D55ToString").getExpression().evaluate(context);

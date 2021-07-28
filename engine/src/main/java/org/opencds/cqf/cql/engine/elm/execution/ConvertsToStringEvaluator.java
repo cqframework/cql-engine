@@ -14,6 +14,7 @@ import org.opencds.cqf.cql.engine.runtime.Time;
 
     ConvertsToString(argument Boolean) Boolean
     ConvertsToString(argument Integer) Boolean
+    ConvertsToString(argument Long) Boolean
     ConvertsToString(argument Decimal) Boolean
     ConvertsToString(argument Quantity) Boolean
     ConvertsToString(argument Ratio) Boolean
@@ -36,16 +37,16 @@ public class ConvertsToStringEvaluator extends org.cqframework.cql.elm.execution
             return null;
         }
 
-        if (argument instanceof Boolean || argument instanceof Integer || argument instanceof BigDecimal
-                || argument instanceof Quantity || argument instanceof Ratio || argument instanceof Date
-                || argument instanceof DateTime || argument instanceof String || argument instanceof Time)
+        if (argument instanceof Boolean || argument instanceof Integer || argument instanceof Long || argument instanceof BigDecimal
+            || argument instanceof Quantity || argument instanceof Ratio || argument instanceof Date
+            || argument instanceof DateTime || argument instanceof String || argument instanceof Time)
         {
             return true;
         }
 
         throw new InvalidOperatorArgument(
-                "ConvertsToString(Boolean) or ConvertsToString(Integer) or ConvertsToString(Decimal) or ConvertsToString(Quantity) or ConvertsToString(Ratio) or ConvertsToString(Date) or ConvertsToString(DateTime) or ConvertsToString(Time)",
-                String.format("ConvertsToString(%s)", argument.getClass().getName())
+            "ConvertsToString(Boolean) or ConvertsToString(Long) or ConvertsToString(Integer) or ConvertsToString(Decimal) or ConvertsToString(Quantity) or ConvertsToString(Ratio) or ConvertsToString(Date) or ConvertsToString(DateTime) or ConvertsToString(Time)",
+            String.format("ConvertsToString(%s)", argument.getClass().getName())
         );
     }
 

@@ -1,7 +1,7 @@
 library ComparisonOperator version '1'
 
 //Between
-define BetweenIntTrue: 4 between 2 and 6 
+define BetweenIntTrue: 4 between 2 and 6
 
 //Equal
 define SimpleEqTrueTrue : true = true
@@ -13,6 +13,7 @@ define SimpleEqTrueNull : true = null
 define SimpleEqNullTrue : null = true
 define SimpleEqInt1Int1 : 1 = 1
 define SimpleEqInt1Int2 : 1 = 2
+define SimpleEqInt1Int2Long : 10L = 20L
 define SimpleEqStringAStringA : 'a' = 'a'
 define SimpleEqStringAStringB : 'a' = 'b'
 define SimpleEqFloat1Float1 : 1.0 = 1.0
@@ -47,6 +48,7 @@ define TimeEq10A10P: @T10:00:00.000 = @T22:00:00.000
 //Greater
 define GreaterZZ        : 0 > 0
 define GreaterZ1        : 0 > 1
+define GreaterLong      : 00L > 10L
 define GreaterZNeg1     : 0 > -1
 define GreaterDecZZ     : 0.0 > 0.0
 define GreaterDecZ1     : 0.0 > 1.0
@@ -73,6 +75,7 @@ define UncertaintyGreaterFalse: DateTime(2013) > DateTime(2014, 2, 15)
 //Greater Or Equal
 define GreaterOrEqualZZ        : 0 >= 0
 define GreaterOrEqualZ1        : 0 >= 1
+define GreaterOrEqualZ1Long    : 00L >= 10L
 define GreaterOrEqualZNeg1     : 0 >= -1
 define GreaterOrEqualDecZZ     : 0.0 >= 0.0
 define GreaterOrEqualDecZ1     : 0.0 >= 1.0
@@ -101,6 +104,8 @@ define UncertaintyGreaterEqualFalse: DateTime(2013) >= DateTime(2014, 2, 15)
 //Less
 define LessZZ        : 0 < 0
 define LessZ1        : 0 < 1
+define LessLong      : 00L < 10L
+define LessLongNeg   : -30L < -20L
 define LessZNeg1     : 0 < -1
 define LessDecZZ     : 0.0 < 0.0
 define LessDecZ1     : 0.0 < 1.0
@@ -127,6 +132,7 @@ define UncertaintyLessFalse: DateTime(2015) < DateTime(2014, 2, 15)
 //Less Or Equal
 define LessOrEqualZZ        : 0 <= 0
 define LessOrEqualZ1        : 0 <= 1
+define LessOrEqualZ1Long    : 00L <= 10L
 define LessOrEqualZNeg1     : 0 <= -1
 define LessOrEqualDecZZ     : 0.0 <= 0.0
 define LessOrEqualDecZ1     : 0.0 <= 1.0
@@ -197,6 +203,7 @@ define SimpleNotEqTrueNull : true != null
 define SimpleNotEqNullTrue : null != true
 define SimpleNotEqInt1Int1 : 1 != 1
 define SimpleNotEqInt1Int2 : 1 != 2
+define SimpleNotEqInt1Int2Long : 10L != 20L
 define SimpleNotEqStringAStringA : 'a' != 'a'
 define SimpleNotEqStringAStringB : 'a' != 'b'
 define SimpleNotEqFloat1Float1 : 1.0 != 1.0

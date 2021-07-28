@@ -23,6 +23,14 @@ public class LiteralEvaluator extends org.cqframework.cql.elm.execution.Literal 
                     throw new CqlException("Bad format for Integer literal");
                 }
                 return intValue;
+            case "Long":
+                long longValue;
+                try {
+                    longValue = Long.parseLong(this.getValue());
+                } catch(NumberFormatException e){
+                    throw new CqlException("Bad format for Long literal");
+                }
+                return longValue;
             case "Decimal":
                 BigDecimal bigDecimalValue;
 

@@ -56,6 +56,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("SimpleEqInt1Int2").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef("SimpleEqInt1Int2Long").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
         result = context.resolveExpressionRef("SimpleEqStringAStringA").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -160,6 +163,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("GreaterZZ").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef("GreaterLong").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
         result = context.resolveExpressionRef("GreaterZ1").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -253,6 +259,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("GreaterOrEqualZ1").getExpression().evaluate(context);
         assertThat(result, is(false));
 
+        result = context.resolveExpressionRef("GreaterOrEqualZ1Long").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
         result = context.resolveExpressionRef("GreaterOrEqualZNeg1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
@@ -340,6 +349,12 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("LessZ1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("LessLong").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("LessLongNeg").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         result = context.resolveExpressionRef("LessZNeg1").getExpression().evaluate(context);
         assertThat(result, is(false));
 
@@ -419,6 +434,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("LessOrEqualZ1").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("LessOrEqualZ1Long").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("LessOrEqualZNeg1").getExpression().evaluate(context);
@@ -637,6 +655,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         result = context.resolveExpressionRef("SimpleNotEqInt1Int2").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
+        result = context.resolveExpressionRef("SimpleNotEqInt1Int2Long").getExpression().evaluate(context);
         assertThat(result, is(true));
 
         result = context.resolveExpressionRef("SimpleNotEqStringAStringA").getExpression().evaluate(context);

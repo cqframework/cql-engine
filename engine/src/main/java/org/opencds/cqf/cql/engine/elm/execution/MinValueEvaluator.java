@@ -14,8 +14,9 @@ import org.opencds.cqf.cql.engine.runtime.Value;
 minimum<T>() T
 
 The minimum operator returns the minimum representable value for the given type.
-The minimum operator is defined for the Integer, Decimal, DateTime, and Time types.
+The minimum operator is defined for the Integer, Long, Decimal, DateTime, and Time types.
 For Integer, minimum returns the minimum signed 32-bit integer, -231.
+For Long, minimum returns the minimum signed 32-bit integer, -263.
 For Decimal, minimum returns the minimum representable decimal value, (-1037 – 1) / 108 (-9999999999999999999999999999.99999999).
 For DateTime, minimum returns the minimum representable date/time value, DateTime(1, 1, 1, 0, 0, 0, 0).
 For Time, minimum returns the minimum representable time value, Time(0, 0, 0, 0).
@@ -31,6 +32,9 @@ public class MinValueEvaluator extends org.cqframework.cql.elm.execution.MinValu
 
         if (type.endsWith("Integer")) {
             return Value.MIN_INT;
+        }
+        if (type.endsWith("Long")) {
+            return Value.MIN_LONG;
         }
         if (type.endsWith("Decimal")) {
             return Value.MIN_DECIMAL;

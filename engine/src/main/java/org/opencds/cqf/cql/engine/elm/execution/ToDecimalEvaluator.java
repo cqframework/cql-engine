@@ -41,6 +41,10 @@ public class ToDecimalEvaluator extends org.cqframework.cql.elm.execution.ToDeci
             return new BigDecimal((Integer)operand);
         }
 
+        if (operand instanceof Long) {
+            return new BigDecimal((Long)operand);
+        }
+
         if (operand instanceof String) {
             try {
                 if (((String) operand).contains(".")) {

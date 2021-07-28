@@ -28,6 +28,10 @@ public class ConvertsToIntegerEvaluator extends org.cqframework.cql.elm.executio
             return true;
         }
 
+        if (argument instanceof Long) {
+            return true;
+        }
+
         if (argument instanceof String) {
             try {
                 Integer.valueOf((String) argument);

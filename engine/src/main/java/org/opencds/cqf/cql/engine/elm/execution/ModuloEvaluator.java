@@ -9,6 +9,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 
 /*
 mod(left Integer, right Integer) Integer
+mod(left Long, right Long) Long
 mod(left Decimal, right Decimal) Decimal
 mod(left Quantity, right Quantity) Quantity
 
@@ -31,6 +32,13 @@ public class ModuloEvaluator extends org.cqframework.cql.elm.execution.Modulo {
             return (Integer)left % (Integer)right;
         }
 
+        if (left instanceof Long) {
+            if ((Long)right == 0L) {
+                return null;
+            }
+            return (Long)left % (Long)right;
+        }
+
         if (left instanceof BigDecimal) {
             if (right == new BigDecimal("0.0")) {
                 return null;
@@ -50,8 +58,8 @@ public class ModuloEvaluator extends org.cqframework.cql.elm.execution.Modulo {
         }
 
         throw new InvalidOperatorArgument(
-            "Modulo(Integer, Integer), Modulo(Decimal, Decimal), Modulo(Quantity, Quantity)",
-            String.format("Modulo(%s, %s)", left.getClass().getName(), right.getClass().getName())
+                "Modulo(Integer, Integer), Modulo(Long, Long) or Modulo(Decimal, Decimal), , Modulo(Quantity, Quantity)",
+                String.format("Modulo(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
 

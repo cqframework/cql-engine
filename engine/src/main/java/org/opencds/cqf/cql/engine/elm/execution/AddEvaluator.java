@@ -18,6 +18,7 @@ import org.opencds.cqf.cql.engine.runtime.Value;
 
 *** NOTES FOR ARITHMETIC OPERATORS ***
 +(left Integer, right Integer) Integer
++(left Long, right Long) Long
 +(left Decimal, right Decimal) Decimal
 +(left Quantity, right Quantity) Quantity
 
@@ -69,6 +70,10 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
             return (Integer)left + (Integer)right;
         }
 
+        if (left instanceof Long && right instanceof Long) {
+            return (Long)left + (Long)right;
+        }
+
         else if (left instanceof BigDecimal && right instanceof BigDecimal) {
             return Value.verifyPrecision(((BigDecimal)left).add((BigDecimal)right), null);
         }
@@ -117,7 +122,7 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
         }
 
         throw new InvalidOperatorArgument(
-                "Add(Integer, Integer), Add(Decimal, Decimal), Add(Quantity, Quantity), Add(Date, Quantity), Add(DateTime, Quantity) or Add(Time, Quantity)",
+                "Add(Integer, Integer), Add(Long, Long), Add(Decimal, Decimal), Add(Quantity, Quantity), Add(Date, Quantity), Add(DateTime, Quantity) or Add(Time, Quantity)",
                 String.format("Add(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }

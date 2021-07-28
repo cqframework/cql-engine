@@ -9,6 +9,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 /*
 
 Product(argument List<Integer>) Integer
+Product(argument List<Long>) Long
 Product(argument List<Decimal>) Decimal
 Product(argument List<Quantity>) Quantity
 
@@ -36,7 +37,8 @@ public class ProductEvaluator extends org.cqframework.cql.elm.execution.Product 
                     continue;
                 }
                 if ((element instanceof Integer && result instanceof Integer)
-                        || (element instanceof BigDecimal && result instanceof BigDecimal)) {
+                    || (element instanceof Long && result instanceof Long)
+                    || (element instanceof BigDecimal && result instanceof BigDecimal)) {
                     result = MultiplyEvaluator.multiply(result, element);
                 } else if (element instanceof Quantity && result instanceof Quantity) {
                     if (!((Quantity) element).getUnit().equals(((Quantity) result).getUnit())) {
@@ -56,8 +58,8 @@ public class ProductEvaluator extends org.cqframework.cql.elm.execution.Product 
                     );
                 } else {
                     throw new InvalidOperatorArgument(
-                            "Product(List<Integer>), Product(List<Decimal>) or Product(List<Quantity>)",
-                            String.format("Product(List<%s>)", element.getClass().getName())
+                        "Product(List<Integer>), Product(List<Long>), Product(List<Decimal>) or Product(List<Quantity>)",
+                        String.format("Product(List<%s>)", element.getClass().getName())
                     );
                 }
             }
@@ -66,8 +68,8 @@ public class ProductEvaluator extends org.cqframework.cql.elm.execution.Product 
         }
 
         throw new InvalidOperatorArgument(
-                "Product(List<Integer>), Product(List<Decimal>) or Product(List<Quantity>)",
-                String.format("Product(%s)", source.getClass().getName())
+            "Product(List<Integer>), Product(List<Long>), Product(List<Decimal>) or Product(List<Quantity>)",
+            String.format("Product(%s)", source.getClass().getName())
         );
     }
 

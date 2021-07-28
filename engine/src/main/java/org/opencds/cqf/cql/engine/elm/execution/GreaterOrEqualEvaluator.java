@@ -10,6 +10,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 
 /*
 >=(left Integer, right Integer) Boolean
+>=(left Long, right Long) Boolean
 >=(left Decimal, right Decimal) Boolean
 >=(left Quantity, right Quantity) Boolean
 >=(left DateTime, right DateTime) Boolean
@@ -34,6 +35,10 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
 
       if (left instanceof Integer && right instanceof Integer) {
           return ((Integer) left).compareTo((Integer) right) >= 0;
+      }
+
+      if (left instanceof Long && right instanceof Long) {
+          return ((Long) left).compareTo((Long) right) >= 0;
       }
 
       else if (left instanceof BigDecimal && right instanceof BigDecimal) {
@@ -65,9 +70,9 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
       }
 
       throw new InvalidOperatorArgument(
-              "GreaterOrEqual(Integer, Integer) GreaterOrEqual(Decimal, Decimal), GreaterOrEqual(Quantity, Quantity), GreaterOrEqual(Date, Date), GreaterOrEqual(DateTime, DateTime), GreaterOrEqual(Time, Time) or GreaterOrEqual(String, String)",
-              String.format("Cannot perform greater than or equal operator on types %s and %s",
-                      left.getClass().getSimpleName(), right.getClass().getSimpleName()));
+          "GreaterOrEqual(Integer, Integer), GreaterOrEqual(Long, Long), GreaterOrEqual(Decimal, Decimal), GreaterOrEqual(Quantity, Quantity), GreaterOrEqual(Date, Date), GreaterOrEqual(DateTime, DateTime), GreaterOrEqual(Time, Time) or GreaterOrEqual(String, String)",
+          String.format("Cannot perform greater than or equal operator on types %s and %s",
+              left.getClass().getSimpleName(), right.getClass().getSimpleName()));
   }
 
     @Override

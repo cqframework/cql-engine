@@ -112,6 +112,17 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProductEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testProduct() throws JAXBException {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("Product_Long").getExpression().evaluate(context);
+        assertThat(result, is(100L));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.CountEvaluator#evaluate(Context)}
      */
     @Test
@@ -140,6 +151,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("MaxTestInteger").getExpression().evaluate(context);
         assertThat(result, is(90));
+
+        result = context.resolveExpressionRef("MaxTestLong").getExpression().evaluate(context);
+        assertThat(result, is(90L));
 
         result = context.resolveExpressionRef("MaxTestString").getExpression().evaluate(context);
         assertThat(result, is("zebra"));
@@ -171,6 +185,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("MinTestInteger").getExpression().evaluate(context);
         assertThat(result, is(0));
+
+        result = context.resolveExpressionRef("MinTestLong").getExpression().evaluate(context);
+        assertThat(result, is(0L));
 
         result = context.resolveExpressionRef("MinTestString").getExpression().evaluate(context);
         assertThat(result, is("bye"));
@@ -244,6 +261,9 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("SumTest1").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("20.0")));
+
+        result = context.resolveExpressionRef("SumTestLong").getExpression().evaluate(context);
+        assertThat(result, is(20L));
 
         result = context.resolveExpressionRef("SumTestQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("15.0")).withUnit("ml")));

@@ -13,6 +13,7 @@ import org.opencds.cqf.cql.engine.runtime.Time;
 
 ToString(argument Boolean) String
 ToString(argument Integer) String
+ToString(argument Long) String
 ToString(argument Decimal) String
 ToString(argument Quantity) String
 ToString(argument Ratio) String
@@ -24,6 +25,7 @@ The ToString operator converts the value of its argument to a String value.
 The operator uses the following string representations for each type:
 Boolean	true|false
 Integer	    (-)?#0
+Long	    (-)?#0L
 Decimal	    (-)?#0.0#
 Quantity    (-)?#0.0# '<unit>'
 Ratio       <quantity>:<quantity>
@@ -47,6 +49,9 @@ public class ToStringEvaluator extends org.cqframework.cql.elm.execution.ToStrin
 
         if (operand instanceof Integer) {
             return Integer.toString((Integer)operand);
+        }
+        else if (operand instanceof Long) {
+            return operand.toString();
         }
         else if (operand instanceof BigDecimal) {
             return operand.toString();
