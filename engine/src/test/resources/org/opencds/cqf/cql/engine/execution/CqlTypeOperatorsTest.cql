@@ -36,7 +36,7 @@ define ConvertsToDecimalFalse: ConvertsToDecimal('+-1')
 define ConvertsToDecimalNull: ConvertsToDecimal(null)
 
 define ConvertsToIntegerTrue: ConvertsToInteger('+1')
-define ConvertsToIntegerLong: ConvertsToInteger(1230L)
+define ConvertsToIntegerLong: ConvertsToInteger(123L)
 define ConvertsToIntegerFalse: ConvertsToInteger('+-1')
 define ConvertsToIntegerNull: ConvertsToInteger(null)
 
@@ -49,7 +49,7 @@ define ConvertsToQuantityNull: ConvertsToQuantity(null)
 
 define ConvertsToStringBoolean: ConvertsToString(true)
 define ConvertsToStringInteger: ConvertsToString(1)
-define ConvertsToStringLong: ConvertsToString(10L)
+define ConvertsToStringLong: ConvertsToString(1L)
 define ConvertsToStringDecimal: ConvertsToString(1.1)
 define ConvertsToStringQuantity: ConvertsToString(1.1'mg')
 define ConvertsToStringRatio: ConvertsToString(1.1'mg':3.1'mg')
@@ -97,7 +97,7 @@ define ToRatioIsNull: ToRatio('1.0 \'mg\';2.0 \'mg\'')
 
 //ToString
 define IntegerNeg5ToString: ToString(-5)
-define LongNeg5ToString: ToString(-50L)
+define LongNeg5ToString: ToString(-5L)
 define Decimal18D55ToString: ToString(18.55)
 define Quantity5D5CMToString: ToString(5.5 'cm')
 define BooleanTrueToString: ToString(true)

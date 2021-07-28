@@ -32,7 +32,6 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("AnyInteger").getExpression().evaluate(context);
         assertThat(result, is(5));
 
-        //until fix for long parsing is merged the following 123L be considered as 12
         result = context.resolveExpressionRef("AnyLong").getExpression().evaluate(context);
         assertThat(result, is(Long.valueOf("12")));
 
