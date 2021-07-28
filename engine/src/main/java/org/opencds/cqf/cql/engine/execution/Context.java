@@ -136,6 +136,10 @@ public class Context {
         }
     }
 
+    public void clearExpressions() {
+        this.expressions.clear();
+    }
+
     public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
@@ -185,6 +189,7 @@ public class Context {
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
+
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
@@ -720,7 +725,17 @@ public class Context {
     }
 
     public void setContextValue(String context, Object contextValue) {
+        if (hasContextValueChanged(context, contextValue)) {
+            clearExpressions();
+        }
         contextValues.put(context, contextValue);
+    }
+
+    private boolean hasContextValueChanged(String context, Object contextValue) {
+        if (contextValues.containsKey(context)) {
+            return !contextValues.get(context).equals(contextValue);
+        }
+        return true;
     }
 
     public Object getCurrentContextValue() {

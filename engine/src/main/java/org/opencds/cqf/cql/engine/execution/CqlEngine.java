@@ -187,6 +187,10 @@ public class CqlEngine {
 
         result.setDebugResult(context.getDebugResult());
 
+        if(context != null) {
+            context.clearExpressions();
+        }
+
         return result;
     }
 
