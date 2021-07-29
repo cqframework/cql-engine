@@ -118,6 +118,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ConvertsToInteger createConvertsToInteger() { return new ConvertsToIntegerEvaluator(); }
 
     @Override
+    public ConvertsToLong createConvertsToLong() { return new ConvertsToLongEvaluator(); }
+
+    @Override
     public ConvertsToQuantity createConvertsToQuantity() { return new ConvertsToQuantityEvaluator(); }
 
     @Override
@@ -518,6 +521,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public ToInteger createToInteger() { return new ToIntegerEvaluator(); }
+
+    @Override
+    public ToLong createToLong() { return new ToLongEvaluator(); }
 
     @Override
     public ToList createToList() { return new ToListEvaluator(); }

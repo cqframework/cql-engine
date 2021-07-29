@@ -40,6 +40,10 @@ define ConvertsToIntegerLong: ConvertsToInteger(123L)
 define ConvertsToIntegerFalse: ConvertsToInteger('+-1')
 define ConvertsToIntegerNull: ConvertsToInteger(null)
 
+define ConvertsToLongTrue: ConvertsToLong('123')
+define ConvertsToLongFalse: ConvertsToLong('+-1')
+define ConvertsToLongNull: ConvertsToLong(null)
+
 define ConvertsToQuantityStringTrue: ConvertsToQuantity('-0.1 \'mg\'')
 define ConvertsToQuantityStringFalse: ConvertsToQuantity('+-0.1 \'mg\'')
 define ConvertsToQuantityIntegerTrue: ConvertsToQuantity(1)
@@ -87,6 +91,9 @@ define String25D5ToDecimal: ToDecimal('+25.5')
 
 //ToInteger
 define StringNeg25ToInteger: ToInteger('-25')
+
+//ToLong
+define String123ToLong: ToLong('123')
 
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
