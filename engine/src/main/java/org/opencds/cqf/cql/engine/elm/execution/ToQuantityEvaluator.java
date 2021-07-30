@@ -50,10 +50,11 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
     public static Quantity toQuantity(String str) {
         StringBuilder number = new StringBuilder();
         StringBuilder unit = new StringBuilder();
+        // Commonly Used UCUM Codes for Healthcare Units : http://download.hl7.de/documents/ucum/ucumdata.html
         for (char c : str.toCharArray()) {
             if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.length() == 0) {
                 number.append(c);
-            } else if (Character.isLetter(c) || c == '/') {
+            } else if (Character.isLetter(c) || c == '/' || c == '%') {
                 unit.append(c);
             } else if (c == ' ' || c == '\'') {
                 // continue
