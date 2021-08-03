@@ -27,57 +27,94 @@ If either argument is null, the result is null.
 
 public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multiply {
 
-  public static Object multiply(Object left, Object right) {
-    if (left == null || right == null) {
-        return null;
+    public static Object multiply(Object left, Object right) {
+        if (left == null || right == null) {
+            return null;
+        }
+
+        String type = ArithmeticUtil.determineClassTypeForArithmetic(left, right);
+        Object returnValue = null;
+
+        if(!type.isEmpty()) {
+            switch (type) {
+                case "Integer":
+                    returnValue = calculateIntegerMultiply(left, right);
+                    break;
+                case "Long":
+                    returnValue = calculateLongMultiply(left, right);
+                    break;
+                case "BigDecimal":
+                    returnValue = calculateDecimalMultiply(left, right);
+                    break;
+            }
+
+            if (returnValue != null) {
+                return returnValue;
+            }
+        }
+
+        // *(Quantity, Quantity)
+        else if (left instanceof Quantity && right instanceof Quantity) {
+            // TODO: unit multiplication i.e. cm*cm = cm^2
+            String unit = ((Quantity) left).getUnit().equals("1") ? ((Quantity) right).getUnit() : ((Quantity) left).getUnit();
+            BigDecimal value = Value.verifyPrecision((((Quantity) left).getValue()).multiply(((Quantity) right).getValue()), null);
+            return new Quantity().withValue(value).withUnit(unit);
+        }
+
+        // *(Decimal, Quantity)
+        else if (left instanceof BigDecimal && right instanceof Quantity) {
+            BigDecimal value = Value.verifyPrecision(((BigDecimal) left).multiply(((Quantity) right).getValue()), null);
+            return ((Quantity) right).withValue(value);
+        }
+
+        // *(Quantity, Decimal)
+        else if (left instanceof Quantity && right instanceof BigDecimal) {
+            BigDecimal value = Value.verifyPrecision((((Quantity) left).getValue()).multiply((BigDecimal) right), null);
+            return ((Quantity) left).withValue(value);
+        }
+
+        // *(Uncertainty, Uncertainty)
+        else if (left instanceof Interval && right instanceof Interval) {
+            Interval leftInterval = (Interval) left;
+            Interval rightInterval = (Interval) right;
+            return new Interval(multiply(leftInterval.getStart(), rightInterval.getStart()), true, multiply(leftInterval.getEnd(), rightInterval.getEnd()), true);
+        }
+
+        throw new InvalidOperatorArgument(
+            "Multiply(Integer, Integer), Multiply(Long, Long), Multiply(Decimal, Decimal), Multiply(Decimal, Quantity), Multiply(Quantity, Decimal) or Multiply(Quantity, Quantity)",
+            String.format("Multiply(%s, %s)", left.getClass().getName(), right.getClass().getName())
+        );
     }
 
-    // *(Integer, Integer)
-    if (left instanceof Integer) {
-        return (Integer)left * (Integer)right;
+    private static Object calculateIntegerMultiply(Object left, Object right) {
+        if(!(left instanceof Integer)) {
+            left = ToIntegerEvaluator.toInteger(left);
+        }
+        if(!(right instanceof Integer)) {
+            right = ToIntegerEvaluator.toInteger(right);
+        }
+        return (Integer) left * (Integer) right;
     }
 
-    if (left instanceof Long) {
+    private static Object calculateLongMultiply(Object left, Object right) {
+        if(!(left instanceof Long)) {
+            left = ToLongEvaluator.toLong(left);
+        }
+        if(!(right instanceof Long)) {
+            right = ToLongEvaluator.toLong(right);
+        }
         return (Long) left * (Long) right;
     }
 
-      // *(Decimal, Decimal)
-    else if (left instanceof BigDecimal && right instanceof BigDecimal) {
-        return Value.verifyPrecision(((BigDecimal)left).multiply((BigDecimal)right), null);
+    private static Object calculateDecimalMultiply(Object left, Object right) {
+        if(!(left instanceof BigDecimal)) {
+            left = ToDecimalEvaluator.toDecimal(left);
+        }
+        if(!(right instanceof BigDecimal)) {
+            right = ToDecimalEvaluator.toDecimal(right);
+        }
+        return Value.verifyPrecision(((BigDecimal) left).multiply((BigDecimal) right), null);
     }
-
-    // *(Quantity, Quantity)
-    else if (left instanceof Quantity && right instanceof Quantity) {
-      // TODO: unit multiplication i.e. cm*cm = cm^2
-      String unit = ((Quantity) left).getUnit().equals("1") ? ((Quantity) right).getUnit() : ((Quantity) left).getUnit();
-      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()), null);
-      return new Quantity().withValue(value).withUnit(unit);
-    }
-
-    // *(Decimal, Quantity)
-    else if (left instanceof BigDecimal && right instanceof Quantity) {
-      BigDecimal value = Value.verifyPrecision(((BigDecimal)left).multiply(((Quantity)right).getValue()), null);
-      return ((Quantity) right).withValue(value);
-    }
-
-    // *(Quantity, Decimal)
-    else if (left instanceof Quantity && right instanceof BigDecimal) {
-      BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply((BigDecimal)right), null);
-      return ((Quantity) left).withValue(value);
-    }
-
-    // *(Uncertainty, Uncertainty)
-    else if (left instanceof Interval && right instanceof Interval) {
-      Interval leftInterval = (Interval)left;
-      Interval rightInterval = (Interval)right;
-      return new Interval(multiply(leftInterval.getStart(), rightInterval.getStart()), true, multiply(leftInterval.getEnd(), rightInterval.getEnd()), true);
-    }
-
-      throw new InvalidOperatorArgument(
-          "Multiply(Integer, Integer), Multiply(Long, Long), Multiply(Decimal, Decimal), Multiply(Decimal, Quantity), Multiply(Quantity, Decimal) or Multiply(Quantity, Quantity)",
-          String.format("Multiply(%s, %s)", left.getClass().getName(), right.getClass().getName())
-      );
-  }
 
     @Override
     protected Object internalEvaluate(Context context) {

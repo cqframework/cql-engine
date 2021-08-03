@@ -28,7 +28,7 @@ public class ToLongEvaluator extends org.cqframework.cql.elm.execution.ToLong {
         }
 
         if (operand instanceof Integer) {
-            return (Long)operand;
+            return Long.valueOf((Integer)operand);
         }
 
         if (operand instanceof String) {

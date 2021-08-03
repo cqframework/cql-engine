@@ -22,30 +22,70 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
             return null;
         }
 
-        if (left instanceof Integer) {
-            if ((Integer)right < 0) {
-                return new BigDecimal(1).divide(new BigDecimal((Integer)left).pow(Math.abs((Integer)right)));
-            }
-            return new BigDecimal((Integer)left).pow((Integer)right).intValue();
+        String type = ArithmeticUtil.determineClassTypeForArithmetic(left, right);
+        Object returnValue = null;
+
+        switch(type) {
+            case "Integer":
+                returnValue = calculateIntegerPower(left, right);
+                break;
+            case "Long":
+                returnValue = calculateLongPower(left, right);
+                break;
+            case "BigDecimal":
+                returnValue = calculateDecimalPower(left, right);
+                break;
         }
 
-        if (left instanceof Long) {
-            if ((Long) right < 0) {
-                return new BigDecimal(1).divide(new BigDecimal((Long) left).pow(Math.abs((Integer) right)));
-            }
-
-            return new BigDecimal((Long) left).pow((Integer) ((Long) right).intValue()).longValue();
+        if (returnValue != null) {
+            return returnValue;
         }
 
-        if (left instanceof BigDecimal) {
-            return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())), null);
-        }
 
         throw new InvalidOperatorArgument(
                 "Power(Integer, Integer), Power(Long, Long) or Power(Decimal, Decimal)",
                 String.format("Power(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
+
+    private static Object calculateIntegerPower(Object left, Object right) {
+        if(!(left instanceof Integer)) {
+            left = ToIntegerEvaluator.toInteger(left);
+        }
+        if(!(right instanceof Integer)) {
+            right = ToIntegerEvaluator.toInteger(right);
+        }
+
+        if ((Integer) right < 0) {
+            return new BigDecimal(1).divide(new BigDecimal((Integer) left).pow(Math.abs((Integer) right)));
+        }
+        return new BigDecimal((Integer) left).pow((Integer) right).intValue();
+    }
+
+    private static Object calculateLongPower(Object left, Object right) {
+        if(!(left instanceof Long)) {
+            left = ToLongEvaluator.toLong(left);
+        }
+        if(!(right instanceof Long)) {
+            right = ToLongEvaluator.toLong(right);
+        }
+        if ((Long) right < 0) {
+            return new BigDecimal(1).divide(new BigDecimal((Long) left).pow(Math.abs((Integer) right)));
+        }
+        return new BigDecimal((Long) left).pow((Integer) ((Long) right).intValue()).longValue();
+    }
+
+    private static BigDecimal calculateDecimalPower(Object left, Object right) {
+        if(!(left instanceof BigDecimal)) {
+            left = ToDecimalEvaluator.toDecimal(left);
+        }
+        if(!(right instanceof BigDecimal)) {
+            right = ToDecimalEvaluator.toDecimal(right);
+        }
+        return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal) left).doubleValue()), ((BigDecimal) right).doubleValue())), null);
+    }
+
+
 
     @Override
     protected Object internalEvaluate(Context context) {

@@ -251,3 +251,12 @@ define TruncatedDivide10By5D: 10 div 5.0
 define TruncatedDivide10By5DQuantity: 10.0 'g' div 5.0 'g'
 define TruncatedDivide414By206DQuantity: 4.14 'm' div 2.06 'm'
 define TruncatedDivide10By0DQuantity: 10.0 'g' div 0.0 'g'
+
+
+//Complex Arithmetic
+
+define ComplexArithmetic2Pow10Minus8Decimal: 2*Power(10,-8)
+define ComplexArithmetic2Pow10DMinus8Decimal: 2*Power(10.0,-8)
+define ComplexArithmetic2DPow10DMinus8Decimal: 2.0*Power(10.0,-8)
+define ComplexArithmetic2DPow10By4Integer: 2*Power(10,4)
+define ComplexArithmetic2DPow10By4Long: 2L*Power(10,4)

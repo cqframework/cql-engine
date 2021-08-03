@@ -869,4 +869,29 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TruncatedDivide10By0DQuantity").getExpression().evaluate(context);
         assertThat(result, nullValue());
     }
+
+    /**
+     * Test some complex arithmetic expressions.
+     */
+    @Test
+    public void testComplexArithmetic() {
+
+        Context context = new Context(library);
+        Object result;
+
+        result = context.resolveExpressionRef("ComplexArithmetic2Pow10Minus8Decimal").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2E-8")));
+
+        result = context.resolveExpressionRef("ComplexArithmetic2Pow10DMinus8Decimal").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2E-8")));
+
+        result = context.resolveExpressionRef("ComplexArithmetic2DPow10DMinus8Decimal").getExpression().evaluate(context);
+        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal("2E-8")));
+
+        result = context.resolveExpressionRef("ComplexArithmetic2DPow10By4Integer").getExpression().evaluate(context);
+        assertThat(result, is(20000));
+
+        result = context.resolveExpressionRef("ComplexArithmetic2DPow10By4Long").getExpression().evaluate(context);
+        assertThat(result, is(20000L));
+    }
 }
