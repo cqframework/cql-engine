@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 
 public class ArithmeticUtil {
@@ -11,7 +12,7 @@ public class ArithmeticUtil {
         TYPE_WEIGHT.put("BigDecimal", 3);
     }
 
-    public static String determineClassTypeForArithmetic(Object left, Object right) {
+    public static String determineResultTypeForArithmetic(Object left, Object right) {
         String leftType = left.getClass().getSimpleName();
         String rightType = right.getClass().getSimpleName();
 
@@ -24,5 +25,26 @@ public class ArithmeticUtil {
         } else {
             return "";
         }
+    }
+
+    public static Object convertToLong(Object operand) {
+        if (!(operand instanceof Long)) {
+            return ToLongEvaluator.toLong(operand);
+        }
+        return operand;
+    }
+
+    public static Object convertToInteger(Object operand) {
+        if (!(operand instanceof Integer)) {
+            return ToIntegerEvaluator.toInteger(operand);
+        }
+        return operand;
+    }
+
+    public static Object convertToDecimal(Object operand) {
+        if (!(operand instanceof BigDecimal)) {
+            return ToDecimalEvaluator.toDecimal(operand);
+        }
+        return operand;
     }
 }

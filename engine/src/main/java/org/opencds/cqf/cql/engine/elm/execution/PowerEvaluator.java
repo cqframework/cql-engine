@@ -22,7 +22,7 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
             return null;
         }
 
-        String type = ArithmeticUtil.determineClassTypeForArithmetic(left, right);
+        String type = ArithmeticUtil.determineResultTypeForArithmetic(left, right);
         Object returnValue = null;
 
         switch(type) {
@@ -49,12 +49,8 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
     }
 
     private static Object calculateIntegerPower(Object left, Object right) {
-        if(!(left instanceof Integer)) {
-            left = ToIntegerEvaluator.toInteger(left);
-        }
-        if(!(right instanceof Integer)) {
-            right = ToIntegerEvaluator.toInteger(right);
-        }
+        left = ArithmeticUtil.convertToInteger(left);
+        right = ArithmeticUtil.convertToInteger(right);
 
         if ((Integer) right < 0) {
             return new BigDecimal(1).divide(new BigDecimal((Integer) left).pow(Math.abs((Integer) right)));
@@ -63,12 +59,9 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
     }
 
     private static Object calculateLongPower(Object left, Object right) {
-        if(!(left instanceof Long)) {
-            left = ToLongEvaluator.toLong(left);
-        }
-        if(!(right instanceof Long)) {
-            right = ToLongEvaluator.toLong(right);
-        }
+        left = ArithmeticUtil.convertToLong(left);
+        right = ArithmeticUtil.convertToLong(right);
+
         if ((Long) right < 0) {
             return new BigDecimal(1).divide(new BigDecimal((Long) left).pow(Math.abs((Integer) right)));
         }
@@ -76,12 +69,9 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
     }
 
     private static BigDecimal calculateDecimalPower(Object left, Object right) {
-        if(!(left instanceof BigDecimal)) {
-            left = ToDecimalEvaluator.toDecimal(left);
-        }
-        if(!(right instanceof BigDecimal)) {
-            right = ToDecimalEvaluator.toDecimal(right);
-        }
+        left = ArithmeticUtil.convertToDecimal(left);
+        right = ArithmeticUtil.convertToDecimal(right);
+
         return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal) left).doubleValue()), ((BigDecimal) right).doubleValue())), null);
     }
 

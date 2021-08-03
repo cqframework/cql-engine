@@ -32,7 +32,7 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
             return null;
         }
 
-        String type = ArithmeticUtil.determineClassTypeForArithmetic(left, right);
+        String type = ArithmeticUtil.determineResultTypeForArithmetic(left, right);
         Object returnValue = null;
 
         if(!type.isEmpty()) {
@@ -87,32 +87,21 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
     }
 
     private static Object calculateIntegerMultiply(Object left, Object right) {
-        if(!(left instanceof Integer)) {
-            left = ToIntegerEvaluator.toInteger(left);
-        }
-        if(!(right instanceof Integer)) {
-            right = ToIntegerEvaluator.toInteger(right);
-        }
+        left = ArithmeticUtil.convertToInteger(left);
+        right = ArithmeticUtil.convertToInteger(right);
+
         return (Integer) left * (Integer) right;
     }
 
     private static Object calculateLongMultiply(Object left, Object right) {
-        if(!(left instanceof Long)) {
-            left = ToLongEvaluator.toLong(left);
-        }
-        if(!(right instanceof Long)) {
-            right = ToLongEvaluator.toLong(right);
-        }
+        left = ArithmeticUtil.convertToLong(left);
+        right = ArithmeticUtil.convertToLong(right);
         return (Long) left * (Long) right;
     }
 
     private static Object calculateDecimalMultiply(Object left, Object right) {
-        if(!(left instanceof BigDecimal)) {
-            left = ToDecimalEvaluator.toDecimal(left);
-        }
-        if(!(right instanceof BigDecimal)) {
-            right = ToDecimalEvaluator.toDecimal(right);
-        }
+        left = ArithmeticUtil.convertToDecimal(left);
+        right = ArithmeticUtil.convertToDecimal(right);
         return Value.verifyPrecision(((BigDecimal) left).multiply((BigDecimal) right), null);
     }
 
