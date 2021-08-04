@@ -48,29 +48,26 @@ define IsNull: ToQuantity('444 \'cm')
 public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQuantity {
 
     public static Quantity toQuantity(String str) {
-        StringBuilder number = new StringBuilder();
-        StringBuilder unit = new StringBuilder();
-        // Commonly Used UCUM Codes for Healthcare Units : http://download.hl7.de/documents/ucum/ucumdata.html
-        for (char c : str.toCharArray()) {
-            if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.length() == 0) {
-                number.append(c);
-            } else if (Character.isLetter(c) || c == '/' || c == '%') {
-                unit.append(c);
-            } else if (c == ' ' || c == '\'') {
-                // continue
-            } else {
-                throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
-            }
-        }
-        try {
-            BigDecimal ret = new BigDecimal(number.toString());
-            if (Value.validateDecimal(ret, null) == null) {
+        String[] tokens = str.trim().replaceAll("\'", "").split("\\s+");
+
+        if (tokens.length >= 1) {
+            Quantity quantity = new Quantity();
+            try {
+                BigDecimal number = new BigDecimal(tokens[0]);
+                if (Value.validateDecimal(number, null) == null) {
+                    return null;
+                }
+                quantity.setValue(number);
+
+            } catch (NumberFormatException nfe) {
                 return null;
             }
-            return new Quantity().withValue(ret).withUnit(unit.toString());
-        } catch (NumberFormatException nfe) {
-            return null;
+            if (tokens.length > 1) {
+                quantity.setUnit(tokens[1]);
+            }
+            return quantity;
         }
+        return null;
     }
 
     public static Quantity toQuantity(Object operand) {

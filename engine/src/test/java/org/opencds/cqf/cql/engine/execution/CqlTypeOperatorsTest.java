@@ -400,7 +400,12 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.5")).withUnit("cm")));
 
         result = context.resolveExpressionRef("StringPercentToQuantity").getExpression().evaluate(context);
-        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("%")));
+        Quantity quantity = new Quantity().withValue(new BigDecimal("60")).withUnit("%");
+        Assert.assertTrue(((Quantity) result).equal(quantity));
+
+        result = context.resolveExpressionRef("StringPercentWithoutQuoteToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(quantity));
+
     }
 
     /**

@@ -98,6 +98,7 @@ define String123ToLong: ToLong('123')
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
 define StringPercentToQuantity: ToQuantity('60 \'%\'')
+define StringPercentWithoutQuoteToQuantity: ToQuantity('60 %')
 
 //ToRatio
 define ToRatioIsValid: ToRatio('1.0 \'mg\':2.0 \'mg\'')
