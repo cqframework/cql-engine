@@ -99,6 +99,8 @@ define String123ToLong: ToLong('123')
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
 define StringInvalidToQuantityNull: ToQuantity('+-0.1 \'mg\'')
+define String100PerMinPerSqMeterToQuantity: ToQuantity('100 daL/min/m2')
+define String100UnitPer10BillionToQuantity: ToQuantity('100 U/10*10{cells}')
 define String60DayPer7DayToQuantity: ToQuantity('60 d/(7.d)')
 define String60EhrlichPer100gmToQuantity: ToQuantity('60 {Ehrlich\'U}/100.g')
 define StringPercentToQuantity: ToQuantity('60 \'%\'')
