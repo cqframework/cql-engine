@@ -399,6 +399,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("String5D5CMToQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.5")).withUnit("cm")));
 
+        result = context.resolveExpressionRef("StringInvalidToQuantityNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+
         result = context.resolveExpressionRef("String60DayPer7DayToQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("d/(7.d)")));
 
