@@ -48,26 +48,33 @@ define IsNull: ToQuantity('444 \'cm')
 public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQuantity {
 
     public static Quantity toQuantity(String str) {
-        String[] tokens = str.trim().replaceAll("\'", "").split("\\s+");
+        str = str.trim();
+        int index = str.indexOf(' ');
 
-        if (tokens.length >= 1) {
-            Quantity quantity = new Quantity();
-            try {
-                BigDecimal number = new BigDecimal(tokens[0]);
-                if (Value.validateDecimal(number, null) == null) {
-                    return null;
-                }
-                quantity.setValue(number);
+        String number = str;
+        Quantity quantity = new Quantity();
 
-            } catch (NumberFormatException nfe) {
+        if (index > 0) {
+            number = str.substring(0, index);
+            quantity.setUnit(str.substring(index + 1).replaceAll("[\' ]", ""));
+        }
+        quantity = setValue(quantity, number);
+
+        return quantity;
+    }
+
+    private static Quantity setValue(Quantity quantity, String str) {
+        try {
+            BigDecimal number = new BigDecimal(str);
+            if (Value.validateDecimal(number, null) == null) {
                 return null;
             }
-            if (tokens.length > 1) {
-                quantity.setUnit(tokens[1]);
-            }
-            return quantity;
+            quantity.setValue(number);
+
+        } catch (NumberFormatException nfe) {
+            return null;
         }
-        return null;
+        return quantity;
     }
 
     public static Quantity toQuantity(Object operand) {
