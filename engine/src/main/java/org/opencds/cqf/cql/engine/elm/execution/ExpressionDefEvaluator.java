@@ -6,6 +6,13 @@ import org.opencds.cqf.cql.engine.execution.Context;
 public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.ExpressionDef {
 
     @Override
+    public void prepare(Context context) {
+        if (getExpression() != null) {
+            getExpression().prepare(context);
+        }
+    }
+
+    @Override
     protected Object internalEvaluate(Context context) {
         if (this.getContext() != null) {
             context.enterContext(this.getContext());

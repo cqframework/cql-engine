@@ -8,6 +8,17 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 public class ForEachEvaluator extends org.cqframework.cql.elm.execution.ForEach {
 
+    @Override
+    public void prepare(Context context) {
+        if (getSource() != null) {
+            getSource().prepare(context);
+        }
+
+        if (getElement() != null) {
+            getElement().prepare(context);
+        }
+    }
+
     public Object forEach(Object source, Object element, Context context) {
         if (source == null || element == null) {
             return null;

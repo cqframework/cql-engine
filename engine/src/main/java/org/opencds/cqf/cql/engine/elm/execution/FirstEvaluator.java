@@ -11,6 +11,13 @@ If the argument is null, the result is null.
 
 public class FirstEvaluator extends org.cqframework.cql.elm.execution.First {
 
+    @Override
+    public void prepare(Context context) {
+        if (getSource() != null) {
+            getSource().prepare(context);
+        }
+    }
+
     public static Object first(Object source) {
 
         if (source == null) {

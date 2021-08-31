@@ -12,6 +12,13 @@ If the argument is null, the result is null.
 
 public class LastEvaluator extends org.cqframework.cql.elm.execution.Last {
 
+    @Override
+    public void prepare(Context context) {
+        if (getSource() != null) {
+            getSource().prepare(context);
+        }
+    }
+
     public static Object last(Object source) {
         if (source == null) {
             return null;

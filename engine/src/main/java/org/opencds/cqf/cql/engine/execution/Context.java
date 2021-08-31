@@ -14,23 +14,7 @@ import java.util.Stack;
 
 import javax.xml.namespace.QName;
 
-import org.cqframework.cql.elm.execution.ChoiceTypeSpecifier;
-import org.cqframework.cql.elm.execution.CodeDef;
-import org.cqframework.cql.elm.execution.CodeSystemDef;
-import org.cqframework.cql.elm.execution.ConceptDef;
-import org.cqframework.cql.elm.execution.ExpressionDef;
-import org.cqframework.cql.elm.execution.FunctionDef;
-import org.cqframework.cql.elm.execution.IncludeDef;
-import org.cqframework.cql.elm.execution.IntervalTypeSpecifier;
-import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.ListTypeSpecifier;
-import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
-import org.cqframework.cql.elm.execution.OperandDef;
-import org.cqframework.cql.elm.execution.ParameterDef;
-import org.cqframework.cql.elm.execution.Tuple;
-import org.cqframework.cql.elm.execution.TypeSpecifier;
-import org.cqframework.cql.elm.execution.ValueSetDef;
-import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.cqframework.cql.elm.execution.*;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
@@ -75,6 +59,28 @@ public class Context {
                 return size() > 15;
             }
         };
+    }
+
+    // Arbitrary starting point for generated local Ids.
+    // If the input ELM does not have local Ids, some of the optimization
+    // outputs require references to be established between ELM nodes,
+    // so local ids are generated if not present in those cases.
+    // Uses the prefix E to avoid clashes with the requirements processor, which uses G
+    private int nextLocalId = 10000;
+    public String generateLocalId() {
+        nextLocalId++;
+        return String.format("E%d", nextLocalId);
+    }
+
+    private Map<String, Retrieve> retrieveIndex = new HashMap<String, Retrieve>();
+    public void indexRetrieve(Retrieve retrieve) {
+        if (retrieve.getLocalId() == null) {
+            retrieve.setLocalId(generateLocalId());
+        }
+        retrieveIndex.put(retrieve.getLocalId(), retrieve);
+    }
+    public Retrieve getRetrieveByLocalId(String localId) {
+        return retrieveIndex.get(localId);
     }
 
     private List<Object> evaluatedResources = new ArrayList<>();

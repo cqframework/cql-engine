@@ -10,6 +10,17 @@ import org.opencds.cqf.cql.engine.execution.Variable;
 public class FilterEvaluator extends Filter {
 
     @Override
+    public void prepare(Context context) {
+        if (getSource() != null) {
+            getSource().prepare(context);
+        }
+
+        if (getCondition() != null) {
+            getCondition().prepare(context);
+        }
+    }
+
+    @Override
     protected Object internalEvaluate(Context context) {
         Object source = this.getSource().evaluate(context);
 

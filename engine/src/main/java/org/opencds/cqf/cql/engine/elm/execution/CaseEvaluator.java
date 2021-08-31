@@ -28,6 +28,26 @@ end
 
 public class CaseEvaluator extends org.cqframework.cql.elm.execution.Case {
 
+    @Override
+    public void prepare(Context context) {
+        if (getComparand() != null) {
+            getComparand().prepare(context);
+        }
+
+        for (CaseItem caseItem : getCaseItem()) {
+            if (caseItem.getWhen() != null) {
+                caseItem.getWhen().prepare(context);
+            }
+            if (caseItem.getThen() != null) {
+                caseItem.getThen().prepare(context);
+            }
+        }
+
+        if (getElse() != null) {
+            getElse().prepare(context);
+        }
+    }
+
     public Object selectedCase(Context context, Object comparand) {
         for (CaseItem caseItem : getCaseItem()) {
             Object when = caseItem.getWhen().evaluate(context);
