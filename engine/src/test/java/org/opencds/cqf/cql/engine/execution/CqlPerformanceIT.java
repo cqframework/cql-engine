@@ -28,11 +28,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
-public class CqlPerformanceIT {
+public class CqlPerformanceIT  extends TranslatingTestBase {
 
     private static final Integer ITERATIONS = 200;
 
     private static final Logger logger = LoggerFactory.getLogger(CqlPerformanceIT.class);
+
+    // This test is a basically empty library that tests how long the engine initialization takes.
+    @Test
+    public void testEngineInit() throws IOException, JAXBException, UcumException {
+        Library library = this.toLibrary("library Test");
+        LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
+
+        Double average = runPerformanceTest("Test", libraryLoader);
+        assertTrue(average < 2.0, "EngineInit took longer per iteration than is acceptable.");
+    }
 
     // This test is for the various CQL operators
     @Test
