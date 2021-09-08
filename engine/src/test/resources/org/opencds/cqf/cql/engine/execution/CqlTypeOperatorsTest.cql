@@ -44,6 +44,7 @@ define ConvertsToLongTrue: ConvertsToLong('123')
 define ConvertsToLongFalse: ConvertsToLong('+-1')
 define ConvertsToLongNull: ConvertsToLong(null)
 
+//Quantity
 define ConvertsToQuantityStringTrue: ConvertsToQuantity('-0.1 \'mg\'')
 define ConvertsToQuantityStringFalse: ConvertsToQuantity('+-0.1 \'mg\'')
 define ConvertsToQuantityIntegerTrue: ConvertsToQuantity(1)
@@ -97,6 +98,17 @@ define String123ToLong: ToLong('123')
 
 //ToQuantity
 define String5D5CMToQuantity: ToQuantity('5.5 cm')
+define StringInvalidToQuantityNull: ToQuantity('+-0.1 \'mg\'')
+define String100PerMinPerSqMeterToQuantity: ToQuantity('100 daL/min/m2')
+define String100UnitPer10BillionToQuantity: ToQuantity('100 U/10*10{cells}')
+define String60DayPer7DayToQuantity: ToQuantity('60 d/(7.d)')
+define String60EhrlichPer100gmToQuantity: ToQuantity('60 {Ehrlich\'U}/100.g')
+define StringPercentToQuantity: ToQuantity('60 \'%\'')
+define StringPercentWithoutQuoteToQuantity: ToQuantity('70 %')
+define StringPercentWithTabToQuantity: ToQuantity('80\t%')
+define StringPercentWithMultiSpacesToQuantity: ToQuantity('90    %')
+define StringPercentWithSpacesUnitToQuantity: ToQuantity('10 m l')
+define StringPercentWithQuoteUnitToQuantity: ToQuantity('20 m\'l')
 
 //ToRatio
 define ToRatioIsValid: ToRatio('1.0 \'mg\':2.0 \'mg\'')

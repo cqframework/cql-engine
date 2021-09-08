@@ -398,6 +398,40 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("String5D5CMToQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.5")).withUnit("cm")));
+
+        result = context.resolveExpressionRef("StringInvalidToQuantityNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+
+        result = context.resolveExpressionRef("String100PerMinPerSqMeterToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("100")).withUnit("daL/min/m2")));
+
+        result = context.resolveExpressionRef("String100UnitPer10BillionToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("100")).withUnit("U/10*10{cells}")));
+
+        result = context.resolveExpressionRef("String60DayPer7DayToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("d/(7.d)")));
+
+        result = context.resolveExpressionRef("String60EhrlichPer100gmToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("{EhrlichU}/100.g")));
+
+        result = context.resolveExpressionRef("StringPercentToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithoutQuoteToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("70")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithTabToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("80")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithMultiSpacesToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("90")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithSpacesUnitToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("10")).withUnit("ml")));
+
+        result = context.resolveExpressionRef("StringPercentWithQuoteUnitToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("20")).withUnit("ml")));
+
     }
 
     /**
