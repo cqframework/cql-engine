@@ -40,8 +40,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = this.toLibrary("library Test");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        Double average = runPerformanceTest("Test", libraryLoader);
-        assertTrue(average < 2.0, "EngineInit took longer per iteration than is acceptable.");
+        runPerformanceTest("Engine init", "Test", libraryLoader, 3.0);
     }
 
     // This test is for the various CQL operators
@@ -50,8 +49,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = translate("portable/CqlTestSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        Double average = runPerformanceTest("CqlTestSuite", libraryLoader);
-        assertTrue(average < 300.0, "CqlTestSuite took longer per iteration than is acceptable.");
+        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 300.0);
     }
 
     // This test is for the runtime errors
@@ -62,20 +60,15 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        Double average = runPerformanceTest("CqlErrorTestSuite", libraryLoader);
-        assertTrue(average < 10.0, "CqlErrorTestSuite took longer per iteration than is acceptable.");
+        runPerformanceTest("CqlErrorTestSuite", "CqlErrorTestSuite", libraryLoader, 10.0);
     }
 
     // This test is to check the validity of the internal representation of the CQL types (OPTIONAL)
     @Test
     public void testInternalTypeRepresentationSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlInternalTypeRepresentationSuite.cql");
-
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
-
-        Double average = runPerformanceTest("CqlInternalTypeRepresentationSuite", libraryLoader);
-
-        assertTrue(average < 10.0, "CqlInternalTypeRepresentationSuite took longer per iteration than is acceptable");
+        runPerformanceTest("CqlInternalTypeRepresentationSuite", "CqlInternalTypeRepresentationSuite", libraryLoader, 300.0);
     }
 
     private Library translate(String file)  throws UcumException, JAXBException, IOException {
@@ -107,7 +100,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         return CqlLibraryReader.read(new StringReader(xml));
     }
 
-    private Double runPerformanceTest(String libraryName, LibraryLoader libraryLoader) {
+    private void runPerformanceTest(String testName, String libraryName, LibraryLoader libraryLoader, Double maxPerIterationMs) {
         // A new CqlEngine is created for each loop because it resets and rebuilds the context completely.
 
         // Warm up the JVM
@@ -125,8 +118,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         long timeElapsed = Duration.between(start, finish).toMillis();
         Double perIteration = (double)timeElapsed / (double)ITERATIONS;
 
-        logger.info("{} performance test took {} millis for {} iterations. Per iteration: {} ms", libraryName, timeElapsed, ITERATIONS, perIteration);
-
-        return perIteration;
+        logger.info("{} performance test took {} millis for {} iterations. Per iteration: {} ms", testName, timeElapsed, ITERATIONS, perIteration);
+        assertTrue(perIteration < maxPerIterationMs, String.format("%s took longer per iteration than allowed. max: %3.2f, actual: %3.2f", testName, maxPerIterationMs, perIteration));
     }
 }
