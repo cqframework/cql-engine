@@ -56,8 +56,6 @@ import org.testng.annotations.Test;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
-import org.hl7.fhirpath.TestLibrarySourceProvider;
-
 public class TestFhirPath {
 
     private FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.DSTU3);

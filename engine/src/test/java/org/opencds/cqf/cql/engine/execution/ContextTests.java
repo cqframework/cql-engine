@@ -32,13 +32,11 @@ public class ContextTests {
         DataProvider dataProvider = new DataProvider(){
 
             @Override
-            @SuppressWarnings("deprecation")
             public String getPackageName() {
                 return "test.package.name";
             }
 
             @Override
-            @SuppressWarnings("deprecation")
             public void setPackageName(String packageName) {
             }
 

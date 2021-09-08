@@ -672,7 +672,6 @@ public class Context {
         return resolveDataProvider(packageName, true);
     }
 
-    @SuppressWarnings("deprecation")
     public DataProvider resolveDataProvider(String packageName, boolean mustResolve) {
         DataProvider dataProvider = packageMap.get(packageName);
         if (dataProvider == null && mustResolve) {

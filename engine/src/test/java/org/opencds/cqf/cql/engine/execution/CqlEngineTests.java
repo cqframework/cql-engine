@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -154,5 +155,25 @@ public class CqlEngineTests extends TranslatingTestBase {
         assertThat(result.forExpression("X"), is(10));
         assertThat(result.forExpression("Y"), is(4));
         assertThat(result.forExpression("W"), is(15));
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void validationEnabled_validatesTerminology() throws IOException, JAXBException  {
+        Library library = this.toLibrary("library Test version '1.0.0'\ncodesystem \"X\" : 'http://example.com'\ndefine X:\n5+5\ndefine Y: 2 + 2");
+
+        LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
+
+        CqlEngine engine = new CqlEngine(libraryLoader, EnumSet.of(CqlEngine.Options.EnableValidation));
+        engine.evaluate("Test");
+    }
+
+    @Test
+    public void validationDisabled_doesNotValidateTerminology() throws IOException, JAXBException {
+        Library library = this.toLibrary("library Test version '1.0.0'\ncodesystem \"X\" : 'http://example.com'\ndefine X:\n5+5\ndefine Y: 2 + 2");
+
+        LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
+
+        CqlEngine engine = new CqlEngine(libraryLoader);
+        engine.evaluate("Test");
     }
 }
