@@ -65,7 +65,7 @@ public class CqlPerformanceIT {
 
         Double average = runPerformanceTest("CqlInternalTypeRepresentationSuite", libraryLoader);
 
-        assertTrue(average < 5.0, "CqlInternalTypeRepresentationSuite took longer per iteration than is acceptable");
+        assertTrue(average < 10.0, "CqlInternalTypeRepresentationSuite took longer per iteration than is acceptable");
     }
 
     private Library translate(String file)  throws UcumException, JAXBException, IOException {

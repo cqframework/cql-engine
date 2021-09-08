@@ -79,17 +79,6 @@ public class CqlEngineTests extends TranslatingTestBase {
         engine.evaluate("Test");
     }
 
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void test_terminologyLibrary_noProvider_throwsException() throws IOException, JAXBException {
-        Library library = this.toLibrary("library Test version '1.0.0'\nvalueset valueset \"Dummy Value Set\": \"http://localhost\"\ndefine X:\n5+5");
-
-        LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
-
-        CqlEngine engine = new CqlEngine(libraryLoader);
-
-        engine.evaluate("Test");
-    }
-
     @Test
     public void test_twoExpressions_byLibrary_allReturned() throws IOException, JAXBException {
         Library library = this.toLibrary("library Test version '1.0.0'\ndefine X:\n5+5\ndefine Y: 2 + 2");
