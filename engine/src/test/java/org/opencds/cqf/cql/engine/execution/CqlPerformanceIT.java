@@ -49,7 +49,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = translate("portable/CqlTestSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 290.0);
+        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 350.0);
     }
 
     // This test is for the runtime errors
