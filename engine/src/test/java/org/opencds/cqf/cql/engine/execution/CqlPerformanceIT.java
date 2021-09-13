@@ -68,7 +68,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
     public void testInternalTypeRepresentationSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlInternalTypeRepresentationSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
-        runPerformanceTest("CqlInternalTypeRepresentationSuite", "CqlInternalTypeRepresentationSuite", libraryLoader, 1.5);
+        runPerformanceTest("CqlInternalTypeRepresentationSuite", "CqlInternalTypeRepresentationSuite", libraryLoader, 3);
     }
 
     private Library translate(String file)  throws UcumException, JAXBException, IOException {
