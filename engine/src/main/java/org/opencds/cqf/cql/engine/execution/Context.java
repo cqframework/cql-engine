@@ -46,6 +46,8 @@ import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * NOTE: This class is thread-affine; it uses thread local storage to allow statics throughout the code base to access
@@ -54,10 +56,14 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 public class Context {
 
+    private static Logger logger = LoggerFactory.getLogger(Context.class);
+
     private static ThreadLocal<Context> threadContext = new ThreadLocal<>();
     public static Context getContext() {
         return threadContext.get();
     }
+
+    private static UcumService sharedUcumService;
 
     private boolean enableExpressionCache = false;
 
@@ -167,25 +173,30 @@ public class Context {
 
     public Context(Library library) {
         setEvaluationDateTime(ZonedDateTime.now());
-        init(library, new SystemDataProvider());
+        init(library, new SystemDataProvider(), null);
     }
 
     public Context(Library library, DataProvider systemDataProvider) {
         setEvaluationDateTime(ZonedDateTime.now());
-        init(library, systemDataProvider);
+        init(library, systemDataProvider, null);
     }
 
     public Context(Library library, ZonedDateTime evaluationZonedDateTime) {
         setEvaluationDateTime(evaluationZonedDateTime);
-        init(library, new SystemDataProvider());
+        init(library, new SystemDataProvider(), null);
     }
 
     public Context(Library library, ZonedDateTime evaluationZonedDateTime, DataProvider systemDataProvider) {
         setEvaluationDateTime(evaluationZonedDateTime);
-        init(library, systemDataProvider);
+        init(library, systemDataProvider, null);
     }
 
-    private void init(Library library, DataProvider systemDataProvider) {
+    public Context(Library library, ZonedDateTime evaluationZonedDateTime, DataProvider systemDataProvider, UcumService ucumService) {
+        setEvaluationDateTime(evaluationZonedDateTime);
+        init(library, systemDataProvider, ucumService);
+    }
+
+    private void init(Library library, DataProvider systemDataProvider, UcumService ucumService) {
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
@@ -193,10 +204,12 @@ public class Context {
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
-        try {
-            ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
-        } catch (UcumException ue) {
-            ucumService = null;
+
+        if (ucumService != null) {
+            this.ucumService = ucumService;
+        }
+        else {
+            this.ucumService = getSharedUcumService();
         }
         threadContext.set(this);
     }
@@ -221,6 +234,19 @@ public class Context {
 
     public UcumService getUcumService() {
         return ucumService;
+    }
+
+    protected synchronized UcumService getSharedUcumService() {
+        if (sharedUcumService == null) {
+            try {
+                sharedUcumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+            }
+            catch (UcumException e) {
+                logger.warn("Error creating shared UcumService", e);
+            }
+        }
+
+        return sharedUcumService;
     }
 
     public void setExpressionCaching(boolean yayOrNay) {

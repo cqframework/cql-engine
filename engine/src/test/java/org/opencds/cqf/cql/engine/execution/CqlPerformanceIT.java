@@ -40,7 +40,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = this.toLibrary("library Test");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        runPerformanceTest("Engine init", "Test", libraryLoader, 6.0);
+        runPerformanceTest("Engine init", "Test", libraryLoader, 0.1);
     }
 
     // This test is for the various CQL operators
@@ -49,7 +49,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = translate("portable/CqlTestSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 300.0);
+        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 290.0);
     }
 
     // This test is for the runtime errors
@@ -68,7 +68,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
     public void testInternalTypeRepresentationSuite() throws IOException, JAXBException, UcumException {
         Library library = translate("portable/CqlInternalTypeRepresentationSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
-        runPerformanceTest("CqlInternalTypeRepresentationSuite", "CqlInternalTypeRepresentationSuite", libraryLoader, 300.0);
+        runPerformanceTest("CqlInternalTypeRepresentationSuite", "CqlInternalTypeRepresentationSuite", libraryLoader, 1.5);
     }
 
     private Library translate(String file)  throws UcumException, JAXBException, IOException {
