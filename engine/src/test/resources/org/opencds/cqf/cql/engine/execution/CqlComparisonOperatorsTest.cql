@@ -159,39 +159,40 @@ define UncertaintyLessEqualTrue: DateTime(2013) <= DateTime(2014, 2, 15)
 define UncertaintyLessEqualFalse: DateTime(2015) <= DateTime(2014, 2, 15)
 
 //Equivalent
-define EquivTrueTrue                : true ~ true
-define EquivTrueFalse               : true ~ false
-define EquivFalseFalse              : false ~ false
-define EquivFalseTrue               : false ~ true
-define EquivNullNull                : null as String ~ null
-define EquivTrueNull                : true ~ null
-define EquivNullTrue                : null ~ true
-define EquivInt1Int1                : 1 ~ 1
-define EquivInt1Int2                : 1 ~ 2
-define EquivStringAStringA          : 'a' ~ 'a'
-define EquivStringAStringB          : 'a' ~ 'b'
-define EquivStringIgnoreCase        : 'Abel' ~ 'abel'
-define EquivFloat1Float1            : 1.0 ~ 1.0
-define EquivFloat1Float2            : 1.0 ~ 2.0
-define EquivFloat1Float1WithZ       : 1.0 ~ 1.00
-define EquivFloat1Float1WithPrecision : 1.5 ~ 1.55
+define EquivTrueTrue                      : true ~ true
+define EquivTrueFalse                     : true ~ false
+define EquivFalseFalse                    : false ~ false
+define EquivFalseTrue                     : false ~ true
+define EquivNullNull                      : null as String ~ null
+define EquivTrueNull                      : true ~ null
+define EquivNullTrue                      : null ~ true
+define EquivInt1Int1                      : 1 ~ 1
+define EquivInt1Int2                      : 1 ~ 2
+define EquivStringAStringA                : 'a' ~ 'a'
+define EquivStringAStringB                : 'a' ~ 'b'
+define EquivStringIgnoreCase              : 'Abel' ~ 'abel'
+define EquivFloat1Float1                  : 1.0 ~ 1.0
+define EquivFloat1Float2                  : 1.0 ~ 2.0
+define EquivFloat1Float1WithZ             : 1.0 ~ 1.00
+define EquivFloat1Float1WithPrecision     : 1.5 ~ 1.55
 define EquivFloat1Float1WithPrecisionAndZ : 1.50 ~ 1.55
-define EquivFloat1Int1              : 1.0 ~ 1
-define EquivFloat1Int2              : 1.0 ~ 2
-define EquivEqCM1CM1                : 1'cm' ~ 1'cm'
-define EquivEqCM1M01                : 1'cm' ~ 0.01'm'
-define RatioEquivalent              : 1'cm':2'cm' ~ 1'cm':2'cm'
-define RatioNotEquivalent           : 1'cm':2'cm' ~ 1.1'cm':2'cm'
-define EquivTupleJohnJohn           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }
-define EquivTupleJohnJohnWithNulls  : Tuple { Id : 1, Name : 'John', Position: null } ~ Tuple { Id : 1, Name : 'John', Position: null }
-define EquivTupleJohnJohnFalse      : Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } ~ Tuple { Id : 1, Name : 'John' }
-define EquivTupleJohnJohnFalse2     : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' }
-define EquivTupleJohnJane           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }
-define EquivTupleJohn1John2         : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }
-define EquivDateTimeTodayToday      : Today() ~ Today()
-define EquivDateTimeTodayYesterday  : Today() ~ Today() - 1 days
-define EquivTime10A10A              : @T10:00:00.000 ~ @T10:00:00.000
-define EquivTime10A10P              : @T10:00:00.000 ~ @T22:00:00.000
+define EquivFloatTrailingZero             : 1.001 ~ 1.000
+define EquivFloat1Int1                    : 1.0 ~ 1
+define EquivFloat1Int2                    : 1.0 ~ 2
+define EquivEqCM1CM1                      : 1'cm' ~ 1'cm'
+define EquivEqCM1M01                      : 1'cm' ~ 0.01'm'
+define RatioEquivalent                    : 1'cm':2'cm' ~ 1'cm':2'cm'
+define RatioNotEquivalent                 : 1'cm':2'cm' ~ 1'cm':3'cm'
+define EquivTupleJohnJohn                 : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John' }
+define EquivTupleJohnJohnWithNulls        : Tuple { Id : 1, Name : 'John', Position: null } ~ Tuple { Id : 1, Name : 'John', Position: null }
+define EquivTupleJohnJohnFalse            : Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' } ~ Tuple { Id : 1, Name : 'John' }
+define EquivTupleJohnJohnFalse2           : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 1, Name : 'John', Position: 'Shift Manager' }
+define EquivTupleJohnJane                 : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'Jane' }
+define EquivTupleJohn1John2               : Tuple { Id : 1, Name : 'John' } ~ Tuple { Id : 2, Name : 'John' }
+define EquivDateTimeTodayToday            : Today() ~ Today()
+define EquivDateTimeTodayYesterday        : Today() ~ Today() - 1 days
+define EquivTime10A10A                    : @T10:00:00.000 ~ @T10:00:00.000
+define EquivTime10A10P                    : @T10:00:00.000 ~ @T22:00:00.000
 
 //Not Equal
 define SimpleNotEqTrueTrue : true != true

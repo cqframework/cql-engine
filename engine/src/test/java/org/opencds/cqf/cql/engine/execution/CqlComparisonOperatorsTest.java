@@ -571,6 +571,9 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("EquivFloat1Float1WithPrecisionAndZ").getExpression().evaluate(context);
         assertThat(result, is(true));
 
+        result = context.resolveExpressionRef("EquivFloatTrailingZero").getExpression().evaluate(context);
+        assertThat(result, is(true));
+
         result = context.resolveExpressionRef("EquivFloat1Int1").getExpression().evaluate(context);
         assertThat(result, is(true));
 
