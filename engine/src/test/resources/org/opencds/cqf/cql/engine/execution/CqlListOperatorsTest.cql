@@ -204,7 +204,8 @@ define ProperIncludesDateTimeTrue:        {DateTime(2001, 9, 11), DateTime(2012,
 define ProperIncludesDateTimeFalse:       {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly includes {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
 define ProperIncludesTimeTrue:            { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999 }
 define ProperIncludesTimeFalse:           { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }
-define ProperlyIncludesNullLeft: null properly includes {2}
+define ProperlyIncludesNullLeft:          null properly includes {2}
+define ProperlyIncludes1And111:           {1} properly includes {1, 1}
 
 //ProperContains
 define ProperContainsNullRightFalse: {'s', 'u', 'n'} properly includes null
@@ -219,16 +220,17 @@ define ProperInTimeTrue: @T15:59:59 properly included in { @T15:59:59, @T20:59:5
 define ProperInTimeNull: @T15:59:59 properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
 
 //ProperlyIncludedIn
-define ProperIncludedInEmptyAndEmpty: {} properly included in {}
+define ProperIncludedInEmptyAndEmpty:       {} properly included in {}
 define ProperIncludedInListNullAndListNull: {null} properly included in {null}
-define ProperIncludedInEmptyAnd123: {} properly included in {1, 2, 3}
-define ProperIncludedIn2And123: {2} properly included in {1, 2, 3}
-define ProperIncludedIn4And123: {4} properly included in {1, 2, 3}
-define ProperIncludedInDateTimeTrue: {DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
-define ProperIncludedInDateTimeFalse: {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
-define ProperIncludedInTimeTrue: { @T15:59:59.999, @T20:59:59.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
-define ProperIncludedInTimeFalse: { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
-define ProperlyIncludedInNulRight: {'s', 'u', 'n'} properly included in null
+define ProperIncludedInEmptyAnd123:         {} properly included in {1, 2, 3}
+define ProperIncludedIn2And123:             {2} properly included in {1, 2, 3}
+define ProperIncludedIn4And123:             {4} properly included in {1, 2, 3}
+define ProperIncludedInDateTimeTrue:        {DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
+define ProperIncludedInDateTimeFalse:       {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)} properly included in {DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10)}
+define ProperIncludedInTimeTrue:            { @T15:59:59.999, @T20:59:59.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
+define ProperIncludedInTimeFalse:           { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 } properly included in { @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 }
+define ProperlyIncludedInNullRight:         {'s', 'u', 'n'} properly included in null
+define ProperlyIncludedIn11And1:            {1, 1} properly included in {1}
 
 //SingletonFrom
 define SingletonFromEmpty: singleton from {}

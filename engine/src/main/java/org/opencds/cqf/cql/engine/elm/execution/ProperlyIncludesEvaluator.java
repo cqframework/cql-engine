@@ -101,7 +101,7 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
 
         return AndEvaluator.and(
                 IncludedInEvaluator.listIncludedIn(right, left),
-                NotEqualEvaluator.notEqual(
+                GreaterEvaluator.greater(
                         leftCount,
                         (int) StreamSupport.stream(((Iterable<?>) right).spliterator(), false).count()
                 )
