@@ -1,10 +1,8 @@
 package org.opencds.cqf.cql.engine.fhir.searchparam;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
+import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import org.apache.commons.lang3.tuple.Pair;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -20,6 +18,7 @@ import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriParam;
 
 public class SearchParameterResolver {
+    private final String PATIENT_ID_CONTEXT = "{{context.patientId}}";
 
     private FhirContext context;
 
@@ -162,5 +161,47 @@ public class SearchParameterResolver {
         } else {
             return null;
         }
+    }
+
+//    public RuntimeSearchParam getPreferredPatientSearchParam(String dataType) {//RuntimeResourceDefinition resourceDef) {
+    public Pair<String, IQueryParameterType> getPreferredPatientSearchParam(String dataType) {
+        RuntimeSearchParam searchParam = null;
+
+        RuntimeResourceDefinition resourceDef = this.context.getResourceDefinition(dataType);
+        List<RuntimeSearchParam> patientSearchParams = getPatientSearchParams(resourceDef);
+        // If there only exists on patient-compartment searchParam, use it.
+        if (patientSearchParams.size() == 1) {
+            searchParam = patientSearchParams.get(0);
+        } else {
+            patientSearchParams.removeIf(sp -> !sp.getParamType().equals(RestSearchParameterTypeEnum.REFERENCE) || !sp.getTargets().contains("Patient"));
+
+            // Order by targets.count descending.
+
+//            if (patientSearchParams.stream().anyMatch(sp -> !sp.getPath().contains("patient") && !sp.getPath().contains("subject"))) {
+//                patientSearchParams.removeIf(sp -> sp.getParamType() != RestSearchParameterTypeEnum.REFERENCE || !sp.getTargets().contains("Patient"));
+//            }
+            // Non-patient|subject paths. consider Coverage or Appointment.actor
+
+
+            //TODO: Is this restriction on the path fair? Introduced to address that case of Observation.performer which has the right type and contains Patient as a target
+            //        patientSearchParams.removeIf(sp -> !sp.getPath().contains("patient") && !sp.getPath().contains("subject"));
+//            patientSearchParams.stream().anyMatch(sp -> sp.getParamType() != RestSearchParameterTypeEnum.REFERENCE || !sp.getTargets().contains("Patient"));
+
+            if (patientSearchParams != null && patientSearchParams.size() > 0) {
+                patientSearchParams.sort(Comparator.comparingInt(sp -> sp.getTargets().size()));
+                searchParam = patientSearchParams.get(0);
+            }
+            //        patientSearchParams.sort(Comparator.comparingInt(sp -> sp.getTargets().size()));
+
+            //        patientSearchParams.stream().filter(sp -> sp.getPathsSplit().contains("subject") || sp.getPathsSplit().contains("patient")).collect(Collectors.toList()).get(0);
+        }
+
+        return Pair.of(searchParam.getName(), new ReferenceParam("Patient", null, PATIENT_ID_CONTEXT));
+//        return searchParam;
+    }
+
+    public List<RuntimeSearchParam> getPatientSearchParams(RuntimeResourceDefinition resourceDef) {
+        List<RuntimeSearchParam> patientSearchParams = resourceDef.getSearchParamsForCompartmentName("Patient");
+        return patientSearchParams;
     }
 }

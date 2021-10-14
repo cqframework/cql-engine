@@ -44,15 +44,15 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
     @Test
     public void noUserSpecifiedPageSizeUsesDefault() {
-        SearchParameterMap map = provider.getBaseMap(null, null, null);
+        SearchParameterMap map = provider.getFhirQueryGenerator().getBaseMap(null, null, null);
         assertEquals( map.getCount(), null );
     }
 
     @Test
     public void userSpecifiedPageSizeIsUsed() {
         Integer expected = 100;
-        provider.setPageSize(expected);
-        SearchParameterMap map = provider.getBaseMap(null, null, null);
+        provider.getFhirQueryGenerator().setPageSize(expected);
+        SearchParameterMap map = provider.getFhirQueryGenerator().getBaseMap(null, null, null);
         assertEquals( map.getCount(), expected );
     }
 
@@ -63,7 +63,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
         mockFhirSearch("/Condition?code=" + escapeUrlParam(code.getSystem() + "|" + code.getCode()) + "&subject=" + escapeUrlParam("Patient/123") + "&_count=500");
 
-        provider.setPageSize(500);
+        provider.getFhirQueryGenerator().setPageSize(500);
         provider.retrieve("Patient", "subject", "123", "Condition", null, "code", codes, null, null, null, null, null);
     }
 
@@ -74,7 +74,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
         mockFhirSearch("/Condition?code" + escapeUrlParam(":") + "in=" + escapeUrlParam(valueSetUrl) + "&subject=" + escapeUrlParam("Patient/123") + "&_count=500");
 
-        provider.setPageSize(500);
+        provider.getFhirQueryGenerator().setPageSize(500);
         provider.retrieve("Patient", "subject", "123", "Condition", "http://hl7.org/fhir/StructureDefinition/Condition", "code", null, valueSetUrl, null, null, null, null);
     }
 
@@ -99,7 +99,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
                 "&onset-date=ge2020[^&]+&onset-date=le[^&]+" +
                 "&_count=500")), makeBundle());
 
-        provider.setPageSize(500);
+        provider.getFhirQueryGenerator().setPageSize(500);
         provider.retrieve("Patient", "subject", "123", "Condition", null, "code", null, null, "onset", null, null, interval);
     }
 
@@ -107,7 +107,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
     public void userSpecifiedPageSizeNotUsedWhenIDQuery() {
         mockFhirRead("/Patient/123", new Patient());
 
-        provider.setPageSize(500);
+        provider.getFhirQueryGenerator().setPageSize(500);
         provider.retrieve("Patient", "id", "123", "Patient", "http://hl7.org/fhir/StructureDefinition/Patient", null, null, null, null, null, null, null);
     }
 
