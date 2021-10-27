@@ -8,9 +8,7 @@ import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.param.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.ValueSet;
+import org.hl7.fhir.r4.model.*;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
@@ -22,7 +20,7 @@ import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
 import java.util.*;
 
-public class FhirQueryGenerator {
+public class R4FhirQueryGenerator {
     //From SearchParameterFhirRetrieveProvider
     private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
 
@@ -52,7 +50,7 @@ public class FhirQueryGenerator {
 //    private SearchParameterResolver searchParameterResolver;
 
 //    public FhirQueryGenerator(IGenericClient fhirClient, SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
-    public FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProviders) {
+    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
@@ -189,9 +187,36 @@ public class FhirQueryGenerator {
             }
         }
 
+        String datePath = null;
+        String dateLowPath = null;
+        String dateHighPath = null;
+        Interval dateRange = null;
+//        if (dataRequirement.hasDateFilter()) {
+//            for (org.hl7.fhir.r4.model.DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
+//                if (dateFilterComponent.hasPath() && dateFilterComponent.hasSearchParam()) {
+//                    throw new UnsupportedOperationException(String.format("Either a path or a searchParam must be provided, but not both"));
+//                }
+//
+//                if (dateFilterComponent.hasPath()) {
+//                    datePath = dateFilterComponent.getPath();
+//                } else if (dateFilterComponent.hasSearchParam()) {
+//                    datePath = dateFilterComponent.getSearchParam();
+//                }
+//
+//                Type dateFilterValue = dateFilterComponent.getValue();
+//                if (dateFilterValue instanceof DateTimeType) {
+//
+//                } else if (dateFilterValue instanceof Duration) {
+//
+//                } else if (dateFilterValue instanceof Period) {
+//
+//                }
+//            }
+//        }
+
         List<SearchParameterMap> maps = new ArrayList<SearchParameterMap>();
         maps = setupQueries(null, null, null, dataRequirement.getType(), null,
-            codePath, codes, valueSet, null, null, null, null);
+            codePath, codes, valueSet, datePath, null, null, null);
 
         for (SearchParameterMap map : maps) {
             String query = map.toNormalizedQueryString(context);
@@ -201,16 +226,9 @@ public class FhirQueryGenerator {
         return queries;
     }
 
-    public boolean isPatientCompartmentResource(RuntimeResourceDefinition resourceDef) {
+    public boolean isPatientCompartmentResource(String dataType) {
+        RuntimeResourceDefinition resourceDef = context.getResourceDefinition(dataType);
         return searchParameterResolver.getPatientSearchParams(resourceDef).size() > 0;
-//        boolean result = true;
-//
-//        List<RuntimeSearchParam>  patientCompartmentSearchParams = resourceDef.getSearchParamsForCompartmentName("Patient");
-//        if (patientCompartmentSearchParams != null && patientCompartmentSearchParams.size() > 0) {
-//            result = true;
-//        }
-//
-//        return result;
     }
 
 //    public List<String> resolveValueCodingCodes(List<Coding> valueCodings) {
@@ -331,15 +349,16 @@ public class FhirQueryGenerator {
         return Pair.of(dateParam.getName(), rangeParam);
     }
 
-//    protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
-//                                                                Object contextValue) {
-//        if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
-////            return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String) contextValue);
-//            return this.searchParameterResolver.getPreferredPatientSearchParam(dataType);
-//        }
-//
-//        return null;
-//    }
+    protected Pair<String, IQueryParameterType> getContextParam(String dataType, String context, String contextPath,
+                                                                Object contextValue) {
+        if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
+            return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String)contextValue);
+        } else if (isPatientCompartmentResource(dataType)) {
+            return this.searchParameterResolver.getPreferredPatientSearchParam(dataType, contextPath, (String)contextValue);
+        }
+
+        return null;
+    }
 
     protected Pair<String, List<TokenOrListParam>> getCodeParams(String dataType, String codePath, Iterable<Code> codes,
                                                                  String valueSet) {
@@ -425,13 +444,14 @@ public class FhirQueryGenerator {
     }
 
     protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue,
-                                                    String dataType, String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
+                                                    String dataType, String templateId, String codePath, Iterable<Code> codes,
+                                                    String valueSet, String datePath,
                                                     String dateLowPath, String dateHighPath, Interval dateRange) {
 
         Pair<String, IQueryParameterType> templateParam = this.getTemplateParam(dataType, templateId);
-//        Pair<String, IQueryParameterType> contextParam = this.getContextParam(dataType, context, contextPath,
-//            contextValue);
-        Pair<String, IQueryParameterType> contextParam = this.searchParameterResolver.getPreferredPatientSearchParam(dataType);
+
+        Pair<String, IQueryParameterType> contextParam = this.getContextParam(dataType, context, contextPath, contextValue);
+
         Pair<String, DateRangeParam> dateRangeParam = this.getDateRangeParam(dataType, datePath, dateLowPath,
             dateHighPath, dateRange);
         Pair<String, List<TokenOrListParam>> codeParams = this.getCodeParams(dataType, codePath, codes, valueSet);

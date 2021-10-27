@@ -122,8 +122,8 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 				flattenedMap.put(name, flattened);
 			}
 
-			if (this.getFhirQueryGenerator().getPageSize() != null) {
-			    search.count(this.getFhirQueryGenerator().getPageSize());
+			if (this.getR4FhirQueryGenerator().getPageSize() != null) {
+			    search.count(this.getR4FhirQueryGenerator().getPageSize());
 			}
 
 			return search.where(flattenedMap).usingStyle(this.searchStyle).execute();

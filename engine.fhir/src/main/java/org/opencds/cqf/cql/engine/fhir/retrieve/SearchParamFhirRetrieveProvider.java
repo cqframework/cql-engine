@@ -1,30 +1,12 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
-import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.apache.commons.lang3.tuple.Pair;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
-import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
-import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
-
-import ca.uhn.fhir.context.RuntimeSearchParam;
-import ca.uhn.fhir.model.api.IQueryParameterType;
-import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
-import ca.uhn.fhir.rest.param.DateParam;
-import ca.uhn.fhir.rest.param.DateRangeParam;
-import ca.uhn.fhir.rest.param.ParamPrefixEnum;
-import ca.uhn.fhir.rest.param.TokenOrListParam;
-import ca.uhn.fhir.rest.param.TokenParam;
-import ca.uhn.fhir.rest.param.TokenParamModifier;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
@@ -34,13 +16,13 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 //    private Integer pageSize;
 //    private int maxCodesPerQuery;
 
-    private FhirQueryGenerator fhirQueryGenerator;
-    public FhirQueryGenerator getFhirQueryGenerator() { return this.fhirQueryGenerator; }
+    private R4FhirQueryGenerator r4FhirQueryGenerator;
+    public R4FhirQueryGenerator getR4FhirQueryGenerator() { return this.r4FhirQueryGenerator; }
 
     public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
 //        this.searchParameterResolver = searchParameterResolver;
 //        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
-        this.fhirQueryGenerator = new FhirQueryGenerator(searchParameterResolver, this.terminologyProvider);
+        this.r4FhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, this.terminologyProvider);
     }
 
 
@@ -76,7 +58,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
             String dateLowPath, String dateHighPath, Interval dateRange) {
 
-        List<SearchParameterMap> queries = this.getFhirQueryGenerator().setupQueries(context, contextPath, contextValue, dataType, templateId,
+        List<SearchParameterMap> queries = this.getR4FhirQueryGenerator().setupQueries(context, contextPath, contextValue, dataType, templateId,
                 codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         return this.executeQueries(dataType, queries);
