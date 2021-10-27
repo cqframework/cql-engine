@@ -87,8 +87,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         this.generator.setExpandValueSets(true);
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
-        String expectedQuery1 = "Observation?category=http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode0,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode1,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode2,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode3&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
-        String expectedQuery2 = "Observation?category=http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode4,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode5,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode6,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyCodeSystem%7Ccode7&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery1 = "Observation?category=http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode0,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode1,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode2,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode3&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery2 = "Observation?category=http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode4,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode5,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode6,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode7&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
 
         assertNotNull(actual);
         assertEquals(actual.size(), 2);
@@ -120,7 +120,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     }
 
     @Test
-    void testGetFhirQueriesCodeInVS() {
+    void testGetFhirQueriesCodeInValueSet() {
         ValueSet valueSet = getTestValueSet("MyValueSet", 500);
 
         org.hl7.fhir.r4.model.Bundle valueSetBundle = new org.hl7.fhir.r4.model.Bundle();
