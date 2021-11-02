@@ -87,8 +87,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         this.generator.setExpandValueSets(true);
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
-        String expectedQuery1 = "Observation?category=http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode0,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode1,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode2,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode3&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
-        String expectedQuery2 = "Observation?category=http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode4,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode5,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode6,http%3A%2F%2Fmyterm.com%2Ffhir%2FCodeSystem%2FMyValueSet%7Ccode7&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&patient=Patient/{{context.patientId}}";
+        String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&patient=Patient/{{context.patientId}}";
 
         assertNotNull(actual);
         assertEquals(actual.size(), 2);
@@ -114,7 +114,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Observation?category:in=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&patient=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -138,7 +138,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Observation?category:in=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet&patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&patient=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -177,7 +177,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Appointment?patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery = "Appointment?patient=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -190,7 +190,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Appointment?patient=Patient%2F%7B%7Bcontext.patientId%7D%7D";
+        String expectedQuery = "Appointment?patient=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }

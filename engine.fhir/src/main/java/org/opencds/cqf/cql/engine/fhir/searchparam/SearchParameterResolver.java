@@ -168,7 +168,7 @@ public class SearchParameterResolver {
         //TODO: Evaluate against CapabilityStatement
         return true;
     }
-    
+
     public Pair<String, IQueryParameterType> getPreferredPatientSearchParam(String dataType, String contextPath, String contextValue) {
         RuntimeSearchParam searchParam = null;
 

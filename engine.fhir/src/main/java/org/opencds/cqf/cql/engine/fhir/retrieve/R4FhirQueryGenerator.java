@@ -18,6 +18,8 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class R4FhirQueryGenerator {
@@ -219,7 +221,12 @@ public class R4FhirQueryGenerator {
             codePath, codes, valueSet, datePath, null, null, null);
 
         for (SearchParameterMap map : maps) {
-            String query = map.toNormalizedQueryString(context);
+            String query = null;
+            try {
+                query = URLDecoder.decode(map.toNormalizedQueryString(context), "UTF-8");
+            } catch (Exception ex) {
+                query = map.toNormalizedQueryString(context);
+            }
             queries.add(dataRequirement.getType() + query);
         }
 
