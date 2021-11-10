@@ -10,46 +10,46 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
-//    private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
-//
-//    private SearchParameterResolver searchParameterResolver;
-//    private Integer pageSize;
-//    private int maxCodesPerQuery;
+    private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
+
+    private SearchParameterResolver searchParameterResolver;
+    private Integer pageSize;
+    private int maxCodesPerQuery;
 
     private R4FhirQueryGenerator r4FhirQueryGenerator;
     public R4FhirQueryGenerator getR4FhirQueryGenerator() { return this.r4FhirQueryGenerator; }
 
     public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
-//        this.searchParameterResolver = searchParameterResolver;
-//        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
+        this.searchParameterResolver = searchParameterResolver;
+        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
         this.r4FhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, this.terminologyProvider);
     }
 
 
-//    public void setPageSize(Integer value) {
-//        if( value == null || value < 1 ) {
-//            throw new IllegalArgumentException("value must be a non-null integer > 0");
-//        }
-//
-//        this.pageSize = value;
-//    }
-//
-//    public Integer getPageSize() {
-//        return this.pageSize;
-//    }
-//
-//    public void setMaxCodesPerQuery(int value) {
-//
-//        if (value < 1) {
-//            throw new IllegalArgumentException("value must be > 0");
-//        }
-//
-//        this.maxCodesPerQuery = value;
-//    }
-//
-//    public int getMaxCodesPerQuery() {
-//        return this.maxCodesPerQuery;
-//    }
+    public void setPageSize(Integer value) {
+        if( value == null || value < 1 ) {
+            throw new IllegalArgumentException("value must be a non-null integer > 0");
+        }
+
+        this.pageSize = value;
+    }
+
+    public Integer getPageSize() {
+        return this.pageSize;
+    }
+
+    public void setMaxCodesPerQuery(int value) {
+
+        if (value < 1) {
+            throw new IllegalArgumentException("value must be > 0");
+        }
+
+        this.maxCodesPerQuery = value;
+    }
+
+    public int getMaxCodesPerQuery() {
+        return this.maxCodesPerQuery;
+    }
 
     protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
