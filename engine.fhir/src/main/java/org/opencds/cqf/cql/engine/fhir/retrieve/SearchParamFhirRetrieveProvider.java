@@ -23,6 +23,14 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         this.searchParameterResolver = searchParameterResolver;
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
         this.r4FhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, this.terminologyProvider);
+        this.getR4FhirQueryGenerator().setExpandValueSets(this.isExpandValueSets());
+    }
+
+    public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, Boolean shouldExpandValueSets) {
+//        this.searchParameterResolver = searchParameterResolver;
+//        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
+        this.r4FhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, this.terminologyProvider);
+        this.getR4FhirQueryGenerator().setExpandValueSets(this.isExpandValueSets());
     }
 
 
