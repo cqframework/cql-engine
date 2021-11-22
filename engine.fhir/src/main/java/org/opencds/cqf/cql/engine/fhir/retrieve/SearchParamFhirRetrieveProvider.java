@@ -33,7 +33,6 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         this.getR4FhirQueryGenerator().setExpandValueSets(this.isExpandValueSets());
     }
 
-
     public void setPageSize(Integer value) {
         if( value == null || value < 1 ) {
             throw new IllegalArgumentException("value must be a non-null integer > 0");
