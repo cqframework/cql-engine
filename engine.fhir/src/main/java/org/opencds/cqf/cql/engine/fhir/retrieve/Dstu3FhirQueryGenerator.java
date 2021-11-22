@@ -114,7 +114,8 @@ public class Dstu3FhirQueryGenerator {
                         code.setCode(codeType.asStringValue());
                         codes.add(code);
                     }
-                } else if (codeFilterComponent.hasValueCoding()) {
+                }
+                if (codeFilterComponent.hasValueCoding()) {
                     codes = new ArrayList<Code>();
 
                     List<org.hl7.fhir.dstu3.model.Coding> codeFilterValueCodings = codeFilterComponent.getValueCoding();
@@ -126,7 +127,8 @@ public class Dstu3FhirQueryGenerator {
                             codes.add(code);
                         }
                     }
-                } else if (codeFilterComponent.hasValueCodeableConcept()) {
+                }
+                if (codeFilterComponent.hasValueCodeableConcept()) {
                     List<org.hl7.fhir.dstu3.model.CodeableConcept> codeFilterValueCodeableConcepts = codeFilterComponent.getValueCodeableConcept();
                     for (CodeableConcept codeableConcept : codeFilterValueCodeableConcepts) {
                         List<org.hl7.fhir.dstu3.model.Coding> codeFilterValueCodeableConceptCodings = codeableConcept.getCoding();
@@ -139,7 +141,8 @@ public class Dstu3FhirQueryGenerator {
                             }
                         }
                     }
-                } else if (codeFilterComponent.hasValueSet()) {
+                }
+                if (codeFilterComponent.hasValueSet()) {
                     if (codeFilterComponent.getValueSetReference().getReference() instanceof String) {
                         valueSet = ((Reference)codeFilterComponent.getValueSet()).getReference();
                     } else if (codeFilterComponent.getValueSetReference() instanceof Reference) {

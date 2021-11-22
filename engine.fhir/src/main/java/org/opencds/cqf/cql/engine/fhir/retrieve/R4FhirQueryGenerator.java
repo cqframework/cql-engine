@@ -91,7 +91,8 @@ public class R4FhirQueryGenerator {
                 if (codeFilterComponent.hasValueSetElement()) {
                     valueSet = codeFilterComponent.getValueSet();
                 }
-                else if (codeFilterComponent.hasCode()) {
+
+                if (codeFilterComponent.hasCode()) {
                     codes = new ArrayList<Code>();
 
                     List<org.hl7.fhir.r4.model.Coding> codeFilterValueCodings = codeFilterComponent.getCode();
