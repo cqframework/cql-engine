@@ -5,30 +5,32 @@ import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.context.RuntimeSearchParam;
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.param.*;
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.tuple.Pair;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.dstu3.model.CodeType;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.Reference;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
-import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
-public class R4FhirQueryGenerator {
+public class Dstu3FhirQueryGenerator {
     private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
 //    private final int DEFAULT_MAX_URI_LENGTH = 8000;
 
     private Integer pageSize;
-//    private int maxUriLength;
+    //    private int maxUriLength;
     private int maxCodesPerQuery;
 
     private FhirContext context;
@@ -45,13 +47,13 @@ public class R4FhirQueryGenerator {
         this.expandValueSets = expandValueSets;
     }
 
-    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
+    public Dstu3FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
 //        this.maxUriLength = DEFAULT_MAX_URI_LENGTH;
 
-        this.context = FhirContext.forR4();
+        this.context = FhirContext.forDstu3();
     }
 
     public void setPageSize(Integer value) {
@@ -76,7 +78,20 @@ public class R4FhirQueryGenerator {
         return this.maxCodesPerQuery;
     }
 
-    public List<String> generateFhirQueries(org.hl7.fhir.r4.model.DataRequirement dataRequirement, org.hl7.fhir.r4.model.CapabilityStatement capabilityStatement) {
+//    public void setMaxUriLength(int maxUriLength) {
+//        throw new NotImplementedException("MaxUriLength is not yet leveraged in the Dstu3FhirQueryGenerator");
+////        if (maxUriLength <= 0) {
+////            throw new IllegalArgumentException("maxUriLength must be > 0");
+////        }
+////
+////        this.maxUriLength = maxUriLength;
+//    }
+
+//    public int getMaxUriLength() {
+//        return this.maxUriLength;
+//    }
+
+    public List<String> generateFhirQueries(org.hl7.fhir.dstu3.model.DataRequirement dataRequirement, org.hl7.fhir.dstu3.model.CapabilityStatement capabilityStatement) {
         List<String> queries = new ArrayList<>();
 
         String codePath = null;
@@ -84,17 +99,25 @@ public class R4FhirQueryGenerator {
         String valueSet = null;
 
         if (dataRequirement.hasCodeFilter()) {
-            for (org.hl7.fhir.r4.model.DataRequirement.DataRequirementCodeFilterComponent codeFilterComponent : dataRequirement.getCodeFilter()) {
-                if (!codeFilterComponent.hasPath()) continue;
+            for (org.hl7.fhir.dstu3.model.DataRequirement.DataRequirementCodeFilterComponent codeFilterComponent : dataRequirement.getCodeFilter()) {
+                if (!codeFilterComponent.hasPath()) {
+                    continue;
+                }
+
                 codePath = codeFilterComponent.getPath();
 
-                if (codeFilterComponent.hasValueSetElement()) {
-                    valueSet = codeFilterComponent.getValueSet();
-                }
-                else if (codeFilterComponent.hasCode()) {
+                // TODO: What to do if/when System is not provided...
+                if (codeFilterComponent.hasValueCode()) {
+                    List<org.hl7.fhir.dstu3.model.CodeType> codeFilterValueCode = codeFilterComponent.getValueCode();
+                    for (CodeType codeType : codeFilterValueCode) {
+                        Code code = new Code();
+                        code.setCode(codeType.asStringValue());
+                        codes.add(code);
+                    }
+                } else if (codeFilterComponent.hasValueCoding()) {
                     codes = new ArrayList<Code>();
 
-                    List<org.hl7.fhir.r4.model.Coding> codeFilterValueCodings = codeFilterComponent.getCode();
+                    List<org.hl7.fhir.dstu3.model.Coding> codeFilterValueCodings = codeFilterComponent.getValueCoding();
                     for (Coding coding : codeFilterValueCodings) {
                         if (coding.hasCode()) {
                             Code code = new Code();
@@ -102,6 +125,25 @@ public class R4FhirQueryGenerator {
                             code.setCode(coding.getCode());
                             codes.add(code);
                         }
+                    }
+                } else if (codeFilterComponent.hasValueCodeableConcept()) {
+                    List<org.hl7.fhir.dstu3.model.CodeableConcept> codeFilterValueCodeableConcepts = codeFilterComponent.getValueCodeableConcept();
+                    for (CodeableConcept codeableConcept : codeFilterValueCodeableConcepts) {
+                        List<org.hl7.fhir.dstu3.model.Coding> codeFilterValueCodeableConceptCodings = codeableConcept.getCoding();
+                        for (Coding coding : codeFilterValueCodeableConceptCodings) {
+                            if (coding.hasCode()) {
+                                Code code = new Code();
+                                code.setSystem(coding.getSystem());
+                                code.setCode(coding.getCode());
+                                codes.add(code);
+                            }
+                        }
+                    }
+                } else if (codeFilterComponent.hasValueSet()) {
+                    if (codeFilterComponent.getValueSetReference().getReference() instanceof String) {
+                        valueSet = ((Reference)codeFilterComponent.getValueSet()).getReference();
+                    } else if (codeFilterComponent.getValueSetReference() instanceof Reference) {
+                        valueSet = codeFilterComponent.getValueSetReference().getReference();
                     }
                 }
             }
@@ -112,7 +154,7 @@ public class R4FhirQueryGenerator {
         String dateHighPath = null;
         Interval dateRange = null;
 //        if (dataRequirement.hasDateFilter()) {
-//            for (org.hl7.fhir.r4.model.DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
+//            for (org.hl7.fhir.dstu3.model.DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
 //                if (dateFilterComponent.hasPath() && dateFilterComponent.hasSearchParam()) {
 //                    throw new UnsupportedOperationException(String.format("Either a path or a searchParam must be provided, but not both"));
 //                }

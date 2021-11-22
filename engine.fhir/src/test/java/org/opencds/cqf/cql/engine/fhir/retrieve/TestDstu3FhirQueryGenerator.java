@@ -1,14 +1,13 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.r4.model.*;
-import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
+import org.hl7.fhir.dstu3.model.Bundle;
+import org.hl7.fhir.dstu3.model.DataRequirement;
+import org.hl7.fhir.dstu3.model.ValueSet;
+import org.opencds.cqf.cql.engine.fhir.Dstu3FhirTest;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
-import org.opencds.cqf.cql.engine.fhir.terminology.R4FhirTerminologyProvider;
+import org.opencds.cqf.cql.engine.fhir.terminology.Dstu3FhirTerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -17,10 +16,13 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestR4FhirQueryGenerator extends R4FhirTest {
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
     static IGenericClient CLIENT;
 
-    R4FhirQueryGenerator generator;
+    Dstu3FhirQueryGenerator generator;
 
     @BeforeClass
     public void setUpBeforeClass() {
@@ -29,9 +31,9 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
     @BeforeMethod
     public void setUp() {
-        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forR4());
-        TerminologyProvider terminologyProvider = new R4FhirTerminologyProvider(CLIENT);
-        this.generator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider);
+        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forDstu3());
+        TerminologyProvider terminologyProvider = new Dstu3FhirTerminologyProvider(CLIENT);
+        this.generator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider);
     }
 
     private ValueSet getTestValueSet(String id, int numberOfCodesToInclude) {
@@ -55,23 +57,59 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         return valueSet;
     }
 
-    private DataRequirement getCodeFilteredDataRequirement(String resourceType, String path, ValueSet valueSet) {
+    private DataRequirement getCodeFilteredViaValueSetDataRequirement(String resourceType, String path, ValueSet valueSet) {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType(resourceType);
         DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
         categoryCodeFilter.setPath(path);
-        org.hl7.fhir.r4.model.CanonicalType valueSetReference = new org.hl7.fhir.r4.model.CanonicalType(valueSet.getUrl());
-        categoryCodeFilter.setValueSetElement(valueSetReference);
+        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
+        categoryCodeFilter.setValueSet(valueSetReference);
         dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
 
         return dataRequirement;
     }
 
+//    private DataRequirement getCodeFilteredViaCodeableConceptDataRequirement(String resourceType, String path, ValueSet valueSet) {
+//        DataRequirement dataRequirement = new DataRequirement();
+//        dataRequirement.setType(resourceType);
+//        DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
+//        categoryCodeFilter.setPath(path);
+//        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
+//        categoryCodeFilter.setValueSet(valueSetReference);
+//        dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
+//
+//        return dataRequirement;
+//    }
+//
+//    private DataRequirement getCodeFilteredViaCodingDataRequirement(String resourceType, String path, ValueSet valueSet) {
+//        DataRequirement dataRequirement = new DataRequirement();
+//        dataRequirement.setType(resourceType);
+//        DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
+//        categoryCodeFilter.setPath(path);
+//        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
+//        categoryCodeFilter.setValueSet(valueSetReference);
+//        dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
+//
+//        return dataRequirement;
+//    }
+//
+//    private DataRequirement getCodeFilteredViaCodeDataRequirement(String resourceType, String path, ValueSet valueSet) {
+//        DataRequirement dataRequirement = new DataRequirement();
+//        dataRequirement.setType(resourceType);
+//        DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
+//        categoryCodeFilter.setPath(path);
+//        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
+//        categoryCodeFilter.setValueSet(valueSetReference);
+//        dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
+//
+//        return dataRequirement;
+//    }
+
     @Test
     void testGetFhirQueriesObservation() {
         ValueSet valueSet = getTestValueSet("MyValueSet", 3);
 
-        org.hl7.fhir.r4.model.Bundle valueSetBundle = new org.hl7.fhir.r4.model.Bundle();
+        org.hl7.fhir.dstu3.model.Bundle valueSetBundle = new org.hl7.fhir.dstu3.model.Bundle();
         valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
 
         Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
@@ -80,7 +118,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
         mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
 
-        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
+        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
 
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
 
@@ -94,7 +132,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     void testGetFhirQueriesCodeInValueSet() {
         ValueSet valueSet = getTestValueSet("MyValueSet", 500);
 
-        org.hl7.fhir.r4.model.Bundle valueSetBundle = new org.hl7.fhir.r4.model.Bundle();
+        org.hl7.fhir.dstu3.model.Bundle valueSetBundle = new org.hl7.fhir.dstu3.model.Bundle();
         valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
 
         Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
@@ -103,7 +141,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
         mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
 
-        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
+        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
@@ -144,7 +182,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     void testCodesExceedMaxCodesPerQuery() {
         ValueSet valueSet = getTestValueSet("MyValueSet", 8);
 
-        org.hl7.fhir.r4.model.Bundle valueSetBundle = new org.hl7.fhir.r4.model.Bundle();
+        org.hl7.fhir.dstu3.model.Bundle valueSetBundle = new org.hl7.fhir.dstu3.model.Bundle();
         valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
 
         Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
@@ -154,7 +192,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
         mockFhirRead("/ValueSet/MyValueSet/$expand", valueSet);
 
-        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
+        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
         this.generator.setExpandValueSets(true);
@@ -173,7 +211,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 //    void testCodesExceedMaxUriLength() {
 //        ValueSet valueSet = getTestValueSet("MyValueSet", 200);
 //
-//        org.hl7.fhir.r4.model.Bundle valueSetBundle = new org.hl7.fhir.r4.model.Bundle();
+//        org.hl7.fhir.dstu3.model.Bundle valueSetBundle = new org.hl7.fhir.dstu3.model.Bundle();
 //        valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
 //
 //        Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
@@ -183,7 +221,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 //        mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
 //        mockFhirRead("/ValueSet/MyValueSet/$expand", valueSet);
 //
-//        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
+//        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
 //
 //        this.generator.setMaxCodesPerQuery(400);
 //        this.generator.setMaxUriLength(20);

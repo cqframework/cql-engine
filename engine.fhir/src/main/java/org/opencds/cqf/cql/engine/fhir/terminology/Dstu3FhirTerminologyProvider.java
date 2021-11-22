@@ -89,6 +89,7 @@ public class Dstu3FhirTerminologyProvider implements TerminologyProvider {
                 .onInstance(new IdType("ValueSet", valueSet.getId()))
                 .named("expand")
                 .withNoParameters(Parameters.class)
+                .useHttpGet()
                 .execute();
 
         ValueSet expanded = (ValueSet) respParam.getParameter().get(0).getResource();
