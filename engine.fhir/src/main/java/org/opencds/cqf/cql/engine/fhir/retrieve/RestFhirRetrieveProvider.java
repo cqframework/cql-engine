@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseCoding;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -29,7 +30,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	private SearchStyleEnum searchStyle;
 
 	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
-		super(searchParameterResolver);
+		super(searchParameterResolver, fhirClient.getFhirContext());
 		// TODO: Figure out how to validate that the searchParameterResolver and the
 		// client are on the same version of FHIR.
 		this.fhirClient = fhirClient;
@@ -122,8 +123,8 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 				flattenedMap.put(name, flattened);
 			}
 
-			if (this.getR4FhirQueryGenerator().getPageSize() != null) {
-			    search.count(this.getR4FhirQueryGenerator().getPageSize());
+			if (this.getPageSize() != null) {
+			    search.count(this.getPageSize());
 			}
 
 			return search.where(flattenedMap).usingStyle(this.searchStyle).execute();

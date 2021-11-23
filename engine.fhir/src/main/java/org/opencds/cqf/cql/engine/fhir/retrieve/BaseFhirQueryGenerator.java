@@ -15,15 +15,20 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
+import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 abstract class BaseFhirQueryGenerator {
-    private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
+    protected static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
+    protected static final boolean DEFAULT_SHOULD_EXPAND_VALUESETS = false;
 //    private final int DEFAULT_MAX_URI_LENGTH = 8000;
 
+    protected FhirContext fhirContext;
+    protected TerminologyProvider terminologyProvider;
+    protected SearchParameterResolver searchParameterResolver;
 //    protected int maxUriLength;
 //    public int getMaxUriLength() { return this.maxUriLength; }
 //    public void setMaxUriLength(int maxUriLength) {
@@ -57,15 +62,11 @@ abstract class BaseFhirQueryGenerator {
         this.maxCodesPerQuery = value;
     }
 
-    protected FhirContext context;
-    protected TerminologyProvider terminologyProvider;
-    protected SearchParameterResolver searchParameterResolver;
-
     // TODO: Think about how to best handle the decision to expand value sets... Should it be part of the
     // terminology provider if it detects support for "code:in"? How does that feed back to the retriever?
     protected boolean expandValueSets;
     public boolean isExpandValueSets() {
-        return expandValueSets;
+        return this.expandValueSets;
     }
     public void setExpandValueSets(boolean expandValueSets) {
         this.expandValueSets = expandValueSets;
@@ -74,14 +75,15 @@ abstract class BaseFhirQueryGenerator {
     public BaseFhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, FhirContext fhirContext) {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
-        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
 //        this.maxUriLength = DEFAULT_MAX_URI_LENGTH;
+        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
+        this.expandValueSets = DEFAULT_SHOULD_EXPAND_VALUESETS;
 
-        this.context = fhirContext;
+        this.fhirContext = fhirContext;
     }
 
     public boolean isPatientCompartmentResource(String dataType) {
-        RuntimeResourceDefinition resourceDef = context.getResourceDefinition(dataType);
+        RuntimeResourceDefinition resourceDef = fhirContext.getResourceDefinition(dataType);
         return searchParameterResolver.getPatientSearchParams(resourceDef).size() > 0;
     }
 
@@ -175,7 +177,7 @@ abstract class BaseFhirQueryGenerator {
     // "dataType.codePath in ValueSet"
     protected List<TokenOrListParam> getCodeParams(Iterable<Code> codes, String valueSet) {
         if (valueSet != null) {
-            if (isExpandValueSets()) {
+            if (this.isExpandValueSets()) {
                 if (this.terminologyProvider == null) {
                     throw new IllegalArgumentException(
                         "Expand value sets cannot be used without a terminology provider and no terminology provider is set.");
@@ -198,7 +200,7 @@ abstract class BaseFhirQueryGenerator {
 
         int codeCount = 0;
         for (Object code : codes) {
-            if (codeCount % this.maxCodesPerQuery == 0) {
+            if (codeCount % this.getMaxCodesPerQuery() == 0) {
                 if (codeParams != null) {
                     codeParamsList.add(codeParams);
                 }
@@ -227,8 +229,8 @@ abstract class BaseFhirQueryGenerator {
 
     protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue,
                                                     String dataType, String templateId, String codePath, Iterable<Code> codes,
-                                                    String valueSet, String datePath,
-                                                    String dateLowPath, String dateHighPath, Interval dateRange) {
+                                                    String valueSet, String datePath, String dateLowPath, String dateHighPath,
+                                                    Interval dateRange) {
 
         Pair<String, IQueryParameterType> templateParam = this.getTemplateParam(dataType, templateId);
 
@@ -264,14 +266,13 @@ abstract class BaseFhirQueryGenerator {
         return maps;
     }
 
-    protected SearchParameterMap getBaseMap(Pair<String, IQueryParameterType> templateParam,
-                                            Pair<String, IQueryParameterType> contextParam, Pair<String, DateRangeParam> dateRangeParam) {
-
+    protected SearchParameterMap getBaseMap(Pair<String, IQueryParameterType> templateParam, Pair<String, IQueryParameterType> contextParam,
+                                            Pair<String, DateRangeParam> dateRangeParam) {
         SearchParameterMap baseMap = new SearchParameterMap();
         baseMap.setLastUpdated(new DateRangeParam());
 
-        if (this.pageSize != null) {
-            baseMap.setCount(this.pageSize);
+        if (this.getPageSize() != null) {
+            baseMap.setCount(pageSize);
         }
 
         if (templateParam != null) {

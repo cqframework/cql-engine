@@ -85,9 +85,9 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
         for (SearchParameterMap map : maps) {
             String query = null;
             try {
-                query = URLDecoder.decode(map.toNormalizedQueryString(context), "UTF-8");
+                query = URLDecoder.decode(map.toNormalizedQueryString(fhirContext), "UTF-8");
             } catch (Exception ex) {
-                query = map.toNormalizedQueryString(context);
+                query = map.toNormalizedQueryString(fhirContext);
             }
             queries.add(dataRequirement.getType() + query);
         }

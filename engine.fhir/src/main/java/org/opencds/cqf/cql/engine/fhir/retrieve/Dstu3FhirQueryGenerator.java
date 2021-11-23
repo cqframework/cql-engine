@@ -17,6 +17,10 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         super(searchParameterResolver, terminologyProvider, FhirContext.forDstu3());
     }
 
+//    public List<String> generateFhirQueries(DataRequirement dataRequirement, CapabilityStatement capabilityStatement) {
+//        return generateFhirQueries(dataRequirement, capabilityStatement, DEFAULT_SHOULD_EXPAND_VALUESETS, DEFAULT_MAX_CODES_PER_QUERY);
+//    }
+
     public List<String> generateFhirQueries(DataRequirement dataRequirement, CapabilityStatement capabilityStatement) {
         List<String> queries = new ArrayList<>();
 
@@ -112,9 +116,9 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         for (SearchParameterMap map : maps) {
             String query = null;
             try {
-                query = URLDecoder.decode(map.toNormalizedQueryString(context), "UTF-8");
+                query = URLDecoder.decode(map.toNormalizedQueryString(fhirContext), "UTF-8");
             } catch (Exception ex) {
-                query = map.toNormalizedQueryString(context);
+                query = map.toNormalizedQueryString(fhirContext);
             }
             queries.add(dataRequirement.getType() + query);
         }
