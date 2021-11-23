@@ -17,10 +17,6 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         super(searchParameterResolver, terminologyProvider, FhirContext.forDstu3());
     }
 
-//    public List<String> generateFhirQueries(DataRequirement dataRequirement, CapabilityStatement capabilityStatement) {
-//        return generateFhirQueries(dataRequirement, capabilityStatement, DEFAULT_SHOULD_EXPAND_VALUESETS, DEFAULT_MAX_CODES_PER_QUERY);
-//    }
-
     public List<String> generateFhirQueries(DataRequirement dataRequirement, CapabilityStatement capabilityStatement) {
         List<String> queries = new ArrayList<>();
 
