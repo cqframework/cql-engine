@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import ca.uhn.fhir.context.FhirContext;
+import org.hl7.fhir.instance.model.api.IBaseConformance;
+import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.CapabilityStatement;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.DataRequirement;
@@ -19,7 +21,18 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
         super(searchParameterResolver, terminologyProvider, FhirContext.forR4());
     }
 
-    public List<String> generateFhirQueries(DataRequirement dataRequirement, CapabilityStatement capabilityStatement) {
+    @Override
+    public List<String> generateFhirQueries(ICompositeType dreq, IBaseConformance capStatement) {
+        if (!(dreq instanceof DataRequirement)) {
+            throw new IllegalArgumentException("dataRequirement argument must be a DataRequirement");
+        }
+        if (capStatement != null && !(capStatement instanceof CapabilityStatement)) {
+            throw new IllegalArgumentException("capabilityStatement argument must be a CapabilityStatement");
+        }
+
+        DataRequirement dataRequirement = (DataRequirement)dreq;
+        CapabilityStatement capabilityStatement = (CapabilityStatement)capStatement;
+
         List<String> queries = new ArrayList<>();
 
         String codePath = null;

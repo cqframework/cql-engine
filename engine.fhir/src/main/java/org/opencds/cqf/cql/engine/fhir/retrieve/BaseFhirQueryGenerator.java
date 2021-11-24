@@ -7,6 +7,10 @@ import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
 import ca.uhn.fhir.rest.param.*;
 import org.apache.commons.lang3.tuple.Pair;
+import org.hl7.fhir.dstu3.model.CapabilityStatement;
+import org.hl7.fhir.dstu3.model.DataRequirement;
+import org.hl7.fhir.instance.model.api.IBaseConformance;
+import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -21,7 +25,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-abstract class BaseFhirQueryGenerator {
+public abstract class BaseFhirQueryGenerator {
     protected static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
     protected static final boolean DEFAULT_SHOULD_EXPAND_VALUESETS = false;
 //    private final int DEFAULT_MAX_URI_LENGTH = 8000;
@@ -81,6 +85,8 @@ abstract class BaseFhirQueryGenerator {
 
         this.fhirContext = fhirContext;
     }
+
+    public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, IBaseConformance capabilityStatement);
 
     public boolean isPatientCompartmentResource(String dataType) {
         RuntimeResourceDefinition resourceDef = fhirContext.getResourceDefinition(dataType);
