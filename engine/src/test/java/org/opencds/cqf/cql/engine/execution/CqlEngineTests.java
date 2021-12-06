@@ -129,8 +129,8 @@ public class CqlEngineTests extends TranslatingTestBase {
         List<Library> executableLibraries = new ArrayList<>();
         for (org.hl7.elm.r1.VersionedIdentifier id : libraries.keySet()) {
             TranslatedLibrary translated = libraryManager.resolveLibrary(id, CqlTranslatorOptions.defaultOptions(), errors);
-            String xml = this.convertToXml(translated.getLibrary());
-            executableLibraries.add(this.readXml(xml));
+            String json = this.convertToJson(translated.getLibrary());
+            executableLibraries.add(this.readJson(json));
         }
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(executableLibraries);

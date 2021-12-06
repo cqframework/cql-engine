@@ -17,12 +17,12 @@ import org.testng.annotations.Test;
 public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
 
     @Test
-    public void testAge() throws JAXBException {
+    public void testAge() {
         // Tests in the fhir engine
     }
 
     @Test
-    public void testAgeAt() throws JAXBException {
+    public void testAgeAt() {
         // Tests in the fhir engine
     }
 
@@ -30,7 +30,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.CalculateAgeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCalculateAge() throws JAXBException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    public void testCalculateAge() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
         Context context = new Context(library, ZonedDateTime.of(2016, 1, 1, 0, 0, 0, 0, TimeZone.getDefault().toZoneId()));
 
          Object result = context.resolveExpressionRef("CalculateAgeYears").getExpression().evaluate(context);
@@ -59,7 +59,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.CalculateAgeAtEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCalculateAgeAt() throws JAXBException {
+    public void testCalculateAgeAt() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("CalculateAgeAtYears").getExpression().evaluate(context);
         assertThat(result, is(17));
@@ -97,7 +97,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEqual() throws JAXBException {
+    public void testEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("Issue70A").getExpression().evaluate(context);
@@ -135,7 +135,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEquivalent() throws JAXBException {
+    public void testEquivalent() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("CodeEquivalentTrue").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -178,7 +178,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.InCodeSystemEvaluator#evaluate(Context)}
      */
     @Test
-    public void testInCodesystem() throws JAXBException {
+    public void testInCodesystem() {
         // Tests in the fhir engine
     }
 
@@ -186,7 +186,7 @@ public class CqlClinicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.InValueSetEvaluator#evaluate(Context)}
      */
     @Test
-    public void testInValueset() throws JAXBException {
+    public void testInValueset() {
         // Tests in the fhir engine
     }
 }

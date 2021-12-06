@@ -14,7 +14,7 @@ public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
    * {@link org.opencds.cqf.cql.engine.elm.execution.IfEvaluator#evaluate(Context)}
    */
   @Test
-  public void testIfThenElse() throws JAXBException {
+  public void testIfThenElse() {
     Context context = new Context(library);
 
     Object result = context.resolveExpressionRef("IfTrue1").getExpression().evaluate(context);
@@ -31,7 +31,7 @@ public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
    * {@link org.opencds.cqf.cql.engine.elm.execution.CaseEvaluator#evaluate(Context)}
    */
   @Test
-  public void testStandardCase() throws JAXBException {
+  public void testStandardCase() {
     Context context = new Context(library);
 
     Object result = context.resolveExpressionRef("StandardCase1").getExpression().evaluate(context);
@@ -48,7 +48,7 @@ public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {
    * {@link org.opencds.cqf.cql.engine.elm.execution.CaseEvaluator#evaluate(Context)}
    */
   @Test
-  public void testSelectedCase() throws JAXBException {
+  public void testSelectedCase() {
     Context context = new Context(library);
 
     Object result = context.resolveExpressionRef("SelectedCase1").getExpression().evaluate(context);

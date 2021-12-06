@@ -18,7 +18,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AndEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAnd() throws JAXBException {
+    public void testAnd() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TrueAndTrue").getExpression().evaluate(context);
@@ -61,7 +61,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ImpliesEvaluator#evaluate(Context)}
      */
     @Test
-    public void testImplies() throws JAXBException {
+    public void testImplies() {
         //Context context = new Context(library);
         // TODO: uncomment this and cql once working
         // Object result = context.resolveExpressionRef("TrueImpliesTrue").getExpression().evaluate(context);
@@ -96,7 +96,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testNot() throws JAXBException {
+    public void testNot() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("NotTrue").getExpression().evaluate(context);
@@ -113,7 +113,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.OrEvaluator#evaluate(Context)}
      */
     @Test
-    public void testOr() throws JAXBException {
+    public void testOr() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TrueOrTrue").getExpression().evaluate(context);
@@ -148,7 +148,7 @@ public class CqlLogicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.XorEvaluator#evaluate(Context)}
      */
     @Test
-    public void testXOr() throws JAXBException {
+    public void testXOr() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TrueXorTrue").getExpression().evaluate(context);

@@ -14,7 +14,7 @@ import org.testng.annotations.Test;
 public class CqlLibraryTest extends CqlExecutionTestBase {
 
     @Test
-    public void testCode() throws JAXBException {
+    public void testCode() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("Code").getExpression().evaluate(context);

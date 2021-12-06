@@ -405,8 +405,8 @@ public class CqlTestSuite {
 
         assertThat(translator.getErrors().size(), is(0));
 
-        String xml = translator.toXml();
+        String json = translator.toJxson();
 
-        return CqlLibraryReader.read(new StringReader(xml));
+        return JsonCqlLibraryReader.read(new StringReader(json));
     }
 }

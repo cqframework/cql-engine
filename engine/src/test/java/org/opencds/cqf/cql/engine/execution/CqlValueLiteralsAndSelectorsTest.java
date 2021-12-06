@@ -23,7 +23,7 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.NullEvaluator#evaluate(Context)}
      */
     @Test
-    public void testNull() throws JAXBException {
+    public void testNull() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("Null").getExpression().evaluate(context);
@@ -36,7 +36,7 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
-    public void testBoolean() throws JAXBException {
+    public void testBoolean() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("BooleanFalse").getExpression().evaluate(context);
@@ -50,7 +50,7 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.LiteralEvaluator#evaluate(Context)}
      */
     @Test
-    public void testInteger() throws JAXBException {
+    public void testInteger() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerZero").getExpression().evaluate(context);
@@ -140,7 +140,7 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.QuantityEvaluator#evaluate(Context)}
      */
     @Test
-    public void testQuantity() throws JAXBException {
+    public void testQuantity() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("QuantityZero").getExpression().evaluate(context);
@@ -227,7 +227,7 @@ public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.LiteralEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDecimal() throws JAXBException {
+    public void testDecimal() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DecimalZero").getExpression().evaluate(context);

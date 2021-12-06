@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Arrays;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.data.SystemExternalFunctionProvider;
 import org.opencds.cqf.cql.engine.execution.external.MyMath;
 import org.testng.annotations.Test;
@@ -15,7 +13,7 @@ import org.testng.annotations.Test;
 public class CqlExternalFunctionsTest extends CqlExecutionTestBase {
 
     @Test
-    public void testExternalFunctions() throws JAXBException {
+    public void testExternalFunctions() {
         Context context = new Context(library);
 
         context.registerExternalFunctionProvider(

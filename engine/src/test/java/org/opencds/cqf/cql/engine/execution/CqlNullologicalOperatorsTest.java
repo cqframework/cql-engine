@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.nullValue;
 
 import java.util.Collections;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Time;
@@ -20,7 +18,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.CoalesceEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCoalesce() throws JAXBException {
+    public void testCoalesce() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CoalesceANull").getExpression().evaluate(context);
@@ -61,7 +59,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsNullEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIsNull() throws JAXBException {
+    public void testIsNull() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IsNullTrue").getExpression().evaluate(context);
@@ -84,7 +82,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsFalseEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIsFalse() throws JAXBException {
+    public void testIsFalse() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IsFalseFalse").getExpression().evaluate(context);
@@ -101,7 +99,7 @@ public class CqlNullologicalOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IsTrueEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIsTrue() throws JAXBException {
+    public void testIsTrue() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IsTrueTrue").getExpression().evaluate(context);

@@ -12,8 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -29,7 +27,7 @@ import org.testng.annotations.BeforeMethod;
 public abstract class CqlExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
     Library library = null;
-    private File xmlFile = null;
+    private File jsonFile = null;
 
     private static ModelManager modelManager;
     protected static ModelManager getModelManager() {
@@ -51,7 +49,7 @@ public abstract class CqlExecutionTestBase {
     }
 
     @BeforeMethod
-    public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {
+    public void beforeEachTestMethod() throws IOException, UcumException {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
         if (library == null) {
@@ -80,12 +78,12 @@ public abstract class CqlExecutionTestBase {
 
                 assertThat(translator.getErrors().size(), is(0));
 
-                xmlFile = new File(cqlFile.getParent(), fileName + ".xml");
-                xmlFile.createNewFile();
+                jsonFile = new File(cqlFile.getParent(), fileName + ".json");
+                jsonFile.createNewFile();
 
-                String xml = translator.toXml();
+                String xml = translator.toJxson();
 
-                PrintWriter pw = new PrintWriter(xmlFile, "UTF-8");
+                PrintWriter pw = new PrintWriter(jsonFile, "UTF-8");
                 pw.println(xml);
                 pw.println();
                 pw.close();
@@ -93,15 +91,15 @@ public abstract class CqlExecutionTestBase {
                 e.printStackTrace();
             }
 
-            library = CqlLibraryReader.read(xmlFile);
+            library = JsonCqlLibraryReader.read(jsonFile);
             libraries.put(fileName, library);
         }
     }
 
     @AfterClass
     public void oneTimeTearDown() {
-//        if (xmlFile != null) {
-//            xmlFile.delete();
+//        if (jsonFile != null) {
+//            jsonFile.delete();
 //        }
     }
 }
