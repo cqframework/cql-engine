@@ -27,7 +27,7 @@ If the left argument is null, the result is true if the right argument is not em
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
+public class ProperIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
     public static Object properlyIncludedIn(Object left, Object right, String precision) {
         if (left == null && right == null) {
@@ -37,17 +37,17 @@ public class ProperlyIncludedInEvaluator extends org.cqframework.cql.elm.executi
         try {
             if (left == null) {
                 return right instanceof Interval
-                        ? ProperlyIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
-                        : ProperlyIncludesEvaluator.listProperlyIncludes((Iterable<?>) right, null);
+                        ? ProperIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
+                        : ProperIncludesEvaluator.listProperlyIncludes((Iterable<?>) right, null);
             }
 
             if (right == null) {
                 return left instanceof Interval
-                        ? ProperlyIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
-                        : ProperlyIncludesEvaluator.listProperlyIncludes(null, (Iterable<?>) left);
+                        ? ProperIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
+                        : ProperIncludesEvaluator.listProperlyIncludes(null, (Iterable<?>) left);
             }
 
-            return ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
+            return ProperIncludesEvaluator.properlyIncludes(right, left, precision);
         }
         catch (InvalidOperatorArgument e) {
             throw new InvalidOperatorArgument(
