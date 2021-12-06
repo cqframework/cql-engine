@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
@@ -18,7 +19,7 @@ public class JsonCqlLibraryReader {
     private JsonCqlLibraryReader() {
     }
 
-    public static Library read(Reader reader) throws IOException {
+    public static ObjectMapper mapper() {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JaxbAnnotationModule module = new JaxbAnnotationModule();
@@ -29,7 +30,14 @@ public class JsonCqlLibraryReader {
         simpleModule.setMixInAnnotation(TypeSpecifier.class, org.opencds.cqf.cql.engine.elm.execution.TypeSpecifierMixin.class);
         //simpleModule.setMixInAnnotation(ExpressionDef.class, org.opencds.cqf.cql.elm.execution.ExpressionDefMixin.class);
         mapper.registerModule(simpleModule);
-        Library result = mapper.readValue(reader, LibraryWrapper.class).getLibrary();
-        return result;
+        return mapper;
+    }
+
+    public static Library read(File reader) throws IOException {
+        return mapper().readValue(reader, LibraryWrapper.class).getLibrary();
+    }
+
+    public static Library read(Reader reader) throws IOException {
+        return mapper().readValue(reader, LibraryWrapper.class).getLibrary();
     }
 }
