@@ -46,25 +46,18 @@
             <artifactId>jaxb2-basics</artifactId>
         </dependency>
 
+        <!-- Provides Null and Not null Annotations-->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
+       
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
         </dependency>
-        <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_xpath</artifactId>
-            <scope>test</scope>
-        </dependency>
+
+        <!-- Provides classes to load and serialize ELM files -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -80,6 +73,18 @@
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
+        </dependency>
+
+        <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
