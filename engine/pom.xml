@@ -20,27 +20,26 @@
     <url>https://github.com/DBCG/cql_engine/tree/master/engine</url>
 
     <dependencies>
-         <!-- Dependencies used from JAXB but added when JAXB was removed 
+         <!-- Logging Services -->
          <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
             <version>1.7.32</version>
         </dependency>
         <dependency>
-            <groupId>commons-beanutils</groupId>
-            <artifactId>commons-beanutils</artifactId>
-            <version>1.9.4</version>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <version>1.7.32</version>
         </dependency>
+
+        <!-- StringUtils, ExceptionUtils and Pair classes. -->
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.12.0</version>
-        </dependency>-->
+        </dependency>
+
+        <!-- Support for generated methods for toString(), equals() and hashCode() using jakarta-commons-lang -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
             <artifactId>jaxb2-basics-runtime</artifactId>
@@ -53,6 +52,7 @@
             <artifactId>jsr305</artifactId>
         </dependency>
        
+        <!-- The Units of Measure  Coding System (UCUM) --> 
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
@@ -97,9 +97,9 @@
                     <configuration>
                         <!-- TODO: Figure out what java doc does not respect source file exclusions when linting-->
                         <!-- <excludePackageNames>org.cqframework.cql.elm.execution</excludePackageNames>
-                    <sourceFileExcludes>
-                        <exclude>**/org/cqframework/cql/elm/execution/*.java</exclude>
-                    </sourceFileExcludes> -->
+                        <sourceFileExcludes>
+                            <exclude>**/org/cqframework/cql/elm/execution/*.java</exclude>
+                        </sourceFileExcludes> -->
                         <additionalOptions>
                             <additionalOption>-Xdoclint:none</additionalOption>
                         </additionalOptions>
