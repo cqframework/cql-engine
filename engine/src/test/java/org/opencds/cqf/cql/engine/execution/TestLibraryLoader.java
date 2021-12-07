@@ -18,15 +18,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.hl7.cql_annotations.r1.Annotation;
-import org.hl7.elm.r1.ObjectFactory;
 
 public class TestLibraryLoader implements LibraryLoader {
 
@@ -75,7 +72,7 @@ public class TestLibraryLoader implements LibraryLoader {
 
         LibraryWrapper wrapper = new LibraryWrapper();
         wrapper.setLibrary(translatedLibrary.getLibrary());
-        
+
         String json;
         try {
             ObjectMapper mapper = new ObjectMapper();
