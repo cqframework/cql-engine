@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,6 +10,8 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
@@ -61,7 +62,12 @@ public abstract class CqlExecutionTestBase {
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
                 options.add(CqlTranslator.Options.EnableAnnotations);
                 options.add(CqlTranslator.Options.EnableLocators);
-                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, getModelManager(), getLibraryManager(), ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
+
+                // The line below is required to make sure the conversion to Jxson exposes empty strings as empty strings (as opposed to nulls)
+                CqlTranslator.getJxsonMapper().setSerializationInclusion(Include.NON_NULL);
+                
+                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, getModelManager(), getLibraryManager(), ucumService, 
+                    options.toArray(new CqlTranslator.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");
@@ -82,7 +88,7 @@ public abstract class CqlExecutionTestBase {
                 jsonFile.createNewFile();
 
                 String json = translator.toJxson();
-                
+
                 PrintWriter pw = new PrintWriter(jsonFile, "UTF-8");
                 pw.println(json);
                 pw.println();

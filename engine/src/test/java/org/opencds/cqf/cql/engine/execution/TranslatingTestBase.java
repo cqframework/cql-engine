@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -32,6 +33,9 @@ public class TranslatingTestBase {
     }
 
     public Library toLibrary(String text, ModelManager modelManager, LibraryManager libraryManager) throws IOException {
+        // The line below is required to make sure the conversion to Jxson exposes empty strings as empty strings (as opposed to nulls)
+        CqlTranslator.getJxsonMapper().setSerializationInclusion(Include.NON_NULL);
+                
         CqlTranslator translator = CqlTranslator.fromText(text, modelManager, libraryManager);
         return this.readJson(translator.toJxson());
     }

@@ -365,6 +365,9 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("UpperNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
+        result = context.resolveExpressionRef("UpperSpace").getExpression().evaluate(context);
+        assertThat(result, is(" "));
+
         result = context.resolveExpressionRef("UpperEmpty").getExpression().evaluate(context);
         assertThat(result, is(""));
 
