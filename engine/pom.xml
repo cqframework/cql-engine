@@ -46,7 +46,6 @@
             <artifactId>jaxb2-basics</artifactId>
         </dependency>
 
-        <!-- Not sure if findbugs is still needed -->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
@@ -59,10 +58,12 @@
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
