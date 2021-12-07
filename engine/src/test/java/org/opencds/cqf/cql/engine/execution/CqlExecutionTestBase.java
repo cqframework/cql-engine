@@ -81,10 +81,10 @@ public abstract class CqlExecutionTestBase {
                 jsonFile = new File(cqlFile.getParent(), fileName + ".json");
                 jsonFile.createNewFile();
 
-                String xml = translator.toJxson();
-
+                String json = translator.toJxson();
+                
                 PrintWriter pw = new PrintWriter(jsonFile, "UTF-8");
-                pw.println(xml);
+                pw.println(json);
                 pw.println();
                 pw.close();
             } catch (IOException e) {
