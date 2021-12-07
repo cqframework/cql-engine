@@ -25,11 +25,6 @@
             <version>1.5.3-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>org.opencds.cqf.cql</groupId>
-            <artifactId>engine.jaxb</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
             <artifactId>hapi-fhir-client</artifactId>
         </dependency>

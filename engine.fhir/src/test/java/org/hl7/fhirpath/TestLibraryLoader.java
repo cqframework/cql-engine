@@ -2,24 +2,24 @@ package org.hl7.fhirpath;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.hl7.cql_annotations.r1.Annotation;
-import org.hl7.elm.r1.ObjectFactory;
-import org.opencds.cqf.cql.engine.execution.CqlLibraryReader;
+import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
 
 public class TestLibraryLoader implements LibraryLoader {
@@ -67,23 +67,26 @@ public class TestLibraryLoader implements LibraryLoader {
 
         org.cqframework.cql.cql2elm.model.TranslatedLibrary translatedLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
 
-        String xml;
-        try {
-            JAXBContext jc = JAXBContext.newInstance(org.hl7.elm.r1.Library.class, Annotation.class);
-            Marshaller marshaller = jc.createMarshaller();
-            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+        LibraryWrapper wrapper = new LibraryWrapper();
+        wrapper.setLibrary(translatedLibrary.getLibrary());
 
-            StringWriter writer = new StringWriter();
-            marshaller.marshal(new ObjectFactory().createLibrary(translatedLibrary.getLibrary()), writer);
-            xml = writer.getBuffer().toString();
-        } catch (JAXBException e) {
+        String json;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_DEFAULT);
+            mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+            JaxbAnnotationModule annotationModule = new JaxbAnnotationModule();
+            mapper.registerModule(annotationModule);
+            
+            json = mapper.writeValueAsString(wrapper);
+        } catch (JsonProcessingException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }
 
         Library library = null;
         try {
-            library = CqlLibraryReader.read(new StringReader(xml));
-        } catch (IOException | JAXBException e) {
+            library = JsonCqlLibraryReader.read(new StringReader(json));
+        } catch (IOException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }
 
