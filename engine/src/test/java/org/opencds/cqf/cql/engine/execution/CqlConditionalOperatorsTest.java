@@ -3,9 +3,6 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
-import javax.xml.bind.JAXBException;
-
 import org.testng.annotations.Test;
 
 public class CqlConditionalOperatorsTest extends CqlExecutionTestBase {

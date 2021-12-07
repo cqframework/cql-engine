@@ -8,8 +8,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.time.ZonedDateTime;
 import java.util.TimeZone;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.testng.Assert;
 import org.testng.annotations.Test;

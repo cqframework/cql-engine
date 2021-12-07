@@ -9,8 +9,6 @@ import static org.hamcrest.Matchers.nullValue;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import javax.xml.bind.JAXBException;
-
 import org.testng.Assert;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.runtime.Quantity;

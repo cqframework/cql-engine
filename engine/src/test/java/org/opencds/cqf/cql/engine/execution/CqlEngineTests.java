@@ -15,8 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -33,7 +31,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test
-    public void test_simpleLibrary_returnsResult() throws IOException, JAXBException {
+    public void test_simpleLibrary_returnsResult() throws IOException {
         Library library = this.toLibrary("library Test version '1.0.0'\ndefine X:\n5+5");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -49,7 +47,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test
-    public void test_simpleLibraryWithParam_returnsParamValue() throws IOException, JAXBException {
+    public void test_simpleLibraryWithParam_returnsParamValue() throws IOException {
         Library library = this.toLibrary("library Test version '1.0.0'\nparameter IntValue Integer\ndefine X:\nIntValue");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -69,7 +67,7 @@ public class CqlEngineTests extends TranslatingTestBase {
 
 
     //@Test(expected = IllegalArgumentException.class)
-    public void test_dataLibrary_noProvider_throwsException() throws IOException, JAXBException {
+    public void test_dataLibrary_noProvider_throwsException() throws IOException {
         Library library = this.toLibrary("library Test version '1.0.0'\nusing FHIR version '3.0.0'\ndefine X:\n5+5");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -80,7 +78,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test
-    public void test_twoExpressions_byLibrary_allReturned() throws IOException, JAXBException {
+    public void test_twoExpressions_byLibrary_allReturned() throws IOException {
         Library library = this.toLibrary("library Test version '1.0.0'\ndefine X:\n5+5\ndefine Y: 2 + 2");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -99,7 +97,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test
-    public void test_twoExpressions_oneRequested_oneReturned() throws IOException, JAXBException {
+    public void test_twoExpressions_oneRequested_oneReturned() throws IOException {
         Library library = this.toLibrary("library Test version '1.0.0'\ndefine X:\n5+5\ndefine Y: 2 + 2");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -115,7 +113,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test
-    public void test_twoLibraries_expressionsForEach() throws IOException, JAXBException {
+    public void test_twoLibraries_expressionsForEach() throws IOException {
 
         Map<org.hl7.elm.r1.VersionedIdentifier, String> libraries = new HashMap<>();
         libraries.put(this.toElmIdentifier("Common", "1.0.0"),
@@ -147,7 +145,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void validationEnabled_validatesTerminology() throws IOException, JAXBException  {
+    public void validationEnabled_validatesTerminology() throws IOException  {
         Library library = this.toLibrary("library Test version '1.0.0'\ncodesystem \"X\" : 'http://example.com'\ndefine X:\n5+5\ndefine Y: 2 + 2");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -157,7 +155,7 @@ public class CqlEngineTests extends TranslatingTestBase {
     }
 
     @Test
-    public void validationDisabled_doesNotValidateTerminology() throws IOException, JAXBException {
+    public void validationDisabled_doesNotValidateTerminology() throws IOException {
         Library library = this.toLibrary("library Test version '1.0.0'\ncodesystem \"X\" : 'http://example.com'\ndefine X:\n5+5\ndefine Y: 2 + 2");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));

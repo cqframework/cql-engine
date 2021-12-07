@@ -5,9 +5,6 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.testng.annotations.Test;
 

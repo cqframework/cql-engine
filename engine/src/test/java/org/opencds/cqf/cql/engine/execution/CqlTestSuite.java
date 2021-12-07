@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.TimeZone;
 
-import javax.xml.bind.JAXBException;
-
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
@@ -49,7 +47,7 @@ public class CqlTestSuite {
 
     // This test is for the various CQL operators
     @Test
-    public void testMainSuite() throws IOException, JAXBException, UcumException {
+    public void testMainSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlTestSuite.cql");
         Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
         if (library.getStatements() != null) {
@@ -66,7 +64,7 @@ public class CqlTestSuite {
 
     // This test is for the runtime errors
     @Test
-    public void testErrorSuite() throws IOException, JAXBException, UcumException {
+    public void testErrorSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlErrorTestSuite.cql");
         Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
         if (library.getStatements() != null) {
@@ -86,7 +84,7 @@ public class CqlTestSuite {
 
     // This test is to check the validity of the internal representation of the CQL types (OPTIONAL)
     @Test
-    public void testInternalTypeRepresentationSuite() throws IOException, JAXBException, UcumException {
+    public void testInternalTypeRepresentationSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlInternalTypeRepresentationSuite.cql");
         Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
         Object result;
@@ -383,7 +381,7 @@ public class CqlTestSuite {
         Assert.assertTrue(listComp != null && listComp);
     }
 
-    private Library translate(String file)  throws UcumException, JAXBException, IOException {
+    private Library translate(String file)  throws UcumException, IOException {
         ModelManager modelManager = new ModelManager();
         LibraryManager libraryManager = new LibraryManager(modelManager);
         UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
