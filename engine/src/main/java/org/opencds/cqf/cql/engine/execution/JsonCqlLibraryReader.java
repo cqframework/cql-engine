@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -21,6 +22,7 @@ public class JsonCqlLibraryReader {
 
     public static ObjectMapper mapper() {
         ObjectMapper mapper = new ObjectMapper();
+        mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_DEFAULT);
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         JaxbAnnotationModule module = new JaxbAnnotationModule();
         mapper.registerModule(module);
