@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
@@ -13,7 +14,8 @@ public class FhirQueryGeneratorFactory {
      * @return a BaseFhirQueryGenerator
      * @throws IllegalArgumentException if the FHIR version specified is not supported
      */
-    public BaseFhirQueryGenerator create(FhirVersionEnum fhirVersionEnum, SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
+    public BaseFhirQueryGenerator create(FhirVersionEnum fhirVersionEnum, SearchParameterResolver searchParameterResolver,
+                                         TerminologyProvider terminologyProvider) {
         switch (fhirVersionEnum) {
             case DSTU3:
                 return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider);

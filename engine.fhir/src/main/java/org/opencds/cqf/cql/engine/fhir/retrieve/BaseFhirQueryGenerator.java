@@ -7,10 +7,9 @@ import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
 import ca.uhn.fhir.rest.param.*;
 import org.apache.commons.lang3.tuple.Pair;
-import org.hl7.fhir.dstu3.model.CapabilityStatement;
-import org.hl7.fhir.dstu3.model.DataRequirement;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -19,7 +18,6 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
-import javax.xml.bind.annotation.XmlType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -31,6 +29,7 @@ public abstract class BaseFhirQueryGenerator {
 //    private final int DEFAULT_MAX_URI_LENGTH = 8000;
 
     protected FhirContext fhirContext;
+
     protected TerminologyProvider terminologyProvider;
     protected SearchParameterResolver searchParameterResolver;
 //    protected int maxUriLength;
@@ -44,7 +43,7 @@ public abstract class BaseFhirQueryGenerator {
 ////        this.maxUriLength = maxUriLength;
 //    }
 
-    protected Integer pageSize;
+    private Integer pageSize;
     public Integer getPageSize() {
         return this.pageSize;
     }
@@ -55,7 +54,7 @@ public abstract class BaseFhirQueryGenerator {
         this.pageSize = value;
     }
 
-    protected int maxCodesPerQuery;
+    private int maxCodesPerQuery;
     public int getMaxCodesPerQuery() {
         return this.maxCodesPerQuery;
     }
@@ -68,7 +67,7 @@ public abstract class BaseFhirQueryGenerator {
 
     // TODO: Think about how to best handle the decision to expand value sets... Should it be part of the
     // terminology provider if it detects support for "code:in"? How does that feed back to the retriever?
-    protected boolean expandValueSets;
+    private boolean expandValueSets;
     public boolean isExpandValueSets() {
         return this.expandValueSets;
     }
@@ -76,7 +75,8 @@ public abstract class BaseFhirQueryGenerator {
         this.expandValueSets = expandValueSets;
     }
 
-    public BaseFhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, FhirContext fhirContext) {
+    public BaseFhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider,
+                                  FhirContext fhirContext) {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
 //        this.maxUriLength = DEFAULT_MAX_URI_LENGTH;
@@ -86,7 +86,7 @@ public abstract class BaseFhirQueryGenerator {
         this.fhirContext = fhirContext;
     }
 
-    public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, IBaseConformance capabilityStatement);
+    public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, Context engineContext, IBaseConformance capabilityStatement);
 
     public boolean isPatientCompartmentResource(String dataType) {
         RuntimeResourceDefinition resourceDef = fhirContext.getResourceDefinition(dataType);

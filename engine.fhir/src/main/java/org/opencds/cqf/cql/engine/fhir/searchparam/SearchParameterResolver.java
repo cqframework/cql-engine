@@ -59,7 +59,7 @@ public class SearchParameterResolver {
             }
 
             String normalizedPath = normalizePath(param.getPath());
-            if (path.equals(normalizedPath) ) {
+            if (path.equals(normalizedPath) || path.equalsIgnoreCase(param.getName())) {
                 return param;
             }
         }

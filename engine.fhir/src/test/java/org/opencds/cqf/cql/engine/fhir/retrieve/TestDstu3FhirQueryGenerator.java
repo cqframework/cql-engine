@@ -2,9 +2,10 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
-import org.hl7.fhir.dstu3.model.Bundle;
-import org.hl7.fhir.dstu3.model.DataRequirement;
-import org.hl7.fhir.dstu3.model.ValueSet;
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.hl7.fhir.dstu3.model.*;
+import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.Dstu3FhirTest;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.Dstu3FhirTerminologyProvider;
@@ -13,7 +14,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -23,6 +27,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
     static IGenericClient CLIENT;
 
     Dstu3FhirQueryGenerator generator;
+    private Context engineContext;
 
     @BeforeClass
     public void setUpBeforeClass() {
@@ -34,6 +39,8 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forDstu3());
         TerminologyProvider terminologyProvider = new Dstu3FhirTerminologyProvider(CLIENT);
         this.generator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider);
+        OffsetDateTime evaluationDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-7));
+        this.engineContext = new Context(new Library().withIdentifier(new VersionedIdentifier().withId("Test")), evaluationDateTime.toZonedDateTime());
     }
 
     private ValueSet getTestValueSet(String id, int numberOfCodesToInclude) {
@@ -120,7 +127,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
         DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
 
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&patient=Patient/{{context.patientId}}";
@@ -144,7 +151,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&patient=Patient/{{context.patientId}}";
@@ -157,7 +164,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Appointment");
 
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Appointment?patient=Patient/{{context.patientId}}";
@@ -166,14 +173,39 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
     }
 
     @Test
-    void testGetFhirQueriesAppointmentWithDates() {
+    void testGetFhirQueriesAppointmentWithDate() {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Appointment");
+        DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
+        dateFilterComponent.setPath("start");
+        dateFilterComponent.setValue(new DateTimeType("2021-12-01"));
+        dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Appointment?patient=Patient/{{context.patientId}}";
+        String expectedQuery = "Appointment?date=ge2021-12-01T00:00:00.000-07:00&date=le2021-12-01T00:00:00.000-07:00&patient=Patient/{{context.patientId}}";
+
+        assertEquals(actualQuery, expectedQuery);
+    }
+
+    @Test
+    void testGetFhirQueriesObservationWithDuration() {
+        DataRequirement dataRequirement = new DataRequirement();
+        dataRequirement.setType("Observation");
+        DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
+        dateFilterComponent.setPath("effective");
+        Duration duration = new Duration();
+        duration.setValue(2);
+        duration.setCode("d");
+        duration.setUnit("days");
+        dateFilterComponent.setValue(duration);
+        dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
+
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+
+        String actualQuery = actual.get(0);
+        String expectedQuery = "Observation?date=ge2018-11-17T09:00:00.000-07:00&date=le2018-11-19T09:00:00.000-07:00&patient=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -196,7 +228,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
         this.generator.setMaxCodesPerQuery(4);
         this.generator.setExpandValueSets(true);
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&patient=Patient/{{context.patientId}}";
         String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&patient=Patient/{{context.patientId}}";
@@ -226,7 +258,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 //        this.generator.setMaxCodesPerQuery(400);
 //        this.generator.setMaxUriLength(20);
 //        this.generator.setExpandValueSets(true);
-//        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+//        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 //
 //        String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&patient=Patient/{{context.patientId}}";
 //        String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&patient=Patient/{{context.patientId}}";

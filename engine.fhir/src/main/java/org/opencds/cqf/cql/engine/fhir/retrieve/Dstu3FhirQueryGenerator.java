@@ -4,9 +4,12 @@ import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.dstu3.model.*;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
+import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
@@ -20,7 +23,7 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
     }
 
     @Override
-    public List<String> generateFhirQueries(ICompositeType dreq, IBaseConformance capStatement) {
+    public List<String> generateFhirQueries(ICompositeType dreq, Context engineContext, IBaseConformance capStatement) {
         if (!(dreq instanceof DataRequirement)) {
             throw new IllegalArgumentException("dataRequirement argument must be a DataRequirement");
         }
@@ -95,32 +98,44 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         String dateLowPath = null;
         String dateHighPath = null;
         Interval dateRange = null;
-//        if (dataRequirement.hasDateFilter()) {
-//            for (org.hl7.fhir.dstu3.model.DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
-//                if (dateFilterComponent.hasPath() && dateFilterComponent.hasSearchParam()) {
-//                    throw new UnsupportedOperationException(String.format("Either a path or a searchParam must be provided, but not both"));
-//                }
-//
-//                if (dateFilterComponent.hasPath()) {
-//                    datePath = dateFilterComponent.getPath();
-//                } else if (dateFilterComponent.hasSearchParam()) {
-//                    datePath = dateFilterComponent.getSearchParam();
-//                }
-//
-//                Type dateFilterValue = dateFilterComponent.getValue();
-//                if (dateFilterValue instanceof DateTimeType) {
-//
-//                } else if (dateFilterValue instanceof Duration) {
-//
-//                } else if (dateFilterValue instanceof Period) {
-//
-//                }
-//            }
-//        }
+
+        if (dataRequirement.hasDateFilter()) {
+            for (org.hl7.fhir.dstu3.model.DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
+                if (!dateFilterComponent.hasPath()) {
+                    throw new UnsupportedOperationException(String.format("A path must be provided"));
+                }
+
+                datePath = dateFilterComponent.getPath();
+
+                Type dateFilterValue = dateFilterComponent.getValue();
+                if (dateFilterValue instanceof DateTimeType) {
+                    dateLowPath = "valueDateTime";
+                    dateHighPath = "valueDateTime";
+                    DateTime dateTime = DateTime.fromJavaDate(((DateTimeType)dateFilterValue).getValue());
+                    dateRange = new Interval(dateTime, true, dateTime, true);
+
+                } else if (dateFilterValue instanceof Duration) {
+                    // If a Duration is specified, the filter will return only those data items that fall within Duration before now.
+                    Duration dateFilterAsDuration = (Duration)dateFilterValue;
+
+                    org.opencds.cqf.cql.engine.runtime.Quantity dateFilterDurationAsCQLQuantity =
+                        new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(dateFilterAsDuration.getValue()).withUnit(dateFilterAsDuration.getUnit());
+
+                    DateTime evaluationDateTime = engineContext.getEvaluationDateTime();
+                    DateTime diff = ((DateTime) SubtractEvaluator.subtract(evaluationDateTime, dateFilterDurationAsCQLQuantity));
+
+                    dateRange = new Interval(diff, true, evaluationDateTime, true);
+                } else if (dateFilterValue instanceof Period) {
+                    dateLowPath = "valueDateTime";
+                    dateHighPath = "valueDateTime";
+                    dateRange = new Interval(((Period)dateFilterValue).getStart(), true, ((Period)dateFilterValue).getEnd(), true);
+                }
+            }
+        }
 
         List<SearchParameterMap> maps = new ArrayList<SearchParameterMap>();
         maps = setupQueries(null, null, null, dataRequirement.getType(), null,
-            codePath, codes, valueSet, datePath, null, null, null);
+            codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {
             String query = null;

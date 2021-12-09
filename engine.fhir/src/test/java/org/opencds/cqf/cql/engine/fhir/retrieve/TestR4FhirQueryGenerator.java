@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.r4.model.*;
+import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.R4FhirTerminologyProvider;
@@ -14,13 +14,20 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
 
 public class TestR4FhirQueryGenerator extends R4FhirTest {
     static IGenericClient CLIENT;
 
     R4FhirQueryGenerator generator;
+    private Context engineContext;
 
     @BeforeClass
     public void setUpBeforeClass() {
@@ -32,6 +39,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forR4());
         TerminologyProvider terminologyProvider = new R4FhirTerminologyProvider(CLIENT);
         this.generator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider);
+        OffsetDateTime evaluationDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-7));
+        this.engineContext = new Context(new Library().withIdentifier(new VersionedIdentifier().withId("Test")), evaluationDateTime.toZonedDateTime());
     }
 
     private ValueSet getTestValueSet(String id, int numberOfCodesToInclude) {
@@ -82,7 +91,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
         DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&patient=Patient/{{context.patientId}}";
@@ -106,7 +115,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&patient=Patient/{{context.patientId}}";
@@ -119,7 +128,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Appointment");
 
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Appointment?patient=Patient/{{context.patientId}}";
@@ -128,14 +137,39 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     }
 
     @Test
-    void testGetFhirQueriesAppointmentWithDates() {
+    void testGetFhirQueriesAppointmentWithDate() {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Appointment");
+        DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
+        dateFilterComponent.setSearchParam("date");
+        dateFilterComponent.setValue(new DateTimeType("2021-12-01"));
+        dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Appointment?patient=Patient/{{context.patientId}}";
+        String expectedQuery = "Appointment?date=ge2021-12-01T00:00:00.000-07:00&date=le2021-12-01T00:00:00.000-07:00&patient=Patient/{{context.patientId}}";
+
+        assertEquals(actualQuery, expectedQuery);
+    }
+
+    @Test
+    void testGetFhirQueriesObservationWithDuration() {
+        DataRequirement dataRequirement = new DataRequirement();
+        dataRequirement.setType("Observation");
+        DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
+        dateFilterComponent.setSearchParam("date");
+        Duration duration = new Duration();
+        duration.setValue(2);
+        duration.setCode("d");
+        duration.setUnit("days");
+        dateFilterComponent.setValue(duration);
+        dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
+
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+
+        String actualQuery = actual.get(0);
+        String expectedQuery = "Observation?date=ge2018-11-17T09:00:00.000-07:00&date=le2018-11-19T09:00:00.000-07:00&patient=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -158,7 +192,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
         this.generator.setMaxCodesPerQuery(4);
         this.generator.setExpandValueSets(true);
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&patient=Patient/{{context.patientId}}";
         String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&patient=Patient/{{context.patientId}}";
@@ -188,7 +222,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 //        this.generator.setMaxCodesPerQuery(400);
 //        this.generator.setMaxUriLength(20);
 //        this.generator.setExpandValueSets(true);
-//        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, null);
+//        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 //
 //        String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&patient=Patient/{{context.patientId}}";
 //        String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&patient=Patient/{{context.patientId}}";
