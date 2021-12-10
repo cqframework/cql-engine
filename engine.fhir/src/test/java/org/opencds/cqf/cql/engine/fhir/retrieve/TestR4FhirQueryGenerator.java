@@ -179,7 +179,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         OffsetDateTime evaluationDateTimeAsLocal = OffsetDateTime.ofInstant(evaluationOffsetDateTime.toInstant(),
             java.util.TimeZone.getDefault().toZoneId());
         OffsetDateTime expectedRangeStartDateTime = evaluationDateTimeAsLocal.minusDays(2);
-        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZZ");
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSxxx");
 
         String actualQuery = actual.get(0);
         String expectedQuery = String.format("Observation?date=ge%s&date=le%s&patient=Patient/{{context.patientId}}", fmt.format(expectedRangeStartDateTime), fmt.format(evaluationDateTimeAsLocal));
