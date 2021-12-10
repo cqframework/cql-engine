@@ -2,13 +2,16 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import org.apache.commons.lang3.StringUtils;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.dstu3.model.*;
+import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.Dstu3FhirTest;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.Dstu3FhirTerminologyProvider;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -16,9 +19,11 @@ import org.testng.annotations.Test;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -39,7 +44,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forDstu3());
         TerminologyProvider terminologyProvider = new Dstu3FhirTerminologyProvider(CLIENT);
         this.generator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider);
-        OffsetDateTime evaluationDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-7));
+        OffsetDateTime evaluationDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-10));
         this.engineContext = new Context(new Library().withIdentifier(new VersionedIdentifier().withId("Test")), evaluationDateTime.toZonedDateTime());
     }
 
@@ -178,13 +183,19 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         dataRequirement.setType("Appointment");
         DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
         dateFilterComponent.setPath("start");
-        dateFilterComponent.setValue(new DateTimeType("2021-12-01"));
+
+        int offsetHours = java.util.TimeZone.getDefault().getRawOffset() / 3600000;
+        String offsetSign = offsetHours < 0 ? "-" : "+";
+        int offsetAbs = Math.abs(offsetHours);
+        String offsetStringPadded = StringUtils.leftPad(String.valueOf(offsetAbs), 2, "0");
+        String dateTimeString = String.format("2021-12-01T00:00:00.000%s%s:00", offsetSign, offsetStringPadded);
+        dateFilterComponent.setValue(new DateTimeType(dateTimeString));
         dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Appointment?date=ge2021-12-01T00:00:00.000-07:00&date=le2021-12-01T00:00:00.000-07:00&patient=Patient/{{context.patientId}}";
+        String expectedQuery = String.format("Appointment?date=ge%s&date=le%s&patient=Patient/{{context.patientId}}", dateTimeString, dateTimeString);
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -196,16 +207,21 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
         dateFilterComponent.setPath("effective");
         Duration duration = new Duration();
-        duration.setValue(2);
-        duration.setCode("d");
-        duration.setUnit("days");
+        duration.setValue(2).setCode("d").setUnit("days");
         dateFilterComponent.setValue(duration);
         dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
+        int offsetHours = java.util.TimeZone.getDefault().getRawOffset() / 3600000;
+        OffsetDateTime evaluationOffsetDateTime = this.engineContext.getEvaluationOffsetDateTime();
+        OffsetDateTime evaluationDateTimeAsLocal = OffsetDateTime.ofInstant(evaluationOffsetDateTime.toInstant(),
+            java.util.TimeZone.getDefault().toZoneId());
+        OffsetDateTime expectedRangeStartDateTime = evaluationDateTimeAsLocal.minusDays(2);
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
         String actualQuery = actual.get(0);
-        String expectedQuery = "Observation?date=ge2018-11-17T09:00:00.000-07:00&date=le2018-11-19T09:00:00.000-07:00&patient=Patient/{{context.patientId}}";
+        String expectedQuery = String.format("Observation?date=ge%s&date=le%s&patient=Patient/{{context.patientId}}", fmt.format(expectedRangeStartDateTime), fmt.format(evaluationDateTimeAsLocal));
 
         assertEquals(actualQuery, expectedQuery);
     }

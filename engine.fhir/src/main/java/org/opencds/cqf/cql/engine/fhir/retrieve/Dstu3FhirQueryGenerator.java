@@ -14,6 +14,7 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 import java.net.URLDecoder;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +112,9 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
                 if (dateFilterValue instanceof DateTimeType) {
                     dateLowPath = "valueDateTime";
                     dateHighPath = "valueDateTime";
-                    DateTime dateTime = DateTime.fromJavaDate(((DateTimeType)dateFilterValue).getValue());
+                    String offsetDateTimeString = ((DateTimeType)dateFilterValue).getValueAsString();
+                    DateTime dateTime = new DateTime(OffsetDateTime.parse(offsetDateTimeString));
+
                     dateRange = new Interval(dateTime, true, dateTime, true);
 
                 } else if (dateFilterValue instanceof Duration) {

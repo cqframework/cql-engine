@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import org.apache.commons.lang3.StringUtils;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.r4.model.*;
@@ -16,6 +17,7 @@ import org.testng.annotations.Test;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,13 +144,19 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         dataRequirement.setType("Appointment");
         DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
         dateFilterComponent.setSearchParam("date");
-        dateFilterComponent.setValue(new DateTimeType("2021-12-01"));
+
+        int offsetHours = java.util.TimeZone.getDefault().getRawOffset() / 3600000;
+        String offsetSign = offsetHours < 0 ? "-" : "+";
+        int offsetAbs = Math.abs(offsetHours);
+        String offsetStringPadded = StringUtils.leftPad(String.valueOf(offsetAbs), 2, "0");
+        String dateTimeString = String.format("2021-12-01T00:00:00.000%s%s:00", offsetSign, offsetStringPadded);
+        dateFilterComponent.setValue(new DateTimeType(dateTimeString));
         dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Appointment?date=ge2021-12-01T00:00:00.000-07:00&date=le2021-12-01T00:00:00.000-07:00&patient=Patient/{{context.patientId}}";
+        String expectedQuery = String.format("Appointment?date=ge%s&date=le%s&patient=Patient/{{context.patientId}}", dateTimeString, dateTimeString);
 
         assertEquals(actualQuery, expectedQuery);
     }
@@ -160,16 +168,21 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         DataRequirement.DataRequirementDateFilterComponent dateFilterComponent = new DataRequirement.DataRequirementDateFilterComponent();
         dateFilterComponent.setSearchParam("date");
         Duration duration = new Duration();
-        duration.setValue(2);
-        duration.setCode("d");
-        duration.setUnit("days");
+        duration.setValue(2).setCode("d").setUnit("days");
         dateFilterComponent.setValue(duration);
         dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
+        int offsetHours = java.util.TimeZone.getDefault().getRawOffset() / 3600000;
+        OffsetDateTime evaluationOffsetDateTime = this.engineContext.getEvaluationOffsetDateTime();
+        OffsetDateTime evaluationDateTimeAsLocal = OffsetDateTime.ofInstant(evaluationOffsetDateTime.toInstant(),
+            java.util.TimeZone.getDefault().toZoneId());
+        OffsetDateTime expectedRangeStartDateTime = evaluationDateTimeAsLocal.minusDays(2);
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
         String actualQuery = actual.get(0);
-        String expectedQuery = "Observation?date=ge2018-11-17T09:00:00.000-07:00&date=le2018-11-19T09:00:00.000-07:00&patient=Patient/{{context.patientId}}";
+        String expectedQuery = String.format("Observation?date=ge%s&date=le%s&patient=Patient/{{context.patientId}}", fmt.format(expectedRangeStartDateTime), fmt.format(evaluationDateTimeAsLocal));
 
         assertEquals(actualQuery, expectedQuery);
     }
