@@ -89,9 +89,6 @@ public abstract class FhirExecutionTestBase {
                 ArrayList<CqlTranslator.Options> options = new ArrayList<>();
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
 
-                // The line below is required to make sure the conversion to Jxson exposes empty strings as empty strings (as opposed to nulls)
-                CqlTranslator.getJxsonMapper().setSerializationInclusion(Include.NON_NULL);
-
                 CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {

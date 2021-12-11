@@ -78,9 +78,6 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
         File cqlFile = new File(URLDecoder.decode(this.getClass().getResource(file).getFile(), "UTF-8"));
 
-        // The line below is required to make sure the conversion to Jxson exposes empty strings as empty strings (as opposed to nulls)
-        CqlTranslator.getJxsonMapper().setSerializationInclusion(Include.NON_NULL);
-
         CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, ucumService);
 
         if (translator.getErrors().size() > 0) {

@@ -176,9 +176,6 @@ public class TestFhirPath {
         UcumService ucumService = new UcumEssenceService(
                 UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
         
-        // The line below is required to make sure the conversion to Jxson exposes empty strings as empty strings (as opposed to nulls)
-        CqlTranslator.getJxsonMapper().setSerializationInclusion(Include.NON_NULL);
-
         CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
                 options.toArray(new CqlTranslator.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
