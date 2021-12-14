@@ -17,6 +17,7 @@
     <modules>
         <module>engine</module>
         <module>engine.fhir</module>
+        <module>engine.jaxb</module>
     </modules>
 
     <licenses>
@@ -560,4 +561,3 @@
         </profile>
     </profiles>
 </project>
-

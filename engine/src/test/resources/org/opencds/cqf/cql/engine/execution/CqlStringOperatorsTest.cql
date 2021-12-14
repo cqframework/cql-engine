@@ -110,6 +110,7 @@ define SubstringAB0To3 : Substring('ab', 0, 3)
 //Upper
 define UpperNull : Upper(null)
 define UpperEmpty : Upper('')
+define UpperSpace : Upper(' ')
 define UpperA : Upper('a')
 define UpperB : Upper('B')
 define UpperAB : Upper('aB')

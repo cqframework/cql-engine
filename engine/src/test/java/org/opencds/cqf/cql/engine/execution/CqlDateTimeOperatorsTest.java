@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.nullValue;
 
 import java.math.BigDecimal;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.AfterEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
@@ -25,7 +23,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AddEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAdd() throws JAXBException {
+    public void testAdd() {
         Context context = new Context(library);
 
         // simple cache test -- watching behavior while stepping through tests
@@ -123,7 +121,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AfterEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAfter() throws JAXBException {
+    public void testAfter() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeAfterYearTrue").getExpression().evaluate(context);
@@ -213,7 +211,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.BeforeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testBefore() throws JAXBException {
+    public void testBefore() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeBeforeYearTrue").getExpression().evaluate(context);
@@ -296,7 +294,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.DateTimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDateTime() throws JAXBException {
+    public void testDateTime() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeYear").getExpression().evaluate(context);
@@ -325,7 +323,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.DateTimeComponentFromEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDateTimeComponentFrom() throws JAXBException {
+    public void testDateTimeComponentFrom() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeComponentFromYear").getExpression().evaluate(context);
@@ -375,7 +373,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.DifferenceBetweenEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDifference() throws JAXBException {
+    public void testDifference() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeDifferenceYear").getExpression().evaluate(context);
@@ -449,7 +447,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.DurationBetweenEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDuration() throws JAXBException {
+    public void testDuration() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeDurationBetweenYear").getExpression().evaluate(context);
@@ -563,7 +561,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.NowEvaluator#evaluate(Context)}
      */
     @Test
-    public void testNow() throws JAXBException {
+    public void testNow() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeNow").getExpression().evaluate(context);
@@ -580,7 +578,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SameAsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSameAs() throws JAXBException {
+    public void testSameAs() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeSameAsYearTrue").getExpression().evaluate(context);
@@ -663,7 +661,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SameOrAfterEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSameOrAfter() throws JAXBException {
+    public void testSameOrAfter() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("DateTimeSameOrAfterYearTrue1").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -784,7 +782,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SameOrBeforeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSameOrBefore() throws JAXBException {
+    public void testSameOrBefore() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("DateTimeSameOrBeforeYearTrue1").getExpression().evaluate(context);
         assertThat(result, is(true));
@@ -899,7 +897,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSubtract() throws JAXBException {
+    public void testSubtract() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeSubtract5Years").getExpression().evaluate(context);
@@ -983,7 +981,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.TimeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTime() throws JAXBException {
+    public void testTime() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TimeTest2").getExpression().evaluate(context);
@@ -994,7 +992,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.TimeOfDayEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTimeOfDay() throws JAXBException {
+    public void testTimeOfDay() {
         // TODO: uncomment once Time(x,x,x,x,x) format is fixed
         //Context context = new Context(library);
         // Object result = context.resolveExpressionRef("TimeOfDayTest").getExpression().evaluate(context);
@@ -1005,7 +1003,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.TodayEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToday() throws JAXBException {
+    public void testToday() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DateTimeSameOrBeforeTodayTrue1").getExpression().evaluate(context);

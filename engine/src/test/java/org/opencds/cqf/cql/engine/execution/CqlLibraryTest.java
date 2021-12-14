@@ -5,16 +5,13 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNull;
 
-
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.testng.annotations.Test;
 
 public class CqlLibraryTest extends CqlExecutionTestBase {
 
     @Test
-    public void testCode() throws JAXBException {
+    public void testCode() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("Code").getExpression().evaluate(context);

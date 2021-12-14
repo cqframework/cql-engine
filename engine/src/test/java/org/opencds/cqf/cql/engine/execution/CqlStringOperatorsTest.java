@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-import javax.xml.bind.JAXBException;
-
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -367,6 +365,9 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("UpperNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
+        result = context.resolveExpressionRef("UpperSpace").getExpression().evaluate(context);
+        assertThat(result, is(" "));
+
         result = context.resolveExpressionRef("UpperEmpty").getExpression().evaluate(context);
         assertThat(result, is(""));
 
@@ -395,7 +396,7 @@ public class CqlStringOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator#evaluate(Context)}
      */
     @Test
-    public void testToString() throws JAXBException {
+    public void testToString() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("QuantityToString").getExpression().evaluate(context);

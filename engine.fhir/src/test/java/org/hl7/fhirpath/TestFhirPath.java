@@ -20,7 +20,8 @@ import java.util.List;
 import java.util.TimeZone;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBException;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
@@ -40,7 +41,7 @@ import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.ExistsEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
-import org.opencds.cqf.cql.engine.execution.CqlLibraryReader;
+import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu2FhirModelResolver;
@@ -174,6 +175,7 @@ public class TestFhirPath {
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
         UcumService ucumService = new UcumEssenceService(
                 UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+        
         CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
                 options.toArray(new CqlTranslator.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
@@ -188,16 +190,15 @@ public class TestFhirPath {
             throw new IllegalArgumentException(errors.toString());
         }
 
-        Library library = null;
+        String json = translator.toJxson();
+
         try {
-            library = CqlLibraryReader.read(new StringReader(translator.toXml()));
+            return JsonCqlLibraryReader.read(new StringReader(json));
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        return library;
+        return null;
     }
 
     private Boolean compareResults(Object expectedResult, Object actualResult) {

@@ -4,9 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.testng.Assert;
@@ -15,7 +12,7 @@ import org.testng.annotations.Test;
 public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 
     @Test
-    public void testBetween() throws JAXBException {
+    public void testBetween() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("BetweenIntTrue").getExpression().evaluate(context);
@@ -26,7 +23,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEqual() throws JAXBException {
+    public void testEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SimpleEqTrueTrue").getExpression().evaluate(context);
@@ -157,7 +154,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.GreaterEvaluator#evaluate(Context)}
      */
     @Test
-    public void testGreater() throws JAXBException {
+    public void testGreater() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("GreaterZZ").getExpression().evaluate(context);
@@ -250,7 +247,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.GreaterOrEqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testGreaterOrEqual() throws JAXBException {
+    public void testGreaterOrEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("GreaterOrEqualZZ").getExpression().evaluate(context);
@@ -340,7 +337,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.LessEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLess() throws JAXBException {
+    public void testLess() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LessZZ").getExpression().evaluate(context);
@@ -427,7 +424,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.LessOrEqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLessOrEqual() throws JAXBException {
+    public void testLessOrEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LessOrEqualZZ").getExpression().evaluate(context);
@@ -517,7 +514,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEquivalent() throws JAXBException {
+    public void testEquivalent() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("EquivTrueTrue").getExpression().evaluate(context);
@@ -627,7 +624,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testNotEqual() throws JAXBException {
+    public void testNotEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SimpleNotEqTrueTrue").getExpression().evaluate(context);

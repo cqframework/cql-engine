@@ -48,7 +48,8 @@ define IsNull: ToQuantity('444 \'cm')
 public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQuantity {
 
     public static Quantity toQuantity(String str) {
-        str = str.trim();
+        // Tabs are treated like spaces for Units
+        str = str.replaceAll("[\t]", " ").trim();
         int index = str.indexOf(' ');
 
         String number = str;
@@ -113,7 +114,6 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return toQuantity(operand);
     }
 }

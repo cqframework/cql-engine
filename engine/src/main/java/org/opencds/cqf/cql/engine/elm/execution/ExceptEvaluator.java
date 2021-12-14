@@ -67,8 +67,8 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
             }
 
             Boolean leftEqualRight = EqualEvaluator.equal(left, right);
-            Boolean rightProperlyIncludesLeft = ProperlyIncludesEvaluator.properlyIncludes(right, left, precision);
-            Boolean leftProperlyIncludesRight = ProperlyIncludesEvaluator.properlyIncludes(left, right, precision);
+            Boolean rightProperlyIncludesLeft = ProperIncludesEvaluator.properlyIncludes(right, left, precision);
+            Boolean leftProperlyIncludesRight = ProperIncludesEvaluator.properlyIncludes(left, right, precision);
             Boolean rightStartsLeft = StartsEvaluator.starts(right, left, precision);
             Boolean rightEndsLeft = EndsEvaluator.ends(right, left, precision);
             Boolean isUndefined = AnyTrueEvaluator.anyTrue(
