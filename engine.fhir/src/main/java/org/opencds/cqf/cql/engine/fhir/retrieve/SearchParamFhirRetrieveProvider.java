@@ -18,9 +18,9 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     protected Integer pageSize;
     protected int maxCodesPerQuery;
 
-    public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, FhirContext fhirContext) {
-        this.fhirContext = fhirContext;
+    public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
+        this.fhirContext = searchParameterResolver.getFhirContext();
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
     }
 

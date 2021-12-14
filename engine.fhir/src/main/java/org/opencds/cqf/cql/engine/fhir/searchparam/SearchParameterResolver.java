@@ -27,6 +27,10 @@ public class SearchParameterResolver {
         this.context = context;
     }
 
+    public FhirContext getFhirContext() {
+        return this.context;
+    }
+
     public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path) {
         return this.getSearchParameterDefinition(dataType, path, (RestSearchParameterTypeEnum)null);
     }

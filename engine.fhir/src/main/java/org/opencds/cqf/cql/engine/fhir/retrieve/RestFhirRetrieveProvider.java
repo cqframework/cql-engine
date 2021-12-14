@@ -30,7 +30,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	private SearchStyleEnum searchStyle;
 
 	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
-		super(searchParameterResolver, fhirClient.getFhirContext());
+		super(searchParameterResolver);
 		// TODO: Figure out how to validate that the searchParameterResolver and the
 		// client are on the same version of FHIR.
 		this.fhirClient = fhirClient;
