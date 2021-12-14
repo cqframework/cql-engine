@@ -74,7 +74,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             BigDecimal leftDecimal = Value.verifyPrecision((BigDecimal)left, 0);
             BigDecimal rightDecimal = Value.verifyPrecision((BigDecimal)right, 0);
             int minScale = Math.min(leftDecimal.scale(), rightDecimal.scale());
-            if (minScale > 0) {
+            if (minScale >= 0) {
                 return leftDecimal.setScale(minScale, RoundingMode.FLOOR).compareTo(rightDecimal.setScale(minScale, RoundingMode.FLOOR)) == 0;
             }
             return leftDecimal.compareTo(rightDecimal) == 0;
