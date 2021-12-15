@@ -34,10 +34,6 @@
             <artifactId>org.eclipse.persistence.moxy</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
         </dependency>
@@ -94,7 +90,7 @@
                                     <limit>
                                         <counter>LINE</counter>
                                         <value>COVEREDRATIO</value>
-                                        <minimum>0.70</minimum>
+                                        <minimum>0.40</minimum>
                                     </limit>
                                 </limits>
                             </rule>

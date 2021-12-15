@@ -41,13 +41,7 @@
             <version>0.12.0</version>
         </dependency>
 
-        <!-- Provides Null and Not null Annotations-->
-        <dependency>
-            <groupId>com.google.code.findbugs</groupId>
-            <artifactId>jsr305</artifactId>
-        </dependency>
-       
-        <!-- The Units of Measure  Coding System (UCUM) --> 
+        <!-- The Units of Measure  Coding System (UCUM) -->
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
