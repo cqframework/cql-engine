@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.is;
 import java.math.BigDecimal;
 import java.util.Arrays;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.AnyTrueEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.AvgEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
@@ -24,7 +22,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AllTrueEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAllTrue() throws JAXBException {
+    public void testAllTrue() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AllTrueAllTrue").getExpression().evaluate(context);
@@ -53,7 +51,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AnyTrueEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAnyTrue() throws JAXBException {
+    public void testAnyTrue() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AnyTrueAllTrue").getExpression().evaluate(context);
@@ -96,7 +94,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.AvgEvaluator#evaluate(Context)}
      */
     @Test
-    public void testAvg() throws JAXBException {
+    public void testAvg() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("AvgTest1").getExpression().evaluate(context);
@@ -115,7 +113,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ProductEvaluator#evaluate(Context)}
      */
     @Test
-    public void testProduct() throws JAXBException {
+    public void testProduct() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("Product_Long").getExpression().evaluate(context);
@@ -126,7 +124,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.CountEvaluator#evaluate(Context)}
      */
     @Test
-    public void testCount() throws JAXBException {
+    public void testCount() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("CountTest1").getExpression().evaluate(context);
@@ -146,7 +144,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.MaxEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMax() throws JAXBException {
+    public void testMax() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("MaxTestInteger").getExpression().evaluate(context);
@@ -169,7 +167,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.MedianEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMedian() throws JAXBException {
+    public void testMedian() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("MedianTestDecimal").getExpression().evaluate(context);
@@ -180,7 +178,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.MinEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMin() throws JAXBException {
+    public void testMin() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("MinTestInteger").getExpression().evaluate(context);
@@ -203,7 +201,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ModeEvaluator#evaluate(Context)}
      */
     @Test
-    public void testMode() throws JAXBException {
+    public void testMode() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ModeTestDateTime").getExpression().evaluate(context);
@@ -223,7 +221,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.StdDevEvaluator#evaluate(Context)}
      */
     @Test
-    public void testPopulationStdDev() throws JAXBException {
+    public void testPopulationStdDev() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("PopStdDevTest1").getExpression().evaluate(context);
@@ -234,7 +232,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.PopulationVarianceEvaluator#evaluate(Context)}
      */
     @Test
-    public void testPopulationVariance() throws JAXBException {
+    public void testPopulationVariance() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("PopVarianceTest1").getExpression().evaluate(context);
@@ -245,7 +243,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.StdDevEvaluator#evaluate(Context)}
      */
     @Test
-    public void testStdDev() throws JAXBException {
+    public void testStdDev() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("StdDevTest1").getExpression().evaluate(context);
@@ -256,7 +254,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SumEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSum() throws JAXBException {
+    public void testSum() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SumTest1").getExpression().evaluate(context);
@@ -276,7 +274,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.VarianceEvaluator#evaluate(Context)}
      */
     @Test
-    public void testVariance() throws JAXBException {
+    public void testVariance() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("VarianceTest1").getExpression().evaluate(context);

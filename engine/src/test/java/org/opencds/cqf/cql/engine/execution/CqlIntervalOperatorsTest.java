@@ -1064,7 +1064,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperIncludesEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperlyIncludes() {
@@ -1157,7 +1157,7 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperIncludedInEvaluator#evaluate(Context)}
      */
     @Test
     public void TestProperlyIncludedIn() {

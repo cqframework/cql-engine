@@ -6,6 +6,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.*;
+import org.opencds.cqf.cql.engine.elm.execution.*;
 
 @XmlRegistry
 public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFactory {
@@ -409,10 +410,10 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public ProperIn createProperIn() { return new ProperInEvaluator(); }
 
     @Override
-    public ProperIncludes createProperIncludes() { return new ProperlyIncludesEvaluator(); }
+    public ProperIncludes createProperIncludes() { return new ProperIncludesEvaluator(); }
 
     @Override
-    public ProperIncludedIn createProperIncludedIn() { return new ProperlyIncludedInEvaluator(); }
+    public ProperIncludedIn createProperIncludedIn() { return new ProperIncludedInEvaluator(); }
 
     @Override
     public Property createProperty() { return new PropertyEvaluator(); }

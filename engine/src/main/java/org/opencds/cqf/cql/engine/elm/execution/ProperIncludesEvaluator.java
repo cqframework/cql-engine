@@ -29,7 +29,7 @@ If the left argument is null, the result is false, else if the right argument is
 Note that the order of elements does not matter for the purposes of determining inclusion.
 */
 
-public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
+public class ProperIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
 
     public static Boolean properlyIncludes(Object left, Object right, String precision) {
         if (left == null && right == null) {
@@ -101,7 +101,7 @@ public class ProperlyIncludesEvaluator extends org.cqframework.cql.elm.execution
 
         return AndEvaluator.and(
                 IncludedInEvaluator.listIncludedIn(right, left),
-                NotEqualEvaluator.notEqual(
+                GreaterEvaluator.greater(
                         leftCount,
                         (int) StreamSupport.stream(((Iterable<?>) right).spliterator(), false).count()
                 )

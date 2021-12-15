@@ -13,7 +13,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import javax.xml.bind.JAXBException;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
@@ -36,7 +36,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
     // This test is a basically empty library that tests how long the engine initialization takes.
     @Test
-    public void testEngineInit() throws IOException, JAXBException, UcumException {
+    public void testEngineInit() throws IOException, UcumException {
         Library library = this.toLibrary("library Test");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
@@ -45,7 +45,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
     // This test is for the various CQL operators
     @Test
-    public void testMainSuite() throws IOException, JAXBException, UcumException {
+    public void testMainSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlTestSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
@@ -55,7 +55,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
     // This test is for the runtime errors
     // @Test
     // TODO: Ratio type not implemented error
-    public void testErrorSuite() throws IOException, JAXBException, UcumException {
+    public void testErrorSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlErrorTestSuite.cql");
 
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
@@ -65,13 +65,13 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
     // This test is to check the validity of the internal representation of the CQL types (OPTIONAL)
     @Test
-    public void testInternalTypeRepresentationSuite() throws IOException, JAXBException, UcumException {
+    public void testInternalTypeRepresentationSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlInternalTypeRepresentationSuite.cql");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
         runPerformanceTest("CqlInternalTypeRepresentationSuite", "CqlInternalTypeRepresentationSuite", libraryLoader, 3.0);
     }
 
-    private Library translate(String file)  throws UcumException, JAXBException, IOException {
+    private Library translate(String file)  throws UcumException, IOException {
         ModelManager modelManager = new ModelManager();
         LibraryManager libraryManager = new LibraryManager(modelManager);
         UcumService ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
@@ -95,9 +95,9 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
         assertThat(translator.getErrors().size(), is(0));
 
-        String xml = translator.toXml();
+        String json = translator.toJxson();
 
-        return CqlLibraryReader.read(new StringReader(xml));
+        return JsonCqlLibraryReader.read(new StringReader(json));
     }
 
     private void runPerformanceTest(String testName, String libraryName, LibraryLoader libraryLoader, Double maxPerIterationMs) {

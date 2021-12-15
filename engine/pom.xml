@@ -20,31 +20,40 @@
     <url>https://github.com/DBCG/cql_engine/tree/master/engine</url>
 
     <dependencies>
+         <!-- Logging Services -->
+         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.32</version>
+        </dependency>
+
+        <!-- StringUtils, ExceptionUtils and Pair classes. -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
+
+        <!-- Support for generated methods for toString(), equals() and hashCode() using jakarta-commons-lang -->
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics</artifactId>
+            <artifactId>jaxb2-basics-runtime</artifactId>
+            <version>0.12.0</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-        </dependency>
+
+        <!-- Provides Null and Not null Annotations-->
         <dependency>
             <groupId>com.google.code.findbugs</groupId>
             <artifactId>jsr305</artifactId>
         </dependency>
+       
+        <!-- The Units of Measure  Coding System (UCUM) --> 
         <dependency>
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
         </dependency>
-        <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_xpath</artifactId>
-        </dependency>
+
+        <!-- Provides classes to load and serialize ELM files -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -61,6 +70,18 @@
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
+
+        <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -71,9 +92,9 @@
                     <configuration>
                         <!-- TODO: Figure out what java doc does not respect source file exclusions when linting-->
                         <!-- <excludePackageNames>org.cqframework.cql.elm.execution</excludePackageNames>
-                    <sourceFileExcludes>
-                        <exclude>**/org/cqframework/cql/elm/execution/*.java</exclude>
-                    </sourceFileExcludes> -->
+                        <sourceFileExcludes>
+                            <exclude>**/org/cqframework/cql/elm/execution/*.java</exclude>
+                        </sourceFileExcludes> -->
                         <additionalOptions>
                             <additionalOption>-Xdoclint:none</additionalOption>
                         </additionalOptions>

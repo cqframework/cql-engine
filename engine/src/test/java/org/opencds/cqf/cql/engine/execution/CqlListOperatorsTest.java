@@ -12,8 +12,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.xml.bind.JAXBException;
-
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
@@ -25,7 +23,7 @@ import org.testng.annotations.Test;
 public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
     @Test
-    public void testSort() throws JAXBException {
+    public void testSort() {
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("simpleSortAsc").getExpression().evaluate(context);
         assertThat(result, is(Arrays.asList(1, 1, 2, 4, 5, 6)));
@@ -92,7 +90,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ContainsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testContains() throws JAXBException {
+    public void testContains() {
         Context context = new Context(library);
 
         Object result;// = context.resolveExpressionRef("ContainsABNullHasNull").getExpression().evaluate(context);
@@ -124,7 +122,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.DescendentsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testDescendents() throws JAXBException {
+    public void testDescendents() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DescendentsEmptyList").getExpression().evaluate(context);
@@ -136,7 +134,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      */
     @Test
     @SuppressWarnings("serial")
-    public void testDistinct() throws JAXBException {
+    public void testDistinct() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("DistinctEmptyList").getExpression().evaluate(context);
@@ -177,7 +175,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEqual() throws JAXBException {
+    public void testEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("EqualNullNull").getExpression().evaluate(context);
@@ -218,7 +216,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ExceptEvaluator#evaluate(Context)}
      */
     @Test
-    public void testExcept() throws JAXBException {
+    public void testExcept() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ExceptEmptyListAndEmptyList").getExpression().evaluate(context);
@@ -246,7 +244,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ExistsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testExists() throws JAXBException {
+    public void testExists() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ExistsEmpty").getExpression().evaluate(context);
@@ -275,7 +273,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.FlattenEvaluator#evaluate(Context)}
      */
     @Test
-    public void testFlatten() throws JAXBException {
+    public void testFlatten() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("FlattenEmpty").getExpression().evaluate(context);
@@ -305,7 +303,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.FirstEvaluator#evaluate(Context)}
      */
     @Test
-    public void testFirst() throws JAXBException {
+    public void testFirst() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("FirstEmpty").getExpression().evaluate(context);
@@ -331,7 +329,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.InEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIn() throws JAXBException {
+    public void testIn() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("InNullEmpty").getExpression().evaluate(context);
@@ -366,7 +364,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IncludesEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIncludes() throws JAXBException {
+    public void testIncludes() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IncludesEmptyAndEmpty").getExpression().evaluate(context);
@@ -408,7 +406,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IncludedInEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIncludedIn() throws JAXBException {
+    public void testIncludedIn() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IncludedInEmptyAndEmpty").getExpression().evaluate(context);
@@ -450,7 +448,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IndexerEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIndexer() throws JAXBException {
+    public void testIndexer() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IndexerNull1List").getExpression().evaluate(context);
@@ -480,7 +478,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IndexOfEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIndexOf() throws JAXBException {
+    public void testIndexOf() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IndexOfEmptyNull").getExpression().evaluate(context);
@@ -512,7 +510,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.IntersectEvaluator#evaluate(Context)}
      */
     @Test
-    public void testIntersect() throws JAXBException {
+    public void testIntersect() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntersectEmptyListAndEmptyList").getExpression().evaluate(context);
@@ -539,7 +537,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.LastEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLast() throws JAXBException {
+    public void testLast() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LastEmpty").getExpression().evaluate(context);
@@ -565,7 +563,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.LengthEvaluator#evaluate(Context)}
      */
     @Test
-    public void testLength() throws JAXBException {
+    public void testLength() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("LengthEmptyList").getExpression().evaluate(context);
@@ -594,7 +592,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator#evaluate(Context)}
      */
     @Test
-    public void testEquivalent() throws JAXBException {
+    public void testEquivalent() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("EquivalentEmptyAndEmpty").getExpression().evaluate(context);
@@ -638,7 +636,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.NotEqualEvaluator#evaluate(Context)}
      */
     @Test
-    public void testNotEqual() throws JAXBException {
+    public void testNotEqual() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("NotEqualEmptyAndEmpty").getExpression().evaluate(context);
@@ -673,10 +671,10 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludesEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperIncludesEvaluator#evaluate(Context)}
      */
     @Test
-    public void testProperlyIncludes() throws JAXBException {
+    public void testProperlyIncludes() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ProperIncludesEmptyAndEmpty").getExpression().evaluate(context);
@@ -708,13 +706,16 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ProperlyIncludesNullLeft").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperlyIncludes1And111").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.ProperContainsEvaluator#evaluate(Context)}
      */
     @Test
-    public void testProperContains() throws JAXBException {
+    public void testProperContains() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ProperContainsNullRightFalse").getExpression().evaluate(context);
@@ -734,7 +735,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.ProperInEvaluator#evaluate(Context)}
      */
     @Test
-    public void testProperIn() throws JAXBException {
+    public void testProperIn() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ProperInNullRightFalse").getExpression().evaluate(context);
@@ -751,10 +752,10 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
-     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperlyIncludedInEvaluator#evaluate(Context)}
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ProperIncludedInEvaluator#evaluate(Context)}
      */
     @Test
-    public void testProperlyIncludedIn() throws JAXBException {
+    public void testProperlyIncludedIn() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("ProperIncludedInEmptyAndEmpty").getExpression().evaluate(context);
@@ -784,7 +785,10 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("ProperIncludedInTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef("ProperlyIncludedInNulRight").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperlyIncludedInNullRight").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperlyIncludedIn11And1").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
@@ -792,7 +796,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SingletonFromEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSingletonFrom() throws JAXBException {
+    public void testSingletonFrom() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SingletonFromEmpty").getExpression().evaluate(context);
@@ -822,7 +826,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SliceEvaluator#evaluate(Context)}
      */
     @Test
-    public void testSkip() throws JAXBException {
+    public void testSkip() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("SkipNull").getExpression().evaluate(context);
@@ -845,7 +849,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SliceEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTail() throws JAXBException {
+    public void testTail() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TailNull").getExpression().evaluate(context);
@@ -868,7 +872,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.SliceEvaluator#evaluate(Context)}
      */
     @Test
-    public void testTake() throws JAXBException {
+    public void testTake() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("TakeNull").getExpression().evaluate(context);
@@ -894,7 +898,7 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
      * {@link org.opencds.cqf.cql.engine.elm.execution.UnionEvaluator#evaluate(Context)}
      */
     @Test
-    public void testUnion() throws JAXBException {
+    public void testUnion() {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("UnionEmptyAndEmpty").getExpression().evaluate(context);
