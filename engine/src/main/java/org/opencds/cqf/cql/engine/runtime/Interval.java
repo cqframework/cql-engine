@@ -4,7 +4,7 @@ import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import javax.annotation.Nonnull;
+
 
 import org.opencds.cqf.cql.engine.elm.execution.AndEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
@@ -142,7 +142,7 @@ public class Interval implements CqlType, Comparable<Interval> {
     }
 
     @Override
-    public int compareTo(@Nonnull Interval other) {
+    public int compareTo(Interval other) {
         CqlList cqlList = new CqlList();
         if (cqlList.compareTo(getStart(), other.getStart()) == 0) {
             return cqlList.compareTo(getEnd(), other.getEnd());
