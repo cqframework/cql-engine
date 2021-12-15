@@ -1,8 +1,14 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.dstu2.model.Age;
 import org.hl7.fhir.dstu2.model.AnnotatedUuidType;
@@ -26,6 +32,7 @@ import org.hl7.fhir.dstu2.model.TimeType;
 import org.hl7.fhir.dstu2.model.UnsignedIntType;
 import org.hl7.fhir.dstu2.model.UriType;
 import org.hl7.fhir.dstu2.model.UuidType;
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -48,23 +55,54 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected void initialize() {
         // HAPI has some bugs where it's missing annotations on certain types. This patches that.
         this.fhirContext.registerCustomType(AnnotatedUuidType.class);
 
         // The context loads Resources on demand which can cause resolution to fail in certain cases
         // This forces all Resource types to be loaded.
-        for (Enumerations.ResourceType type :Enumerations.ResourceType.values()) {
-            // These are abstract types that should never be resolved directly.
-            switch (type) {
-                case DOMAINRESOURCE:
-                case RESOURCE:
-                case NULL:
-                    continue;
-                default:
+       
+        // force calling of validateInitialized();
+        this.fhirContext.getResourceDefinition(Enumerations.ResourceType.ACCOUNT.toCode());
+        
+        Map<String, Class<? extends IBaseResource>> myNameToResourceType;
+        try {
+            Field f = this.fhirContext.getClass().getDeclaredField("myNameToResourceType");
+            f.setAccessible(true);
+            myNameToResourceType = (Map<String, Class<? extends IBaseResource>>) f.get(this.fhirContext);
+
+            List<Class<? extends IBaseResource>> toLoad = new ArrayList<Class<? extends IBaseResource>>(myNameToResourceType.size());
+
+            for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
+                // These are abstract types that should never be resolved directly.
+                switch (type) {
+                    case DOMAINRESOURCE:
+                    case RESOURCE:
+                    case NULL:
+                        continue;
+                    default:
+                }
+                if (myNameToResourceType.containsKey(type.toCode().toLowerCase()))
+                    toLoad.add(myNameToResourceType.get(type.toCode().toLowerCase()));
             }
 
-            this.fhirContext.getResourceDefinition(type.toCode());
+            // Sends a list of all classes to be loaded in bulk. 
+            Method m = this.fhirContext.getClass().getDeclaredMethod("scanResourceTypes", Collection.class);
+            m.setAccessible(true);
+            m.invoke(this.fhirContext, toLoad);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
