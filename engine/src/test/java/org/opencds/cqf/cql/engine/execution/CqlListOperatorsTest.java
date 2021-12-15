@@ -706,6 +706,9 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("ProperlyIncludesNullLeft").getExpression().evaluate(context);
         assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperlyIncludes1And111").getExpression().evaluate(context);
+        assertThat(result, is(false));
     }
 
     /**
@@ -782,7 +785,10 @@ public class CqlListOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("ProperIncludedInTimeFalse").getExpression().evaluate(context);
         assertThat(result, is(false));
 
-        result = context.resolveExpressionRef("ProperlyIncludedInNulRight").getExpression().evaluate(context);
+        result = context.resolveExpressionRef("ProperlyIncludedInNullRight").getExpression().evaluate(context);
+        assertThat(result, is(false));
+
+        result = context.resolveExpressionRef("ProperlyIncludedIn11And1").getExpression().evaluate(context);
         assertThat(result, is(false));
     }
 
