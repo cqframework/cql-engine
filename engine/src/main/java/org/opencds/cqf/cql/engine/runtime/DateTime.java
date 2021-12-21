@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import javax.annotation.Nonnull;
+
 
 import org.opencds.cqf.cql.engine.exception.InvalidDateTime;
 import org.opencds.cqf.cql.engine.execution.Context;
@@ -251,7 +251,7 @@ public class DateTime extends BaseTemporal {
     }
 
     @Override
-    public int compareTo(@Nonnull BaseTemporal other) {
+    public int compareTo(BaseTemporal other) {
         return this.compare(other, true);
     }
 

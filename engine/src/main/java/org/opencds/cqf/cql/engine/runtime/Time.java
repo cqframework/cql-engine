@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.engine.runtime;
 
 import java.time.LocalTime;
 
-import javax.annotation.Nonnull;
+
 
 import org.opencds.cqf.cql.engine.exception.InvalidTime;
 
@@ -167,7 +167,7 @@ public class Time extends BaseTemporal {
     }
 
     @Override
-    public int compareTo(@Nonnull BaseTemporal other) {
+    public int compareTo(BaseTemporal other) {
         return this.compare(other, true);
     }
 

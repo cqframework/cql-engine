@@ -20,7 +20,7 @@ deploy:
     secure: b1sDrdEZcKENRDizYSaaQMbXet2vCS34AMm1MVZptjr0r2dqvogN2VfLUhCGTLNDkoogBry6oN2b6v4g1joK9Vv6C6Vi/9fXJRECl7Ccg98JBBOT1ii2zsBIr2o5Jwa2y/F7ukm+OkQEAHlxVRDuu9xpBVULkWGuVa47TnJEXBJQAdA1WE6z5HTFEbro8ES4wyFo3Ngugulw2WaDEyx0RiFSC/4uKjAZ7uCS12RrjF9l16bpLYIkgeItMk3WqQWzQG4TOwSVOyDcIOAKQeMyLEXc0gqYuwvdsqPgoqSbOfzfggaZYKgIBrMwFDFSFQHouDPMU1tBLVKR2UL5/eXY1nfbaZgDsQ7frojeerFn2yLl94uqLGQ8XS7ilTs0LY66/6EvVHX2KesEwC0OV/sW3TWDRyEthsT4ATdhVxzn6YOAVKxjg99JxIXg5XiZ1NyRWFJc3Z5J5oZcKgQdDi8zLhX6dlSBU+kjB/jyJ/0sL7ONwPkKbGuV3IC/w5+C5K78SUoNoCwJ4bcuBOguXSShl8Nff2ZM0oYmXnuFdbvtwe6JMtPCSO9zVjC22d+wmruqbdbtTOLoouIT6HKkNteu3FiAbo/VwL08/aKLTw+jaH/rNEF54f237zQ4oyI6ZSaYN9thjEPXcbslh9GivpuHeMEyHMaCowkla11bC5bQNtk=
   file_glob: true
   file: "target/**/*.jar"
-  skip_cleanup: true
+  cleanup: false
   name: CQL Engine $TRAVIS_TAG
   overwrite: true
   target_commitish: $TRAVIS_COMMIT
