@@ -32,6 +32,9 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public AnyTrue createAnyTrue() { return new AnyTrueEvaluator(); }
 
     @Override
+    public AnyInCodeSystem createAnyInCodeSystem() { return new AnyInCodeSystemEvaluator(); }
+
+    @Override
     public AnyInValueSet createAnyInValueSet() { return new AnyInValueSetEvaluator(); }
 
     @Override
@@ -65,13 +68,7 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     public Code createCode() { return new CodeEvaluator(); }
 
     @Override
-    public CodeDef createCodeDef() { return new CodeDefEvaluator(); }
-
-    @Override
     public CodeRef createCodeRef() { return new CodeRefEvaluator(); }
-
-    @Override
-    public CodeSystemDef createCodeSystemDef() { return new CodeSystemDefEvaluator(); }
 
     @Override
     public CodeSystemRef createCodeSystemRef() { return new CodeSystemRefEvaluator(); }
@@ -87,9 +84,6 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
 
     @Override
     public Concept createConcept() { return new ConceptEvaluator(); }
-
-    @Override
-    public ConceptDef createConceptDef() { return new ConceptDefEvaluator(); }
 
     @Override
     public ConceptRef createConceptRef() { return new ConceptRefEvaluator(); }
