@@ -7,13 +7,14 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.cqframework.cql.elm.execution.Expression;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ 
+@JsonSubTypes({
     @Type(value = AbsEvaluator.class, name = "Abs"),
     @Type(value = AddEvaluator.class, name = "Add"),
     @Type(value = AfterEvaluator.class, name = "After"),
     @Type(value = AliasRefEvaluator.class, name = "AliasRef"),
     @Type(value = AllTrueEvaluator.class, name = "AllTrue"),
     @Type(value = AndEvaluator.class, name = "And"),
+    @Type(value = AnyInCodeSystemEvaluator.class, name = "AnyInCodeSystem"),
     @Type(value = AnyInValueSetEvaluator.class, name = "AnyInValueSet"),
     @Type(value = AnyTrueEvaluator.class, name = "AnyTrue"),
     @Type(value = AsEvaluator.class, name = "As"),
@@ -26,19 +27,16 @@ import org.cqframework.cql.elm.execution.Expression;
     @Type(value = ChildrenEvaluator.class, name = "Children"),
     @Type(value = CoalesceEvaluator.class, name = "Coalesce"),
     @Type(value = CodeEvaluator.class, name = "Code"),
-    @Type(value = CodeDefEvaluator.class, name = "CodeDef"),
     @Type(value = CodeRefEvaluator.class, name = "CodeRef"),
-    @Type(value = CodeSystemDefEvaluator.class, name = "CodeSystemDef"),
     @Type(value = CodeSystemRefEvaluator.class, name = "CodeSystemRef"),
     @Type(value = CollapseEvaluator.class, name = "Collapse"),
     @Type(value = CombineEvaluator.class, name = "Combine"),
     @Type(value = ConcatenateEvaluator.class, name = "Concatenate"),
     @Type(value = ConceptEvaluator.class, name = "Concept"),
-    @Type(value = ConceptDefEvaluator.class, name = "ConceptDef"),
     @Type(value = ConceptRefEvaluator.class, name = "ConceptRef"),
     @Type(value = ContainsEvaluator.class, name = "Contains"),
     @Type(value = ConvertEvaluator.class, name = "Convert"),
-    @Type(value = ConvertQuantityEvaluator.class, name = "ConvertQuantity"),    
+    @Type(value = ConvertQuantityEvaluator.class, name = "ConvertQuantity"),
     @Type(value = ConvertsToBooleanEvaluator.class, name = "ConvertsToBoolean"),
     @Type(value = ConvertsToDateEvaluator.class, name = "ConvertsToDate"),
     @Type(value = ConvertsToDateTimeEvaluator.class, name = "ConvertsToDateTime"),

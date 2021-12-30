@@ -340,6 +340,16 @@ public class Context {
         throw new CqlException(String.format("Could not resolve code reference '%s'.", name));
     }
 
+    public CodeDef resolveCodeRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            return resolveCodeRef(name);
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
+    }
+
     public ConceptDef resolveConceptRef(String name) {
         for (ConceptDef conceptDef : getCurrentLibrary().getConcepts().getDef()) {
             if (conceptDef.getName().equals(name)) {
@@ -348,6 +358,16 @@ public class Context {
         }
 
         throw new CqlException(String.format("Could not resolve concept reference '%s'.", name));
+    }
+
+    public ConceptDef resolveConceptRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            return resolveConceptRef(name);
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
     }
 
     private IncludeDef resolveLibraryRef(String libraryName) {
