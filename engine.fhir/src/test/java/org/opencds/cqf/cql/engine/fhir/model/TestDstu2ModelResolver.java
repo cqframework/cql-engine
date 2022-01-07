@@ -2,7 +2,8 @@ package org.opencds.cqf.cql.engine.fhir.model;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertThrows;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import org.hl7.fhir.dstu2.model.Enumerations.ResourceType;
 import org.hl7.fhir.dstu2.model.Enumerations.SearchParamType;
 import org.hl7.fhir.dstu2.model.Enumerations.SpecialValues;
 import org.hl7.fhir.dstu2.model.Patient;
+import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
@@ -53,8 +55,7 @@ public class TestDstu2ModelResolver {
     };
 
     @Test(expectedExceptions = UnknownType.class)
-    public void resolverThrowsExceptionForUnknownType()
-    {
+    public void resolverThrowsExceptionForUnknownType() {
         ModelResolver resolver = new Dstu2FhirModelResolver();
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
     }
@@ -129,62 +130,70 @@ public class TestDstu2ModelResolver {
         }
 
         for (Class<?> enumType : enums) {
-            // For the enums we actually expect an Enumeration with a factory of the correct type to be created.
-            Enumeration<?> instance = (Enumeration<?>)resolver.createInstance(enumType.getSimpleName());
+            // For the enums we actually expect an Enumeration with a factory of the correct
+            // type to be created.
+            Enumeration<?> instance = (Enumeration<?>) resolver.createInstance(enumType.getSimpleName());
             assertNotNull(instance);
 
             Field enumFactory;
             try {
                 enumFactory = instance.getClass().getDeclaredField("myEnumFactory");
                 enumFactory.setAccessible(true);
-                EnumFactory<?> factory = (EnumFactory<?>)enumFactory.get(instance);
+                EnumFactory<?> factory = (EnumFactory<?>) enumFactory.get(instance);
 
-                assertTrue(factory.getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName()));
-            }
-            catch(Exception e){
+                assertTrue(
+                        factory.getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName()));
+            } catch (Exception e) {
                 throw new AssertionError("error getting factory type. " + e.getMessage());
             }
         }
     }
 
-
     @Test
     public void contextPathTests() {
         ModelResolver resolver = new Dstu2FhirModelResolver();
 
-        String path = (String)resolver.getContextPath("Patient", "Patient");
+        String path = (String) resolver.getContextPath("Patient", "Patient");
         assertNotNull(path);
         assertTrue(path.equals("id"));
 
-        path = (String)resolver.getContextPath(null, "Encounter");
+        path = (String) resolver.getContextPath(null, "Encounter");
         assertNull(path);
 
         // TODO: Consider making this an exception on the resolver because
         // if this happens it means something went wrong in the context.
-        path = (String)resolver.getContextPath("Patient", null);
+        path = (String) resolver.getContextPath("Patient", null);
         assertNull(path);
 
-        path = (String)resolver.getContextPath("Patient", "Condition");
+        path = (String) resolver.getContextPath("Patient", "Condition");
         assertNotNull(path);
         assertTrue(path.equals("patient"));
 
-        path = (String)resolver.getContextPath("Patient", "Appointment");
+        path = (String) resolver.getContextPath("Patient", "Appointment");
         assertNotNull(path);
         assertTrue(path.equals("participant.actor"));
 
-        path = (String)resolver.getContextPath("Patient", "Observation");
+        path = (String) resolver.getContextPath("Patient", "Observation");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
 
-        path = (String)resolver.getContextPath("Patient", "Encounter");
+        path = (String) resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
         assertTrue(path.equals("patient"));
 
-        path = (String)resolver.getContextPath("Patient", "MedicationStatement");
+        path = (String) resolver.getContextPath("Patient", "MedicationStatement");
         assertTrue(path.equals("patient"));
+
+        // Issue 527 - https://github.com/DBCG/cql_engine/issues/527
+        path = (String) resolver.getContextPath("Unfiltered", "MedicationStatement");
+        assertNull(path);
+
+        // Related to 527 - The engine incorrectly was checking for "Unspecified"
+        assertThrows(DataProviderException.class, () -> resolver.getContextPath("Unspecified", "MedicationStatement"));
     }
 
-    // This is a serious failure that needs to be addressed. There's some sort of mixup
+    // This is a serious failure that needs to be addressed. There's some sort of
+    // mixup
     // between the dstu2 and hl7org dstu2 objects.
     // @Test
     public void resolveMissingPropertyReturnsNull() {

@@ -90,22 +90,24 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             return null;
         }
 
-        if (contextType != null && !(contextType.equals("Unspecified") || contextType.equals("Population"))) {
-            if (targetType != null && contextType.equals(targetType)) {
-                return "id";
-            }
+        if (contextType.equals("Unfiltered") || contextType.equals("Population")) {
+            return null;
+        }
 
-            RuntimeResourceDefinition resourceDefinition = this.fhirContext.getResourceDefinition(targetType);
-            Object theValue = this.createInstance(contextType);
-            Class<? extends IBase> type = (Class<? extends IBase>) theValue.getClass();
+        if (targetType.equals(contextType)) {
+            return "id";
+        }
 
-            List<BaseRuntimeChildDefinition> children = resourceDefinition.getChildren();
-            for (BaseRuntimeChildDefinition child : children) {
-                Set<String> visitedElements = new HashSet<>();
-                String path = this.innerGetContextPath(visitedElements, child, type);
-                if (path != null) {
-                    return path;
-                }
+        RuntimeResourceDefinition resourceDefinition = this.fhirContext.getResourceDefinition(targetType);
+        Object theValue = this.createInstance(contextType);
+        Class<? extends IBase> type = (Class<? extends IBase>) theValue.getClass();
+
+        List<BaseRuntimeChildDefinition> children = resourceDefinition.getChildren();
+        for (BaseRuntimeChildDefinition child : children) {
+            Set<String> visitedElements = new HashSet<>();
+            String path = this.innerGetContextPath(visitedElements, child, type);
+            if (path != null) {
+                return path;
             }
         }
 
