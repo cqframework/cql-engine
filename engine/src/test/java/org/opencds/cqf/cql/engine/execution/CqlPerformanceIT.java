@@ -38,7 +38,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = this.toLibrary("library Test");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        runPerformanceTest("Engine init", "Test", libraryLoader, 0.1);
+        runPerformanceTest("Engine init", "Test", libraryLoader, 0.2);
     }
 
     // This test is for the various CQL operators
