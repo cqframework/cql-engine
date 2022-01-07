@@ -90,7 +90,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             return null;
         }
 
-        if (contextType.equals("Unfiltered") || contextType.equals("Population")) {
+        if (contextType.equals("Unfiltered") || contextType.equals("Unspecified") || contextType.equals("Population")) {
             return null;
         }
 

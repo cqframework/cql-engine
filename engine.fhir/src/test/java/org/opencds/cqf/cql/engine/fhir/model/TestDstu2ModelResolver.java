@@ -188,8 +188,8 @@ public class TestDstu2ModelResolver {
         path = (String) resolver.getContextPath("Unfiltered", "MedicationStatement");
         assertNull(path);
 
-        // Related to 527 - The engine incorrectly was checking for "Unspecified"
-        assertThrows(DataProviderException.class, () -> resolver.getContextPath("Unspecified", "MedicationStatement"));
+        path = (String) resolver.getContextPath("Unspecified", "MedicationStatement");
+        assertNull(path);
     }
 
     // This is a serious failure that needs to be addressed. There's some sort of
