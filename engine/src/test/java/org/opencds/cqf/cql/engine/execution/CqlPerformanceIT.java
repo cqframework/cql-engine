@@ -13,8 +13,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -40,7 +38,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         Library library = this.toLibrary("library Test");
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        runPerformanceTest("Engine init", "Test", libraryLoader, 0.1);
+        runPerformanceTest("Engine init", "Test", libraryLoader, 0.2);
     }
 
     // This test is for the various CQL operators

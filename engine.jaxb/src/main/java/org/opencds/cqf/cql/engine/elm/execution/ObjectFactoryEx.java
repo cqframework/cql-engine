@@ -6,7 +6,6 @@ import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
 import org.cqframework.cql.elm.execution.*;
-import org.opencds.cqf.cql.engine.elm.execution.*;
 
 @XmlRegistry
 public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFactory {

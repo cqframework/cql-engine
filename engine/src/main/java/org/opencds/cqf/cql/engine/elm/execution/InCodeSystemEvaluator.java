@@ -1,8 +1,5 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.cqframework.cql.elm.execution.CodeSystemDef;
-import org.cqframework.cql.elm.execution.CodeSystemRef;
-import org.cqframework.cql.elm.execution.Expression;
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.Code;

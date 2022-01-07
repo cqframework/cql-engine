@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.cqframework.cql.elm.execution.CodeDef;
 import org.cqframework.cql.elm.execution.CodeRef;
 import org.cqframework.cql.elm.execution.ConceptDef;
 import org.cqframework.cql.elm.execution.ConceptRef;
@@ -10,7 +9,6 @@ import org.opencds.cqf.cql.engine.runtime.Concept;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ConceptRefEvaluator extends org.cqframework.cql.elm.execution.ConceptRef {
 

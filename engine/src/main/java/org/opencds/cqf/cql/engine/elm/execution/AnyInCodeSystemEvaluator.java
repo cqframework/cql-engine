@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.cqframework.cql.elm.execution.Expression;
 import org.opencds.cqf.cql.engine.execution.Context;
 
 public class AnyInCodeSystemEvaluator extends org.cqframework.cql.elm.execution.AnyInCodeSystem {

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -54,7 +53,7 @@ public class TranslatingTestBase {
         mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
         JaxbAnnotationModule annotationModule = new JaxbAnnotationModule();
         mapper.registerModule(annotationModule);
-        
+
         return mapper.writeValueAsString(wrapper);
     }
 

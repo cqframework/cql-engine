@@ -1,13 +1,11 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.cqframework.cql.elm.execution.CodeSystemDef;
 import org.cqframework.cql.elm.execution.CodeSystemRef;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.CodeSystem;
 import org.opencds.cqf.cql.engine.runtime.ValueSet;
-import org.opencds.cqf.cql.engine.terminology.CodeSystemInfo;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
@@ -16,11 +14,11 @@ public class ValueSetRefEvaluator extends org.cqframework.cql.elm.execution.Valu
     public static ValueSet toValueSet(Context context, ValueSetRef vsr) {
         boolean enteredLibrary = context.enterLibrary(vsr.getLibraryName());
         try {
-            ValueSetDef vsd = context.resolveValueSetRef(vsr.getLibraryName(), vsr.getName());
+            ValueSetDef vsd = context.resolveValueSetRef(vsr.getName());
             ValueSet vs = new ValueSet().withId(vsd.getId()).withVersion(vsd.getVersion());
             for (CodeSystemRef csr : vsd.getCodeSystem()) {
-                CodeSystemDef csd = context.resolveCodeSystemRef(csr.getLibraryName(), csr.getName());
-                vs.addCodeSystem(new CodeSystem().withId(csd.getId()).withVersion(csd.getVersion()));
+                CodeSystem cs = CodeSystemRefEvaluator.toCodeSystem(context, csr);
+                vs.addCodeSystem(cs);
             }
             return vs;
         }

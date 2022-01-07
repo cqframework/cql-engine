@@ -159,8 +159,7 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
     public Object createInstance(String typeName) {
         Class<?> clazz = resolveType(typeName);
         try {
-            Object object = clazz.getDeclaredConstructor().newInstance();
-            return object;
+            return clazz.getDeclaredConstructor().newInstance();
         } catch (InstantiationException | InvocationTargetException |
             ExceptionInInitializerError | IllegalAccessException | SecurityException | NoSuchMethodException e) {
             throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));

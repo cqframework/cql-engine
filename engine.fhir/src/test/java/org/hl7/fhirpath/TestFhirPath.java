@@ -21,8 +21,6 @@ import java.util.TimeZone;
 
 import javax.xml.bind.JAXB;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.FhirLibrarySourceProvider;
@@ -175,7 +173,7 @@ public class TestFhirPath {
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
         UcumService ucumService = new UcumEssenceService(
                 UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
-        
+
         CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
                 options.toArray(new CqlTranslator.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
