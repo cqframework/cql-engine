@@ -11,8 +11,6 @@ import java.util.Map;
 
 import javax.xml.bind.JAXBException;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import org.cqframework.cql.cql2elm.*;
 import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
 import org.cqframework.cql.elm.execution.Library;

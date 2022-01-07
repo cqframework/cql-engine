@@ -15,8 +15,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.TimeZone;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
 import org.cqframework.cql.cql2elm.LibraryManager;
