@@ -1,9 +1,20 @@
 package org.opencds.cqf.cql.engine.terminology;
 
+import org.opencds.cqf.cql.engine.runtime.CodeSystem;
+import org.opencds.cqf.cql.engine.runtime.ValueSet;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class ValueSetInfo {
+    public static ValueSetInfo fromValueSet(ValueSet vs) {
+        ValueSetInfo vsi = new ValueSetInfo().withId(vs.getId()).withVersion(vs.getVersion());
+        for (CodeSystem cs : vs.getCodeSystems()) {
+            vsi.withCodeSystem(CodeSystemInfo.fromCodeSystem(cs));
+        }
+        return vsi;
+    }
+
     private String id;
     public String getId() {
         return id;
