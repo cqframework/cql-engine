@@ -2,7 +2,10 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 public class FhirQueryGeneratorFactory {
@@ -16,11 +19,14 @@ public class FhirQueryGeneratorFactory {
      */
     public BaseFhirQueryGenerator create(FhirVersionEnum fhirVersionEnum, SearchParameterResolver searchParameterResolver,
                                          TerminologyProvider terminologyProvider) {
+        ModelResolver modelResolver;
         switch (fhirVersionEnum) {
             case DSTU3:
-                return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider);
+                modelResolver = new Dstu3FhirModelResolver();
+                return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver)modelResolver);
             case R4:
-                return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider);
+                modelResolver = new R4FhirModelResolver();
+                return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver)modelResolver);
             default:
                 throw new IllegalArgumentException(String.format("Unsupported FHIR version for FHIR Query Generation: %s", fhirVersionEnum));
         }

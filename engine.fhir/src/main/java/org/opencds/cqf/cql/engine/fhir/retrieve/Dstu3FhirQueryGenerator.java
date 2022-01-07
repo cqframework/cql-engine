@@ -6,6 +6,7 @@ import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
-    public Dstu3FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
-        super(searchParameterResolver, terminologyProvider, FhirContext.forDstu3());
+    public Dstu3FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, Dstu3FhirModelResolver modelResolver) {
+        super(searchParameterResolver, terminologyProvider, modelResolver, FhirContext.forDstu3());
     }
 
     @Override
@@ -137,7 +138,14 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         }
 
         List<SearchParameterMap> maps = new ArrayList<SearchParameterMap>();
-        maps = setupQueries(null, null, null, dataRequirement.getType(), null,
+
+        Object contextPath = modelResolver.getContextPath(engineContext.getCurrentContext(), dataRequirement.getType());
+        Object contextValue = engineContext.getCurrentContextValue();
+        String templateId = dataRequirement.getProfile() != null && dataRequirement.getProfile().size() > 0
+            ? dataRequirement.getProfile().get(0).getValue()
+            : null;
+
+        maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
             codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {

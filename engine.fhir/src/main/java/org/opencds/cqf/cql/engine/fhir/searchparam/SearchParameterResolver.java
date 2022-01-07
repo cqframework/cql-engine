@@ -172,39 +172,4 @@ public class SearchParameterResolver {
         //TODO: Evaluate against CapabilityStatement
         return true;
     }
-
-    public Pair<String, IQueryParameterType> getPreferredPatientSearchParam(String dataType, String contextPath, String contextValue) {
-        RuntimeSearchParam searchParam = null;
-
-        RuntimeResourceDefinition resourceDef = this.context.getResourceDefinition(dataType);
-        List<RuntimeSearchParam> patientSearchParams = getPatientSearchParams(resourceDef);
-
-        if (contextPath != null && !contextPath.isEmpty()
-            && patientSearchParams.stream().anyMatch(sp -> sp.getName().equals(contextPath))
-            && searchParamIsSupported(dataType, contextPath)) {
-            searchParam = patientSearchParams.stream().filter(sp -> sp.getName().equals(contextPath)).collect(Collectors.toList()).get(0);
-        }
-        // If there only exists on patient-compartment searchParam, use it.
-        else if (patientSearchParams.size() == 1) {
-            searchParam = patientSearchParams.get(0);
-        } else {
-            patientSearchParams.removeIf(sp -> !sp.getParamType().equals(RestSearchParameterTypeEnum.REFERENCE) || !sp.getTargets().contains("Patient"));
-
-            if (patientSearchParams != null && patientSearchParams.size() > 0) {
-                patientSearchParams.sort(Comparator.comparingInt(sp -> sp.getTargets().size()));
-                searchParam = patientSearchParams.get(0);
-            }
-        }
-
-        String value = PATIENT_ID_CONTEXT;
-        if (contextValue != null &&  !contextValue.isEmpty()) {
-            value = contextValue;
-        }
-        return Pair.of(searchParam.getName(), new ReferenceParam("Patient", null, value));
-    }
-
-    public List<RuntimeSearchParam> getPatientSearchParams(RuntimeResourceDefinition resourceDef) {
-        List<RuntimeSearchParam> patientSearchParams = resourceDef.getSearchParamsForCompartmentName("Patient");
-        return patientSearchParams;
-    }
 }

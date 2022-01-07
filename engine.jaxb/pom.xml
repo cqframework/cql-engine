@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>1.5.3-SNAPSHOT</version>
+        <version>1.5.4-SNAPSHOTAdam</version>
     </parent>
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.jaxb</artifactId>
-    <version>1.5.3-SNAPSHOT</version>
+    <version>1.5.4-SNAPSHOTAdam</version>
     <packaging>jar</packaging>
 
     <name>engine.jaxb</name>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
             <artifactId>engine</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
+            <version>1.5.4-SNAPSHOTAdam</version>
         </dependency>
         <dependency>
             <groupId>org.jvnet.jaxb2_commons</groupId>

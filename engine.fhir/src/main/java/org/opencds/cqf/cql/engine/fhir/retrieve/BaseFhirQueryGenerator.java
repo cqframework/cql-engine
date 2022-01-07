@@ -10,8 +10,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -32,6 +34,7 @@ public abstract class BaseFhirQueryGenerator {
 
     protected TerminologyProvider terminologyProvider;
     protected SearchParameterResolver searchParameterResolver;
+    protected ModelResolver modelResolver;
 //    protected int maxUriLength;
 //    public int getMaxUriLength() { return this.maxUriLength; }
 //    public void setMaxUriLength(int maxUriLength) {
@@ -76,9 +79,10 @@ public abstract class BaseFhirQueryGenerator {
     }
 
     public BaseFhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider,
-                                  FhirContext fhirContext) {
+                                  ModelResolver modelResolver, FhirContext fhirContext) {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
+        this.modelResolver = modelResolver;
 //        this.maxUriLength = DEFAULT_MAX_URI_LENGTH;
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
         this.expandValueSets = DEFAULT_SHOULD_EXPAND_VALUESETS;
@@ -87,11 +91,6 @@ public abstract class BaseFhirQueryGenerator {
     }
 
     public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, Context engineContext, IBaseConformance capabilityStatement);
-
-    public boolean isPatientCompartmentResource(String dataType) {
-        RuntimeResourceDefinition resourceDef = fhirContext.getResourceDefinition(dataType);
-        return searchParameterResolver.getPatientSearchParams(resourceDef).size() > 0;
-    }
 
     protected Pair<String, IQueryParameterType> getTemplateParam(String dataType, String templateId) {
         if (templateId == null || templateId.equals("")) {
@@ -142,8 +141,6 @@ public abstract class BaseFhirQueryGenerator {
                                                                 Object contextValue) {
         if (context != null && context.equals("Patient") && contextValue != null && contextPath != null) {
             return this.searchParameterResolver.createSearchParameter(context, dataType, contextPath, (String)contextValue);
-        } else if (isPatientCompartmentResource(dataType)) {
-            return this.searchParameterResolver.getPreferredPatientSearchParam(dataType, contextPath, (String)contextValue);
         }
 
         return null;

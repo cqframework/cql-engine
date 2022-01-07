@@ -6,6 +6,7 @@ import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.*;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -19,8 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
-    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider) {
-        super(searchParameterResolver, terminologyProvider, FhirContext.forR4());
+    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, R4FhirModelResolver modelResolver) {
+        super(searchParameterResolver, terminologyProvider, modelResolver, FhirContext.forR4());
     }
 
     @Override
@@ -110,7 +111,14 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
         }
 
         List<SearchParameterMap> maps = new ArrayList<SearchParameterMap>();
-        maps = setupQueries(null, null, null, dataRequirement.getType(), null,
+
+        Object contextPath = modelResolver.getContextPath(engineContext.getCurrentContext(), dataRequirement.getType());
+        Object contextValue = engineContext.getCurrentContextValue();
+        String templateId = dataRequirement.getProfile() != null && dataRequirement.getProfile().size() > 0
+            ? dataRequirement.getProfile().get(0).getValue()
+            : null;
+
+        maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
             codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {
