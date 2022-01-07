@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
-import org.cqframework.cql.elm.execution.CodeSystemDef;
 import org.cqframework.cql.elm.execution.CodeSystemRef;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.ValueSetRef;
@@ -18,8 +17,8 @@ public class ValueSetRefEvaluator extends org.cqframework.cql.elm.execution.Valu
             ValueSetDef vsd = context.resolveValueSetRef(vsr.getName());
             ValueSet vs = new ValueSet().withId(vsd.getId()).withVersion(vsd.getVersion());
             for (CodeSystemRef csr : vsd.getCodeSystem()) {
-                CodeSystemDef csd = context.resolveCodeSystemRef(csr.getName());
-                vs.addCodeSystem(new CodeSystem().withId(csd.getId()).withVersion(csd.getVersion()));
+                CodeSystem cs = CodeSystemRefEvaluator.toCodeSystem(context, csr);
+                vs.addCodeSystem(cs);
             }
             return vs;
         }

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.ValueSetRef;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.execution.Context;
@@ -23,25 +22,31 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
         Iterable<Code> codes = null;
         String valueSet = null;
         if (this.getCodes() != null) {
-            Object codesResult = this.getCodes().evaluate(context);
-            if (codesResult instanceof ValueSet) {
-                valueSet = ((ValueSet)codesResult).getId();
-            } else if (codesResult instanceof String) {
-                List<Code> codesList = new ArrayList<>();
-                codesList.add(new Code().withCode((String) codesResult));
-                codes = codesList;
-            } else if (codesResult instanceof Code) {
-                List<Code> codesList = new ArrayList<>();
-                codesList.add((Code) codesResult);
-                codes = codesList;
-            } else if (codesResult instanceof Concept) {
-                List<Code> codesList = new ArrayList<>();
-                for (Code conceptCode : ((Concept) codesResult).getCodes()) {
-                    codesList.add(conceptCode);
+            if (this.getCodes() instanceof ValueSetRef) {
+                ValueSet vs = ValueSetRefEvaluator.toValueSet(context, (ValueSetRef)this.getCodes());
+                valueSet = vs.getId();
+            }
+            else {
+                Object codesResult = this.getCodes().evaluate(context);
+                if (codesResult instanceof ValueSet) {
+                    valueSet = ((ValueSet)codesResult).getId();
+                } else if (codesResult instanceof String) {
+                    List<Code> codesList = new ArrayList<>();
+                    codesList.add(new Code().withCode((String) codesResult));
+                    codes = codesList;
+                } else if (codesResult instanceof Code) {
+                    List<Code> codesList = new ArrayList<>();
+                    codesList.add((Code) codesResult);
+                    codes = codesList;
+                } else if (codesResult instanceof Concept) {
+                    List<Code> codesList = new ArrayList<>();
+                    for (Code conceptCode : ((Concept) codesResult).getCodes()) {
+                        codesList.add(conceptCode);
+                    }
+                    codes = codesList;
+                } else {
+                    codes = (Iterable<Code>) codesResult;
                 }
-                codes = codesList;
-            } else {
-                codes = (Iterable<Code>) codesResult;
             }
         }
         Interval dateRange = null;
