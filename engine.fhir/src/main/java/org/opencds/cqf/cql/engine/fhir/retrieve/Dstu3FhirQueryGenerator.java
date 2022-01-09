@@ -109,30 +109,33 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
 
                 datePath = dateFilterComponent.getPath();
 
-                Type dateFilterValue = dateFilterComponent.getValue();
-                if (dateFilterValue instanceof DateTimeType) {
-                    dateLowPath = "valueDateTime";
-                    dateHighPath = "valueDateTime";
-                    String offsetDateTimeString = ((DateTimeType)dateFilterValue).getValueAsString();
-                    DateTime dateTime = new DateTime(OffsetDateTime.parse(offsetDateTimeString));
+                // TODO: Deal with the case that the value is expressed as an expression extension
+                if (dateFilterComponent.hasValue()) {
+                    Type dateFilterValue = dateFilterComponent.getValue();
+                    if (dateFilterValue instanceof DateTimeType && dateFilterValue.hasPrimitiveValue()) {
+                        dateLowPath = "valueDateTime";
+                        dateHighPath = "valueDateTime";
+                        String offsetDateTimeString = ((DateTimeType)dateFilterValue).getValueAsString();
+                        DateTime dateTime = new DateTime(OffsetDateTime.parse(offsetDateTimeString));
 
-                    dateRange = new Interval(dateTime, true, dateTime, true);
+                        dateRange = new Interval(dateTime, true, dateTime, true);
 
-                } else if (dateFilterValue instanceof Duration) {
-                    // If a Duration is specified, the filter will return only those data items that fall within Duration before now.
-                    Duration dateFilterAsDuration = (Duration)dateFilterValue;
+                    } else if (dateFilterValue instanceof Duration && ((Duration)dateFilterValue).hasValue()) {
+                        // If a Duration is specified, the filter will return only those data items that fall within Duration before now.
+                        Duration dateFilterAsDuration = (Duration)dateFilterValue;
 
-                    org.opencds.cqf.cql.engine.runtime.Quantity dateFilterDurationAsCQLQuantity =
-                        new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(dateFilterAsDuration.getValue()).withUnit(dateFilterAsDuration.getUnit());
+                        org.opencds.cqf.cql.engine.runtime.Quantity dateFilterDurationAsCQLQuantity =
+                            new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(dateFilterAsDuration.getValue()).withUnit(dateFilterAsDuration.getUnit());
 
-                    DateTime evaluationDateTime = engineContext.getEvaluationDateTime();
-                    DateTime diff = ((DateTime) SubtractEvaluator.subtract(evaluationDateTime, dateFilterDurationAsCQLQuantity));
+                        DateTime evaluationDateTime = engineContext.getEvaluationDateTime();
+                        DateTime diff = ((DateTime) SubtractEvaluator.subtract(evaluationDateTime, dateFilterDurationAsCQLQuantity));
 
-                    dateRange = new Interval(diff, true, evaluationDateTime, true);
-                } else if (dateFilterValue instanceof Period) {
-                    dateLowPath = "valueDateTime";
-                    dateHighPath = "valueDateTime";
-                    dateRange = new Interval(((Period)dateFilterValue).getStart(), true, ((Period)dateFilterValue).getEnd(), true);
+                        dateRange = new Interval(diff, true, evaluationDateTime, true);
+                    } else if (dateFilterValue instanceof Period && ((Period)dateFilterValue).hasStart() && ((Period)dateFilterValue).hasEnd()) {
+                        dateLowPath = "valueDateTime";
+                        dateHighPath = "valueDateTime";
+                        dateRange = new Interval(((Period)dateFilterValue).getStart(), true, ((Period)dateFilterValue).getEnd(), true);
+                    }
                 }
             }
         }
