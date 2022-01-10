@@ -15,9 +15,9 @@ This repository uses stable trunk methodology:
 |Branch|Description|Status|Version
 |----|----|----|----|
 |v12|CQL 1.2 Engine|Obsolete|1.2.20|
-|v13|CQL 1.3 Engine|Maintenance|1.3.12.2|
+|v13|CQL 1.3 Engine|Obselete|1.3.12.2|
 |v14|CQL 1.4 Engine|Maintenance|1.4.0|
-|master|CQL 1.5 Engine|Active Development|1.5.1|
+|master|CQL 1.5 Engine|Active Development|1.5.4|
 
 ## Commit Policy
 
@@ -43,7 +43,9 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.0 - Initial release candidate
 * 1.5.1 - Minor maintenance/stability fixes
 * 1.5.2 - PHI Obfuscation, Long data type, performance enhancements, bug fixes
-* 1.5.3 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
+* 1.5.3 - Performance enhancements, break out of Jaxb dependencies, support for ValueSet and CodeSystem types
+* 1.5.4 - Maintenance/stability fixes
+* 1.5.5 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
 * 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
 
 ## Getting Help
