@@ -81,6 +81,40 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     }
 
     @Test
+    void testGetFhirQueriesPatientWithNoFilters() {
+
+        DataRequirement dataRequirement = new DataRequirement();
+        dataRequirement.setType("Patient");
+
+        this.engineContext.enterContext("Patient");
+        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
+
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+
+        String actualQuery = actual.get(0);
+        String expectedQuery = "Patient?_id={{context.patientId}}";
+
+        assertEquals(actualQuery, expectedQuery);
+    }
+
+    @Test
+    void testGetFhirQueriesConditionWithNoFilters() {
+
+        DataRequirement dataRequirement = new DataRequirement();
+        dataRequirement.setType("Condition");
+
+        this.engineContext.enterContext("Patient");
+        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
+
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+
+        String actualQuery = actual.get(0);
+        String expectedQuery = "Condition?subject={{context.patientId}}";
+
+        assertEquals(actualQuery, expectedQuery);
+    }
+
+    @Test
     void testGetFhirQueriesObservation() {
         ValueSet valueSet = getTestValueSet("MyValueSet", 3);
 
