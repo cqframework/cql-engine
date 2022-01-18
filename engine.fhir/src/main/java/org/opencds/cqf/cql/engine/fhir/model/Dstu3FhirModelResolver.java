@@ -63,10 +63,10 @@ public class Dstu3FhirModelResolver extends
 
         // The context loads Resources on demand which can cause resolution to fail in certain cases
         // This forces all Resource types to be loaded.
-       
+
         // force calling of validateInitialized();
         this.fhirContext.getResourceDefinition(Enumerations.ResourceType.ACCOUNT.toCode());
-        
+
         Map<String, Class<? extends IBaseResource>> myNameToResourceType;
         try {
             Field f = this.fhirContext.getClass().getDeclaredField("myNameToResourceType");
@@ -88,7 +88,7 @@ public class Dstu3FhirModelResolver extends
                     toLoad.add(myNameToResourceType.get(type.toCode().toLowerCase()));
             }
 
-            // Sends a list of all classes to be loaded in bulk. 
+            // Sends a list of all classes to be loaded in bulk.
             Method m = this.fhirContext.getClass().getDeclaredMethod("scanResourceTypes", Collection.class);
             m.setAccessible(true);
             m.invoke(this.fhirContext, toLoad);
@@ -314,10 +314,8 @@ public class Dstu3FhirModelResolver extends
             return null;
         }
 
-        if (contextType != null && !(contextType.equals("Unspecified") || contextType.equals("Population"))) {
-            if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
-                return "subject";
-            }
+        if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
+            return "subject";
         }
 
         return super.getContextPath(contextType, targetType);

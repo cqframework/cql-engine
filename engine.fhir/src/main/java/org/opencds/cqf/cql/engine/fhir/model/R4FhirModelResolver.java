@@ -64,10 +64,10 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
         // The context loads Resources on demand which can cause resolution to fail in certain cases
         // This forces all Resource types to be loaded.
-       
+
         // force calling of validateInitialized();
         this.fhirContext.getResourceDefinition(Enumerations.ResourceType.ACCOUNT.toCode());
-        
+
         Map<String, Class<? extends IBaseResource>> myNameToResourceType;
         try {
             Field f = this.fhirContext.getClass().getDeclaredField("myNameToResourceType");
@@ -89,7 +89,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                     toLoad.add(myNameToResourceType.get(type.toCode().toLowerCase()));
             }
 
-            // Sends a list of all classes to be loaded in bulk. 
+            // Sends a list of all classes to be loaded in bulk.
             Method m = this.fhirContext.getClass().getDeclaredMethod("scanResourceTypes", Collection.class);
             m.setAccessible(true);
             m.invoke(this.fhirContext, toLoad);
@@ -183,6 +183,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             case "MedicationKnowledgeStatus": typeName = "CodeType"; break;
             case "Messageheader_Response_Request": typeName = "CodeType"; break;
             case "MimeType": typeName = "CodeType"; break;
+            default: break;
         }
 
 
@@ -223,6 +224,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "AnnotatedUuidType":
                 case "UuidType": return true;
                 case "OidType": return true;
+                default: break;
             }
         }
 
@@ -230,6 +232,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             switch (type.getSimpleName()) {
                 case "PositiveIntType": return true;
                 case "UnsignedIntType": return true;
+                default: break;
             }
         }
 
@@ -238,6 +241,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "CodeType": return true;
                 case "MarkdownType": return true;
                 case "IdType": return true;
+                default: break;
             }
         }
 
@@ -249,6 +253,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "Count":
                 case "SimpleQuantity":
                 case "MoneyQuantity": return true;
+                default: break;
             }
         }
 
@@ -273,6 +278,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "AnnotatedUuidType":
                 case "UuidType": return uriType.hasPrimitiveValue() && uriType.getValue().startsWith("urn:uuid:") ? new UuidType(uriType.primitiveValue()) : null;
                 case "OidType": return uriType.hasPrimitiveValue() && uriType.getValue().startsWith("urn:oid:") ? new OidType(uriType.primitiveValue()) : null; // castToOid(uriType); Throws an exception, not implemented
+                default: break;
             }
         }
 
@@ -281,6 +287,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             switch (type.getSimpleName()) {
                 case "PositiveIntType": return integerType.hasPrimitiveValue() && integerType.getValue() > 0 ? new PositiveIntType(integerType.primitiveValue()) : null; // integerType.castToPositiveInt(integerType); Throws an exception, not implemented
                 case "UnsignedIntType": return integerType.hasPrimitiveValue() && integerType.getValue() >= 0 ? new UnsignedIntType(integerType.primitiveValue()) : null; // castToUnsignedInt(integerType); Throws an exception, not implemented
+                default: break;
             }
         }
 
@@ -290,6 +297,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "CodeType": return stringType.castToCode(stringType);
                 case "MarkdownType": return stringType.castToMarkdown(stringType);
                 case "IdType": return stringType.hasPrimitiveValue() ? new IdType(stringType.primitiveValue()) : null; // stringType.castToId(stringType); Throws an exception, not implemented
+                default: break;
             }
         }
 
@@ -327,6 +335,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                     moneyQuantity.setCode(quantity.getCode());
                     // TODO: Ensure money constraints are met, else return null
                     return moneyQuantity;
+                default: break;
             }
         }
 
@@ -343,10 +352,8 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             return null;
         }
 
-        if (contextType != null && !(contextType.equals("Unspecified") || contextType.equals("Population"))) {
-            if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
-                return "subject";
-            }
+        if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
+            return "subject";
         }
 
         return super.getContextPath(contextType, targetType);

@@ -656,16 +656,6 @@ public class Context {
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
-    public ValueSetDef resolveValueSetRef(String libraryName, String name) {
-        boolean enteredLibrary = enterLibrary(libraryName);
-        try {
-            return resolveValueSetRef(name);
-        }
-        finally {
-            exitLibrary(enteredLibrary);
-        }
-    }
-
     public CodeSystemDef resolveCodeSystemRef(String name) {
         for (CodeSystemDef codeSystemDef : getCurrentLibrary().getCodeSystems().getDef()) {
             if (codeSystemDef.getName().equals(name)) {
@@ -675,16 +665,6 @@ public class Context {
 
         throw new CqlException(String.format("Could not resolve code system reference '%s' in library '%s'.",
                 name, getCurrentLibrary().getIdentifier().getId()));
-    }
-
-    public CodeSystemDef resolveCodeSystemRef(String libraryName, String name) {
-        boolean enteredLibrary = enterLibrary(libraryName);
-        try {
-            return resolveCodeSystemRef(name);
-        }
-        finally {
-            exitLibrary(enteredLibrary);
-        }
     }
 
     private Map<String, DataProvider> dataProviders = new HashMap<>();

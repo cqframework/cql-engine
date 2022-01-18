@@ -10,8 +10,13 @@ import org.opencds.cqf.cql.engine.runtime.CodeSystem;
 public class CodeSystemRefEvaluator extends org.cqframework.cql.elm.execution.CodeSystemRef {
 
     public static CodeSystem toCodeSystem(Context context, CodeSystemRef csr) {
-        CodeSystemDef csd = context.resolveCodeSystemRef(csr.getLibraryName(), csr.getName());
-        return new CodeSystem().withId(csd.getId()).withVersion(csd.getVersion()).withName(csd.getName());
+        boolean enteredLibrary = context.enterLibrary(csr.getLibraryName());
+        try {
+            CodeSystemDef csd = context.resolveCodeSystemRef(csr.getName());
+            return new CodeSystem().withId(csd.getId()).withVersion(csd.getVersion()).withName(csd.getName());
+        } finally {
+            context.exitLibrary(enteredLibrary);
+        }
     }
 
     @Override

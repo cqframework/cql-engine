@@ -2,7 +2,8 @@ package org.opencds.cqf.cql.engine.fhir.model;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertThrows;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +32,7 @@ import org.hl7.fhir.dstu3.model.Enumerations.ResourceType;
 import org.hl7.fhir.dstu3.model.Enumerations.SearchParamType;
 import org.hl7.fhir.dstu3.model.Enumerations.SpecialValues;
 import org.hl7.fhir.dstu3.model.Patient;
+import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
@@ -62,8 +64,7 @@ public class TestDstu3ModelResolver {
     };
 
     @Test(expectedExceptions = UnknownType.class)
-    public void resolverThrowsExceptionForUnknownType()
-    {
+    public void resolverThrowsExceptionForUnknownType() {
         ModelResolver resolver = new Dstu3FhirModelResolver();
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
     }
@@ -114,17 +115,19 @@ public class TestDstu3ModelResolver {
         List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
 
         for (TypeInfo ti : typeInfos) {
-            ClassInfo ci = (ClassInfo)ti;
+            ClassInfo ci = (ClassInfo) ti;
             if (ci != null) {
                 switch (ci.getBaseType()) {
                     // Abstract classes
                     case "FHIR.BackboneElement":
-                    case "FHIR.Element": continue;
+                    case "FHIR.Element":
+                        continue;
                 }
 
                 switch (ci.getName()) {
                     // TODO: HAPI Doesn't have a ResourceContainer type for Dstu3
-                    case "ResourceContainer": continue;
+                    case "ResourceContainer":
+                        continue;
                 }
 
                 resolver.resolveType(ci.getName());
@@ -143,11 +146,9 @@ public class TestDstu3ModelResolver {
         resolver.resolveType("TestScriptRequestMethodCode");
         resolver.resolveType("FHIRDeviceStatus");
 
-
         // This tests the special case handling of "Codes".
         resolver.resolveType("ImmunizationStatusCodes");
         resolver.resolveType("ConditionClinicalStatusCodes");
-
 
         // These are oddballs requiring manual mapping.
         resolver.resolveType("ConfidentialityClassification");
@@ -194,16 +195,18 @@ public class TestDstu3ModelResolver {
         }
 
         for (Class<?> enumType : enums) {
-            // For the enums we actually expect an Enumeration with a factory of the correct type to be created.
-            Enumeration<?> instance = (Enumeration<?>)resolver.createInstance(enumType.getSimpleName());
+            // For the enums we actually expect an Enumeration with a factory of the correct
+            // type to be created.
+            Enumeration<?> instance = (Enumeration<?>) resolver.createInstance(enumType.getSimpleName());
             assertNotNull(instance);
 
-            assertTrue(instance.getEnumFactory().getClass().getSimpleName().replace("EnumFactory", "").equals(enumType.getSimpleName()));
+            assertTrue(instance.getEnumFactory().getClass().getSimpleName().replace("EnumFactory", "")
+                    .equals(enumType.getSimpleName()));
         }
 
-
         // These are some inner classes that don't appear in the enums above
-        // This list is not exhaustive. It's meant as a spot check for the resolution code.
+        // This list is not exhaustive. It's meant as a spot check for the resolution
+        // code.
         Object instance = resolver.createInstance("TestScriptRequestMethodCode");
         assertNotNull(instance);
 
@@ -211,41 +214,47 @@ public class TestDstu3ModelResolver {
         assertNotNull(instance);
     }
 
-
     @Test
     public void contextPathTests() {
         ModelResolver resolver = new Dstu3FhirModelResolver();
 
-        String path = (String)resolver.getContextPath("Patient", "Patient");
+        String path = (String) resolver.getContextPath("Patient", "Patient");
         assertNotNull(path);
         assertTrue(path.equals("id"));
 
-        path = (String)resolver.getContextPath(null, "Encounter");
+        path = (String) resolver.getContextPath(null, "Encounter");
         assertNull(path);
 
         // TODO: Consider making this an exception on the resolver because
         // if this happens it means something went wrong in the context.
-        path = (String)resolver.getContextPath("Patient", null);
+        path = (String) resolver.getContextPath("Patient", null);
         assertNull(path);
 
-        path = (String)resolver.getContextPath("Patient", "Condition");
+        path = (String) resolver.getContextPath("Patient", "Condition");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
 
-        path = (String)resolver.getContextPath("Patient", "Appointment");
+        path = (String) resolver.getContextPath("Patient", "Appointment");
         assertNotNull(path);
         assertTrue(path.equals("participant.actor"));
 
-        path = (String)resolver.getContextPath("Patient", "Account");
+        path = (String) resolver.getContextPath("Patient", "Account");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
 
-        path = (String)resolver.getContextPath("Patient", "Encounter");
+        path = (String) resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
         assertTrue(path.equals("subject"));
 
-        path = (String)resolver.getContextPath("Patient", "MedicationStatement");
+        path = (String) resolver.getContextPath("Patient", "MedicationStatement");
         assertTrue(path.equals("subject"));
+
+        // Issue 527 - https://github.com/DBCG/cql_engine/issues/527
+        path = (String) resolver.getContextPath("Unfiltered", "MedicationStatement");
+        assertNull(path);
+
+        path = (String) resolver.getContextPath("Unspecified", "MedicationStatement");
+        assertNull(path);
     }
 
     @Test
