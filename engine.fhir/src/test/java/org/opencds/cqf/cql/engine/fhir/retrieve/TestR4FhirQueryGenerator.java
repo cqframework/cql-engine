@@ -109,7 +109,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
 
         String actualQuery = actual.get(0);
-        String expectedQuery = "Condition?subject={{context.patientId}}";
+        String expectedQuery = "Condition?subject=Patient/{{context.patientId}}";
 
         assertEquals(actualQuery, expectedQuery);
     }
