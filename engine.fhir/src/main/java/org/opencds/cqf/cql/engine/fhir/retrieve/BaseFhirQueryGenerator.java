@@ -32,23 +32,12 @@ import ca.uhn.fhir.rest.param.TokenParamModifier;
 public abstract class BaseFhirQueryGenerator {
     protected static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
     protected static final boolean DEFAULT_SHOULD_EXPAND_VALUESETS = false;
-//    private final int DEFAULT_MAX_URI_LENGTH = 8000;
 
     protected FhirContext fhirContext;
 
     protected TerminologyProvider terminologyProvider;
     protected SearchParameterResolver searchParameterResolver;
     protected ModelResolver modelResolver;
-//    protected int maxUriLength;
-//    public int getMaxUriLength() { return this.maxUriLength; }
-//    public void setMaxUriLength(int maxUriLength) {
-//        throw new NotImplementedException("MaxUriLength is not yet leveraged in the Dstu3FhirQueryGenerator");
-////        if (maxUriLength <= 0) {
-////            throw new IllegalArgumentException("maxUriLength must be > 0");
-////        }
-////
-////        this.maxUriLength = maxUriLength;
-//    }
 
     private Integer pageSize;
     public Integer getPageSize() {
@@ -87,7 +76,6 @@ public abstract class BaseFhirQueryGenerator {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
         this.modelResolver = modelResolver;
-//        this.maxUriLength = DEFAULT_MAX_URI_LENGTH;
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
         this.expandValueSets = DEFAULT_SHOULD_EXPAND_VALUESETS;
 

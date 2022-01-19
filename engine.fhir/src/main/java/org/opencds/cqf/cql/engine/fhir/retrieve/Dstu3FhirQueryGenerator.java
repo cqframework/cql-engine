@@ -114,7 +114,7 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         if (dataRequirement.hasDateFilter()) {
             for (org.hl7.fhir.dstu3.model.DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
                 if (!dateFilterComponent.hasPath()) {
-                    throw new UnsupportedOperationException(String.format("A path must be provided"));
+                    throw new UnsupportedOperationException("A path must be provided");
                 }
 
                 datePath = dateFilterComponent.getPath();
