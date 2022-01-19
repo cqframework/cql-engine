@@ -1,9 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.searchparam;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import org.apache.commons.lang3.tuple.Pair;
 
 import ca.uhn.fhir.context.FhirContext;
@@ -165,10 +166,5 @@ public class SearchParameterResolver {
         } else {
             return null;
         }
-    }
-
-    private Boolean searchParamIsSupported(String dataType, String searchParam) {
-        //TODO: Evaluate against CapabilityStatement
-        return true;
     }
 }

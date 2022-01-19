@@ -34,10 +34,10 @@ import org.hl7.fhir.dstu2.model.UriType;
 import org.hl7.fhir.dstu2.model.UuidType;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
+import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
-import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 
 public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
@@ -62,17 +62,17 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
 
         // The context loads Resources on demand which can cause resolution to fail in certain cases
         // This forces all Resource types to be loaded.
-       
+
         // force calling of validateInitialized();
         this.fhirContext.getResourceDefinition(Enumerations.ResourceType.ACCOUNT.toCode());
-        
+
         Map<String, Class<? extends IBaseResource>> myNameToResourceType;
         try {
             Field f = this.fhirContext.getClass().getDeclaredField("myNameToResourceType");
             f.setAccessible(true);
             myNameToResourceType = (Map<String, Class<? extends IBaseResource>>) f.get(this.fhirContext);
 
-            List<Class<? extends IBaseResource>> toLoad = new ArrayList<Class<? extends IBaseResource>>(myNameToResourceType.size());
+            List<Class<? extends IBaseResource>> toLoad = new ArrayList<>(myNameToResourceType.size());
 
             for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
                 // These are abstract types that should never be resolved directly.
@@ -87,7 +87,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
                     toLoad.add(myNameToResourceType.get(type.toCode().toLowerCase()));
             }
 
-            // Sends a list of all classes to be loaded in bulk. 
+            // Sends a list of all classes to be loaded in bulk.
             Method m = this.fhirContext.getClass().getDeclaredMethod("scanResourceTypes", Collection.class);
             m.setAccessible(true);
             m.invoke(this.fhirContext, toLoad);

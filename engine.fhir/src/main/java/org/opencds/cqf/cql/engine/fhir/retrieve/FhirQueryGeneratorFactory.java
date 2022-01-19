@@ -1,12 +1,12 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import ca.uhn.fhir.context.FhirVersionEnum;
-import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
+
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class FhirQueryGeneratorFactory {
     /**

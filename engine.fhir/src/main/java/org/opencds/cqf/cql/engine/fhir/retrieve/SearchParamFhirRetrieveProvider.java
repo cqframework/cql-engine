@@ -2,12 +2,13 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import java.util.List;
 
-import ca.uhn.fhir.context.FhirContext;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Interval;
+
+import ca.uhn.fhir.context.FhirContext;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
 
@@ -18,7 +19,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     protected Integer pageSize;
     protected int maxCodesPerQuery;
 
-    public SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
+    protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
         this.fhirContext = searchParameterResolver.getFhirContext();
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
@@ -51,12 +52,13 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
     protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
+
     @Override
     public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
             String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
             String dateLowPath, String dateHighPath, Interval dateRange) {
 
-        BaseFhirQueryGenerator fhirQueryGenerator = fhirQueryGenerator =
+        BaseFhirQueryGenerator fhirQueryGenerator =
             new FhirQueryGeneratorFactory().create(fhirContext.getVersion().getVersion(), searchParameterResolver,
                 terminologyProvider, this.expandValueSets, this.maxCodesPerQuery, this.pageSize);
 

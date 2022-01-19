@@ -1,9 +1,19 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import ca.uhn.fhir.context.FhirContext;
+import java.net.URLDecoder;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.CapabilityStatement;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.DataRequirement;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Duration;
+import org.hl7.fhir.r4.model.Period;
+import org.hl7.fhir.r4.model.Type;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
@@ -14,10 +24,7 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
-import java.net.URLDecoder;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import ca.uhn.fhir.context.FhirContext;
 
 public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
     public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, R4FhirModelResolver modelResolver) {
@@ -34,7 +41,6 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
         }
 
         DataRequirement dataRequirement = (DataRequirement)dreq;
-        CapabilityStatement capabilityStatement = (CapabilityStatement)capStatement;
 
         List<String> queries = new ArrayList<>();
 
@@ -74,7 +80,7 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
         if (dataRequirement.hasDateFilter()) {
             for (DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
                 if (dateFilterComponent.hasPath() && dateFilterComponent.hasSearchParam()) {
-                    throw new UnsupportedOperationException(String.format("Either a path or a searchParam must be provided, but not both"));
+                    throw new UnsupportedOperationException("Either a path or a searchParam must be provided, but not both");
                 }
 
                 if (dateFilterComponent.hasPath()) {
@@ -113,15 +119,13 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
             }
         }
 
-        List<SearchParameterMap> maps = new ArrayList<SearchParameterMap>();
-
         Object contextPath = modelResolver.getContextPath(engineContext.getCurrentContext(), dataRequirement.getType());
         Object contextValue = engineContext.getCurrentContextValue();
-        String templateId = dataRequirement.getProfile() != null && dataRequirement.getProfile().size() > 0
+        String templateId = dataRequirement.getProfile() != null && !dataRequirement.getProfile().isEmpty()
             ? dataRequirement.getProfile().get(0).getValue()
             : null;
 
-        maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
+            List<SearchParameterMap> maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
             codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {

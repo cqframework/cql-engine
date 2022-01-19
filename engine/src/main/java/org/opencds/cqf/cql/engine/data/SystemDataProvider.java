@@ -24,11 +24,6 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
         throw new IllegalArgumentException("SystemDataProvider does not support retrieval.");
     }
 
-	// @Override
-	// public boolean isPatientCompartment(String dataType) {
-	// 	return false;
-	// }
-
     @SuppressWarnings("deprecation")
     @Override
     public String getPackageName() {

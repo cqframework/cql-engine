@@ -1,7 +1,20 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import ca.uhn.fhir.context.FhirContext;
-import org.hl7.fhir.dstu3.model.*;
+import java.net.URLDecoder;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hl7.fhir.dstu3.model.CapabilityStatement;
+import org.hl7.fhir.dstu3.model.CodeType;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.DataRequirement;
+import org.hl7.fhir.dstu3.model.DateTimeType;
+import org.hl7.fhir.dstu3.model.Duration;
+import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Reference;
+import org.hl7.fhir.dstu3.model.Type;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
@@ -14,10 +27,7 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
-import java.net.URLDecoder;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import ca.uhn.fhir.context.FhirContext;
 
 public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
     public Dstu3FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, Dstu3FhirModelResolver modelResolver) {
@@ -34,7 +44,6 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
         }
 
         DataRequirement dataRequirement = (DataRequirement)dreq;
-        CapabilityStatement capabilityStatement = (CapabilityStatement)capStatement;
 
         List<String> queries = new ArrayList<>();
 
@@ -52,6 +61,7 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
 
                 // TODO: What to do if/when System is not provided...
                 if (codeFilterComponent.hasValueCode()) {
+                    codes = new ArrayList<>();
                     List<org.hl7.fhir.dstu3.model.CodeType> codeFilterValueCode = codeFilterComponent.getValueCode();
                     for (CodeType codeType : codeFilterValueCode) {
                         Code code = new Code();
@@ -60,7 +70,7 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
                     }
                 }
                 if (codeFilterComponent.hasValueCoding()) {
-                    codes = new ArrayList<Code>();
+                    codes = new ArrayList<>();
 
                     List<org.hl7.fhir.dstu3.model.Coding> codeFilterValueCodings = codeFilterComponent.getValueCoding();
                     for (Coding coding : codeFilterValueCodings) {
@@ -140,15 +150,13 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
             }
         }
 
-        List<SearchParameterMap> maps = new ArrayList<SearchParameterMap>();
-
         Object contextPath = modelResolver.getContextPath(engineContext.getCurrentContext(), dataRequirement.getType());
         Object contextValue = engineContext.getCurrentContextValue();
-        String templateId = dataRequirement.getProfile() != null && dataRequirement.getProfile().size() > 0
+        String templateId = dataRequirement.getProfile() != null && !dataRequirement.getProfile().isEmpty()
             ? dataRequirement.getProfile().get(0).getValue()
             : null;
 
-        maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
+            List<SearchParameterMap> maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
             codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {

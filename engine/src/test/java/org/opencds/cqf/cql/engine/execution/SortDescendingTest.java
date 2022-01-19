@@ -10,7 +10,7 @@ public class SortDescendingTest extends CqlExecutionTestBase {
     @Test
     public void testInterval() {
         Context context = new Context(library);
-        
+
         Object result = context.resolveExpressionRef("sorted list of numbers descending").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>) result).get(0), 9));
         Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>) result).get(1), 4));

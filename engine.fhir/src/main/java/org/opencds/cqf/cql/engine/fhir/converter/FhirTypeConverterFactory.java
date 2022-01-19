@@ -24,5 +24,5 @@ public class FhirTypeConverterFactory {
                 throw new IllegalArgumentException(String.format("Unsupported FHIR version for type conversion: %s", fhirVersionEnum));
         }
     }
-    
+
 }

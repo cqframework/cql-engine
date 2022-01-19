@@ -75,7 +75,7 @@ public class TestLibraryLoader implements LibraryLoader {
             mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
             JaxbAnnotationModule annotationModule = new JaxbAnnotationModule();
             mapper.registerModule(annotationModule);
-            
+
             json = mapper.writeValueAsString(wrapper);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));

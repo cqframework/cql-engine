@@ -1,11 +1,23 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.rest.client.api.IGenericClient;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import org.apache.commons.lang3.StringUtils;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.DataRequirement;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Duration;
+import org.hl7.fhir.r4.model.ValueSet;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
@@ -16,15 +28,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class TestR4FhirQueryGenerator extends R4FhirTest {
     static IGenericClient CLIENT;
@@ -34,7 +39,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
     @BeforeClass
     public void setUpBeforeClass() {
-        CLIENT= newClient();
+        CLIENT = newClient();
     }
 
     @BeforeMethod

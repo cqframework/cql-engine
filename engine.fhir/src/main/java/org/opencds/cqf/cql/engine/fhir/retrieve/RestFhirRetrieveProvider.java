@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import ca.uhn.fhir.context.FhirContext;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseCoding;
 import org.hl7.fhir.instance.model.api.IBaseResource;
@@ -52,7 +51,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 		}
 
 		List<Object> objects = new ArrayList<>();
-		List<IBaseBundle> bundles = new ArrayList<IBaseBundle>();
+		List<IBaseBundle> bundles = new ArrayList<>();
 		for (SearchParameterMap map : queries) {
 			IBaseResource result = this.executeQuery(dataType, map);
 			if (result instanceof IBaseBundle) {
@@ -85,7 +84,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 				}
 
 				List<List<IQueryParameterType>> value = entry.getValue();
-				if (value == null || value.size() == 0) {
+				if (value == null || value.isEmpty()) {
 					continue;
 				}
 
@@ -93,7 +92,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
 				for (List<IQueryParameterType> subList : value) {
 
-					if (subList == null || subList.size() == 0) {
+					if (subList == null || subList.isEmpty()) {
 						continue;
 					}
 
@@ -123,8 +122,8 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 				flattenedMap.put(name, flattened);
 			}
 
-			if (this.getPageSize() != null) {
-			    search.count(this.getPageSize());
+			if (getPageSize() != null) {
+			    search.count(getPageSize());
 			}
 
 			return search.where(flattenedMap).usingStyle(this.searchStyle).execute();

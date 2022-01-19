@@ -13,7 +13,7 @@ public class LetClauseOutsideQueryContextTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("First Position of list").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>)result).get(0), 1));
-        
+
         result = context.resolveExpressionRef("Third Position of list With Same Name of Let As First").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(((List<?>)result).get(0), 3));
     }

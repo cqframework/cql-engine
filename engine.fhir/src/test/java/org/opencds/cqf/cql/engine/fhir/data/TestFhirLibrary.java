@@ -1,32 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.data;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URLDecoder;
-
-import javax.xml.bind.JAXBException;
-
-import org.cqframework.cql.elm.execution.Library;
-import org.hl7.fhir.dstu3.model.Observation;
-import org.hl7.fhir.dstu3.model.RiskAssessment;
-import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
-import org.opencds.cqf.cql.engine.execution.Context;
-import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
-import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
-
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
-
 public class TestFhirLibrary {
 
 
     //@Test
-    /* TODO: These tests haven't been run for a while. Why not just deleting them? I am not sure what their purpose is. 
+    /* TODO: These tests haven't been run for a while. Why not just deleting them? I am not sure what their purpose is.
     public void TestCBP() throws IOException, JAXBException {
         File xmlFile = new File(URLDecoder.decode(TestFhirLibrary.class.getResource("library-cbp.elm.xml").getFile(), "UTF-8"));
         Library library = CqlLibraryReader.read(xmlFile);

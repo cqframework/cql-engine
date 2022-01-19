@@ -1,12 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertThrows;
-import static org.hamcrest.MatcherAssert.assertThat;
-
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,8 +43,6 @@ import org.hl7.fhir.r4.model.Enumerations.SpecialValues;
 import org.hl7.fhir.r4.model.IdType;
 import org.hl7.fhir.r4.model.Patient;
 import org.hl7.fhir.r4.model.VisionPrescription;
-import org.opencds.cqf.cql.engine.exception.CqlException;
-import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
