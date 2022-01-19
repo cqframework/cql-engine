@@ -23,5 +23,5 @@ public class EvaluationResult {
     public void setDebugResult(DebugResult debugResult) {
         this.debugResult = debugResult;
     }
-    
+
 }

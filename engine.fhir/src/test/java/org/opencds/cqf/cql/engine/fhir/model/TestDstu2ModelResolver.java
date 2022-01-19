@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.engine.fhir.model;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.assertThrows;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -26,7 +25,6 @@ import org.hl7.fhir.dstu2.model.Enumerations.ResourceType;
 import org.hl7.fhir.dstu2.model.Enumerations.SearchParamType;
 import org.hl7.fhir.dstu2.model.Enumerations.SpecialValues;
 import org.hl7.fhir.dstu2.model.Patient;
-import org.opencds.cqf.cql.engine.fhir.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;

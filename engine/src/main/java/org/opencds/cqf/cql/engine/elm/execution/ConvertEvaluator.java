@@ -57,7 +57,7 @@ public class ConvertEvaluator extends org.cqframework.cql.elm.execution.Convert 
                 Class<?> cls = operand.getClass();
                 return cls.getDeclaredConstructor().newInstance();
             }
-        } catch (InstantiationException | InvocationTargetException | 
+        } catch (InstantiationException | InvocationTargetException |
             ExceptionInInitializerError | IllegalAccessException | SecurityException | NoSuchMethodException e) {
             throw new InvalidConversion("Error during conversion: " + e.getMessage());
         }

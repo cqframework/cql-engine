@@ -99,7 +99,7 @@ public class SearchParameterMap implements Serializable {
 			if (next == null) {
 				continue;
             }
-            
+
 			get(theName).add((List<IQueryParameterType>) next.getValuesAsQueryTokens());
 		}
 	}

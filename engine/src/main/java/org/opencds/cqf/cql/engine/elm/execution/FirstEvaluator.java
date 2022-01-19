@@ -1,5 +1,7 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
+import java.util.Iterator;
+
 import org.opencds.cqf.cql.engine.execution.Context;
 
 /*
@@ -17,8 +19,11 @@ public class FirstEvaluator extends org.cqframework.cql.elm.execution.First {
             return null;
         }
 
-        for (Object element : (Iterable<?>) source) {
-            return element;
+        if (source instanceof Iterable) {
+            Iterator<?> iter = ((Iterable<?>)source).iterator();
+            if (iter.hasNext()) {
+                return iter.next();
+            }
         }
 
         return null;
