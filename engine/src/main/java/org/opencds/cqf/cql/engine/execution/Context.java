@@ -27,7 +27,6 @@ import org.cqframework.cql.elm.execution.ListTypeSpecifier;
 import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
 import org.cqframework.cql.elm.execution.OperandDef;
 import org.cqframework.cql.elm.execution.ParameterDef;
-import org.cqframework.cql.elm.execution.Tuple;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
@@ -45,6 +44,7 @@ import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Tuple;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +69,7 @@ public class Context {
 
     @SuppressWarnings("serial")
     private LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>> expressions = new LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>>(10, 0.9f, true) {
+        @Override
         protected boolean removeEldestEntry(Map.Entry<VersionedIdentifier, LinkedHashMap<String, Object>> eldestEntry) {
             return size() > 10;
         }
@@ -77,6 +78,7 @@ public class Context {
     @SuppressWarnings("serial")
     private LinkedHashMap<String, Object> constructLibraryExpressionHashMap() {
         return  new LinkedHashMap<String, Object>(15, 0.9f, true) {
+            @Override
             protected boolean removeEldestEntry(Map.Entry<String, Object> eldestEntry) {
                 return size() > 15;
             }

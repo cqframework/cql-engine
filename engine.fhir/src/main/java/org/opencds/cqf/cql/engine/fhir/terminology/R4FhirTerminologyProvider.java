@@ -25,7 +25,7 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
 
     private static final String URN_UUID = "urn:uuid:";
     private static final String URN_OID = "urn:oid:";
-    
+
     private IGenericClient fhirClient;
 
     public R4FhirTerminologyProvider() { }
@@ -126,7 +126,7 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
                     "Could not expand value set %s; version and code system bindings are not supported at this time.",
                     valueSet.getId()));
         }
-        
+
         // https://github.com/DBCG/cql_engine/pull/462 - Use a search path of URL, identifier, and then resource id
         Bundle searchResults = fhirClient.search().forResource(ValueSet.class)
                 .where(ValueSet.URL.matches().value(valueSet.getId())).returnBundle(Bundle.class).execute();
@@ -135,27 +135,27 @@ public class R4FhirTerminologyProvider implements TerminologyProvider {
                 .where(ValueSet.IDENTIFIER.exactly().code(valueSet.getId())).returnBundle(Bundle.class).execute();
             if( ! searchResults.hasEntry() ) {
                 String id = valueSet.getId();
-                if( id.startsWith(URN_OID) ) { 
+                if( id.startsWith(URN_OID) ) {
                     id = id.replace(URN_OID, "");
                 } else if( id.startsWith(URN_UUID)) {
                     id = id.replace(URN_UUID, "");
-                } 
-                
+                }
+
                 searchResults = new Bundle();
                 // If we reached this point and it looks like it might
-                // be a FHIR resource ID, we will try to read it. 
+                // be a FHIR resource ID, we will try to read it.
                 // See https://www.hl7.org/fhir/datatypes.html#id
                 if( id.matches("[A-Za-z0-9\\-\\.]{1,64}") ) {
                     try {
                         ValueSet vs = fhirClient.read().resource(ValueSet.class).withId(id).execute();
                         searchResults.addEntry().setResource(vs);
                     } catch( ResourceNotFoundException rnfe ) {
-                        // intentionally empty 
+                        // intentionally empty
                     }
                 }
             }
         }
-        
+
         if (!searchResults.hasEntry()) {
             throw new IllegalArgumentException(String.format("Could not resolve value set %s.", valueSet.getId()));
         } else if (searchResults.getEntry().size() == 1) {

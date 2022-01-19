@@ -36,15 +36,15 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         this.searchParameterResolver = searchParameterResolver;
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
     }
-    
+
     public void setPageSize(Integer value) {
-        if( value == null || value < 1 ) { 
+        if( value == null || value < 1 ) {
             throw new IllegalArgumentException("value must be a non-null integer > 0");
         }
-        
+
         this.pageSize = value;
     }
-    
+
     public Integer getPageSize() {
         return this.pageSize;
     }
@@ -199,7 +199,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             if (code instanceof Code) {
                 Code c = (Code)code;
                 codeParams.addOr(new TokenParam(c.getSystem(), c.getCode()));
-            } 
+            }
             else if (code instanceof String) {
                 String s = (String)code;
                 codeParams.addOr(new TokenParam(s));
@@ -257,7 +257,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
         SearchParameterMap baseMap = new SearchParameterMap();
         baseMap.setLastUpdated(new DateRangeParam());
-        
+
         if (this.pageSize != null) {
             baseMap.setCount(this.pageSize);
         }
