@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.dstu3.model.CapabilityStatement;
 import org.hl7.fhir.dstu3.model.CodeType;
@@ -18,7 +19,6 @@ import org.hl7.fhir.dstu3.model.Type;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
-import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
@@ -35,7 +35,7 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
     }
 
     @Override
-    public List<String> generateFhirQueries(ICompositeType dreq, Context engineContext, IBaseConformance capStatement) {
+    public List<String> generateFhirQueries(ICompositeType dreq, DateTime evaluationDateTime, Map<String, Object> contextValues, Map<String, Object> parameters, IBaseConformance capStatement) {
         if (!(dreq instanceof DataRequirement)) {
             throw new IllegalArgumentException("dataRequirement argument must be a DataRequirement");
         }
@@ -137,7 +137,6 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
                         org.opencds.cqf.cql.engine.runtime.Quantity dateFilterDurationAsCQLQuantity =
                             new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(dateFilterAsDuration.getValue()).withUnit(dateFilterAsDuration.getUnit());
 
-                        DateTime evaluationDateTime = engineContext.getEvaluationDateTime();
                         DateTime diff = ((DateTime) SubtractEvaluator.subtract(evaluationDateTime, dateFilterDurationAsCQLQuantity));
 
                         dateRange = new Interval(diff, true, evaluationDateTime, true);
@@ -150,13 +149,15 @@ public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
             }
         }
 
-        Object contextPath = modelResolver.getContextPath(engineContext.getCurrentContext(), dataRequirement.getType());
-        Object contextValue = engineContext.getCurrentContextValue();
+        // STU3 only supported Patient context
+        String contextType = "Patient";
+        Object contextPath = modelResolver.getContextPath(contextType, dataRequirement.getType());
+        Object contextValue = contextValues.get(contextType);
         String templateId = dataRequirement.getProfile() != null && !dataRequirement.getProfile().isEmpty()
             ? dataRequirement.getProfile().get(0).getValue()
             : null;
 
-            List<SearchParameterMap> maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
+            List<SearchParameterMap> maps = setupQueries(contextType, (String)contextPath, contextValue, dataRequirement.getType(), templateId,
             codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {

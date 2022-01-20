@@ -4,6 +4,7 @@ import java.net.URLDecoder;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
@@ -15,7 +16,6 @@ import org.hl7.fhir.r4.model.Duration;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Type;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
-import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
@@ -32,7 +32,7 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
     }
 
     @Override
-    public List<String> generateFhirQueries(ICompositeType dreq, Context engineContext, IBaseConformance capStatement) {
+    public List<String> generateFhirQueries(ICompositeType dreq, DateTime evaluationDateTime, Map<String, Object> contextValues, Map<String, Object> parameters, IBaseConformance capStatement) {
         if (!(dreq instanceof DataRequirement)) {
             throw new IllegalArgumentException("dataRequirement argument must be a DataRequirement");
         }
@@ -106,7 +106,6 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
                         org.opencds.cqf.cql.engine.runtime.Quantity dateFilterDurationAsCQLQuantity =
                             new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(dateFilterAsDuration.getValue()).withUnit(dateFilterAsDuration.getUnit());
 
-                        DateTime evaluationDateTime = engineContext.getEvaluationDateTime();
                         DateTime diff = ((DateTime)SubtractEvaluator.subtract(evaluationDateTime, dateFilterDurationAsCQLQuantity));
 
                         dateRange = new Interval(diff, true, evaluationDateTime, true);
@@ -119,13 +118,34 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
             }
         }
 
-        Object contextPath = modelResolver.getContextPath(engineContext.getCurrentContext(), dataRequirement.getType());
-        Object contextValue = engineContext.getCurrentContextValue();
+        // Patient is the default context if one is not specified
+        String contextType = "Patient";
+
+        if (dataRequirement.hasSubjectReference()) {
+            throw new IllegalArgumentException("Cannot process data requirements with subjects specified as references");
+        }
+
+        if (dataRequirement.hasSubjectCodeableConcept()) {
+            Coding c = null;
+            for (Coding coding : dataRequirement.getSubjectCodeableConcept().getCoding()) {
+                if ("http://hl7.org/fhir/resource-types".equals(coding.getSystem())) {
+                    c = coding;
+                    break;
+                }
+            }
+            if (c == null) {
+                throw new IllegalArgumentException("Cannot process data requirements with subjects not specified using a code from http://hl7.org/fhir/resource-types");
+            }
+            contextType = c.getCode();
+        }
+
+        Object contextPath = modelResolver.getContextPath(contextType, dataRequirement.getType());
+        Object contextValue = contextValues.get(contextType);
         String templateId = dataRequirement.getProfile() != null && !dataRequirement.getProfile().isEmpty()
             ? dataRequirement.getProfile().get(0).getValue()
             : null;
 
-            List<SearchParameterMap> maps = setupQueries(engineContext.getCurrentContext(), (String)contextPath, contextValue, dataRequirement.getType(), templateId,
+            List<SearchParameterMap> maps = setupQueries(contextType, (String)contextPath, contextValue, dataRequirement.getType(), templateId,
             codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
 
         for (SearchParameterMap map : maps) {

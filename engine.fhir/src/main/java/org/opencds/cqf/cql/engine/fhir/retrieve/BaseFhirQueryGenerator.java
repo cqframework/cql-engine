@@ -1,14 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
-import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
@@ -82,7 +78,8 @@ public abstract class BaseFhirQueryGenerator {
         this.fhirContext = fhirContext;
     }
 
-    public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, Context engineContext, IBaseConformance capabilityStatement);
+    public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, DateTime evaluationDateTime,
+         Map<String, Object> contextValues, Map<String, Object> parameters, IBaseConformance capabilityStatement);
 
     protected Pair<String, IQueryParameterType> getTemplateParam(String dataType, String templateId) {
         if (templateId == null || templateId.equals("")) {

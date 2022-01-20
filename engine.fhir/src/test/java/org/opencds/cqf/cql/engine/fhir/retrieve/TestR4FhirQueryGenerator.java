@@ -6,23 +6,19 @@ import static org.testng.Assert.assertNotNull;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DataRequirement;
 import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Duration;
 import org.hl7.fhir.r4.model.ValueSet;
-import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.R4FhirTerminologyProvider;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
@@ -35,7 +31,10 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     static IGenericClient CLIENT;
 
     R4FhirQueryGenerator generator;
-    private Context engineContext;
+    OffsetDateTime evaluationOffsetDateTime;
+    DateTime evaluationDateTime;
+    Map<String, Object> contextValues;
+    Map<String, Object> parameters;
 
     @BeforeClass
     public void setUpBeforeClass() {
@@ -49,7 +48,10 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         R4FhirModelResolver modelResolver = new R4FhirModelResolver();
         this.generator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, modelResolver);
         OffsetDateTime evaluationDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-7));
-        this.engineContext = new Context(new Library().withIdentifier(new VersionedIdentifier().withId("Test")), evaluationDateTime.toZonedDateTime());
+        this.evaluationOffsetDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-10));
+        this.evaluationDateTime = new DateTime(evaluationOffsetDateTime);
+        this.contextValues = new HashMap<String, Object>();
+        this.parameters = new HashMap<String, Object>();
     }
 
     private ValueSet getTestValueSet(String id, int numberOfCodesToInclude) {
@@ -91,10 +93,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Patient");
 
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Patient?_id={{context.patientId}}";
@@ -108,10 +108,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Condition");
 
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Condition?subject=Patient/{{context.patientId}}";
@@ -134,10 +132,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
         DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&subject=Patient/{{context.patientId}}";
@@ -161,9 +157,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Observation?category:in=http://myterm.com/fhir/ValueSet/MyValueSet&subject=Patient/{{context.patientId}}";
@@ -175,9 +170,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     void testGetFhirQueriesAppointment() {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType("Appointment");
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = "Appointment?actor=Patient/{{context.patientId}}";
@@ -200,9 +194,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         dateFilterComponent.setValue(new DateTimeType(dateTimeString));
         dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String actualQuery = actual.get(0);
         String expectedQuery = String.format("Appointment?actor=Patient/{{context.patientId}}&date=ge%s&date=le%s", dateTimeString, dateTimeString);
@@ -221,12 +214,10 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
         dateFilterComponent.setValue(duration);
         dataRequirement.setDateFilter(Collections.singletonList(dateFilterComponent));
 
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         int offsetHours = java.util.TimeZone.getDefault().getRawOffset() / 3600000;
-        OffsetDateTime evaluationOffsetDateTime = this.engineContext.getEvaluationOffsetDateTime();
         OffsetDateTime evaluationDateTimeAsLocal = OffsetDateTime.ofInstant(evaluationOffsetDateTime.toInstant(),
             java.util.TimeZone.getDefault().toZoneId());
         OffsetDateTime expectedRangeStartDateTime = evaluationDateTimeAsLocal.minusDays(2);
@@ -256,9 +247,8 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
         this.generator.setMaxCodesPerQuery(4);
         this.generator.setExpandValueSets(true);
-        this.engineContext.enterContext("Patient");
-        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
 
         String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&subject=Patient/{{context.patientId}}";
         String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&subject=Patient/{{context.patientId}}";
