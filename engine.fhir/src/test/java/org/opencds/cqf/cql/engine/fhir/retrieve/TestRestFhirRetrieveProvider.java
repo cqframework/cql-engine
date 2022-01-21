@@ -10,10 +10,14 @@ import java.time.ZoneOffset;
 import java.util.Arrays;
 import java.util.List;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
+import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -41,25 +45,35 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         this.provider = new RestFhirRetrieveProvider(RESOLVER, CLIENT);
     }
 
+    private static ModelResolver getModelResolver(FhirVersionEnum fhirVersionEnum) {
+        if(fhirVersionEnum.equals(FhirVersionEnum.DSTU3)) {
+            return new Dstu3FhirModelResolver();
+        } else if(fhirVersionEnum.equals(FhirVersionEnum.R4)) {
+            return new R4FhirModelResolver();
+        }
+        return null;
+    }
+
 
     @Test
     public void noUserSpecifiedPageSizeUsesDefault() {
-        BaseFhirQueryGenerator fhirQueryGenerator = new FhirQueryGeneratorFactory().create(CLIENT.getFhirContext().getVersion().getVersion(),
+        ModelResolver modelResolver = getModelResolver(CLIENT.getFhirContext().getVersion().getVersion());
+        BaseFhirQueryGenerator fhirQueryGenerator = new FhirQueryGeneratorFactory().create(modelResolver,
             provider.searchParameterResolver, provider.getTerminologyProvider());
 
         SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null);
-        assertEquals( map.getCount(), null );
+        assertEquals(map.getCount(), null);
     }
 
     @Test
     public void userSpecifiedPageSizeIsUsed() {
         Integer expected = 100;
         provider.setPageSize(expected);
-        BaseFhirQueryGenerator fhirQueryGenerator = new FhirQueryGeneratorFactory().create(CLIENT.getFhirContext().getVersion().getVersion(),
+        BaseFhirQueryGenerator fhirQueryGenerator = new FhirQueryGeneratorFactory().create(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),
             provider.searchParameterResolver, provider.getTerminologyProvider(), null, null, expected);
 
         SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null);
-        assertEquals( map.getCount(), expected );
+        assertEquals(map.getCount(), expected);
     }
 
     @Test

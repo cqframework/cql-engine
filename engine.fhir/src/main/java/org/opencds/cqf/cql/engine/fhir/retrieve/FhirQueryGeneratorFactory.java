@@ -8,33 +8,35 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 
+import static ca.uhn.fhir.context.FhirVersionEnum.DSTU3;
+import static ca.uhn.fhir.context.FhirVersionEnum.R4;
+
 public class FhirQueryGeneratorFactory {
     /**
      * Creates a FHIR version-specific FhirQueryGenerator
-     * @param fhirVersionEnum the version of FHIR to create a converter for
+     * @param modelResolver is the model resolver for specific fhir version
      * @param searchParameterResolver the SearchParameterResolver instance the Generator should use
      * @param terminologyProvider the TerminologyProvider instance the Generator should use
      * @return a BaseFhirQueryGenerator
      * @throws IllegalArgumentException if the FHIR version specified is not supported
      */
-    public BaseFhirQueryGenerator create(FhirVersionEnum fhirVersionEnum, SearchParameterResolver searchParameterResolver,
+    public static BaseFhirQueryGenerator create(ModelResolver modelResolver, SearchParameterResolver searchParameterResolver,
                                          TerminologyProvider terminologyProvider) {
-        ModelResolver modelResolver;
-        switch (fhirVersionEnum) {
-            case DSTU3:
-                modelResolver = new Dstu3FhirModelResolver();
-                return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver)modelResolver);
-            case R4:
-                modelResolver = new R4FhirModelResolver();
-                return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver)modelResolver);
-            default:
-                throw new IllegalArgumentException(String.format("Unsupported FHIR version for FHIR Query Generation: %s", fhirVersionEnum));
+        FhirVersionEnum fhirVersionEnum = null;
+        if (modelResolver instanceof Dstu3FhirModelResolver) {
+            fhirVersionEnum = DSTU3;
+            return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver)modelResolver);
+        } else if(modelResolver instanceof R4FhirModelResolver) {
+            fhirVersionEnum = R4;
+            return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver) modelResolver);
+        } else {
+            throw new IllegalArgumentException(String.format("Unsupported FHIR version for FHIR Query Generation: %s", fhirVersionEnum));
         }
     }
 
     /**
      * Creates a FHIR version-specific FhirQueryGenerator
-     * @param fhirVersionEnum the version of FHIR to create a converter for
+     * @param modelResolver is the model resolver for specific fhir version
      * @param searchParameterResolver the SearchParameterResolver instance the Generator should use
      * @param terminologyProvider the TerminologyProvider instance the Generator should use
      * @param shouldExpandValueSets configuration indicating whether or not ValueSets should be expanded for querying
@@ -44,10 +46,10 @@ public class FhirQueryGeneratorFactory {
      * @return a BaseFhirQueryGenerator
      * @throws IllegalArgumentException if the FHIR version specified is not supported
      */
-    public BaseFhirQueryGenerator create(FhirVersionEnum fhirVersionEnum, SearchParameterResolver searchParameterResolver,
+    public static BaseFhirQueryGenerator create(ModelResolver modelResolver, SearchParameterResolver searchParameterResolver,
                                          TerminologyProvider terminologyProvider, Boolean shouldExpandValueSets,
                                          Integer maxCodesPerQuery, Integer pageSize) {
-        BaseFhirQueryGenerator baseFhirQueryGenerator = create(fhirVersionEnum, searchParameterResolver, terminologyProvider);
+        BaseFhirQueryGenerator baseFhirQueryGenerator = create(modelResolver, searchParameterResolver, terminologyProvider);
         if (shouldExpandValueSets != null) {
             baseFhirQueryGenerator.setExpandValueSets(shouldExpandValueSets);
         }

@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
-import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
+import org.opencds.cqf.cql.engine.retrieve.TerminologyModelAwareRetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 
 import ca.uhn.fhir.context.FhirContext;
 
-public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
+public abstract class SearchParamFhirRetrieveProvider extends TerminologyModelAwareRetrieveProvider {
 
     private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
 
@@ -54,12 +55,12 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
 
     @Override
-    public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
-            String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
-            String dateLowPath, String dateHighPath, Interval dateRange) {
+    public Iterable<Object> retrieve(ModelResolver modelResolver, String context, String contextPath, Object contextValue, String dataType,
+                                     String templateId, String codePath, Iterable<Code> codes, String valueSet, String datePath,
+                                     String dateLowPath, String dateHighPath, Interval dateRange) {
 
         BaseFhirQueryGenerator fhirQueryGenerator =
-            new FhirQueryGeneratorFactory().create(fhirContext.getVersion().getVersion(), searchParameterResolver,
+            FhirQueryGeneratorFactory.create(modelResolver, searchParameterResolver,
                 terminologyProvider, this.expandValueSets, this.maxCodesPerQuery, this.pageSize);
 
         List<SearchParameterMap> queries = fhirQueryGenerator.setupQueries(context, contextPath, contextValue, dataType,

@@ -19,7 +19,6 @@ import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.UriParam;
 
 public class SearchParameterResolver {
-    private final String PATIENT_ID_CONTEXT = "{{context.patientId}}";
 
     private FhirContext context;
 
