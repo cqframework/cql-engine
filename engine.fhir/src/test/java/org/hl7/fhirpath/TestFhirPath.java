@@ -98,38 +98,51 @@ public class TestFhirPath {
                 .parseResource(new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
     }
 
-    private Iterable<Object> loadExpectedResults(org.hl7.fhirpath.tests.Test test) {
+    private Iterable<Object> loadExpectedResults(org.hl7.fhirpath.tests.Test test, boolean isExpressionOutputTest) {
         List<Object> results = new ArrayList<>();
-        if (test.getOutput() != null) {
-            for (org.hl7.fhirpath.tests.Output output : test.getOutput()) {
-                switch (output.getType()) {
-                    case BOOLEAN:
-                        results.add(Boolean.valueOf(output.getValue()));
-                        break;
-                    case DECIMAL:
-                        results.add(new BigDecimal(output.getValue()));
-                        break;
-                    case DATE:
-                        results.add(new Date(output.getValue()));
-                        break;
-                    case DATE_TIME:
-                        results.add(new DateTime(output.getValue(),
-                                ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
-                        break;
-                    case TIME:
-                        results.add(new Time(output.getValue()));
-                        break;
-                    case INTEGER:
-                        results.add(Integer.valueOf(output.getValue()));
-                        break;
-                    case STRING:
-                        results.add(output.getValue());
-                        break;
-                    case CODE:
-                        results.add(output.getValue());
-                        break;
-                    case QUANTITY:
-                        results.add(toQuantity(output.getValue()));
+        if (isExpressionOutputTest) {
+            results.add(true);
+        }
+        else {
+            if (test.getOutput() != null) {
+                for (org.hl7.fhirpath.tests.Output output : test.getOutput()) {
+                    if (output.getType() != null) {
+                        switch (output.getType()) {
+                            case BOOLEAN:
+                                results.add(Boolean.valueOf(output.getValue()));
+                                break;
+                            case DECIMAL:
+                                results.add(new BigDecimal(output.getValue()));
+                                break;
+                            case DATE:
+                                results.add(new Date(output.getValue()));
+                                break;
+                            case DATE_TIME:
+                                results.add(new DateTime(output.getValue(),
+                                    ZoneOffset.systemDefault().getRules().getOffset(Instant.now())));
+                                break;
+                            case TIME:
+                                results.add(new Time(output.getValue()));
+                                break;
+                            case INTEGER:
+                                results.add(Integer.valueOf(output.getValue()));
+                                break;
+                            case STRING:
+                                results.add(output.getValue());
+                                break;
+                            case CODE:
+                                results.add(output.getValue());
+                                break;
+                            case QUANTITY:
+                                results.add(toQuantity(output.getValue()));
+                                break;
+                            default:
+                                throw new IllegalArgumentException(String.format("Unknown output type: %s", output.getType()));
+                        }
+                    }
+                    else {
+                        throw new IllegalArgumentException("Output type is not specified and the test is not expressed as an expression-output test");
+                    }
                 }
             }
         }
@@ -294,7 +307,7 @@ public class TestFhirPath {
                 actualResults = results;
             }
 
-            Iterable<Object> expectedResults = loadExpectedResults(test);
+            Iterable<Object> expectedResults = loadExpectedResults(test, false);
             Iterator<Object> actualResultsIterator = actualResults.iterator();
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
@@ -337,6 +350,17 @@ public class TestFhirPath {
             cql = String.format(
                 "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers define Test: %s",
                 test.getExpression().getValue());
+        }
+
+        boolean isExpressionOutputTest = test.getOutput().size() == 1 && test.getOutput().get(0).getType() == null;
+        if (isExpressionOutputTest) {
+            String outputExpression = test.getOutput().get(0).getValue();
+            if ("null".equals(outputExpression)) {
+                cql = String.format("%s is %s", cql, outputExpression);
+            }
+            else {
+                cql = String.format("%s = %s", cql, outputExpression);
+            }
         }
 
         Library library = null;
@@ -395,7 +419,7 @@ public class TestFhirPath {
 
             Iterable<Object> actualResults = ensureIterable(result);
 
-            Iterable<Object> expectedResults = loadExpectedResults(test);
+            Iterable<Object> expectedResults = loadExpectedResults(test, isExpressionOutputTest);
             Iterator<Object> actualResultsIterator = actualResults.iterator();
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
@@ -447,7 +471,7 @@ public class TestFhirPath {
                 String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
     }
 
-    private void runTests(String testsFilePath) {
+    private void runTests(String testsFilePath, int expectedTestCount, int expectedPassCount, int expectedSkipCount) {
         System.out.println(String.format("Running test file %s...", testsFilePath));
         Tests tests = loadTestsFile(testsFilePath);
         int testCounter = 0;
@@ -475,86 +499,90 @@ public class TestFhirPath {
         }
         System.out.println(
             String.format("Tests file %s passed %s of %s tests (%s skipped).", testsFilePath, passCounter, testCounter, skipCounter));
+
+        assertThat(testCounter, is(expectedTestCount));
+        assertThat(passCounter, is(expectedPassCount));
+        assertThat(skipCounter, is(expectedSkipCount));
     }
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml");
+        runTests("r4/tests-fhir-r4.xml", 715, 546, 18);
     }
 
     @Test
     public void testCqlAggregateFunctions() {
-        runTests("cql/CqlAggregateFunctionsTest.xml");
+        runTests("cql/CqlAggregateFunctionsTest.xml", 39, 39, 0);
     }
 
     @Test
     public void testCqlAggregate() {
-        runTests("cql/CqlAggregateTest.xml");
+        runTests("cql/CqlAggregateTest.xml", 2, 0, 0);
     }
 
     @Test
     public void testCqlArithmeticFunctions() {
-        runTests("cql/CqlArithmeticFunctionsTest.xml");
+        runTests("cql/CqlArithmeticFunctionsTest.xml", 192, 183, 0);
     }
 
     @Test
     public void testCqlComparisonOperators() {
-        runTests("cql/CqlComparisonOperatorsTest.xml");
+        runTests("cql/CqlComparisonOperatorsTest.xml", 183, 162, 0);
     }
 
     @Test
     public void testCqlConditionalOperators() {
-        runTests("cql/CqlConditionalOperatorsTest.xml");
+        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 6, 0);
     }
 
     @Test
     public void testCqlDateTimeOperators() {
-        runTests("cql/CqlDateTimeOperatorsTest.xml");
+        runTests("cql/CqlDateTimeOperatorsTest.xml", 294, 279, 0);
     }
 
     @Test
     public void testCqlErrorsAndMessagingOperators() {
-        runTests("cql/CqlErrorsAndMessagingOperatorsTest.xml");
+        runTests("cql/CqlErrorsAndMessagingOperatorsTest.xml", 4, 4, 0);
     }
 
     @Test
     public void testCqlIntervalOperators() {
-        runTests("cql/CqlIntervalOperatorsTest.xml");
+        runTests("cql/CqlIntervalOperatorsTest.xml", 360, 262, 0);
     }
 
     @Test
     public void testCqlListOperators() {
-        runTests("cql/CqlListOperatorsTest.xml");
+        runTests("cql/CqlListOperatorsTest.xml", 207, 145, 0);
     }
 
     @Test
     public void testCqlLogicalOperators() {
-        runTests("cql/CqlLogicalOperatorsTest.xml");
+        runTests("cql/CqlLogicalOperatorsTest.xml", 39, 26, 0);
     }
 
     @Test
     public void testCqlNullologicalOperators() {
-        runTests("cql/CqlNullologicalOperatorsTest.xml");
+        runTests("cql/CqlNullologicalOperatorsTest.xml", 22, 22, 0);
     }
 
     @Test
     public void testCqlStringOperators() {
-        runTests("cql/CqlStringOperatorsTest.xml");
+        runTests("cql/CqlStringOperatorsTest.xml", 81, 78, 0);
     }
 
     @Test
     public void testCqlTypeOperators() {
-        runTests("cql/CqlTypeOperatorsTest.xml");
+        runTests("cql/CqlTypeOperatorsTest.xml", 32, 21, 0);
     }
 
     @Test
     public void testCqlTypes() {
-        runTests("cql/CqlTypesTest.xml");
+        runTests("cql/CqlTypesTest.xml", 27, 22, 0);
     }
 
     @Test
     public void testCqlValueLiteralsAndSelectors() {
-        runTests("cql/CqlValueLiteralsAndSelectors.xml");
+        runTests("cql/ValueLiteralsAndSelectors.xml", 66, 57, 0);
     }
 
     private String getStringFromResourceStream(String resourceName) {

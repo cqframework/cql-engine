@@ -143,9 +143,9 @@
 	<xs:complexType name="Output">
 		<xs:simpleContent>
 			<xs:extension base="xs:string">
-				<xs:attribute name="type" type="OutputType" use="required">
+				<xs:attribute name="type" type="OutputType" use="optional">
 					<xs:annotation>
-						<xs:documentation>The type of the expected output.</xs:documentation>
+						<xs:documentation>The type of the expected output. If no type is provided, the value is expected to be an expression in the language under test and will be set equal to the test expression and the expected evaluation result will be true. In the special case that the output is a null, a null predicate test will be used.</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
 			</xs:extension>
@@ -158,7 +158,6 @@
 			<xs:enumeration value="date"/>
 			<xs:enumeration value="dateTime"/>
 			<xs:enumeration value="decimal"/>
-            <xs:enumeration value="expression"/>
             <xs:enumeration value="integer"/>
             <xs:enumeration value="long"/>
 			<xs:enumeration value="quantity"/>
