@@ -10,6 +10,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 
 /*
 <=(left Integer, right Integer) Boolean
+<=(left Long, right Long) Boolean
 <=(left Decimal, right Decimal) Boolean
 <=(left Quantity, right Quantity) Boolean
 <=(left Date, right Date) Boolean
@@ -45,6 +46,10 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
           return ((Integer) left).compareTo((Integer) right) <= 0;
       }
 
+      if (left instanceof Long && right instanceof Long) {
+          return ((Long) left).compareTo((Long) right) <= 0;
+      }
+
       else if (left instanceof BigDecimal && right instanceof BigDecimal) {
           return ((BigDecimal) left).compareTo((BigDecimal) right) <= 0;
       }
@@ -74,8 +79,8 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
       }
 
       throw new InvalidOperatorArgument(
-              "LessOrEqual(Integer, Integer) LessOrEqual(Decimal, Decimal), LessOrEqual(Quantity, Quantity), LessOrEqual(Date, Date), LessOrEqual(DateTime, DateTime), LessOrEqual(Time, Time) or LessOrEqual(String, String)",
-              String.format("LessOrEqual(%s, %s)", left.getClass().getSimpleName(), right.getClass().getSimpleName())
+          "LessOrEqual(Integer, Integer), LessOrEqual(Long, Long), LessOrEqual(Decimal, Decimal), LessOrEqual(Quantity, Quantity), LessOrEqual(Date, Date), LessOrEqual(DateTime, DateTime), LessOrEqual(Time, Time) or LessOrEqual(String, String)",
+          String.format("LessOrEqual(%s, %s)", left.getClass().getSimpleName(), right.getClass().getSimpleName())
       );
   }
 

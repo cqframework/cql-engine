@@ -24,16 +24,13 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
         throw new IllegalArgumentException("SystemDataProvider does not support retrieval.");
     }
 
-	// @Override
-	// public boolean isPatientCompartment(String dataType) {
-	// 	return false;
-	// }
-
-	@Override
+    @SuppressWarnings("deprecation")
+    @Override
     public String getPackageName() {
         return "org.opencds.cqf.cql.engine.runtime";
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void setPackageName(String packageName) {
 
@@ -96,7 +93,7 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
         if (accessor == null) {
             return null;
         }
-        
+
         try {
             return accessor.invoke(target);
         } catch (InvocationTargetException e) {
@@ -157,9 +154,8 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
     public Object createInstance(String typeName) {
         Class<?> clazz = resolveType(typeName);
         try {
-            Object object = clazz.getDeclaredConstructor().newInstance();
-            return object;
-        } catch (InstantiationException | InvocationTargetException | 
+            return clazz.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | InvocationTargetException |
             ExceptionInInitializerError | IllegalAccessException | SecurityException | NoSuchMethodException e) {
             throw new IllegalArgumentException(String.format("Could not create an instance of class %s.", clazz.getName()));
         }

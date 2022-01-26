@@ -10,6 +10,7 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 
 /*
 <(left Integer, right Integer) Boolean
+<(left Long, right Long) Boolean
 <(left Decimal, right Decimal) Boolean
 <(left Quantity, right Quantity) Boolean
 <(left Date, right Date) Boolean
@@ -43,6 +44,10 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
 
         if (left instanceof Integer && right instanceof Integer) {
             return ((Integer) left).compareTo((Integer) right) < 0;
+        }
+
+        if (left instanceof Long && right instanceof Long) {
+            return ((Long) left).compareTo((Long) right) < 0;
         }
 
         else if (left instanceof BigDecimal && right instanceof BigDecimal) {
@@ -82,8 +87,8 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
         }
 
         throw new InvalidOperatorArgument(
-                "Less(Integer, Integer) Less(Decimal, Decimal), Less(Quantity, Quantity), Less(Date, Date), Less(DateTime, DateTime), Less(Time, Time) or Less(String, String)",
-                String.format("Less(%s, %s)", left.getClass().getSimpleName(), right.getClass().getSimpleName())
+            "Less(Integer, Integer), Less(Long, Long), Less(Decimal, Decimal), Less(Quantity, Quantity), Less(Date, Date), Less(DateTime, DateTime), Less(Time, Time) or Less(String, String)",
+            String.format("Less(%s, %s)", left.getClass().getSimpleName(), right.getClass().getSimpleName())
         );
     }
 

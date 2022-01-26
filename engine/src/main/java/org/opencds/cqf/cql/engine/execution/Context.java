@@ -27,7 +27,6 @@ import org.cqframework.cql.elm.execution.ListTypeSpecifier;
 import org.cqframework.cql.elm.execution.NamedTypeSpecifier;
 import org.cqframework.cql.elm.execution.OperandDef;
 import org.cqframework.cql.elm.execution.ParameterDef;
-import org.cqframework.cql.elm.execution.Tuple;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.cqframework.cql.elm.execution.ValueSetDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
@@ -45,7 +44,10 @@ import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.Severity;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Tuple;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * NOTE: This class is thread-affine; it uses thread local storage to allow statics throughout the code base to access
@@ -54,15 +56,20 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 public class Context {
 
+    private static Logger logger = LoggerFactory.getLogger(Context.class);
+
     private static ThreadLocal<Context> threadContext = new ThreadLocal<>();
     public static Context getContext() {
         return threadContext.get();
     }
 
+    private static UcumService sharedUcumService;
+
     private boolean enableExpressionCache = false;
 
     @SuppressWarnings("serial")
     private LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>> expressions = new LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>>(10, 0.9f, true) {
+        @Override
         protected boolean removeEldestEntry(Map.Entry<VersionedIdentifier, LinkedHashMap<String, Object>> eldestEntry) {
             return size() > 10;
         }
@@ -71,6 +78,7 @@ public class Context {
     @SuppressWarnings("serial")
     private LinkedHashMap<String, Object> constructLibraryExpressionHashMap() {
         return  new LinkedHashMap<String, Object>(15, 0.9f, true) {
+            @Override
             protected boolean removeEldestEntry(Map.Entry<String, Object> eldestEntry) {
                 return size() > 15;
             }
@@ -136,6 +144,10 @@ public class Context {
         }
     }
 
+    public void clearExpressions() {
+        this.expressions.clear();
+    }
+
     public void logDebugResult(Executable node, Object result, DebugAction action) {
         ensureDebugResult();
         debugResult.logDebugResult(node, this.getCurrentLibrary(), result, action);
@@ -163,35 +175,43 @@ public class Context {
 
     public Context(Library library) {
         setEvaluationDateTime(ZonedDateTime.now());
-        init(library, new SystemDataProvider());
+        init(library, new SystemDataProvider(), null);
     }
 
     public Context(Library library, DataProvider systemDataProvider) {
         setEvaluationDateTime(ZonedDateTime.now());
-        init(library, systemDataProvider);
+        init(library, systemDataProvider, null);
     }
 
     public Context(Library library, ZonedDateTime evaluationZonedDateTime) {
         setEvaluationDateTime(evaluationZonedDateTime);
-        init(library, new SystemDataProvider());
+        init(library, new SystemDataProvider(), null);
     }
 
     public Context(Library library, ZonedDateTime evaluationZonedDateTime, DataProvider systemDataProvider) {
         setEvaluationDateTime(evaluationZonedDateTime);
-        init(library, systemDataProvider);
+        init(library, systemDataProvider, null);
     }
 
-    private void init(Library library, DataProvider systemDataProvider) {
+    public Context(Library library, ZonedDateTime evaluationZonedDateTime, DataProvider systemDataProvider, UcumService ucumService) {
+        setEvaluationDateTime(evaluationZonedDateTime);
+        init(library, systemDataProvider, ucumService);
+    }
+
+    private void init(Library library, DataProvider systemDataProvider, UcumService ucumService) {
         pushWindow();
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
+
         if (library.getIdentifier() != null)
             libraries.put(library.getIdentifier().getId(), library);
         currentLibrary.push(library);
-        try {
-            ucumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
-        } catch (UcumException ue) {
-            ucumService = null;
+
+        if (ucumService != null) {
+            this.ucumService = ucumService;
+        }
+        else {
+            this.ucumService = getSharedUcumService();
         }
         threadContext.set(this);
     }
@@ -216,6 +236,19 @@ public class Context {
 
     public UcumService getUcumService() {
         return ucumService;
+    }
+
+    protected synchronized UcumService getSharedUcumService() {
+        if (sharedUcumService == null) {
+            try {
+                sharedUcumService = new UcumEssenceService(UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+            }
+            catch (UcumException e) {
+                logger.warn("Error creating shared UcumService", e);
+            }
+        }
+
+        return sharedUcumService;
     }
 
     public void setExpressionCaching(boolean yayOrNay) {
@@ -309,6 +342,16 @@ public class Context {
         throw new CqlException(String.format("Could not resolve code reference '%s'.", name));
     }
 
+    public CodeDef resolveCodeRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            return resolveCodeRef(name);
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
+    }
+
     public ConceptDef resolveConceptRef(String name) {
         for (ConceptDef conceptDef : getCurrentLibrary().getConcepts().getDef()) {
             if (conceptDef.getName().equals(name)) {
@@ -317,6 +360,16 @@ public class Context {
         }
 
         throw new CqlException(String.format("Could not resolve concept reference '%s'.", name));
+    }
+
+    public ConceptDef resolveConceptRef(String libraryName, String name) {
+        boolean enteredLibrary = enterLibrary(libraryName);
+        try {
+            return resolveConceptRef(name);
+        }
+        finally {
+            exitLibrary(enteredLibrary);
+        }
     }
 
     private IncludeDef resolveLibraryRef(String libraryName) {
@@ -544,8 +597,14 @@ public class Context {
         if (ret != null) {
             return ret;
         }
-        throw new CqlException(String.format("Could not resolve call to operator '%s' in library '%s'.",
-                name, getCurrentLibrary().getIdentifier().getId()));
+
+        StringBuilder argStr = new StringBuilder();
+        if( arguments != null ) {
+            arguments.forEach( a -> argStr.append( (argStr.length() > 0) ? ", " : "" ).append( resolveType(a).getName() ) );
+        }
+
+        throw new CqlException(String.format("Could not resolve call to operator '%s(%s)' in library '%s'.",
+                name, argStr.toString(), getCurrentLibrary().getIdentifier().getId()));
     }
 
     private ParameterDef resolveParameterRef(String name) {
@@ -599,16 +658,6 @@ public class Context {
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
-    public ValueSetDef resolveValueSetRef(String libraryName, String name) {
-        boolean enteredLibrary = enterLibrary(libraryName);
-        try {
-            return resolveValueSetRef(name);
-        }
-        finally {
-            exitLibrary(enteredLibrary);
-        }
-    }
-
     public CodeSystemDef resolveCodeSystemRef(String name) {
         for (CodeSystemDef codeSystemDef : getCurrentLibrary().getCodeSystems().getDef()) {
             if (codeSystemDef.getName().equals(name)) {
@@ -620,22 +669,12 @@ public class Context {
                 name, getCurrentLibrary().getIdentifier().getId()));
     }
 
-    public CodeSystemDef resolveCodeSystemRef(String libraryName, String name) {
-        boolean enteredLibrary = enterLibrary(libraryName);
-        try {
-            return resolveCodeSystemRef(name);
-        }
-        finally {
-            exitLibrary(enteredLibrary);
-        }
-    }
-
     private Map<String, DataProvider> dataProviders = new HashMap<>();
     private Map<String, DataProvider> packageMap = new HashMap<>();
 
     public void registerDataProvider(String modelUri, DataProvider dataProvider) {
         dataProviders.put(modelUri, dataProvider);
-        packageMap.put(dataProvider.getPackageName(), dataProvider);
+        dataProvider.getPackageNames().forEach( pn -> packageMap.put( pn, dataProvider ) );
     }
 
     public DataProvider resolveDataProvider(QName dataType) {
@@ -648,28 +687,23 @@ public class Context {
         return dataProvider;
     }
 
+    public DataProvider resolveDataProviderByModelUri(String modelUri) {
+        DataProvider dataProvider = dataProviders.get(modelUri);
+        if (dataProvider == null) {
+            throw new CqlException(String.format("Could not resolve data provider for model '%s'.", modelUri));
+        }
+
+        return dataProvider;
+    }
+
     public DataProvider resolveDataProvider(String packageName) {
         return resolveDataProvider(packageName, true);
     }
 
     public DataProvider resolveDataProvider(String packageName, boolean mustResolve) {
         DataProvider dataProvider = packageMap.get(packageName);
-        if (dataProvider == null) {
-            if (packageName.startsWith("ca.uhn.fhir.model.dstu2") || packageName.equals("ca.uhn.fhir.model.primitive"))
-            {
-                for (DataProvider provider : dataProviders.values()) {
-                    if (provider.getPackageName().startsWith("ca.uhn.fhir.model.dstu2")
-                            || provider.getPackageName().equals("ca.uhn.fhir.model.primitive"))
-                    {
-                        provider.setPackageName(packageName);
-                        return provider;
-                    }
-                }
-            }
-
-            if (mustResolve) {
-                throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
-            }
+        if (dataProvider == null && mustResolve) {
+            throw new CqlException(String.format("Could not resolve data provider for package '%s'.", packageName));
         }
 
         return dataProvider;
@@ -718,7 +752,17 @@ public class Context {
     }
 
     public void setContextValue(String context, Object contextValue) {
+        if (hasContextValueChanged(context, contextValue)) {
+            clearExpressions();
+        }
         contextValues.put(context, contextValue);
+    }
+
+    private boolean hasContextValueChanged(String context, Object contextValue) {
+        if (contextValues.containsKey(context)) {
+            return !contextValues.get(context).equals(contextValue);
+        }
+        return true;
     }
 
     public Object getCurrentContextValue() {

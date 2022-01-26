@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -331,6 +331,13 @@ public class TestR4ModelResolver {
 
         path = (String)resolver.getContextPath("Patient", "MedicationStatement");
         assertTrue(path.equals("subject"));
+
+        // Issue 527 - https://github.com/DBCG/cql_engine/issues/527
+        path = (String)resolver.getContextPath("Unfiltered", "MedicationStatement");
+        assertNull(path);
+
+        path = (String) resolver.getContextPath("Unspecified", "MedicationStatement");
+        assertNull(path);
     }
 
     @Test

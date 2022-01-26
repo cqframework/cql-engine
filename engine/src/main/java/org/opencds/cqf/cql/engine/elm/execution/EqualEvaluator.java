@@ -51,7 +51,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return false;
         }
 
-        else if (left instanceof Boolean || left instanceof Integer || left instanceof String) {
+        else if (left instanceof Boolean || left instanceof Integer || left instanceof Long || left instanceof String) {
             return left.equals(right);
         }
 

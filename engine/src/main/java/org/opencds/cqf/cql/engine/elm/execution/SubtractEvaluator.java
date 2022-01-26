@@ -72,6 +72,10 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
             return (Integer)left - (Integer)right;
         }
 
+        if (left instanceof Long) {
+            return (Long)left - (Long)right;
+        }
+
         // -(Decimal, Decimal)
         else if (left instanceof BigDecimal) {
             return ((BigDecimal)left).subtract((BigDecimal)right);
@@ -118,8 +122,8 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
         }
 
         throw new InvalidOperatorArgument(
-                "Subtract(Integer, Integer), Subtract(Decimal, Decimal), Subtract(Quantity, Quantity), Subtract(Date, Quantity), Subtract(DateTime, Quantity), Subtract(Time, Quantity)",
-                String.format("Subtract(%s, %s)", left.getClass().getName(), right.getClass().getName())
+            "Subtract(Integer, Integer), Subtract(Long, Long) Subtract(Decimal, Decimal), Subtract(Quantity, Quantity), Subtract(Date, Quantity), Subtract(DateTime, Quantity), Subtract(Time, Quantity)",
+            String.format("Subtract(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
 

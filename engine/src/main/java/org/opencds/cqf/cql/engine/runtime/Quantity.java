@@ -2,7 +2,7 @@ package org.opencds.cqf.cql.engine.runtime;
 
 import java.math.BigDecimal;
 
-import javax.annotation.Nonnull;
+
 
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
@@ -123,7 +123,7 @@ public class Quantity implements CqlType, Comparable<Quantity> {
     }
 
     @Override
-    public int compareTo(@Nonnull Quantity other) {
+    public int compareTo(Quantity other) {
         if (unitsEqual(this.getUnit(), other.getUnit())) {
             return this.getValue().compareTo(other.getValue());
         }

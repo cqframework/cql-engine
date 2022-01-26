@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import javax.xml.bind.JAXB;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.SchemaOutputResolver;
 
 import com.sun.jdi.CharType;
 import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
@@ -44,7 +42,7 @@ import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.ExistsEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
-import org.opencds.cqf.cql.engine.execution.CqlLibraryReader;
+import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu2FhirModelResolver;
@@ -58,19 +56,18 @@ import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.annotations.Test;
 
 import ca.uhn.fhir.context.FhirContext;
-import org.w3._1999.xhtml.P;
-import sun.lwawt.macosx.CSystemTray;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class TestFhirPath {
 
-    private FhirContext fhirContext = FhirContext.forDstu3();
+    private FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.DSTU3);
     private Dstu3FhirModelResolver dstu3ModelResolver = new Dstu3FhirModelResolver();
     private RestFhirRetrieveProvider dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
     private CompositeDataProvider provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 
 
-    private FhirContext fhirContextR4 = FhirContext.forR4();
+    private FhirContext fhirContextR4 = FhirContext.forCached(FhirVersionEnum.R4);
     private R4FhirModelResolver r4FhirModelResolver = new R4FhirModelResolver();
     private RestFhirRetrieveProvider r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContextR4),
             fhirContextR4.newRestfulGenericClient("http://fhirtest.uhn.ca/baseR4"));
@@ -186,6 +183,7 @@ public class TestFhirPath {
         options.add(CqlTranslator.Options.EnableDateRangeOptimization);
         UcumService ucumService = new UcumEssenceService(
                 UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
+
         CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
                 options.toArray(new CqlTranslator.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
@@ -200,16 +198,15 @@ public class TestFhirPath {
             throw new IllegalArgumentException(errors.toString());
         }
 
-        Library library = null;
+        String json = translator.toJxson();
+
         try {
-            library = CqlLibraryReader.read(new StringReader(translator.toXml()));
+            return JsonCqlLibraryReader.read(new StringReader(json));
         } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JAXBException e) {
+            // TODO Auto-generated catch block
             e.printStackTrace();
         }
-
-        return library;
+        return null;
     }
 
     private Boolean compareResults(Object expectedResult, Object actualResult) {
@@ -803,7 +800,7 @@ public class TestFhirPath {
         context.registerLibraryLoader(getLibraryLoader());
 
         Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-        FhirContext fhirContext = FhirContext.forDstu3();
+        FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.DSTU3);
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
                 fhirContext.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu3"));
         CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
@@ -840,7 +837,7 @@ public class TestFhirPath {
         Dstu2FhirModelResolver modelResolver = new Dstu2FhirModelResolver();
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(
                 new org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver(fhirContext),
-                FhirContext.forDstu2().newRestfulGenericClient(""));
+                FhirContext.forCached(FhirVersionEnum.DSTU2).newRestfulGenericClient(""));
         CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
         //BaseFhirDataProvider provider = new FhirDataProviderDstu2();
         context.registerDataProvider("http://hl7.org/fhir", provider);

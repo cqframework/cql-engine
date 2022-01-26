@@ -48,28 +48,34 @@ define IsNull: ToQuantity('444 \'cm')
 public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQuantity {
 
     public static Quantity toQuantity(String str) {
-        StringBuilder number = new StringBuilder();
-        StringBuilder unit = new StringBuilder();
-        for (char c : str.toCharArray()) {
-            if ((Character.isDigit(c) || c == '.' || c == '+' || c == '-') && unit.length() == 0) {
-                number.append(c);
-            } else if (Character.isLetter(c) || c == '/') {
-                unit.append(c);
-            } else if (c == ' ' || c == '\'') {
-                // continue
-            } else {
-                throw new IllegalArgumentException(String.format("%c is not allowed in ToQuantity format", c));
-            }
+        // Tabs are treated like spaces for Units
+        str = str.replaceAll("[\t]", " ").trim();
+        int index = str.indexOf(' ');
+
+        String number = str;
+        Quantity quantity = new Quantity();
+
+        if (index > 0) {
+            number = str.substring(0, index);
+            quantity.setUnit(str.substring(index + 1).replaceAll("[\' ]", ""));
         }
+        quantity = setValue(quantity, number);
+
+        return quantity;
+    }
+
+    private static Quantity setValue(Quantity quantity, String str) {
         try {
-            BigDecimal ret = new BigDecimal(number.toString());
-            if (Value.validateDecimal(ret, null) == null) {
+            BigDecimal number = new BigDecimal(str);
+            if (Value.validateDecimal(number, null) == null) {
                 return null;
             }
-            return new Quantity().withValue(ret).withUnit(unit.toString());
+            quantity.setValue(number);
+
         } catch (NumberFormatException nfe) {
             return null;
         }
+        return quantity;
     }
 
     public static Quantity toQuantity(Object operand) {
@@ -108,7 +114,6 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-
         return toQuantity(operand);
     }
 }

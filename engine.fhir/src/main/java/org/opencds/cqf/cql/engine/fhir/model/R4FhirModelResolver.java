@@ -1,7 +1,16 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
 import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 
+import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Age;
 import org.hl7.fhir.r4.model.AnnotatedUuidType;
 import org.hl7.fhir.r4.model.Base;
@@ -29,39 +38,73 @@ import org.opencds.cqf.cql.engine.exception.InvalidCast;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+
 import org.opencds.cqf.cql.engine.runtime.BaseTemporal;
 
 public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeType, TimeType, SimpleQuantity, IdType, Resource, Enumeration<?>, EnumFactory<?>> {
 
 	public R4FhirModelResolver() {
+        // This ModelResolver makes specific alterations to the FhirContext,
+        // so it's unable to use a cached version.
         this(FhirContext.forR4());
 	}
 
 	private R4FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
-        this.setPackageName("org.hl7.fhir.r4.model");
+        this.setPackageNames(Arrays.asList("org.hl7.fhir.r4.model"));
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.R4) {
             throw new IllegalArgumentException("The supplied context is not configured for R4");
         }
     }
-    
+
+    @SuppressWarnings("unchecked")
     protected void initialize() {
         // HAPI has some bugs where it's missing annotations on certain types. This patches that.
         this.fhirContext.registerCustomType(AnnotatedUuidType.class);
 
         // The context loads Resources on demand which can cause resolution to fail in certain cases
         // This forces all Resource types to be loaded.
-        for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
-            // These are abstract types that should never be resolved directly.
-            switch (type) {
-                case DOMAINRESOURCE:
-                case RESOURCE:
-                case NULL:
-                    continue;
-                default:
+
+        // force calling of validateInitialized();
+        this.fhirContext.getResourceDefinition(Enumerations.ResourceType.ACCOUNT.toCode());
+
+        Map<String, Class<? extends IBaseResource>> myNameToResourceType;
+        try {
+            Field f = this.fhirContext.getClass().getDeclaredField("myNameToResourceType");
+            f.setAccessible(true);
+            myNameToResourceType = (Map<String, Class<? extends IBaseResource>>) f.get(this.fhirContext);
+
+            List<Class<? extends IBaseResource>> toLoad = new ArrayList<Class<? extends IBaseResource>>(myNameToResourceType.size());
+
+            for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
+                // These are abstract types that should never be resolved directly.
+                switch (type) {
+                    case DOMAINRESOURCE:
+                    case RESOURCE:
+                    case NULL:
+                        continue;
+                    default:
+                }
+                if (myNameToResourceType.containsKey(type.toCode().toLowerCase()))
+                    toLoad.add(myNameToResourceType.get(type.toCode().toLowerCase()));
             }
 
-            this.fhirContext.getResourceDefinition(type.toCode());
+            // Sends a list of all classes to be loaded in bulk.
+            Method m = this.fhirContext.getClass().getDeclaredMethod("scanResourceTypes", Collection.class);
+            m.setAccessible(true);
+            m.invoke(this.fhirContext, toLoad);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
@@ -75,7 +118,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
         return super.resolveProperty(target, path);
     }
-    
+
     protected Boolean equalsDeep(Base left, Base right) {
         return left.equalsDeep(right);
     }
@@ -140,6 +183,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             case "MedicationKnowledgeStatus": typeName = "CodeType"; break;
             case "Messageheader_Response_Request": typeName = "CodeType"; break;
             case "MimeType": typeName = "CodeType"; break;
+            default: break;
         }
 
 
@@ -180,6 +224,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "AnnotatedUuidType":
                 case "UuidType": return true;
                 case "OidType": return true;
+                default: break;
             }
         }
 
@@ -187,6 +232,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             switch (type.getSimpleName()) {
                 case "PositiveIntType": return true;
                 case "UnsignedIntType": return true;
+                default: break;
             }
         }
 
@@ -195,6 +241,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "CodeType": return true;
                 case "MarkdownType": return true;
                 case "IdType": return true;
+                default: break;
             }
         }
 
@@ -206,6 +253,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "Count":
                 case "SimpleQuantity":
                 case "MoneyQuantity": return true;
+                default: break;
             }
         }
 
@@ -230,6 +278,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "AnnotatedUuidType":
                 case "UuidType": return uriType.hasPrimitiveValue() && uriType.getValue().startsWith("urn:uuid:") ? new UuidType(uriType.primitiveValue()) : null;
                 case "OidType": return uriType.hasPrimitiveValue() && uriType.getValue().startsWith("urn:oid:") ? new OidType(uriType.primitiveValue()) : null; // castToOid(uriType); Throws an exception, not implemented
+                default: break;
             }
         }
 
@@ -238,6 +287,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             switch (type.getSimpleName()) {
                 case "PositiveIntType": return integerType.hasPrimitiveValue() && integerType.getValue() > 0 ? new PositiveIntType(integerType.primitiveValue()) : null; // integerType.castToPositiveInt(integerType); Throws an exception, not implemented
                 case "UnsignedIntType": return integerType.hasPrimitiveValue() && integerType.getValue() >= 0 ? new UnsignedIntType(integerType.primitiveValue()) : null; // castToUnsignedInt(integerType); Throws an exception, not implemented
+                default: break;
             }
         }
 
@@ -247,6 +297,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                 case "CodeType": return stringType.castToCode(stringType);
                 case "MarkdownType": return stringType.castToMarkdown(stringType);
                 case "IdType": return stringType.hasPrimitiveValue() ? new IdType(stringType.primitiveValue()) : null; // stringType.castToId(stringType); Throws an exception, not implemented
+                default: break;
             }
         }
 
@@ -284,6 +335,7 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
                     moneyQuantity.setCode(quantity.getCode());
                     // TODO: Ensure money constraints are met, else return null
                     return moneyQuantity;
+                default: break;
             }
         }
 
@@ -300,10 +352,8 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             return null;
         }
 
-        if (contextType != null && !(contextType.equals("Unspecified") || contextType.equals("Population"))) {
-            if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
-                return "subject";
-            }
+        if (contextType.equals("Patient") && targetType.equals("MedicationStatement")) {
+            return "subject";
         }
 
         return super.getContextPath(contextType, targetType);

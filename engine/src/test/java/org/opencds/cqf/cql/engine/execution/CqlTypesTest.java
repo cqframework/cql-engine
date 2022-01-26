@@ -32,6 +32,9 @@ public class CqlTypesTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("AnyInteger").getExpression().evaluate(context);
         assertThat(result, is(5));
 
+        result = context.resolveExpressionRef("AnyLong").getExpression().evaluate(context);
+        assertThat(result, is(Long.valueOf("12")));
+
         result = context.resolveExpressionRef("AnyDecimal").getExpression().evaluate(context);
         assertThat(result, is(new BigDecimal("5.0")));
 

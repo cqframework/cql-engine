@@ -19,7 +19,7 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
             severity = "message";
         }
 
-        if (condition) {
+        if (condition != null && condition) {
             StringBuilder messageBuilder = new StringBuilder();
             if (code != null) {
                 messageBuilder.append(code).append(": ");
@@ -52,6 +52,10 @@ public class MessageEvaluator extends org.cqframework.cql.elm.execution.Message 
     }
 
     private String stripPHI(Context context, Object source) {
+        if (source == null) {
+            return null;
+        }
+
         Optional<DataProvider> dataProvider = Optional.ofNullable(context.resolveDataProvider(source.getClass().getPackage().getName(), false));
 
         return dataProvider.map(DataProvider::phiObfuscationSupplier).map(Supplier::get)

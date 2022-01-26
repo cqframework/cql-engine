@@ -3,7 +3,6 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,8 +10,6 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.bind.JAXBException;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorException;
@@ -29,7 +26,7 @@ import org.testng.annotations.BeforeMethod;
 public abstract class CqlExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
     Library library = null;
-    private File xmlFile = null;
+    private File jsonFile = null;
 
     private static ModelManager modelManager;
     protected static ModelManager getModelManager() {
@@ -51,7 +48,7 @@ public abstract class CqlExecutionTestBase {
     }
 
     @BeforeMethod
-    public void beforeEachTestMethod() throws JAXBException, IOException, UcumException {
+    public void beforeEachTestMethod() throws IOException, UcumException {
         String fileName = this.getClass().getSimpleName();
         library = libraries.get(fileName);
         if (library == null) {
@@ -63,7 +60,9 @@ public abstract class CqlExecutionTestBase {
                 options.add(CqlTranslator.Options.EnableDateRangeOptimization);
                 options.add(CqlTranslator.Options.EnableAnnotations);
                 options.add(CqlTranslator.Options.EnableLocators);
-                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, getModelManager(), getLibraryManager(), ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
+
+                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, getModelManager(), getLibraryManager(), ucumService,
+                    options.toArray(new CqlTranslator.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");
@@ -80,28 +79,28 @@ public abstract class CqlExecutionTestBase {
 
                 assertThat(translator.getErrors().size(), is(0));
 
-                xmlFile = new File(cqlFile.getParent(), fileName + ".xml");
-                xmlFile.createNewFile();
+                jsonFile = new File(cqlFile.getParent(), fileName + ".json");
+                jsonFile.createNewFile();
 
-                String xml = translator.toXml();
+                String json = translator.toJxson();
 
-                PrintWriter pw = new PrintWriter(xmlFile, "UTF-8");
-                pw.println(xml);
+                PrintWriter pw = new PrintWriter(jsonFile, "UTF-8");
+                pw.println(json);
                 pw.println();
                 pw.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
-            library = CqlLibraryReader.read(xmlFile);
+            library = JsonCqlLibraryReader.read(jsonFile);
             libraries.put(fileName, library);
         }
     }
 
     @AfterClass
     public void oneTimeTearDown() {
-//        if (xmlFile != null) {
-//            xmlFile.delete();
+//        if (jsonFile != null) {
+//            jsonFile.delete();
 //        }
     }
 }

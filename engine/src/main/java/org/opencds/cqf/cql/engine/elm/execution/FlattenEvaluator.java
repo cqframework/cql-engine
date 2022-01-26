@@ -22,8 +22,12 @@ public class FlattenEvaluator extends org.cqframework.cql.elm.execution.Flatten 
         if (operand instanceof Iterable) {
             List<Object> resultList = new ArrayList<>();
             for (Object element : (Iterable<?>) operand) {
-                for (Object subElement : (Iterable<?>) element) {
-                    resultList.add(subElement);
+                if (element == null) {
+                    resultList.add(null);
+                } else {
+                    for (Object subElement : (Iterable<?>) element) {
+                        resultList.add(subElement);
+                    }
                 }
             }
 

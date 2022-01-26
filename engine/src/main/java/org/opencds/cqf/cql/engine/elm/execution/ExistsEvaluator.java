@@ -20,7 +20,7 @@ public class ExistsEvaluator extends org.cqframework.cql.elm.execution.Exists {
             return false;
         }
 
-        return !CqlList.toList(value, true).isEmpty();
+        return !CqlList.toList(value, false).isEmpty();
     }
 
     @Override

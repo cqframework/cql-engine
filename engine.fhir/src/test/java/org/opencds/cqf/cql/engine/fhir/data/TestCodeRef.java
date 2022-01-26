@@ -6,11 +6,12 @@ import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.terminology.Dstu3FhirTerminologyProvider;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 
 public class TestCodeRef extends FhirExecutionTestBase {
 
-    private IGenericClient fhirClient = FhirContext.forDstu3().newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+    private IGenericClient fhirClient = FhirContext.forCached(FhirVersionEnum.DSTU3).newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
     private Dstu3FhirTerminologyProvider terminologyProvider =
             new Dstu3FhirTerminologyProvider(fhirClient);
 

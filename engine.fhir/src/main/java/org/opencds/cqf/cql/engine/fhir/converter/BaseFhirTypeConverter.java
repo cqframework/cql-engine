@@ -129,7 +129,7 @@ abstract class BaseFhirTypeConverter implements FhirTypeConverter {
         if (value instanceof Iterable<?>) {
             throw new IllegalArgumentException("isCqlType can not be used for Iterables");
         }
-        
+
         if (value instanceof CqlType) {
             return true;
         }
@@ -204,7 +204,7 @@ abstract class BaseFhirTypeConverter implements FhirTypeConverter {
             case "Coding": return toCqlCode((IBaseCoding) value);
             case "CodeableConcept": return toCqlConcept((ICompositeType) value);
             case "Period":
-            case "Range": 
+            case "Range":
                     return toCqlInterval((ICompositeType) value);
             case "Tuple": return toCqlTuple((IBase) value);
             default:

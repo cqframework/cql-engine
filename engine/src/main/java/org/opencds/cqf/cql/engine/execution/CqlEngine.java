@@ -14,6 +14,7 @@ import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.FunctionDef;
 import org.cqframework.cql.elm.execution.IncludeDef;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.UsingDef;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.data.DataProvider;
 import org.opencds.cqf.cql.engine.debug.DebugMap;
@@ -44,7 +45,8 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 public class CqlEngine {
 
     public static enum Options {
-        EnableExpressionCaching
+        EnableExpressionCaching,
+        EnableValidation
     }
 
     private LibraryLoader libraryLoader;
@@ -61,7 +63,7 @@ public class CqlEngine {
     }
 
     public CqlEngine(LibraryLoader libraryLoader, EnumSet<Options> engineOptions) {
-        this(libraryLoader, null, null, null);
+        this(libraryLoader, null, null, engineOptions);
     }
 
     public CqlEngine(LibraryLoader libraryLoader, Map<String, DataProvider> dataProviders, TerminologyProvider terminologyProvider, EnumSet<Options> engineOptions) {
@@ -187,6 +189,10 @@ public class CqlEngine {
 
         result.setDebugResult(context.getDebugResult());
 
+        if(context != null) {
+            context.clearExpressions();
+        }
+
         return result;
     }
 
@@ -252,14 +258,11 @@ public class CqlEngine {
                 libraryIdentifier.getId() + (libraryIdentifier.getVersion() != null ? "-" + libraryIdentifier.getVersion() : "")));
         }
 
-        // TODO: Removed this validation pending more intelligent handling at the service layer
-        // For example, providing a mock or dummy data provider in the event there's no data store
-        // this.validateDataRequirements(library);
-        this.validateTerminologyRequirements(library);
-
-
-        // TODO: Optimization ?
-        // TODO: Validate Expressions as well?
+        if (this.engineOptions.contains(Options.EnableValidation)) {
+            this.validateTerminologyRequirements(library);
+            this.validateDataRequirements(library);
+            // TODO: Validate Expressions as well?
+        }
 
         if (library.getIncludes() != null && library.getIncludes().getDef() != null) {
             for (IncludeDef include : library.getIncludes().getDef()) {
@@ -275,25 +278,25 @@ public class CqlEngine {
         return library;
     }
 
-    // private void validateDataRequirements(Library library) {
-    //     // TODO: What we actually need here is a check of the actual retrieves.
-    //     if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
-    //     {
-    //         for (UsingDef using : library.getUsings().getDef()) {
-    //             // Skip system using since the context automatically registers that.
-    //             if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
-    //             {
-    //                 continue;
-    //             }
+    private void validateDataRequirements(Library library) {
+        // TODO: What we actually need here is a check of the actual retrieves, based on data requirements
+        if (library.getUsings() != null && library.getUsings().getDef() != null && !library.getUsings().getDef().isEmpty())
+        {
+            for (UsingDef using : library.getUsings().getDef()) {
+                // Skip system using since the context automatically registers that.
+                if (using.getUri().equals("urn:hl7-org:elm-types:r1"))
+                {
+                    continue;
+                }
 
-    //             if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
-    //                 throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
-    //                 this.getLibraryDescription(library.getIdentifier()),
-    //                 using.getUri()));
-    //             }
-    //         }
-    //     }
-    // }
+                if (this.dataProviders == null || !this.dataProviders.containsKey(using.getUri())) {
+                    throw new IllegalArgumentException(String.format("Library %1$s is using %2$s and no data provider is registered for uri %2$s.",
+                    this.getLibraryDescription(library.getIdentifier()),
+                    using.getUri()));
+                }
+            }
+        }
+    }
 
     private void validateTerminologyRequirements(Library library) {
         // TODO: Smarter validation would be to checkout and see if any retrieves

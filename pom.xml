@@ -6,7 +6,7 @@
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.5.5-SNAPSHOT</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
@@ -17,6 +17,7 @@
     <modules>
         <module>engine</module>
         <module>engine.fhir</module>
+        <module>engine.jaxb</module>
     </modules>
 
     <licenses>
@@ -47,9 +48,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jackson.version>2.12.1</jackson.version>
-        <cqframework.version>1.5.1</cqframework.version>
-        <hapi.version>5.3.0</hapi.version>
+        <jackson.version>2.13.1</jackson.version>
+        <cqframework.version>1.5.6</cqframework.version>
+        <hapi.version>5.6.2</hapi.version>
+        <slf4j.version>1.7.29</slf4j.version>
     </properties>
 
     <repositories>
@@ -92,13 +94,6 @@
                 <artifactId>org.eclipse.persistence.moxy</artifactId>
                 <version>2.7.7</version>
             </dependency>
-
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>jsr305</artifactId>
-                <version>3.0.2</version>
-            </dependency>
-
 
             <!-- Jackson dependencies -->
             <dependency>
@@ -219,7 +214,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.3.0</version>
+                <version>7.5</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -242,8 +237,24 @@
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>jcl-over-slf4j</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>2.0.0-alpha1</version>
+                <version>${slf4j.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock-jre8</artifactId>
+                <version>2.32.0</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
@@ -276,6 +287,59 @@
     <build>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>3.1.2</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>9.2.1</version>
+                        </dependency>
+                    </dependencies>
+                    <executions>
+                        <execution>
+                            <?m2e ignore?>
+                            <id>validate</id>
+                            <phase>generate-sources</phase>
+                            <configuration>
+                                <configLocation>config/checkstyle/checkstyle.xml</configLocation>
+                                <encoding>UTF-8</encoding>
+                                <consoleOutput>true</consoleOutput>
+                                <failOnViolation>true</failOnViolation>
+                                <failsOnError>false</failsOnError>
+                                <!-- don't include the generated-sources -->
+                                <sourceDirectories>
+                                    <sourceDirectory>${project.build.sourceDirectory}</sourceDirectory>
+                                    <sourceDirectory>${project.build.testSourceDirectory}</sourceDirectory>
+                                </sourceDirectories>
+                            </configuration>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.spotbugs</groupId>
+                    <artifactId>spotbugs-maven-plugin</artifactId>
+                    <version>4.5.0.0</version>
+                    <dependencies>
+                        <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                        <dependency>
+                            <groupId>com.github.spotbugs</groupId>
+                            <artifactId>spotbugs</artifactId>
+                            <version>4.5.2</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <effort>Max</effort>
+                        <!-- TODO: Gradually migrate this down to Medium and then Low-->
+                        <threshold>High</threshold>
+                        <excludeFilterFile>config/spotbugs/exclude.xml</excludeFilterFile>
+                    </configuration>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
@@ -313,7 +377,6 @@
                     <configuration>
                         <source>1.8</source>
                         <target>1.8</target>
-                        <release>8</release>
                         <failOnError>true</failOnError>
                         <failOnWarning>true</failOnWarning>
                         <compilerArgs>
@@ -340,7 +403,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.2.0</version>
+                    <version>3.3.1</version>
                     <configuration>
                         <source>8</source>
                     </configuration>
@@ -462,9 +525,58 @@
                         </execution>
                     </executions>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-pmd-plugin</artifactId>
+                    <version>3.15.0</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.ow2.asm</groupId>
+                            <artifactId>asm</artifactId>
+                            <version>9.2</version>
+                        </dependency>
+                    </dependencies>
+                    <configuration>
+                        <analysisCache>true</analysisCache>
+                        <printFailingErrors>true</printFailingErrors>
+                        <!-- TODO: Gradually raise to 5 -->
+                        <failurePriority>2</failurePriority>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jxr-plugin</artifactId>
+                    <version>3.1.1</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-pmd-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+            </plugin>
             <plugin>
                 <groupId>org.jvnet.jaxb2.maven2</groupId>
                 <artifactId>maven-jaxb2-plugin</artifactId>
@@ -473,37 +585,39 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+            </plugin>
         </plugins>
     </build>
 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </reporting>
+
     <profiles>
-        <profile>
-            <id>ci</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-javadoc-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-failsafe-plugin</artifactId>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>release</id>
             <build>
@@ -523,6 +637,24 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>java-9</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <release>8</release>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
     </profiles>
 </project>
-

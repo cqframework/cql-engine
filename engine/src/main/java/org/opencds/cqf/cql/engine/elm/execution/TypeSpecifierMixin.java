@@ -11,8 +11,8 @@ import org.cqframework.cql.elm.execution.TupleTypeSpecifier;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ 
-    @Type(value = TupleTypeSpecifier.class, name = "TupleTypeSpecifier"), 
+@JsonSubTypes({
+    @Type(value = TupleTypeSpecifier.class, name = "TupleTypeSpecifier"),
     @Type(value = NamedTypeSpecifier.class, name = "NamedTypeSpecifier"),
     @Type(value = ChoiceTypeSpecifier.class, name = "ChoiceTypeSpecifier"),
     @Type(value = ChoiceTypeSpecifier.class, name = "IntervalTypeSpecifier"),

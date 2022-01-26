@@ -4,7 +4,7 @@
         {
             "name": "Profiling",
             "workingDirectory": "${workspaceFolder}",
-            "vmargs": [ "-Xmx512M", 
+            "vmargs": [ "-Xmx512M",
                 "-Dcom.sun.management.jmxremote.port=9999",
                 "-Dcom.sun.management.jmxremote.authenticate=false",
                 "-Dcom.sun.management.jmxremote.ssl=false" ]
@@ -35,6 +35,31 @@
         "sublist",
         "sublists",
         "ucum",
-        "unpair"
-    ]
+        "unpair",
+        "Gson",
+		"numer",
+		"reindex"
+    ],
+    "cSpell.enabledLanguageIds": [
+		"java",
+		"json",
+		"xml",
+		"md"
+	],
+	"cSpell.ignorePaths": [
+		".git/objects",
+		".vscode",
+		"**/pom.xml",
+		"checkstyle.xml"
+	],
+	"editor.codeActionsOnSave": {
+		"source.organizeImports": true,
+		"editor.formatOnSave": true
+	},
+	"files.exclude": {
+		"**/.classpath": true,
+		"**/.project": true,
+		"**/.settings": true,
+		"**/.factorypath": true
+	}
 }

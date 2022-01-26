@@ -6,12 +6,12 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>1.5.2-SNAPSHOT</version>
+        <version>1.5.5-SNAPSHOT</version>
     </parent>
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.fhir</artifactId>
-    <version>1.5.2-SNAPSHOT</version>
+    <version>1.5.5-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>engine.fhir</name>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
             <artifactId>engine</artifactId>
-            <version>1.5.2-SNAPSHOT</version>
+            <version>1.5.5-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>
@@ -51,10 +51,17 @@
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock-jre8</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 

@@ -17,8 +17,8 @@ successor of<T>(argument T) T
 
 The successor operator returns the successor of the argument. For example, the successor of 1 is 2.
   If the argument is already the maximum value for the type, a run-time error is thrown.
-The successor operator is defined for the Integer, Decimal, DateTime, and Time types.
-For Integer, successor is equivalent to adding 1.
+The successor operator is defined for the Integer, Long, Decimal, DateTime, and Time types.
+For Integer, Long successor is equivalent to adding 1.
 For Decimal, successor is equivalent to adding the minimum precision value for the Decimal type, or 10^-08.
 For DateTime and Time values, successor is equivalent to adding a time-unit quantity for the lowest specified precision of the value.
   For example, if the DateTime is fully specified, successor is equivalent to adding 1 millisecond;
@@ -38,6 +38,12 @@ public class SuccessorEvaluator extends org.cqframework.cql.elm.execution.Succes
                 throw new TypeOverflow("The result of the successor operation exceeds the maximum value allowed for the Integer type");
             }
             return ((Integer)value) + 1;
+        }
+        else if (value instanceof Long) {
+            if ((Long) value >= Value.MAX_LONG) {
+                throw new TypeOverflow("The result of the successor operation exceeds the maximum value allowed for the Long type");
+            }
+            return ((Long)value) + 1;
         }
         else if (value instanceof BigDecimal) {
             if (((BigDecimal) value).compareTo(Value.MAX_DECIMAL) >= 0) {

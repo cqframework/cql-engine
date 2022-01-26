@@ -10,6 +10,7 @@ import org.opencds.cqf.cql.engine.runtime.Value;
 
 /*
 *(left Integer, right Integer) Integer
+*(left Long, right Long) Long
 *(left Decimal, right Decimal) Decimal
 *(left Decimal, right Quantity) Quantity
 *(left Quantity, right Decimal) Quantity
@@ -36,7 +37,11 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
         return (Integer)left * (Integer)right;
     }
 
-    // *(Decimal, Decimal)
+    if (left instanceof Long) {
+        return (Long) left * (Long) right;
+    }
+
+      // *(Decimal, Decimal)
     else if (left instanceof BigDecimal && right instanceof BigDecimal) {
         return Value.verifyPrecision(((BigDecimal)left).multiply((BigDecimal)right), null);
     }
@@ -68,10 +73,10 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
       return new Interval(multiply(leftInterval.getStart(), rightInterval.getStart()), true, multiply(leftInterval.getEnd(), rightInterval.getEnd()), true);
     }
 
-    throw new InvalidOperatorArgument(
-            "Multiply(Integer, Integer), Multiply(Decimal, Decimal), Multiply(Decimal, Quantity), Multiply(Quantity, Decimal) or Multiply(Quantity, Quantity)",
-            String.format("Multiply(%s, %s)", left.getClass().getName(), right.getClass().getName())
-    );
+      throw new InvalidOperatorArgument(
+          "Multiply(Integer, Integer), Multiply(Long, Long), Multiply(Decimal, Decimal), Multiply(Decimal, Quantity), Multiply(Quantity, Decimal) or Multiply(Quantity, Quantity)",
+          String.format("Multiply(%s, %s)", left.getClass().getName(), right.getClass().getName())
+      );
   }
 
     @Override

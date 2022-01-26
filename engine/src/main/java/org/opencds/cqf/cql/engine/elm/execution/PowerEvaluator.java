@@ -29,12 +29,20 @@ public class PowerEvaluator extends org.cqframework.cql.elm.execution.Power {
             return new BigDecimal((Integer)left).pow((Integer)right).intValue();
         }
 
+        if (left instanceof Long) {
+            if ((Long) right < 0) {
+                return new BigDecimal(1).divide(new BigDecimal((Long) left).pow(Math.abs((Integer) right)));
+            }
+
+            return new BigDecimal((Long) left).pow((Integer) ((Long) right).intValue()).longValue();
+        }
+
         if (left instanceof BigDecimal) {
             return Value.verifyPrecision(new BigDecimal(Math.pow((((BigDecimal)left).doubleValue()), ((BigDecimal)right).doubleValue())), null);
         }
 
         throw new InvalidOperatorArgument(
-                "Power(Integer, Integer) or Power(Decimal, Decimal)",
+                "Power(Integer, Integer), Power(Long, Long) or Power(Decimal, Decimal)",
                 String.format("Power(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }

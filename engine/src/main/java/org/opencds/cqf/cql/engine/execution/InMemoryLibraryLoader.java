@@ -10,7 +10,7 @@ import org.cqframework.cql.elm.execution.VersionedIdentifier;
 public class InMemoryLibraryLoader implements LibraryLoader {
 
     private Map<String, Library> libraries = new HashMap<>();
-    
+
     public InMemoryLibraryLoader(Collection<Library> libraries) {
 
         for (Library library : libraries) {

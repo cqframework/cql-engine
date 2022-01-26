@@ -9,8 +9,10 @@ import org.opencds.cqf.cql.engine.elm.execution.MinValueEvaluator;
 public class Value {
 
     public static final Integer MAX_INT = Integer.MAX_VALUE;
+    public static final Long MAX_LONG = Long.MAX_VALUE;
     public static final BigDecimal MAX_DECIMAL = new BigDecimal("9999999999999999999999999999.99999999");
     public static final Integer MIN_INT = Integer.MIN_VALUE;
+    public static final Long MIN_LONG = Long.MIN_VALUE;
     public static final BigDecimal MIN_DECIMAL = new BigDecimal("-9999999999999999999999999999.99999999");
 
     private Value() {
@@ -62,5 +64,19 @@ public class Value {
             return null;
         }
         return ret.intValue();
+    }
+
+    public static Long validateLong(Long ret) {
+        if (ret > MAX_LONG || ret < MIN_LONG) {
+            return null;
+        }
+        return ret;
+    }
+
+    public static Long validateLong(Double ret) {
+        if (ret > MAX_LONG || ret < MIN_LONG) {
+            return null;
+        }
+        return ret.longValue();
     }
 }

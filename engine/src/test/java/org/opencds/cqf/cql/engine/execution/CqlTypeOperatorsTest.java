@@ -172,10 +172,30 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Object result = context.resolveExpressionRef("ConvertsToIntegerTrue").getExpression().evaluate(context);
         Assert.assertTrue((Boolean) result);
 
+        result = context.resolveExpressionRef("ConvertsToIntegerLong").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
         result = context.resolveExpressionRef("ConvertsToIntegerFalse").getExpression().evaluate(context);
         Assert.assertFalse((Boolean) result);
 
         result = context.resolveExpressionRef("ConvertsToIntegerNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+    }
+
+    /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ConvertsToLongEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testConvertsToLong() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("ConvertsToLongTrue").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToLongFalse").getExpression().evaluate(context);
+        Assert.assertFalse((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToLongNull").getExpression().evaluate(context);
         Assert.assertNull(result);
     }
 
@@ -216,6 +236,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue((Boolean) result);
 
         result = context.resolveExpressionRef("ConvertsToStringInteger").getExpression().evaluate(context);
+        Assert.assertTrue((Boolean) result);
+
+        result = context.resolveExpressionRef("ConvertsToStringLong").getExpression().evaluate(context);
         Assert.assertTrue((Boolean) result);
 
         result = context.resolveExpressionRef("ConvertsToStringDecimal").getExpression().evaluate(context);
@@ -356,6 +379,17 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ToLongEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testToLong() {
+        Context context = new Context(library);
+
+        Object result = context.resolveExpressionRef("String123ToLong").getExpression().evaluate(context);
+        assertThat(result, is(new Long(123)));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.ToQuantityEvaluator#evaluate(Context)}
      */
     @Test
@@ -364,6 +398,40 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
 
         Object result = context.resolveExpressionRef("String5D5CMToQuantity").getExpression().evaluate(context);
         Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("5.5")).withUnit("cm")));
+
+        result = context.resolveExpressionRef("StringInvalidToQuantityNull").getExpression().evaluate(context);
+        Assert.assertNull(result);
+
+        result = context.resolveExpressionRef("String100PerMinPerSqMeterToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("100")).withUnit("daL/min/m2")));
+
+        result = context.resolveExpressionRef("String100UnitPer10BillionToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("100")).withUnit("U/10*10{cells}")));
+
+        result = context.resolveExpressionRef("String60DayPer7DayToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("d/(7.d)")));
+
+        result = context.resolveExpressionRef("String60EhrlichPer100gmToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("{EhrlichU}/100.g")));
+
+        result = context.resolveExpressionRef("StringPercentToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("60")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithoutQuoteToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("70")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithTabToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("80")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithMultiSpacesToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("90")).withUnit("%")));
+
+        result = context.resolveExpressionRef("StringPercentWithSpacesUnitToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("10")).withUnit("ml")));
+
+        result = context.resolveExpressionRef("StringPercentWithQuoteUnitToQuantity").getExpression().evaluate(context);
+        Assert.assertTrue(((Quantity) result).equal(new Quantity().withValue(new BigDecimal("20")).withUnit("ml")));
+
     }
 
     /**
@@ -389,6 +457,9 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("IntegerNeg5ToString").getExpression().evaluate(context);
+        assertThat(result, is("-5"));
+
+        result = context.resolveExpressionRef("LongNeg5ToString").getExpression().evaluate(context);
         assertThat(result, is("-5"));
 
         result = context.resolveExpressionRef("Decimal18D55ToString").getExpression().evaluate(context);
