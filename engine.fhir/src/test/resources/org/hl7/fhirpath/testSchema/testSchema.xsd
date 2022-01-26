@@ -158,7 +158,9 @@
 			<xs:enumeration value="date"/>
 			<xs:enumeration value="dateTime"/>
 			<xs:enumeration value="decimal"/>
-			<xs:enumeration value="integer"/>
+            <xs:enumeration value="expression"/>
+            <xs:enumeration value="integer"/>
+            <xs:enumeration value="long"/>
 			<xs:enumeration value="quantity"/>
 			<xs:enumeration value="string"/>
 			<xs:enumeration value="time"/>

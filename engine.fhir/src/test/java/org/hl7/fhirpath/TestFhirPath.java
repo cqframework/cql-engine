@@ -324,11 +324,20 @@ public class TestFhirPath {
     }
 
     private void runR4Test(org.hl7.fhirpath.tests.Test test) throws UcumException {
-        String resourceFilePath = "r4/input/" + test.getInputfile();
-        org.hl7.fhir.r4.model.Resource resource = loadResourceFileR4(resourceFilePath);
-        String cql = String.format(
-                "library TestFHIRPath using FHIR version '4.0.0' include FHIRHelpers version '4.0.0' called FHIRHelpers parameter %s %s define Test: %s",
+        String cql = null;
+        org.hl7.fhir.r4.model.Resource resource = null;
+        if (test.getInputfile() != null) {
+            String resourceFilePath = "r4/input/" + test.getInputfile();
+            resource = loadResourceFileR4(resourceFilePath);
+            cql = String.format(
+                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers parameter %s %s define Test: %s",
                 resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
+        }
+        else {
+            cql = String.format(
+                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers define Test: %s",
+                test.getExpression().getValue());
+        }
 
         Library library = null;
         // If the test expression is invalid, expect an error during translation and
@@ -355,7 +364,9 @@ public class TestFhirPath {
             Context context = new Context(library);
             context.registerLibraryLoader(getLibraryLoader());
             context.registerDataProvider("http://hl7.org/fhir", providerR4);
-            context.setParameter(null, resource.fhirType(), resource);
+            if (resource != null) {
+                context.setParameter(null, resource.fhirType(), resource);
+            }
 
             Object result = null;
             boolean testPassed = false;
@@ -436,9 +447,7 @@ public class TestFhirPath {
                 String.format("Tests file %s passed %s of %s tests.", testsFilePath, passCounter, testCounter));
     }
 
-    @Test
-    public void testFhirPathR4() {
-        String testsFilePath = "r4/tests-fhir-r4.xml";
+    private void runTests(String testsFilePath) {
         System.out.println(String.format("Running test file %s...", testsFilePath));
         Tests tests = loadTestsFile(testsFilePath);
         int testCounter = 0;
@@ -460,12 +469,92 @@ public class TestFhirPath {
                     }
                 } catch (Exception e) {
                     System.out
-                            .println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
+                        .println(String.format("Test %s failed with exception: %s", test.getName(), e.toString()));
                 }
             }
         }
         System.out.println(
-                String.format("Tests file %s passed %s of %s tests (%s skipped).", testsFilePath, passCounter, testCounter, skipCounter));
+            String.format("Tests file %s passed %s of %s tests (%s skipped).", testsFilePath, passCounter, testCounter, skipCounter));
+    }
+
+    @Test
+    public void testFhirPathR4() {
+        runTests("r4/tests-fhir-r4.xml");
+    }
+
+    @Test
+    public void testCqlAggregateFunctions() {
+        runTests("cql/CqlAggregateFunctionsTest.xml");
+    }
+
+    @Test
+    public void testCqlAggregate() {
+        runTests("cql/CqlAggregateTest.xml");
+    }
+
+    @Test
+    public void testCqlArithmeticFunctions() {
+        runTests("cql/CqlArithmeticFunctionsTest.xml");
+    }
+
+    @Test
+    public void testCqlComparisonOperators() {
+        runTests("cql/CqlComparisonOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlConditionalOperators() {
+        runTests("cql/CqlConditionalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlDateTimeOperators() {
+        runTests("cql/CqlDateTimeOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlErrorsAndMessagingOperators() {
+        runTests("cql/CqlErrorsAndMessagingOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlIntervalOperators() {
+        runTests("cql/CqlIntervalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlListOperators() {
+        runTests("cql/CqlListOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlLogicalOperators() {
+        runTests("cql/CqlLogicalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlNullologicalOperators() {
+        runTests("cql/CqlNullologicalOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlStringOperators() {
+        runTests("cql/CqlStringOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlTypeOperators() {
+        runTests("cql/CqlTypeOperatorsTest.xml");
+    }
+
+    @Test
+    public void testCqlTypes() {
+        runTests("cql/CqlTypesTest.xml");
+    }
+
+    @Test
+    public void testCqlValueLiteralsAndSelectors() {
+        runTests("cql/CqlValueLiteralsAndSelectors.xml");
     }
 
     private String getStringFromResourceStream(String resourceName) {
