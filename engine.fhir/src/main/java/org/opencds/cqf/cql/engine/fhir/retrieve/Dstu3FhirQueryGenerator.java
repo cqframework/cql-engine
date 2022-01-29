@@ -27,7 +27,6 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
-import ca.uhn.fhir.context.FhirContext;
 
 public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
     public Dstu3FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, Dstu3FhirModelResolver modelResolver) {

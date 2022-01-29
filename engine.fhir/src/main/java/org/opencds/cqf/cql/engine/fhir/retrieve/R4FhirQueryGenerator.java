@@ -24,7 +24,6 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
-import ca.uhn.fhir.context.FhirContext;
 
 public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
     public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, R4FhirModelResolver modelResolver) {
