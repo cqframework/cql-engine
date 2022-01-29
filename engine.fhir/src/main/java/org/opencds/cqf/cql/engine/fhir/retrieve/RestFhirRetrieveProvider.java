@@ -29,6 +29,12 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	protected IGenericClient fhirClient;
 	private SearchStyleEnum searchStyle;
 
+    public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
+        super(searchParameterResolver);
+        this.fhirClient = fhirClient;
+        this.searchStyle = DEFAULT_SEARCH_STYLE;
+    }
+
     public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, FhirModelResolver modelResolver, IGenericClient fhirClient) {
         super(searchParameterResolver, modelResolver);
         // TODO: Figure out how to validate that the searchParameterResolver and the

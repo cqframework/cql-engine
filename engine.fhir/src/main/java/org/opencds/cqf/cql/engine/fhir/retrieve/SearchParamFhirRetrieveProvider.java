@@ -25,11 +25,15 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     private BaseFhirQueryGenerator fhirQueryGenerator;
     private FhirModelResolver modelResolver;
 
-    protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, FhirModelResolver modelResolver) {
+    protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
-        this.modelResolver = modelResolver;
         this.fhirContext = searchParameterResolver.getFhirContext();
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
+    }
+
+    protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, FhirModelResolver modelResolver) {
+        this(searchParameterResolver);
+        this.modelResolver = modelResolver;
     }
 
     public void setPageSize(Integer value) {
@@ -83,7 +87,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
 
         List<SearchParameterMap> queries = null;
 
-        if (this.fhirContext != null) {
+        if (this.fhirContext != null && modelResolver != null) {
             if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.DSTU3)) {
                 fhirQueryGenerator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver) this.modelResolver);
             } else if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.R4)) {
