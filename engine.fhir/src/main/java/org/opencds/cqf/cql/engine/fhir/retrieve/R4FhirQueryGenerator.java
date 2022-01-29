@@ -28,7 +28,7 @@ import ca.uhn.fhir.context.FhirContext;
 
 public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
     public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, R4FhirModelResolver modelResolver) {
-        super(searchParameterResolver, terminologyProvider, modelResolver, FhirContext.forR4());
+        super(searchParameterResolver, terminologyProvider, modelResolver, searchParameterResolver.getFhirContext());
     }
 
     @Override

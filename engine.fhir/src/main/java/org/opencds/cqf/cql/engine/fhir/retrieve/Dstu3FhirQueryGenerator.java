@@ -31,7 +31,7 @@ import ca.uhn.fhir.context.FhirContext;
 
 public class Dstu3FhirQueryGenerator extends BaseFhirQueryGenerator {
     public Dstu3FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, Dstu3FhirModelResolver modelResolver) {
-        super(searchParameterResolver, terminologyProvider, modelResolver, FhirContext.forDstu3());
+        super(searchParameterResolver, terminologyProvider, modelResolver, searchParameterResolver.getFhirContext());
     }
 
     @Override
