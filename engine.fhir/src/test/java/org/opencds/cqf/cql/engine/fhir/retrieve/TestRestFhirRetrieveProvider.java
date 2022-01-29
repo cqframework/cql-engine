@@ -14,10 +14,10 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
-import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -33,6 +33,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
     static IGenericClient CLIENT;
 
     RestFhirRetrieveProvider provider;
+    FhirModelResolver modelResolver;
 
     @BeforeClass
     public void setUpBeforeClass() {
@@ -42,10 +43,11 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
     @BeforeMethod
     public void setUp() {
-        this.provider = new RestFhirRetrieveProvider(RESOLVER, CLIENT);
+        modelResolver = getModelResolver(CLIENT.getFhirContext().getVersion().getVersion());
+        this.provider = new RestFhirRetrieveProvider(RESOLVER, modelResolver, CLIENT);
     }
 
-    private ModelResolver getModelResolver(FhirVersionEnum fhirVersionEnum) {
+    private FhirModelResolver getModelResolver(FhirVersionEnum fhirVersionEnum) {
         if(fhirVersionEnum.equals(FhirVersionEnum.DSTU3)) {
             return new Dstu3FhirModelResolver();
         } else if(fhirVersionEnum.equals(FhirVersionEnum.R4)) {
@@ -57,7 +59,6 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
     @Test
     public void noUserSpecifiedPageSizeUsesDefault() {
-        ModelResolver modelResolver = getModelResolver(CLIENT.getFhirContext().getVersion().getVersion());
         BaseFhirQueryGenerator fhirQueryGenerator = FhirQueryGeneratorFactory.create(modelResolver,
             provider.searchParameterResolver, provider.getTerminologyProvider());
 
@@ -84,7 +85,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         mockFhirSearch("/Condition?code=" + escapeUrlParam(code.getSystem() + "|" + code.getCode()) + "&subject=" + escapeUrlParam("Patient/123") + "&_count=500");
 
         provider.setPageSize(500);
-        provider.retrieve(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),"Patient", "subject", "123", "Condition", null, "code", codes, null, null, null, null, null);
+        provider.retrieve("Patient", "subject", "123", "Condition", null, "code", codes, null, null, null, null, null);
     }
 
     @Test
@@ -95,7 +96,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         mockFhirSearch("/Condition?code" + escapeUrlParam(":") + "in=" + escapeUrlParam(valueSetUrl) + "&subject=" + escapeUrlParam("Patient/123") + "&_count=500");
 
         provider.setPageSize(500);
-        provider.retrieve(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),"Patient", "subject", "123", "Condition", "http://hl7.org/fhir/StructureDefinition/Condition", "code", null, valueSetUrl, null, null, null, null);
+        provider.retrieve("Patient", "subject", "123", "Condition", "http://hl7.org/fhir/StructureDefinition/Condition", "code", null, valueSetUrl, null, null, null, null);
     }
 
     @Test
@@ -120,7 +121,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
                 "&_count=500")), makeBundle());
 
         provider.setPageSize(500);
-        provider.retrieve(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),"Patient", "subject", "123", "Condition", null, "code", null, null, "onset", null, null, interval);
+        provider.retrieve("Patient", "subject", "123", "Condition", null, "code", null, null, "onset", null, null, interval);
     }
 
     @Test
@@ -128,7 +129,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         mockFhirRead("/Patient/123", new Patient());
 
         provider.setPageSize(500);
-        provider.retrieve(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),"Patient", "id", "123", "Patient", "http://hl7.org/fhir/StructureDefinition/Patient", null, null, null, null, null, null, null);
+        provider.retrieve("Patient", "id", "123", "Patient", "http://hl7.org/fhir/StructureDefinition/Patient", null, null, null, null, null, null, null);
     }
 
     @Test
@@ -138,6 +139,6 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
         mockFhirSearch("/Condition?code=" + escapeUrlParam(code.getSystem() + "|" + code.getCode()) + "&subject=" + escapeUrlParam("Patient/123"));
 
-        provider.retrieve(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),"Patient", "subject", "123", "Condition", null, "code", codes, null, null, null, null, null);
+        provider.retrieve("Patient", "subject", "123", "Condition", null, "code", codes, null, null, null, null, null);
     }
 }
