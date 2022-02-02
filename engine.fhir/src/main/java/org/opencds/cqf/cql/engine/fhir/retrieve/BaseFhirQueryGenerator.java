@@ -2,9 +2,11 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import java.util.*;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
@@ -25,7 +27,7 @@ import ca.uhn.fhir.rest.param.TokenOrListParam;
 import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.TokenParamModifier;
 
-public abstract class BaseFhirQueryGenerator {
+public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChecker {
     protected static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
     protected static final boolean DEFAULT_SHOULD_EXPAND_VALUESETS = false;
 
@@ -68,7 +70,7 @@ public abstract class BaseFhirQueryGenerator {
     }
 
     protected BaseFhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider,
-                                  ModelResolver modelResolver, FhirContext fhirContext) {
+                                  ModelResolver modelResolver, FhirContext fhirContext) throws FhirVersionMisMatchException {
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
         this.modelResolver = modelResolver;
@@ -76,10 +78,27 @@ public abstract class BaseFhirQueryGenerator {
         this.expandValueSets = DEFAULT_SHOULD_EXPAND_VALUESETS;
 
         this.fhirContext = fhirContext;
+        validateFhirVersionIntegrity(fetchFhirVersionEnum(this.fhirContext));
+    }
+
+    @Override
+    public void validateFhirVersionIntegrity(FhirVersionEnum fhirVersionEnum) throws FhirVersionMisMatchException {
+        if(this.searchParameterResolver != null && fetchFhirVersionEnum(this.searchParameterResolver.getFhirContext()) != fhirVersionEnum) {
+            throw new IllegalArgumentException("Components have different");
+        }
+    }
+
+    public FhirVersionEnum fetchFhirVersionEnum(FhirContext fhirContext) {
+        if(fhirContext == null) {
+            throw new NullPointerException("The provided argument is null");
+        }
+        return fhirContext.getVersion().getVersion();
     }
 
     public abstract List<String> generateFhirQueries(ICompositeType dataRequirement, DateTime evaluationDateTime,
          Map<String, Object> contextValues, Map<String, Object> parameters, IBaseConformance capabilityStatement);
+
+    public abstract FhirVersionEnum getFhirVersion();
 
     protected Pair<String, IQueryParameterType> getTemplateParam(String dataType, String templateId) {
         if (templateId == null || templateId.equals("")) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
 import org.hl7.fhir.r4.model.CapabilityStatement;
@@ -16,7 +17,8 @@ import org.hl7.fhir.r4.model.Duration;
 import org.hl7.fhir.r4.model.Period;
 import org.hl7.fhir.r4.model.Type;
 import org.opencds.cqf.cql.engine.elm.execution.SubtractEvaluator;
-import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
+import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -26,8 +28,22 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 
 public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
-    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, R4FhirModelResolver modelResolver) {
-        super(searchParameterResolver, terminologyProvider, modelResolver, searchParameterResolver.getFhirContext());
+    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, FhirModelResolver modelResolver) throws FhirVersionMisMatchException {
+        super(searchParameterResolver, terminologyProvider, modelResolver, modelResolver.getFhirContext());
+        validateFhirVersionIntegrity(super.fetchFhirVersionEnum(modelResolver.getFhirContext()));
+    }
+
+    @Override
+    public FhirVersionEnum getFhirVersion() {
+        return FhirVersionEnum.R4;
+    }
+
+    @Override
+    public void validateFhirVersionIntegrity(FhirVersionEnum fhirVersionEnum) throws FhirVersionMisMatchException {
+        super.validateFhirVersionIntegrity(fhirVersionEnum);
+        if(this.getFhirVersion() != null && this.getFhirVersion() != fhirVersionEnum) {
+            throw new FhirVersionMisMatchException("Components have different fhir version");
+        }
     }
 
     @Override

@@ -3,11 +3,12 @@ package org.opencds.cqf.cql.engine.fhir.retrieve;
 import java.util.List;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.retrieve.TerminologyAwareRetrieveProvider;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Interval;
@@ -23,7 +24,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
     protected Integer pageSize;
     protected int maxCodesPerQuery;
     private BaseFhirQueryGenerator fhirQueryGenerator;
-    private FhirModelResolver modelResolver;
+    private ModelResolver modelResolver;
 
     protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
@@ -31,7 +32,7 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
     }
 
-    protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, FhirModelResolver modelResolver) {
+    protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, ModelResolver modelResolver) {
         this(searchParameterResolver);
         this.modelResolver = modelResolver;
     }
@@ -56,11 +57,11 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         this.fhirQueryGenerator = fhirQueryGenerator;
     }
 
-    public FhirModelResolver getModelResolver() {
+    public ModelResolver getModelResolver() {
         return modelResolver;
     }
 
-    public void setModelResolver(FhirModelResolver modelResolver) {
+    public void setModelResolver(ModelResolver modelResolver) {
         this.modelResolver = modelResolver;
     }
 
@@ -88,10 +89,14 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         List<SearchParameterMap> queries = null;
 
         if (this.fhirContext != null && modelResolver != null) {
-            if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.DSTU3)) {
-                fhirQueryGenerator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver) this.modelResolver);
-            } else if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.R4)) {
-                fhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver) this.modelResolver);
+            try {
+                if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.DSTU3)) {
+                    fhirQueryGenerator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver) this.modelResolver);
+                } else if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.R4)) {
+                    fhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver) this.modelResolver);
+                }
+            } catch (FhirVersionMisMatchException exception) {
+                throw new RuntimeException(exception.getMessage());
             }
         }
         if (fhirQueryGenerator != null) {

@@ -15,6 +15,7 @@ import org.hl7.fhir.r4.model.DateTimeType;
 import org.hl7.fhir.r4.model.Duration;
 import org.hl7.fhir.r4.model.ValueSet;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.R4FhirTerminologyProvider;
@@ -42,7 +43,7 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
     }
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp() throws FhirVersionMisMatchException {
         SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forR4());
         TerminologyProvider terminologyProvider = new R4FhirTerminologyProvider(CLIENT);
         R4FhirModelResolver modelResolver = new R4FhirModelResolver();

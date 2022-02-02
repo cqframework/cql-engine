@@ -1,7 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
+import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
@@ -21,14 +21,12 @@ public class FhirQueryGeneratorFactory {
      * @throws IllegalArgumentException if the FHIR version specified is not supported
      */
     public static BaseFhirQueryGenerator create(ModelResolver modelResolver, SearchParameterResolver searchParameterResolver,
-                                         TerminologyProvider terminologyProvider) {
-        FhirVersionEnum fhirVersionEnum = null;
-        if (modelResolver instanceof Dstu3FhirModelResolver) {
-            fhirVersionEnum = DSTU3;
-            return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver)modelResolver);
-        } else if(modelResolver instanceof R4FhirModelResolver) {
-            fhirVersionEnum = R4;
-            return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver) modelResolver);
+                                                TerminologyProvider terminologyProvider) throws FhirVersionMisMatchException {
+        FhirVersionEnum fhirVersionEnum = searchParameterResolver.getFhirContext().getVersion().getVersion();
+        if (fhirVersionEnum == DSTU3) {
+            return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (FhirModelResolver) modelResolver);
+        } else if (fhirVersionEnum == R4) {
+            return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (FhirModelResolver) modelResolver);
         } else {
             throw new IllegalArgumentException(String.format("Unsupported FHIR version for FHIR Query Generation: %s", fhirVersionEnum));
         }
@@ -48,7 +46,7 @@ public class FhirQueryGeneratorFactory {
      */
     public static BaseFhirQueryGenerator create(ModelResolver modelResolver, SearchParameterResolver searchParameterResolver,
                                          TerminologyProvider terminologyProvider, Boolean shouldExpandValueSets,
-                                         Integer maxCodesPerQuery, Integer pageSize) {
+                                         Integer maxCodesPerQuery, Integer pageSize) throws FhirVersionMisMatchException {
         BaseFhirQueryGenerator baseFhirQueryGenerator = create(modelResolver, searchParameterResolver, terminologyProvider);
         if (shouldExpandValueSets != null) {
             baseFhirQueryGenerator.setExpandValueSets(shouldExpandValueSets);

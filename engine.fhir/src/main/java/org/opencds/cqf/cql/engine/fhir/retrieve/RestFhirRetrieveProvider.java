@@ -10,9 +10,9 @@ import java.util.function.BiFunction;
 import org.hl7.fhir.instance.model.api.IBaseBundle;
 import org.hl7.fhir.instance.model.api.IBaseCoding;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.SearchStyleEnum;
@@ -35,7 +35,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
         this.searchStyle = DEFAULT_SEARCH_STYLE;
     }
 
-    public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, FhirModelResolver modelResolver, IGenericClient fhirClient) {
+    public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, ModelResolver modelResolver, IGenericClient fhirClient) {
         super(searchParameterResolver, modelResolver);
         // TODO: Figure out how to validate that the searchParameterResolver and the
         // client are on the same version of FHIR.

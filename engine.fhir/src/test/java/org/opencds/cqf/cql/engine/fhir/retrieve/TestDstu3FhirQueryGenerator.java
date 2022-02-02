@@ -15,6 +15,7 @@ import org.hl7.fhir.dstu3.model.DateTimeType;
 import org.hl7.fhir.dstu3.model.Duration;
 import org.hl7.fhir.dstu3.model.ValueSet;
 import org.opencds.cqf.cql.engine.fhir.Dstu3FhirTest;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.Dstu3FhirTerminologyProvider;
@@ -42,7 +43,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
     }
 
     @BeforeMethod
-    public void setUp() {
+    public void setUp() throws FhirVersionMisMatchException {
         SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forDstu3());
         TerminologyProvider terminologyProvider = new Dstu3FhirTerminologyProvider(CLIENT);
         Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();

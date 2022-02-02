@@ -13,6 +13,7 @@ import java.util.List;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
+import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
@@ -58,7 +59,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
 
     @Test
-    public void noUserSpecifiedPageSizeUsesDefault() {
+    public void noUserSpecifiedPageSizeUsesDefault() throws FhirVersionMisMatchException {
         BaseFhirQueryGenerator fhirQueryGenerator = FhirQueryGeneratorFactory.create(modelResolver,
             provider.searchParameterResolver, provider.getTerminologyProvider());
 
@@ -67,7 +68,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
     }
 
     @Test
-    public void userSpecifiedPageSizeIsUsed() {
+    public void userSpecifiedPageSizeIsUsed() throws FhirVersionMisMatchException {
         Integer expected = 100;
         provider.setPageSize(expected);
         BaseFhirQueryGenerator fhirQueryGenerator = FhirQueryGeneratorFactory.create(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),
