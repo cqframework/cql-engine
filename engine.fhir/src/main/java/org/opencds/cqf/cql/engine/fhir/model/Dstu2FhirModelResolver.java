@@ -72,7 +72,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
             f.setAccessible(true);
             myNameToResourceType = (Map<String, Class<? extends IBaseResource>>) f.get(this.fhirContext);
 
-            List<Class<? extends IBaseResource>> toLoad = new ArrayList<Class<? extends IBaseResource>>(myNameToResourceType.size());
+            List<Class<? extends IBaseResource>> toLoad = new ArrayList<>(myNameToResourceType.size());
 
             for (Enumerations.ResourceType type : Enumerations.ResourceType.values()) {
                 // These are abstract types that should never be resolved directly.

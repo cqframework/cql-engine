@@ -32,7 +32,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 
 public abstract class FhirExecutionTestBase {
-	static Map<String, Library> libraries = new HashMap<>();
+    static Map<String, Library> libraries = new HashMap<>();
 
 
     protected Dstu2FhirModelResolver dstu2ModelResolver;
@@ -55,19 +55,19 @@ public abstract class FhirExecutionTestBase {
         dstu2ModelResolver = new Dstu2FhirModelResolver();
         FhirContext dstu2Context = FhirContext.forCached(FhirVersionEnum.DSTU2);
         dstu2RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu2Context),
-                dstu2Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
+            dstu2ModelResolver, dstu2Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
         dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
 
         dstu3ModelResolver = new Dstu3FhirModelResolver();
         FhirContext dstu3Context = FhirContext.forCached(FhirVersionEnum.DSTU3);
-        dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context),
-        dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
+        dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), dstu3ModelResolver,
+            dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 
         r4ModelResolver = new R4FhirModelResolver();
         FhirContext r4Context = FhirContext.forCached(FhirVersionEnum.R4);
-        r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(r4Context),
-                r4Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu4"));
+        r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(r4Context), r4ModelResolver,
+            r4Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu4"));
         r4Provider = new CompositeDataProvider(r4ModelResolver, r4RetrieveProvider);
 
     }
@@ -95,7 +95,7 @@ public abstract class FhirExecutionTestBase {
                     for (CqlTranslatorException error : translator.getErrors()) {
                         TrackBack tb = error.getLocator();
                         String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
-                                tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
+                            tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
                         System.err.printf("%s %s%n", lines, error.getMessage());
                         errors.add(lines + error.getMessage());
                     }

@@ -36,9 +36,11 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
     // @Test
     public void testDataProviderRetrieve() {
         Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-		String contextPath = modelResolver.getContextPath("Patient", "Patient").toString();
+        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
+            modelResolver,
+            fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
+        CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        String contextPath = modelResolver.getContextPath("Patient", "Patient").toString();
         FhirBundleCursor results = (FhirBundleCursor) provider.retrieve("Patient", contextPath, null, "Patient", null, null, null, null, null, null, null, null);
 
 		// BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
@@ -50,18 +52,20 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
     // @Test
     public void testPatientRetrieve() {
         Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-		String contextPath = modelResolver.getContextPath("Patient", "Patient").toString();
+        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
+            modelResolver,
+            fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
+        CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        String contextPath = modelResolver.getContextPath("Patient", "Patient").toString();
         Iterable<Object> results = provider.retrieve("Patient", contextPath, "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
 
-		// BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
+        // BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3");
         // Iterable<Object> results = provider.retrieve("Patient", "Patient-12214", "Patient", null, null, null, null, null, null, null, null);
         List<Patient> patients = new ArrayList<>();
 
         int resultCount = 0;
         for (Object o : results) {
-            patients.add((Patient)o);
+            patients.add((Patient) o);
             resultCount++;
         }
 
@@ -137,9 +141,11 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
     // @Test
     public void testList() {
         Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
-		RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext), fhirContext.newRestfulGenericClient("http://fhir.hl7.de:8080/baseDstu3"));
-		CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
-		String contextPath = modelResolver.getContextPath("Patient", "List").toString();
+        RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
+            modelResolver,
+            fhirContext.newRestfulGenericClient("http://fhir.hl7.de:8080/baseDstu3"));
+        CompositeDataProvider provider = new CompositeDataProvider(modelResolver, retrieveProvider);
+        String contextPath = modelResolver.getContextPath("Patient", "List").toString();
 		Iterable<Object> results = provider.retrieve("Patient", contextPath, null, "List", null, null, null, null, null, null, null, null);
 
 		//BaseFhirDataProvider provider = new FhirDataProviderStu3().setEndpoint("http://fhir.hl7.de:8080/baseDstu3");

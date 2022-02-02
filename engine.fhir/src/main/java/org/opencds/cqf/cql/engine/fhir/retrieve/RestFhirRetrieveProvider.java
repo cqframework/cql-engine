@@ -12,6 +12,7 @@ import org.hl7.fhir.instance.model.api.IBaseCoding;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.model.ModelResolver;
 
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.SearchStyleEnum;
@@ -28,13 +29,19 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 	protected IGenericClient fhirClient;
 	private SearchStyleEnum searchStyle;
 
-	public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
-		super(searchParameterResolver);
-		// TODO: Figure out how to validate that the searchParameterResolver and the
-		// client are on the same version of FHIR.
-		this.fhirClient = fhirClient;
-		this.searchStyle = DEFAULT_SEARCH_STYLE;
-	}
+    public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, IGenericClient fhirClient) {
+        super(searchParameterResolver);
+        this.fhirClient = fhirClient;
+        this.searchStyle = DEFAULT_SEARCH_STYLE;
+    }
+
+    public RestFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, ModelResolver modelResolver, IGenericClient fhirClient) {
+        super(searchParameterResolver, modelResolver);
+        // TODO: Figure out how to validate that the searchParameterResolver and the
+        // client are on the same version of FHIR.
+        this.fhirClient = fhirClient;
+        this.searchStyle = DEFAULT_SEARCH_STYLE;
+    }
 
 	public void setSearchStyle(SearchStyleEnum value) {
 		this.searchStyle = value;
@@ -51,7 +58,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 		}
 
 		List<Object> objects = new ArrayList<>();
-		List<IBaseBundle> bundles = new ArrayList<IBaseBundle>();
+		List<IBaseBundle> bundles = new ArrayList<>();
 		for (SearchParameterMap map : queries) {
 			IBaseResource result = this.executeQuery(dataType, map);
 			if (result instanceof IBaseBundle) {
@@ -84,7 +91,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 				}
 
 				List<List<IQueryParameterType>> value = entry.getValue();
-				if (value == null || value.size() == 0) {
+				if (value == null || value.isEmpty()) {
 					continue;
 				}
 
@@ -92,7 +99,7 @@ public class RestFhirRetrieveProvider extends SearchParamFhirRetrieveProvider {
 
 				for (List<IQueryParameterType> subList : value) {
 
-					if (subList == null || subList.size() == 0) {
+					if (subList == null || subList.isEmpty()) {
 						continue;
 					}
 

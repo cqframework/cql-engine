@@ -26,6 +26,10 @@ public class SearchParameterResolver {
         this.context = context;
     }
 
+    public FhirContext getFhirContext() {
+        return this.context;
+    }
+
     public RuntimeSearchParam getSearchParameterDefinition(String dataType, String path) {
         return this.getSearchParameterDefinition(dataType, path, (RestSearchParameterTypeEnum)null);
     }
@@ -58,7 +62,7 @@ public class SearchParameterResolver {
             }
 
             String normalizedPath = normalizePath(param.getPath());
-            if (path.equals(normalizedPath) ) {
+            if (path.equals(normalizedPath) || path.equalsIgnoreCase(param.getName())) {
                 return param;
             }
         }

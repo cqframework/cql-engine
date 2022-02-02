@@ -46,7 +46,7 @@ public class TestR4FhirTerminologyProvider extends R4FhirTest {
 
         mockResolveSearchPath(info, response);
 
-        assertEquals(Boolean.TRUE, provider.resolveByUrl(info));
+        assertEquals(provider.resolveByUrl(info), true);
     }
 
     @Test

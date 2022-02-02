@@ -7,7 +7,6 @@ public abstract class TerminologyAwareRetrieveProvider implements RetrieveProvid
 
     protected TerminologyProvider terminologyProvider;
 
-
     // TODO: Think about how to best handle the decision to expand value sets... Should it be part of the
     // terminology provider if it detects support for "code:in"? How does that feed back to the retriever?
     protected boolean expandValueSets;
