@@ -1,7 +1,6 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
 import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
-import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
@@ -24,9 +23,9 @@ public class FhirQueryGeneratorFactory {
                                                 TerminologyProvider terminologyProvider) throws FhirVersionMisMatchException {
         FhirVersionEnum fhirVersionEnum = searchParameterResolver.getFhirContext().getVersion().getVersion();
         if (fhirVersionEnum == DSTU3) {
-            return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (FhirModelResolver) modelResolver);
+            return new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, modelResolver);
         } else if (fhirVersionEnum == R4) {
-            return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (FhirModelResolver) modelResolver);
+            return new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, modelResolver);
         } else {
             throw new IllegalArgumentException(String.format("Unsupported FHIR version for FHIR Query Generation: %s", fhirVersionEnum));
         }
