@@ -88,30 +88,29 @@ public class SubtractEvaluator extends org.cqframework.cql.elm.execution.Subtrac
 
         // -(DateTime, Quantity)
         else if (left instanceof BaseTemporal && right instanceof Quantity) {
-            Precision precision = Precision.fromString(((Quantity) right).getUnit());
+            Precision valueToSubtractPrecision = Precision.fromString(((Quantity) right).getUnit());
+            Precision precision = Precision.fromString(BaseTemporal.getLowestPrecision((BaseTemporal) left));
             int valueToSubtract = ((Quantity) right).getValue().intValue();
 
-            // +(DateTime, Quantity)
+            if (left instanceof DateTime || left instanceof Date) {
+                if (valueToSubtractPrecision == Precision.WEEK) {
+                    valueToSubtract = TemporalHelper.weeksToDays(valueToSubtract);
+                    valueToSubtractPrecision = Precision.DAY;
+                }
+            }
+
+            long convertedValueToSubtract = valueToSubtract;
+            if (precision.toDateTimeIndex() < valueToSubtractPrecision.toDateTimeIndex()) {
+                convertedValueToSubtract = TemporalHelper.truncateValueToTargetPrecision(valueToSubtract, valueToSubtractPrecision, precision);
+                valueToSubtractPrecision = precision;
+            }
+
             if (left instanceof DateTime) {
-                if (precision == Precision.WEEK) {
-                    valueToSubtract = TemporalHelper.weeksToDays(valueToSubtract);
-                    precision = Precision.DAY;
-                }
-
-                return new DateTime(((DateTime) left).getDateTime().minus(valueToSubtract, precision.toChronoUnit()), ((DateTime) left).getPrecision());
-            }
-            // +(Date, Quantity)
-            else if (left instanceof Date) {
-                if (precision == Precision.WEEK) {
-                    valueToSubtract = TemporalHelper.weeksToDays(valueToSubtract);
-                    precision = Precision.DAY;
-                }
-
-                return new Date(((Date) left).getDate().minus(valueToSubtract, precision.toChronoUnit())).setPrecision(((Date) left).getPrecision());
-            }
-            // +(Time, Quantity)
-            else {
-                return new Time(((Time) left).getTime().minus(valueToSubtract, precision.toChronoUnit()), ((Time) left).getPrecision());
+                return new DateTime(((DateTime) left).getDateTime().minus(convertedValueToSubtract, valueToSubtractPrecision.toChronoUnit()), precision);
+            } else if (left instanceof Date) {
+                return new Date(((Date) left).getDate().minus(convertedValueToSubtract, valueToSubtractPrecision.toChronoUnit())).setPrecision(precision);
+            } else {
+                return new Time(((Time) left).getTime().minus(convertedValueToSubtract, valueToSubtractPrecision.toChronoUnit()), precision);
             }
         }
 
