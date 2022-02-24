@@ -10,6 +10,13 @@ define DateTimeAddYearInWeeks: DateTime(2018, 5, 23) + 52 weeks
 define DateTimeAdd5Days: DateTime(2005, 5, 10) + 5 days
 define DateTimeAddDaysOverflow: DateTime(2016, 6, 10) + 21 days
 define DateTimeAdd5Hours: DateTime(2005, 5, 10, 5) + 5 hours
+define DateTimeAdd5HoursWithLeftMinPrecisionSecond: DateTime(2005, 5, 10, 5, 20, 30) + 5 hours
+define DateTimeAdd5HoursWithLeftMinPrecisionDay: DateTime(2005, 5, 10) + 5 hours
+define DateTimeAdd5HoursWithLeftMinPrecisionDayOverflow: DateTime(2005, 5, 10) + 25 hours
+define DateAdd2YearsAsMonths: Date(2014) + 24 months
+define DateAdd2YearsAsMonthsRem1: Date(2014) + 25 months
+define DateAdd33Days: Date(2014,6) + 33 days
+define DateAdd1Year: Date(2014,6) + 1 year
 define DateTimeAddHoursOverflow: DateTime(2016, 6, 10, 5) + 19 hours
 define DateTimeAdd5Minutes: DateTime(2005, 5, 10, 5, 5) + 5 minutes
 define DateTimeAddMinutesOverflow: DateTime(2016, 6, 10, 5, 5) + 55 minutes
