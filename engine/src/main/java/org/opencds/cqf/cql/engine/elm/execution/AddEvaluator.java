@@ -82,31 +82,37 @@ public class AddEvaluator extends org.cqframework.cql.elm.execution.Add {
             return new Quantity().withValue((((Quantity)left).getValue()).add(((Quantity)right).getValue())).withUnit(((Quantity)left).getUnit());
         }
 
+        //+(DateTime, Quantity), +(Date, Quantity), +(Time, Quantity)
         else if (left instanceof BaseTemporal && right instanceof Quantity) {
-            Precision precision = Precision.fromString(((Quantity) right).getUnit());
+            Precision valueToAddPrecision = Precision.fromString(((Quantity) right).getUnit());
+            Precision precision = Precision.fromString(BaseTemporal.getLowestPrecision((BaseTemporal) left));
             int valueToAdd = ((Quantity) right).getValue().intValue();
 
-            // +(DateTime, Quantity)
+            if (left instanceof DateTime || left instanceof Date) {
+                if (valueToAddPrecision == Precision.WEEK) {
+                    valueToAdd = TemporalHelper.weeksToDays(valueToAdd);
+                    valueToAddPrecision = Precision.DAY;
+                }
+            }
+
+            if (left instanceof DateTime || left instanceof Date) {
+                if (precision == Precision.WEEK) {
+                    valueToAdd = TemporalHelper.weeksToDays(valueToAdd);
+                    precision = Precision.DAY;
+                }
+            }
+            long convertedValueToAdd = valueToAdd;
+            if (precision.toDateTimeIndex() < valueToAddPrecision.toDateTimeIndex()) {
+                convertedValueToAdd = TemporalHelper.truncateValueToTargetPrecision(valueToAdd, valueToAddPrecision, precision);
+                valueToAddPrecision = precision;
+            }
+
             if (left instanceof DateTime) {
-                if (precision == Precision.WEEK) {
-                    valueToAdd = TemporalHelper.weeksToDays(valueToAdd);
-                    precision = Precision.DAY;
-                }
-
-                return new DateTime(((DateTime) left).getDateTime().plus(valueToAdd, precision.toChronoUnit()), ((DateTime) left).getPrecision());
-            }
-            // +(Date, Quantity)
-            else if (left instanceof Date) {
-                if (precision == Precision.WEEK) {
-                    valueToAdd = TemporalHelper.weeksToDays(valueToAdd);
-                    precision = Precision.DAY;
-                }
-
-                return new Date(((Date) left).getDate().plus(valueToAdd, precision.toChronoUnit())).setPrecision(((Date) left).getPrecision());
-            }
-            // +(Time, Quantity)
-            else {
-                return new Time(((Time) left).getTime().plus(valueToAdd, precision.toChronoUnit()), ((Time) left).getPrecision());
+                return new DateTime(((DateTime) left).getDateTime().plus(convertedValueToAdd, valueToAddPrecision.toChronoUnit()), precision);
+            } else if (left instanceof Date) {
+                return new Date(((Date) left).getDate().plus(convertedValueToAdd, valueToAddPrecision.toChronoUnit())).setPrecision(precision);
+            } else {
+                return new Time(((Time) left).getTime().plus(convertedValueToAdd, valueToAddPrecision.toChronoUnit()), precision);
             }
         }
 
