@@ -50,13 +50,15 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
 
         List<String> queries = new ArrayList<>();
 
-        String codePath = null;
-        List<Code> codes = null;
-        String valueSet = null;
-
+        List<CodeFilter> codeFilters = new ArrayList<CodeFilter>();
         if (dataRequirement.hasCodeFilter()) {
             for (DataRequirement.DataRequirementCodeFilterComponent codeFilterComponent : dataRequirement.getCodeFilter()) {
                 if (!codeFilterComponent.hasPath()) continue;
+
+                String codePath = null;
+                List<Code> codes = null;
+                String valueSet = null;
+
                 codePath = codeFilterComponent.getPath();
 
                 if (codeFilterComponent.hasValueSetElement()) {
@@ -76,15 +78,20 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
                         }
                     }
                 }
+
+                codeFilters.add(new CodeFilter(codePath, codes, valueSet));
             }
         }
 
-        String datePath = null;
-        String dateLowPath = null;
-        String dateHighPath = null;
-        Interval dateRange = null;
+        List<DateFilter> dateFilters = new ArrayList<DateFilter>();
+
         if (dataRequirement.hasDateFilter()) {
             for (DataRequirement.DataRequirementDateFilterComponent dateFilterComponent : dataRequirement.getDateFilter()) {
+                String datePath = null;
+                String dateLowPath = null;
+                String dateHighPath = null;
+                Interval dateRange = null;
+
                 if (dateFilterComponent.hasPath() && dateFilterComponent.hasSearchParam()) {
                     throw new UnsupportedOperationException("Either a path or a searchParam must be provided, but not both");
                 }
@@ -120,6 +127,8 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
                         dateHighPath = "valueDateTime";
                         dateRange = new Interval(((Period)dateFilterValue).getStart(), true, ((Period)dateFilterValue).getEnd(), true);
                     }
+
+                    dateFilters.add(new DateFilter(datePath, dateLowPath, dateHighPath, dateRange));
                 }
             }
         }
@@ -152,7 +161,7 @@ public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
             : null;
 
             List<SearchParameterMap> maps = setupQueries(contextType, (String)contextPath, contextValue, dataRequirement.getType(), templateId,
-            codePath, codes, valueSet, datePath, dateLowPath, dateHighPath, dateRange);
+            codeFilters, dateFilters);
 
         for (SearchParameterMap map : maps) {
             String query = null;
