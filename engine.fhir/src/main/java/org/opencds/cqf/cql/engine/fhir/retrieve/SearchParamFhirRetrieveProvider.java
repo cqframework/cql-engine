@@ -4,8 +4,6 @@ import java.util.List;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
-import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
@@ -91,9 +89,9 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         if (this.fhirContext != null && modelResolver != null) {
             try {
                 if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.DSTU3)) {
-                    fhirQueryGenerator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, (Dstu3FhirModelResolver) this.modelResolver);
+                    fhirQueryGenerator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, this.modelResolver);
                 } else if (this.fhirContext.getVersion().getVersion().equals(FhirVersionEnum.R4)) {
-                    fhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, (R4FhirModelResolver) this.modelResolver);
+                    fhirQueryGenerator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, this.modelResolver);
                 }
             } catch (FhirVersionMisMatchException exception) {
                 throw new RuntimeException(exception.getMessage());
