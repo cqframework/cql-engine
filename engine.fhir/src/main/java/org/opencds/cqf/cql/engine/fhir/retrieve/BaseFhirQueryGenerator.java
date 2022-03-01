@@ -1,8 +1,12 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
 import org.hl7.fhir.instance.model.api.ICompositeType;
@@ -17,6 +21,7 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 import org.opencds.cqf.cql.engine.terminology.ValueSetInfo;
 
 import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.context.RuntimeSearchParam;
 import ca.uhn.fhir.model.api.IQueryParameterType;
 import ca.uhn.fhir.rest.api.RestSearchParameterTypeEnum;
@@ -238,39 +243,78 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
         return codeParamsList;
     }
 
-    protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue,
-                                                    String dataType, String templateId, String codePath, Iterable<Code> codes,
-                                                    String valueSet, String datePath, String dateLowPath, String dateHighPath,
-                                                    Interval dateRange) {
-
+    protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue, String dataType, String templateId, List<CodeFilter> codeFilters, List<DateFilter> dateFilters) {
         Pair<String, IQueryParameterType> templateParam = this.getTemplateParam(dataType, templateId);
 
         Pair<String, IQueryParameterType> contextParam = this.getContextParam(dataType, context, contextPath, contextValue);
 
-        Pair<String, DateRangeParam> dateRangeParam = this.getDateRangeParam(dataType, datePath, dateLowPath,
-            dateHighPath, dateRange);
-        Pair<String, List<TokenOrListParam>> codeParams = this.getCodeParams(dataType, codePath, codes, valueSet);
-
-        // In the case we filtered to a valueSet without codes, there are no possible results.
-        if (valueSet != null && (codeParams == null || codeParams.getValue().isEmpty())) {
-            return Collections.emptyList();
+        List<Pair<String, DateRangeParam>> dateRangeParams = new ArrayList<Pair<String, DateRangeParam>>();
+        if (dateFilters != null) {
+            for (DateFilter df : dateFilters) {
+                Pair<String, DateRangeParam> dateRangeParam = this.getDateRangeParam(dataType, df.getDatePath(), df.getDateLowPath(),
+                    df.getDateHighPath(), df.getDateRange());
+                if (dateRangeParam != null) {
+                    dateRangeParams.add(dateRangeParam);
+                }
+            }
         }
 
-        return this.innerSetupQueries(templateParam, contextParam, dateRangeParam, codeParams);
+        List<Pair<String, List<TokenOrListParam>>> codeParamList = new ArrayList<Pair<String, List<TokenOrListParam>>>();
+        if (codeFilters != null) {
+            for (CodeFilter cf : codeFilters) {
+                Pair<String, List<TokenOrListParam>> codeParams = this.getCodeParams(dataType, cf.getCodePath(), cf.getCodes(), cf.getValueSet());
+
+                // In the case we filtered to a valueSet without codes, there are no possible results.
+                // TODO: Isn't this assuming in-line expansion? If we have a value set we expect the server to support, isn't that okay?
+                if (cf.getValueSet() != null && (codeParams == null || codeParams.getValue().isEmpty())) {
+                    return Collections.emptyList();
+                }
+                if (codeParams != null) {
+                    codeParamList.add(codeParams);
+                }
+            }
+        }
+
+        return this.innerSetupQueries(templateParam, contextParam, dateRangeParams, codeParamList);
+    }
+
+    protected List<SearchParameterMap> setupQueries(String context, String contextPath, Object contextValue,
+                                                    String dataType, String templateId, String codePath, Iterable<Code> codes,
+                                                    String valueSet, String datePath, String dateLowPath, String dateHighPath,
+                                                    Interval dateRange) {
+        return setupQueries(context, contextPath, contextValue, dataType, templateId,
+            codePath != null ? Arrays.asList(new CodeFilter(codePath, codes, valueSet)) : null,
+            datePath != null || dateLowPath != null || dateHighPath != null ? Arrays.asList(new DateFilter(datePath, dateLowPath, dateHighPath, dateRange)) : null
+        );
     }
 
     protected List<SearchParameterMap> innerSetupQueries(Pair<String, IQueryParameterType> templateParam,
-                                                         Pair<String, IQueryParameterType> contextParam, Pair<String, DateRangeParam> dateRangeParam,
-                                                         Pair<String, List<TokenOrListParam>> codeParams) {
+                                                         Pair<String, IQueryParameterType> contextParam,
+                                                         List<Pair<String, DateRangeParam>> dateRangeParams,
+                                                         List<Pair<String, List<TokenOrListParam>>> codeParams) {
 
-        if (codeParams == null || codeParams.getValue() == null || codeParams.getValue().isEmpty()) {
-            return Collections.singletonList(this.getBaseMap(templateParam, contextParam, dateRangeParam));
+        if (codeParams == null || codeParams.isEmpty()) {
+            return Collections.singletonList(this.getBaseMap(templateParam, contextParam, dateRangeParams, codeParams));
+        }
+
+        Pair<String, List<TokenOrListParam>> chunkedCodeParam = null;
+        for (Pair<String, List<TokenOrListParam>> cp : codeParams) {
+            if (cp.getValue() != null && cp.getValue().size() > 1) {
+                if (chunkedCodeParam != null) {
+                    throw new IllegalArgumentException(String.format("Cannot evaluate multiple chunked code filters on %s and %s", chunkedCodeParam.getKey(), cp.getKey()));
+                }
+                chunkedCodeParam = cp;
+            }
+        }
+
+        if (chunkedCodeParam == null) {
+            return Collections.singletonList(this.getBaseMap(templateParam, contextParam, dateRangeParams, codeParams));
         }
 
         List<SearchParameterMap> maps = new ArrayList<>();
-        for (TokenOrListParam tolp : codeParams.getValue()) {
-            SearchParameterMap base = this.getBaseMap(templateParam, contextParam, dateRangeParam);
-            base.add(codeParams.getKey(), tolp);
+        for (TokenOrListParam tolp : chunkedCodeParam.getValue()) {
+            SearchParameterMap base = this.getBaseMap(templateParam, contextParam, dateRangeParams, codeParams);
+            base.add(chunkedCodeParam.getKey(), tolp);
             maps.add(base);
         }
 
@@ -278,7 +322,7 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
     }
 
     protected SearchParameterMap getBaseMap(Pair<String, IQueryParameterType> templateParam, Pair<String, IQueryParameterType> contextParam,
-                                            Pair<String, DateRangeParam> dateRangeParam) {
+                                            List<Pair<String, DateRangeParam>> dateRangeParams, List<Pair<String, List<TokenOrListParam>>> codeParams) {
         SearchParameterMap baseMap = new SearchParameterMap();
         baseMap.setLastUpdated(new DateRangeParam());
 
@@ -290,8 +334,20 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
             baseMap.add(templateParam.getKey(), templateParam.getValue());
         }
 
-        if (dateRangeParam != null) {
-            baseMap.add(dateRangeParam.getKey(), dateRangeParam.getValue());
+        if (dateRangeParams != null) {
+            for (Pair<String, DateRangeParam> drp : dateRangeParams) {
+                baseMap.add(drp.getKey(), drp.getValue());
+            }
+        }
+
+        if (codeParams != null) {
+            for (Pair<String, List<TokenOrListParam>> cp : codeParams) {
+                if (cp.getValue() == null || cp.getValue().isEmpty() || cp.getValue().size() > 1) {
+                    // NOTE: Ignores "chunked" code parameters so they don't have to be removed
+                    continue;
+                }
+                baseMap.add(cp.getKey(), cp.getValue().get(0));
+            }
         }
 
         if (contextParam != null) {

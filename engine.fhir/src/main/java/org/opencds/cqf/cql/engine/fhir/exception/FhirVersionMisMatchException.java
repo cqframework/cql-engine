@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.engine.fhir.exception;
 
 public class FhirVersionMisMatchException extends Exception{
+    private static final long serialVersionUID = 01L;
+
     String message;
 
     /* Constructor of custom FhirVersionMisMatchException class

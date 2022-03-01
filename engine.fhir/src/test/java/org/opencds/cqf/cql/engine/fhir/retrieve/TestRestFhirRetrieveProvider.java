@@ -63,7 +63,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         BaseFhirQueryGenerator fhirQueryGenerator = FhirQueryGeneratorFactory.create(modelResolver,
             provider.searchParameterResolver, provider.getTerminologyProvider());
 
-        SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null);
+        SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null, null);
         assertEquals(map.getCount(), null);
     }
 
@@ -74,7 +74,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         BaseFhirQueryGenerator fhirQueryGenerator = FhirQueryGeneratorFactory.create(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),
             provider.searchParameterResolver, provider.getTerminologyProvider(), null, null, expected);
 
-        SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null);
+        SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null, null);
         assertEquals(map.getCount(), expected);
     }
 
