@@ -636,6 +636,15 @@
 		<test name="testContainsString7" inputfile="patient-example.xml"><expression>'12345'.contains('') = true</expression><output type="boolean">true</output></test>
 	</group>
 
+    <group name="testMatches">
+        <test name="testMatchesCaseSensitive1" inputfile="patient-example.xml"><expression>'FHIR'.matches('FHIR')</expression><output type="boolean">true</output></test>
+        <test name="testMatchesCaseSensitive2" inputfile="patient-example.xml"><expression>'FHIR'.matches('fhir')</expression><output type="boolean">false</output></test>
+        <test name="testMatchesSingleLineMode1" inputfile="patient-example.xml"><expression>'A
+            B'.matches('A.*B')</expression><output type="boolean">true</output></test>
+        <test name="testMatchesWithinUrl1" inputfile="patient-example.xml"><expression>'http://fhir.org/guides/cqf/common/Library/FHIR-ModelInfo|4.0.1'.matches('Library')</expression><output type="boolean">true</output></test>
+        <test name="testMatchesWithinUrl2" inputfile="patient-example.xml"><expression>'http://fhir.org/guides/cqf/common/Library/FHIR-ModelInfo|4.0.1'.matches('Measure')</expression><output type="boolean">false</output></test>
+    </group>
+
 	<group name="testLength">
 		<test name="testLength1" inputfile="patient-example.xml"><expression>'123456'.length() = 6</expression><output type="boolean">true</output></test>
 		<test name="testLength2" inputfile="patient-example.xml"><expression>'12345'.length() = 5</expression><output type="boolean">true</output></test>
