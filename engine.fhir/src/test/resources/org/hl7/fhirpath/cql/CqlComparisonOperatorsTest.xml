@@ -25,7 +25,7 @@
 			<output>false</output>
 		</test>
 		<test name="SimpleEqNullNull">
-			<expression>null as String = null</expression>
+			<expression>(null as String = null)</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleEqTrueNull">
@@ -33,7 +33,7 @@
 			<output>null</output>
 		</test>
 		<test name="SimpleEqNullTrue">
-			<expression>null = true</expression>
+			<expression>(null = true)</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleEqInt1Int1">
@@ -73,8 +73,8 @@
 			<output>true</output>
 		</test>
 		<test name="QuantityEqCM1M01">
-			<expression>1'cm' = 0.01'm'</expression>
-			<output>true</output>
+			<expression>(1'cm' = 0.01'm')</expression>
+			<output>null</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
 		<test name="QuantityEqDiffPrecision">
@@ -126,7 +126,7 @@
 			<output>false</output>
 		</test>
 		<test name="DateTimeEqNull">
-			<expression>DateTime(null) = DateTime(null)</expression>
+			<expression>(DateTime(null) = DateTime(null))</expression>
 			<output>null</output>
 		</test>
 		<test name="DateTimeUTC">
@@ -180,12 +180,12 @@
 			<output>true</output>
 		</test>
 		<test name="GreaterM1CM1">
-			<expression>1'm' &gt; 1'cm'</expression>
+			<expression>(1'm' &gt; 1'cm')</expression>
 			<output>true</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
 		<test name="GreaterM1CM10">
-			<expression>1'm' &gt; 10'cm'</expression>
+			<expression>(1'm' &gt; 10'cm')</expression>
 			<output>true</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
@@ -230,7 +230,7 @@
 			<output>false</output>
 		</test>
 		<test name="UncertaintyGreaterNull">
-			<expression>DateTime(2014) &gt; DateTime(2014, 2, 15)</expression>
+			<expression>(DateTime(2014) &gt; DateTime(2014, 2, 15))</expression>
 			<output>null</output>
 		</test>
 		<test name="UncertaintyGreaterTrue">
@@ -285,7 +285,7 @@
 			<!-- TODO: make Engine convert units properly; note, only passes by coincidence -->
 		</test>
 		<test name="GreaterOrEqualM1CM10">
-			<expression>1'm' &gt;= 10'cm'</expression>
+			<expression>(1'm' &gt;= 10'cm')</expression>
 			<output>true</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
@@ -338,7 +338,7 @@
 			<output>false</output>
 		</test>
 		<test name="UncertaintyGreaterEqualNull">
-			<expression>DateTime(2014) &gt;= DateTime(2014, 2, 15)</expression>
+			<expression>(DateTime(2014) &gt;= DateTime(2014, 2, 15))</expression>
 			<output>null</output>
 		</test>
 		<test name="UncertaintyGreaterEqualTrue">
@@ -388,12 +388,12 @@
 			<output>false</output>
 		</test>
 		<test name="LessM1CM1">
-			<expression>1'm' &lt; 1'cm'</expression>
+			<expression>(1'm' &lt; 1'cm')</expression>
 			<output>false</output>
 			<!-- TODO: make Engine convert units properly; note, only works by coincidence -->
 		</test>
 		<test name="LessM1CM10">
-			<expression>1'm' &lt; 10'cm'</expression>
+			<expression>(1'm' &lt; 10'cm')</expression>
 			<output>false</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
@@ -438,7 +438,7 @@
 			<output>false</output>
 		</test>
 		<test name="UncertaintyLessNull">
-			<expression>DateTime(2014) &lt; DateTime(2014, 2, 15)</expression>
+			<expression>(DateTime(2014) &lt; DateTime(2014, 2, 15))</expression>
 			<output>null</output>
 		</test>
 		<test name="UncertaintyLessTrue">
@@ -493,7 +493,7 @@
 			<!-- TODO: make Engine convert units properly -->
 		</test>
 		<test name="LessOrEqualM1CM10">
-			<expression>1'm' &lt;= 10'cm'</expression>
+			<expression>(1'm' &lt;= 10'cm')</expression>
 			<output>false</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
@@ -546,7 +546,7 @@
 			<output>false</output>
 		</test>
 		<test name="UncertaintyLessEqualNull">
-			<expression>DateTime(2014) &lt;= DateTime(2014, 2, 15)</expression>
+			<expression>(DateTime(2014) &lt;= DateTime(2014, 2, 15))</expression>
 			<output>null</output>
 		</test>
 		<test name="UncertaintyLessEqualTrue">
@@ -679,15 +679,15 @@
 			<output>true</output>
 		</test>
 		<test name="SimpleNotEqNullNull">
-			<expression>null as String != null</expression>
+			<expression>(null as String != null)</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleNotEqTrueNull">
-			<expression>true != null</expression>
+			<expression>(true != null)</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleNotEqNullTrue">
-			<expression>null != true</expression>
+			<expression>(null != true)</expression>
 			<output>null</output>
 		</test>
 		<test name="SimpleNotEqInt1Int1">
@@ -727,7 +727,7 @@
 			<output>false</output>
 		</test>
 		<test name="QuantityNotEqCM1M01">
-			<expression>1'cm' != 0.01'm'</expression>
+			<expression>(1'cm' != 0.01'm')</expression>
 			<output>false</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
