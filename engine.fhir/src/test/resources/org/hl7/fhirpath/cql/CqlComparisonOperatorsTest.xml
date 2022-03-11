@@ -74,7 +74,7 @@
 		</test>
 		<test name="QuantityEqCM1M01">
 			<expression>(1'cm' = 0.01'm')</expression>
-			<output>null</output>
+			<output>true</output>
 			<!-- TODO: make Engine convert units properly -->
 		</test>
 		<test name="QuantityEqDiffPrecision">

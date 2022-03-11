@@ -527,7 +527,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlComparisonOperators() {
-        runTests("cql/CqlComparisonOperatorsTest.xml", 183, 173, 0);
+        runTests("cql/CqlComparisonOperatorsTest.xml", 183, 172, 0);
     }
 
     @Test
