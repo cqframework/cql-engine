@@ -547,7 +547,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlIntervalOperators() {
-        runTests("cql/CqlIntervalOperatorsTest.xml", 360, 262, 0);
+        runTests("cql/CqlIntervalOperatorsTest.xml", 360, 354, 0);
     }
 
     @Test
@@ -577,7 +577,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlTypes() {
-        runTests("cql/CqlTypesTest.xml", 27, 22, 0);
+        runTests("cql/CqlTypesTest.xml", 27, 25, 0);
     }
 
     @Test
