@@ -246,7 +246,7 @@
 		</test>
 		<test name="ExpandPerHour">
 			<expression>(expand { Interval[@T10:00, @T12:30] } per hour)</expression>
-			<output>{ Interval[10:00, 11:00), Interval[11:00, 12:00) }</output>
+			<output>{ Interval[@T10:00, @T11:00), Interval[@T11:00, @T12:00) }</output>
 		</test>
 		<test name="ExpandPer1">
 			<expression>(expand { Interval[10.0, 12.5] } per 1)</expression>
