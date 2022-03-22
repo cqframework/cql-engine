@@ -343,8 +343,8 @@ public class TestFhirPath {
             String resourceFilePath = "r4/input/" + test.getInputfile();
             resource = loadResourceFileR4(resourceFilePath);
             cql = String.format(
-                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers parameter %s %s define Test: %s",
-                resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
+                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers parameter %s %s context %s define Test: %s",
+                resource.fhirType(), resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
         }
         else {
             cql = String.format(
@@ -479,6 +479,7 @@ public class TestFhirPath {
         int passCounter = 0;
         for (Group group : tests.getGroup()) {
             System.out.println(String.format("Running test group %s...", group.getName()));
+
             for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
                 testCounter += 1;
                 try {
