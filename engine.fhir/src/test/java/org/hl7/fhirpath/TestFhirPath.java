@@ -533,7 +533,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlConditionalOperators() {
-        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 6, 0);
+        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 9, 0);
     }
 
     @Test
