@@ -295,13 +295,14 @@
 			<expression>Ln(-1)</expression>
 			<output>null</output>
 		</test>
+        <!--@@@CQF1271 fix test case-->
 		<test name="Ln1000">
-			<expression>Round(Ln(1000), 8)</expression>
-			<output>6.90775528</output>
+			<expression>Round(Ln(1000), 7)</expression>
+			<output>6.9077553</output>
 		</test>
 		<test name="Ln1000D">
-			<expression>Round(Ln(1000.0), 8)</expression>
-			<output>6.90775528</output>
+			<expression>Round(Ln(1000.0), 7)</expression>
+			<output>6.9077553</output>
 		</test>
 	</group>
 	<group name="MinValue">
@@ -310,13 +311,14 @@
 			<output>-2147483648</output>
 			<!-- TODO: make Engine parse -2147483648 holistically not as a negated positive -->
 		</test>
+        <!--@@@CQF1271 fix test case-->
 		<test name="LongMinValue">
 			<expression>minimum Long</expression>
-			<output>-9223372036854775808L</output>
+			<output>-9223372036854775807L</output>
 		</test>
 		<test name="DecimalMinValue">
 			<expression>minimum Decimal</expression>
-			<output>-99999999999999999999.99999999</output>
+			<output>-9999999999999999999999999999.99999999</output>
 		</test>
 		<!-- OBSOLETE: define QuantityMinValue: minimum Quantity -->
 		<test name="DateTimeMinValue">
@@ -341,9 +343,10 @@
 			<expression>maximum Long</expression>
 			<output>9223372036854775807L</output>
 		</test>
+        <!--@@@CQF1271 fix test case-->
 		<test name="DecimalMaxValue">
 			<expression>maximum Decimal</expression>
-			<output>99999999999999999999.99999999</output>
+			<output>9999999999999999999999999999.99999999</output>
 		</test>
 		<!-- OBSOLETE: define QuantityMaxValue: maximum Quantity -->
 		<test name="DateTimeMaxValue">
@@ -825,9 +828,10 @@
 			<expression>10 div 5.0</expression>
 			<output>2.0</output>
 		</test>
+        <!--@@@CQF1271 fix test case-->
 		<test name="TruncatedDivide10d1ByNeg3D1Quantity">
 			<expression>10.1 'cm' div -3.1 'cm'</expression>
-			<output>-3.0 'cm'</output>
+			<output>-3.0 '1'</output>
 		</test>
 	</group>
 </tests>
