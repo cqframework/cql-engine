@@ -280,7 +280,7 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("Log1Base1").getExpression().evaluate(context);
-        assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
+        assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("Log1Base2").getExpression().evaluate(context);
         assertThat((BigDecimal)result, comparesEqualTo(new BigDecimal(0d)));
@@ -860,11 +860,11 @@ public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {
 
         result = context.resolveExpressionRef("TruncatedDivide10By5DQuantity").getExpression().evaluate(context);
         assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("2.0")));
-        assertThat(((Quantity)result).getUnit(), is("g"));
+        assertThat(((Quantity)result).getUnit(), is("1"));
 
         result = context.resolveExpressionRef("TruncatedDivide414By206DQuantity").getExpression().evaluate(context);
         assertThat(((Quantity)result).getValue(), comparesEqualTo(new BigDecimal("2.0")));
-        assertThat(((Quantity)result).getUnit(), is("m"));
+        assertThat(((Quantity)result).getUnit(), is("1"));
 
         result = context.resolveExpressionRef("TruncatedDivide10By0DQuantity").getExpression().evaluate(context);
         assertThat(result, nullValue());

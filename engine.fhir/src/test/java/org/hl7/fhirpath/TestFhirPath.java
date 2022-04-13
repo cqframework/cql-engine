@@ -508,7 +508,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 716, 547, 18);
+        runTests("r4/tests-fhir-r4.xml", 716, 548, 18);
     }
 
     @Test
@@ -523,7 +523,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlArithmeticFunctions() {
-        runTests("cql/CqlArithmeticFunctionsTest.xml", 192, 183, 0);
+        runTests("cql/CqlArithmeticFunctionsTest.xml", 192, 192, 0);
     }
 
     @Test

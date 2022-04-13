@@ -22,6 +22,10 @@ public class LogEvaluator extends org.cqframework.cql.elm.execution.Log {
         }
 
         if (left instanceof BigDecimal) {
+        	//@@@CQF-1348 handle log1base1 as special case
+            if (((BigDecimal)left).intValue() == 1 && ((BigDecimal)right).intValue() == 1) {
+                return null;
+            }
             Double base = Math.log(((BigDecimal)right).doubleValue());
             Double value = Math.log(((BigDecimal)left).doubleValue());
 

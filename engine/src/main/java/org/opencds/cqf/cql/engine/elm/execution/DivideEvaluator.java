@@ -2,6 +2,8 @@ package org.opencds.cqf.cql.engine.elm.execution;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
@@ -48,8 +50,24 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
         }
 
         else if (left instanceof Quantity && right instanceof Quantity) {
+        	//@@@CQF-1348 unit calculation in division
+            String unit = "";
+            String unitLeft = ((Quantity) left).getUnit();
+            String unitRight = ((Quantity) right).getUnit();
+            if (unitLeft.equals("1") && !unitRight.equals("1") ) {
+                throw new InvalidOperatorArgument(
+                    "Dividend and divisor must have the same unit",
+                    String.format("Divide(%s, %s)", ((Quantity) left).getUnit(), ((Quantity) right).getUnit())
+                );
+            }
+            else if (!unitLeft.equals("1") && unitRight.equals("1")) {
+                unit = unitLeft;
+            }
+            else if (!unitLeft.equals("1") && !unitRight.equals("1")) {
+                unit = unitCalculator(unitLeft, unitRight);
+            }
             BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue());
-            return new Quantity().withValue(Value.verifyPrecision(value, null)).withUnit(((Quantity) left).getUnit());
+            return new Quantity().withValue(Value.verifyPrecision(value, null)).withUnit(unit);
         }
 
         else if (left instanceof Quantity && right instanceof BigDecimal) {
@@ -71,6 +89,27 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
                 "Divide(Decimal, Decimal), Divide(Quantity, Decimal), Divide(Quantity, Quantity)",
                 String.format("Divide(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
+    }
+
+    public static String unitCalculator(String s1, String s2) {
+        Pattern integerPattern = Pattern.compile("-?\\d+");
+        Matcher matcher1 = integerPattern.matcher(s1);
+        Matcher matcher2 = integerPattern.matcher(s2);
+        int exp1 = 1, exp2 = 1;
+        String root = s1;
+        if (matcher1.find()) {
+            exp1 = Integer.parseInt(matcher1.group());
+            root = s1.substring(0, s1.indexOf(matcher1.group()));
+        }
+        if (matcher2.find()) {
+            exp2 = Integer.parseInt(matcher2.group());
+        }
+        int exp = exp1 - exp2;
+        if (exp == 0)
+            root = "1";
+        else if (exp > 1 || exp < 0)
+            root += String.valueOf(exp);
+        return root;
     }
 
     @Override
