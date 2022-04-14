@@ -526,7 +526,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlConditionalOperators() {
-        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 6, 0);
+        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 9, 0);
     }
 
     @Test
@@ -551,7 +551,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlLogicalOperators() {
-        runTests("cql/CqlLogicalOperatorsTest.xml", 39, 26, 0);
+        runTests("cql/CqlLogicalOperatorsTest.xml", 39, 39, 0);
     }
 
     @Test
@@ -561,7 +561,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlStringOperators() {
-        runTests("cql/CqlStringOperatorsTest.xml", 81, 78, 0);
+        runTests("cql/CqlStringOperatorsTest.xml", 81, 80, 0);
     }
 
     @Test
