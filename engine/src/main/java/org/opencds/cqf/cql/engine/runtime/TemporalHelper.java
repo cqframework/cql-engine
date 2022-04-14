@@ -105,4 +105,130 @@ public class TemporalHelper {
         }
         return weeks * 7 + (years * 365);
     }
+
+    public static long truncateValueToTargetPrecision(long value, Precision precision, Precision targetPrecision) {
+        if (targetPrecision == Precision.YEAR) {
+            switch (precision) {
+                case YEAR:
+                    return value;
+                case MONTH:
+                    return value / 12;
+                case DAY:
+                    return value / 365;
+                case HOUR:
+                    return value / (24 * 365);
+                case MINUTE:
+                    return value / (24 * 365 * 60);
+                case SECOND:
+                    return value / (24 * 365 * 60 * 60);
+                case MILLISECOND:
+                    return ((value / 1000) / (3600)) / (24 * 365);
+            }
+
+        } else if (targetPrecision == Precision.MONTH) {
+            switch (precision) {
+                case YEAR:
+                    return value * 12;
+                case MONTH:
+                    return value;
+                case DAY:
+                    return value / 30;
+                case HOUR:
+                    return value / (30 * 24);
+                case MINUTE:
+                    return value / (30 * 24 * 60);
+                case SECOND:
+                    return value / (30 * 24 * 60 * 60);
+                case MILLISECOND:
+                    return ((value / 1000) / (3600)) / (30 * 24);
+            }
+        } else if (targetPrecision == Precision.DAY) {
+            switch (precision) {
+                case YEAR:
+                    return value * 365;
+                case MONTH:
+                    return value * 12;
+                case DAY:
+                    return value;
+                case HOUR:
+                    return value / 24;
+                case MINUTE:
+                    return value / (24 * 60);
+                case SECOND:
+                    return value / (24 * 60 * 60);
+                case MILLISECOND:
+                    return ((value / 1000) / (3600)) / 24;
+            }
+
+        } else if (targetPrecision == Precision.HOUR) {
+            switch (precision) {
+                case YEAR:
+                    return value * 365 * 24;
+                case MONTH:
+                    return value * 30 * 24;
+                case DAY:
+                    return value * 24;
+                case HOUR:
+                    return value;
+                case MINUTE:
+                    return value / 60;
+                case SECOND:
+                    return value / (60 * 60);
+                case MILLISECOND:
+                    return (value / 1000) / 3600;
+            }
+        } else if (targetPrecision == Precision.MINUTE) {
+            switch (precision) {
+                case YEAR:
+                    return value * 365 * 24 * 60;
+                case MONTH:
+                    return value * 30 * 24 * 60;
+                case DAY:
+                    return value * 24 * 60;
+                case HOUR:
+                    return value * 60;
+                case MINUTE:
+                    return value;
+                case SECOND:
+                    return value / 60;
+                case MILLISECOND:
+                    return (value / 1000) / 60;
+            }
+        } else if (targetPrecision == Precision.SECOND) {
+            switch (precision) {
+                case YEAR:
+                    return value * 365 * 24 * 60 * 60;
+                case MONTH:
+                    return value * 30 * 24 * 60 * 60;
+                case DAY:
+                    return value * 24 * 60 * 60;
+                case HOUR:
+                    return value * 60 * 60;
+                case MINUTE:
+                    return value * 60;
+                case SECOND:
+                    return value;
+                case MILLISECOND:
+                    return value / 1000;
+            }
+        } else if (targetPrecision == Precision.MILLISECOND) {
+            switch (precision) {
+                case YEAR:
+                    return value * 365 * 24 * 60 * 60 * 1000;
+                case MONTH:
+                    return value * 30 * 24 * 60 * 60;
+                case DAY:
+                    return value * 24 * 60 * 60;
+                case HOUR:
+                    return value * 60 * 60;
+                case MINUTE:
+                    return value * 60;
+                case SECOND:
+                    return value;
+                case MILLISECOND:
+                    return value / 1000;
+            }
+        }
+        return 0;
+    }
 }

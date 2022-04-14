@@ -61,6 +61,27 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeAdd5Hours").evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2005, 5, 10, 10)));
 
+        result = context.resolveExpressionRef("DateTimeAdd5HoursWithLeftMinPrecisionSecond").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2005, 5, 10, 10, 20, 30)));
+
+        result = context.resolveExpressionRef("DateTimeAdd5HoursWithLeftMinPrecisionDay").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2005, 5, 10)));
+
+        result = context.resolveExpressionRef("DateTimeAdd5HoursWithLeftMinPrecisionDayOverflow").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2005, 5, 11)));
+
+        result = context.resolveExpressionRef("DateAdd2YearsAsMonths").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2016)));
+
+        result = context.resolveExpressionRef("DateAdd2YearsAsMonthsRem1").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2016)));
+
+        result = context.resolveExpressionRef("DateAdd33Days").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2014,7)));
+
+        result = context.resolveExpressionRef("DateAdd1Year").evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2015,6)));
+
         result = context.resolveExpressionRef("DateTimeAddHoursOverflow").evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2016, 6, 11, 0)));
 
@@ -943,6 +964,13 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("DateTimeSubtract5Seconds").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2005, 5, 10, 5, 5, 5)));
 
+        result = context.resolveExpressionRef("DateTimeSubtract1YearInSeconds").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2015, 5)));
+
+        result = context.resolveExpressionRef("DateTimeSubtract15HourPrecisionSecond").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2016, 9, 30, 19, 20, 30)));
+
+
         result = context.resolveExpressionRef("DateTimeSubtractSecondsUnderflow").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2016, 6, 10, 5, 4, 59)));
 
@@ -956,7 +984,19 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012)));
 
         result = context.resolveExpressionRef("DateTimeSubtract2YearsAsMonthsRem1").getExpression().evaluate(context);
-        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2011)));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new DateTime(null, 2012)));
+
+        result = context.resolveExpressionRef("DateSubtract2YearsAsMonthsRem1").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2012)));
+
+        result = context.resolveExpressionRef("DateSubtract2YearsAsMonths").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2012)));
+
+        result = context.resolveExpressionRef("DateSubtract33Days").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2014,5)));
+
+        result = context.resolveExpressionRef("DateSubtract1Year").getExpression().evaluate(context);
+        Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Date(2013,6)));
 
         result = context.resolveExpressionRef("TimeSubtract5Hours").getExpression().evaluate(context);
         Assert.assertTrue(EquivalentEvaluator.equivalent(result, new Time(10, 59, 59, 999)));

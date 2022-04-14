@@ -13,7 +13,7 @@ script:
 before_cache:
 - rm -rf $HOME/.m2/repository/org/opencds/cqf/cql
 after_success:
-- ./scripts/deploy.sh
+- test $TRAVIS_BRANCH = "master" && test $TRAVIS_PULL_REQUEST = "false" && ./scripts/deploy.sh
 deploy:
   provider: releases
   api_key:
