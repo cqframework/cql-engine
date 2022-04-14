@@ -49,35 +49,35 @@
 	</group>
 	<group name="Contains">
 		<test name="ContainsABNullHasNull">
-			<expression>({ 'a', 'b', null } contains null)</expression>
+			<expression>{ 'a', 'b', null } contains null</expression>
 			<output>null</output>
 		</test>
 		<test name="ContainsNullFirst">
-			<expression>({ null, 'b', 'c' } contains 'a')</expression>
+			<expression>{ null, 'b', 'c' } contains 'a'</expression>
 			<output>false</output>
 		</test>
 		<test name="ContainsABCHasA">
-			<expression>({ 'a', 'b', 'c' } contains 'a')</expression>
+			<expression>{ 'a', 'b', 'c' } contains 'a'</expression>
 			<output>true</output>
 		</test>
 		<test name="ContainsJan2012True">
-			<expression>({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 1, 1) } contains DateTime(2012, 1, 1))</expression>
+			<expression>{ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 1, 1) } contains DateTime(2012, 1, 1)</expression>
 			<output>true</output>
 		</test>
 		<test name="ContainsJan2012False">
-			<expression>({ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 1) } contains DateTime(2012, 1, 1))</expression>
+			<expression>{ DateTime(2012, 10, 5), DateTime(2012, 9, 5), DateTime(2012, 10, 1) } contains DateTime(2012, 1, 1)</expression>
 			<output>false</output>
 		</test>
 		<test name="ContainsTimeTrue">
-			<expression>({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T05:59:59.999)</expression>
+			<expression>{ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T05:59:59.999</expression>
 			<output>true</output>
 		</test>
 		<test name="ContainsTimeFalse">
-			<expression>({ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T08:59:59.999)</expression>
+			<expression>{ @T15:59:59.999, @T05:59:59.999, @T20:59:59.999 } contains @T08:59:59.999</expression>
 			<output>false</output>
 		</test>
 		<test name="ContainsNullLeft">
-			<expression>(null contains 'a')</expression>
+			<expression>null contains 'a'</expression>
 			<output>false</output>
 		</test>
 	</group>
@@ -102,23 +102,23 @@
 			<output>{'a', null}</output>
 		</test>
 		<test name="Distinct112233">
-			<expression>(distinct { 1, 1, 2, 2, 3, 3})</expression>
+			<expression>distinct { 1, 1, 2, 2, 3, 3}</expression>
 			<output>{1,2,3}</output>
 		</test>
 		<test name="Distinct123123">
-			<expression>(distinct { 1, 2, 3, 1, 2, 3})</expression>
+			<expression>distinct { 1, 2, 3, 1, 2, 3}</expression>
 			<output>{1,2,3}</output>
 		</test>
 		<test name="DistinctAABBCC">
-			<expression>(distinct { 'a', 'a', 'b', 'b', 'c', 'c'})</expression>
+			<expression>distinct { 'a', 'a', 'b', 'b', 'c', 'c'}</expression>
 			<output>{'a','b','c'}</output>
 		</test>
 		<test name="DistinctABCABC">
-			<expression>(distinct { 'a', 'b', 'c', 'a', 'b', 'c'})</expression>
+			<expression>distinct { 'a', 'b', 'c', 'a', 'b', 'c'}</expression>
 			<output>{'a','b','c'}</output>
 		</test>
 		<test name="DistinctDateTime">
-			<expression>(distinct { DateTime(2012, 10, 5), DateTime(2012, 1, 1), DateTime(2012, 1, 1)})</expression>
+			<expression>distinct { DateTime(2012, 10, 5), DateTime(2012, 1, 1), DateTime(2012, 1, 1)}</expression>
 			<output>{ DateTime(2012, 10, 5), DateTime(2012, 1, 1)}</output>
 		</test>
 		<test name="DistinctTime">
@@ -128,15 +128,15 @@
 	</group>
 	<group name="Equal">
 		<test name="EqualNullNull">
-			<expression>({null} = {null})</expression>
+			<expression>{null} = {null}</expression>
 			<output>null</output>
 		</test>
 		<test name="EqualEmptyListNull">
-			<expression>({} as List&lt;String&gt; = null)</expression>
+			<expression>{} as List&lt;String&gt; = null</expression>
 			<output>null</output>
 		</test>
 		<test name="EqualNullEmptyList">
-			<expression>(null = {} as List&lt;String&gt;)</expression>
+			<expression>null = {} as List&lt;String&gt;</expression>
 			<output>null</output>
 		</test>
 		<test name="EqualEmptyListAndEmptyList">
@@ -174,27 +174,27 @@
 	</group>
 	<group name="Except">
 		<test name="ExceptEmptyListAndEmptyList">
-			<expression>({} except {})</expression>
+			<expression>{} except {}</expression>
 			<output>{}</output>
 		</test>
 		<test name="Except1234And23">
-			<expression>({ 1, 2, 3, 4 } except { 2, 3 })</expression>
+			<expression>{ 1, 2, 3, 4 } except { 2, 3 }</expression>
 			<output>{ 1, 4 }</output>
 		</test>
 		<test name="Except23And1234">
-			<expression>({ 2, 3 } except { 1, 2, 3, 4 })</expression>
+			<expression>{ 2, 3 } except { 1, 2, 3, 4 }</expression>
 			<output>{}</output>
 		</test>
 		<test name="ExceptDateTimeList">
-			<expression>({ DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) })</expression>
+			<expression>{ DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2010, 1, 1)} except {DateTime(2014, 12, 10), DateTime(2010, 1, 1) }</expression>
 			<output>{@2012-05-10T}</output>
 		</test>
 		<test name="ExceptTimeList">
-			<expression>({ @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } except { @T20:59:59.999, @T12:59:59.999 })</expression>
+			<expression>{ @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } except { @T20:59:59.999, @T12:59:59.999 }</expression>
 			<output>{@T15:59:59.999}</output>
 		</test>
 		<test name="ExceptNullRight">
-			<expression>({ 1, 4 } except null)</expression>
+			<expression>{ 1, 4 } except null</expression>
 			<output>{1, 4}</output>
 		</test>
 	</group>
@@ -278,39 +278,39 @@
 	</group>
 	<group name="In">
 		<test name="InNullEmpty">
-			<expression>(null in {})</expression>
+			<expression>null in {}</expression>
 			<output>null</output>
 		</test>
 		<test name="InNullAnd1Null">
-			<expression>(null in { 1, null })</expression>
+			<expression>null in { 1, null }</expression>
 			<output>null</output>
 		</test>
 		<test name="In1Null">
-			<expression>(1 in null)</expression>
+			<expression>1 in null</expression>
 			<output>false</output>
 		</test>
 		<test name="In1And12">
-			<expression>(1 in { 1, 2 })</expression>
+			<expression>1 in { 1, 2 }</expression>
 			<output>true</output>
 		</test>
 		<test name="In3And12">
-			<expression>(3 in { 1, 2 })</expression>
+			<expression>3 in { 1, 2 }</expression>
 			<output>false</output>
 		</test>
 		<test name="InDateTimeTrue">
-			<expression>(DateTime(2012, 5, 10) in { DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) })</expression>
+			<expression>DateTime(2012, 5, 10) in { DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) }</expression>
 			<output>true</output>
 		</test>
 		<test name="InDateTimeFalse">
-			<expression>(DateTime(2012, 6, 10) in { DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) })</expression>
+			<expression>DateTime(2012, 6, 10) in { DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) }</expression>
 			<output>false</output>
 		</test>
 		<test name="InTimeTrue">
-			<expression>(@T15:59:59.999 in { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 })</expression>
+			<expression>@T15:59:59.999 in { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 }</expression>
 			<output>true</output>
 		</test>
 		<test name="InTimeFalse">
-			<expression>(@T16:59:59.999 in { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 })</expression>
+			<expression>@T16:59:59.999 in { @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 }</expression>
 			<output>false</output>
 		</test>
 	</group>
@@ -352,12 +352,12 @@
 			<output>false</output>
 		</test>
 		<test name="IncludesNullLeft">
-			<expression>(null includes {2})</expression>
+			<expression>null includes {2}</expression>
 			<output>null</output>
 		</test>
 		<!-- this test is going to the ContainsEvaluator -->
 		<test name="IncludesNullRight">
-			<expression>({'s', 'a', 'm'} includes null)</expression>
+			<expression>{'s', 'a', 'm'} includes null</expression>
 			<output>null</output>
 		</test>
 	</group>
@@ -400,11 +400,11 @@
 		</test>
 		<!-- the following expression is going to the InEvaluator -->
 		<test name="IncludedInNullLeft">
-			<expression>(null included in {2})</expression>
+			<expression>null included in {2}</expression>
 			<output>null</output>
 		</test>
 		<test name="IncludedInNullRight">
-			<expression>({'s', 'a', 'm'} included in null)</expression>
+			<expression>{'s', 'a', 'm'} included in null</expression>
 			<output>null</output>
 		</test>
 	</group>
@@ -479,19 +479,19 @@
 			<output>{}</output>
 		</test>
 		<test name="Intersect1234And23">
-			<expression>({ 1, 2, 3, 4 } intersect { 2, 3 })</expression>
+			<expression>{ 1, 2, 3, 4 } intersect { 2, 3 }</expression>
 			<output>{ 2, 3 }</output>
 		</test>
 		<test name="Intersect23And1234">
-			<expression>({2, 3} intersect { 1, 2, 3, 4 })</expression>
+			<expression>{2, 3} intersect { 1, 2, 3, 4 }</expression>
 			<output>{ 2, 3 }</output>
 		</test>
 		<test name="IntersectDateTime">
-			<expression>({ DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) } intersect { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2000, 5, 5) })</expression>
+			<expression>{ DateTime(2001, 9, 11), DateTime(2012, 5, 10), DateTime(2014, 12, 10) } intersect { DateTime(2012, 5, 10), DateTime(2014, 12, 10), DateTime(2000, 5, 5) }</expression>
 			<output>{@2012-05-10T, @2014-12-10T}</output>
 		</test>
 		<test name="IntersectTime">
-			<expression>({ @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 } intersect { @T01:29:15.156, @T15:59:59.999, @T20:59:59.999 })</expression>
+			<expression>{ @T02:29:15.156, @T15:59:59.999, @T20:59:59.999 } intersect { @T01:29:15.156, @T15:59:59.999, @T20:59:59.999 }</expression>
 			<output>{@T15:59:59.999, @T20:59:59.999}</output>
 		</test>
 	</group>
@@ -663,7 +663,7 @@
 			<output>true</output>
 		</test>
 		<test name="ProperContainsTimeNull">
-			<expression>({ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes @T15:59:59)</expression>
+			<expression>{ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes @T15:59:59</expression>
 			<output>null</output>
 		</test>
 	</group>
@@ -719,7 +719,7 @@
 			<output>true</output>
 		</test>
 		<test name="ProperIncludesTimeFalse">
-			<expression>({ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 })</expression>
+			<expression>{ @T15:59:59.999, @T20:59:59.999, @T20:59:49.999 } properly includes { @T15:59:59.999, @T20:59:59.999, @T14:59:22.999 }</expression>
 			<output>false</output>
 		</test>
 		<test name="ProperlyIncludesNullLeft">
@@ -871,27 +871,27 @@
 			<output>{}</output>
 		</test>
 		<test name="UnionListNullAndListNull">
-			<expression>({ null } union { null })</expression>
+			<expression>{ null } union { null }</expression>
 			<output>{null}</output>
 		</test>
 		<test name="Union123AndEmpty">
-			<expression>({ 1, 2, 3 } union {})</expression>
+			<expression>{ 1, 2, 3 } union {}</expression>
 			<output>{1, 2, 3}</output>
 		</test>
 		<test name="Union123And2">
-			<expression>({ 1, 2, 3 } union { 2 })</expression>
+			<expression>{ 1, 2, 3 } union { 2 }</expression>
 			<output>{1, 2, 3}</output>
 		</test>
 		<test name="Union123And4">
-			<expression>({ 1, 2, 3 } union { 4 })</expression>
+			<expression>{ 1, 2, 3 } union { 4 }</expression>
 			<output>{1, 2, 3, 4}</output>
 		</test>
 		<test name="UnionDateTime">
-			<expression>({ DateTime(2001, 9, 11)} union {DateTime(2012, 5, 10), DateTime(2014, 12, 10) })</expression>
+			<expression>{ DateTime(2001, 9, 11)} union {DateTime(2012, 5, 10), DateTime(2014, 12, 10) }</expression>
 			<output>{@2001-09-11T, @2012-05-10T, @2014-12-10T}</output>
 		</test>
 		<test name="UnionTime">
-			<expression>({ @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } union { @T10:59:59.999 })</expression>
+			<expression>{ @T15:59:59.999, @T20:59:59.999, @T12:59:59.999 } union { @T10:59:59.999 }</expression>
 			<output>{@T15:59:59.999, @T20:59:59.999, @T12:59:59.999, @T10:59:59.999}</output>
 		</test>
 	</group>

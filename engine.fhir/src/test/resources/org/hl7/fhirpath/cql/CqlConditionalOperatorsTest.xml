@@ -3,15 +3,15 @@
 	name="CqlConditionalOperatorsTest" reference="https://cql.hl7.org/03-developersguide.html#conditional-expressions">
 	<group name="if-then-else">
 		<test name="IfTrue1">
-			<expression>(if 10 &gt; 5 then 5 else 10)</expression>
+			<expression>if 10 &gt; 5 then 5 else 10</expression>
 			<output>5</output>
 		</test>
 		<test name="IfFalse1">
-			<expression>(if 10 = 5 then 10 + 5 else 10 - 5)</expression>
+			<expression>if 10 = 5 then 10 + 5 else 10 - 5</expression>
 			<output>5</output>
 		</test>
 		<test name="IfNull1">
-			<expression>(if 10 = null then 5 else 10)</expression>
+			<expression>if 10 = null then 5 else 10</expression>
 			<output>10</output>
 		</test>
 	</group>
