@@ -501,7 +501,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 716, 547, 18);
+        runTests("r4/tests-fhir-r4.xml", 721, 550, 18);
     }
 
     @Test
@@ -531,7 +531,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlDateTimeOperators() {
-        runTests("cql/CqlDateTimeOperatorsTest.xml", 294, 279, 0);
+        runTests("cql/CqlDateTimeOperatorsTest.xml", 294, 280, 0);
     }
 
     @Test
