@@ -353,10 +353,10 @@ public class TestFhirPath {
         if (isExpressionOutputTest) {
             String outputExpression = test.getOutput().get(0).getValue();
             if ("null".equals(outputExpression)) {
-                cql = String.format("%s is %s", cql, outputExpression);
+                cql = String.format("(%s) is %s", cql, outputExpression);
             }
             else {
-                cql = String.format("%s = %s", cql, outputExpression);
+                cql = String.format("(%s) = %s", cql, outputExpression);
             }
         }
 
