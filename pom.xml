@@ -378,7 +378,7 @@
                         <source>1.8</source>
                         <target>1.8</target>
                         <failOnError>true</failOnError>
-                        <failOnWarning>true</failOnWarning>
+                        <failOnWarning>false</failOnWarning>
                         <compilerArgs>
                             <arg>-Xlint:all</arg>
                             <!-- This fixes a boostrapclass path warning which the "release" property fixes on Java 9+ -->
@@ -558,8 +558,7 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!-- Results in NullReferenceException in my environment...
-            <plugin>
+            <!--plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <executions>
@@ -569,8 +568,7 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            -->
+            </plugin-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-pmd-plugin</artifactId>
