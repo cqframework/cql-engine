@@ -343,24 +343,26 @@ public class TestFhirPath {
             String resourceFilePath = "r4/input/" + test.getInputfile();
             resource = loadResourceFileR4(resourceFilePath);
             cql = String.format(
-                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers parameter %s %s context %s define Test: %s",
-                resource.fhirType(), resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
+                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers parameter %s %s context %s define Test:",
+                resource.fhirType(), resource.fhirType(), resource.fhirType());
         }
         else {
-            cql = String.format(
-                "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers define Test: %s",
-                test.getExpression().getValue());
+            cql = "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers define Test:";
         }
 
+        String testExpression = test.getExpression().getValue();
         boolean isExpressionOutputTest = test.getOutput().size() == 1 && test.getOutput().get(0).getType() == null;
         if (isExpressionOutputTest) {
             String outputExpression = test.getOutput().get(0).getValue();
             if ("null".equals(outputExpression)) {
-                cql = String.format("%s is %s", cql, outputExpression);
+                cql = String.format("%s (%s) is %s", cql, testExpression, outputExpression);
             }
             else {
-                cql = String.format("%s = %s", cql, outputExpression);
+                cql = String.format("%s (%s) = %s", cql, testExpression, outputExpression);
             }
+        }
+        else {
+            cql = String.format("%s %s", cql, testExpression);
         }
 
         Library library = null;
@@ -508,7 +510,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 716, 548, 18);
+        runTests("r4/tests-fhir-r4.xml", 721, 550, 18);
     }
 
     @Test
@@ -533,12 +535,12 @@ public class TestFhirPath {
 
     @Test
     public void testCqlConditionalOperators() {
-        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 6, 0);
+        runTests("cql/CqlConditionalOperatorsTest.xml", 9, 9, 0);
     }
 
     @Test
     public void testCqlDateTimeOperators() {
-        runTests("cql/CqlDateTimeOperatorsTest.xml", 294, 279, 0);
+        runTests("cql/CqlDateTimeOperatorsTest.xml", 294, 284, 0);
     }
 
     @Test
@@ -548,17 +550,17 @@ public class TestFhirPath {
 
     @Test
     public void testCqlIntervalOperators() {
-        runTests("cql/CqlIntervalOperatorsTest.xml", 360, 262, 0);
+        runTests("cql/CqlIntervalOperatorsTest.xml", 360, 355, 0);
     }
 
     @Test
     public void testCqlListOperators() {
-        runTests("cql/CqlListOperatorsTest.xml", 207, 145, 0);
+        runTests("cql/CqlListOperatorsTest.xml", 207, 187, 0);
     }
 
     @Test
     public void testCqlLogicalOperators() {
-        runTests("cql/CqlLogicalOperatorsTest.xml", 39, 26, 0);
+        runTests("cql/CqlLogicalOperatorsTest.xml", 39, 39, 0);
     }
 
     @Test
@@ -568,7 +570,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlStringOperators() {
-        runTests("cql/CqlStringOperatorsTest.xml", 81, 78, 0);
+        runTests("cql/CqlStringOperatorsTest.xml", 81, 80, 0);
     }
 
     @Test

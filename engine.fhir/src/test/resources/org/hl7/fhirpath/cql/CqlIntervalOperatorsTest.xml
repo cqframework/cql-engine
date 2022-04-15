@@ -192,7 +192,7 @@
 	<group name="Collapse">
 		<test name="TestCollapseNull">
 			<expression>collapse {Interval(null, null)}</expression>
-			<output>null</output>
+			<output>{ }</output>
 		</test>
 		<test name="IntegerIntervalCollapse">
 			<expression>collapse { Interval[1,5], Interval[3,7], Interval[12,19], Interval[7,10] }</expression>
@@ -246,7 +246,7 @@
 		</test>
 		<test name="ExpandPerHour">
 			<expression>expand { Interval[@T10:00, @T12:30] } per hour</expression>
-			<output>{ Interval[@T10, @T10], Interval[@T11, @T11], Interval[@T12, @T12] }</output>
+			<output>{ Interval[@T10:00, @T11:00), Interval[@T11:00, @T12:00) }</output>
 		</test>
 		<test name="ExpandPer1">
 			<expression>expand { Interval[10.0, 12.5] } per 1</expression>
@@ -263,11 +263,11 @@
 			<!-- Translation Error: Could not resolve call to operator Expand with signature (list<interval<System.Integer>>,System.Decimal). -->
 		</test>
 		<test name="ExpandInterval">
-			<expression>expand Interval[1, 10]</expression>
+			<expression>expand { Interval[1, 10] }</expression>
 			<output>{ Interval[1, 1], Interval[2, 2], Interval[3, 3], Interval[4, 4], Interval[5, 5], Interval[6, 6], Interval[7, 7], Interval[8, 8], Interval[9, 9], Interval[10, 10] }</output>
 		</test>
 		<test name="ExpandIntervalPer2">
-			<expression>expand Interval[1, 10] per 2</expression>
+			<expression>expand { Interval[1, 10] } per 2</expression>
 			<output>{ Interval[1, 2], Interval[3, 4], Interval[5, 6], Interval[7, 8], Interval[9, 10] }</output>
 		</test>
 	</group>
@@ -492,7 +492,7 @@
 	<group name="In">
 		<test name="TestInNullBoundaries">
 			<expression>5 in Interval[null, null]</expression>
-			<output>true</output>
+			<output>false</output>
 		</test>
 		<test name="IntegerIntervalInTrue">
 			<expression>5 in Interval[1, 10]</expression>
@@ -839,7 +839,7 @@
 	<group name="MeetsAfter">
 		<test name="TestMeetsAfterNull">
 			<expression>Interval(null, 5] meets after Interval[11, null)</expression>
-			<output>null</output>
+			<output>false</output>
 		</test>
 		<test name="IntegerIntervalMeetsAfterTrue">
 			<expression>Interval[11, 20] meets after Interval[1, 10]</expression>
@@ -1203,7 +1203,7 @@
 	<group name="ProperlyIncludes">
 		<test name="NullBoundariesProperlyIncludesIntegerInterval">
 			<expression>Interval[null as Integer, null as Integer] properly includes Interval[1, 10]</expression>
-			<output>true</output>
+			<output>null</output>
 		</test>
 		<test name="IntegerIntervalProperlyIncludesTrue">
 			<expression>Interval[1, 10] properly includes Interval[4, 10]</expression>
@@ -1249,7 +1249,7 @@
 	<group name="ProperlyIncludedIn">
 		<test name="IntegerIntervalProperlyIncludedInNullBoundaries">
 			<expression>Interval[1, 10] properly included in Interval[null, null]</expression>
-			<output>true</output>
+			<output>null</output>
 		</test>
 		<test name="IntegerIntervalProperlyIncludedInTrue">
 			<expression>Interval[4, 10] properly included in Interval[1, 10]</expression>

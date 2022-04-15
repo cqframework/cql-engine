@@ -558,7 +558,8 @@
             </plugins>
         </pluginManagement>
         <plugins>
-            <!--plugin>
+            <!-- Results in NullReferenceException in my environment...
+            <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <executions>
