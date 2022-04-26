@@ -503,7 +503,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 721, 548, 18);
+        runTests("r4/tests-fhir-r4.xml", 721, 550, 18);
     }
 
     @Test
@@ -578,7 +578,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlValueLiteralsAndSelectors() {
-        runTests("cql/ValueLiteralsAndSelectors.xml", 66, 60, 0);
+        runTests("cql/ValueLiteralsAndSelectors.xml", 66, 59, 0);
     }
 
     private String getStringFromResourceStream(String resourceName) {
