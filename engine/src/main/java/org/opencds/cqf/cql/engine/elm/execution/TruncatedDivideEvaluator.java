@@ -32,6 +32,15 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
             return (Integer)left / (Integer)right;
         }
 
+        //@@@CQF-1348 handle Long data type
+        if (left instanceof Long) {
+            if ((Long)right == 0) {
+                return null;
+            }
+
+            return (Long)left / (Long)right;
+        }
+
         else if (left instanceof BigDecimal) {
             if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
                 return null;
@@ -44,8 +53,24 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
             if (EqualEvaluator.equal(((Quantity) right).getValue(), new BigDecimal("0.0"))) {
                 return null;
             }
+            //@@@CQF-1348 unit calculation in division
+            String unit = ((Quantity) left).getUnit();
+            if (right instanceof Quantity) {
+                String unitLeft = ((Quantity) left).getUnit();
+                String unitRight = ((Quantity) right).getUnit();
+                if (unitLeft.equals("1") && !unitRight.equals("1")) {
+                    throw new InvalidOperatorArgument(
+                        "Dividend and divisor must have the same unit",
+                        String.format("Divide(%s, %s)", ((Quantity) left).getUnit(), ((Quantity) right).getUnit())
+                    );
+                } else if (!unitLeft.equals("1") && unitRight.equals("1")) {
+                    unit = unitLeft;
+                } else if (!unitLeft.equals("1") && !unitRight.equals("1")) {
+                    unit = DivideEvaluator.unitCalculator(unitLeft, unitRight);
+                }
+            }
             return new Quantity()
-                .withUnit(((Quantity) left).getUnit())
+                .withUnit(unit)
                 .withValue(((Quantity) left).getValue().divideAndRemainder(((Quantity) right).getValue())[0]);
         }
 

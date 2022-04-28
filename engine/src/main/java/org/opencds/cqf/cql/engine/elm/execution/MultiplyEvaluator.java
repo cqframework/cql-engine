@@ -1,6 +1,8 @@
 package org.opencds.cqf.cql.engine.elm.execution;
 
 import java.math.BigDecimal;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
@@ -48,8 +50,20 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
 
     // *(Quantity, Quantity)
     else if (left instanceof Quantity && right instanceof Quantity) {
-      // TODO: unit multiplication i.e. cm*cm = cm^2
-      String unit = ((Quantity) left).getUnit().equals("1") ? ((Quantity) right).getUnit() : ((Quantity) left).getUnit();
+    	//@@@CQF-1348 unit calculation in multiplication
+        String unit = "1";
+        String unitLeft = ((Quantity) left).getUnit();
+        String unitRight = ((Quantity) right).getUnit();
+        if (unitLeft.equals("1") && !unitRight.equals("1") ) {
+            unit = unitRight;
+        }
+        else if (!unitLeft.equals("1") && unitRight.equals("1")) {
+            unit = unitLeft;
+        }
+        else if (!unitLeft.equals("1") && !unitRight.equals("1")) {
+            unit = unitCalculator(unitLeft, unitRight);
+        }
+        //String unit = ((Quantity) left).getUnit().equals("1") ? ((Quantity) right).getUnit() : ((Quantity) left).getUnit();
       BigDecimal value = Value.verifyPrecision((((Quantity)left).getValue()).multiply(((Quantity)right).getValue()), null);
       return new Quantity().withValue(value).withUnit(unit);
     }
@@ -78,6 +92,22 @@ public class MultiplyEvaluator extends org.cqframework.cql.elm.execution.Multipl
           String.format("Multiply(%s, %s)", left.getClass().getName(), right.getClass().getName())
       );
   }
+
+    private static String unitCalculator(String s1, String s2) {
+        Pattern integerPattern = Pattern.compile("-?\\d+");
+        Matcher matcher1 = integerPattern.matcher(s1);
+        Matcher matcher2 = integerPattern.matcher(s2);
+        int exp1 = 1, exp2 = 1;
+        String root = s1;
+        if (matcher1.find()) {
+            exp1 = Integer.parseInt(matcher1.group());
+            root = s1.substring(0, s1.indexOf(matcher1.group()));
+        }
+        if (matcher2.find()) {
+            exp2 = Integer.parseInt(matcher2.group());
+        }
+        return root + String.valueOf(exp1+ exp2);
+    }
 
     @Override
     protected Object internalEvaluate(Context context) {
