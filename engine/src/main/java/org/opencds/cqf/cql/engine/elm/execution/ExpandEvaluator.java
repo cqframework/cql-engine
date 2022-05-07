@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -70,7 +71,6 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
 
         List<Interval> expansion = new ArrayList<>();
         Object start = interval.getStart();
-        Object end = addPer(start, per);
 
         if ((start instanceof Integer || start instanceof BigDecimal)
                 && !per.getUnit().equals("1"))
@@ -84,11 +84,34 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return expansion;
         }
 
-        while (LessOrEqualEvaluator.lessOrEqual(PredecessorEvaluator.predecessor(end), interval.getEnd()))
-        {
-            expansion.add(new Interval(start, true, end, false));
-            start = end;
-            end = addPer(start, per);
+        if (start instanceof Integer) {
+            Object end = addPer(start, per);
+            Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);
+
+            while (LessOrEqualEvaluator.lessOrEqual(predecessorOfEnd, interval.getEnd())) {
+                expansion.add(new Interval(start, true, predecessorOfEnd, true));
+                start = end;
+                end = addPer(start, per);
+                predecessorOfEnd = PredecessorEvaluator.predecessor(end);
+            }
+        } else if(start instanceof BigDecimal) {
+
+            int precision = determineMinPrecision((BigDecimal) start, (BigDecimal) interval.getEnd());
+            BigDecimal startDecimal = truncateToPrecision((BigDecimal) start, precision) ;
+            BigDecimal endDecimal = truncateToPrecision((BigDecimal) interval.getEnd(), precision) ;
+            BigDecimal end = (BigDecimal) addPer(startDecimal, per);
+            BigDecimal predecessorOfEnd = (BigDecimal) PredecessorEvaluator.predecessor(end);
+
+            if(end.compareTo(endDecimal) == 0) {
+                expansion.add(new Interval(startDecimal, true, end, true));
+                return expansion;
+            }
+            while (LessOrEqualEvaluator.lessOrEqual(predecessorOfEnd, endDecimal)) {
+                expansion.add(new Interval(startDecimal, true, predecessorOfEnd, true));
+                startDecimal = (BigDecimal) end;
+                end = (BigDecimal) addPer(startDecimal, per);
+                predecessorOfEnd = (BigDecimal) PredecessorEvaluator.predecessor(end);
+            }
         }
 
         return expansion;
@@ -116,12 +139,14 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             Interval unit = null;
             Object start = interval.getStart();
             Object end = AddEvaluator.add(start, per);
+            Object predecessorOfEnd = PredecessorEvaluator.predecessor(end);
             for (int j = 0; j < (Integer) i; ++j)
             {
-                unit = new Interval(start, true, end, false);
+                unit = new Interval(start, true, predecessorOfEnd, true);
                 expansion.add(unit);
                 start = end;
                 end = AddEvaluator.add(start, per);
+                predecessorOfEnd = PredecessorEvaluator.predecessor(end);
             }
 
             if (unit != null)
@@ -129,7 +154,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
                 i = DurationBetweenEvaluator.duration(unit.getEnd(), interval.getEnd(), Precision.fromString(precision));
                 if (i instanceof Integer && (Integer) i == 1)
                 {
-                    expansion.add(new Interval(start, true, end, false));
+                    expansion.add(new Interval(start, true, PredecessorEvaluator.predecessor(end), true));
                 }
             }
             else
@@ -163,33 +188,19 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return intervals;
         }
 
+        boolean isTemporal =
+            intervals.get(0).getStart() instanceof BaseTemporal
+                || intervals.get(0).getEnd() instanceof BaseTemporal;
+
+        if(per == null) {
+            per = determinePer(intervals.get(0), isTemporal);
+        }
+
+
         // collapses overlapping intervals
         intervals = CollapseEvaluator.collapse(intervals, new Quantity().withValue(BigDecimal.ZERO).withUnit(per == null ? "1" : per.getUnit()));
 
-        boolean isTemporal =
-                intervals.get(0).getStart() instanceof BaseTemporal
-                        || intervals.get(0).getEnd() instanceof BaseTemporal;
-
         intervals.sort(new CqlList().valueSort);
-
-        if (per == null)
-        {
-            if (isTemporal)
-            {
-                per = new Quantity()
-                        .withValue(new BigDecimal("1.0"))
-                        .withUnit(
-                                BaseTemporal.getLowestPrecision(
-                                        (BaseTemporal) intervals.get(0).getStart(),
-                                        (BaseTemporal) intervals.get(0).getEnd()
-                                )
-                        );
-            }
-            else
-            {
-                per = new Quantity().withValue(new BigDecimal("1.0")).withDefaultUnit();
-            }
-        }
 
         String precision = per.getUnit().equals("1") ? null : per.getUnit();
 
@@ -214,6 +225,52 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
         }
 
         return set.isEmpty() ? new ArrayList<>() : new ArrayList<>(set);
+    }
+
+    /*
+      The number with the fewest decimal places determines the per for decimal.
+        [1, 45] -> 1        // scale 0
+        [1.0, 2.0] -> .1    //scale 1
+        [1.000001, 2] -> 1   //scale 0
+        [1.0, 2.01] -> .1    // scale 1
+        [1, 2.010101010] -> 1  //scale 0
+        [2.01010101, 1] -> 1   //scale 0
+        [1.00, 2.00] -> .01   //scale 2
+        [1.00, 2.0005] -> .01  //scale 2
+     */
+    private static Quantity determinePer(Interval interval, boolean isTemporal) {
+        Quantity per = null;
+
+        if (isTemporal) {
+            per = new Quantity()
+                .withValue(new BigDecimal("1.0"))
+                .withUnit(
+                    BaseTemporal.getLowestPrecision(
+                        (BaseTemporal) interval.getStart(),
+                        (BaseTemporal) interval.getEnd()
+                    )
+                );
+        } else {
+            per = new Quantity().withDefaultUnit();
+
+            if ((interval.getStart() instanceof BigDecimal)) {
+                int scale = determineMinPrecision(((BigDecimal) interval.getStart()), ((BigDecimal) interval.getEnd()));
+                BigDecimal d = BigDecimal.valueOf(Math.pow(10.0, BigDecimal.valueOf(scale).doubleValue()));
+                per.withValue(BigDecimal.ONE.divide(d));
+            } else {
+                per = new Quantity().withValue(new BigDecimal("1.0"));
+            }
+
+        }
+        return per;
+    }
+
+    private static int determineMinPrecision(BigDecimal start, BigDecimal end) {
+        return Math.min(start.scale(), end.scale());
+    }
+
+    private static BigDecimal truncateToPrecision(BigDecimal value, int scale) {
+        return value.setScale(scale, RoundingMode.DOWN);
     }
 
     @Override

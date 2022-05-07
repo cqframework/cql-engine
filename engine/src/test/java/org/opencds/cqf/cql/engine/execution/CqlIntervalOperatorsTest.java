@@ -174,6 +174,70 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
     }
 
     /**
+     * {@link org.opencds.cqf.cql.engine.elm.execution.ExpandEvaluator#evaluate(Context)}
+     */
+    @Test
+    public void testExpand() {
+        Context context = new Context(library);
+        Object result;
+
+        result = context.resolveExpressionRef("TestDateIntervalExpandClosedPerDay").getExpression().evaluate(context);
+        Interval interval = ((Interval)((List<?>)result).get(0));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getStart(), new Date(2018, 1, 1)));
+        Assert.assertTrue(interval.getLowClosed() && interval.getHighClosed());
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getEnd(), new Date(2018, 1, 1)));
+        interval = ((Interval)((List<?>)result).get(1));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getStart(), new Date(2018, 1, 2)));
+        Assert.assertTrue(interval.getLowClosed() && interval.getHighClosed());
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getEnd(), new Date(2018, 1, 2)));
+
+        result = context.resolveExpressionRef("TestDateIntervalExpandClosedPerWeekEmpty").getExpression().evaluate(context);
+        Assert.assertTrue(((List)result).isEmpty());
+
+        result = context.resolveExpressionRef("TestDateIntervalExpandClosedPerWeek").getExpression().evaluate(context);
+        interval = ((Interval)((List<?>)result).get(0));
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getStart(), new Date(2018, 1, 1)));
+        Assert.assertTrue(interval.getLowClosed() && interval.getHighClosed());
+        Assert.assertTrue(EquivalentEvaluator.equivalent(interval.getEnd(), new Date(2018, 1, 7)));
+
+        result = context.resolveExpressionRef("TestIntegerIntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(4, true, 4, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(5, true, 5, true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(2)).equal(new Interval(6, true, 6, true)));
+
+        result = context.resolveExpressionRef("TestDecimalIntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("4"), true,  new BigDecimal("4"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("5"), true,  new BigDecimal("5"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal2IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true,  new BigDecimal("1.0"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.1"), true,  new BigDecimal("1.1"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal3IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1"), true,  new BigDecimal("2"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal4IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.0"), true,  new BigDecimal("1.0"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.1"), true,  new BigDecimal("1.1"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal5IntervalExpand").getExpression().evaluate(context);
+        System.out.println(result);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1"), true,  new BigDecimal("2"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal6IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.00"), true,  new BigDecimal("1.00"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.01"), true,  new BigDecimal("1.01"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal7IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.00"), true,  new BigDecimal("1.00"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.01"), true,  new BigDecimal("1.01"), true)));
+
+        result = context.resolveExpressionRef("TestDecimal8IntervalExpand").getExpression().evaluate(context);
+        Assert.assertTrue(((Interval)((List<?>) result).get(0)).equal(new Interval(new BigDecimal("1.00"), true,  new BigDecimal("1.29"), true)));
+        Assert.assertTrue(((Interval)((List<?>) result).get(1)).equal(new Interval(new BigDecimal("1.30"), true,  new BigDecimal("1.59"), true)));
+    }
+
+    /**
      * {@link org.opencds.cqf.cql.engine.elm.execution.CollapseEvaluator#evaluate(Context)}
      */
     @Test
@@ -422,13 +486,13 @@ public class CqlIntervalOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("DecimalIntervalExcept1to3").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.99999999"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new BigDecimal("1.0"), true, new BigDecimal("3.9"), true)));
 
         result = context.resolveExpressionRef("DecimalIntervalExceptNull").getExpression().evaluate(context);
         assertThat(result, is(nullValue()));
 
         result = context.resolveExpressionRef("QuantityIntervalExcept1to4").getExpression().evaluate(context);
-        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.99999999")).withUnit("g"), true)));
+        Assert.assertTrue(((Interval)result).equal(new Interval(new Quantity().withValue(new BigDecimal("1.0")).withUnit("g"), true, new Quantity().withValue(new BigDecimal("4.9")).withUnit("g"), true)));
 
         result = context.resolveExpressionRef("Except12").getExpression().evaluate(context);
         Assert.assertTrue(((Interval)result).equal(new Interval(1, true, 2, true)));
