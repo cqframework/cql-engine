@@ -573,7 +573,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlTypeOperators() {
-        runTests("cql/CqlTypeOperatorsTest.xml", 32, 21, 0);
+        runTests("cql/CqlTypeOperatorsTest.xml", 32, 32, 0);
     }
 
     @Test

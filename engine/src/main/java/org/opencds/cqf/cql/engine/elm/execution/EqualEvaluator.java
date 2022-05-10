@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.CqlList;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
+import org.opencds.cqf.cql.engine.runtime.Time;
 
 /*
 *** NOTES FOR CLINICAL OPERATORS ***
@@ -64,7 +66,12 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         }
 
         else if (left instanceof CqlType && right instanceof CqlType) {
-            return ((CqlType) left).equal(right);
+            
+        	if (left instanceof DateTime && right instanceof DateTime) {
+        		return ((DateTime)left).toString().equalsIgnoreCase(((DateTime)right).toString());
+        	}
+        	
+        	return ((CqlType) left).equal(right);
         }
 
         return Context.getContext().objectEqual(left, right);
