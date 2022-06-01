@@ -25,8 +25,8 @@ If either argument is null, the result is null.
 
 public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
 
-    private static BigDecimal divideHelper(BigDecimal left, BigDecimal right) {
-        if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
+    private static BigDecimal divideHelper(BigDecimal left, BigDecimal right, Context context) {
+        if (EqualEvaluator.equal(right, new BigDecimal("0.0"), context)) {
             return null;
         }
 
@@ -37,23 +37,23 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
         }
     }
 
-    public static Object divide(Object left, Object right) {
+    public static Object divide(Object left, Object right, Context context) {
 
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof BigDecimal && right instanceof BigDecimal) {
-            return divideHelper((BigDecimal) left, (BigDecimal) right);
+            return divideHelper((BigDecimal) left, (BigDecimal) right, context);
         }
 
         else if (left instanceof Quantity && right instanceof Quantity) {
-            BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue());
+            BigDecimal value = divideHelper(((Quantity) left).getValue(), ((Quantity) right).getValue(), context);
             return new Quantity().withValue(Value.verifyPrecision(value, null)).withUnit(((Quantity) left).getUnit());
         }
 
         else if (left instanceof Quantity && right instanceof BigDecimal) {
-            BigDecimal value = divideHelper(((Quantity) left).getValue(), (BigDecimal) right);
+            BigDecimal value = divideHelper(((Quantity) left).getValue(), (BigDecimal) right, context);
             return new Quantity().withValue(Value.verifyPrecision(value, null)).withUnit(((Quantity)left).getUnit());
         }
 
@@ -62,8 +62,8 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
             Interval rightInterval = (Interval)right;
 
             return new Interval(
-                    divide(leftInterval.getStart(), rightInterval.getStart()), true,
-                    divide(leftInterval.getEnd(), rightInterval.getEnd()), true
+                    divide(leftInterval.getStart(), rightInterval.getStart(), context), true,
+                    divide(leftInterval.getEnd(), rightInterval.getEnd(), context), true
             );
         }
 
@@ -78,6 +78,6 @@ public class DivideEvaluator extends org.cqframework.cql.elm.execution.Divide {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return divide(left, right);
+        return divide(left, right, context);
     }
 }

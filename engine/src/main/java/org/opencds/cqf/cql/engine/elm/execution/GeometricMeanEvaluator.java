@@ -24,7 +24,7 @@ If the source is null, the result is null.
 
 public class GeometricMeanEvaluator extends org.cqframework.cql.elm.execution.GeometricMean {
 
-    public static BigDecimal geometricMean(Iterable<?> source) {
+    public static BigDecimal geometricMean(Iterable<?> source, Context context) {
         if (source == null) {
             return null;
         }
@@ -45,12 +45,12 @@ public class GeometricMeanEvaluator extends org.cqframework.cql.elm.execution.Ge
         }
         return (BigDecimal) PowerEvaluator.power(
                 ProductEvaluator.product(cleanSource),
-                DivideEvaluator.divide(new BigDecimal(1), ToDecimalEvaluator.toDecimal(CountEvaluator.count(cleanSource)))
+                DivideEvaluator.divide(new BigDecimal(1), ToDecimalEvaluator.toDecimal(CountEvaluator.count(cleanSource)), context)
         );
     }
 
     @Override
     protected Object internalEvaluate(Context context) {
-        return geometricMean((Iterable<?>) getSource().evaluate(context));
+        return geometricMean((Iterable<?>) getSource().evaluate(context), context);
     }
 }

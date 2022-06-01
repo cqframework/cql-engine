@@ -78,7 +78,7 @@ public class CqlList {
         }
     }
 
-    public static Boolean equivalent(Iterable<?> left, Iterable<?> right) {
+    public static Boolean equivalent(Iterable<?> left, Iterable<?> right, Context context) {
         Iterator<?> leftIterator = left.iterator();
         Iterator<?> rightIterator = right.iterator();
 
@@ -86,7 +86,7 @@ public class CqlList {
             Object leftObject = leftIterator.next();
             if (rightIterator.hasNext()) {
                 Object rightObject = rightIterator.next();
-                Boolean elementEquivalent = EquivalentEvaluator.equivalent(leftObject, rightObject);
+                Boolean elementEquivalent = EquivalentEvaluator.equivalent(leftObject, rightObject, context);
                 if (!elementEquivalent) {
                     return false;
                 }
@@ -97,7 +97,7 @@ public class CqlList {
         return !rightIterator.hasNext();
     }
 
-    public static Boolean equal(Iterable<?> left, Iterable<?> right) {
+    public static Boolean equal(Iterable<?> left, Iterable<?> right, Context context) {
         Iterator<?> leftIterator = left.iterator();
         Iterator<?> rightIterator = right.iterator();
 
@@ -106,9 +106,9 @@ public class CqlList {
             if (rightIterator.hasNext()) {
                 Object rightObject = rightIterator.next();
                 if (leftObject instanceof Iterable && rightObject instanceof Iterable) {
-                    return equal((Iterable<?>) leftObject, (Iterable<?>) rightObject);
+                    return equal((Iterable<?>) leftObject, (Iterable<?>) rightObject, context);
                 }
-                Boolean elementEquals = EqualEvaluator.equal(leftObject, rightObject);
+                Boolean elementEquals = EqualEvaluator.equal(leftObject, rightObject, context);
                 if (elementEquals == null || !elementEquals) {
                     return elementEquals;
                 }

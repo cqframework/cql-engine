@@ -14,7 +14,7 @@ If the list argument is null, the result is null.
 
 public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf {
 
-    public static Object indexOf(Object source, Object elementToFind) {
+    public static Object indexOf(Object source, Object elementToFind, Context context) {
         if (source == null) {
             return null;
         }
@@ -24,7 +24,7 @@ public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf 
 
         for (Object element : (Iterable<?>)source) {
             index++;
-            Boolean equiv = EquivalentEvaluator.equivalent(element, elementToFind);
+            Boolean equiv = EquivalentEvaluator.equivalent(element, elementToFind, context);
 
             if (equiv == null) {
                 nullSwitch = true;
@@ -47,6 +47,6 @@ public class IndexOfEvaluator extends org.cqframework.cql.elm.execution.IndexOf 
         Object source = getSource().evaluate(context);
         Object elementToFind = getElement().evaluate(context);
 
-        return indexOf(source, elementToFind);
+        return indexOf(source, elementToFind, context);
     }
 }

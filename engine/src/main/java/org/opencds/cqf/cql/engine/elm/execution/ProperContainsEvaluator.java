@@ -23,7 +23,7 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 
 public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.ProperContains {
 
-    public static Boolean properContains(Object left, Object right) {
+    public static Boolean properContains(Object left, Object right, Context context) {
         if (left instanceof Interval) {
             Boolean startProperContains = GreaterEvaluator.greater(right, ((Interval) left).getStart());
             Boolean endProperContains = LessEvaluator.less(right, ((Interval) left).getEnd());
@@ -35,7 +35,7 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
             List<?> leftList = (List<?>) left;
 
             for (Object element : leftList) {
-                Boolean isElementInList = EquivalentEvaluator.equivalent(element, right);
+                Boolean isElementInList = EquivalentEvaluator.equivalent(element, right, context);
                 if (isElementInList == null) {
                     return null;
                 }
@@ -54,7 +54,7 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
         );
     }
 
-    public static Boolean properContains(Object left, Object right, String precision) {
+    public static Boolean properContains(Object left, Object right, String precision, Context context) {
         if (left instanceof Interval && right instanceof BaseTemporal) {
             Boolean startProperContains = AfterEvaluator.after(right, ((Interval) left).getStart(), precision);
             Boolean endProperContains = BeforeEvaluator.before(right, ((Interval) left).getEnd(), precision);
@@ -62,7 +62,7 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
             return startProperContains == null ? null : endProperContains == null ? null : startProperContains && endProperContains;
         }
 
-        return properContains(left, right);
+        return properContains(left, right, context);
     }
 
     @Override
@@ -71,6 +71,6 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return properContains(left, right, precision);
+        return properContains(left, right, precision, context);
     }
 }

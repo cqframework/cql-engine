@@ -34,7 +34,7 @@ If either argument is null, or contains null elements, the result is null.
 
 public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
 
-    public static Boolean equal(Object left, Object right) {
+    public static Boolean equal(Object left, Object right, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -60,14 +60,22 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         }
 
         else if (left instanceof Iterable && right instanceof Iterable) {
-            return CqlList.equal((Iterable<?>) left, (Iterable<?>) right);
+            return CqlList.equal((Iterable<?>) left, (Iterable<?>) right, context);
         }
 
         else if (left instanceof CqlType && right instanceof CqlType) {
             return ((CqlType) left).equal(right);
         }
 
-        return Context.getContext().objectEqual(left, right);
+        if (context != null) {
+            return context.objectEqual(left, right);
+        }
+
+        return null;
+    }
+
+    public static Boolean equal(Object left, Object right) {
+        return equal(left, right, null);
     }
 
     @Override
@@ -75,6 +83,6 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return equal(left, right);
+        return equal(left, right, context);
     }
 }

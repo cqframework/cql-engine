@@ -45,7 +45,7 @@ least precise operand; trailing zeroes after the decimal are ignored in determin
 
 public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equivalent {
 
-    public static Boolean equivalent(Object left, Object right) {
+    public static Boolean equivalent(Object left, Object right, Context context) {
         if (left == null && right == null) {
             return true;
         }
@@ -81,7 +81,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         }
 
         if (left instanceof Iterable) {
-            return CqlList.equivalent((Iterable<?>) left, (Iterable<?>) right);
+            return CqlList.equivalent((Iterable<?>) left, (Iterable<?>) right, context);
         }
 
         else if (left instanceof CqlType) {
@@ -92,7 +92,15 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((String) left).equalsIgnoreCase((String) right);
         }
 
-        return Context.getContext().objectEquivalent(left, right);
+        if (context != null) {
+            return context.objectEquivalent(left, right);
+        }
+
+        return null;
+    }
+
+    public static Boolean equivalent(Object left, Object right) {
+        return equivalent(left, right, null);
     }
 
     @Override
@@ -100,6 +108,6 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return equivalent(left, right);
+        return equivalent(left, right, context);
     }
 }
