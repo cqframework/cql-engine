@@ -518,6 +518,7 @@ public class TestFhirPath {
 
     @Test
     public void testCqlArithmeticFunctions() {
+    	//@@@CQF-1271 fix ArithmeticFunctions test cases
         runTests("cql/CqlArithmeticFunctionsTest.xml", 192, 187, 0);
     }
 
@@ -573,7 +574,8 @@ public class TestFhirPath {
 
     @Test
     public void testCqlTypes() {
-        runTests("cql/CqlTypesTest.xml", 27, 25, 0);
+    	//@@@CQF-1280 fix Types test case
+        runTests("cql/CqlTypesTest.xml", 27, 27, 0);
     }
 
     @Test
