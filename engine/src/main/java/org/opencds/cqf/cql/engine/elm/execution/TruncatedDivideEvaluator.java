@@ -19,7 +19,7 @@ If either argument is null, the result is null.
 
 public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.TruncatedDivide {
 
-    public static Object div(Object left, Object right) {
+    public static Object div(Object left, Object right, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -33,7 +33,7 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
         }
 
         else if (left instanceof BigDecimal) {
-            if (EqualEvaluator.equal(right, new BigDecimal("0.0"))) {
+            if (EqualEvaluator.equal(right, new BigDecimal("0.0"), context)) {
                 return null;
             }
 
@@ -41,7 +41,7 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
         }
 
         else if (left instanceof Quantity) {
-            if (EqualEvaluator.equal(((Quantity) right).getValue(), new BigDecimal("0.0"))) {
+            if (EqualEvaluator.equal(((Quantity) right).getValue(), new BigDecimal("0.0"), context)) {
                 return null;
             }
             return new Quantity()
@@ -53,7 +53,7 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
             Interval leftInterval = (Interval)left;
             Interval rightInterval = (Interval)right;
 
-            return new Interval(div(leftInterval.getStart(), rightInterval.getStart()), true, div(leftInterval.getEnd(), rightInterval.getEnd()), true);
+            return new Interval(div(leftInterval.getStart(), rightInterval.getStart(), context), true, div(leftInterval.getEnd(), rightInterval.getEnd(), context), true);
         }
 
         throw new InvalidOperatorArgument(
@@ -66,6 +66,6 @@ public class TruncatedDivideEvaluator extends org.cqframework.cql.elm.execution.
     protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-        return div(left, right);
+        return div(left, right, context);
     }
 }

@@ -37,7 +37,7 @@ For date/time values, the comparison is performed by considering each precision 
 
 public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
 
-    public static Boolean less(Object left, Object right) {
+    public static Boolean less(Object left, Object right, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -73,14 +73,14 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
 
         // Uncertainty comparisons for difference/duration between
         else if (left instanceof Interval && right instanceof Integer) {
-            if (InEvaluator.in(right,  left, null)) {
+            if (InEvaluator.in(right,  left, null, context)) {
                 return null;
             }
             return ((Integer)((Interval) left).getEnd()).compareTo((Integer) right) < 0;
         }
 
         else if (left instanceof Integer && right instanceof Interval) {
-            if (InEvaluator.in(left, right, null)) {
+            if (InEvaluator.in(left, right, null, context)) {
                 return null;
             }
             return ((Integer) left).compareTo((Integer)((Interval) right).getStart()) < 0;
@@ -97,6 +97,6 @@ public class LessEvaluator extends org.cqframework.cql.elm.execution.Less {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return less(left, right);
+        return less(left, right, context);
     }
 }

@@ -220,7 +220,7 @@ public class CqlDateTimeOperatorsTest extends CqlExecutionTestBase {
         result = context.resolveExpressionRef("TimeAfterTimeCstor").getExpression().evaluate(context);
         assertThat(result, is(true));
         try {
-            result = AfterEvaluator.after(12, "This is an error", null);
+            result = AfterEvaluator.after(12, "This is an error", null, context);
             Assert.fail();
         }
         catch (CqlException e) {

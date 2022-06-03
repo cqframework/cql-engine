@@ -44,7 +44,7 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 public class CqlEngine {
 
-    public static enum Options {
+    public enum Options {
         EnableExpressionCaching,
         EnableValidation
     }
@@ -188,10 +188,7 @@ public class CqlEngine {
         }
 
         result.setDebugResult(context.getDebugResult());
-
-        if(context != null) {
-            context.clearExpressions();
-        }
+        context.clearExpressions();
 
         return result;
     }

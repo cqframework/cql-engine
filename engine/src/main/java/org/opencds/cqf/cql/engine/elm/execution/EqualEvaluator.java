@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 
 import java.math.BigDecimal;
 
+import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.CqlList;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
@@ -71,7 +72,7 @@ public class EqualEvaluator extends org.cqframework.cql.elm.execution.Equal {
             return context.objectEqual(left, right);
         }
 
-        return null;
+        throw new InvalidOperatorArgument(String.format("Equal(%s, %s) requires Context and context was null", left.getClass().getName(), right.getClass().getName()));
     }
 
     public static Boolean equal(Object left, Object right) {

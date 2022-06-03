@@ -25,8 +25,8 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
 
     public static Boolean properContains(Object left, Object right, Context context) {
         if (left instanceof Interval) {
-            Boolean startProperContains = GreaterEvaluator.greater(right, ((Interval) left).getStart());
-            Boolean endProperContains = LessEvaluator.less(right, ((Interval) left).getEnd());
+            Boolean startProperContains = GreaterEvaluator.greater(right, ((Interval) left).getStart(), context);
+            Boolean endProperContains = LessEvaluator.less(right, ((Interval) left).getEnd(), context);
 
             return startProperContains == null ? null : endProperContains == null ? null : startProperContains && endProperContains;
         }
@@ -56,8 +56,8 @@ public class ProperContainsEvaluator extends org.cqframework.cql.elm.execution.P
 
     public static Boolean properContains(Object left, Object right, String precision, Context context) {
         if (left instanceof Interval && right instanceof BaseTemporal) {
-            Boolean startProperContains = AfterEvaluator.after(right, ((Interval) left).getStart(), precision);
-            Boolean endProperContains = BeforeEvaluator.before(right, ((Interval) left).getEnd(), precision);
+            Boolean startProperContains = AfterEvaluator.after(right, ((Interval) left).getStart(), precision, context);
+            Boolean endProperContains = BeforeEvaluator.before(right, ((Interval) left).getEnd(), precision, context);
 
             return startProperContains == null ? null : endProperContains == null ? null : startProperContains && endProperContains;
         }

@@ -131,10 +131,7 @@ public class CqlList {
     public static <T> List<T> toList(Iterable<T> iterable, boolean includeNullElements) {
         List<T> ret = new ArrayList<>();
         for (T element : iterable) {
-            if (includeNullElements) {
-                ret.add(element);
-            }
-            else if (element != null) {
+            if (element != null || includeNullElements) {
                 ret.add(element);
             }
         }

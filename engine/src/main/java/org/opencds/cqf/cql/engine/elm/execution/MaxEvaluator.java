@@ -25,7 +25,7 @@ If the source is null, the result is null.
 
 public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
 
-    public static Object max(Object source) {
+    public static Object max(Object source, Context context) {
         if (source == null) {
             return null;
         }
@@ -50,7 +50,7 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
                     continue;
                 }
 
-                Boolean greater = GreaterEvaluator.greater(value, max);
+                Boolean greater = GreaterEvaluator.greater(value, max, context);
                 if (greater != null && greater) {
                     max = value;
                 }
@@ -67,6 +67,6 @@ public class MaxEvaluator extends org.cqframework.cql.elm.execution.Max {
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return max(source);
+        return max(source, context);
     }
 }

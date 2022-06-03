@@ -67,7 +67,7 @@ same _precision_ as(left Interval<T>, right Interval<T>) Boolean
 
 public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs
 {
-    public static Boolean sameAs(Object left, Object right, String precision)
+    public static Boolean sameAs(Object left, Object right, String precision, Context context)
     {
         if (left == null || right == null)
         {
@@ -108,8 +108,8 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs
             }
             else
             {
-                Boolean startResult = EqualEvaluator.equal(leftStart, rightStart);
-                Boolean endResult = EqualEvaluator.equal(leftEnd, rightEnd);
+                Boolean startResult = EqualEvaluator.equal(leftStart, rightStart, context);
+                Boolean endResult = EqualEvaluator.equal(leftEnd, rightEnd, context);
                 if (startResult == null && endResult == null)
                 {
                     return null;
@@ -149,6 +149,6 @@ public class SameAsEvaluator extends org.cqframework.cql.elm.execution.SameAs
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return sameAs(left, right, precision);
+        return sameAs(left, right, precision, context);
     }
 }

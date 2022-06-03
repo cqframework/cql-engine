@@ -33,16 +33,16 @@ public interface FhirTypeConverter {
 
     /**
      * Tests if an Object is a FHIR structure
-     * 
+     *
      * @param value the value to test
      * @return true if value is a FHIR structure, false otherwise
      * @throws NullPointerException if value is null
      */
-    public Boolean isFhirType(Object value);
+    public boolean isFhirType(Object value);
 
     /**
      * Converts an Object to a FHIR structure.
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR structure
      * @throws IllegalArgumentException is value is an Iterable
@@ -52,7 +52,7 @@ public interface FhirTypeConverter {
     /**
      * Converts an iterable of Objects to FHIR structures. Preserves ordering,
      * nulls, and sublist hierarchy
-     * 
+     *
      * @param values an Iterable containing CQL structures, nulls, or sublists
      * @return an Iterable containing FHIR types, nulls, and sublists
      */
@@ -60,7 +60,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a String to a FHIR Id
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Id
      */
@@ -68,7 +68,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a Boolean to a FHIR Boolean
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Boolean
      */
@@ -76,7 +76,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts an Integer to a FHIR Integer
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Integer
      */
@@ -84,7 +84,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a BigDecimal to a FHIR Decimal
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Decimal
      */
@@ -92,7 +92,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Date to a FHIR Date
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Date
      */
@@ -100,7 +100,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL DateTime to a FHIR DateTime
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR DateTime
      */
@@ -108,7 +108,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Time to a FHIR Time
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Time
      */
@@ -116,7 +116,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a String to a FHIR String
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR String
      */
@@ -124,7 +124,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Quantity to a FHIR Quantity
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Quantity
      */
@@ -132,7 +132,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Ratio to a FHIR Ratio
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Ratio
      */
@@ -140,7 +140,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Any to a FHIR Any
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Any
      */
@@ -148,7 +148,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Code to a FHIR Coding
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Coding
      */
@@ -156,7 +156,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Concept to a FHIR CodeableConcept
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR CodeableConcept
      */
@@ -164,7 +164,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Interval to a FHIR Period
-     * 
+     *
      * @param value a Date or DateTime Interval
      * @return a FHIR Period
      */
@@ -172,7 +172,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Interval to a FHIR Range
-     * 
+     *
      * @param value a Quantity Interval
      * @return a FHIR Range
      */
@@ -180,7 +180,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Interval to FHIR Range or Period
-     * 
+     *
      * @param value a Quantity, Date, or DateTime interval
      * @return A FHIR Range or Period
      */
@@ -188,7 +188,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a CQL Tuple to a FHIR Structure
-     * 
+     *
      * @param value the value to convert
      * @return a FHIR Structure
      */
@@ -198,7 +198,7 @@ public interface FhirTypeConverter {
 
     /**
      * Tests if an Object is a CQL type
-     * 
+     *
      * @param value the value to convert
      * @return true if value is a CQL type, false otherwise
      * @throws NullPointerException if value is null
@@ -207,7 +207,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts an Object to a CQL type.
-     * 
+     *
      * @param value the value to convert a FHIR structure
      * @return a CQL type
      * @throws IllegalArgumentException is value is an Iterable
@@ -217,7 +217,7 @@ public interface FhirTypeConverter {
     /**
      * Converts an iterable of Objects to CQL types. Preserves ordering, nulls, and
      * sublist hierarchy
-     * 
+     *
      * @param values the values to convert an Iterable containing FHIR structures,
      *              nulls, or sublists
      * @return an Iterable containing CQL types, nulls, and sublists
@@ -226,7 +226,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Id to a CQL String
-     * 
+     *
      * @param value the value to convert
      * @return a String
      */
@@ -234,7 +234,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Boolean to a CQL Boolean
-     * 
+     *
      * @param value the value to convert
      * @return a Boolean
      */
@@ -242,7 +242,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Integer to a CQL Integer
-     * 
+     *
      * @param value the value to convert
      * @return an Integer
      */
@@ -250,7 +250,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Decimal to a CQL Decimal
-     * 
+     *
      * @param value the value to convert
      * @return a BigDecimal
      */
@@ -258,7 +258,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Date to a CQL Date
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Date
      * @throws IllegalArgumentException if value is not a Date
@@ -267,7 +267,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR DateTime to a CQL DateTime
-     * 
+     *
      * @param value the value to convert
      * @return a CQL DateTime
      * @throws IllegalArgumentException if value is not a DateTime
@@ -276,7 +276,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR DateTime, Date, or Instance to a CQL BaseTemporal
-     * 
+     *
      * @param value the value to convert
      * @return a CQL BaseTemporal
      * @throws IllegalArgumentException if value is not a DateTime, Date, or Instant
@@ -285,7 +285,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Time to a CQL Time
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Time
      * @throws IllegalArgumentException if value is not a Time
@@ -294,7 +294,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR String to a CQL String
-     * 
+     *
      * @param value the value to convert
      * @return a String
      */
@@ -302,7 +302,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Quantity to a CQL Quantity
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Quantity
      * @throws IllegalArgumentException if value is not a Quantity
@@ -311,7 +311,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Ratio to a CQL Ratio
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Ratio
      * @throws IllegalArgumentException if value is not a Ratio
@@ -320,7 +320,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Any to a CQL Any
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Any
      */
@@ -328,7 +328,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Coding to a CQL Code
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Code
      */
@@ -336,7 +336,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR CodeableConcept to a CQL Concept
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Concept
      * @throws IllegalArgumentException if value is not a CodeableConcept
@@ -345,7 +345,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Range or Period to a CQL Interval
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Interval
      * @throws IllegalArgumentException if value is not a Range or Period
@@ -354,7 +354,7 @@ public interface FhirTypeConverter {
 
     /**
      * Converts a FHIR Structure to a CQL Tuple
-     * 
+     *
      * @param value the value to convert
      * @return a CQL Tuple
      */

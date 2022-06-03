@@ -52,7 +52,7 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
             } else {
                 if (values.get(0) instanceof Integer) { // size of list is even
                     return TruncatedDivideEvaluator.div(
-                            AddEvaluator.add(values.get(values.size() / 2), values.get((values.size() / 2) - 1)), 2
+                            AddEvaluator.add(values.get(values.size() / 2), values.get((values.size() / 2) - 1)), 2, context
                     );
                 } else if (values.get(0) instanceof BigDecimal || values.get(0) instanceof Quantity) {
                     return DivideEvaluator.divide(

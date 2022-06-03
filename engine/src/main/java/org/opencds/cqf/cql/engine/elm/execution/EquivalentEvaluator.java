@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.CqlList;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
@@ -96,7 +97,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return context.objectEquivalent(left, right);
         }
 
-        return null;
+        throw new InvalidOperatorArgument(String.format("Equivalent(%s, %s) requires Context and context was null", left.getClass().getName(), right.getClass().getName()));
     }
 
     public static Boolean equivalent(Object left, Object right) {

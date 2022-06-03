@@ -22,9 +22,9 @@ If either argument is null, the result is null.
 
 public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contains {
 
-    public static Object contains(Object left, Object right, String precision) {
+    public static Object contains(Object left, Object right, String precision, Context context) {
         try {
-            return InEvaluator.in(right, left, precision);
+            return InEvaluator.in(right, left, precision, context);
         } catch (InvalidOperatorArgument e) {
             throw new InvalidOperatorArgument(
                     "Contains(List<T>, T)",
@@ -49,13 +49,13 @@ public class ContainsEvaluator extends org.cqframework.cql.elm.execution.Contain
         // null left operand case
         if (getOperand().get(0) instanceof AsEvaluator) {
             if (((AsEvaluator) getOperand().get(0)).getAsTypeSpecifier() instanceof IntervalTypeSpecifier) {
-                return InEvaluator.in(right, left, precision);
+                return InEvaluator.in(right, left, precision, context);
             }
             else {
-                return InEvaluator.in(right, left, null);
+                return InEvaluator.in(right, left, null, context);
             }
         }
 
-        return contains(left, right, precision);
+        return contains(left, right, precision, context);
     }
 }

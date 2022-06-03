@@ -17,7 +17,7 @@ If the source is null, the result is null.
 
 public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
 
-    public static Object mode(Object source) {
+    public static Object mode(Object source, Context context) {
         if (source == null) {
             return null;
         }
@@ -49,7 +49,7 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
             for (int i = 0; i < values.size(); ++i) {
                 int count = 0;
                 for (int j = i; j < values.size(); ++j) {
-                    Boolean equal = EqualEvaluator.equal(values.get(i), values.get(j));
+                    Boolean equal = EqualEvaluator.equal(values.get(i), values.get(j), context);
                     if (equal != null && equal) {
                         ++count;
                     }
@@ -70,6 +70,6 @@ public class ModeEvaluator extends org.cqframework.cql.elm.execution.Mode {
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return mode(source);
+        return mode(source, context);
     }
 }

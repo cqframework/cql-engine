@@ -31,7 +31,16 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.BaseDateTimeType;
+import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.r4.model.Coding;
+import org.hl7.fhir.r4.model.DateType;
+import org.hl7.fhir.r4.model.DecimalType;
+import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.IntegerType;
+import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.r4.model.Resource;
+import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhirpath.tests.Group;
 import org.hl7.fhirpath.tests.InvalidType;
 import org.hl7.fhirpath.tests.Tests;
@@ -41,11 +50,11 @@ import org.opencds.cqf.cql.engine.elm.execution.ExistsEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
-import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu2FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
+import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Date;
 import org.opencds.cqf.cql.engine.runtime.DateTime;
@@ -212,7 +221,7 @@ public class TestFhirPath {
         return null;
     }
 
-    private Boolean compareResults(Object expectedResult, Object actualResult) {
+    private Boolean compareResults(Object expectedResult, Object actualResult, Context context) {
         // Perform FHIR system-defined type conversions
         if (actualResult instanceof Enumeration) {
             actualResult = ((Enumeration<?>) actualResult).getValueAsString();
@@ -235,7 +244,7 @@ public class TestFhirPath {
             actualResult = new Code().withCode(coding.getCode()).withDisplay(coding.getDisplay())
                 .withSystem(coding.getSystem()).withVersion(coding.getVersion());
         }
-        return EqualEvaluator.equal(expectedResult, actualResult);
+        return EqualEvaluator.equal(expectedResult, actualResult, context);
     }
 
     @SuppressWarnings("unchecked")
@@ -309,7 +318,7 @@ public class TestFhirPath {
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
-                    Boolean comparison = compareResults(expectedResult, actualResult);
+                    Boolean comparison = compareResults(expectedResult, actualResult, context);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
                     }
@@ -420,7 +429,7 @@ public class TestFhirPath {
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
-                    Boolean comparison = compareResults(expectedResult, actualResult);
+                    Boolean comparison = compareResults(expectedResult, actualResult, context);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
                     }

@@ -194,7 +194,7 @@ public class CqlTestSuite {
         elements.put("b", 2);
         result = context.resolveExpressionRef("Structured_tuple").evaluate(context);
         Assert.assertTrue(result instanceof Tuple);
-        Assert.assertTrue(((Tuple) result).equal(new Tuple().withElements(elements)));
+        Assert.assertTrue(((Tuple) result).equal(new Tuple(context).withElements(elements)));
 
         elements.clear();
         elements.put("class", "Portable CQL Test Suite");
@@ -204,7 +204,7 @@ public class CqlTestSuite {
 
         result = context.resolveExpressionRef("Structured_TupleA").evaluate(context);
         Assert.assertTrue(result instanceof Tuple);
-        Assert.assertTrue(((Tuple) result).equal(new Tuple().withElements(elements)));
+        Assert.assertTrue(((Tuple) result).equal(new Tuple(context).withElements(elements)));
 
         result = context.resolveExpressionRef("Interval_Open").evaluate(context);
         Assert.assertTrue(result instanceof Interval);
@@ -349,7 +349,7 @@ public class CqlTestSuite {
         listComp = CqlList.equal(
                 (Iterable<?>) result,
                 Arrays.asList(
-                        new Tuple().withElements(elements), new Tuple().withElements(elements2)
+                        new Tuple(context).withElements(elements), new Tuple(context).withElements(elements2)
 
                 ),
                 context
