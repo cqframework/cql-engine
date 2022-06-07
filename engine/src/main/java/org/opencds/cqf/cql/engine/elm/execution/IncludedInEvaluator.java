@@ -32,12 +32,12 @@ Note that the order of elements does not matter for the purposes of determining 
 
 public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.IncludedIn {
 
-    public static Boolean includedIn(Object left, Object right, String precision) {
+    public static Boolean includedIn(Object left, Object right, String precision, Context context) {
         if (left instanceof Interval && right instanceof Interval) {
-            return intervalIncludedIn((Interval) left, (Interval) right, precision);
+            return intervalIncludedIn((Interval) left, (Interval) right, precision, context);
         }
         if (left instanceof Iterable && right instanceof Iterable) {
-            return listIncludedIn((Iterable<?>) left, (Iterable<?>) right);
+            return listIncludedIn((Iterable<?>) left, (Iterable<?>) right, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -46,7 +46,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         );
     }
 
-    public static Boolean intervalIncludedIn(Interval left, Interval right, String precision) {
+    public static Boolean intervalIncludedIn(Interval left, Interval right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -58,8 +58,8 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
 
         Boolean boundaryCheck =
                 AndEvaluator.and(
-                        InEvaluator.in(leftStart, right, precision),
-                        InEvaluator.in(leftEnd, right, precision)
+                        InEvaluator.in(leftStart, right, precision, context),
+                        InEvaluator.in(leftEnd, right, precision, context)
                 );
 
         if (boundaryCheck != null && boundaryCheck) {
@@ -69,27 +69,27 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         if (leftStart instanceof BaseTemporal || leftEnd instanceof BaseTemporal
                 || rightStart instanceof BaseTemporal || rightEnd instanceof BaseTemporal)
         {
-            if (AnyTrueEvaluator.anyTrue(Arrays.asList(BeforeEvaluator.before(leftStart, rightStart, precision), AfterEvaluator.after(leftEnd, rightEnd, precision))))
+            if (AnyTrueEvaluator.anyTrue(Arrays.asList(BeforeEvaluator.before(leftStart, rightStart, precision, context), AfterEvaluator.after(leftEnd, rightEnd, precision, context))))
             {
                 return false;
             }
             return AndEvaluator.and(
-                    SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
-                    SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision)
+                    SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision, context),
+                    SameOrBeforeEvaluator.sameOrBefore(leftEnd, rightEnd, precision, context)
             );
         }
 
-        if (AnyTrueEvaluator.anyTrue(Arrays.asList(LessEvaluator.less(leftStart, rightStart), GreaterEvaluator.greater(leftEnd, rightEnd))))
+        if (AnyTrueEvaluator.anyTrue(Arrays.asList(LessEvaluator.less(leftStart, rightStart, context), GreaterEvaluator.greater(leftEnd, rightEnd, context))))
         {
             return false;
         }
         return AndEvaluator.and(
-                GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart),
-                LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)
+                GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart, context),
+                LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd, context)
         );
     }
 
-    public static Boolean listIncludedIn(Iterable<?> left, Iterable<?> right) {
+    public static Boolean listIncludedIn(Iterable<?> left, Iterable<?> right, Context context) {
         if (left == null) {
             return true;
         }
@@ -98,7 +98,7 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
         }
 
         for (Object element : left) {
-            Object in = InEvaluator.in(element, right, null);
+            Object in = InEvaluator.in(element, right, null, context);
 
             if (in == null) continue;
 
@@ -121,16 +121,16 @@ public class IncludedInEvaluator extends org.cqframework.cql.elm.execution.Inclu
 
         if (left == null) {
             return right instanceof Interval
-                    ? intervalIncludedIn(null, (Interval) right, precision)
-                    : listIncludedIn(null, (Iterable<?>) right);
+                    ? intervalIncludedIn(null, (Interval) right, precision, context)
+                    : listIncludedIn(null, (Iterable<?>) right, context);
         }
 
         if (right == null) {
             return left instanceof Interval
-                    ? intervalIncludedIn((Interval) left, null, precision)
-                    : listIncludedIn((Iterable<?>) left, null);
+                    ? intervalIncludedIn((Interval) left, null, precision, context)
+                    : listIncludedIn((Iterable<?>) left, null, context);
         }
 
-        return includedIn(left, right, precision);
+        return includedIn(left, right, precision, context);
     }
 }

@@ -25,7 +25,7 @@ import org.opencds.cqf.cql.engine.runtime.Ratio;
 
 public class ConvertsToQuantityEvaluator extends org.cqframework.cql.elm.execution.ConvertsToQuantity {
 
-    public static Boolean convertsToQuantity(Object argument) {
+    public static Boolean convertsToQuantity(Object argument, Context context) {
         if (argument == null) {
             return null;
         }
@@ -37,7 +37,7 @@ public class ConvertsToQuantityEvaluator extends org.cqframework.cql.elm.executi
         if (argument instanceof String || argument instanceof Ratio || argument instanceof BigDecimal || argument instanceof Integer)
         {
             try {
-                Object response = ToQuantityEvaluator.toQuantity(argument);
+                Object response = ToQuantityEvaluator.toQuantity(argument, context);
                 if (response == null) {
                     return false;
                 }
@@ -56,7 +56,7 @@ public class ConvertsToQuantityEvaluator extends org.cqframework.cql.elm.executi
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-        return convertsToQuantity(operand);
+        return convertsToQuantity(operand, context);
     }
 
 }

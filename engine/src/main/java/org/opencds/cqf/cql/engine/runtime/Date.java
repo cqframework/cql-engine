@@ -1,10 +1,11 @@
 package org.opencds.cqf.cql.engine.runtime;
 
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.TimeZone;
-
-
 
 import org.opencds.cqf.cql.engine.exception.InvalidDate;
 import org.opencds.cqf.cql.engine.execution.Context;
@@ -177,9 +178,8 @@ public class Date extends BaseTemporal {
         }
     }
 
-    public java.util.Date toJavaDate() {
+    public java.util.Date toJavaDate(Context c) {
         ZonedDateTime zonedDateTime = null;
-        Context c = Context.getContext();
         if (c != null) {
             zonedDateTime = date.atStartOfDay(c.getEvaluationZonedDateTime().getZone());
         }
@@ -189,6 +189,10 @@ public class Date extends BaseTemporal {
         Instant instant = zonedDateTime.toInstant();
         java.util.Date date = java.util.Date.from(instant);
         return date;
+    }
+
+    public java.util.Date toJavaDate() {
+        return toJavaDate(null);
     }
 
     public static DateTime fromJavaDate(java.util.Date date) {

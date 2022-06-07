@@ -30,7 +30,7 @@ import org.opencds.cqf.cql.engine.runtime.Tuple;
 abstract class BaseFhirTypeConverter implements FhirTypeConverter {
 
     @Override
-    public Boolean isFhirType(Object value) {
+    public boolean isFhirType(Object value) {
         Objects.requireNonNull(value, "value can not be null");
 
         if (value instanceof Iterable<?>) {

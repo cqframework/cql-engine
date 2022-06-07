@@ -37,7 +37,7 @@ For date/time values, the comparison is performed by considering each precision 
 
 public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.LessOrEqual {
 
-  public static Boolean lessOrEqual(Object left, Object right) {
+  public static Boolean lessOrEqual(Object left, Object right, Context context) {
     if (left == null || right == null) {
         return null;
     }
@@ -75,7 +75,7 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
       else if ((left instanceof Interval && right instanceof Integer)
                     || (left instanceof Integer && right instanceof Interval))
       {
-          return LessEvaluator.less(left, right);
+          return LessEvaluator.less(left, right, context);
       }
 
       throw new InvalidOperatorArgument(
@@ -89,6 +89,6 @@ public class LessOrEqualEvaluator extends org.cqframework.cql.elm.execution.Less
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return lessOrEqual(left, right);
+        return lessOrEqual(left, right, context);
     }
 }

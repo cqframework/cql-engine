@@ -20,7 +20,7 @@ If the source is null, the result is null.
 
 public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
 
-    public static Object median(Object source) {
+    public static Object median(Object source, Context context) {
         if (source == null) {
             return null;
         }
@@ -52,11 +52,11 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
             } else {
                 if (values.get(0) instanceof Integer) { // size of list is even
                     return TruncatedDivideEvaluator.div(
-                            AddEvaluator.add(values.get(values.size() / 2), values.get((values.size() / 2) - 1)), 2
+                            AddEvaluator.add(values.get(values.size() / 2), values.get((values.size() / 2) - 1)), 2, context
                     );
                 } else if (values.get(0) instanceof BigDecimal || values.get(0) instanceof Quantity) {
                     return DivideEvaluator.divide(
-                            AddEvaluator.add(values.get(values.size() / 2), values.get((values.size() / 2) - 1)), new BigDecimal("2.0")
+                            AddEvaluator.add(values.get(values.size() / 2), values.get((values.size() / 2) - 1)), new BigDecimal("2.0"), context
                     );
                 }
             }
@@ -71,6 +71,6 @@ public class MedianEvaluator extends org.cqframework.cql.elm.execution.Median {
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return median(source);
+        return median(source, context);
     }
 }

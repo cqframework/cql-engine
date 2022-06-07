@@ -33,7 +33,7 @@ If either argument is null, the result is null.
 
 public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
 {
-    public static Object except(Object left, Object right)
+    public static Object except(Object left, Object right, Context context)
     {
         if (left == null )
         {
@@ -66,11 +66,11 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
                 precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
             }
 
-            Boolean leftEqualRight = EqualEvaluator.equal(left, right);
-            Boolean rightProperlyIncludesLeft = ProperIncludesEvaluator.properlyIncludes(right, left, precision);
-            Boolean leftProperlyIncludesRight = ProperIncludesEvaluator.properlyIncludes(left, right, precision);
-            Boolean rightStartsLeft = StartsEvaluator.starts(right, left, precision);
-            Boolean rightEndsLeft = EndsEvaluator.ends(right, left, precision);
+            Boolean leftEqualRight = EqualEvaluator.equal(left, right, context);
+            Boolean rightProperlyIncludesLeft = ProperIncludesEvaluator.properlyIncludes(right, left, precision, context);
+            Boolean leftProperlyIncludesRight = ProperIncludesEvaluator.properlyIncludes(left, right, precision, context);
+            Boolean rightStartsLeft = StartsEvaluator.starts(right, left, precision, context);
+            Boolean rightEndsLeft = EndsEvaluator.ends(right, left, precision, context);
             Boolean isUndefined = AnyTrueEvaluator.anyTrue(
                     Arrays.asList(
                             leftEqualRight,
@@ -90,27 +90,27 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
                 return null;
             }
 
-            if (GreaterEvaluator.greater(rightStart, leftEnd))
+            if (GreaterEvaluator.greater(rightStart, leftEnd, context))
             {
                 return left;
             }
 
-            else if (AndEvaluator.and(LessEvaluator.less(leftStart, rightStart), GreaterEvaluator.greater(leftEnd, rightEnd)))
+            else if (AndEvaluator.and(LessEvaluator.less(leftStart, rightStart, context), GreaterEvaluator.greater(leftEnd, rightEnd, context)))
             {
                 return null;
             }
 
             // left interval starts before right interval
-            if (AndEvaluator.and(LessEvaluator.less(leftStart, rightStart), LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd)))
+            if (AndEvaluator.and(LessEvaluator.less(leftStart, rightStart, context), LessOrEqualEvaluator.lessOrEqual(leftEnd, rightEnd, context)))
             {
-                Object min = LessEvaluator.less(PredecessorEvaluator.predecessor(rightStart), leftEnd) ? PredecessorEvaluator.predecessor(rightStart) : leftEnd;
+                Object min = LessEvaluator.less(PredecessorEvaluator.predecessor(rightStart), leftEnd, context) ? PredecessorEvaluator.predecessor(rightStart) : leftEnd;
                 return new Interval(leftStart, true, min, true);
             }
 
             // right interval starts before left interval
-            else if (AndEvaluator.and(GreaterEvaluator.greater(leftEnd, rightEnd), GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart)))
+            else if (AndEvaluator.and(GreaterEvaluator.greater(leftEnd, rightEnd, context), GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart, context)))
             {
-                Object max = GreaterEvaluator.greater(SuccessorEvaluator.successor(rightEnd), leftStart) ? SuccessorEvaluator.successor(rightEnd) : leftStart;
+                Object max = GreaterEvaluator.greater(SuccessorEvaluator.successor(rightEnd), leftStart, context) ? SuccessorEvaluator.successor(rightEnd) : leftStart;
                 return new Interval(max, true, leftEnd, true);
             }
 
@@ -126,14 +126,14 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
             Boolean in;
             for (Object leftItem : leftArr)
             {
-                in = InEvaluator.in(leftItem, rightArr, null);
+                in = InEvaluator.in(leftItem, rightArr, null, context);
                 if (in != null && !in)
                 {
                     result.add(leftItem);
                 }
             }
 
-            return DistinctEvaluator.distinct(result);
+            return DistinctEvaluator.distinct(result, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -148,6 +148,6 @@ public class ExceptEvaluator extends org.cqframework.cql.elm.execution.Except
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return except(left, right);
+        return except(left, right, context);
     }
 }

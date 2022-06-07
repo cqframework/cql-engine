@@ -19,7 +19,7 @@ If either argument is null, the result is null.
 
 public class OverlapsEvaluator extends org.cqframework.cql.elm.execution.Overlaps {
 
-    public static Boolean overlaps(Object left, Object right, String precision) {
+    public static Boolean overlaps(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -32,15 +32,15 @@ public class OverlapsEvaluator extends org.cqframework.cql.elm.execution.Overlap
 
             if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
                 return AndEvaluator.and(
-                        SameOrBeforeEvaluator.sameOrBefore(leftStart, rightEnd, precision),
-                        SameOrBeforeEvaluator.sameOrBefore(rightStart, leftEnd, precision)
+                        SameOrBeforeEvaluator.sameOrBefore(leftStart, rightEnd, precision, context),
+                        SameOrBeforeEvaluator.sameOrBefore(rightStart, leftEnd, precision, context)
                 );
             }
 
             else {
                 return AndEvaluator.and(
-                        LessOrEqualEvaluator.lessOrEqual(leftStart, rightEnd),
-                        LessOrEqualEvaluator.lessOrEqual(rightStart, leftEnd)
+                        LessOrEqualEvaluator.lessOrEqual(leftStart, rightEnd, context),
+                        LessOrEqualEvaluator.lessOrEqual(rightStart, leftEnd, context)
                 );
             }
         }
@@ -57,6 +57,6 @@ public class OverlapsEvaluator extends org.cqframework.cql.elm.execution.Overlap
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return overlaps(left, right, precision);
+        return overlaps(left, right, precision, context);
     }
 }

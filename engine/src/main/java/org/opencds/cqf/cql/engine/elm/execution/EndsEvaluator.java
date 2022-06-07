@@ -18,7 +18,7 @@ If either argument is null, the result is null.
 
 public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
 
-    public static Boolean ends(Object left, Object right, String precision) {
+    public static Boolean ends(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -31,15 +31,15 @@ public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
 
             if (leftStart instanceof BaseTemporal && rightStart instanceof BaseTemporal) {
                 return AndEvaluator.and(
-                        SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision),
-                        SameAsEvaluator.sameAs(leftEnd, rightEnd, precision)
+                        SameOrAfterEvaluator.sameOrAfter(leftStart, rightStart, precision, context),
+                        SameAsEvaluator.sameAs(leftEnd, rightEnd, precision, context)
                 );
             }
 
             else {
                 return AndEvaluator.and(
-                        GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart),
-                        EqualEvaluator.equal(leftEnd, rightEnd)
+                        GreaterOrEqualEvaluator.greaterOrEqual(leftStart, rightStart, context),
+                        EqualEvaluator.equal(leftEnd, rightEnd, context)
                 );
             }
         }
@@ -56,6 +56,6 @@ public class EndsEvaluator extends org.cqframework.cql.elm.execution.Ends {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return ends(left, right, precision);
+        return ends(left, right, precision, context);
     }
 }

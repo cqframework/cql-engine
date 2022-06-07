@@ -28,9 +28,9 @@ Note that the order of elements does not matter for the purposes of determining 
 
 public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Includes {
 
-    public static Boolean includes(Object left, Object right, String precision) {
+    public static Boolean includes(Object left, Object right, String precision, Context context) {
         try {
-            return IncludedInEvaluator.includedIn(right, left, precision);
+            return IncludedInEvaluator.includedIn(right, left, precision, context);
         }
         catch (IllegalArgumentException e) {
             throw new InvalidOperatorArgument(
@@ -52,16 +52,16 @@ public class IncludesEvaluator extends org.cqframework.cql.elm.execution.Include
 
         if (left == null) {
             return right instanceof Interval
-                    ? IncludedInEvaluator.intervalIncludedIn((Interval) right, null, precision)
-                    : IncludedInEvaluator.listIncludedIn((Iterable<?>) right, null);
+                    ? IncludedInEvaluator.intervalIncludedIn((Interval) right, null, precision, context)
+                    : IncludedInEvaluator.listIncludedIn((Iterable<?>) right, null, context);
         }
 
         if (right == null) {
             return left instanceof Interval
-                    ? IncludedInEvaluator.intervalIncludedIn(null, (Interval) left, precision)
-                    : IncludedInEvaluator.listIncludedIn(null, (Iterable<?>) left);
+                    ? IncludedInEvaluator.intervalIncludedIn(null, (Interval) left, precision, context)
+                    : IncludedInEvaluator.listIncludedIn(null, (Iterable<?>) left, context);
         }
 
-        return includes(left, right, precision);
+        return includes(left, right, precision, context);
     }
 }

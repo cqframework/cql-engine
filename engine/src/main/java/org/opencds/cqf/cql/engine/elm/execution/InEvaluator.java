@@ -33,26 +33,26 @@ If either argument is null, the result is null.
 
 public class InEvaluator extends org.cqframework.cql.elm.execution.In
 {
-    public static Boolean in(Object left, Object right, String precision)
+    public static Boolean in(Object left, Object right, String precision, Context context)
     {
         if (left == null )
         {
             return null;
         }
 
-        if(left != null && right == null)
+        if(right == null)
         {
             return false;
         }
 
         if (right instanceof Iterable)
         {
-            return listIn(left, (Iterable<?>) right);
+            return listIn(left, (Iterable<?>) right, context);
         }
 
         else if (right instanceof Interval)
         {
-            return intervalIn(left, (Interval) right, precision);
+            return intervalIn(left, (Interval) right, precision, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -61,18 +61,18 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
         );
     }
 
-    private static Boolean intervalIn(Object left, Interval right, String precision)
+    private static Boolean intervalIn(Object left, Interval right, String precision, Context context)
     {
         Object rightStart = right.getStart();
         Object rightEnd = right.getEnd();
 
         if (left instanceof BaseTemporal)
         {
-            if (AnyTrueEvaluator.anyTrue(Arrays.asList(SameAsEvaluator.sameAs(left, right.getStart(), precision), SameAsEvaluator.sameAs(left, right.getEnd(), precision))))
+            if (AnyTrueEvaluator.anyTrue(Arrays.asList(SameAsEvaluator.sameAs(left, right.getStart(), precision, context), SameAsEvaluator.sameAs(left, right.getEnd(), precision, context))))
             {
                 return true;
             }
-            else if (AnyTrueEvaluator.anyTrue(Arrays.asList(BeforeEvaluator.before(left, right.getStart(), precision), AfterEvaluator.after(left, right.getEnd(), precision))))
+            else if (AnyTrueEvaluator.anyTrue(Arrays.asList(BeforeEvaluator.before(left, right.getStart(), precision, context), AfterEvaluator.after(left, right.getEnd(), precision, context))))
             {
                 return false;
             }
@@ -84,7 +84,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
             }
             else
             {
-                pointSameOrAfterStart = SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision);
+                pointSameOrAfterStart = SameOrAfterEvaluator.sameOrAfter(left, rightStart, precision, context);
             }
 
             Boolean pointSameOrBeforeEnd;
@@ -94,17 +94,17 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
             }
             else
             {
-                pointSameOrBeforeEnd = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision);
+                pointSameOrBeforeEnd = SameOrBeforeEvaluator.sameOrBefore(left, rightEnd, precision, context);
             }
 
             return AndEvaluator.and(pointSameOrAfterStart, pointSameOrBeforeEnd);
         }
 
-        else if (AnyTrueEvaluator.anyTrue(Arrays.asList(EqualEvaluator.equal(left, right.getStart()), EqualEvaluator.equal(left, right.getEnd()))))
+        else if (AnyTrueEvaluator.anyTrue(Arrays.asList(EqualEvaluator.equal(left, right.getStart(), context), EqualEvaluator.equal(left, right.getEnd(), context))))
         {
             return true;
         }
-        else if (AnyTrueEvaluator.anyTrue(Arrays.asList(LessEvaluator.less(left, right.getStart()), GreaterEvaluator.greater(left, right.getEnd()))))
+        else if (AnyTrueEvaluator.anyTrue(Arrays.asList(LessEvaluator.less(left, right.getStart(), context), GreaterEvaluator.greater(left, right.getEnd(), context))))
         {
             return false;
         }
@@ -116,7 +116,7 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
         }
         else
         {
-            greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart);
+            greaterOrEqual = GreaterOrEqualEvaluator.greaterOrEqual(left, rightStart, context);
         }
 
         Boolean lessOrEqual;
@@ -126,18 +126,18 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
         }
         else
         {
-            lessOrEqual = LessOrEqualEvaluator.lessOrEqual(left, rightEnd);
+            lessOrEqual = LessOrEqualEvaluator.lessOrEqual(left, rightEnd, context);
         }
 
         return AndEvaluator.and(greaterOrEqual, lessOrEqual);
     }
 
-    private static Boolean listIn(Object left, Iterable<?> right)
+    private static Boolean listIn(Object left, Iterable<?> right, Context context)
     {
         Boolean isEqual;
         for (Object element : right)
         {
-            isEqual = EqualEvaluator.equal(left, element);
+            isEqual = EqualEvaluator.equal(left, element, context);
             if ((isEqual != null && isEqual))
             {
                 return true;
@@ -164,6 +164,6 @@ public class InEvaluator extends org.cqframework.cql.elm.execution.In
 //            }
 //        }
 
-        return in(left, right, precision);
+        return in(left, right, precision, context);
     }
 }

@@ -102,45 +102,45 @@ Note that this operator can be invoked using either the on or before or the befo
 
 public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.SameOrBefore {
 
-    public static Boolean onOrBefore(Object left, Object right, String precision) {
+    public static Boolean onOrBefore(Object left, Object right, String precision, Context context) {
         // Interval, Interval
         if (left instanceof Interval && right instanceof Interval) {
             if (((Interval) left).getStart() instanceof BaseTemporal) {
-                return sameOrBefore(((Interval) left).getEnd(), ((Interval) right).getStart(), precision);
+                return sameOrBefore(((Interval) left).getEnd(), ((Interval) right).getStart(), precision, context);
             }
-            return LessOrEqualEvaluator.lessOrEqual(((Interval) left).getEnd(), ((Interval) right).getStart());
+            return LessOrEqualEvaluator.lessOrEqual(((Interval) left).getEnd(), ((Interval) right).getStart(), context);
         }
 
         // Interval, Point
         else if (left instanceof Interval) {
             if (right instanceof BaseTemporal) {
-                return sameOrBefore(((Interval) left).getEnd(), right, precision);
+                return sameOrBefore(((Interval) left).getEnd(), right, precision, context);
             }
-            return LessOrEqualEvaluator.lessOrEqual(((Interval) left).getEnd(), right);
+            return LessOrEqualEvaluator.lessOrEqual(((Interval) left).getEnd(), right, context);
         }
 
         // Point, Interval
         else if (right instanceof Interval) {
             if (left instanceof BaseTemporal) {
-                return sameOrBefore(left, ((Interval) right).getStart(), precision);
+                return sameOrBefore(left, ((Interval) right).getStart(), precision, context);
             }
-            return LessOrEqualEvaluator.lessOrEqual(left, ((Interval) right).getStart());
+            return LessOrEqualEvaluator.lessOrEqual(left, ((Interval) right).getStart(), context);
         }
 
-        throw new IllegalArgumentException(String.format(
+        throw new InvalidOperatorArgument(
                 "OnOrBefore(Date, Date), OnOrBefore(DateTime, DateTime), OnOrBefore(Time, Time), OnOrBefore(Interval<T>, Interval<T>), OnOrBefore(T, Interval<T>) or OnOrBefore(Interval<T>, T)",
-                "OnOrBefore(%s, %s)", left.getClass().getName(), right.getClass().getName())
+                String.format("OnOrBefore(%s, %s)", left.getClass().getName(), right.getClass().getName())
         );
     }
 
-    public static Boolean sameOrBefore(Object left, Object right, String precision) {
+    public static Boolean sameOrBefore(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
 
         // Interval OnOrBefore overload
         if (left instanceof Interval || right instanceof Interval) {
-            return onOrBefore(left, right, precision);
+            return onOrBefore(left, right, precision, context);
         }
 
         if (precision == null) {
@@ -164,6 +164,6 @@ public class SameOrBeforeEvaluator extends org.cqframework.cql.elm.execution.Sam
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return sameOrBefore(left, right, precision);
+        return sameOrBefore(left, right, precision, context);
     }
 }

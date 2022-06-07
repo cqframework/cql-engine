@@ -103,29 +103,29 @@ Note that this operator can be invoked using either the on or after or the after
 
 public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.SameOrAfter {
 
-    public static Boolean onOrAfter(Object left, Object right, String precision) {
+    public static Boolean onOrAfter(Object left, Object right, String precision, Context context) {
         // Interval, Interval
         if (left instanceof Interval && right instanceof Interval) {
             if (((Interval) left).getStart() instanceof BaseTemporal) {
-                return sameOrAfter(((Interval) left).getStart(), ((Interval) right).getEnd(), precision);
+                return sameOrAfter(((Interval) left).getStart(), ((Interval) right).getEnd(), precision, context);
             }
-            return GreaterOrEqualEvaluator.greaterOrEqual(((Interval) left).getStart(), ((Interval) right).getEnd());
+            return GreaterOrEqualEvaluator.greaterOrEqual(((Interval) left).getStart(), ((Interval) right).getEnd(), context);
         }
 
         // Interval, Point
         else if (left instanceof Interval) {
             if (right instanceof BaseTemporal) {
-                return sameOrAfter(((Interval) left).getStart(), right, precision);
+                return sameOrAfter(((Interval) left).getStart(), right, precision, context);
             }
-            return GreaterOrEqualEvaluator.greaterOrEqual(((Interval) left).getStart(), right);
+            return GreaterOrEqualEvaluator.greaterOrEqual(((Interval) left).getStart(), right, context);
         }
 
         // Point, Interval
         else if (right instanceof Interval) {
             if (left instanceof BaseTemporal) {
-                return sameOrAfter(left, ((Interval) right).getEnd(), precision);
+                return sameOrAfter(left, ((Interval) right).getEnd(), precision, context);
             }
-            return GreaterOrEqualEvaluator.greaterOrEqual(left, ((Interval) right).getEnd());
+            return GreaterOrEqualEvaluator.greaterOrEqual(left, ((Interval) right).getEnd(), context);
         }
 
         throw new InvalidOperatorArgument(
@@ -133,14 +133,14 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
                 String.format("OnOrAfter(%s, %s)", left.getClass().getName(), right.getClass().getName()));
     }
 
-    public static Boolean sameOrAfter(Object left, Object right, String precision) {
+    public static Boolean sameOrAfter(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
 
         // Interval OnOrAfter overload
         if (left instanceof Interval || right instanceof Interval) {
-            return onOrAfter(left, right, precision);
+            return onOrAfter(left, right, precision, context);
         }
 
         if (precision == null) {
@@ -164,6 +164,6 @@ public class SameOrAfterEvaluator extends org.cqframework.cql.elm.execution.Same
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return sameOrAfter(left, right, precision);
+        return sameOrAfter(left, right, precision, context);
     }
 }

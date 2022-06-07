@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import org.opencds.cqf.cql.engine.exception.InvalidOperatorArgument;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.runtime.CqlList;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
@@ -45,7 +46,7 @@ least precise operand; trailing zeroes after the decimal are ignored in determin
 
 public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equivalent {
 
-    public static Boolean equivalent(Object left, Object right) {
+    public static Boolean equivalent(Object left, Object right, Context context) {
         if (left == null && right == null) {
             return true;
         }
@@ -81,7 +82,7 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         }
 
         if (left instanceof Iterable) {
-            return CqlList.equivalent((Iterable<?>) left, (Iterable<?>) right);
+            return CqlList.equivalent((Iterable<?>) left, (Iterable<?>) right, context);
         }
 
         else if (left instanceof CqlType) {
@@ -92,7 +93,15 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
             return ((String) left).equalsIgnoreCase((String) right);
         }
 
-        return Context.getContext().objectEquivalent(left, right);
+        if (context != null) {
+            return context.objectEquivalent(left, right);
+        }
+
+        throw new InvalidOperatorArgument(String.format("Equivalent(%s, %s) requires Context and context was null", left.getClass().getName(), right.getClass().getName()));
+    }
+
+    public static Boolean equivalent(Object left, Object right) {
+        return equivalent(left, right, null);
     }
 
     @Override
@@ -100,6 +109,6 @@ public class EquivalentEvaluator extends org.cqframework.cql.elm.execution.Equiv
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return equivalent(left, right);
+        return equivalent(left, right, context);
     }
 }

@@ -52,22 +52,22 @@ If either or both arguments are null, the result is null.
 
 public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
 
-    public static Boolean before(Object left, Object right, String precision) {
+    public static Boolean before(Object left, Object right, String precision, Context context) {
 
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof Interval && right instanceof Interval) {
-            return before(((Interval)left).getEnd(), ((Interval)right).getStart(), precision);
+            return before(((Interval)left).getEnd(), ((Interval)right).getStart(), precision, context);
         }
 
         else if (left instanceof Interval) {
-            return before(((Interval)left).getEnd(), right, precision);
+            return before(((Interval)left).getEnd(), right, precision, context);
         }
 
         else if (right instanceof Interval) {
-            return before(left, ((Interval)right).getStart(), precision);
+            return before(left, ((Interval)right).getStart(), precision, context);
         }
 
         else if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
@@ -79,7 +79,7 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
             return result == null ? null : result < 0;
         }
 
-        return LessEvaluator.less(left, right);
+        return LessEvaluator.less(left, right, context);
     }
 
     @Override
@@ -88,6 +88,6 @@ public class BeforeEvaluator extends org.cqframework.cql.elm.execution.Before {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return before(left, right, precision);
+        return before(left, right, precision, context);
     }
 }

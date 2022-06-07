@@ -36,7 +36,7 @@ If the per argument is null, the default unit interval for the point type of the
 
 public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collapse
 {
-    private static Interval getIntervalWithPerApplied(Interval interval, Quantity per)
+    private static Interval getIntervalWithPerApplied(Interval interval, Quantity per, Context context)
     {
         if (per.getValue().equals(new BigDecimal("0")))
         {
@@ -73,7 +73,7 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
         }
     }
 
-    public static List<Interval> collapse(Iterable<Interval> list, Quantity per)
+    public static List<Interval> collapse(Iterable<Interval> list, Quantity per, Context context)
     {
         if (list == null)
         {
@@ -102,7 +102,7 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
 
         for (int i = 0; i < intervals.size() - 1; ++i)
         {
-            Interval applyPer = getIntervalWithPerApplied(intervals.get(i), per);
+            Interval applyPer = getIntervalWithPerApplied(intervals.get(i), per, context);
 
             if(isTemporal) {
                 applyPer = intervals.get(i);
@@ -110,8 +110,8 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
 
             Boolean doMerge = AnyTrueEvaluator.anyTrue(
                     Arrays.asList(
-                            OverlapsEvaluator.overlaps(applyPer, intervals.get(i+1), precision),
-                            MeetsEvaluator.meets(applyPer, intervals.get(i+1), precision)
+                            OverlapsEvaluator.overlaps(applyPer, intervals.get(i+1), precision, context),
+                            MeetsEvaluator.meets(applyPer, intervals.get(i+1), precision, context)
                     )
             );
 
@@ -124,8 +124,8 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
             {
                 Boolean isNextEndGreater =
                         isTemporal
-                                ? AfterEvaluator.after((intervals.get(i+1)).getEnd(), applyPer.getEnd(), precision)
-                                : GreaterEvaluator.greater((intervals.get(i+1)).getEnd(), applyPer.getEnd());
+                                ? AfterEvaluator.after((intervals.get(i+1)).getEnd(), applyPer.getEnd(), precision, context)
+                                : GreaterEvaluator.greater((intervals.get(i+1)).getEnd(), applyPer.getEnd(), context);
 
                 intervals.set(
                         i,
@@ -143,12 +143,12 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected Object internalEvaluate(Context context)
     {
+        @SuppressWarnings("unchecked")
         Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);
         Quantity per = (Quantity) getOperand().get(1).evaluate(context);
 
-        return collapse(list, per);
+        return collapse(list, per, context);
     }
 }

@@ -19,12 +19,12 @@ import org.opencds.cqf.cql.engine.execution.Context;
 
 public class ProperInEvaluator extends org.cqframework.cql.elm.execution.ProperIn {
 
-    public static Boolean properIn(Object left, Object right) {
-        return ProperContainsEvaluator.properContains(right, left);
+    public static Boolean properIn(Object left, Object right, Context context) {
+        return ProperContainsEvaluator.properContains(right, left, context);
     }
 
-    public static Boolean properIn(Object left, Object right, String precision) {
-        return ProperContainsEvaluator.properContains(right, left, precision);
+    public static Boolean properIn(Object left, Object right, String precision, Context context) {
+        return ProperContainsEvaluator.properContains(right, left, precision, context);
     }
 
     @Override
@@ -34,9 +34,9 @@ public class ProperInEvaluator extends org.cqframework.cql.elm.execution.ProperI
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
         if (precision != null) {
-            return properIn(left, right, precision);
+            return properIn(left, right, precision, context);
         }
 
-        return properIn(left, right);
+        return properIn(left, right, context);
     }
 }

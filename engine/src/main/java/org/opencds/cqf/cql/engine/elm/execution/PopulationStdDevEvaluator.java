@@ -19,7 +19,7 @@ Return types: BigDecimal & Quantity
 
 public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution.PopulationStdDev {
 
-    public static Object popStdDev(Object source) {
+    public static Object popStdDev(Object source, Context context) {
 
         if (source == null) {
             return null;
@@ -31,7 +31,7 @@ public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution
                 return null;
             }
 
-            Object variance = PopulationVarianceEvaluator.popVariance(source);
+            Object variance = PopulationVarianceEvaluator.popVariance(source, context);
 
             return variance instanceof BigDecimal ?
                     PowerEvaluator.power(variance, new BigDecimal("0.5")) :
@@ -48,6 +48,6 @@ public class PopulationStdDevEvaluator extends org.cqframework.cql.elm.execution
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return popStdDev(source);
+        return popStdDev(source, context);
     }
 }
