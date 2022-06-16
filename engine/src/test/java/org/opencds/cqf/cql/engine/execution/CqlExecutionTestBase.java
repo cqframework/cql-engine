@@ -11,10 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.*;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
@@ -56,18 +53,18 @@ public abstract class CqlExecutionTestBase {
             try {
                 File cqlFile = new File(URLDecoder.decode(this.getClass().getResource(fileName + ".cql").getFile(), "UTF-8"));
 
-                ArrayList<CqlTranslator.Options> options = new ArrayList<>();
-                options.add(CqlTranslator.Options.EnableDateRangeOptimization);
-                options.add(CqlTranslator.Options.EnableAnnotations);
-                options.add(CqlTranslator.Options.EnableLocators);
+                ArrayList<CqlTranslatorOptions.Options> options = new ArrayList<>();
+                options.add(CqlTranslatorOptions.Options.EnableDateRangeOptimization);
+                options.add(CqlTranslatorOptions.Options.EnableAnnotations);
+                options.add(CqlTranslatorOptions.Options.EnableLocators);
 
                 CqlTranslator translator = CqlTranslator.fromFile(cqlFile, getModelManager(), getLibraryManager(), ucumService,
-                    options.toArray(new CqlTranslator.Options[options.size()]));
+                    options.toArray(new CqlTranslatorOptions.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");
                     ArrayList<String> errors = new ArrayList<>();
-                    for (CqlTranslatorException error : translator.getErrors()) {
+                    for (CqlCompilerException error : translator.getErrors()) {
                         TrackBack tb = error.getLocator();
                         String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
                                 tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());

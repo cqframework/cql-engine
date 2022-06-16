@@ -13,7 +13,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
@@ -59,13 +59,13 @@ public class TestLibraryLoader implements LibraryLoader {
     }
 
     private Library loadLibrary(VersionedIdentifier libraryIdentifier) {
-        List<CqlTranslatorException> errors = new ArrayList<>();
+        List<CqlCompilerException> errors = new ArrayList<>();
         org.hl7.elm.r1.VersionedIdentifier identifier = new org.hl7.elm.r1.VersionedIdentifier()
                 .withId(libraryIdentifier.getId())
                 .withSystem(libraryIdentifier.getSystem())
                 .withVersion(libraryIdentifier.getVersion());
 
-        org.cqframework.cql.cql2elm.model.TranslatedLibrary translatedLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
+        org.cqframework.cql.cql2elm.model.CompiledLibrary translatedLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
 
         LibraryWrapper wrapper = new LibraryWrapper();
         wrapper.setLibrary(translatedLibrary.getLibrary());
