@@ -483,15 +483,15 @@ public class TestFhirPath {
         int skipCounter = 0;
         int passCounter = 0;
         for (Group group : tests.getGroup()) {
-            if (group.getName() == null || !group.getName().equals("testNow")) {
-                continue;
-            }
+            //if (group.getName() == null || !group.getName().equals("testTimeOfDay")) {
+            //    continue;
+            //}
             System.out.println(String.format("Running test group %s...", group.getName()));
 
             for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
-                if (test.getName() == null || !test.getName().equals("testNow1")) {
-                    continue;
-                }
+                //if (test.getName() == null || !test.getName().equals("testNow1")) {
+                //    continue;
+                //}
 
                 testCounter += 1;
                 try {
@@ -519,7 +519,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 721, 550, 18);
+        runTests("r4/tests-fhir-r4.xml", 724, 561, 18);
     }
 
     @Test

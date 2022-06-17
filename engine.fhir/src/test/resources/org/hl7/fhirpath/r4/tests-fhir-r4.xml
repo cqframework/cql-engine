@@ -699,7 +699,7 @@
 	</group>
 
 	<group name="testNow">
-		<test name="testNow1" inputfile="patient-example.xml"><expression>Patient.birthDate &lt; now()</expression><output type="boolean">true</output></test>
+		<test name="testNow1" inputfile="patient-example.xml"><expression>Patient.birthDate.value &lt; now()</expression><output type="boolean">true</output></test>
 		<test name="testNow2" inputfile="patient-example.xml"><expression>now().toString().length() > 10</expression><output type="boolean">true</output></test>
         <test name="testNow3" inputfile="patient-example.xml"><expression>now() > now() - 1 day</expression><output type="boolean">true</output></test>
 	</group>
