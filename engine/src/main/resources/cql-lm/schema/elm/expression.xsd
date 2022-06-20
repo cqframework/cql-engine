@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="urn:hl7-org:elm:r1" xmlns:sch="http://purl.oclc.org/dsdl/schematron" targetNamespace="urn:hl7-org:elm:r1" elementFormDefault="qualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+	xmlns="urn:hl7-org:elm:r1" 
+	xmlns:a="urn:hl7-org:cql-annotations:r1" 
+	xmlns:sch="http://purl.oclc.org/dsdl/schematron" 
+	targetNamespace="urn:hl7-org:elm:r1" 
+	elementFormDefault="qualified">
 	<xs:annotation>
 		<xs:documentation>This file defines the core expression components used throughout artifacts based on the Expression Logical Model. The core expression components defined here are intended to be general purpose, and do not reference anything specific to the clinical quality domain. This layering is intended to isolate the conceptual elements of a general purpose expression language from the clinically-focused operations relevant to the clinical quality domain.</xs:documentation>
 	</xs:annotation>
+	<xs:import namespace="urn:hl7-org:cql-annotations:r1" schemaLocation="cqlannotations.xsd"/>
 	<xs:complexType name="Element" abstract="true">
 		<xs:annotation>
 			<xs:documentation>The Element type defines the abstract base type for all library elements in ELM.</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="annotation" type="xs:anyType" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="annotation" type="a:CqlToElmBase" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation>The annotation element provides a mechanism for decorating expressions with application-specific information such as translation hints, visual designer information, or debug symbols.</xs:documentation>
 				</xs:annotation>
@@ -122,6 +128,16 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="ParameterTypeSpecifier">
+		<xs:annotation>
+			<xs:documentation>A type which is generic class parameter such as T in MyGeneric&lt;T extends SomeType&gt;.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="TypeSpecifier">
+				<xs:attribute name="parameterName" type="xs:string" use="required"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="Expression" abstract="true">
 		<xs:annotation>
 			<xs:documentation>The Expression type defines the abstract base type for all expressions used in the ELM expression language.</xs:documentation>
@@ -229,6 +245,7 @@
 					<xs:element name="operand" type="OperandDef" minOccurs="0" maxOccurs="unbounded"/>
 				</xs:sequence>
 				<xs:attribute name="external" type="xs:boolean" use="optional"/>
+				<xs:attribute name="fluent" type="xs:boolean" use="optional"/>
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
@@ -602,11 +619,11 @@ If no valid conversion exists from the actual value to the target type, the resu
 
 This operator supports conversion:
 
-Between String and each of Boolean, Integer, Decimal, Quantity, Ratio, Date, DateTime, and Time
+Between String and each of Boolean, Integer, Long, Decimal, Quantity, Ratio, Date, DateTime, and Time
 
 as well as:
 
-From Integer to Decimal or Quantity
+From Integer to Long, Decimal or Quantity
 From Decimal to Quantity
 Between Date and DateTime
 From Code to Concept
@@ -629,11 +646,11 @@ Conversion between String and Date/DateTime/Time is performed using the ISO-8601
 
 This operator returns true for conversion:
 
-Between String and each of Boolean, Integer, Decimal, Quantity, Ratio, Date, DateTime, and Time,
+Between String and each of Boolean, Integer, Long, Decimal, Quantity, Ratio, Date, DateTime, and Time,
 
 as well as:
 
-From Integer to Decimal or Quantity
+From Integer to Long, Decimal, or Quantity
 From Decimal to Quantity
 Between Date and DateTime
 From Code to Concept
@@ -656,6 +673,10 @@ Conversion between String and Date/DateTime/Time is checked using the ISO-8601 s
 
 The operator accepts 'true', 't', 'yes', 'y', and '1' as string representations of true, and 'false', 'f', 'no', 'n', and '0' as string representations of false, ignoring case.
 
+If the input is an Integer or Long, the result is true if the integer is 1, false if the integer is 0.
+
+If the input is a Decimal, the result is true if the decimal is 1.0, false if the decimal is 0.0.
+
 If the input cannot be interpreted as a valid Boolean value, the result is null.
 
 If the argument is null the result is null.</xs:documentation>
@@ -666,9 +687,13 @@ If the argument is null the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToBoolean">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToBoolean operator returns true if the value of its argument can be converted to a Boolean value.
+			<xs:documentation>The ConvertsToBoolean operator returns true if the value of its argument is or can be converted to a Boolean value.
 
 The operator accepts 'true', 't', 'yes', 'y', and '1' as string representations of true, and 'false', 'f', 'no', 'n', and '0' as string representations of false, ignoring case.
+
+If the input is an Integer or Long, the result is true if the integer is 1 or 0.
+
+If the input is a Decimal, the result is true if the decimal is 1.0 or 0.0.
 
 If the input cannot be interpreted as a valid Boolean value, the result is false.
 
@@ -682,6 +707,8 @@ If the argument is null the result is null.</xs:documentation>
 		<xs:annotation>
 			<xs:documentation>The ToConcept operator converts a value of type Code to a Concept value with the given Code as its primary and only Code. If the Code has a display value, the resulting Concept will have the same display value.
 
+If the input is a list of Codes, the resulting Concept will have all the input Codes, and will not have a display value.
+
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -690,7 +717,7 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToDate">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToDate operator returns true if the value of its argument can be converted to a Date value.
+			<xs:documentation>The ConvertsToDate operator returns true if the value of its argument is or can be converted to a Date value.
 
 For String values, The operator expects the string to be formatted using the ISO-8601 date representation:
 
@@ -718,6 +745,8 @@ For String values, The operator expects the string to be formatted using the ISO
 
 YYYY-MM-DD
 
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+
 In addition, the string must be interpretable as a valid date value.
 
 Note that the operator can take datetime formatted strings and will ignore the time portions.
@@ -736,11 +765,13 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToDateTime">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToDateTime operator returns true if the value of its argument can be converted to a DateTime value.
+			<xs:documentation>The ConvertsToDateTime operator returns true if the value of its argument is or can be converted to a DateTime value.
 
 For String values, the operator expects the string to be formatted using the ISO-8601 datetime representation:
 
-YYYY-MM-DDThh:mm:ss.fff(+|-)hh:mm
+YYYY-MM-DDThh:mm:ss.fff(Z|((+|-)hh:mm))
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 In addition, the string must be interpretable as a valid DateTime value.
 
@@ -760,7 +791,9 @@ If the argument is null, the result is null.</xs:documentation>
 
 For String values, the operator expects the string to be formatted using the ISO-8601 datetime representation:
 
-YYYY-MM-DDThh:mm:ss.fff(+|-)hh:mm
+YYYY-MM-DDThh:mm:ss.fff(Z|((+|-)hh:mm))
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 In addition, the string must be interpretable as a valid DateTime value.
 
@@ -778,15 +811,19 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToDecimal">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToDecimal operator returns true if the value of its argument can be converted to a Decimal value. The operator accepts strings using the following format:
+			<xs:documentation>The ConvertsToDecimal operator returns true if the value of its argument is or can be converted to a Decimal value. The operator accepts strings using the following format:
 
 (+|-)?#0(.0#)?
 
 Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit, followed optionally by a decimal point, at least one digit, and any number of additional digits (including none).
 
-Note that the decimal value returned by this operator must be limited in precision and scale to the maximum precision and scale representable for Decimal values within CQL.
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+
+Note that for this operator to return true, the input value must be limited in precision and scale to the maximum precision and scale representable for Decimal values within CQL.
 
 If the input string is not formatted correctly, or cannot be interpreted as a valid Decimal value, the result is false.
+
+If the input is a Boolean, the result is true.
 
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -802,9 +839,13 @@ If the argument is null, the result is null.</xs:documentation>
 
 Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit, followed optionally by a decimal point, at least one digit, and any number of additional digits (including none).
 
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+
 Note that the decimal value returned by this operator must be limited in precision and scale to the maximum precision and scale representable for Decimal values within CQL.
 
 If the input string is not formatted correctly, or cannot be interpreted as a valid Decimal value, the result is null.
+
+If the input is Boolean, true will result in 1.0, false will result in 0.0.
 
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -814,15 +855,19 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToInteger">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToInteger operator returns true if the value of its argument can be converted to an Integer value. The operator accepts strings using the following format:
+			<xs:documentation>The ConvertsToInteger operator returns true if the value of its argument is or can be converted to an Integer value. The operator accepts strings using the following format:
 
 (+|-)?#0
 
 Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
 
-Note that the integer value returned by this operator must be a valid value in the range representable for Integer values in CQL.
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+
+Note that for this operator to return true, the input must be a valid value in the range representable for Integer values in CQL.
 
 If the input string is not formatted correctly, or cannot be interpreted as a valid Integer value, the result is false.
+
+If the input is a Boolean, the result is true.
 
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -838,9 +883,13 @@ If the argument is null, the result is null.</xs:documentation>
 
 Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
 
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+
 Note that the integer value returned by this operator must be a valid value in the range representable for Integer values in CQL.
 
 If the input string is not formatted correctly, or cannot be interpreted as a valid Integer value, the result is null.
+
+If the input is Boolean, true will result in 1, false will result in 0.
 
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -848,57 +897,59 @@ If the argument is null, the result is null.</xs:documentation>
 			<xs:extension base="UnaryExpression"/>
 		</xs:complexContent>
 	</xs:complexType>
-    <xs:complexType name="ConvertsToLong">
-        <xs:annotation>
-            <xs:documentation>The ConvertsToLong operator returns true if the value of its argument is or can be converted to a Long value. The operator accepts strings using the following format:
+	<xs:complexType name="ConvertsToLong">
+		<xs:annotation>
+			<xs:documentation>The ConvertsToLong operator returns true if the value of its argument is or can be converted to a Long value. The operator accepts strings using the following format:
 
-                (+|-)?#0
+(+|-)?#0
 
-                Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
+Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
 
-                See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
-                Note that for this operator to return true, the input must be a valid value in the range representable for Long values in CQL.
+Note that for this operator to return true, the input must be a valid value in the range representable for Long values in CQL.
 
-                If the input string is not formatted correctly, or cannot be interpreted as a valid Long value, the result is false.
+If the input string is not formatted correctly, or cannot be interpreted as a valid Long value, the result is false.
 
-                If the input is a Boolean, the result is true.
+If the input is a Boolean, the result is true.
 
-                If the argument is null, the result is null.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="UnaryExpression"/>
-        </xs:complexContent>
-    </xs:complexType>
-    <xs:complexType name="ToLong">
-        <xs:annotation>
-            <xs:documentation>The ToLong operator converts the value of its argument to a Long value. The operator accepts strings using the following format:
+If the argument is null, the result is null.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="UnaryExpression"/>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ToLong">
+		<xs:annotation>
+			<xs:documentation>The ToLong operator converts the value of its argument to a Long value. The operator accepts strings using the following format:
 
-                (+|-)?#0
+(+|-)?#0
 
-                Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
+Meaning an optional polarity indicator, followed by any number of digits (including none), followed by at least one digit.
 
-                See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
-                Note that the long value returned by this operator must be a valid value in the range representable for Long values in CQL.
+Note that the long value returned by this operator must be a valid value in the range representable for Long values in CQL.
 
-                If the input string is not formatted correctly, or cannot be interpreted as a valid Long value, the result is null.
+If the input string is not formatted correctly, or cannot be interpreted as a valid Long value, the result is null.
 
-                If the argument is null, the result is null.</xs:documentation>
-        </xs:annotation>
-        <xs:complexContent>
-            <xs:extension base="UnaryExpression"/>
-        </xs:complexContent>
-    </xs:complexType>
+If the argument is null, the result is null.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="UnaryExpression"/>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="ConvertsToQuantity">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToQuantity operator returns true if the value of its argument can be converted to a Quantity value. The operator may be used with Integer, Decimal, Ratio, or String values.
+			<xs:documentation>The ConvertsToQuantity operator returns true if the value of its argument is or can be converted to a Quantity value. The operator may be used with Integer, Decimal, Ratio, or String values.
 
 For String values, the operator accepts strings using the following format:
 
 (+|-)?#0(.0#)?('&lt;unit&gt;')?
 
-Meaning an optional polarity indicator, followed by any number of digits (including none) followed by at least one digit, optionally followed by a decimal point, at least one digit, and any number of additional digits, all optionally followed by a unit designator as a string literal specifying a valid UCUM unit of measure. Spaces are allowed between the quantity value and the unit designator.
+Meaning an optional polarity indicator, followed by any number of digits (including none) followed by at least one digit, optionally followed by a decimal point, at least one digit, and any number of additional digits, all optionally followed by a unit designator as a string literal specifying a valid UCUM unit of measure or calendar duration keyword, singular or plural. Spaces are allowed between the quantity value and the unit designator.
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 Note that the decimal value of the quantity returned by this operator must be a valid value in the range representable for Decimal values in CQL.
 
@@ -914,13 +965,15 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ToQuantity">
 		<xs:annotation>
-			<xs:documentation>The ToQuantity operator converts the value of its argument to a Quantity value. The operator may be used with Integer, Decimal, Ratio, or String values.
+			<xs:documentation>The ToQuantity operator converts the value of its argument to a Quantity value. The operator may be used with Integer, Decimal, Ratio, or String values. The operation does not perform any unit conversion, that capability is supported by the ConvertQuantity operator.
 
 For String values, the operator accepts strings using the following format:
 
 (+|-)?#0(.0#)?('&lt;unit&gt;')?
 
-Meaning an optional polarity indicator, followed by any number of digits (including none) followed by at least one digit, optionally followed by a decimal point, at least one digit, and any number of additional digits, all optionally followed by a unit designator as a string literal specifying a valid UCUM unit of measure. Spaces are allowed between the quantity value and the unit designator.
+Meaning an optional polarity indicator, followed by any number of digits (including none) followed by at least one digit, optionally followed by a decimal point, at least one digit, and any number of additional digits, all optionally followed by a unit designator as a string literal specifying a valid UCUM unit of measure or calendar duration keyword, singular or plural. Spaces are allowed between the quantity value and the unit designator.
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 Note that the decimal value of the quantity returned by this operator must be a valid value in the range representable for Decimal values in CQL.
 
@@ -938,7 +991,7 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToRatio">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToRatio operator returns true if the value of its argument can be converted to a Ratio value. The operator accepts strings using the following format:
+			<xs:documentation>The ConvertsToRatio operator returns true if the value of its argument is or can be converted to a Ratio value. The operator accepts strings using the following format:
 
 &lt;quantity&gt;:&lt;quantity&gt;
 
@@ -994,18 +1047,20 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToString">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToString operator returns true if the value of its argument can be converted to a String value.
+			<xs:documentation>The ConvertsToString operator returns true if the value of its argument is or can be converted to a String value.
 
 The operator returns true if the argument is any of the following types:
 
 Boolean
 Integer
+Long
 Decimal
 DateTime
 Date
 Time
 Quantity
 Ratio
+String
 
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -1019,12 +1074,15 @@ If the argument is null, the result is null.</xs:documentation>
 
 Boolean true|false
 Integer (-)?#0
+Long (-)?#0
 Decimal (-)?#0.0#
 Quantity (-)?#0.0# '&lt;unit&gt;'
 Date YYYY-MM-DD
 DateTime YYYY-MM-DDThh:mm:ss.fff(+|-)hh:mm
 Time	hh:mm:ss.fff
 Ratio &lt;quantity&gt;:&lt;quantity&gt;
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -1034,11 +1092,13 @@ If the argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="ConvertsToTime">
 		<xs:annotation>
-			<xs:documentation>The ConvertsToTime operator returns true if the value of its argument can be converted to a Time value.
+			<xs:documentation>The ConvertsToTime operator returns true if the value of its argument is or can be converted to a Time value.
 
 For String values, the operator expects the string to be formatted using ISO-8601 time representation:
 
 hh:mm:ss.fff
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 In addition, the string must be interpretable as a valid time-of-day value.
 
@@ -1059,6 +1119,8 @@ If the argument is null, the result is null.</xs:documentation>
 For String values, the operator expects the string to be formatted using ISO-8601 time representation:
 
 hh:mm:ss.fff
+
+See the Formatting Strings topic in the CQL Reference (Appendix B) of the CQL Specification for a description of formatting strings.
 
 In addition, the string must be interpretable as a valid time-of-day value.
 
@@ -1109,7 +1171,9 @@ For string values, equality is strictly lexical based on the Unicode values for 
 
 For decimal values, trailing zeroes are ignored.
 
-For quantities, this means that the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a run-time error.
+For quantities, this means that the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in null. When a quantity has no units specified, it is treated as a quantity with the default unit ('1').
+
+For time-valued quantities, UCUM definite-time duration quantities above days (and weeks) are not comparable to calendar duration quantities above days (and weeks). Definite-time duration unit conversions shall be performed as specified in ISO-8601, while calendar-time duration unit conversions shall be performed according to calendar duration semantics. In particular, unit conversion between variable length calendar durations (i.e. years and months) and definite-time durations (i.e. days or below) results in null.
 
 For ratios, this means that the numerator and denominator must be the same, using quantity equality semantics.
 
@@ -1137,7 +1201,9 @@ For string values, equivalence returns true if the strings are the same value wh
 
 For decimals, equivalent means the values are the same with the comparison done on values rounded to the least precision of the least precise operand; trailing zeroes after the decimal are ignored in determining precision for equivalent comparison.
 
-For quantities, equivalent means the values are the same quantity when considering unit conversion (e.g. 100 'cm' ~ 1 'm') and using decimal equivalent semantics for the value. Note that implementations are not required to support unit conversion and so are allowed to return null for equivalence of quantities with different units.
+For quantities, equivalent means the values are the same quantity when considering unit conversion (e.g. 100 'cm' ~ 1 'm') and using decimal equivalent semantics for the value. Note that implementations are not required to support unit conversion and so are allowed to return false for equivalence of quantities with different units.
+
+For time-valued quantities, UCUM definite-time duration quantities above days (and weeks) are considered equivalent to their calendar duration counterparts. Definite-time duration unit conversions shall be performed as specified in ISO-8601, while calendar-time duration unit conversions shall be performed according to the calendar duration semantics. In particular, unit conversion between variable length calendar durations (i.e. years and months) and definite-time durations (i.e. days or below) uses the approximations of 365 days in a year, and 30 days in a month.
 
 For ratios, equivalent means that the numerator and denominator represent the same ratio (e.g. 1:100 ~ 10:1000).
 
@@ -1173,13 +1239,15 @@ The NotEqual operator is a shorthand for invocation of logical negation of the E
 		<xs:annotation>
 			<xs:documentation>The Less operator returns true if the first argument is less than the second argument.
 
-For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a run-time error.
+For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a null. When a quantity has no units specified, it is treated as a quantity with the default unit ('1').
+
+For time-valued quantities, the UCUM definite-quantity durations above days (and weeks) are not comparable to calendar durations. Definite-time duration unit conversions shall be performed as specified in ISO-8601, while calendar-time duration unit conversions shall be performed according to calendar duration semantics. In particular, unit conversion between variable length calendar durations (i.e. years and months) and definite-time durations (i.e. days or below) results in null.
 
 For Date, Time, and DateTime values, the comparison is performed by considering each precision in order, beginning with years (or hours for time values). If the values are the same, comparison proceeds to the next precision; if the first value is less than the second, the result is true; if the first value is greater than the second, the result is false; if one input has a value for the precision and the other does not, the comparison stops and the result is null; if neither input has a value for the precision or the last precision has been reached, the comparison stops and the result is false. For the purposes of comparison, seconds and milliseconds are combined as a single precision using a decimal, with decimal comparison semantics.
 
 If either argument is null, the result is null.
 
-The Less operator is defined for the Integer, Decimal, String, Date, DateTime, Time, and Quantity types.
+The Less operator is defined for the Integer, Long, Decimal, String, Date, DateTime, Time, and Quantity types.
 
 Note that relative ratio comparisons are not directly supported due to the variance of uses within healthcare. See the discussion in Ratio Operators in the Author's Guide for more information.</xs:documentation>
 		</xs:annotation>
@@ -1191,9 +1259,11 @@ Note that relative ratio comparisons are not directly supported due to the varia
 		<xs:annotation>
 			<xs:documentation>The Greater operator returns true if the first argument is greater than the second argument.
 
-The Greater operator is defined for the Integer, Decimal, String, Date, DateTime, Time, and Quantity types.
+The Greater operator is defined for the Integer, Long, Decimal, String, Date, DateTime, Time, and Quantity types.
 
-For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a run-time error.
+For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in null. When a quantity has no units specified, it is treated as a quantity with the default unit ('1').
+
+For time-valued quantities, the UCUM definite-quantity durations above days (and weeks) are not comparable to calendar durations. Definite-time duration unit conversions shall be performed as specified in ISO-8601, while calendar-time duration unit conversions shall be performed according to calendar duration semantics. In particular, unit conversion between variable length calendar durations (i.e. years and months) and definite-time durations (i.e. days or below) results in null.
 
 For Date, Time, and DateTime values, the comparison is performed by considering each precision in order, beginning with years (or hours for time values). If the values are the same, comparison proceeds to the next precision; if the first value is greater than the second, the result is true; if the first value is less than the second, the result is false; if one input has a value for the precision and the other does not, the comparison stops and the result is null; if neither input has a value for the precision or the last precision has been reached, the comparison stops and the result is false. For the purposes of comparison, seconds and milliseconds are combined as a single precision using a decimal, with decimal comparison semantics.
 
@@ -1211,9 +1281,11 @@ Note that relative ratio comparisons are not directly supported due to the varia
 		<xs:annotation>
 			<xs:documentation>The LessOrEqual operator returns true if the first argument is less than or equal to the second argument.
 
-The LessOrEqual operator is defined for the Integer, Decimal, String, Date, DateTime, Time, and Quantity types.
+The LessOrEqual operator is defined for the Integer, Long, Decimal, String, Date, DateTime, Time, and Quantity types.
 
-For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a run-time error.
+For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a null. When a quantity has no units specified, it is treated as a quantity with the default unit ('1').
+
+For time-valued quantities, the UCUM definite-quantity durations above days (and weeks) are not comparable to calendar durations. Definite-time duration unit conversions shall be performed as specified in ISO-8601, while calendar-time duration unit conversions shall be performed according to calendar duration semantics. In particular, unit conversion between variable length calendar durations (i.e. years and months) and definite-time durations (i.e. days or below) results in null.
 
 For Date, Time, and DateTime values, the comparison is performed by considering each precision in order, beginning with years (or hours for time values). If the values are the same, comparison proceeds to the next precision; if the first value is less than the second, the result is true; if the first value is greater than the second, the result is false; if one input has a value for the precision and the other does not, the comparison stops and the result is null; if neither input has a value for the precision or the last precision has been reached, the comparison stops and the result is true. For the purposes of comparison, seconds and milliseconds are combined as a single precision using a decimal, with decimal comparison semantics.
 
@@ -1231,9 +1303,11 @@ Note that relative ratio comparisons are not directly supported due to the varia
 		<xs:annotation>
 			<xs:documentation>The GreaterOrEqual operator returns true if the first argument is greater than or equal to the second argument.
 
-The GreaterOrEqual operator is defined for the Integer, Decimal, String, Date, DateTime, Time, and Quantity types.
+The GreaterOrEqual operator is defined for the Integer, Long, Decimal, String, Date, DateTime, Time, and Quantity types.
 
-For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a run-time error.
+For comparisons involving quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' are comparable, but units of 'cm2' and 'cm' are not. Attempting to operate on quantities with invalid units will result in a null. When a quantity has no units specified, it is treated as a quantity with the default unit ('1').
+
+For time-valued quantities, the UCUM definite-quantity durations above days (and weeks) are not comparable to calendar durations. Definite-time duration unit conversions shall be performed as specified in ISO-8601, while calendar-time duration unit conversions shall be performed according to calendar duration semantics. In particular, unit conversion between variable length calendar durations (i.e. years and months) and definite-time durations (i.e. days or below) results in null.
 
 For Date, Time, and DateTime values, the comparison is performed by considering each precision in order, beginning with years (or hours for time values). If the values are the same, comparison proceeds to the next precision; if the first value is greater than the second, the result is true; if the first value is less than the second, the result is false; if one input has a value for the precision and the other does not, the comparison stops and the result is null; if neither input has a value for the precision or the last precision has been reached, the comparison stops and the result is true. For the purposes of comparison, seconds and milliseconds are combined as a single precision using a decimal, with decimal comparison semantics.
 
@@ -1254,7 +1328,7 @@ Note that relative ratio comparisons are not directly supported due to the varia
 
 When adding quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' can be added, but units of 'cm2' and 'cm' cannot. The unit of the result will be the most granular unit of either input. Attempting to operate on quantities with invalid units will result in a run-time error.
 
-The Add operator is defined for the Integer, Decimal, and Quantity types. In addition, a time-valued Quantity can be added to a Date, DateTime or Time using this operator.
+The Add operator is defined for the Integer, Long, Decimal, and Quantity types. In addition, a time-valued Quantity can be added to a Date, DateTime or Time using this operator.
 
 For Date, DateTime, and Time values, the operator returns the value of the first argument, incremented by the time-valued quantity, respecting variable length periods for calendar years and months.
 
@@ -1264,9 +1338,11 @@ For DateTime values, the quantity unit must be one of years, months, weeks, days
 
 For Time values, the quantity unit must be one of hours, minutes, seconds, or milliseconds.
 
-Note that as with any Date, Time, or DateTime operations, temporal units may be specified with either singular, plural, or UCUM units.
+Note that as with any Date, Time, or DateTime operations, temporal units may be specified with either singular, plural, or UCUM units. However, to avoid the potential confusion of calendar-based date and time arithmetic with definite-duration date and time arithmetic, it is an error to attempt to add a definite-duration time-valued unit above days (and weeks), a calendar duration must be used.
 
-The operation is performed by converting the time-based quantity to the highest specified granularity in the first argument (truncating any resulting decimal portion) and then adding it to the first argument.
+For precisions above seconds, any decimal portion of the time-valued quantity is ignored, since date/time arithmetic above seconds is performed with calendar duration semantics.
+
+For partial date/time values where the time-valued quantity is more precise than the partial date/time, the operation is performed by converting the time-based quantity to the highest specified granularity in the first argument (truncating any resulting decimal portion) and then adding it to the first argument.
 
 If either argument is null, the result is null.
 
@@ -1282,7 +1358,7 @@ If the result of the addition cannot be represented (i.e. arithmetic overflow), 
 
 When subtracting quantities, the dimensions of each quantity must be the same, but not necessarily the unit. For example, units of 'cm' and 'm' can be subtracted, but units of 'cm2' and 'cm' cannot. The unit of the result will be the most granular unit of either input. Attempting to operate on quantities with invalid units will result in a run-time error.
 
-The Subtract operator is defined for the Integer, Decimal, and Quantity types. In addition, a time-valued Quantity can be subtracted from a Date, DateTime, or Time using this operator.
+The Subtract operator is defined for the Integer, Long, Decimal, and Quantity types. In addition, a time-valued Quantity can be subtracted from a Date, DateTime, or Time using this operator.
 
 For Date, DateTime, Time values, the operator returns the value of the first argument, decremented by the time-valued quantity, respecting variable length periods for calendar years and months.
 
@@ -1292,7 +1368,11 @@ For DateTime values, the quantity unit must be one of years, months, weeks, days
 
 For Time values, the quantity unit must be one of hours, minutes, seconds, or milliseconds.
 
-The operation is performed by converting the time-based quantity to the highest specified granularity in the first argument (truncating any resulting decimal portion) and then adding it to the first argument.
+Note that as with any Date, Time, or DateTime operations, temporal units may be specified with either singular, plural, or UCUM units. However, to avoid the potential confusion of calendar-based date and time arithmetic with definite-duration date and time arithmetic, it is an error to attempt to subtract a definite-duration time-valued unit above days (and weeks), a calendar duration must be used.
+
+For precisions above seconds, any decimal portion of the time-valued quantity is ignored, since date/time arithmetic above seconds is performed with calendar duration semantics.
+
+For partial date/time values where the time-valued quantity is more precise than the partial date/time, the operation is performed by converting the time-based quantity to the highest specified granularity in the first argument (truncating any resulting decimal portion) and then subtracting it from the first argument.
 
 If either argument is null, the result is null.
 
@@ -1312,7 +1392,7 @@ If either argument is null, the result is null.
 
 If the result of the operation cannot be represented, the result is null.
 
-The Multiply operator is defined for the Integer, Decimal and Quantity types.</xs:documentation>
+The Multiply operator is defined for the Integer, Long, Decimal and Quantity types.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BinaryExpression"/>
@@ -1342,7 +1422,9 @@ If either argument is null, the result is null.
 
 If the result of the operation cannot be represented, or the right argument is 0, the result is null.
 
-The TruncatedDivide operator is defined for the Integer and Decimal types.</xs:documentation>
+The TruncatedDivide operator is defined for the Integer, Long, Decimal, and Quantity types.
+
+For TruncatedDivide operations involving quantities, the resulting quantity will have the appropriate unit.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BinaryExpression"/>
@@ -1356,7 +1438,9 @@ If either argument is null, the result is null.
 
 If the result of the modulo cannot be represented, or the right argument is 0, the result is null.
 
-The Modulo operator is defined for the Integer and Decimal types.</xs:documentation>
+The Modulo operator is defined for the Integer, Long, Decimal, and Quantity types.
+
+For Modulo operations involving quantities, the resulting quantity will have the appropriate unit.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BinaryExpression"/>
@@ -1402,7 +1486,7 @@ If the argument is null, the result is null.
 
 If the result of taking the absolute value of the argument cannot be represented (e.g. Abs(minimum Integer)), the result is null.
 
-The Abs operator is defined for the Integer, Decimal, and Quantity types.</xs:documentation>
+The Abs operator is defined for the Integer, Long, Decimal, and Quantity types.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="UnaryExpression"/>
@@ -1418,7 +1502,7 @@ If the argument is null, the result is null.
 
 If the result of negating the argument cannot be represented (e.g. -(minimum Integer)), the result is null.
 
-The Negate operator is defined for the Integer, Decimal, and Quantity types.</xs:documentation>
+The Negate operator is defined for the Integer, Long, Decimal, and Quantity types.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="UnaryExpression"/>
@@ -1493,9 +1577,11 @@ If the result of the operation cannot be represented, the result is null.</xs:do
 		<xs:annotation>
 			<xs:documentation>The Successor operator returns the successor of the argument. For example, the successor of 1 is 2. If the argument is already the maximum value for the type, a run-time error is thrown.
 
-The Successor operator is defined for the Integer, Decimal, Date, DateTime, and Time types.
+The Successor operator is defined for the Integer, Long, Decimal, Date, DateTime, and Time types.
 
 For Integer, Successor is equivalent to adding 1.
+
+For Long, Successor is equivalent to adding 1L.
 
 For Decimal, Successor is equivalent to adding the minimum precision value for the Decimal type, or 10^-08.
 
@@ -1513,9 +1599,11 @@ If the result of the operation cannot be represented, the result is null.</xs:do
 		<xs:annotation>
 			<xs:documentation>The Predecessor operator returns the predecessor of the argument. For example, the predecessor of 2 is 1. If the argument is already the minimum value for the type, a run-time error is thrown.
 
-The Predecessor operator is defined for the Integer, Decimal, Date, DateTime, and Time types.
+The Predecessor operator is defined for the Integer, Long, Decimal, Date, DateTime, and Time types.
 
 For Integer, Predecessor is equivalent to subtracting 1.
+
+For Long, Predecessor is equivalent to subtracting 1L.
 
 For Decimal, Predecessor is equivalent to subtracting the minimum precision value for the Decimal type, or 10^-08.
 
@@ -1533,9 +1621,11 @@ If the result of the operation cannot be represented, the result is null.</xs:do
 		<xs:annotation>
 			<xs:documentation>The MinValue operator returns the minimum representable value for the given type.
 
-The MinValue operator is defined for the Integer, Decimal, Date, DateTime, and Time types.
+The MinValue operator is defined for the Integer, Long, Decimal, Date, DateTime, and Time types.
 
 For Integer, MinValue returns the minimum signed 32-bit integer, -(2^31).
+
+For Long, MinValue returns the minimum signed 64-bit integer, -(2^63).
 
 For Decimal, MinValue returns the minimum representable Decimal value, (-10^28 + 1) / 10^8 (-99999999999999999999.99999999).
 
@@ -1559,9 +1649,11 @@ Note that implementations may choose to represent the minimum DateTime value usi
 		<xs:annotation>
 			<xs:documentation>The MaxValue operator returns the maximum representable value for the given type.
 
-The MaxValue operator is defined for the Integer, Decimal, Date, DateTime, and Time types.
+The MaxValue operator is defined for the Integer, Long, Decimal, Date, DateTime, and Time types.
 
 For Integer, MaxValue returns the maximum signed 32-bit integer, 2^31 - 1.
+
+For Long, MaxValue returns the maximum signed 64-bit integer, 2^63 - 1.
 
 For Decimal, MaxValue returns the maximum representable Decimal value, (10^28 - 1) / 10^8 (99999999999999999999.99999999).
 
@@ -1947,13 +2039,11 @@ If the argument is null, the result is null.</xs:documentation>
 			<xs:extension base="UnaryExpression"/>
 		</xs:complexContent>
 	</xs:complexType>
-	<!-- NOTE: This class is _not_ part of 1.4 ELM, it is included for backwards compatibility.
-	The TimezoneFrom operator in ELM was renamed to TimezoneOffsetFrom -->
 	<xs:complexType name="TimezoneFrom">
 		<xs:annotation>
-			<xs:documentation>The TimezoneFrom operator returns the timezone offset of the argument.
+			<xs:documentation>DEPRECATED (as of 1.4): The TimezoneFrom operator returns the timezone offset of the argument.
 
-				If the argument is null, the result is null.</xs:documentation>
+If the argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="UnaryExpression"/>
@@ -2032,6 +2122,8 @@ At least one component must be specified, and no component may be specified at a
 
 At least one component other than timezoneOffset must be specified, and no component may be specified at a precision below an unspecified precision. For example, hour may be null, but if it is, minute, second, and millisecond must all be null as well.
 
+Although the milliseconds are specified with a separate component, seconds and milliseconds are combined and represented as a Decimal for the purposes of comparison.
+
 If timezoneOffset is not specified, it is defaulted to the timezone offset of the evaluation request.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
@@ -2053,7 +2145,9 @@ If timezoneOffset is not specified, it is defaulted to the timezone offset of th
 		<xs:annotation>
 			<xs:documentation>The Time operator constructs a time value from the given components.
 
-At least one component must be specified, and no component may be specified at a precision below an unspecified precision. For example, minute may be null, but if it is, second, and millisecond must all be null as well.</xs:documentation>
+At least one component must be specified, and no component may be specified at a precision below an unspecified precision. For example, minute may be null, but if it is, second, and millisecond must all be null as well.
+
+Although the milliseconds are specified with a separate component, seconds and milliseconds are combined and represented as a [.id]#Decimal# for the purposes of comparison.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="OperatorExpression">
@@ -2229,7 +2323,7 @@ There are two overloads of this operator:
 
 For the List, T overload, this operator returns true if the given element is in the list, using equality semantics.
 
-For the Interval, T overload, this operator returns true if the given point is greater than or equal to the starting point of the interval, and less than or equal to the ending point of the interval. For open interval boundaries, exclusive comparison operators are used. For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true. If precision is specified and the point type is a Date, DateTime, or Time type, comparisons used in the operation are performed at the specified precision.
+For the Interval, T overload, this operator returns true if the given point is equal to the starting or ending point of the interval, or greater than the starting point and less than the ending point. For open interval boundaries, exclusive comparison operators are used. For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true. If precision is specified and the point type is a Date, DateTime, or Time type, comparisons used in the operation are performed at the specified precision.
 
 If the first argument is null, the result is false. If the second argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
@@ -2252,7 +2346,7 @@ For the List, T overload, this operator returns true if the given element is in 
 
 For the Interval, T overload, this operator returns true if the given point is greater than the starting point of the interval, and less than the ending point of the interval, as determined by the Start and End operators.  If precision is specified and the point type is a Date, DateTime, or Time type, comparisons used in the operation are performed at the specified precision.
 
-If either argument is null, the result is null.</xs:documentation>
+If the first argument is null, the result is false. If the second argument is null, the result is null.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BinaryExpression">
@@ -2271,7 +2365,7 @@ There are two overloads of this operator:
 
 For the T, List overload, this operator returns true if the given element is in the given list, using equality semantics.
 
-For the T, Interval overload, this operator returns true if the given point is greater than or equal to the starting point of the interval, and less than or equal to the ending point of the interval. For open interval boundaries, exclusive comparison operators are used. For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true. If precision is specified and the point type is a Date, DateTime, or Time type, comparisons used in the operation are performed at the specified precision.
+For the T, Interval overload, this operator returns true if the given point is equal to the starting or ending point of the interval, or greater than the starting point and less than the ending point. For open interval boundaries, exclusive comparison operators are used. For closed interval boundaries, if the interval boundary is null, the result of the boundary comparison is considered true. If precision is specified and the point type is a Date, DateTime, or Time type, comparisons used in the operation are performed at the specified precision.
 
 If the first argument is null, the result is null. If the second argument is null the result is false.</xs:documentation>
 		</xs:annotation>
@@ -2294,7 +2388,7 @@ For the T, List overload, this operator returns if the given element is in the g
 
 For the T, Interval overload, this operator returns true if the given point is greater than the starting point, and less than the ending point of the interval, as determined by the Start and End operators. If precision is specified and the point type is a Date, DateTime, or Time type, comparisons used in the operation are performed at the specified precision.
 
-If either argument is null, the result is null.</xs:documentation>
+If the first argument is null, the result is null. If the second argument is null the result is false.</xs:documentation>
 		</xs:annotation>
 		<xs:complexContent>
 			<xs:extension base="BinaryExpression">
@@ -2597,6 +2691,8 @@ The operation is performed by combining successive intervals in the input that e
 
 The per argument determines the precision at which the collapse is computed and must be a quantity-valued expression compatible with the interval point type. For numeric intervals, this means a quantity with the default unit '1' (not to be confused with the quantity value, which may be any valid positive decimal). For Date-, DateTime-, and Time-valued intervals, this means a quantity with a temporal unit (e.g., 'year', 'month', etc).
 
+Conceptually, the per argument to the collapse operator partitions the value-space for the operation into units of size 'per', and the intervals will be collapsed aligning with those partitions. Note that the 'per' partitions start from the starting boundary of the first input interval, ordered.
+
 If the per argument is null, a per value will be constructed based on the coarsest precision of the boundaries of the intervals in the input set. For example, a list of DateTime-based intervals where the boundaries are a mixture of hours and minutes will collapse at the hour precision.
 
 If the list of intervals is empty, the result is empty. If the list of intervals contains a single interval, the result is a list with that interval. If the list of intervals contains nulls, they will be excluded from the resulting list.
@@ -2609,13 +2705,17 @@ If the source argument is null, the result is null.</xs:documentation>
 	</xs:complexType>
 	<xs:complexType name="Expand">
 		<xs:annotation>
-			<xs:documentation>The Expand operator returns the set of intervals of size per for all the ranges present in the given list of intervals.
+			<xs:documentation>The Expand operator returns the set of intervals of size per for all the ranges present in the given list of intervals, or the list of points covering the range of the given interval, if invoked on a single interval.
 
 The per argument determines the size of the resulting intervals and must be a quantity-valued expression compatible with the interval point type. For numeric intervals, this means a quantity with the default unit '1' (not to be confused with the quantity value, which may be any valid positive decimal). For Date-, DateTime-, and Time-valued intervals, this means a quantity with a temporal unit (e.g., 'year', 'month', etc).
+
+Conceptually, the per argument to the expand operator partitions the value-space for the operation into units of size 'per', and the intervals will be expanded aligning with those partitions. Note that the 'per' partitions start from the starting boundary of the first input interval, ordered.
 
 If the per argument is null, a per value will be constructed based on the coarsest precision of the boundaries of the intervals in the input set. For example, a list of DateTime-based intervals where the boundaries are a mixture of hours and minutes will expand at the hour precision.
 
 Note that if the values in the intervals are more precise than the per quantity, the more precise values will be truncated to the precision specified by the per quantity.
+
+If the input argument is an interval, rather than a list of intervals, the result is a list of points, rather than a list of intervals. In this case, the calculation is performed the same way, but the starting point of each resulting interval is returned, rather than the interval.
 
 If the list of intervals is empty, the result is empty. If the list of intervals contains nulls, they will be excluded from the resulting list.
 
@@ -3319,6 +3419,21 @@ Property expressions can also be used to access the individual points and closed
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="AggregateClause">
+		<xs:annotation>
+			<xs:documentation>The AggregateClause element defines the result of the query in terms of an aggregation expression performed for each item in the query.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="Element">
+				<xs:sequence>
+					<xs:element name="expression" type="Expression" minOccurs="1" maxOccurs="1"/>
+					<xs:element name="starting" type="Expression" minOccurs="0" maxOccurs="1"/>
+				</xs:sequence>
+				<xs:attribute name="identifier" type="xs:string" use="required"/>
+				<xs:attribute name="distinct" type="xs:boolean" use="optional" default="false"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="Query">
 		<xs:annotation>
 			<xs:documentation>The Query operator represents a clause-based query. The result of the query is determined by the type of sources included, as well as the clauses used in the query.</xs:documentation>
@@ -3331,6 +3446,7 @@ Property expressions can also be used to access the individual points and closed
 					<xs:element name="relationship" type="RelationshipClause" minOccurs="0" maxOccurs="unbounded"/>
 					<xs:element name="where" type="Expression" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="return" type="ReturnClause" minOccurs="0" maxOccurs="1"/>
+					<xs:element name="aggregate" type="AggregateClause" minOccurs="0" maxOccurs="1"/>
 					<xs:element name="sort" type="SortClause" minOccurs="0" maxOccurs="1"/>
 				</xs:sequence>
 			</xs:extension>
