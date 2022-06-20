@@ -695,12 +695,18 @@
 	<group name="testToday">
 		<test name="testToday1" inputfile="patient-example.xml"><expression>Patient.birthDate &lt; today()</expression><output type="boolean">true</output></test>
 		<test name="testToday2" inputfile="patient-example.xml"><expression>today().toString().length() = 10</expression><output type="boolean">true</output></test>
+        <test name="testToday3" inputfile="patient-example.xml"><expression>today() > today() - 1 day</expression><output type="boolean">true</output></test>
 	</group>
 
 	<group name="testNow">
-		<test name="testNow1" inputfile="patient-example.xml"><expression>Patient.birthDate &lt; now()</expression><output type="boolean">true</output></test>
+		<test name="testNow1" inputfile="patient-example.xml"><expression>Patient.birthDate.value &lt; now()</expression><output type="boolean">true</output></test>
 		<test name="testNow2" inputfile="patient-example.xml"><expression>now().toString().length() > 10</expression><output type="boolean">true</output></test>
+        <test name="testNow3" inputfile="patient-example.xml"><expression>now() > now() - 1 day</expression><output type="boolean">true</output></test>
 	</group>
+
+    <group name="testTimeOfDay">
+        <test name="testTimeOfDay1"><expression>timeOfDay() > timeOfDay() - 1 hour</expression><output type="boolean">true</output></test>
+    </group>
 
 	<group name="testEquality">
 		<test name="testEquality1" inputfile="patient-example.xml"><expression>1 = 1</expression><output type="boolean">true</output></test>
