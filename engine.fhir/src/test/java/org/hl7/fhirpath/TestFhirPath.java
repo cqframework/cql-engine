@@ -512,7 +512,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 721, 550, 18);
+        runTests("r4/tests-fhir-r4.xml", 721, 557, 18);
     }
 
     @Test
