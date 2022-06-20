@@ -9,16 +9,22 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.hl7.cql_annotations.r1.CqlToElmBase;
+import org.opencds.cqf.cql.engine.elm.execution.CqlToElmBaseMixIn;
 import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
 
@@ -59,24 +65,28 @@ public class TestLibraryLoader implements LibraryLoader {
     }
 
     private Library loadLibrary(VersionedIdentifier libraryIdentifier) {
-        List<CqlTranslatorException> errors = new ArrayList<>();
+        List<CqlCompilerException> errors = new ArrayList<>();
         org.hl7.elm.r1.VersionedIdentifier identifier = new org.hl7.elm.r1.VersionedIdentifier()
                 .withId(libraryIdentifier.getId())
                 .withSystem(libraryIdentifier.getSystem())
                 .withVersion(libraryIdentifier.getVersion());
 
-        org.cqframework.cql.cql2elm.model.TranslatedLibrary translatedLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
+        CompiledLibrary compiledLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
 
         LibraryWrapper wrapper = new LibraryWrapper();
-        wrapper.setLibrary(translatedLibrary.getLibrary());
+        wrapper.setLibrary(compiledLibrary.getLibrary());
 
         String json;
         try {
-            ObjectMapper mapper = new ObjectMapper();
-            mapper.setDefaultPropertyInclusion(JsonInclude.Include.NON_DEFAULT);
-            mapper.configure(SerializationFeature.INDENT_OUTPUT, true);
-            JaxbAnnotationModule annotationModule = new JaxbAnnotationModule();
-            mapper.registerModule(annotationModule);
+            ObjectMapper mapper = JsonMapper.builder()
+                .defaultMergeable(true)
+                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
+                .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
+                .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
+                .addModule(new JaxbAnnotationModule())
+                .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
+                .build();
 
             json = mapper.writeValueAsString(wrapper);
         } catch (JsonProcessingException e) {

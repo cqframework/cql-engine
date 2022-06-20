@@ -15,10 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
+import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.testng.annotations.Test;
 
@@ -58,8 +58,6 @@ public class CqlEngineTests extends TranslatingTestBase {
         parameters.put("IntValue", 10);
 
         EvaluationResult result = engine.evaluate("Test", parameters);
-
-
         Object expResult = result.forExpression("X");
 
         assertThat(expResult, is(10));
@@ -121,20 +119,16 @@ public class CqlEngineTests extends TranslatingTestBase {
         libraries.put(toElmIdentifier("Test", "1.0.0"),
             "library Test version '1.0.0'\ninclude Common version '1.0.0' named \"Common\"\ndefine X:\n5+5\ndefine Y: 2 + 2\ndefine W: \"Common\".Z + 5");
 
-
         LibraryManager libraryManager = this.toLibraryManager(libraries);
-        List<CqlTranslatorException> errors = new ArrayList<>();
-        List<Library> executableLibraries = new ArrayList<>();
+        List<CqlCompilerException> errors = new ArrayList<>();
+        List<Library> executableLibrariesJson = new ArrayList<>();
         for (org.hl7.elm.r1.VersionedIdentifier id : libraries.keySet()) {
-            TranslatedLibrary translated = libraryManager.resolveLibrary(id, CqlTranslatorOptions.defaultOptions(), errors);
-            String json = this.convertToJson(translated.getLibrary());
-            executableLibraries.add(this.readJson(json));
+            CompiledLibrary compiled = libraryManager.resolveLibrary(id, CqlTranslatorOptions.defaultOptions(), errors);
+            executableLibrariesJson.add(this.readJson(this.convertToJson(compiled.getLibrary())));
         }
 
-        LibraryLoader libraryLoader = new InMemoryLibraryLoader(executableLibraries);
-
-        CqlEngine engine = new CqlEngine(libraryLoader);
-
+        // Testing JSON Export/Import
+        CqlEngine engine = new CqlEngine(new InMemoryLibraryLoader(executableLibrariesJson));
         EvaluationResult result = engine.evaluate("Test", new HashSet<>(Arrays.asList("X", "Y", "W")));
 
         assertNotNull(result);

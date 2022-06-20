@@ -12,7 +12,7 @@ import java.util.Map;
 import javax.xml.bind.JAXBException;
 
 import org.cqframework.cql.cql2elm.*;
-import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
+import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
@@ -84,15 +84,15 @@ public abstract class FhirExecutionTestBase {
             try {
                 File cqlFile = new File(URLDecoder.decode(this.getClass().getResource("fhir/" + fileName + ".cql").getFile(), "UTF-8"));
 
-                ArrayList<CqlTranslator.Options> options = new ArrayList<>();
-                options.add(CqlTranslator.Options.EnableDateRangeOptimization);
+                ArrayList<CqlTranslatorOptions.Options> options = new ArrayList<>();
+                options.add(CqlTranslatorOptions.Options.EnableDateRangeOptimization);
 
-                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, ucumService, options.toArray(new CqlTranslator.Options[options.size()]));
+                CqlTranslator translator = CqlTranslator.fromFile(cqlFile, modelManager, libraryManager, ucumService, options.toArray(new CqlTranslatorOptions.Options[options.size()]));
 
                 if (translator.getErrors().size() > 0) {
                     System.err.println("Translation failed due to errors:");
                     ArrayList<String> errors = new ArrayList<>();
-                    for (CqlTranslatorException error : translator.getErrors()) {
+                    for (CqlCompilerException error : translator.getErrors()) {
                         TrackBack tb = error.getLocator();
                         String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
                             tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
@@ -104,8 +104,8 @@ public abstract class FhirExecutionTestBase {
 
                 assertThat(translator.getErrors().size(), is(0));
 
-                for (Map.Entry<String, TranslatedLibrary> entry : libraryManager.getTranslatedLibraries().entrySet()) {
-                    String jsonContent = CqlTranslator.convertToJxson(entry.getValue().getLibrary());
+                for (Map.Entry<String, CompiledLibrary> entry : libraryManager.getCompiledLibraries().entrySet()) {
+                    String jsonContent = CqlTranslator.convertToJson(entry.getValue().getLibrary());
                     StringReader sr = new StringReader(jsonContent);
                     libraries.put(entry.getKey(), JsonCqlLibraryReader.read(sr));
                     if (entry.getKey().equals(fileName)) {
@@ -114,7 +114,7 @@ public abstract class FhirExecutionTestBase {
                 }
 
                 if (library == null) {
-                    library = JsonCqlLibraryReader.read(new StringReader(translator.toJxson()));
+                    library = JsonCqlLibraryReader.read(new StringReader(translator.toJson()));
                     libraries.put(fileName, library);
                 }
             } catch (IOException e) {

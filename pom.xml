@@ -50,8 +50,8 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.13.2</jackson.version>
         <jackson-databind.version>2.13.2.1</jackson-databind.version>
-        <cqframework.version>1.5.8</cqframework.version>
-        <hapi.version>5.6.3</hapi.version>
+        <cqframework.version>2.0.0-SNAPSHOT</cqframework.version>
+        <hapi.version>6.0.1</hapi.version>
         <slf4j.version>1.7.29</slf4j.version>
     </properties>
 
@@ -82,18 +82,23 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- StringUtils, ExceptionUtils and Pair classes. -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>1.9</version>
+            </dependency>
 
             <!-- JAXB related dependencies -->
             <dependency>
                 <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics</artifactId>
-                <version>0.12.0</version>
+                <artifactId>jaxb2-basics-runtime</artifactId>
+                <version>1.11.1</version>
             </dependency>
-
             <dependency>
-                <groupId>org.eclipse.persistence</groupId>
-                <artifactId>org.eclipse.persistence.moxy</artifactId>
-                <version>2.7.7</version>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>2.3.3</version>
             </dependency>
 
             <!-- Jackson dependencies -->
@@ -115,6 +120,11 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.module</groupId>
                 <artifactId>jackson-module-jaxb-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-xml</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
 
@@ -225,6 +235,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <groupId>org.eclipse.persistence</groupId>
+                <artifactId>org.eclipse.persistence.moxy</artifactId>
+                <version>2.7.7</version>
+            </dependency>
+
+            <dependency>
                 <groupId>uk.co.datumedge</groupId>
                 <artifactId>hamcrest-json</artifactId>
                 <version>0.2</version>
@@ -236,6 +252,7 @@
                 </exclusions>
                 <scope>test</scope>
             </dependency>
+            <!-- Logging Services -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
@@ -349,35 +366,15 @@
                 <plugin>
                     <groupId>org.jvnet.jaxb2.maven2</groupId>
                     <artifactId>maven-jaxb2-plugin</artifactId>
-                    <!-- Update to 0.14.1 once released to remove illegal reflective access warnings-->
-                    <version>0.14.0</version>
-                    <!-- This replaces the bad version of the jaxb-runtime with the non-reflective access one. -->
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.glassfish.jaxb</groupId>
-                            <artifactId>jaxb-runtime</artifactId>
-                            <version>2.4.0-b180830.0438</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.jvnet.jaxb2.maven2</groupId>
-                            <artifactId>maven-jaxb23-plugin</artifactId>
-                            <version>0.14.0</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.glassfish.jaxb</groupId>
-                                    <artifactId>jaxb-runtime</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                    </dependencies>
+                    <version>0.15.1</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.8.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>11</source>
+                        <target>11</target>
                         <failOnError>true</failOnError>
                         <failOnWarning>false</failOnWarning>
                         <compilerArgs>
