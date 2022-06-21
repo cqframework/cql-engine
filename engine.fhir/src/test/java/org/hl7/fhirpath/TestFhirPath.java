@@ -238,6 +238,9 @@ public class TestFhirPath {
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
+                    System.out.println("Test: " + test.getName());
+                    System.out.println("- Expected Result: " + expectedResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
+                    System.out.println("- Actual Result: " + actualResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
                     Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
@@ -323,8 +326,8 @@ public class TestFhirPath {
                     Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
                     if (comparison == null || !comparison) {
                         System.out.println("Test: " + test.getName());
-                        System.out.println("- Expected Result: " + expectedResult + " of " + expectedResult.getClass().getSimpleName());
-                        System.out.println("- Actual Result: " + actualResult + " of " + expectedResult.getClass().getSimpleName());
+                        System.out.println("- Expected Result: " + expectedResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
+                        System.out.println("- Actual Result: " + actualResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
                         throw new RuntimeException("Actual result is not equal to expected result.");
                     }
                 } else {
