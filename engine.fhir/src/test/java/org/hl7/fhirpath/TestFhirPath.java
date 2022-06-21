@@ -489,7 +489,7 @@ public class TestFhirPath {
             System.out.println(String.format("Running test group %s...", group.getName()));
 
             for (org.hl7.fhirpath.tests.Test test : group.getTest()) {
-                //if (test.getName() == null || !test.getName().equals("testNow1")) {
+                //if (test.getName() == null || !test.getName().equals("testDateNotEqualToday")) {
                 //    continue;
                 //}
 
@@ -519,7 +519,7 @@ public class TestFhirPath {
 
     @Test
     public void testFhirPathR4() {
-        runTests("r4/tests-fhir-r4.xml", 724, 557, 18);
+        runTests("r4/tests-fhir-r4.xml", 724, 561, 18);
     }
 
     @Test
