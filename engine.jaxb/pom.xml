@@ -45,10 +45,12 @@
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
