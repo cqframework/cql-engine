@@ -36,11 +36,6 @@
             <artifactId>jaxb2-basics-runtime</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-        </dependency>
-
         <!-- The Units of Measure  Coding System (UCUM) -->
         <dependency>
             <groupId>org.fhir</groupId>
@@ -160,7 +155,7 @@
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-testng</artifactId>
-                            <version>2.21.0</version>
+                            <version>${surefire.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>
