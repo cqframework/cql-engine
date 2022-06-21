@@ -8,6 +8,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.dstu2.model.EnumFactory;
 import org.hl7.fhir.dstu2.model.Enumeration;
 import org.hl7.fhir.dstu2.model.Enumerations.AdministrativeGender;
@@ -54,13 +56,13 @@ public class TestDstu2ModelResolver {
 
     @Test(expectedExceptions = UnknownType.class)
     public void resolverThrowsExceptionForUnknownType() {
-        ModelResolver resolver = new Dstu2FhirModelResolver();
+        ModelResolver resolver = new Dstu2FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU2));
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
     }
 
     @Test
     public void resolveTypeTests() {
-        ModelResolver resolver = new Dstu2FhirModelResolver();
+        ModelResolver resolver = new Dstu2FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU2));
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
@@ -95,7 +97,7 @@ public class TestDstu2ModelResolver {
 
     @Test
     public void createInstanceTests() {
-        ModelResolver resolver = new Dstu2FhirModelResolver();
+        ModelResolver resolver = new Dstu2FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU2));
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
@@ -149,7 +151,7 @@ public class TestDstu2ModelResolver {
 
     @Test
     public void contextPathTests() {
-        ModelResolver resolver = new Dstu2FhirModelResolver();
+        ModelResolver resolver = new Dstu2FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU2));
 
         String path = (String) resolver.getContextPath("Patient", "Patient");
         assertNotNull(path);

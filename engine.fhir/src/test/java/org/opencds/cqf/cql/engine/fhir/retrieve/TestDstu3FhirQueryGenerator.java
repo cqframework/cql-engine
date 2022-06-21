@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.DataRequirement;
@@ -44,9 +45,9 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
     @BeforeMethod
     public void setUp() throws FhirVersionMisMatchException {
-        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forDstu3());
+        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         TerminologyProvider terminologyProvider = new Dstu3FhirTerminologyProvider(CLIENT);
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         this.generator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, modelResolver);
         this.evaluationOffsetDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-10));
         this.evaluationDateTime = new DateTime(evaluationOffsetDateTime);
