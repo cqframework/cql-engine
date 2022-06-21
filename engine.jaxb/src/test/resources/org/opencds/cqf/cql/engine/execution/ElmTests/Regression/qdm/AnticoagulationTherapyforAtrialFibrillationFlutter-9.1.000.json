@@ -289,6 +289,7 @@
           "codeProperty" : "code"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -384,6 +385,7 @@
           "codeProperty" : "code"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -479,6 +481,7 @@
           "codeProperty" : "code"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -574,6 +577,7 @@
           "codeProperty" : "code"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -754,6 +758,7 @@
           "locator" : "38:2-40:60"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1105,6 +1110,7 @@
           "codeProperty" : "code"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1188,6 +1194,7 @@
           "libraryName" : "TJC"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1389,6 +1396,7 @@
           "locator" : "49:2-51:104"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1834,6 +1842,7 @@
           "locator" : "75:2-78:48"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2268,6 +2277,7 @@
           "locator" : "59:2-62:3"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2618,6 +2628,7 @@
           "locator" : "65:2-67:58"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2822,6 +2833,7 @@
           "locator" : "54:2-56:82"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -3195,6 +3207,7 @@
           "locator" : "70:2-72:84"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -3613,6 +3626,7 @@
           "locator" : "91:2-93:149"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -4238,6 +4252,7 @@
           "locator" : "81:2-88:49"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -4902,7 +4917,8 @@
       } ]
     },
     "annotation" : [ {
-      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation"
+      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+      "type" : "CqlToElmInfo"
     } ]
   }
 }

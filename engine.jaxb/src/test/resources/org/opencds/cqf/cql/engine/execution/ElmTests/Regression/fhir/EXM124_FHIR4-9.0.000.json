@@ -446,6 +446,7 @@
           "libraryName" : "SDE"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -553,6 +554,7 @@
           "libraryName" : "SDE"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -660,6 +662,7 @@
           "libraryName" : "SDE"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -747,6 +750,7 @@
           "libraryName" : "SDE"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -968,6 +972,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1430,6 +1435,7 @@
           "name" : "Initial Population"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1786,6 +1792,7 @@
           "locator" : "70:3-75:104"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2544,6 +2551,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2982,6 +2990,7 @@
           "locator" : "83:2-86:125"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -4024,6 +4033,7 @@
           "locator" : "89:2-93:120"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -5041,6 +5051,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -5148,8 +5159,10 @@
       } ]
     },
     "annotation" : [ {
-      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation"
+      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+      "type" : "CqlToElmInfo"
     }, {
+      "type": "CqlToElmError",
       "libraryId" : "MATGlobalCommonFunctions_FHIR4",
       "libraryVersion" : "5.0.000",
       "startLine" : 286,

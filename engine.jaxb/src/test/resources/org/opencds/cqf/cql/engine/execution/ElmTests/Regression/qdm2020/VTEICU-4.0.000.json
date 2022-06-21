@@ -20,6 +20,7 @@
       }, {
         "type" : "UsingDef",
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -69,6 +70,7 @@
       "def" : [ {
         "type" : "IncludeDef",
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -129,6 +131,7 @@
           "locator" : "7:32-7:49"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -227,6 +230,7 @@
           "name" : "Encounter"
         } ],
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -704,6 +708,7 @@
           "name" : "Encounter"
         } ],
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -898,6 +903,7 @@
           "name" : "Encounter"
         } ],
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1039,6 +1045,7 @@
           "name" : "Encounter"
         } ],
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1475,8 +1482,10 @@
       } ]
     },
     "annotation" : [ {
-      "translatorOptions" : "EnableAnnotations,EnableLocators,DisableListDemotion,DisableListPromotion,DisableMethodInvocation"
+      "translatorOptions" : "EnableAnnotations,EnableLocators,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+      "type" : "CqlToElmInfo"
     }, {
+      "type" : "Annotation",
       "s" : {
         "s" : [ {
           "name" : "{urn:hl7-org:cql-annotations:r1}s",

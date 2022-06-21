@@ -612,7 +612,8 @@
           "dataType" : "{urn:healthit-gov:qdm:v5_4}PatientCharacteristicEthnicity",
           "codeProperty" : "code"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -707,7 +708,8 @@
           "dataType" : "{urn:healthit-gov:qdm:v5_4}PatientCharacteristicPayer",
           "codeProperty" : "code"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -802,7 +804,8 @@
           "dataType" : "{urn:healthit-gov:qdm:v5_4}PatientCharacteristicRace",
           "codeProperty" : "code"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -897,7 +900,8 @@
           "dataType" : "{urn:healthit-gov:qdm:v5_4}PatientCharacteristicSex",
           "codeProperty" : "code"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1132,7 +1136,8 @@
           "localId" : "63",
           "locator" : "54:2-55:97"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1501,7 +1506,8 @@
           "localId" : "71",
           "locator" : "58:2-59:63"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1881,7 +1887,8 @@
           "localId" : "85",
           "locator" : "104:2-107:66"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2385,7 +2392,8 @@
           "locator" : "142:2-146:3",
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2887,7 +2895,8 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean",
           "name" : "Initial Population"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -3145,7 +3154,8 @@
           "localId" : "120",
           "locator" : "65:2-68:7"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -3634,7 +3644,8 @@
           "locator" : "71:2-73:32",
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -4326,7 +4337,8 @@
           "localId" : "184",
           "locator" : "76:2-89:42"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -5950,7 +5962,8 @@
           "localId" : "203",
           "locator" : "92:2-96:46"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -6555,7 +6568,8 @@
           "localId" : "210",
           "locator" : "99:2-101:2"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -7073,7 +7087,8 @@
           "localId" : "240",
           "locator" : "110:2-116:45"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -8056,7 +8071,8 @@
           "localId" : "270",
           "locator" : "119:2-125:45"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -8995,7 +9011,8 @@
           "localId" : "292",
           "locator" : "128:2-132:88"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -9875,7 +9892,8 @@
           "localId" : "314",
           "locator" : "135:2-139:88"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -10799,7 +10817,8 @@
           "localId" : "344",
           "locator" : "149:2-155:45"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -11782,7 +11801,8 @@
           "localId" : "374",
           "locator" : "158:2-164:45"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -12765,7 +12785,8 @@
           "localId" : "404",
           "locator" : "167:2-173:45"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -13575,7 +13596,8 @@
           "locator" : "176:2-180:73",
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
-        "annotation" : [ {
+                "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -13961,7 +13983,8 @@
       } ]
     },
     "annotation" : [ {
-      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation"
+      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+      "type" : "CqlToElmInfo"
     } ]
   }
 }
