@@ -72,7 +72,7 @@ public class CQLOperationsDstu3Test extends TestFhirPath implements ITest {
 
     @Test
     public void test() throws UcumException {
-        runStu3Test(test, fhirContext, provider, fhirModelResolver);
+        runTest(test, "stu3/input/", fhirContext, provider, fhirModelResolver);
     }
 
     public Boolean compareResults(Object expectedResult, Object actualResult, Context context, FhirModelResolver<?, ?, ?, ?, ?, ?, ?, ?> resolver) {

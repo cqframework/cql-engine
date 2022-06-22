@@ -118,108 +118,11 @@ public abstract class TestFhirPath {
         return actualResults;
     }
 
-    @SuppressWarnings("unchecked")
-    protected void runStu3Test(org.hl7.fhirpath.tests.Test test, FhirContext fhirContext, CompositeDataProvider provider, FhirModelResolver<?,?,?,?,?,?,?,?> resolver) throws UcumException {
-        String resourceFilePath = "stu3/input/" + test.getInputfile();
-        IBaseResource resource = loadResourceFile(resourceFilePath, fhirContext);
-        String cql = String.format(
-            "library TestFHIRPath using FHIR version '3.0.0' include FHIRHelpers version '3.0.0' called FHIRHelpers parameter %s %s define Test: %s",
-            resource.fhirType(), resource.fhirType(), test.getExpression().getValue());
-
-        Library library = null;
-        // If the test expression is invalid, expect an error during translation and
-        // fail if we don't get one
-        InvalidType invalidType = test.getExpression().getInvalid();
-        if (invalidType == null) {
-            invalidType = InvalidType.FALSE;
-        }
-
-        if (invalidType.equals(InvalidType.SEMANTIC)) {
-            boolean testPassed = false;
-            try {
-                library = translator.translate(cql);
-            } catch (Exception e) {
-                testPassed = true;
-            }
-
-            if (!testPassed) {
-                throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
-            }
-        } else {
-            Iterable<Object> expectedResults = loadExpectedResults(test, false);
-
-            try {
-                library = translator.translate(cql);
-            } catch (IllegalArgumentException e) {
-                // if it crashes and didn't have an expected output, assume the test was supposed to fail.
-                if (!expectedResults.iterator().hasNext()) {
-                    return;
-                } else {
-                    e.printStackTrace();
-                    throw new RuntimeException(String.format("Couldn't translate library and was expencting a result. %s.", test.getName()));
-                }
-            }
-
-            Context context = new Context(library);
-            context.registerLibraryLoader(translator.getLibraryLoader());
-            context.registerDataProvider("http://hl7.org/fhir", provider);
-            context.setParameter(null, resource.fhirType(), resource);
-
-            Object result = null;
-            boolean testPassed = false;
-            String message = null;
-            try {
-                result = context.resolveExpressionRef("Test").evaluate(context);
-                testPassed = invalidType.equals(InvalidType.FALSE);
-            } catch (Exception e) {
-                testPassed = invalidType.equals(InvalidType.TRUE);
-                message = e.getMessage();
-            }
-
-            if (!testPassed) {
-                if (invalidType.equals(InvalidType.TRUE)) {
-                    throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
-                } else {
-                    throw new RuntimeException(String.format("Unexpected exception thrown for test %s: %s.", test.getName(), message));
-                }
-            }
-
-            if (test.isPredicate() != null && test.isPredicate().booleanValue()) {
-                result = ExistsEvaluator.exists(result);
-            }
-
-            Iterable<Object> actualResults;
-            if (result instanceof Iterable) {
-                actualResults = (Iterable<Object>) result;
-            } else {
-                List<Object> results = new ArrayList<>();
-                results.add(result);
-                actualResults = results;
-            }
-
-            Iterator<Object> actualResultsIterator = actualResults.iterator();
-            for (Object expectedResult : expectedResults) {
-                if (actualResultsIterator.hasNext()) {
-                    Object actualResult = actualResultsIterator.next();
-                    Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
-                    if (comparison == null || !comparison) {
-                        System.out.println("Test: " + test.getName());
-                        System.out.println("- Expected Result: " + expectedResult + " (" + expectedResult.getClass() +")");
-                        System.out.println("- Actual Result: " + actualResult + " (" + expectedResult.getClass() +")");
-                        throw new RuntimeException("Actual result is not equal to expected result.");
-                    }
-                } else {
-                    throw new RuntimeException("Actual result is not equal to expected result.");
-                }
-            }
-        }
-    }
-
-    protected void runR4Test(org.hl7.fhirpath.tests.Test test, FhirContext fhirContext, CompositeDataProvider provider, FhirModelResolver<?,?,?,?,?,?,?,?> resolver) throws UcumException {
+    protected void runTest(org.hl7.fhirpath.tests.Test test, String basePathInput, FhirContext fhirContext, CompositeDataProvider provider, FhirModelResolver<?,?,?,?,?,?,?,?> resolver) throws UcumException {
         String cql = null;
         IBaseResource resource = null;
         if (test.getInputfile() != null) {
-            String resourceFilePath = "r4/input/" + test.getInputfile();
+            String resourceFilePath = basePathInput + test.getInputfile();
             resource = loadResourceFile(resourceFilePath, fhirContext);
             cql = String.format(
                 "library TestFHIRPath using FHIR version '4.0.1' include FHIRHelpers version '4.0.1' called FHIRHelpers parameter %s %s context %s define Test:",
@@ -263,7 +166,18 @@ public abstract class TestFhirPath {
                 throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
             }
         } else {
-            library = translator.translate(cql);
+            try {
+                library = translator.translate(cql);
+            } catch (IllegalArgumentException e) {
+                // if it crashes and didn't have an expected output, assume the test was supposed to fail.
+                if (test.getOutput() == null || test.getOutput().isEmpty()) {
+                    return;
+                } else {
+                    e.printStackTrace();
+                    throw new RuntimeException(String.format("Couldn't translate library and was expencting a result. %s.", test.getName()));
+                }
+            }
+
             Context context = new Context(library);
             context.registerLibraryLoader(translator.getLibraryLoader());
             context.registerDataProvider("http://hl7.org/fhir", provider);
@@ -295,7 +209,7 @@ public abstract class TestFhirPath {
             }
 
             Iterable<Object> actualResults = ensureIterable(result);
-            Iterable<Object> expectedResults = loadExpectedResults(test, false);
+            Iterable<Object> expectedResults = loadExpectedResults(test, isExpressionOutputTest);
             Iterator<Object> actualResultsIterator = actualResults.iterator();
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {

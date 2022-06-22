@@ -89,7 +89,7 @@ public class CQLOperationsR4Test extends TestFhirPath implements ITest {
 
     @Test
     public void test() throws UcumException {
-        runR4Test(test, fhirContext, provider, fhirModelResolver);
+        runTest(test, "r4/input/", fhirContext, provider, fhirModelResolver);
     }
 
     @Override
