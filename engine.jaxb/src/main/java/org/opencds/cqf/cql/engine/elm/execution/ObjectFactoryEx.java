@@ -8,7 +8,7 @@ import javax.xml.namespace.QName;
 import org.cqframework.cql.elm.execution.*;
 
 @XmlRegistry
-public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFactory {
+public class ObjectFactoryEx extends ObjectFactory {
     @Override
     public Abs createAbs() { return new AbsEvaluator(); }
 
