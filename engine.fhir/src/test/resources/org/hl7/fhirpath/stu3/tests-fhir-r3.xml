@@ -177,47 +177,47 @@
 			<expression>Observation.value.value &gt; 180.0</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal1" inputfile="observation-example.xml">
 			<expression>Observation.value.value &gt; 0.0</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal2" inputfile="observation-example.xml">
 			<expression>Observation.value.value &gt; 0</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal3" inputfile="observation-example.xml">
 			<expression>Observation.value.value &lt; 190</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal4" inputfile="observation-example.xml">
 			<expression>Observation.value.value &lt; 'test'</expression>
 			<!-- no output - empty set -->
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate1" inputfile="patient-example.xml">
 			<expression>Patient.birthDate = @1974-12-25</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate2" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate3" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00-10:00</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate4" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00+10:00</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate5" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00Z</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate6" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @T12:14:15</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate7" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @T12:14</expression>
 			<output type="boolean">true</output>
 		</test>
@@ -248,23 +248,23 @@
 			<expression>Patient.link.empty()</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate8" inputfile="patient-example.xml">
 			<expression>true.not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate9" inputfile="patient-example.xml">
 			<expression>false.not() = true</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate10" inputfile="patient-example.xml">
 			<expression>(0).not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate11" inputfile="patient-example.xml">
 			<expression>(1).not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate" inputfile="patient-example.xml">
+		<test name="testLiteralDate12" inputfile="patient-example.xml">
 			<expression>(1|2).not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
@@ -1837,7 +1837,7 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
   public void testPrecedence() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), "1+2*3+4 = 11", true);
   }
-  
+
   @Test
   public void testVariables() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), "%sct = 'http://snomed.info/sct'", true);
@@ -1845,28 +1845,28 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
     testBoolean(patient(), "%ucum = 'http://unitsofmeasure.org'", true);
     testBoolean(patient(), "%\"vs-administrative-gender\" = 'http://hl7.org/fhir/ValueSet/administrative-gender'", true);
   }
-  
+
   @Test
   public void testExtension() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), "Patient.birthDate.extension('http://hl7.org/fhir/StructureDefinition/patient-birthTime').exists()", true);
     testBoolean(patient(), "Patient.birthDate.extension(%\"ext-patient-birthTime\").exists()", true);
     testBoolean(patient(), "Patient.birthDate.extension('http://hl7.org/fhir/StructureDefinition/patient-birthTime1').empty()", true);
   }
-  
+
   @Test
   public void testDollarResource() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), patient().getManagingOrganization(), "Reference", "reference.startsWith('#').not() or (reference.substring(1).trace('url') in %resource.contained.id.trace('ids'))", true);
     testBoolean(patient(), patient(), "Patient", "contained.select(('#'+id in %resource.descendants().reference).not()).empty()", true);
     testWrong(patient(), "contained.select(('#'+id in %resource.descendants().reference).not()).empty()");
   }
-  
+
   @Test
   public void testTyping() throws FileNotFoundException, IOException, FHIRException {
     ElementDefinition ed = new ElementDefinition();
     ed.getBinding().setValueSet(new UriType("http://test.org"));
     testBoolean(null, ed.getBinding().getValueSet(), "ElementDefinition.binding.valueSetUri", "startsWith('http:') or startsWith('https') or startsWith('urn:')", true);
   }
-  
+
   @Test
   public void testDecimalRA() throws FileNotFoundException, IOException, FHIRException {
     RiskAssessment r = new RiskAssessment();
@@ -1881,20 +1881,20 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
     sq1.setCode("%");
     sq1.setSystem("http://unitsofmeasure.org");
     r.addPrediction().setProbability(new Range().setLow(sq).setHigh(sq1));
-    testBoolean(r, r.getPrediction().get(0).getProbability(), "RiskAssessment.prediction.probabilityRange", 
+    testBoolean(r, r.getPrediction().get(0).getProbability(), "RiskAssessment.prediction.probabilityRange",
         "(low.empty() or ((low.code = '%') and (low.system = %ucum))) and (high.empty() or ((high.code = '%') and (high.system = %ucum)))", true);
     testBoolean(r, r.getPrediction().get(0), "RiskAssessment.prediction", "probability is decimal implies probability.as(decimal) <= 100", true);
     r.getPrediction().get(0).setProbability(new DecimalType(80));
     testBoolean(r, r.getPrediction().get(0), "RiskAssessment.prediction", "probability.as(decimal) <= 100", true);
   }
-  
-  
+
+
   @Test
   public void testAppointment() throws FileNotFoundException, IOException, FHIRException {
     testBoolean(appointment(), "(start and end) or status = 'proposed' or status = 'cancelled'", true);
     testBoolean(appointment(), "start.empty() xor end.exists()", true);
   }
-  
+
   @Test
   public void testQuestionnaire() throws FileNotFoundException, IOException, FHIRException {
     Questionnaire q = (Questionnaire) new JsonParser().parse(new FileInputStream("C:/work/org.hl7.fhir/build/publish/questionnaire-example-gcs.json"));
@@ -1906,7 +1906,7 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
   private void testQItem(QuestionnaireItemComponent qi) throws FileNotFoundException, IOException, FHIRException {
     testBoolean(null, qi, "Questionnaire.item", "(type = 'choice' or type = 'open-choice') or (options.empty() and option.empty())", true);
   }
-   
+
   @Test
   public void testExtensionDefinitions() throws FileNotFoundException, IOException, FHIRException {
     Bundle b = (Bundle) new JsonParser().parse(new FileInputStream("C:/work/org.hl7.fhir/build/publish/extension-definitions.json"));
@@ -1916,7 +1916,7 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
   }
 
   private void testStructureDefinition(StructureDefinition sd) throws FileNotFoundException, IOException, FHIRException {
-    testBoolean(sd, sd, "StructureDefinition", "snapshot.element.tail().all(path.startsWith(%resource.snapshot.element.first().path&'.')) and differential.element.tail().all(path.startsWith(%resource.differential.element.first().path&'.'))", true); 
+    testBoolean(sd, sd, "StructureDefinition", "snapshot.element.tail().all(path.startsWith(%resource.snapshot.element.first().path&'.')) and differential.element.tail().all(path.startsWith(%resource.differential.element.first().path&'.'))", true);
   }
 
   @Test
@@ -1928,7 +1928,7 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
 //  public void testParameersConstraint() throws FileNotFoundException, IOException, FHIRException {
 //    Parameters p = parameters();
 //    Order o = (Order) parameters.getParameter().get(0).getResource();
-//    
+//
 //    testBoolean(o, o.getSubject(), "Reference", "reference.startsWith('#').not() or (reference.substring(1).trace('url') in %resource.contained.id.trace('ids'))", true);
 //  }
 
