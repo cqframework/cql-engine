@@ -81,6 +81,7 @@ public class CQLOperationsDstu3Test extends TestFhirPath implements ITest {
         "stu3/tests-fhir-r3/Literals/testLiteralDate10",
         "stu3/tests-fhir-r3/Literals/testLiteralDate11",
         "stu3/tests-fhir-r3/Literals/testLiteralDate12",
+        "stu3/tests-fhir-r3/Literals/testLiteralDecimal2",
         "stu3/tests-fhir-r3/Literals/testLiteralDecimal3",
         "stu3/tests-fhir-r3/Literals/testLiteralDecimal4",
         "stu3/tests-fhir-r3/Literals/testLiteralString",
