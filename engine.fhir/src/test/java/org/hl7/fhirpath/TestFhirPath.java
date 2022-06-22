@@ -44,8 +44,6 @@ public abstract class TestFhirPath {
         }
     }
 
-    private TranslatorHelper translator = new TranslatorHelper();
-
     private IBaseResource loadResourceFile(String resourceFilePath, FhirContext context) {
         return context.newXmlParser()
             .parseResource(new InputStreamReader(TestFhirPath.class.getResourceAsStream(resourceFilePath)));
@@ -154,6 +152,8 @@ public abstract class TestFhirPath {
             invalidType = InvalidType.FALSE;
         }
 
+        TranslatorHelper translator = new TranslatorHelper();
+
         if (invalidType.equals(InvalidType.SEMANTIC)) {
             boolean testPassed = false;
             try {
@@ -214,11 +214,11 @@ public abstract class TestFhirPath {
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
-                    System.out.println("Test: " + test.getName());
-                    System.out.println("- Expected Result: " + expectedResult + " (" + expectedResult.getClass() +")");
-                    System.out.println("- Actual Result: " + actualResult + " (" + expectedResult.getClass() +")");
                     Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
                     if (comparison == null || !comparison) {
+                        System.out.println("Failing Test: " + test.getName());
+                        System.out.println("- Expected Result: " + expectedResult + " (" + expectedResult.getClass() +")");
+                        System.out.println("- Actual Result: " + actualResult + " (" + expectedResult.getClass() +")");
                         throw new RuntimeException("Actual result is not equal to expected result.");
                     }
                 } else {

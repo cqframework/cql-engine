@@ -14,21 +14,12 @@ import java.io.StringReader;
 import java.util.ArrayList;
 
 public class TranslatorHelper {
-    private ModelManager modelManager;
+    private static ModelManager modelManager = new ModelManager();
+    private static LibraryManager libraryManager;
 
-    private ModelManager getModelManager() {
-        if (modelManager == null) {
-            modelManager = new ModelManager();
-        }
-
-        return modelManager;
-    }
-
-    private LibraryManager libraryManager;
-
-    private LibraryManager getLibraryManager() {
+    private static LibraryManager getLibraryManager() {
         if (libraryManager == null) {
-            libraryManager = new LibraryManager(getModelManager());
+            libraryManager = new LibraryManager(modelManager);
             libraryManager.getLibrarySourceLoader().clearProviders();
             libraryManager.getLibrarySourceLoader().registerProvider(new TestLibrarySourceProvider());
             libraryManager.getLibrarySourceLoader().registerProvider(new FhirLibrarySourceProvider());
@@ -40,7 +31,7 @@ public class TranslatorHelper {
 
     public LibraryLoader getLibraryLoader() {
         if (libraryLoader == null) {
-            libraryLoader = new TestLibraryLoader(libraryManager);
+            libraryLoader = new TestLibraryLoader(getLibraryManager());
         }
         return libraryLoader;
     }
@@ -51,7 +42,7 @@ public class TranslatorHelper {
         UcumService ucumService = new UcumEssenceService(
             UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
 
-        CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
+        CqlTranslator translator = CqlTranslator.fromText(cql, modelManager, getLibraryManager(), ucumService,
             options.toArray(new CqlTranslatorOptions.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
             ArrayList<String> errors = new ArrayList<>();
