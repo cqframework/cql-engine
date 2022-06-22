@@ -22,24 +22,24 @@ If either argument is null, the result is null.
 
 public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
 
-    public static Boolean meetsOperation(Object left, Object right, String precision) {
+    public static Boolean meetsOperation(Object left, Object right, String precision, Context context) {
         if (left == null && right == null) {
             return null;
         }
 
         Object maxValue = MaxValueEvaluator.maxValue(left != null ? left.getClass().getName() : right.getClass().getName());
         if (left instanceof BaseTemporal && right instanceof BaseTemporal) {
-            Boolean isMax = SameAsEvaluator.sameAs(left, maxValue, precision);
+            Boolean isMax = SameAsEvaluator.sameAs(left, maxValue, precision, context);
             if (isMax != null && isMax) {
                 return false;
             }
 
             String tempPrecision = BaseTemporal.getHighestPrecision((BaseTemporal) left, (BaseTemporal) right);
             if (precision == null && ((BaseTemporal) left).isUncertain(Precision.fromString(tempPrecision))) {
-                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(left), right, tempPrecision);
+                return SameAsEvaluator.sameAs(SuccessorEvaluator.successor(left), right, tempPrecision, context);
             }
             else if (precision != null && ((BaseTemporal) left).isUncertain(Precision.fromString(precision))) {
-                return SameAsEvaluator.sameAs(left, right, precision);
+                return SameAsEvaluator.sameAs(left, right, precision, context);
             }
 
             if (precision == null) {
@@ -49,23 +49,23 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
             //the following blocks adds 1 with the left and check if it is same as right when both params are of type DateTime/Time
             if (left instanceof DateTime && right instanceof DateTime) {
                 DateTime dt = new DateTime(((DateTime) left).getDateTime().plus(1, Precision.fromString(precision).toChronoUnit()), ((BaseTemporal) left).getPrecision());
-                return SameAsEvaluator.sameAs(dt, right, precision);
+                return SameAsEvaluator.sameAs(dt, right, precision, context);
             }
             else if (left instanceof Time) {
                 Time t = new Time(((Time) left).getTime().plus(1, Precision.fromString(precision).toChronoUnit()), ((BaseTemporal) left).getPrecision());
-                return SameAsEvaluator.sameAs(t, right, precision);
+                return SameAsEvaluator.sameAs(t, right, precision, context);
             }
         }
 
-        Boolean isMax = EqualEvaluator.equal(left, maxValue);
+        Boolean isMax = EqualEvaluator.equal(left, maxValue, context);
         if (isMax != null && isMax) {
             return false;
         }
         //the following gets the successor of left and check with Equal for params Date
-        return EqualEvaluator.equal(SuccessorEvaluator.successor(left), right);
+        return EqualEvaluator.equal(SuccessorEvaluator.successor(left), right, context);
     }
 
-    public static Boolean meets(Object left, Object right, String precision) {
+    public static Boolean meets(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -74,18 +74,18 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
             Object leftStart = ((Interval) left).getStart();
             Object leftEnd = ((Interval) left).getEnd();
 
-            Boolean in = InEvaluator.in(leftStart, right, precision);
+            Boolean in = InEvaluator.in(leftStart, right, precision, context);
             if (in != null && in) {
                 return false;
             }
-            in = InEvaluator.in(leftEnd, right, precision);
+            in = InEvaluator.in(leftEnd, right, precision, context);
             if (in != null && in) {
                 return false;
             }
 
             return OrEvaluator.or(
-                        MeetsBeforeEvaluator.meetsBefore(left, right, precision),
-                        MeetsAfterEvaluator.meetsAfter(left, right, precision)
+                        MeetsBeforeEvaluator.meetsBefore(left, right, precision, context),
+                        MeetsAfterEvaluator.meetsAfter(left, right, precision, context)
             );
         }
 
@@ -101,6 +101,6 @@ public class MeetsEvaluator extends org.cqframework.cql.elm.execution.Meets {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return meets(left, right, precision);
+        return meets(left, right, precision, context);
     }
 }

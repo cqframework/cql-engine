@@ -18,7 +18,7 @@ Avg(argument List<Quantity>) Quantity
 
 public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
 
-    public static Object avg(Object source) {
+    public static Object avg(Object source, Context context) {
 
         if (source == null) {
             return null;
@@ -50,7 +50,7 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
                 }
             }
 
-            return DivideEvaluator.divide(avg, new BigDecimal(size));
+            return DivideEvaluator.divide(avg, new BigDecimal(size), context);
         }
 
         throw new InvalidOperatorArgument(
@@ -62,6 +62,6 @@ public class AvgEvaluator extends org.cqframework.cql.elm.execution.Avg {
     @Override
     protected Object internalEvaluate(Context context) {
         Object src = getSource().evaluate(context);
-        return avg(src);
+        return avg(src, context);
     }
 }

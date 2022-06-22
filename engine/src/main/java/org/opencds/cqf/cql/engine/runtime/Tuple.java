@@ -7,12 +7,20 @@ import java.util.Map;
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.ToStringEvaluator;
+import org.opencds.cqf.cql.engine.execution.Context;
 
 public class Tuple implements CqlType {
 
     protected LinkedHashMap<String, Object> elements;
 
+    private Context context;
+
     public Tuple() {
+        this(null);
+    }
+
+    public Tuple(Context context) {
+        this.context = context;
         this.elements = new LinkedHashMap<>();
     }
 
@@ -34,6 +42,10 @@ public class Tuple implements CqlType {
         return this;
     }
 
+    public Context getContext() {
+        return this.context;
+    }
+
     @Override
     public Boolean equivalent(Object other) {
         if (this.getElements().size() != ((Tuple) other).getElements().size()) {
@@ -42,7 +54,7 @@ public class Tuple implements CqlType {
 
         for (String key : ((Tuple) other).getElements().keySet()) {
             if (this.getElements().containsKey(key)) {
-                Object areKeyValsSame = EquivalentEvaluator.equivalent(((Tuple) other).getElements().get(key), this.getElements().get(key));
+                Object areKeyValsSame = EquivalentEvaluator.equivalent(((Tuple) other).getElements().get(key), this.getElements().get(key), context);
                 if (!(Boolean) areKeyValsSame) {
                     return false;
                 }
@@ -67,7 +79,7 @@ public class Tuple implements CqlType {
                 {
                     continue;
                 }
-                Boolean equal = EqualEvaluator.equal(((Tuple) other).getElements().get(key), this.getElements().get(key));
+                Boolean equal = EqualEvaluator.equal(((Tuple) other).getElements().get(key), this.getElements().get(key), context);
                 if (equal == null) { return null; }
                 else if (!equal) { return false; }
             }

@@ -27,7 +27,7 @@ If either argument is null, the result is null.
 
 public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.GreaterOrEqual {
 
-  public static Boolean greaterOrEqual(Object left, Object right) {
+  public static Boolean greaterOrEqual(Object left, Object right, Context context) {
 
     if (left == null || right == null) {
         return null;
@@ -66,7 +66,7 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
       else if ((left instanceof Interval && right instanceof Integer)
                     || (left instanceof Integer && right instanceof Interval))
       {
-          return GreaterEvaluator.greater(left, right);
+          return GreaterEvaluator.greater(left, right, context);
       }
 
       throw new InvalidOperatorArgument(
@@ -80,6 +80,6 @@ public class GreaterOrEqualEvaluator extends org.cqframework.cql.elm.execution.G
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return greaterOrEqual(left, right);
+        return greaterOrEqual(left, right, context);
     }
 }

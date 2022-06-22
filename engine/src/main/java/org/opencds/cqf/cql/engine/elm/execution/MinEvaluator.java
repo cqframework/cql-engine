@@ -25,7 +25,7 @@ If the source is null, the result is null.
 
 public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
 
-    public static Object min(Object source) {
+    public static Object min(Object source, Context context) {
         if (source == null) {
             return null;
         }
@@ -49,7 +49,7 @@ public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
                     continue;
                 }
 
-                Boolean less = LessEvaluator.less(value, min);
+                Boolean less = LessEvaluator.less(value, min, context);
                 if (less != null && less) {
                     min = value;
                 }
@@ -66,6 +66,6 @@ public class MinEvaluator extends org.cqframework.cql.elm.execution.Min {
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return min(source);
+        return min(source, context);
     }
 }

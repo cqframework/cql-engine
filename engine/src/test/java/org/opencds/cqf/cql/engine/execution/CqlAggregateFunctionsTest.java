@@ -101,7 +101,7 @@ public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
         assertThat(result, is(new BigDecimal("3.0")));
 
         try {
-            result = AvgEvaluator.avg(Arrays.asList("this", "is", "error"));
+            result = AvgEvaluator.avg(Arrays.asList("this", "is", "error"), context);
             Assert.fail();
         }
         catch (InvalidOperatorArgument e) {

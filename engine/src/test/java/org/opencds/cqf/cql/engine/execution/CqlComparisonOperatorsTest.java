@@ -235,7 +235,7 @@ public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
         assertThat(result, is(false));
 
         try {
-            GreaterEvaluator.greater(1, "one");
+            GreaterEvaluator.greater(1, "one", context);
             Assert.fail();
         }
         catch (CqlException e) {

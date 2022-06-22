@@ -15,13 +15,13 @@ If either argument is null, the result is null.
 
 public class MeetsAfterEvaluator extends org.cqframework.cql.elm.execution.MeetsAfter {
 
-    public static Boolean meetsAfter(Object left, Object right, String precision) {
+    public static Boolean meetsAfter(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
 
         if (left instanceof Interval && right instanceof Interval) {
-            Boolean isRightStartGreater = GreaterEvaluator.greater(((Interval) right).getStart(), ((Interval) left).getEnd());
+            Boolean isRightStartGreater = GreaterEvaluator.greater(((Interval) right).getStart(), ((Interval) left).getEnd(), context);
             if (isRightStartGreater != null && isRightStartGreater) {
                 return false;
             }
@@ -29,20 +29,20 @@ public class MeetsAfterEvaluator extends org.cqframework.cql.elm.execution.Meets
             Object leftStart = ((Interval) left).getStart();
             Object rightEnd = ((Interval) right).getEnd();
 
-            Boolean isIn = InEvaluator.in(((Interval) left).getEnd(), right, precision);
+            Boolean isIn = InEvaluator.in(((Interval) left).getEnd(), right, precision, context);
             if (isIn != null && isIn) {
                 return false;
             }
-            isIn = InEvaluator.in(leftStart, right, precision);
+            isIn = InEvaluator.in(leftStart, right, precision, context);
             if (isIn != null && isIn) {
                 return false;
             }
-            isIn = InEvaluator.in(rightEnd, left, precision);
+            isIn = InEvaluator.in(rightEnd, left, precision, context);
             if (isIn != null && isIn) {
                 return false;
             }
 
-            return MeetsEvaluator.meetsOperation(rightEnd, leftStart, precision);
+            return MeetsEvaluator.meetsOperation(rightEnd, leftStart, precision, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -57,6 +57,6 @@ public class MeetsAfterEvaluator extends org.cqframework.cql.elm.execution.Meets
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return meetsAfter(left, right, precision);
+        return meetsAfter(left, right, precision, context);
     }
 }

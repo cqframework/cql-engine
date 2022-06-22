@@ -82,17 +82,17 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
     }
 
     private Object evaluateReturn(Context context, List<Variable> variables, List<Object> elements) {
-        return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : constructResult(variables, elements);
+        return this.getReturn() != null ? this.getReturn().getExpression().evaluate(context) : constructResult(context, variables, elements);
     }
 
-    private Object constructResult(List<Variable> variables, List<Object> elements) {
+    private Object constructResult(Context context, List<Variable> variables, List<Object> elements) {
         if (variables.size() > 1) {
-            LinkedHashMap<String,Object> elementMap = new LinkedHashMap<String, Object>();
+            LinkedHashMap<String,Object> elementMap = new LinkedHashMap<>();
             for (int i = 0; i < variables.size(); i++) {
                 elementMap.put(variables.get(i).getName(), variables.get(i).getValue());
             }
 
-            return new Tuple().withElements(elementMap);
+            return new Tuple(context).withElements(elementMap);
         }
 
         return elements.get(0);
@@ -210,7 +210,7 @@ public class QueryEvaluator extends org.cqframework.cql.elm.execution.Query {
         }
 
         if (this.getReturn() != null && this.getReturn().isDistinct()) {
-            result = DistinctEvaluator.distinct(result);
+            result = DistinctEvaluator.distinct(result, context);
         }
 
         sortResult(result, context, null);

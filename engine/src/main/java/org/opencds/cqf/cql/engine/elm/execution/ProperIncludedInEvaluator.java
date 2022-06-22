@@ -29,7 +29,7 @@ Note that the order of elements does not matter for the purposes of determining 
 
 public class ProperIncludedInEvaluator extends org.cqframework.cql.elm.execution.ProperIncludedIn {
 
-    public static Object properlyIncludedIn(Object left, Object right, String precision) {
+    public static Object properlyIncludedIn(Object left, Object right, String precision, Context context) {
         if (left == null && right == null) {
             return null;
         }
@@ -37,17 +37,17 @@ public class ProperIncludedInEvaluator extends org.cqframework.cql.elm.execution
         try {
             if (left == null) {
                 return right instanceof Interval
-                        ? ProperIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision)
-                        : ProperIncludesEvaluator.listProperlyIncludes((Iterable<?>) right, null);
+                        ? ProperIncludesEvaluator.intervalProperlyIncludes((Interval) right, null, precision, context)
+                        : ProperIncludesEvaluator.listProperlyIncludes((Iterable<?>) right, null, context);
             }
 
             if (right == null) {
                 return left instanceof Interval
-                        ? ProperIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision)
-                        : ProperIncludesEvaluator.listProperlyIncludes(null, (Iterable<?>) left);
+                        ? ProperIncludesEvaluator.intervalProperlyIncludes(null, (Interval) left, precision, context)
+                        : ProperIncludesEvaluator.listProperlyIncludes(null, (Iterable<?>) left, context);
             }
 
-            return ProperIncludesEvaluator.properlyIncludes(right, left, precision);
+            return ProperIncludesEvaluator.properlyIncludes(right, left, precision,context);
         }
         catch (InvalidOperatorArgument e) {
             throw new InvalidOperatorArgument(
@@ -63,6 +63,6 @@ public class ProperIncludedInEvaluator extends org.cqframework.cql.elm.execution
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return properlyIncludedIn(left, right, precision);
+        return properlyIncludedIn(left, right, precision, context);
     }
 }

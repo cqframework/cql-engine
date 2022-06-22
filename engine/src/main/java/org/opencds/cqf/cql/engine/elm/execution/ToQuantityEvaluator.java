@@ -78,7 +78,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
         return quantity;
     }
 
-    public static Quantity toQuantity(Object operand) {
+    public static Quantity toQuantity(Object operand, Context context) {
         if (operand == null) {
             return null;
         }
@@ -105,7 +105,7 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
             return new Quantity().withValue((BigDecimal) operand).withDefaultUnit();
         }
         else if (operand instanceof Ratio) {
-            return (Quantity) DivideEvaluator.divide(((Ratio) operand).getNumerator(), ((Ratio) operand).getDenominator());
+            return (Quantity) DivideEvaluator.divide(((Ratio) operand).getNumerator(), ((Ratio) operand).getDenominator(), context);
         }
 
         throw new IllegalArgumentException(String.format("Cannot cast a value of type %s as Quantity - use String, Integer, Decimal, or Ratio values.", operand.getClass().getName()));
@@ -114,6 +114,6 @@ public class ToQuantityEvaluator extends org.cqframework.cql.elm.execution.ToQua
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-        return toQuantity(operand);
+        return toQuantity(operand, context);
     }
 }

@@ -13,7 +13,7 @@ If the argument is null, the result is null.
 * */
 public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointFrom {
 
-    public static Object pointFrom(Object operand) {
+    public static Object pointFrom(Object operand, Context context) {
         if (operand == null) {
             return null;
         }
@@ -22,7 +22,7 @@ public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointF
             Object start = ((Interval) operand).getStart();
             Object end = ((Interval) operand).getEnd();
 
-            Boolean equal = EqualEvaluator.equal(start, end);
+            Boolean equal = EqualEvaluator.equal(start, end, context);
             if (equal != null && equal) {
                 return start;
             }
@@ -39,6 +39,6 @@ public class PointFromEvaluator extends org.cqframework.cql.elm.execution.PointF
     @Override
     protected Object internalEvaluate(Context context) {
         Object operand = getOperand().evaluate(context);
-        return pointFrom(operand);
+        return pointFrom(operand, context);
     }
 }

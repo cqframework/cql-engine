@@ -1,7 +1,10 @@
 package org.opencds.cqf.cql.engine.runtime;
 
 import java.math.BigDecimal;
-import java.time.*;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.Objects;
@@ -83,14 +86,17 @@ public class TemporalHelper {
         return new BigDecimal(Double.toString(seconds/60f/60f));
     }
 
-    public static ZonedDateTime toZonedDateTime(LocalDateTime localDateTime) {
-        Context c = Context.getContext();
+    public static ZonedDateTime toZonedDateTime(LocalDateTime localDateTime, Context c) {
         if (c != null) {
             return localDateTime.atZone(c.getEvaluationZonedDateTime().getZone());
         }
         else {
             return localDateTime.atZone(TimeZone.getDefault().toZoneId());
         }
+    }
+
+    public static ZonedDateTime toZonedDateTime(LocalDateTime localDateTime) {
+        return toZonedDateTime(localDateTime, null);
     }
 
     public static OffsetDateTime toOffsetDateTime(LocalDateTime localDateTime) {

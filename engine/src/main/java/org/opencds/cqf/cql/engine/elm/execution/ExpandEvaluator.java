@@ -57,11 +57,11 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
 
         throw new InvalidOperatorArgument(
                 "Expand(List<Interval<T>>, Quantity)",
-                String.format("Expand(%s, %s)" + addTo.getClass().getName(), per.getClass().getName())
+                String.format("Expand(%s, %s)", addTo.getClass().getName(), per.getClass().getName())
         );
     }
 
-    public static List<Interval> getExpandedInterval(Interval interval, Quantity per)
+    public static List<Interval> getExpandedInterval(Interval interval, Quantity per, Context context)
     {
         if (interval.getLow() == null || interval.getHigh() == null )
         {
@@ -78,13 +78,13 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
             return null;
         }
 
-        if (EqualEvaluator.equal(start, interval.getEnd()))
+        if (EqualEvaluator.equal(start, interval.getEnd(), context))
         {
             expansion.add(new Interval(start, true, start, true));
             return expansion;
         }
 
-        while (LessOrEqualEvaluator.lessOrEqual(PredecessorEvaluator.predecessor(end), interval.getEnd()))
+        while (LessOrEqualEvaluator.lessOrEqual(PredecessorEvaluator.predecessor(end), interval.getEnd(), context))
         {
             expansion.add(new Interval(start, true, end, false));
             start = end;
@@ -149,7 +149,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
         return null;
     }
 
-    public static List<Interval> expand(Iterable<Interval> list, Quantity per)
+    public static List<Interval> expand(Iterable<Interval> list, Quantity per, Context context)
     {
         if (list == null)
         {
@@ -164,7 +164,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
         }
 
         // collapses overlapping intervals
-        intervals = CollapseEvaluator.collapse(intervals, new Quantity().withValue(BigDecimal.ZERO).withUnit(per == null ? "1" : per.getUnit()));
+        intervals = CollapseEvaluator.collapse(intervals, new Quantity().withValue(BigDecimal.ZERO).withUnit(per == null ? "1" : per.getUnit()), context);
 
         boolean isTemporal =
                 intervals.get(0).getStart() instanceof BaseTemporal
@@ -201,7 +201,7 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
                 continue;
             }
 
-            List<Interval> temp = isTemporal ? getExpandedInterval(interval, per, precision) : getExpandedInterval(interval, per);
+            List<Interval> temp = isTemporal ? getExpandedInterval(interval, per, precision) : getExpandedInterval(interval, per, context);
             if (temp == null)
             {
                 return null;
@@ -223,6 +223,6 @@ public class ExpandEvaluator extends org.cqframework.cql.elm.execution.Expand
         Iterable<Interval> list = (Iterable<Interval>) getOperand().get(0).evaluate(context);
         Quantity per = (Quantity) getOperand().get(1).evaluate(context);
 
-        return expand(list, per);
+        return expand(list, per, context);
     }
 }

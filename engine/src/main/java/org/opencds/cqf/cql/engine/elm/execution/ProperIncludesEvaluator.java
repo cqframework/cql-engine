@@ -31,28 +31,28 @@ Note that the order of elements does not matter for the purposes of determining 
 
 public class ProperIncludesEvaluator extends org.cqframework.cql.elm.execution.ProperIncludes {
 
-    public static Boolean properlyIncludes(Object left, Object right, String precision) {
+    public static Boolean properlyIncludes(Object left, Object right, String precision, Context context) {
         if (left == null && right == null) {
             return null;
         }
 
         if (left == null) {
             return right instanceof Interval
-                    ? intervalProperlyIncludes(null, (Interval) right, precision)
-                    : listProperlyIncludes(null, (Iterable<?>) right);
+                    ? intervalProperlyIncludes(null, (Interval) right, precision, context)
+                    : listProperlyIncludes(null, (Iterable<?>) right, context);
         }
 
         if (right == null) {
             return left instanceof Interval
-                    ? intervalProperlyIncludes((Interval) left, null, precision)
-                    : listProperlyIncludes((Iterable<?>) left, null);
+                    ? intervalProperlyIncludes((Interval) left, null, precision, context)
+                    : listProperlyIncludes((Iterable<?>) left, null, context);
         }
 
         if (left instanceof Interval && right instanceof Interval) {
-            return intervalProperlyIncludes((Interval) left, (Interval) right, precision);
+            return intervalProperlyIncludes((Interval) left, (Interval) right, precision, context);
         }
         if (left instanceof Iterable && right instanceof Iterable) {
-            return listProperlyIncludes((Iterable<?>) left, (Iterable<?>) right);
+            return listProperlyIncludes((Iterable<?>) left, (Iterable<?>) right, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -61,7 +61,7 @@ public class ProperIncludesEvaluator extends org.cqframework.cql.elm.execution.P
         );
     }
 
-    public static Boolean intervalProperlyIncludes(Interval left, Interval right, String precision) {
+    public static Boolean intervalProperlyIncludes(Interval left, Interval right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -74,21 +74,21 @@ public class ProperIncludesEvaluator extends org.cqframework.cql.elm.execution.P
         if (leftStart instanceof BaseTemporal || leftEnd instanceof BaseTemporal
                 || rightStart instanceof BaseTemporal || rightEnd instanceof BaseTemporal) {
             Boolean isSame = AndEvaluator.and(
-                    SameAsEvaluator.sameAs(leftStart, rightStart, precision),
-                    SameAsEvaluator.sameAs(leftEnd, rightEnd, precision)
+                    SameAsEvaluator.sameAs(leftStart, rightStart, precision, context),
+                    SameAsEvaluator.sameAs(leftEnd, rightEnd, precision, context)
             );
             return AndEvaluator.and(
-                    IncludedInEvaluator.intervalIncludedIn(right, left, precision),
+                    IncludedInEvaluator.intervalIncludedIn(right, left, precision, context),
                     isSame == null ? null : !isSame
             );
         }
         return AndEvaluator.and(
-                IncludedInEvaluator.intervalIncludedIn(right, left, precision),
-                NotEqualEvaluator.notEqual(left, right)
+                IncludedInEvaluator.intervalIncludedIn(right, left, precision, context),
+                NotEqualEvaluator.notEqual(left, right, context)
         );
     }
 
-    public static Boolean listProperlyIncludes(Iterable<?> left, Iterable<?> right) {
+    public static Boolean listProperlyIncludes(Iterable<?> left, Iterable<?> right, Context context) {
         if (left == null) {
             return false;
         }
@@ -100,10 +100,11 @@ public class ProperIncludesEvaluator extends org.cqframework.cql.elm.execution.P
         }
 
         return AndEvaluator.and(
-                IncludedInEvaluator.listIncludedIn(right, left),
+                IncludedInEvaluator.listIncludedIn(right, left, context),
                 GreaterEvaluator.greater(
                         leftCount,
-                        (int) StreamSupport.stream(((Iterable<?>) right).spliterator(), false).count()
+                        (int) StreamSupport.stream(((Iterable<?>) right).spliterator(), false).count(),
+                        context
                 )
         );
     }
@@ -114,6 +115,6 @@ public class ProperIncludesEvaluator extends org.cqframework.cql.elm.execution.P
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() != null ? getPrecision().value() : null;
 
-        return properlyIncludes(left, right, precision);
+        return properlyIncludes(left, right, precision, context);
     }
 }

@@ -17,7 +17,7 @@ This repository uses stable trunk methodology:
 |v12|CQL 1.2 Engine|Obsolete|1.2.20|
 |v13|CQL 1.3 Engine|Obselete|1.3.12.2|
 |v14|CQL 1.4 Engine|Maintenance|1.4.0|
-|master|CQL 1.5 Engine|Active Development|1.5.4|
+|master|CQL 1.5 Engine|Active Development|1.5.5|
 
 ## Commit Policy
 

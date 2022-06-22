@@ -42,7 +42,7 @@ If either argument is null, the result is null.
 
 public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater {
 
-    public static Boolean greater(Object left, Object right) {
+    public static Boolean greater(Object left, Object right, Context context) {
 
         if (left == null || right == null) {
             return null;
@@ -79,14 +79,14 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
 
         // Uncertainty comparisons for difference/duration between
         else if (left instanceof Interval && right instanceof Integer) {
-            if (InEvaluator.in(right, left, null)) {
+            if (InEvaluator.in(right, left, null, context)) {
                 return null;
             }
             return ((Integer)((Interval) left).getStart()).compareTo((Integer) right) > 0;
         }
 
         else if (left instanceof Integer && right instanceof Interval) {
-            if (InEvaluator.in(left, right, null)) {
+            if (InEvaluator.in(left, right, null, context)) {
                 return null;
             }
             return ((Integer) left).compareTo((Integer)((Interval) right).getEnd()) > 0;
@@ -103,6 +103,6 @@ public class GreaterEvaluator extends org.cqframework.cql.elm.execution.Greater 
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return greater(left, right);
+        return greater(left, right, context);
     }
 }

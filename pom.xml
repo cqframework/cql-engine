@@ -6,7 +6,7 @@
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>1.5.5-SNAPSHOT</version>
+    <version>1.5.6</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
@@ -48,9 +48,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <jackson.version>2.13.1</jackson.version>
-        <cqframework.version>1.5.7-SNAPSHOT</cqframework.version>
-        <hapi.version>5.6.2</hapi.version>
+        <jackson.version>2.13.2</jackson.version>
+        <jackson-databind.version>2.13.2.1</jackson-databind.version>
+        <cqframework.version>1.5.9</cqframework.version>
+        <hapi.version>5.6.3</hapi.version>
         <slf4j.version>1.7.29</slf4j.version>
     </properties>
 
@@ -99,7 +100,7 @@
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
+                <version>${jackson-databind.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -508,7 +509,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.6</version>
+                    <version>0.8.8</version>
                     <executions>
                         <execution>
                             <id>jacoco-initialize</id>

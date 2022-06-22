@@ -20,7 +20,7 @@ Return types: BigDecimal & Quantity
 
 public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Variance {
 
-    public static Object variance(Object source) {
+    public static Object variance(Object source, Context context) {
 
         if (source == null) {
             return null;
@@ -32,7 +32,7 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
                 return null;
             }
 
-            Object mean = AvgEvaluator.avg(source);
+            Object mean = AvgEvaluator.avg(source, context);
 
             List<Object> newVals = new ArrayList<>();
 
@@ -53,7 +53,7 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
                 }
             }
 
-            return DivideEvaluator.divide(SumEvaluator.sum(newVals), new BigDecimal(newVals.size() - 1)); // slight variation to Avg
+            return DivideEvaluator.divide(SumEvaluator.sum(newVals), new BigDecimal(newVals.size() - 1), context); // slight variation to Avg
         }
 
         throw new InvalidOperatorArgument(
@@ -64,6 +64,6 @@ public class VarianceEvaluator extends org.cqframework.cql.elm.execution.Varianc
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return variance(source);
+        return variance(source, context);
     }
 }

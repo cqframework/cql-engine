@@ -52,24 +52,24 @@ If either or both arguments are null, the result is null.
 
 public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
 
-    public static Boolean after(Object left, Object right, String precision) {
+    public static Boolean after(Object left, Object right, String precision, Context context) {
         if (left == null || right == null) {
             return null;
         }
 
         // (Interval, Interval)
         if (left instanceof Interval && right instanceof Interval) {
-            return after(((Interval)left).getStart(), ((Interval)right).getEnd(), precision);
+            return after(((Interval)left).getStart(), ((Interval)right).getEnd(), precision, context);
         }
 
         // (Interval, Point)
         else if (left instanceof Interval) {
-            return after(((Interval)left).getStart(), right, precision);
+            return after(((Interval)left).getStart(), right, precision, context);
         }
 
         // (Point, Interval)
         else if (right instanceof Interval) {
-            return after(left, ((Interval)right).getEnd(), precision);
+            return after(left, ((Interval)right).getEnd(), precision, context);
         }
 
         // (Date, Date), (DateTime, DateTime) or (Time, Time)
@@ -82,7 +82,7 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
             return result == null ? null : result > 0;
         }
 
-        return GreaterEvaluator.greater(left, right);
+        return GreaterEvaluator.greater(left, right, context);
     }
 
     @Override
@@ -91,6 +91,6 @@ public class AfterEvaluator extends org.cqframework.cql.elm.execution.After {
         Object right = getOperand().get(1).evaluate(context);
         String precision = getPrecision() == null ? null : getPrecision().value();
 
-        return after(left, right, precision);
+        return after(left, right, precision, context);
     }
 }

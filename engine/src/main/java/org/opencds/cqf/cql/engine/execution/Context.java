@@ -58,11 +58,6 @@ public class Context {
 
     private static Logger logger = LoggerFactory.getLogger(Context.class);
 
-    private static ThreadLocal<Context> threadContext = new ThreadLocal<>();
-    public static Context getContext() {
-        return threadContext.get();
-    }
-
     private static UcumService sharedUcumService;
 
     private boolean enableExpressionCache = false;
@@ -213,7 +208,6 @@ public class Context {
         else {
             this.ucumService = getSharedUcumService();
         }
-        threadContext.set(this);
     }
 
     private void setEvaluationDateTime(ZonedDateTime evaluationZonedDateTime) {

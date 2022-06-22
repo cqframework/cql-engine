@@ -18,7 +18,7 @@ Return types: BigDecimal & Quantity
 
 public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.execution.PopulationVariance {
 
-    public static Object popVariance(Object source) {
+    public static Object popVariance(Object source, Context context) {
 
         if (source == null) {
             return null;
@@ -30,7 +30,7 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
                 return null;
             }
 
-            Object mean = AvgEvaluator.avg(source);
+            Object mean = AvgEvaluator.avg(source, context);
 
             List<Object> newVals = new ArrayList<>();
 
@@ -41,7 +41,7 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
                     )
             );
 
-            return AvgEvaluator.avg(newVals);
+            return AvgEvaluator.avg(newVals, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -53,6 +53,6 @@ public class PopulationVarianceEvaluator extends org.cqframework.cql.elm.executi
     @Override
     protected Object internalEvaluate(Context context) {
         Object source = getSource().evaluate(context);
-        return popVariance(source);
+        return popVariance(source, context);
     }
 }

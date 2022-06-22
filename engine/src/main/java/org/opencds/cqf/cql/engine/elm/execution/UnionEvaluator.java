@@ -30,7 +30,7 @@ Note that the union operator can also be invoked with the symbolic operator (|).
 
 public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
 
-    public static Object union(Object left, Object right) {
+    public static Object union(Object left, Object right, Context context) {
         if (left == null || right == null) {
             return null;
         }
@@ -53,15 +53,15 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
             }
 
             Boolean overlapsOrMeets = OrEvaluator.or(
-                    OverlapsEvaluator.overlaps(left, right, precision),
-                    MeetsEvaluator.meets(left, right, precision)
+                    OverlapsEvaluator.overlaps(left, right, precision, context),
+                    MeetsEvaluator.meets(left, right, precision, context)
             );
             if (overlapsOrMeets == null || !overlapsOrMeets) {
                 return null;
             }
 
-            Object min = LessEvaluator.less(leftStart, rightStart) ? leftStart : rightStart;
-            Object max = GreaterEvaluator.greater(leftEnd, rightEnd) ? leftEnd : rightEnd;
+            Object min = LessEvaluator.less(leftStart, rightStart, context) ? leftStart : rightStart;
+            Object max = GreaterEvaluator.greater(leftEnd, rightEnd, context) ? leftEnd : rightEnd;
 
             return new Interval(min, true, max, true);
         }
@@ -76,7 +76,7 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
             for (Object rightElement : (Iterable<?>)right) {
                 result.add(rightElement);
             }
-            return DistinctEvaluator.distinct(result);
+            return DistinctEvaluator.distinct(result, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -89,6 +89,6 @@ public class UnionEvaluator extends org.cqframework.cql.elm.execution.Union {
     protected Object internalEvaluate(Context context) {
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
-        return union(left, right);
+        return union(left, right, context);
     }
 }

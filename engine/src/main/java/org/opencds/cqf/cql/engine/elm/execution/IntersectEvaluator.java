@@ -30,7 +30,7 @@ If either argument is null, the result is null.
 
 public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Intersect
 {
-    public static Object intersect(Object left, Object right)
+    public static Object intersect(Object left, Object right, Context context)
     {
         if (left == null || right == null)
         {
@@ -60,14 +60,14 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
                 precision = BaseTemporal.getHighestPrecision((BaseTemporal) leftStart, (BaseTemporal) leftEnd, (BaseTemporal) rightStart, (BaseTemporal) rightEnd);
             }
 
-            Boolean overlaps = OverlapsEvaluator.overlaps(leftInterval, rightInterval, precision);
+            Boolean overlaps = OverlapsEvaluator.overlaps(leftInterval, rightInterval, precision, context);
             if (overlaps == null || !overlaps)
             {
                 return null;
             }
 
-            Boolean leftStartGtRightStart = GreaterEvaluator.greater(leftStart, rightStart);
-            Boolean leftEndLtRightEnd = LessEvaluator.less(leftEnd, rightEnd);
+            Boolean leftStartGtRightStart = GreaterEvaluator.greater(leftStart, rightStart, context);
+            Boolean leftEndLtRightEnd = LessEvaluator.less(leftEnd, rightEnd, context);
 
             Object max;
             if (leftStartGtRightStart == null && precision != null)
@@ -101,14 +101,14 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
             Boolean in;
             for (Object leftItem : leftArr)
             {
-                in = InEvaluator.in(leftItem, rightArr, null);
+                in = InEvaluator.in(leftItem, rightArr, null, context);
                 if (in != null && in)
                 {
                     result.add(leftItem);
                 }
             }
 
-            return DistinctEvaluator.distinct(result);
+            return DistinctEvaluator.distinct(result, context);
         }
 
         throw new InvalidOperatorArgument(
@@ -123,6 +123,6 @@ public class IntersectEvaluator extends org.cqframework.cql.elm.execution.Inters
         Object left = getOperand().get(0).evaluate(context);
         Object right = getOperand().get(1).evaluate(context);
 
-        return intersect(left, right);
+        return intersect(left, right, context);
     }
 }
