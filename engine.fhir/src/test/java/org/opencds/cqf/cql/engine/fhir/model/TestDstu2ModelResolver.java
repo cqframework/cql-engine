@@ -197,7 +197,7 @@ public class TestDstu2ModelResolver {
     // between the dstu2 and hl7org dstu2 objects.
     // @Test
     public void resolveMissingPropertyReturnsNull() {
-        ModelResolver resolver = new Dstu2FhirModelResolver();
+        ModelResolver resolver = new Dstu2FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU2));
 
         Patient p = new Patient();
 

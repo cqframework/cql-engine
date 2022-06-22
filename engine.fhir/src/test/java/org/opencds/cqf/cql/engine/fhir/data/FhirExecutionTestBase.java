@@ -52,20 +52,20 @@ public abstract class FhirExecutionTestBase {
 
     @BeforeClass
     public void setup() {
-        dstu2ModelResolver = new Dstu2FhirModelResolver();
         FhirContext dstu2Context = FhirContext.forCached(FhirVersionEnum.DSTU2);
+        dstu2ModelResolver = new Dstu2FhirModelResolver(dstu2Context);
         dstu2RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu2Context),
             dstu2ModelResolver, dstu2Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
         dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
 
-        dstu3ModelResolver = new Dstu3FhirModelResolver();
         FhirContext dstu3Context = FhirContext.forCached(FhirVersionEnum.DSTU3);
+        dstu3ModelResolver = new Dstu3FhirModelResolver(dstu3Context);
         dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), dstu3ModelResolver,
             dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 
-        r4ModelResolver = new R4FhirModelResolver();
         FhirContext r4Context = FhirContext.forCached(FhirVersionEnum.R4);
+        r4ModelResolver = new R4FhirModelResolver(r4Context);
         r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(r4Context), r4ModelResolver,
             r4Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu4"));
         r4Provider = new CompositeDataProvider(r4ModelResolver, r4RetrieveProvider);

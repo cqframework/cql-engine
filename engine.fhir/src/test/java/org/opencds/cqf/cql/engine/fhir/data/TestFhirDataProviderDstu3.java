@@ -35,7 +35,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testDataProviderRetrieve() {
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             modelResolver,
             fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
@@ -51,7 +51,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testPatientRetrieve() {
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             modelResolver,
             fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
@@ -140,7 +140,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testList() {
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             modelResolver,
             fhirContext.newRestfulGenericClient("http://fhir.hl7.de:8080/baseDstu3"));

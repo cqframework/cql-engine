@@ -11,6 +11,7 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
+import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
@@ -51,9 +52,9 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
     private FhirModelResolver<?,?,?,?,?,?,?,?> getModelResolver(FhirVersionEnum fhirVersionEnum) {
         if(fhirVersionEnum.equals(FhirVersionEnum.DSTU3)) {
-            return new Dstu3FhirModelResolver();
+            return new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         } else if(fhirVersionEnum.equals(FhirVersionEnum.R4)) {
-            return new R4FhirModelResolver();
+            return new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
         }
         return null;
     }
