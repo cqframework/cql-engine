@@ -215,8 +215,8 @@ public abstract class TestFhirPath {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
                     System.out.println("Test: " + test.getName());
-                    System.out.println("- Expected Result: " + expectedResult + " (Class of " + expectedResult.getClass() +")");
-                    System.out.println("- Actual Result: " + actualResult + " (Class of " + expectedResult.getClass() +")");
+                    System.out.println("- Expected Result: " + expectedResult + " (" + expectedResult.getClass() +")");
+                    System.out.println("- Actual Result: " + actualResult + " (" + expectedResult.getClass() +")");
                     Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
