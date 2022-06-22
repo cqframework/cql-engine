@@ -3,11 +3,11 @@ package org.hl7.fhirpath;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.fhir.ucum.UcumException;
-import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.Enumeration;
-import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.instance.model.api.IPrimitiveType;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhirpath.tests.Group;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
+import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
 import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
@@ -89,26 +89,33 @@ public class CQLOperationsR4Test extends TestFhirPath implements ITest {
 
     @Test
     public void test() throws UcumException {
-        runTest(test, fhirContext, provider, fhirModelResolver);
+        runR4Test(test, fhirContext, provider, fhirModelResolver);
     }
 
-    protected Boolean compareResults(Object expectedResult, Object actualResult, Context context, FhirModelResolver<?,?,?,?,?,?,?,?> resolver) {
+    @Override
+    public Boolean compareResults(Object expectedResult, Object actualResult, Context context, FhirModelResolver<?, ?, ?, ?, ?, ?, ?, ?> resolver) {
+        // Perform FHIR system-defined type conversions
         if (actualResult instanceof Enumeration) {
             actualResult = ((Enumeration<?>) actualResult).getValueAsString();
+        } else if (actualResult instanceof BooleanType) {
+            actualResult = ((BooleanType) actualResult).getValue();
+        } else if (actualResult instanceof IntegerType) {
+            actualResult = ((IntegerType) actualResult).getValue();
+        } else if (actualResult instanceof DecimalType) {
+            actualResult = ((DecimalType) actualResult).getValue();
+        } else if (actualResult instanceof StringType) {
+            actualResult = ((StringType) actualResult).getValue();
+        } else if (actualResult instanceof BaseDateTimeType) {
+            actualResult = resolver.toJavaPrimitive(actualResult, actualResult);
         } else if (actualResult instanceof Quantity) {
             Quantity quantity = (Quantity) actualResult;
-            actualResult = new org.opencds.cqf.cql.engine.runtime.Quantity()
-                .withValue(quantity.getValue())
+            actualResult = new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(quantity.getValue())
                 .withUnit(quantity.getUnit());
         } else if (actualResult instanceof Coding) {
             Coding coding = (Coding) actualResult;
-            actualResult = new Code()
-                .withCode(coding.getCode())
-                .withDisplay(coding.getDisplay())
-                .withSystem(coding.getSystem())
-                .withVersion(coding.getVersion());
+            actualResult = new Code().withCode(coding.getCode()).withDisplay(coding.getDisplay())
+                .withSystem(coding.getSystem()).withVersion(coding.getVersion());
         }
-
-        return super.compareResults(expectedResult, actualResult, context, resolver);
+        return EqualEvaluator.equal(expectedResult, actualResult, context);
     }
 }
