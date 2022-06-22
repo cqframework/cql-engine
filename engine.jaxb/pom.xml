@@ -23,24 +23,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics</artifactId>
-            <version>1.11.1</version>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fhir</groupId>
-            <artifactId>ucum</artifactId>
-        </dependency>
         <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
         <dependency>
             <groupId>xpp3</groupId>
@@ -50,6 +32,11 @@
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
