@@ -16,14 +16,10 @@ import javax.xml.bind.JAXB;
 import org.cqframework.cql.elm.execution.Library;
 import org.fhir.ucum.UcumException;
 import org.hl7.fhir.instance.model.api.IBaseResource;
-import org.hl7.fhir.r4.model.BaseDateTimeType;
-import org.hl7.fhir.r4.model.BooleanType;
+import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.hl7.fhir.r4.model.Coding;
-import org.hl7.fhir.r4.model.DecimalType;
 import org.hl7.fhir.r4.model.Enumeration;
-import org.hl7.fhir.r4.model.IntegerType;
 import org.hl7.fhir.r4.model.Quantity;
-import org.hl7.fhir.r4.model.StringType;
 import org.hl7.fhirpath.tests.InvalidType;
 import org.hl7.fhirpath.tests.Tests;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
@@ -112,29 +108,11 @@ public class TestFhirPath {
 
 
 
-    private Boolean compareResults(Object expectedResult, Object actualResult, Context context, FhirModelResolver<?,?,?,?,?,?,?,?> resolver) {
-        // Perform FHIR system-defined type conversions
-        if (actualResult instanceof Enumeration) {
-            actualResult = ((Enumeration<?>) actualResult).getValueAsString();
-        } else if (actualResult instanceof BooleanType) {
-            actualResult = ((BooleanType) actualResult).getValue();
-        } else if (actualResult instanceof IntegerType) {
-            actualResult = ((IntegerType) actualResult).getValue();
-        } else if (actualResult instanceof DecimalType) {
-            actualResult = ((DecimalType) actualResult).getValue();
-        } else if (actualResult instanceof StringType) {
-            actualResult = ((StringType) actualResult).getValue();
-        } else if (actualResult instanceof BaseDateTimeType) {
-            actualResult = resolver.toJavaPrimitive(actualResult, actualResult);
-        } else if (actualResult instanceof Quantity) {
-            Quantity quantity = (Quantity) actualResult;
-            actualResult = new org.opencds.cqf.cql.engine.runtime.Quantity().withValue(quantity.getValue())
-                .withUnit(quantity.getUnit());
-        } else if (actualResult instanceof Coding) {
-            Coding coding = (Coding) actualResult;
-            actualResult = new Code().withCode(coding.getCode()).withDisplay(coding.getDisplay())
-                .withSystem(coding.getSystem()).withVersion(coding.getVersion());
+    protected Boolean compareResults(Object expectedResult, Object actualResult, Context context, FhirModelResolver<?,?,?,?,?,?,?,?> resolver) {
+        if (actualResult instanceof IPrimitiveType) {
+            actualResult = ((IPrimitiveType) actualResult).getValue();
         }
+
         return EqualEvaluator.equal(expectedResult, actualResult, context);
     }
 
@@ -239,8 +217,8 @@ public class TestFhirPath {
                 if (actualResultsIterator.hasNext()) {
                     Object actualResult = actualResultsIterator.next();
                     System.out.println("Test: " + test.getName());
-                    System.out.println("- Expected Result: " + expectedResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
-                    System.out.println("- Actual Result: " + actualResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
+                    System.out.println("- Expected Result: " + expectedResult + "(Class of " + expectedResult.getClass() +")");
+                    System.out.println("- Actual Result: " + actualResult + "(Class of " + expectedResult.getClass() +")");
                     Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
                     if (comparison == null || !comparison) {
                         throw new RuntimeException("Actual result is not equal to expected result.");
@@ -280,7 +258,20 @@ public class TestFhirPath {
                 throw new RuntimeException(String.format("Expected exception not thrown for test %s.", test.getName()));
             }
         } else {
-            library = translator.translate(cql);
+            Iterable<Object> expectedResults = loadExpectedResults(test, false);
+
+            try {
+                library = translator.translate(cql);
+            } catch (IllegalArgumentException e) {
+                // if it crashes and didn't have an expected output, assume the test was supposed to fail.
+                if (!expectedResults.iterator().hasNext()) {
+                    return;
+                } else {
+                    e.printStackTrace();
+                    throw new RuntimeException(String.format("Couldn't translate library and was expencting a result. %s.", test.getName()));
+                }
+            }
+
             Context context = new Context(library);
             context.registerLibraryLoader(translator.getLibraryLoader());
             context.registerDataProvider("http://hl7.org/fhir", provider);
@@ -318,7 +309,6 @@ public class TestFhirPath {
                 actualResults = results;
             }
 
-            Iterable<Object> expectedResults = loadExpectedResults(test, false);
             Iterator<Object> actualResultsIterator = actualResults.iterator();
             for (Object expectedResult : expectedResults) {
                 if (actualResultsIterator.hasNext()) {
@@ -326,8 +316,8 @@ public class TestFhirPath {
                     Boolean comparison = compareResults(expectedResult, actualResult, context, resolver);
                     if (comparison == null || !comparison) {
                         System.out.println("Test: " + test.getName());
-                        System.out.println("- Expected Result: " + expectedResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
-                        System.out.println("- Actual Result: " + actualResult + "(Class of " + expectedResult.getClass().getSimpleName() +")");
+                        System.out.println("- Expected Result: " + expectedResult + "(Class of " + expectedResult.getClass() +")");
+                        System.out.println("- Actual Result: " + actualResult + "(Class of " + expectedResult.getClass() +")");
                         throw new RuntimeException("Actual result is not equal to expected result.");
                     }
                 } else {
