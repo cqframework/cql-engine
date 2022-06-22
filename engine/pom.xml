@@ -35,32 +35,15 @@
             <artifactId>jaxb2-basics-runtime</artifactId>
         </dependency>
 
-        <!-- The Units of Measure  Coding System (UCUM) -->
-        <dependency>
-            <groupId>org.fhir</groupId>
-            <artifactId>ucum</artifactId>
-        </dependency>
-
-        <!-- Provides classes to load and serialize ELM files -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.module</groupId>
             <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
+
+        <!-- The Units of Measure  Coding System (UCUM) -->
         <dependency>
-            <groupId>com.fasterxml.jackson.dataformat</groupId>
-            <artifactId>jackson-dataformat-xml</artifactId>
+            <groupId>org.fhir</groupId>
+            <artifactId>ucum</artifactId>
         </dependency>
 
         <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
