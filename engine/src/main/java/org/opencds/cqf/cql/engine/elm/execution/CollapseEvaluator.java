@@ -104,8 +104,15 @@ public class CollapseEvaluator extends org.cqframework.cql.elm.execution.Collaps
         {
             Interval applyPer = getIntervalWithPerApplied(intervals.get(i), per, context);
 
-            if(isTemporal) {
-                applyPer = intervals.get(i);
+            if (isTemporal) {
+                if (per.getValue().compareTo(BigDecimal.ONE) == 0 || per.getValue().compareTo(BigDecimal.ZERO) == 0) {
+                    // Temporal DataTypes already receive the precision adjustments at the OverlapsEvaluator and MeetsEvaluator.
+                    // But they can only do full units (ms, seconds, days): They cannot do "4 days" of precision.
+                    // The getIntervalWithPerApplied takes that into account.
+                    applyPer = intervals.get(i);
+                } else {
+                    precision = "millisecond";
+                }
             }
 
             Boolean doMerge = AnyTrueEvaluator.anyTrue(
