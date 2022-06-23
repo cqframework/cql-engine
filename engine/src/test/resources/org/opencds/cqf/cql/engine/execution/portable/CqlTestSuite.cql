@@ -4516,13 +4516,13 @@ define Exists_ListStartingWithNull: exists ({ null, 3, 4 })
 define Exists_ListWithNull: exists ({ 3, null, 5 })
 define Exists_NullExists: exists (null)
 
-define test_Exists_EmptyList: TestMessage(not Exists_EmptyList, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
-define test_Exists_FullList: TestMessage(Exists_FullList, 'Exists_FullList', toString(true), toString(Exists_FullList))
-define test_Exists_ListWithOneNull: TestMessage(Exists_ListWithOneNull, 'Exists_ListWithOneNull', toString(true), toString(Exists_ListWithOneNull))
-define test_Exists_ListWithTwoNulls: TestMessage(Exists_ListWithTwoNulls, 'Exists_ListWithTwoNulls', toString(true), toString(Exists_ListWithTwoNulls))
-define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
-define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
-define test_Exists_NullExists: TestMessage(not Exists_NullExists, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
+define test_Exists_EmptyList: TestMessage(Exists_EmptyList = false, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
+define test_Exists_FullList: TestMessage(Exists_FullList = true, 'Exists_FullList', toString(true), toString(Exists_FullList))
+define test_Exists_ListWithOneNull: TestMessage(Exists_ListWithOneNull = false, 'Exists_ListWithOneNull', toString(false), toString(Exists_ListWithOneNull))
+define test_Exists_ListWithTwoNulls: TestMessage(Exists_ListWithTwoNulls = false, 'Exists_ListWithTwoNulls', toString(false), toString(Exists_ListWithTwoNulls))
+define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull = true, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
+define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull = true, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
+define test_Exists_NullExists: TestMessage(Exists_NullExists = false, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
 
 // Equal
 define Equal_EqualIntList: {1, 2, 3} = {1, 2, 3}
