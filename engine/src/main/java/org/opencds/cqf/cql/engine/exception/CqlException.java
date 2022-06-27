@@ -14,10 +14,7 @@ public class CqlException extends RuntimeException
         super(message, cause);
     }
     public CqlException(Throwable cause) {
-        super(cause == null ? null : String.format("Unexpected exception caught during execution: %s", cause.toString(), cause));
-        if (cause != null) {
-            this.cause = cause;
-        }
+        super(cause == null ? null : String.format("Unexpected exception caught during execution: %s", cause.toString()), cause);
     }
 
     public CqlException(String message, SourceLocator sourceLocator) {
@@ -27,7 +24,6 @@ public class CqlException extends RuntimeException
 
     public CqlException(String message, Throwable cause, SourceLocator sourceLocator) {
         super(message, cause);
-        this.cause = cause;
         this.sourceLocator = sourceLocator;
     }
 
@@ -50,9 +46,6 @@ public class CqlException extends RuntimeException
     public Severity getSeverity() {
         return severity;
     }
-
-    private Throwable cause;
-    public Throwable getCause() { return cause;}
 
     private SourceLocator sourceLocator;
     public SourceLocator getSourceLocator() {
