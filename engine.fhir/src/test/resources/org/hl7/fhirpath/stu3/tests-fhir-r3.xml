@@ -1837,7 +1837,6 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
   public void testPrecedence() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), "1+2*3+4 = 11", true);
   }
-
   @Test
   public void testVariables() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), "%sct = 'http://snomed.info/sct'", true);
@@ -1845,28 +1844,24 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
     testBoolean(patient(), "%ucum = 'http://unitsofmeasure.org'", true);
     testBoolean(patient(), "%\"vs-administrative-gender\" = 'http://hl7.org/fhir/ValueSet/administrative-gender'", true);
   }
-
   @Test
   public void testExtension() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), "Patient.birthDate.extension('http://hl7.org/fhir/StructureDefinition/patient-birthTime').exists()", true);
     testBoolean(patient(), "Patient.birthDate.extension(%\"ext-patient-birthTime\").exists()", true);
     testBoolean(patient(), "Patient.birthDate.extension('http://hl7.org/fhir/StructureDefinition/patient-birthTime1').empty()", true);
   }
-
   @Test
   public void testDollarResource() throws FileNotFoundException, FHIRFormatError, IOException, FHIRException {
     testBoolean(patient(), patient().getManagingOrganization(), "Reference", "reference.startsWith('#').not() or (reference.substring(1).trace('url') in %resource.contained.id.trace('ids'))", true);
     testBoolean(patient(), patient(), "Patient", "contained.select(('#'+id in %resource.descendants().reference).not()).empty()", true);
     testWrong(patient(), "contained.select(('#'+id in %resource.descendants().reference).not()).empty()");
   }
-
   @Test
   public void testTyping() throws FileNotFoundException, IOException, FHIRException {
     ElementDefinition ed = new ElementDefinition();
     ed.getBinding().setValueSet(new UriType("http://test.org"));
     testBoolean(null, ed.getBinding().getValueSet(), "ElementDefinition.binding.valueSetUri", "startsWith('http:') or startsWith('https') or startsWith('urn:')", true);
   }
-
   @Test
   public void testDecimalRA() throws FileNotFoundException, IOException, FHIRException {
     RiskAssessment r = new RiskAssessment();
@@ -1887,14 +1882,11 @@ return new org.hl7.fhir.dstu3.elementmodel.XmlParser(TestingUtilities.context).p
     r.getPrediction().get(0).setProbability(new DecimalType(80));
     testBoolean(r, r.getPrediction().get(0), "RiskAssessment.prediction", "probability.as(decimal) <= 100", true);
   }
-
-
   @Test
   public void testAppointment() throws FileNotFoundException, IOException, FHIRException {
     testBoolean(appointment(), "(start and end) or status = 'proposed' or status = 'cancelled'", true);
     testBoolean(appointment(), "start.empty() xor end.exists()", true);
   }
-
   @Test
   public void testQuestionnaire() throws FileNotFoundException, IOException, FHIRException {
     Questionnaire q = (Questionnaire) new JsonParser().parse(new FileInputStream("C:/work/org.hl7.fhir/build/publish/questionnaire-example-gcs.json"));
