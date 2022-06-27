@@ -14,10 +14,7 @@ public class CqlException extends RuntimeException
         super(message, cause);
     }
     public CqlException(Throwable cause) {
-        super(cause == null ? null : String.format("Unexpected exception caught during execution: %s", cause.toString(), cause));
-        if (cause != null) {
-            cause.printStackTrace(System.err);
-        }
+        super(cause == null ? null : String.format("Unexpected exception caught during execution: %s", cause.toString()), cause);
     }
 
     public CqlException(String message, SourceLocator sourceLocator) {
