@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../testSchema/testSchema.xsd"
+<tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests" xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd"
 	name="CqlListOperatorsTest" reference="https://cql.hl7.org/09-b-cqlreference.html#list-operators-2">
 	<group name="Sort">
 		<test name="simpleSortAsc">

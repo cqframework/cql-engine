@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tests xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://hl7.org/fhirpath/tests"
-       xsi:schemaLocation="http://hl7.org/fhirpath/tests ../testSchema/testSchema.xsd"
+       xsi:schemaLocation="http://hl7.org/fhirpath/tests ../../testSchema/testSchema.xsd"
        name="failingCqlComparisonOperatorsTests"
        reference="https://cql.hl7.org/09-b-cqlreference.html#comparison-operators-4">
     <!-- This file contains copies of the tests in CqlComparisonOperatorsTest.xml that are failing. When these are
