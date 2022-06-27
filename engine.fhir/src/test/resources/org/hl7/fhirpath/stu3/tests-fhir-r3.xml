@@ -177,47 +177,47 @@
 			<expression>Observation.value.value &gt; 180.0</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal1" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal" inputfile="observation-example.xml">
 			<expression>Observation.value.value &gt; 0.0</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal2" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal" inputfile="observation-example.xml">
 			<expression>Observation.value.value &gt; 0</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal3" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal" inputfile="observation-example.xml">
 			<expression>Observation.value.value &lt; 190</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDecimal4" inputfile="observation-example.xml">
+		<test name="testLiteralDecimal" inputfile="observation-example.xml">
 			<expression>Observation.value.value &lt; 'test'</expression>
 			<!-- no output - empty set -->
 		</test>
-		<test name="testLiteralDate1" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate = @1974-12-25</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate2" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate3" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00-10:00</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate4" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00+10:00</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate5" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @1974-12-25T12:34:00Z</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate6" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @T12:14:15</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate7" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>Patient.birthDate != @T12:14</expression>
 			<output type="boolean">true</output>
 		</test>
@@ -248,23 +248,23 @@
 			<expression>Patient.link.empty()</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate8" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>true.not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate9" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>false.not() = true</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate10" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>(0).not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate11" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>(1).not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
-		<test name="testLiteralDate12" inputfile="patient-example.xml">
+		<test name="testLiteralDate" inputfile="patient-example.xml">
 			<expression>(1|2).not() = false</expression>
 			<output type="boolean">true</output>
 		</test>
