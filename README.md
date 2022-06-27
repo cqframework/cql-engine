@@ -12,12 +12,12 @@ This project builds on that tooling to provide an open source Java-based evaluat
 
 This repository uses stable trunk methodology:
 
-|Branch|Description|Status|Version
-|----|----|----|----|
-|v12|CQL 1.2 Engine|Obsolete|1.2.20|
-|v13|CQL 1.3 Engine|Obselete|1.3.12.2|
-|v14|CQL 1.4 Engine|Maintenance|1.4.0|
-|master|CQL 1.5 Engine|Active Development|1.5.5|
+|Branch|Description|Status| Version
+|----|----|----|----------|
+|v12|CQL 1.2 Engine|Obsolete| 1.2.20   |
+|v13|CQL 1.3 Engine|Obselete| 1.3.12.2 |
+|v14|CQL 1.4 Engine|Maintenance| 1.4.0    |
+|master|CQL 1.5 Engine|Active Development| 1.5.7    |
 
 ## Commit Policy
 
@@ -45,7 +45,11 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.2 - PHI Obfuscation, Long data type, performance enhancements, bug fixes
 * 1.5.3 - Performance enhancements, break out of Jaxb dependencies, support for ValueSet and CodeSystem types
 * 1.5.4 - Maintenance/stability fixes
-* 1.5.5 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
+* 1.5.5 - Maintenance/stability fixes; FHIRPath test suite; improved test coverage
+* 1.5.6 - Burned by Maven
+* 1.5.7 - Critical fix for FHIRPath now() and today() support
+* 1.5.8 - Improved support for dynamic model info loading, version manifest usage, improved test coverage, improved testing and debug capabilities
+* 1.5.9 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
 * 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
 
 ## Getting Help
