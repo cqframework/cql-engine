@@ -1,16 +1,7 @@
 package org.opencds.cqf.cql.engine.fhir.data;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
-import java.io.*;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.bind.JAXBException;
-
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.*;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
@@ -19,17 +10,26 @@ import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
-import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu2FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
+import javax.xml.bind.JAXBException;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public abstract class FhirExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
@@ -107,14 +107,14 @@ public abstract class FhirExecutionTestBase {
                 for (Map.Entry<String, CompiledLibrary> entry : libraryManager.getCompiledLibraries().entrySet()) {
                     String jsonContent = CqlTranslator.convertToJson(entry.getValue().getLibrary());
                     StringReader sr = new StringReader(jsonContent);
-                    libraries.put(entry.getKey(), JsonCqlLibraryReader.read(sr));
+                    libraries.put(entry.getKey(), new JsonCqlLibraryReader().read(sr));
                     if (entry.getKey().equals(fileName)) {
                         library = libraries.get(entry.getKey());
                     }
                 }
 
                 if (library == null) {
-                    library = JsonCqlLibraryReader.read(new StringReader(translator.toJson()));
+                    library = new JsonCqlLibraryReader().read(new StringReader(translator.toJson()));
                     libraries.put(fileName, library);
                 }
             } catch (IOException e) {

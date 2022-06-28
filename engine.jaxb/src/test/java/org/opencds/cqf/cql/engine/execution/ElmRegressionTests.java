@@ -1,5 +1,14 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
+import org.testng.Assert;
+import org.testng.ITest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
+
+import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -7,15 +16,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.xml.bind.JAXBException;
-
-import org.cqframework.cql.elm.execution.Library;
-import org.testng.Assert;
-import org.testng.ITest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
 
 public class ElmRegressionTests implements ITest {
     private final String path;
@@ -69,7 +69,7 @@ public class ElmRegressionTests implements ITest {
 
         Library jsonLibrary = null;
         try {
-            jsonLibrary = JsonCqlLibraryReader.read(new FileReader(path + "/" + fileName + ".json"));
+            jsonLibrary = new JsonCqlLibraryReader().read(new FileReader(path + "/" + fileName + ".json"));
         }
         catch (Exception e) {
             throw new IllegalArgumentException(String.format("Errors occurred reading ELM from json %s: %s", getPathName() + fileName, e.getMessage()));

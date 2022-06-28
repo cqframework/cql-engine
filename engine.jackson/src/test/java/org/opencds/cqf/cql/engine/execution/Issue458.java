@@ -1,10 +1,9 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import static org.testng.Assert.assertEquals;
-
-
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
 
 public class Issue458 extends CqlExecutionTestBase {
     @Test

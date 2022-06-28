@@ -1,21 +1,20 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 
-import org.cqframework.cql.elm.execution.*;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
 
 public class TranslatingTestBase {
 
-    public LibraryManager toLibraryManager(Map<org.hl7.elm.r1.VersionedIdentifier, String> libraryText) throws IOException {
+    public LibraryManager toLibraryManager(Map<org.hl7.elm.r1.VersionedIdentifier, String> libraryText) {
         ModelManager modelManager = new ModelManager();
         LibraryManager libraryManager = new LibraryManager(modelManager);
         libraryManager.getLibrarySourceLoader().registerProvider(new InMemoryLibrarySourceProvider(libraryText));
@@ -35,7 +34,7 @@ public class TranslatingTestBase {
     }
 
     public Library readJson(String json) throws IOException {
-        return JsonCqlLibraryReader.read(new StringReader(json));
+        return new JsonCqlLibraryReader().read(new StringReader(json));
     }
 
     public org.hl7.elm.r1.VersionedIdentifier toElmIdentifier(String name, String version) {

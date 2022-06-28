@@ -1,24 +1,24 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.cqframework.cql.cql2elm.*;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public abstract class CqlExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();
@@ -76,21 +76,13 @@ public abstract class CqlExecutionTestBase {
 
                 assertThat(translator.getErrors().size(), is(0));
 
-                jsonFile = new File(cqlFile.getParent(), fileName + ".json");
-                jsonFile.createNewFile();
-
                 String json = translator.toJson();
 
-                PrintWriter pw = new PrintWriter(jsonFile, "UTF-8");
-                pw.println(json);
-                pw.println();
-                pw.close();
+                library = new JsonCqlLibraryReader().read(json);
+                libraries.put(fileName, library);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            library = JsonCqlLibraryReader.read(jsonFile);
-            libraries.put(fileName, library);
         }
     }
 

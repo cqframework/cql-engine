@@ -1,14 +1,6 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
@@ -17,6 +9,13 @@ import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TestLibraryLoader implements LibraryLoader {
 
@@ -75,7 +74,7 @@ public class TestLibraryLoader implements LibraryLoader {
 
         Library library = null;
         try {
-            library = JsonCqlLibraryReader.read(new StringReader(json));
+            library = new JsonCqlLibraryReader().read(json);
         } catch (IOException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }

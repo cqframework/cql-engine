@@ -1,13 +1,13 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-
-import java.util.Arrays;
-
 import org.opencds.cqf.cql.engine.data.SystemExternalFunctionProvider;
 import org.opencds.cqf.cql.engine.execution.external.MyMath;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class CqlExternalFunctionsTest extends CqlExecutionTestBase {
 
