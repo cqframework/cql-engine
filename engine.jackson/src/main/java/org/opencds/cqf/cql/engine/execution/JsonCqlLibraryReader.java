@@ -27,6 +27,7 @@ public class JsonCqlLibraryReader {
         .addMixIn(Expression.class, ExpressionMixin.class)
         .addMixIn(TypeSpecifier.class, TypeSpecifierMixin.class)
         .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
+        .addMixIn(Executable.class, ExecutableMixin.class)
         .build();
 
     private JsonCqlLibraryReader() {

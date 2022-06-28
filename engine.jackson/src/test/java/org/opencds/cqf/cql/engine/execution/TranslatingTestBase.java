@@ -4,14 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -19,8 +12,6 @@ import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 
 import org.cqframework.cql.elm.execution.*;
-import org.hl7.cql_annotations.r1.CqlToElmBase;
-import org.opencds.cqf.cql.engine.elm.execution.*;
 
 public class TranslatingTestBase {
 
@@ -55,16 +46,6 @@ public class TranslatingTestBase {
         LibraryWrapper wrapper = new LibraryWrapper();
         wrapper.setLibrary(library);
 
-        ObjectMapper mapper = JsonMapper.builder()
-            .defaultMergeable(true)
-            .enable(SerializationFeature.INDENT_OUTPUT)
-            .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-            .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
-            .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
-            .addModule(new JaxbAnnotationModule())
-            .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
-            .build();
-
-        return mapper.writeValueAsString(wrapper);
+        return CqlTranslator.getJsonMapper().writeValueAsString(wrapper);
     }
 }

@@ -9,11 +9,11 @@
         <version>1.5.8-SNAPSHOT</version>
     </parent>
 
-    <artifactId>engine.jaxb</artifactId>
+    <artifactId>engine.jackson</artifactId>
     <packaging>jar</packaging>
 
-    <name>engine.jaxb</name>
-    <description>CQL Engine XML Readers</description>
+    <name>engine.jackson</name>
+    <description>CQL Engine Jackson Readers</description>
     <url>https://github.com/DBCG/cql_engine/tree/master/engine.jaxb</url>
 
     <dependencies>
@@ -21,6 +21,33 @@
             <groupId>org.opencds.cqf.cql</groupId>
             <artifactId>engine</artifactId>
             <version>${project.version}</version>
+        </dependency>
+
+        <!-- Jackson dependencies -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson-databind.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.module</groupId>
+            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
@@ -32,21 +59,6 @@
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3_xpath</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Jaxb implementation of choice -->
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Jaxb module compares itself with the Jackson -->
-        <dependency>
-            <groupId>org.opencds.cqf.cql</groupId>
-            <artifactId>engine.jackson</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

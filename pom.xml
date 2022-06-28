@@ -17,6 +17,7 @@
     <modules>
         <module>engine</module>
         <module>engine.fhir</module>
+        <module>engine.jackson</module>
         <module>engine.jaxb</module>
     </modules>
 

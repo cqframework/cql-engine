@@ -7,24 +7,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 
 import org.cqframework.cql.cql2elm.CqlCompilerException;
+import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.hl7.cql_annotations.r1.CqlToElmBase;
-import org.opencds.cqf.cql.engine.elm.execution.CqlToElmBaseMixIn;
 
 public class TestLibraryLoader implements LibraryLoader {
 
@@ -76,17 +68,7 @@ public class TestLibraryLoader implements LibraryLoader {
 
         String json;
         try {
-            ObjectMapper mapper = JsonMapper.builder()
-                .defaultMergeable(true)
-                .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-                .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
-                .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
-                .addModule(new JaxbAnnotationModule())
-                .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
-                .build();
-
-            json = mapper.writeValueAsString(wrapper);
+            json = CqlTranslator.getJsonMapper().writeValueAsString(wrapper);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }

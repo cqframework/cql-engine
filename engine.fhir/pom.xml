@@ -85,6 +85,13 @@
             <artifactId>org.eclipse.persistence.moxy</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- Uses Jackson to load some libraries for testing -->
+        <dependency>
+            <groupId>org.opencds.cqf.cql</groupId>
+            <artifactId>engine.jackson</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
