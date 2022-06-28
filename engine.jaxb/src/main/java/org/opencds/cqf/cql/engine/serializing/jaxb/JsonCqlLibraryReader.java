@@ -31,7 +31,7 @@ public class JsonCqlLibraryReader implements CqlLibraryReader {
         }
 
         try {
-            // TODO: Figure out what's going on with the Type Specifier. 
+            // TODO: Figure out what's going on with the Type Specifier.
             unmarshaller.setEventHandler(event -> true);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
