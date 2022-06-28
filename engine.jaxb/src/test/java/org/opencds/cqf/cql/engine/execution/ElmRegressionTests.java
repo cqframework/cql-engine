@@ -1,7 +1,8 @@
 package org.opencds.cqf.cql.engine.execution;
 
 import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
+import org.opencds.cqf.cql.engine.serializing.jaxb.JsonCqlLibraryReader;
+import org.opencds.cqf.cql.engine.serializing.jaxb.XmlCqlLibraryReader;
 import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.DataProvider;
@@ -61,7 +62,7 @@ public class ElmRegressionTests implements ITest {
     private void testElmDeserialization() throws IOException, JAXBException {
         Library xmlLibrary = null;
         try {
-            xmlLibrary = CqlLibraryReader.read(new FileReader(path + "/" + fileName + ".xml"));
+            xmlLibrary = new XmlCqlLibraryReader().read(new FileReader(path + "/" + fileName + ".xml"));
         }
         catch (Exception e) {
             throw new IllegalArgumentException(String.format("Errors occurred reading ELM from xml %s: %s", getPathName() + fileName, e.getMessage()));
@@ -72,6 +73,7 @@ public class ElmRegressionTests implements ITest {
             jsonLibrary = new JsonCqlLibraryReader().read(new FileReader(path + "/" + fileName + ".json"));
         }
         catch (Exception e) {
+            e.printStackTrace();
             throw new IllegalArgumentException(String.format("Errors occurred reading ELM from json %s: %s", getPathName() + fileName, e.getMessage()));
         }
 

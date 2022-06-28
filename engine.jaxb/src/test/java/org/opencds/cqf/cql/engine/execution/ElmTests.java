@@ -1,6 +1,7 @@
 package org.opencds.cqf.cql.engine.execution;
 
 import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.serializing.jaxb.XmlCqlLibraryReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -15,7 +16,7 @@ public class ElmTests {
      */
     @Test
     public void filterTest() throws JAXBException, IOException {
-        Library library = CqlLibraryReader.read(ElmTests.class.getResourceAsStream("ElmTests.xml"));
+        Library library = new XmlCqlLibraryReader().read(ElmTests.class.getResourceAsStream("ElmTests.xml"));
         Context context = new Context(library);
         Object result = context.resolveExpressionRef("TestFilter").getExpression().evaluate(context);
 

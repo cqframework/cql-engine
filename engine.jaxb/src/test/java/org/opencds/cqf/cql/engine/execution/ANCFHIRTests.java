@@ -4,7 +4,7 @@ import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.engine.elm.execution.ExpressionDefEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.RetrieveEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.SingletonFromEvaluator;
-import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
+import org.opencds.cqf.cql.engine.serializing.jaxb.JsonCqlLibraryReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
