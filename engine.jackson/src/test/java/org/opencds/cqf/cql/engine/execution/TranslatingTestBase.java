@@ -6,6 +6,7 @@ import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 
 import java.io.IOException;
@@ -45,6 +46,6 @@ public class TranslatingTestBase {
         LibraryWrapper wrapper = new LibraryWrapper();
         wrapper.setLibrary(library);
 
-        return CqlTranslator.getJsonMapper().writeValueAsString(wrapper);
+        return ElmJsonMapper.getMapper().writeValueAsString(wrapper);
     }
 }

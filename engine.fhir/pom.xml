@@ -92,6 +92,21 @@
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>cql-to-elm</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>model-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>elm-jackson</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -132,7 +147,7 @@
                             <plugin>
                                 <groupId>org.jvnet.jaxb2_commons</groupId>
                                 <artifactId>jaxb2-basics</artifactId>
-                                <version>1.11.1</version>
+                                <version>0.13.1</version>
                             </plugin>
                             <plugin>
                                 <groupId>org.jvnet.jaxb2_commons</groupId>

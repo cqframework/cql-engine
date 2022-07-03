@@ -2,13 +2,13 @@ package org.opencds.cqf.cql.engine.execution;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.cqframework.cql.cql2elm.CqlCompilerException;
-import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 
 import java.io.IOException;
@@ -67,7 +67,7 @@ public class TestLibraryLoader implements LibraryLoader {
 
         String json;
         try {
-            json = CqlTranslator.getJsonMapper().writeValueAsString(wrapper);
+            json = ElmJsonMapper.getMapper().writeValueAsString(wrapper);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }
