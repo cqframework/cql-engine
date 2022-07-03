@@ -125,7 +125,7 @@
                             <plugin>
                                 <groupId>org.jvnet.jaxb2_commons</groupId>
                                 <artifactId>jaxb2-basics</artifactId>
-                                <version>1.11.1</version>
+                                <version>0.13.1</version>
                             </plugin>
                             <plugin>
                                 <groupId>org.jvnet.jaxb2_commons</groupId>
