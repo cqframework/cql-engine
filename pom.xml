@@ -222,14 +222,40 @@
 
 
             <!-- Testing dependencies -->
+
+            <!-- The scope of info.cqframework dependency must remain as test.
+                There is an intentional separation between the CQL translator and the CQL engine -->
             <dependency>
                 <groupId>info.cqframework</groupId>
                 <artifactId>cql-to-elm</artifactId>
                 <version>${cqframework.version}</version>
-                <!-- The scope of this dependency must remain as test.
-            There is an intentional separation between the CQL translator and the CQL engine -->
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
+                <artifactId>elm-jackson</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
+                <artifactId>model-jackson</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
+                <artifactId>elm-jaxb</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
+                <artifactId>model-jaxb</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
@@ -283,10 +309,6 @@
 
     <!-- Used by every project -->
     <dependencies>
-        <dependency>
-            <groupId>info.cqframework</groupId>
-            <artifactId>cql-to-elm</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
