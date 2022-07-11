@@ -2,52 +2,55 @@ package org.opencds.cqf.cql.engine.exception;
 
 import org.opencds.cqf.cql.engine.debug.SourceLocator;
 
-public class CqlException extends RuntimeException
-{
+public class CqlException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public CqlException(String message)
-    {
-        super(message);
+    public CqlException(String message) {
+        this(message, null, null, null);
     }
+
     public CqlException(String message, Throwable cause) {
-        super(message, cause);
+        this(message, cause, null);
     }
+
     public CqlException(Throwable cause) {
-        super(cause == null ? null : String.format("Unexpected exception caught during execution: %s", cause.toString()), cause);
+        this(null, cause, null);
     }
 
     public CqlException(String message, SourceLocator sourceLocator) {
-        super(message);
-        this.sourceLocator = sourceLocator;
+        this(message, null, sourceLocator);
     }
 
     public CqlException(String message, Throwable cause, SourceLocator sourceLocator) {
-        super(message, cause);
-        this.sourceLocator = sourceLocator;
+        this(message, cause, sourceLocator, null);
     }
 
     public CqlException(Throwable cause, SourceLocator sourceLocator) {
-        this(cause);
+        super(cause);
         this.sourceLocator = sourceLocator;
+        this.severity = Severity.ERROR;
     }
 
     public CqlException(String message, SourceLocator sourceLocator, Severity severity) {
-        this(message, sourceLocator);
-        this.severity = severity;
+        super(message);
+        this.sourceLocator = sourceLocator;
+        this.severity = severity != null ? severity : Severity.ERROR;
     }
 
     public CqlException(String message, Throwable cause, SourceLocator sourceLocator, Severity severity) {
-        this(message, cause, sourceLocator);
-        this.severity = severity;
+        super(message, cause);
+        this.sourceLocator = sourceLocator;
+        this.severity = severity != null ? severity : Severity.ERROR;
     }
 
-    private Severity severity = Severity.ERROR;
+    private final Severity severity;
+
     public Severity getSeverity() {
         return severity;
     }
 
-    private SourceLocator sourceLocator;
+    private transient SourceLocator sourceLocator = null;
+
     public SourceLocator getSourceLocator() {
         return sourceLocator;
     }
