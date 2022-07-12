@@ -198,7 +198,7 @@ abstract class BaseFhirTypeConverter implements FhirTypeConverter {
             case "DateTimeType": return toCqlDateTime((IPrimitiveType<java.util.Date>) value);
             case "TimeType": return toCqlTime((IPrimitiveType<String>) value);
             case "StringType": return toCqlString((IPrimitiveType<String>)value);
-            case "QuantityType": return toCqlQuantity((ICompositeType) value);
+            case "Quantity": return toCqlQuantity((ICompositeType) value);
             case "RatioType": return toCqlRatio((ICompositeType) value);
             case "AnyType": return toCqlAny((IBase)value);
             case "Coding": return toCqlCode((IBaseCoding) value);
