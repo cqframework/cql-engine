@@ -205,7 +205,6 @@ abstract class BaseFhirTypeConverter implements FhirTypeConverter {
             case "Period":
             case "Range":
                     return toCqlInterval((ICompositeType) value);
-            case "Tuple": return toCqlTuple((IBase) value);
             default:
                 throw new IllegalArgumentException(
                         String.format("missing case statement for: %s", value.getClass().getName()));
