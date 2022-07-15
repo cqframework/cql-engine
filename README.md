@@ -48,8 +48,9 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.5 - Maintenance/stability fixes; FHIRPath test suite; improved test coverage
 * 1.5.6 - Burned by Maven
 * 1.5.7 - Critical fix for FHIRPath now() and today() support
-* 1.5.8 - Improved support for dynamic model info loading, version manifest usage, improved test coverage, improved testing and debug capabilities
-* 1.5.9 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
+* 1.5.8 - Critical fix for evaluator parameter passing
+* 1.5.9 - Improved support for dynamic model info loading, version manifest usage, improved test coverage, improved testing and debug capabilities
+* 1.5.10 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
 * 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
 
 ## Getting Help
