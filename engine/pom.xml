@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>1.5.8-SNAPSHOT</version>
+        <version>1.5.9-SNAPSHOT</version>
     </parent>
 
     <artifactId>engine</artifactId>
