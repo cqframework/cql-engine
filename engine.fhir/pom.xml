@@ -93,6 +93,11 @@
         </dependency>
         <dependency>
             <groupId>info.cqframework</groupId>
+            <artifactId>fhir-r4</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
             <artifactId>model-jackson</artifactId>
             <scope>test</scope>
         </dependency>

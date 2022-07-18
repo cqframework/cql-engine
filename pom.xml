@@ -233,6 +233,12 @@
             </dependency>
             <dependency>
                 <groupId>info.cqframework</groupId>
+                <artifactId>fhir-r4</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
                 <artifactId>elm-jackson</artifactId>
                 <version>${cqframework.version}</version>
                 <scope>test</scope>
