@@ -9,6 +9,7 @@ import org.hl7.fhirpath.tests.Group;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.elm.execution.EqualEvaluator;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.fhir.model.CachedR4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
@@ -27,7 +28,7 @@ import java.util.Set;
 public class CQLOperationsR4Test extends TestFhirPath implements ITest {
 
     private static FhirContext fhirContext = FhirContext.forCached(FhirVersionEnum.R4);
-    private static R4FhirModelResolver fhirModelResolver = new R4FhirModelResolver(fhirContext);
+    private static R4FhirModelResolver fhirModelResolver = new CachedR4FhirModelResolver();
     private static RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(
         new SearchParameterResolver(fhirContext),
         fhirModelResolver,

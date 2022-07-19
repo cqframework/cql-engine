@@ -11,14 +11,11 @@ import java.time.ZoneOffset;
 import java.util.Collections;
 import java.util.List;
 
-import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.hl7.fhir.r4.model.Patient;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
 import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
-import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.model.*;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterMap;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.runtime.Code;
@@ -52,9 +49,9 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
 
     private FhirModelResolver<?,?,?,?,?,?,?,?> getModelResolver(FhirVersionEnum fhirVersionEnum) {
         if(fhirVersionEnum.equals(FhirVersionEnum.DSTU3)) {
-            return new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
+            return new CachedDstu3FhirModelResolver();
         } else if(fhirVersionEnum.equals(FhirVersionEnum.R4)) {
-            return new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
+            return new CachedR4FhirModelResolver();
         }
         return null;
     }
