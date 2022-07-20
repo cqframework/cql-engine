@@ -98,6 +98,11 @@
         </dependency>
         <dependency>
             <groupId>info.cqframework</groupId>
+            <artifactId>quick</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
             <artifactId>model-jackson</artifactId>
             <scope>test</scope>
         </dependency>
