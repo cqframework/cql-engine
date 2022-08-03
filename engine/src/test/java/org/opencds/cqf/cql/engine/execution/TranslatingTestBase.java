@@ -33,7 +33,7 @@ public class TranslatingTestBase {
 
     public Library toLibrary(String text, ModelManager modelManager, LibraryManager libraryManager) throws IOException {
         CqlTranslator translator = CqlTranslator.fromText(text, modelManager, libraryManager);
-        return this.readJson(translator.toJxson());
+        return this.readJson(translator.toJson());
     }
 
     public Library readJson(String json) throws IOException {

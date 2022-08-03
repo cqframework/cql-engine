@@ -21,11 +21,8 @@ import java.util.TimeZone;
 
 import javax.xml.bind.JAXB;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.FhirLibrarySourceProvider;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.*;
+import org.cqframework.cql.cql2elm.quick.FhirLibrarySourceProvider;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
@@ -191,16 +188,16 @@ public class TestFhirPath {
     }
 
     private Library translate(String cql) throws UcumException {
-        ArrayList<CqlTranslator.Options> options = new ArrayList<>();
-        options.add(CqlTranslator.Options.EnableDateRangeOptimization);
+        ArrayList<CqlTranslatorOptions.Options> options = new ArrayList<>();
+        options.add(CqlTranslatorOptions.Options.EnableDateRangeOptimization);
         UcumService ucumService = new UcumEssenceService(
             UcumEssenceService.class.getResourceAsStream("/ucum-essence.xml"));
 
         CqlTranslator translator = CqlTranslator.fromText(cql, getModelManager(), getLibraryManager(), ucumService,
-            options.toArray(new CqlTranslator.Options[options.size()]));
+            options.toArray(new CqlTranslatorOptions.Options[options.size()]));
         if (translator.getErrors().size() > 0) {
             ArrayList<String> errors = new ArrayList<>();
-            for (CqlTranslatorException error : translator.getErrors()) {
+            for (CqlCompilerException error : translator.getErrors()) {
                 TrackBack tb = error.getLocator();
                 String lines = tb == null ? "[n/a]"
                     : String.format("[%d:%d, %d:%d]", tb.getStartLine(), tb.getStartChar(), tb.getEndLine(),
@@ -210,7 +207,7 @@ public class TestFhirPath {
             throw new IllegalArgumentException(errors.toString());
         }
 
-        String json = translator.toJxson();
+        String json = translator.toJson();
 
         try {
             return JsonCqlLibraryReader.read(new StringReader(json));

@@ -15,10 +15,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.model.TranslatedLibrary;
+import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.testng.annotations.Test;
 
@@ -123,11 +123,11 @@ public class CqlEngineTests extends TranslatingTestBase {
 
 
         LibraryManager libraryManager = this.toLibraryManager(libraries);
-        List<CqlTranslatorException> errors = new ArrayList<>();
+        List<CqlCompilerException> errors = new ArrayList<>();
         List<Library> executableLibraries = new ArrayList<>();
         for (org.hl7.elm.r1.VersionedIdentifier id : libraries.keySet()) {
-            TranslatedLibrary translated = libraryManager.resolveLibrary(id, CqlTranslatorOptions.defaultOptions(), errors);
-            String json = this.convertToJson(translated.getLibrary());
+            CompiledLibrary compiledLibrary = libraryManager.resolveLibrary(id, CqlTranslatorOptions.defaultOptions(), errors);
+            String json = this.convertToJson(compiledLibrary.getLibrary());
             executableLibraries.add(this.readJson(json));
         }
 

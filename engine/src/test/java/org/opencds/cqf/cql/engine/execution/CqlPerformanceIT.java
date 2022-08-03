@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
@@ -81,7 +81,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         if (translator.getErrors().size() > 0) {
             System.err.println("Translation failed due to errors:");
             ArrayList<String> errors = new ArrayList<>();
-            for (CqlTranslatorException error : translator.getErrors()) {
+            for (CqlCompilerException error : translator.getErrors()) {
                 TrackBack tb = error.getLocator();
                 String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
                         tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
@@ -93,7 +93,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
         assertThat(translator.getErrors().size(), is(0));
 
-        String json = translator.toJxson();
+        String json = translator.toJson();
 
         return JsonCqlLibraryReader.read(new StringReader(json));
     }
