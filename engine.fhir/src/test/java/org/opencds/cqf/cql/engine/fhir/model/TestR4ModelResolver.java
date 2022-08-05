@@ -223,10 +223,8 @@ public class TestR4ModelResolver {
                 }
 
 
-
                 switch (ci.getBaseType()) {
                     // Abstract classes
-                    case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
 

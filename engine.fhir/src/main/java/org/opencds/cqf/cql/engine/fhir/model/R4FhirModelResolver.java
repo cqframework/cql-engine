@@ -168,9 +168,6 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
 
         // TODO: Might be able to patch some of these by registering custom types in HAPI.
         switch(typeName) {
-            case "CodeSystem.Concept": typeName = "CodeSystem$ConceptDefinitionComponent"; break;
-            case "CodeSystem.Concept.Property": typeName = "CodeSystem$ConceptPropertyComponent"; break;
-            case "CodeSystem.Property": typeName = "CodeSystem$ConceptPropertyComponent"; break;
             case "ConfidentialityClassification": typeName = "Composition$DocumentConfidentiality"; break;
             case "ContractResourceStatusCodes": typeName = "Contract$ContractStatus"; break;
             case "EventStatus": typeName = "Procedure$ProcedureStatus"; break;

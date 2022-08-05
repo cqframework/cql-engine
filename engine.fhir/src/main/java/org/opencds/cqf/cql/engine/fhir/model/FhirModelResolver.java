@@ -11,13 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.hl7.fhir.exceptions.FHIRException;
-import org.hl7.fhir.instance.model.api.IAnyResource;
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.IBaseBackboneElement;
-import org.hl7.fhir.instance.model.api.IBaseElement;
-import org.hl7.fhir.instance.model.api.IBaseEnumeration;
-import org.hl7.fhir.instance.model.api.ICompositeType;
-import org.hl7.fhir.instance.model.api.IPrimitiveType;
+import org.hl7.fhir.instance.model.api.*;
 import org.opencds.cqf.cql.engine.exception.DataProviderException;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
 import org.opencds.cqf.cql.engine.exception.InvalidPrecision;
@@ -237,6 +231,24 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             // Resources
             return this.fhirContext.getResourceDefinition(typeName).getImplementingClass();
         } catch (Exception e) {
+        }
+
+        try {
+            if (typeName.contains(".")) {
+                String[] path = typeName.split("\\.");
+                RuntimeResourceDefinition resourceDefinition = this.fhirContext.getResourceDefinition(path[0]);
+                String childName = Character.toLowerCase(path[1].charAt(0)) + path[1].substring(1);
+                BaseRuntimeChildDefinition childDefinition = resourceDefinition.getChildByName(childName);
+                BaseRuntimeElementDefinition childElement = childDefinition.getChildByName(childName);
+                for (int i = 2; i < path.length; ++i) {
+                    childName = Character.toLowerCase(path[i].charAt(0)) + path[i].substring(1);
+                    childDefinition = childElement.getChildByName(childName);
+                    childElement = childDefinition.getChildByName(childName);
+                }
+                return childElement.getImplementingClass();
+            }
+        } catch (Exception e) {
+
         }
 
         // Special case for enumerations. They are often in the "Enumerations" class.
