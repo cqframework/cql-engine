@@ -299,7 +299,7 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             if (c instanceof RuntimeChildResourceBlockDefinition) {
                 for (String childrenName : c.getValidChildNames()) {
                     if (c.getElementName().equals(childrenName)) continue;
-                    return resolveChildren(c.getChildByName(childrenName).getChildren(), childName);
+                    resolveChildren(c.getChildByName(childrenName).getChildren(), childName);
                 }
             }
         }
