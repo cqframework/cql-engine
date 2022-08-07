@@ -8,6 +8,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.cql2elm.model.Model;
+import org.hl7.elm.r1.VersionedIdentifier;
+import org.hl7.elm_modelinfo.r1.ClassInfo;
+import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.dstu2.model.EnumFactory;
 import org.hl7.fhir.dstu2.model.Enumeration;
 import org.hl7.fhir.dstu2.model.Enumerations.AdministrativeGender;
@@ -59,13 +64,38 @@ public class TestDstu2ModelResolver {
     }
 
     @Test
+    public void resolveModelInfoTests() {
+        ModelResolver resolver = new Dstu2FhirModelResolver();
+        ModelManager mm = new ModelManager();
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("1.0.2"));
+
+        List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
+
+        for (TypeInfo ti : typeInfos) {
+            ClassInfo ci = (ClassInfo)ti;
+            if (ci != null) {
+                switch (ci.getBaseType()) {
+                    // Abstract classes
+                    case "FHIR.Element": continue;
+                }
+
+                switch (ci.getName()) {
+                    // TODO: HAPI Doesn't have a ResourceContainer type
+                    case "FHIR.ResourceContainer": continue;
+                }
+
+                resolver.resolveType(ci.getName());
+            }
+        }
+    }
+
+    @Test
     public void resolveTypeTests() {
         ModelResolver resolver = new Dstu2FhirModelResolver();
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
-                case BACKBONEELEMENT:
                 case ELEMENT:
                 case NULL:
                     continue;

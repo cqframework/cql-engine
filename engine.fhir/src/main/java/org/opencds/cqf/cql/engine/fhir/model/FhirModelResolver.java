@@ -10,6 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import ca.uhn.fhir.context.*;
 import org.hl7.fhir.exceptions.FHIRException;
 import org.hl7.fhir.instance.model.api.IAnyResource;
 import org.hl7.fhir.instance.model.api.IBase;
@@ -29,14 +30,6 @@ import org.opencds.cqf.cql.engine.runtime.Precision;
 import org.opencds.cqf.cql.engine.runtime.TemporalHelper;
 import org.opencds.cqf.cql.engine.runtime.Time;
 
-import ca.uhn.fhir.context.BaseRuntimeChildDefinition;
-import ca.uhn.fhir.context.BaseRuntimeElementCompositeDefinition;
-import ca.uhn.fhir.context.BaseRuntimeElementDefinition;
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.RuntimeChildChoiceDefinition;
-import ca.uhn.fhir.context.RuntimeChildResourceBlockDefinition;
-import ca.uhn.fhir.context.RuntimeChildResourceDefinition;
-import ca.uhn.fhir.context.RuntimeResourceDefinition;
 import ca.uhn.fhir.model.api.TemporalPrecisionEnum;
 
 // TODO: Probably quite a bit of redundancy here. Probably only really need the BaseType and the PrimitiveType
@@ -227,6 +220,10 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
 
     @Override
     public Class<?> resolveType(String typeName) {
+        // For Dstu2
+        if (typeName.startsWith("FHIR.")) {
+            typeName = typeName.replace("FHIR.", "");
+        }
         // dataTypes
         BaseRuntimeElementDefinition<?> definition = this.fhirContext.getElementDefinition(typeName);
         if (definition != null) {
@@ -242,9 +239,13 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
         try {
             if (typeName.contains(".")) {
                 String[] path = typeName.split("\\.");
-                RuntimeResourceDefinition resourceDefinition = this.fhirContext.getResourceDefinition(path[0]);
+                BaseRuntimeElementDefinition resourceDefinition = this.fhirContext.getResourceTypes().contains(path[0])
+                        ? this.fhirContext.getResourceDefinition(path[0]) : this.fhirContext.getElementDefinition(path[0]);
                 String childName = Character.toLowerCase(path[1].charAt(0)) + path[1].substring(1);
                 BaseRuntimeChildDefinition childDefinition = resourceDefinition.getChildByName(childName);
+                if (childDefinition == null) {
+                    return resolveChildren(resourceDefinition.getChildren(), childName);
+                }
                 BaseRuntimeElementDefinition childElement = childDefinition.getChildByName(childName);
                 for (int i = 2; i < path.length; ++i) {
                     childName = Character.toLowerCase(path[i].charAt(0)) + path[i].substring(1);
@@ -254,7 +255,6 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
                 return childElement.getImplementingClass();
             }
         } catch (Exception e) {
-
         }
 
         // Special case for enumerations. They are often in the "Enumerations" class.
@@ -287,6 +287,23 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             throw new UnknownType(String.format("Could not resolve type %s. Primary package(s) for this resolver are %s",
                     typeName, String.join(",", this.packageNames)));
         }
+    }
+
+    // This method walks the entire child tree of a resource/element until the specified child is found
+    // This is for cases when the child path is not well-defined (STU3 and 4.0.0)
+    private Class<?> resolveChildren(List<BaseRuntimeChildDefinition> children, String childName) {
+        for (BaseRuntimeChildDefinition c : children) {
+            if (c.getValidChildNames().contains(childName)) {
+                return c.getChildByName(childName).getImplementingClass();
+            }
+            if (c instanceof RuntimeChildResourceBlockDefinition) {
+                for (String childrenName : c.getValidChildNames()) {
+                    if (c.getElementName().equals(childrenName)) continue;
+                    return resolveChildren(c.getChildByName(childrenName).getChildren(), childName);
+                }
+            }
+        }
+        return null;
     }
 
     @Override
