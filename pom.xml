@@ -6,7 +6,7 @@
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>1.5.8-SNAPSHOT</version>
+    <version>1.5.10-SNAPSHOT</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
@@ -51,7 +51,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.13.2</jackson.version>
         <jackson-databind.version>2.13.2.1</jackson-databind.version>
-        <cqframework.version>2.0.0-SNAPSHOT</cqframework.version>
+        <cqframework.version>2.0.0</cqframework.version>
         <hapi.version>6.0.1</hapi.version>
         <slf4j.version>1.7.29</slf4j.version>
         <surefire.version>3.0.0-M7</surefire.version>
@@ -229,6 +229,18 @@
             <dependency>
                 <groupId>info.cqframework</groupId>
                 <artifactId>cql-to-elm</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
+                <artifactId>fhir-r4</artifactId>
+                <version>${cqframework.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>info.cqframework</groupId>
+                <artifactId>quick</artifactId>
                 <version>${cqframework.version}</version>
                 <scope>test</scope>
             </dependency>

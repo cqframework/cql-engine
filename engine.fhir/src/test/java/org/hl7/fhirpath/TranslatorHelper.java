@@ -1,6 +1,7 @@
 package org.hl7.fhirpath;
 
 import org.cqframework.cql.cql2elm.*;
+import org.cqframework.cql.cql2elm.fhir.r4.FhirLibrarySourceProvider;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;

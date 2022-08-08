@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.fhir.data;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.*;
+import org.cqframework.cql.cql2elm.fhir.r4.FhirLibrarySourceProvider;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
@@ -10,9 +11,7 @@ import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
-import org.opencds.cqf.cql.engine.fhir.model.Dstu2FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
-import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
+import org.opencds.cqf.cql.engine.fhir.model.*;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
@@ -53,19 +52,19 @@ public abstract class FhirExecutionTestBase {
     @BeforeClass
     public void setup() {
         FhirContext dstu2Context = FhirContext.forCached(FhirVersionEnum.DSTU2);
-        dstu2ModelResolver = new Dstu2FhirModelResolver(dstu2Context);
+        dstu2ModelResolver = new CachedDstu2FhirModelResolver();
         dstu2RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu2Context),
             dstu2ModelResolver, dstu2Context.newRestfulGenericClient("http://fhirtest.uhn.ca/baseDstu2"));
         dstu2Provider = new CompositeDataProvider(dstu2ModelResolver, dstu2RetrieveProvider);
 
         FhirContext dstu3Context = FhirContext.forCached(FhirVersionEnum.DSTU3);
-        dstu3ModelResolver = new Dstu3FhirModelResolver(dstu3Context);
+        dstu3ModelResolver = new CachedDstu3FhirModelResolver();
         dstu3RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(dstu3Context), dstu3ModelResolver,
             dstu3Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
         dstu3Provider = new CompositeDataProvider(dstu3ModelResolver, dstu3RetrieveProvider);
 
         FhirContext r4Context = FhirContext.forCached(FhirVersionEnum.R4);
-        r4ModelResolver = new R4FhirModelResolver(r4Context);
+        r4ModelResolver = new CachedR4FhirModelResolver();
         r4RetrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(r4Context), r4ModelResolver,
             r4Context.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu4"));
         r4Provider = new CompositeDataProvider(r4ModelResolver, r4RetrieveProvider);

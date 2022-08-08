@@ -47,7 +47,7 @@ public class Dstu2FhirModelResolver extends  FhirModelResolver<Base, BaseDateTim
 		this(FhirContext.forDstu2());
 	}
 
-    public Dstu2FhirModelResolver(FhirContext fhirContext) {
+    protected Dstu2FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
         this.setPackageNames(Arrays.asList("ca.uhn.fhir.model.dstu2", "org.hl7.fhir.dstu2.model", "ca.uhn.fhir.model.primitive"));
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU2) {

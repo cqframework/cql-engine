@@ -6,10 +6,11 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>1.5.8-SNAPSHOT</version>
+        <version>1.5.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>engine.jaxb</artifactId>
+    <version>1.5.10-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>engine.jaxb</name>
@@ -20,7 +21,7 @@
         <dependency>
             <groupId>org.opencds.cqf.cql</groupId>
             <artifactId>engine</artifactId>
-            <version>${project.version}</version>
+            <version>1.5.10-SNAPSHOT</version>
         </dependency>
 
         <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->

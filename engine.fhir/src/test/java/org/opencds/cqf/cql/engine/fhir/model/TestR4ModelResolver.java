@@ -94,7 +94,6 @@ public class TestR4ModelResolver {
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
-                case BACKBONEELEMENT:
                 case ELEMENT:
                 case NULL:
                     continue;
@@ -167,7 +166,7 @@ public class TestR4ModelResolver {
     public void modelInfo400Tests() {
         ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
         ModelManager mm = new ModelManager();
-        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.0"));
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.1"));
 
         List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
 
@@ -176,7 +175,6 @@ public class TestR4ModelResolver {
             if (ci != null) {
                 switch (ci.getBaseType()) {
                     // Abstract classes
-                    case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
 
@@ -225,10 +223,8 @@ public class TestR4ModelResolver {
                 }
 
 
-
                 switch (ci.getBaseType()) {
                     // Abstract classes
-                    case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
 

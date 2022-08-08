@@ -10,6 +10,7 @@ import org.hl7.fhir.dstu3.model.ListResource;
 import org.hl7.fhir.dstu3.model.Patient;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.fhir.model.CachedDstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.retrieve.FhirBundleCursor;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
@@ -35,7 +36,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testDataProviderRetrieve() {
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
+        Dstu3FhirModelResolver modelResolver = new CachedDstu3FhirModelResolver();
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             modelResolver,
             fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
@@ -51,7 +52,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testPatientRetrieve() {
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
+        Dstu3FhirModelResolver modelResolver = new CachedDstu3FhirModelResolver();
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             modelResolver,
             fhirContext.newRestfulGenericClient("http://measure.eval.kanvix.com/cqf-ruler/baseDstu3"));
@@ -140,7 +141,7 @@ public class TestFhirDataProviderDstu3 extends FhirExecutionTestBase {
 
     // @Test
     public void testList() {
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver(fhirContext);
+        Dstu3FhirModelResolver modelResolver = new CachedDstu3FhirModelResolver();
         RestFhirRetrieveProvider retrieveProvider = new RestFhirRetrieveProvider(new SearchParameterResolver(fhirContext),
             modelResolver,
             fhirContext.newRestfulGenericClient("http://fhir.hl7.de:8080/baseDstu3"));

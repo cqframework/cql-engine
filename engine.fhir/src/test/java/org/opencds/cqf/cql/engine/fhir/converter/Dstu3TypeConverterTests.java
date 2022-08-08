@@ -1,20 +1,41 @@
 package org.opencds.cqf.cql.engine.fhir.converter;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.testng.Assert.assertTrue;
-
-import static org.hamcrest.Matchers.instanceOf;
 
 import java.math.BigDecimal;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import org.hl7.fhir.dstu3.model.*;
+import org.apache.commons.lang3.NotImplementedException;
+import org.hl7.fhir.dstu2.model.IdType;
+import org.hl7.fhir.dstu3.model.Attachment;
+import org.hl7.fhir.dstu3.model.Base;
+import org.hl7.fhir.dstu3.model.BooleanType;
+import org.hl7.fhir.dstu3.model.CodeableConcept;
+import org.hl7.fhir.dstu3.model.Coding;
+import org.hl7.fhir.dstu3.model.DateTimeType;
+import org.hl7.fhir.dstu3.model.DateType;
+import org.hl7.fhir.dstu3.model.DecimalType;
+import org.hl7.fhir.dstu3.model.InstantType;
+import org.hl7.fhir.dstu3.model.IntegerType;
+import org.hl7.fhir.dstu3.model.Patient;
+import org.hl7.fhir.dstu3.model.Period;
+import org.hl7.fhir.dstu3.model.Range;
+import org.hl7.fhir.dstu3.model.SimpleQuantity;
+import org.hl7.fhir.dstu3.model.StringType;
+import org.hl7.fhir.dstu3.model.TimeType;
+import org.hl7.fhir.instance.model.api.IBase;
+import org.hl7.fhir.instance.model.api.ICompositeType;
+import org.hl7.fhir.instance.model.api.IIdType;
+import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Concept;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
@@ -23,13 +44,8 @@ import org.opencds.cqf.cql.engine.runtime.DateTime;
 import org.opencds.cqf.cql.engine.runtime.Interval;
 import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Ratio;
+import org.opencds.cqf.cql.engine.runtime.Time;
 import org.opencds.cqf.cql.engine.runtime.Tuple;
-import org.apache.commons.lang3.NotImplementedException;
-import org.hl7.fhir.dstu2.model.IdType;
-import org.hl7.fhir.instance.model.api.IBase;
-import org.hl7.fhir.instance.model.api.ICompositeType;
-import org.hl7.fhir.instance.model.api.IIdType;
-import org.hl7.fhir.instance.model.api.IPrimitiveType;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -93,6 +109,20 @@ public class Dstu3TypeConverterTests {
     public void TestIsFhirType() {
         assertTrue(this.typeConverter.isFhirType(new Patient()));
         assertTrue(this.typeConverter.isFhirType(new IdType()));
+        assertTrue(this.typeConverter.isFhirType(new org.hl7.fhir.dstu3.model.Quantity()));
+        assertTrue(this.typeConverter.isFhirType(new org.hl7.fhir.dstu3.model.Ratio()));
+        assertTrue(this.typeConverter.isFhirType(new BooleanType()));
+        assertTrue(this.typeConverter.isFhirType(new IntegerType()));
+        assertTrue(this.typeConverter.isFhirType(new DecimalType()));
+        assertTrue(this.typeConverter.isFhirType(new DateType()));
+        assertTrue(this.typeConverter.isFhirType(new InstantType()));
+        assertTrue(this.typeConverter.isFhirType(new DateTimeType()));
+        assertTrue(this.typeConverter.isFhirType(new TimeType()));
+        assertTrue(this.typeConverter.isFhirType(new StringType()));
+        assertTrue(this.typeConverter.isFhirType(new Coding()));
+        assertTrue(this.typeConverter.isFhirType(new CodeableConcept()));
+        assertTrue(this.typeConverter.isFhirType(new Period()));
+        assertTrue(this.typeConverter.isFhirType(new Range()));
 
         assertFalse(this.typeConverter.isFhirType(5));
         assertFalse(this.typeConverter.isFhirType(new BigDecimal(0)));
@@ -394,6 +424,55 @@ public class Dstu3TypeConverterTests {
 
         actual = this.typeConverter.toCqlType(new StringType("test"));
         assertThat(actual, instanceOf(String.class));
+
+        actual = this.typeConverter.toCqlType(new IdType("test"));
+        assertThat(actual, instanceOf(String.class));
+
+        actual = this.typeConverter.toCqlType(new BooleanType(true));
+        assertThat(actual, instanceOf(Boolean.class));
+
+        actual = this.typeConverter.toCqlType(new DecimalType(1.0));
+        assertThat(actual, instanceOf(BigDecimal.class));
+
+        actual = this.typeConverter.toCqlType(new DateType(Calendar.getInstance()));
+        assertThat(actual, instanceOf(Date.class));
+
+        actual = this.typeConverter.toCqlType(new InstantType(Calendar.getInstance()));
+        assertThat(actual, instanceOf(DateTime.class));
+
+        actual = this.typeConverter.toCqlType(new DateTimeType(Calendar.getInstance()));
+        assertThat(actual, instanceOf(DateTime.class));
+
+        actual = this.typeConverter.toCqlType(new TimeType("10:00:00.0000"));
+        assertThat(actual, instanceOf(Time.class));
+
+        actual = this.typeConverter.toCqlType(new StringType("test"));
+        assertThat(actual, instanceOf(String.class));
+
+        actual = this.typeConverter.toCqlType(new org.hl7.fhir.dstu3.model.Quantity());
+        assertThat(actual, instanceOf( Quantity.class));
+
+        actual = this.typeConverter.toCqlType(new org.hl7.fhir.dstu3.model.Ratio());
+        assertThat(actual, instanceOf(Ratio.class));
+
+        actual = this.typeConverter.toCqlType(new Coding());
+        assertThat(actual, instanceOf(Code.class));
+
+        actual = this.typeConverter.toCqlType(new CodeableConcept());
+        assertThat(actual, instanceOf(Concept.class));
+
+        actual = this.typeConverter.toCqlType(new Period().setStart(Calendar.getInstance().getTime()).setEnd(Calendar.getInstance().getTime()));
+        assertThat(actual, instanceOf(Interval.class));
+
+        SimpleQuantity low = new SimpleQuantity();
+        low.setValue(1.0);
+        low.setUnit("d");
+
+        SimpleQuantity high = new SimpleQuantity();
+        high.setValue(4.0);
+        high.setUnit("d");
+        actual = this.typeConverter.toCqlType(new Range().setLow(low).setHigh(high));
+        assertThat(actual, instanceOf(Interval.class));
 
         actual = this.typeConverter.toCqlType(null);
         assertNull(null);
