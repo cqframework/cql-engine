@@ -8,7 +8,11 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.engine.runtime.*;
+import org.opencds.cqf.cql.engine.runtime.Date;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Interval;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
+import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 

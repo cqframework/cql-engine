@@ -10,7 +10,11 @@ import org.opencds.cqf.cql.engine.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.exception.UndefinedResult;
-import org.opencds.cqf.cql.engine.runtime.*;
+import org.opencds.cqf.cql.engine.runtime.Date;
+import org.opencds.cqf.cql.engine.runtime.DateTime;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
+import org.opencds.cqf.cql.engine.runtime.Time;
+import org.opencds.cqf.cql.engine.runtime.Value;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
