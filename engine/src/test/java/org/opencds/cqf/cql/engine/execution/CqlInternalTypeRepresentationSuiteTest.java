@@ -1,7 +1,19 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
+import org.cqframework.cql.cql2elm.CqlTranslator;
+import org.cqframework.cql.cql2elm.LibraryManager;
+import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.tracking.TrackBack;
+import org.fhir.ucum.UcumEssenceService;
+import org.fhir.ucum.UcumException;
+import org.fhir.ucum.UcumService;
+import org.opencds.cqf.cql.engine.runtime.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,76 +21,14 @@ import java.io.StringReader;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.TimeZone;
+import java.util.*;
 
-import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
-import org.cqframework.cql.cql2elm.LibraryManager;
-import org.cqframework.cql.cql2elm.ModelManager;
-import org.cqframework.cql.elm.execution.ExpressionDef;
-import org.cqframework.cql.elm.execution.FunctionDef;
-import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.tracking.TrackBack;
-import org.fhir.ucum.UcumEssenceService;
-import org.fhir.ucum.UcumException;
-import org.fhir.ucum.UcumService;
-import org.opencds.cqf.cql.engine.runtime.Code;
-import org.opencds.cqf.cql.engine.runtime.Concept;
-import org.opencds.cqf.cql.engine.runtime.CqlList;
-import org.opencds.cqf.cql.engine.runtime.DateTime;
-import org.opencds.cqf.cql.engine.runtime.Interval;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.opencds.cqf.cql.engine.runtime.Time;
-import org.opencds.cqf.cql.engine.runtime.Tuple;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
-public class CqlTestSuite {
+public class CqlInternalTypeRepresentationSuiteTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(CqlTestSuite.class);
-
-    // This test is for the various CQL operators
-    @Test
-    public void testMainSuite() throws IOException, UcumException {
-        Library library = translate("portable/CqlTestSuite.cql");
-        Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
-        if (library.getStatements() != null) {
-            for (ExpressionDef expression : library.getStatements().getDef()) {
-                if (expression instanceof FunctionDef) {
-                    continue;
-                }
-                if (expression.getName().startsWith("test")) {
-                    logger.info((String) expression.evaluate(context));
-                }
-            }
-        }
-    }
-
-    // This test is for the runtime errors
-    @Test
-    public void testErrorSuite() throws IOException, UcumException {
-        Library library = translate("portable/CqlErrorTestSuite.cql");
-        Context context = new Context(library, ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId()));
-        if (library.getStatements() != null) {
-            for (ExpressionDef expression : library.getStatements().getDef()) {
-                try {
-                    expression.evaluate(context);
-                    logger.error("Test " + expression.getName() + " should result in an error");
-                    Assert.fail();
-                }
-                catch (Exception e) {
-                    // pass
-                    logger.info(expression.getName() + " TEST PASSED");
-                }
-            }
-        }
-    }
+    private static final Logger logger = LoggerFactory.getLogger(CqlInternalTypeRepresentationSuiteTest.class);
 
     // This test is to check the validity of the internal representation of the CQL types (OPTIONAL)
     @Test
@@ -398,7 +348,7 @@ public class CqlTestSuite {
         if (translator.getErrors().size() > 0) {
             System.err.println("Translation failed due to errors:");
             ArrayList<String> errors = new ArrayList<>();
-            for (CqlTranslatorException error : translator.getErrors()) {
+            for (CqlCompilerException error : translator.getErrors()) {
                 TrackBack tb = error.getLocator();
                 String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
                         tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
@@ -410,7 +360,7 @@ public class CqlTestSuite {
 
         assertThat(translator.getErrors().size(), is(0));
 
-        String json = translator.toJxson();
+        String json = translator.toJson();
 
         return JsonCqlLibraryReader.read(new StringReader(json));
     }

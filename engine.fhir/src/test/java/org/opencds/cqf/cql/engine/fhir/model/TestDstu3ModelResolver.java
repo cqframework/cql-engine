@@ -7,6 +7,8 @@ import static org.testng.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.elm.r1.VersionedIdentifier;
@@ -63,14 +65,14 @@ public class TestDstu3ModelResolver {
 
     @Test(expectedExceptions = UnknownType.class)
     public void resolverThrowsExceptionForUnknownType() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
     }
 
     @Test
     // This tests all the top-level types HAPI knows about.
     public void resolveTypeTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
@@ -105,7 +107,7 @@ public class TestDstu3ModelResolver {
     @Test
     // This tests all the types that are present in the ModelInfo.
     public void resolveModelInfoTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         ModelManager mm = new ModelManager();
         Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("3.0.0"));
 
@@ -136,7 +138,7 @@ public class TestDstu3ModelResolver {
     // on the FhirContext or generalized logic, or fixed-up ModelInfos
     @Test
     public void modelInfoSpecialCaseTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
 
         // This tests resolution of inner classes. They aren't registered directly.
         resolver.resolveType("TestScriptRequestMethodCode");
@@ -158,7 +160,7 @@ public class TestDstu3ModelResolver {
 
     @Test
     public void createInstanceTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
@@ -212,7 +214,7 @@ public class TestDstu3ModelResolver {
 
     @Test
     public void contextPathTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
 
         String path = (String) resolver.getContextPath("Patient", "Patient");
         assertNotNull(path);
@@ -255,7 +257,7 @@ public class TestDstu3ModelResolver {
 
     @Test
     public void resolveMissingPropertyReturnsNull() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
 
         Patient p = new Patient();
 

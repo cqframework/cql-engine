@@ -988,8 +988,8 @@ define test_GreaterOrEqual_ALtB_Quantity: TestMessage(not GreaterOrEqual_ALtB_Qu
 // If
 define function IfThenElse(var Boolean): if var then 'true return' else 'false return'
 
-define test_If_true: TestMessage(IfThenElse(true) = 'true return', 'IfThenElse(true)', 'true return', IfThenElse(true))
-define test_If_false: TestMessage(IfThenElse(false) = 'false return', 'IfThenElse(false)', 'false return', IfThenElse(false))
+define test_IfThenElse_true: TestMessage(IfThenElse(true) = 'true return', 'IfThenElse_true', 'true return', IfThenElse(true))
+define test_IfThenElse_false: TestMessage(IfThenElse(false) = 'false return', 'IfThenElse_false', 'false return', IfThenElse(false))
 
 // Case
 
@@ -1001,9 +1001,9 @@ define function Case_selected(var Integer):
     '?'
   end
 
-define test_Case_Select_1: TestMessage(Case_selected(1) = 'one', 'Case_selected(1)', 'one', Case_selected(1))
-define test_Case_Select_2: TestMessage(Case_selected(2) = 'two', 'Case_selected(2)', 'two', Case_selected(2))
-define test_Case_Select_3: TestMessage(Case_selected(3) = '?', 'Case_selected(3)', '?', Case_selected(3))
+define test_Case_selected_1: TestMessage(Case_selected(1) = 'one', 'Case_selected_1', 'one', Case_selected(1))
+define test_Case_selected_2: TestMessage(Case_selected(2) = 'two', 'Case_selected_2', 'two', Case_selected(2))
+define test_Case_selected_3: TestMessage(Case_selected(3) = '?',   'Case_selected_3', '?',   Case_selected(3))
 
 define function Case_standard(X Integer, Y Integer):
   case
@@ -1012,9 +1012,9 @@ define function Case_standard(X Integer, Y Integer):
     else 'X == Y'
   end
 
-define test_Case_Standard_1_2: TestMessage(Case_standard(1, 2) = 'X < Y', 'Case_standard(1, 2)', 'X < Y', Case_standard(1, 2))
-define test_Case_Standard_2_1: TestMessage(Case_standard(2, 1) = 'X > Y', 'Case_standard(2, 1)', 'X > Y', Case_standard(2, 1))
-define test_Case_Standard_1_1: TestMessage(Case_standard(1, 1) = 'X == Y', 'Case_standard(1, 1)', 'X == Y', Case_standard(1, 1))
+define test_Case_Standard_1_2: TestMessage(Case_standard(1, 2) = 'X < Y', 'Case_Standard_1_2', 'X < Y', Case_standard(1, 2))
+define test_Case_Standard_2_1: TestMessage(Case_standard(2, 1) = 'X > Y', 'Case_Standard_2_1', 'X > Y', Case_standard(2, 1))
+define test_Case_Standard_1_1: TestMessage(Case_standard(1, 1) = 'X == Y', 'Case_Standard_1_1', 'X == Y', Case_standard(1, 1))
 
 /*
 *************************
@@ -3289,7 +3289,7 @@ define test_OverlapsDT_OverlapsContained: TestMessage(OverlapsDT_OverlapsContain
 define test_OverlapsDT_OverlapsContains: TestMessage(OverlapsDT_OverlapsContains, 'OverlapsDT_OverlapsContains', toString(true), toString(OverlapsDT_OverlapsContains))
 // define test_OverlapsDT_ImpreciseOverlap: TestMessage(OverlapsDT_ImpreciseOverlap, 'OverlapsDT_ImpreciseOverlap', toString(true), toString(OverlapsDT_ImpreciseOverlap))
 define test_OverlapsDT_NoOverlap: TestMessage(not OverlapsDT_NoOverlap, 'OverlapsDT_NoOverlap', toString(false), toString(OverlapsDT_NoOverlap))
-define test_OverlapsDT_NoImpreciseOverlap: TestMessage(not OverlapsDT_NoImpreciseOverlap, 'OverlapsDT_OverlapsBefore', toString(false), toString(OverlapsDT_OverlapsBefore))
+define test_OverlapsDT_NoImpreciseOverlap: TestMessage(not OverlapsDT_NoImpreciseOverlap, 'OverlapsDT_NoImpreciseOverlap', toString(false), toString(OverlapsDT_OverlapsBefore))
 define test_OverlapsDT_UnknownOverlap: TestMessage(OverlapsDT_UnknownOverlap is null, 'OverlapsDT_UnknownOverlap', 'null', toString(OverlapsDT_UnknownOverlap))
 define test_OverlapsDT_MatchingPrecisionOverlap: TestMessage(OverlapsDT_MatchingPrecisionOverlap, 'OverlapsDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsDT_MatchingPrecisionOverlap))
 define test_OverlapsDT_OverlapsBeforeDayOfIvlEdge: TestMessage(OverlapsDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsDT_OverlapsBeforeDayOfIvlEdge', toString(true), toString(OverlapsDT_OverlapsBeforeDayOfIvlEdge))
@@ -3349,7 +3349,7 @@ define test_OverlapsAfterDT_OverlapsContains: TestMessage(OverlapsAfterDT_Overla
 define test_OverlapsAfterDT_ImpreciseOverlapBefore: TestMessage(not OverlapsAfterDT_ImpreciseOverlapBefore, 'OverlapsAfterDT_ImpreciseOverlapBefore', toString(false), toString(OverlapsAfterDT_ImpreciseOverlapBefore))
 define test_OverlapsAfterDT_ImpreciseOverlapAfter: TestMessage(OverlapsAfterDT_ImpreciseOverlapAfter, 'OverlapsAfterDT_ImpreciseOverlapAfter', toString(true), toString(OverlapsAfterDT_ImpreciseOverlapAfter))
 define test_OverlapsAfterDT_NoOverlap: TestMessage(not OverlapsAfterDT_NoOverlap, 'OverlapsAfterDT_NoOverlap', toString(false), toString(OverlapsAfterDT_NoOverlap))
-define test_OverlapsAfterDT_NoImpreciseOverlap: TestMessage(not OverlapsAfterDT_NoImpreciseOverlap, 'OverlapsAfterDT_OverlapsBefore', toString(false), toString(OverlapsAfterDT_OverlapsBefore))
+define test_OverlapsAfterDT_NoImpreciseOverlap: TestMessage(not OverlapsAfterDT_NoImpreciseOverlap, 'OverlapsAfterDT_NoImpreciseOverlap', toString(false), toString(OverlapsAfterDT_NoImpreciseOverlap))
 define test_OverlapsAfterDT_MatchingPrecisionOverlap: TestMessage(OverlapsAfterDT_MatchingPrecisionOverlap, 'OverlapsAfterDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsAfterDT_MatchingPrecisionOverlap))
 define test_OverlapsAfterDT_UnknownOverlap: TestMessage(OverlapsAfterDT_UnknownOverlap is null, 'OverlapsAfterDT_UnknownOverlap', 'null', toString(OverlapsAfterDT_UnknownOverlap))
 define test_OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge: TestMessage(not OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge', toString(false), toString(OverlapsAfterDT_OverlapsBeforeDayOfIvlEdge))
@@ -3408,7 +3408,7 @@ define test_OverlapsBeforeDT_OverlapsContains: TestMessage(OverlapsBeforeDT_Over
 define test_OverlapsBeforeDT_ImpreciseOverlapAfter: TestMessage(not OverlapsBeforeDT_ImpreciseOverlapAfter, 'OverlapsBeforeDT_ImpreciseOverlapAfter', toString(false), toString(OverlapsBeforeDT_ImpreciseOverlapAfter))
 define test_OverlapsBeforeDT_ImpreciseOverlapBefore: TestMessage(OverlapsBeforeDT_ImpreciseOverlapBefore, 'OverlapsBeforeDT_ImpreciseOverlapBefore', toString(true), toString(OverlapsBeforeDT_ImpreciseOverlapBefore))
 define test_OverlapsBeforeDT_NoOverlap: TestMessage(not OverlapsBeforeDT_NoOverlap, 'OverlapsBeforeDT_NoOverlap', toString(false), toString(OverlapsBeforeDT_NoOverlap))
-define test_OverlapsBeforeDT_NoImpreciseOverlap: TestMessage(not OverlapsBeforeDT_NoImpreciseOverlap, 'OverlapsBeforeDT_OverlapsBefore', toString(false), toString(OverlapsBeforeDT_OverlapsBefore))
+define test_OverlapsBeforeDT_NoImpreciseOverlap: TestMessage(not OverlapsBeforeDT_NoImpreciseOverlap, 'OverlapsBeforeDT_NoImpreciseOverlap', toString(false), toString(OverlapsBeforeDT_NoImpreciseOverlap))
 define test_OverlapsBeforeDT_MatchingPrecisionOverlap: TestMessage(OverlapsBeforeDT_MatchingPrecisionOverlap, 'OverlapsBeforeDT_MatchingPrecisionOverlap', toString(true), toString(OverlapsBeforeDT_MatchingPrecisionOverlap))
 define test_OverlapsBeforeDT_UnknownOverlap: TestMessage(OverlapsBeforeDT_UnknownOverlap is null, 'OverlapsBeforeDT_UnknownOverlap', 'null', toString(OverlapsBeforeDT_UnknownOverlap))
 define test_OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge: TestMessage(OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge, 'OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge', toString(true), toString(OverlapsBeforeDT_OverlapsBeforeDayOfIvlEdge))
@@ -3848,8 +3848,9 @@ define test_NullIvlCollapse_NullPerCollapse: TestMessage(NullIvlCollapse_NullPer
 define test_NullIvlCollapse_DateTimeNullEndCollapseNoOverlap: TestMessage(NullIvlCollapse_DateTimeNullEndCollapseNoOverlap = DateTimeNullEndCollapseNoOverlapExpected, 'NullIvlCollapse_DateTimeNullEndCollapseNoOverlap', toString(DateTimeNullEndCollapseNoOverlapExpected), toString(NullIvlCollapse_DateTimeNullEndCollapseNoOverlap))
 define test_NullIvlCollapse_DateTimeNullStartCollapseNoOverlap: TestMessage(NullIvlCollapse_DateTimeNullStartCollapseNoOverlap = DateTimeNullStartCollapseNoOverlapExpected, 'NullIvlCollapse_DateTimeNullStartCollapseNoOverlap', toString(DateTimeNullStartCollapseNoOverlapExpected), toString(NullIvlCollapse_DateTimeNullStartCollapseNoOverlap))
 define test_NullIvlCollapse_DateTimeNullStartEndCollapse: TestMessage(NullIvlCollapse_DateTimeNullStartEndCollapse = DateTimeNullStartEndCollapseExpected, 'NullIvlCollapse_DateTimeNullStartEndCollapse', toString(DateTimeNullStartEndCollapseExpected), toString(NullIvlCollapse_DateTimeNullStartEndCollapse))
-define test_NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer = CollapseQuantityNullLowUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer', toString(CollapseQuantityNullLowUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer))
-define test_NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer = CollapseQuantityNullHighUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer', toString(CollapseQuantityNullHighUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer))
+//TODO: Fix non Datetime intervals with null
+//define test_NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer = CollapseQuantityNullLowUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer', toString(CollapseQuantityNullLowUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullLowUnitsWithinPer))
+//define test_NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer: TestMessage(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer = CollapseQuantityNullHighUnitsWithinPerExpected, 'NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer', toString(CollapseQuantityNullHighUnitsWithinPerExpected), toString(NullIvlCollapse_CollapseQuantityNullHighUnitsWithinPer))
 define test_NullIvlCollapse_CollapseQuantityIntervalListWithNulls: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNulls = CollapseQuantityIntervalListWithNullsExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNulls', toString(CollapseQuantityIntervalListWithNullsExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNulls))
 define test_NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap = CollapseQuantityIntervalListWithNullLowNoOverlapExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap', toString(CollapseQuantityIntervalListWithNullLowNoOverlapExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNullLowNoOverlap))
 define test_NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap: TestMessage(NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap = CollapseQuantityIntervalListWithNullHighNoOverlapExpected, 'NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap', toString(CollapseQuantityIntervalListWithNullHighNoOverlapExpected), toString(NullIvlCollapse_CollapseQuantityIntervalListWithNullHighNoOverlap))
@@ -4516,13 +4517,13 @@ define Exists_ListStartingWithNull: exists ({ null, 3, 4 })
 define Exists_ListWithNull: exists ({ 3, null, 5 })
 define Exists_NullExists: exists (null)
 
-define test_Exists_EmptyList: TestMessage(not Exists_EmptyList, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
-define test_Exists_FullList: TestMessage(Exists_FullList, 'Exists_FullList', toString(true), toString(Exists_FullList))
-define test_Exists_ListWithOneNull: TestMessage(Exists_ListWithOneNull, 'Exists_ListWithOneNull', toString(true), toString(Exists_ListWithOneNull))
-define test_Exists_ListWithTwoNulls: TestMessage(Exists_ListWithTwoNulls, 'Exists_ListWithTwoNulls', toString(true), toString(Exists_ListWithTwoNulls))
-define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
-define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
-define test_Exists_NullExists: TestMessage(not Exists_NullExists, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
+define test_Exists_EmptyList: TestMessage(Exists_EmptyList = false, 'Exists_EmptyList', toString(false), toString(Exists_EmptyList))
+define test_Exists_FullList: TestMessage(Exists_FullList = true, 'Exists_FullList', toString(true), toString(Exists_FullList))
+define test_Exists_ListWithOneNull: TestMessage(Exists_ListWithOneNull = false, 'Exists_ListWithOneNull', toString(false), toString(Exists_ListWithOneNull))
+define test_Exists_ListWithTwoNulls: TestMessage(Exists_ListWithTwoNulls = false, 'Exists_ListWithTwoNulls', toString(false), toString(Exists_ListWithTwoNulls))
+define test_Exists_ListStartingWithNull: TestMessage(Exists_ListStartingWithNull = true, 'Exists_ListStartingWithNull', toString(true), toString(Exists_ListStartingWithNull))
+define test_Exists_ListWithNull: TestMessage(Exists_ListWithNull = true, 'Exists_ListWithNull', toString(true), toString(Exists_ListWithNull))
+define test_Exists_NullExists: TestMessage(Exists_NullExists = false, 'Exists_NullExists', toString(false), toString(Exists_NullExists))
 
 // Equal
 define Equal_EqualIntList: {1, 2, 3} = {1, 2, 3}

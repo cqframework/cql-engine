@@ -476,6 +476,7 @@
           "locator" : "39:5-39:60"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -1006,6 +1007,7 @@
           "locator" : "42:2-52:30"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2014,6 +2016,7 @@
           "locator" : "55:2-59:33"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -2737,6 +2740,7 @@
           "locator" : "62:2-69:30"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -3497,6 +3501,7 @@
           "locator" : "72:2-75:9"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -4364,6 +4369,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -6046,6 +6052,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -7068,6 +7075,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -7620,6 +7628,7 @@
           "name" : "Intervals"
         } ],
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -8044,6 +8053,7 @@
           "name" : "CumulativeDays"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -8128,6 +8138,7 @@
           "resultTypeName" : "{urn:hl7-org:elm-types:r1}Boolean"
         },
         "annotation" : [ {
+          "type" : "Annotation",
           "s" : {
             "s" : [ {
               "name" : "{urn:hl7-org:cql-annotations:r1}s",
@@ -8185,8 +8196,10 @@
       } ]
     },
     "annotation" : [ {
-      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation"
+      "translatorOptions" : "EnableDateRangeOptimization,EnableAnnotations,EnableLocators,EnableResultTypes,DisableListDemotion,DisableListPromotion,DisableMethodInvocation",
+      "type" : "CqlToElmInfo"
     }, {
+      "type": "CqlToElmError",
       "libraryId" : "MATGlobalCommonFunctions_FHIR4",
       "libraryVersion" : "5.0.000",
       "startLine" : 286,
@@ -8197,6 +8210,7 @@
       "errorType" : "semantic",
       "errorSeverity" : "warning"
     }, {
+      "type": "CqlToElmError",
       "libraryId" : "AdvancedIllnessandFrailtyExclusion_FHIR4",
       "libraryVersion" : "5.0.000",
       "startLine" : 78,
@@ -8207,6 +8221,7 @@
       "errorType" : "semantic",
       "errorSeverity" : "warning"
     }, {
+      "type": "CqlToElmError",
       "libraryId" : "AdvancedIllnessandFrailtyExclusion_FHIR4",
       "libraryVersion" : "5.0.000",
       "startLine" : 78,
@@ -8217,6 +8232,7 @@
       "errorType" : "semantic",
       "errorSeverity" : "warning"
     }, {
+      "type": "CqlToElmError",
       "libraryId" : "AdvancedIllnessandFrailtyExclusion_FHIR4",
       "libraryVersion" : "5.0.000",
       "startLine" : 81,
@@ -8227,6 +8243,7 @@
       "errorType" : "semantic",
       "errorSeverity" : "warning"
     }, {
+      "type": "CqlToElmError",
       "libraryId" : "AdvancedIllnessandFrailtyExclusion_FHIR4",
       "libraryVersion" : "5.0.000",
       "startLine" : 81,

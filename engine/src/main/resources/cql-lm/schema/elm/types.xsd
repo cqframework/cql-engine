@@ -45,7 +45,7 @@
         <xs:complexContent>
             <xs:extension base="Vocabulary">
                 <xs:sequence>
-                  <xs:element name="codesystem" type="CodeSystem" minOccurs="0" maxOccurs="unbounded"/>
+                    <xs:element name="codesystem" type="CodeSystem" minOccurs="0" maxOccurs="unbounded"/>
                 </xs:sequence>
             </xs:extension>
         </xs:complexContent>

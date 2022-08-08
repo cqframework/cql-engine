@@ -9,7 +9,6 @@
         <version>1.5.10-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.jaxb</artifactId>
     <version>1.5.10-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -24,27 +23,37 @@
             <artifactId>engine</artifactId>
             <version>1.5.10-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.jvnet.jaxb2_commons</groupId>
-            <artifactId>jaxb2-basics</artifactId>
-            <version>0.12.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.persistence</groupId>
-            <artifactId>org.eclipse.persistence.moxy</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.fhir</groupId>
-            <artifactId>ucum</artifactId>
-        </dependency>
+
         <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>xpp3</groupId>
             <artifactId>xpp3_xpath</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>cql-to-elm</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>model-jaxb</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>info.cqframework</groupId>
+            <artifactId>elm-jaxb</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -62,7 +71,7 @@
                         <dependency>
                             <groupId>org.apache.maven.surefire</groupId>
                             <artifactId>surefire-testng</artifactId>
-                            <version>2.21.0</version>
+                            <version>${surefire.version}</version>
                         </dependency>
                     </dependencies>
                 </plugin>

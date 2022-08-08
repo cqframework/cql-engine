@@ -11,6 +11,8 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.elm.r1.VersionedIdentifier;
@@ -81,13 +83,13 @@ public class TestR4ModelResolver {
     @Test(expectedExceptions = UnknownType.class)
     public void resolverThrowsExceptionForUnknownType()
     {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
         resolver.resolveType("ImpossibleTypeThatDoesntExistAndShouldBlowUp");
     }
 
     @Test
     public void resolveTypeTests() {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
@@ -121,7 +123,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void modelInfoSpecialCaseTests() {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         // This tests resolution of inner classes. They aren't registered directly.
         resolver.resolveType("TestScriptRequestMethodCode");
@@ -162,9 +164,9 @@ public class TestR4ModelResolver {
 
      @Test
     public void modelInfo400Tests() {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
         ModelManager mm = new ModelManager();
-        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.0"));
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.1"));
 
         List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
 
@@ -196,7 +198,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void modelInfo401Tests() throws Exception {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
         ModelManager mm = new ModelManager();
         Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.1"));
 
@@ -240,7 +242,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void createInstanceTests() {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
@@ -292,7 +294,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void contextPathTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver();
+        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
 
         String path = (String)resolver.getContextPath("Patient", "Patient");
         assertNotNull(path);
@@ -338,7 +340,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void resolveMissingPropertyReturnsNull() {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         Patient p = new Patient();
 
@@ -348,7 +350,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void resolveIdPropertyReturnsString() {
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         Patient p = new Patient();
         p.setId("5");
@@ -366,7 +368,7 @@ public class TestR4ModelResolver {
     @Test
     public void resolveDateTimeProviderReturnsDate() {
 
-        ModelResolver resolver = new R4FhirModelResolver();
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         VisionPrescription vp = new VisionPrescription();
         Date time = new GregorianCalendar(1999, 3, 31).getTime();

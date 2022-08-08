@@ -386,7 +386,7 @@ public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
         Context context = new Context(library);
 
         Object result = context.resolveExpressionRef("String123ToLong").getExpression().evaluate(context);
-        assertThat(result, is(new Long(123)));
+        assertThat(result, is(123L));
     }
 
     /**

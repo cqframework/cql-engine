@@ -5,6 +5,7 @@ import org.opencds.cqf.cql.engine.debug.SourceLocator;
  * This class is meant to be thrown by implementations of the TerminologyProvider interface whenever they encounter an Exception
  */
 public class TerminologyProviderException extends CqlException {
+    private static final long serialVersionUID = 1L;
 
     public TerminologyProviderException (String message)
     {

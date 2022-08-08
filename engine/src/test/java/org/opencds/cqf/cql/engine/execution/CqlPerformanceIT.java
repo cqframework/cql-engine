@@ -10,14 +10,17 @@ import java.io.StringReader;
 import java.net.URLDecoder;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.TimeZone;
 
 import org.cqframework.cql.cql2elm.CqlTranslator;
-import org.cqframework.cql.cql2elm.CqlTranslatorException;
+import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
@@ -45,9 +48,10 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
     @Test
     public void testMainSuite() throws IOException, UcumException {
         Library library = translate("portable/CqlTestSuite.cql");
+        ZonedDateTime date = ZonedDateTime.of(2018, 1, 1, 7, 0, 0, 0, TimeZone.getDefault().toZoneId());
         LibraryLoader libraryLoader = new InMemoryLibraryLoader(Collections.singleton(library));
 
-        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 350.0);
+        runPerformanceTest("CqlTestSuite", "CqlTestSuite", libraryLoader, 350.0, date);
     }
 
     // This test is for the runtime errors
@@ -81,7 +85,7 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
         if (translator.getErrors().size() > 0) {
             System.err.println("Translation failed due to errors:");
             ArrayList<String> errors = new ArrayList<>();
-            for (CqlTranslatorException error : translator.getErrors()) {
+            for (CqlCompilerException error : translator.getErrors()) {
                 TrackBack tb = error.getLocator();
                 String lines = tb == null ? "[n/a]" : String.format("[%d:%d, %d:%d]",
                         tb.getStartLine(), tb.getStartChar(), tb.getEndLine(), tb.getEndChar());
@@ -93,26 +97,33 @@ public class CqlPerformanceIT  extends TranslatingTestBase {
 
         assertThat(translator.getErrors().size(), is(0));
 
-        String json = translator.toJxson();
+        String json = translator.toJson();
 
         return JsonCqlLibraryReader.read(new StringReader(json));
     }
 
     private void runPerformanceTest(String testName, String libraryName, LibraryLoader libraryLoader, Double maxPerIterationMs) {
+        runPerformanceTest(testName, libraryName, libraryLoader, maxPerIterationMs, null);
+    }
+
+    private void runPerformanceTest(String testName, String libraryName, LibraryLoader libraryLoader, Double maxPerIterationMs, ZonedDateTime evaluationZonedDateTime) {
         // A new CqlEngine is created for each loop because it resets and rebuilds the context completely.
 
         // Warm up the JVM
         for (int i = 0; i < ITERATIONS; i++) {
             CqlEngine engine = new CqlEngine(libraryLoader);
-            engine.evaluate(libraryName);
+            engine.evaluate(new VersionedIdentifier().withId(libraryName), null, null,
+                null, null, evaluationZonedDateTime);
         }
 
         Instant start = Instant.now();
         for (int i = 0; i < ITERATIONS; i++) {
             CqlEngine engine = new CqlEngine(libraryLoader);
-            engine.evaluate(libraryName);
+            engine.evaluate(new VersionedIdentifier().withId(libraryName), null, null,
+                null, null, evaluationZonedDateTime);
         }
         Instant finish = Instant.now();
+
         long timeElapsed = Duration.between(start, finish).toMillis();
         Double perIteration = (double)timeElapsed / (double)ITERATIONS;
 

@@ -48,7 +48,7 @@ public class Dstu3FhirModelResolver extends
         this(FhirContext.forDstu3());
     }
 
-    private Dstu3FhirModelResolver(FhirContext fhirContext) {
+    protected Dstu3FhirModelResolver(FhirContext fhirContext) {
         super(fhirContext);
         this.setPackageNames(Arrays.asList("org.hl7.fhir.dstu3.model"));
         if (fhirContext.getVersion().getVersion() != FhirVersionEnum.DSTU3) {

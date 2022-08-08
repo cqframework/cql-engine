@@ -3,6 +3,7 @@ package org.opencds.cqf.cql.engine.execution;
 import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getNamePart;
 import static org.opencds.cqf.cql.engine.execution.NamespaceHelper.getUriPart;
 
+import java.time.ZonedDateTime;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
@@ -144,6 +145,10 @@ public class CqlEngine {
     }
 
     public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters, DebugMap debugMap) {
+        return this.evaluate(libraryIdentifier, expressions, contextParameter, parameters, debugMap, null);
+    }
+
+    public EvaluationResult evaluate(VersionedIdentifier libraryIdentifier, Set<String> expressions, Pair<String, Object> contextParameter, Map<String, Object> parameters, DebugMap debugMap, ZonedDateTime evaluationDateTime) {
         // TODO: Figure out way to validate / invalidate library cache
         Map<VersionedIdentifier, Library> libraryCache = new HashMap<>();
 
@@ -158,7 +163,7 @@ public class CqlEngine {
         }
 
         // TODO: Some testing to see if it's more performant to reset a context rather than create a new one.
-        Context context = this.initializeContext(libraryCache, library, debugMap);
+        Context context = this.initializeContext(libraryCache, library, debugMap, evaluationDateTime);
         this.setParametersForContext(library, context, contextParameter, parameters);
 
         return this.evaluateExpressions(context, expressions);
@@ -214,10 +219,10 @@ public class CqlEngine {
         }
     }
 
-    private Context initializeContext(Map<VersionedIdentifier, Library> libraryCache, Library library, DebugMap debugMap) {
+    private Context initializeContext(Map<VersionedIdentifier, Library> libraryCache, Library library, DebugMap debugMap, ZonedDateTime evaluationDateTime) {
         // Context requires an initial library to init properly.
         // TODO: Allow context to be initialized with multiple libraries
-        Context context = new Context(library);
+        Context context = evaluationDateTime == null ? new Context(library) : new Context(library, evaluationDateTime);
 
         // TODO: Does the context actually need a library loaded if all the libraries are prefetched?
         // We'd have to make sure we include the dependencies too.

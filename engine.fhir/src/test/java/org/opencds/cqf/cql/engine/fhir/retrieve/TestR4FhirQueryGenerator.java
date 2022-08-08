@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.DataRequirement;
@@ -16,6 +17,7 @@ import org.hl7.fhir.r4.model.Duration;
 import org.hl7.fhir.r4.model.ValueSet;
 import org.opencds.cqf.cql.engine.fhir.R4FhirTest;
 import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
+import org.opencds.cqf.cql.engine.fhir.model.CachedR4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.R4FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.R4FhirTerminologyProvider;
@@ -44,9 +46,9 @@ public class TestR4FhirQueryGenerator extends R4FhirTest {
 
     @BeforeMethod
     public void setUp() throws FhirVersionMisMatchException {
-        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forR4());
+        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forCached(FhirVersionEnum.R4));
         TerminologyProvider terminologyProvider = new R4FhirTerminologyProvider(CLIENT);
-        R4FhirModelResolver modelResolver = new R4FhirModelResolver();
+        R4FhirModelResolver modelResolver = new CachedR4FhirModelResolver();
         this.generator = new R4FhirQueryGenerator(searchParameterResolver, terminologyProvider, modelResolver);
         OffsetDateTime evaluationDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-7));
         this.evaluationOffsetDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-10));

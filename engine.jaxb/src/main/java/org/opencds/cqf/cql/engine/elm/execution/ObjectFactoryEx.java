@@ -8,7 +8,7 @@ import javax.xml.namespace.QName;
 import org.cqframework.cql.elm.execution.*;
 
 @XmlRegistry
-public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFactory {
+public class ObjectFactoryEx extends ObjectFactory {
     @Override
     public Abs createAbs() { return new AbsEvaluator(); }
 
@@ -566,6 +566,19 @@ public class ObjectFactoryEx extends org.cqframework.cql.elm.execution.ObjectFac
     @XmlElementDecl(namespace = "urn:hl7-org:elm:r1", name = "library")
     public JAXBElement<Library> createLibrary(Library value) {
         return new JAXBElement<Library>(new QName("urn:hl7-org:elm:r1", "library"), Library.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link Narrative }{@code >}
+     *
+     * @param value
+     *     Java instance representing xml element's value.
+     * @return
+     *     the new instance of {@link JAXBElement }{@code <}{@link Narrative }{@code >}
+     */
+    @XmlElementDecl(namespace = "urn:hl7-org:cql-annotations:r1", name = "s", scope = Narrative.class)
+    public JAXBElement<Narrative> createNarrativeS(Narrative value) {
+        return new JAXBElement<Narrative>(new QName("urn:hl7-org:cql-annotations:r1", "s"), Narrative.class, Narrative.class, value);
     }
 
 }

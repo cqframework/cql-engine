@@ -8,6 +8,7 @@ import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+import ca.uhn.fhir.context.FhirVersionEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.hl7.fhir.dstu3.model.Bundle;
 import org.hl7.fhir.dstu3.model.DataRequirement;
@@ -16,6 +17,7 @@ import org.hl7.fhir.dstu3.model.Duration;
 import org.hl7.fhir.dstu3.model.ValueSet;
 import org.opencds.cqf.cql.engine.fhir.Dstu3FhirTest;
 import org.opencds.cqf.cql.engine.fhir.exception.FhirVersionMisMatchException;
+import org.opencds.cqf.cql.engine.fhir.model.CachedDstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.model.Dstu3FhirModelResolver;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
 import org.opencds.cqf.cql.engine.fhir.terminology.Dstu3FhirTerminologyProvider;
@@ -44,9 +46,9 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
     @BeforeMethod
     public void setUp() throws FhirVersionMisMatchException {
-        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forDstu3());
+        SearchParameterResolver searchParameterResolver = new SearchParameterResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         TerminologyProvider terminologyProvider = new Dstu3FhirTerminologyProvider(CLIENT);
-        Dstu3FhirModelResolver modelResolver = new Dstu3FhirModelResolver();
+        Dstu3FhirModelResolver modelResolver = new CachedDstu3FhirModelResolver();
         this.generator = new Dstu3FhirQueryGenerator(searchParameterResolver, terminologyProvider, modelResolver);
         this.evaluationOffsetDateTime = OffsetDateTime.of(2018, 11, 19, 9, 0, 0, 000, ZoneOffset.ofHours(-10));
         this.evaluationDateTime = new DateTime(evaluationOffsetDateTime);
