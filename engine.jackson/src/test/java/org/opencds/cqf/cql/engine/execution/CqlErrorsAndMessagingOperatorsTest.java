@@ -1,17 +1,17 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.opencds.cqf.cql.engine.data.SystemDataProvider;
-import org.opencds.cqf.cql.engine.elm.execution.obfuscate.PHIObfuscator;
-import org.opencds.cqf.cql.engine.elm.execution.obfuscate.RedactingPHIObfuscator;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
+import org.opencds.cqf.cql.engine.data.SystemDataProvider;
+import org.opencds.cqf.cql.engine.elm.execution.obfuscate.PHIObfuscator;
+import org.opencds.cqf.cql.engine.elm.execution.obfuscate.RedactingPHIObfuscator;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlErrorsAndMessagingOperatorsTest extends CqlExecutionTestBase {
     @Test

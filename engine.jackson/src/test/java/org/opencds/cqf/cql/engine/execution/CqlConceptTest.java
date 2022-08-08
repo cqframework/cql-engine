@@ -1,14 +1,14 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Concept;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class CqlConceptTest extends CqlExecutionTestBase {
 

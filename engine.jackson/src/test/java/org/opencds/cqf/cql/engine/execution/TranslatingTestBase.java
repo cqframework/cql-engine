@@ -1,5 +1,9 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.Map;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -8,10 +12,6 @@ import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
-
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Map;
 
 public class TranslatingTestBase {
 

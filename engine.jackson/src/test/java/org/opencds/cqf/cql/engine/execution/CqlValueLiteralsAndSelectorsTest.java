@@ -1,15 +1,15 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.opencds.cqf.cql.engine.exception.CqlException;
-import org.opencds.cqf.cql.engine.runtime.Quantity;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import org.opencds.cqf.cql.engine.exception.CqlException;
+import org.opencds.cqf.cql.engine.runtime.Quantity;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlValueLiteralsAndSelectorsTest extends CqlExecutionTestBase {
 

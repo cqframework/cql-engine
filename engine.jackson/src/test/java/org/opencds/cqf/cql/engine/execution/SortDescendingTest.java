@@ -1,10 +1,10 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.util.List;
+
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 public class SortDescendingTest extends CqlExecutionTestBase {
     @Test

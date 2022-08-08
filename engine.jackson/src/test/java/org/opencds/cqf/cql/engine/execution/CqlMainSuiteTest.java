@@ -1,5 +1,11 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.io.IOException;
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.TimeZone;
+
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.FunctionDef;
 import org.cqframework.cql.elm.execution.Library;
@@ -11,12 +17,6 @@ import org.testng.ITest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
-
-import java.io.IOException;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.TimeZone;
 
 public class CqlMainSuiteTest implements ITest {
 

@@ -1,18 +1,18 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
-import org.opencds.cqf.cql.engine.exception.InvalidDateTime;
-import org.opencds.cqf.cql.engine.runtime.*;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
+import org.opencds.cqf.cql.engine.exception.InvalidDateTime;
+import org.opencds.cqf.cql.engine.runtime.*;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 
 public class CqlTypesTest extends CqlExecutionTestBase {

@@ -1,5 +1,15 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.cqframework.cql.cql2elm.*;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
@@ -9,16 +19,6 @@ import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeMethod;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public abstract class CqlExecutionTestBase {
     static Map<String, Library> libraries = new HashMap<>();

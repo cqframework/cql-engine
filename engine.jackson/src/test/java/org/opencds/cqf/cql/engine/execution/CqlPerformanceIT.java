@@ -1,12 +1,6 @@
 package org.opencds.cqf.cql.engine.execution;
 
 import static org.testng.Assert.assertTrue;
-import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.fhir.ucum.UcumException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -14,6 +8,13 @@ import java.time.Instant;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.TimeZone;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.VersionedIdentifier;
+import org.fhir.ucum.UcumException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.annotations.Test;
 
 public class CqlPerformanceIT  extends TranslatingTestBase {
 

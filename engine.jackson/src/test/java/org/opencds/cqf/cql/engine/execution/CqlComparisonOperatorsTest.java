@@ -1,13 +1,13 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+
 import org.opencds.cqf.cql.engine.elm.execution.GreaterEvaluator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 public class CqlComparisonOperatorsTest extends CqlExecutionTestBase {
 

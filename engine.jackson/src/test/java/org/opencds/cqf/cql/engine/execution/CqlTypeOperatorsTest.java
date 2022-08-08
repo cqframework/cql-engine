@@ -1,16 +1,16 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.math.BigDecimal;
+import java.time.format.DateTimeParseException;
+
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
 import org.opencds.cqf.cql.engine.exception.InvalidCast;
 import org.opencds.cqf.cql.engine.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
-import java.time.format.DateTimeParseException;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class CqlTypeOperatorsTest extends CqlExecutionTestBase {
 

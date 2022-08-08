@@ -1,5 +1,10 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+
+import java.math.BigDecimal;
+
 import org.opencds.cqf.cql.engine.elm.execution.AbsEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.AddEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
@@ -8,11 +13,6 @@ import org.opencds.cqf.cql.engine.exception.UndefinedResult;
 import org.opencds.cqf.cql.engine.runtime.*;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
 
 
 public class CqlArithmeticFunctionsTest extends CqlExecutionTestBase {

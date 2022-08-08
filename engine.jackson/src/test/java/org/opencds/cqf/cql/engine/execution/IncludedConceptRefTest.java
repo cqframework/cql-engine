@@ -1,11 +1,11 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.util.Collections;
+
 import org.opencds.cqf.cql.engine.runtime.Code;
 import org.opencds.cqf.cql.engine.runtime.Concept;
 import org.opencds.cqf.cql.engine.runtime.CqlType;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
 
 public class IncludedConceptRefTest extends CqlExecutionTestBase {
 

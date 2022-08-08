@@ -1,5 +1,14 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -10,15 +19,6 @@ import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class TranslatorHelper {
 

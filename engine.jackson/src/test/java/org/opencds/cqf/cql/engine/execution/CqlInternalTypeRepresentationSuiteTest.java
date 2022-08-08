@@ -1,13 +1,5 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.fhir.ucum.UcumException;
-import org.opencds.cqf.cql.engine.runtime.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
@@ -15,6 +7,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.TimeZone;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.fhir.ucum.UcumException;
+import org.opencds.cqf.cql.engine.runtime.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 
 public class CqlInternalTypeRepresentationSuiteTest {
 
