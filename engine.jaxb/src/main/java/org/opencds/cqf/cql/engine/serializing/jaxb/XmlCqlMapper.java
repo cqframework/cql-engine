@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.engine.serializing.jaxb;
 
-import org.opencds.cqf.cql.engine.elm.execution.ObjectFactoryEx;
-
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+
+import org.opencds.cqf.cql.engine.elm.execution.ObjectFactoryEx;
 
 public class XmlCqlMapper {
 

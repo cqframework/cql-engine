@@ -1,8 +1,5 @@
 package org.opencds.cqf.cql.engine.serializing.jaxb;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.serializing.CqlLibraryReader;
-
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -13,6 +10,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.serializing.CqlLibraryReader;
 
 public class XmlCqlLibraryReader implements CqlLibraryReader {
 

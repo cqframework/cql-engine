@@ -1,14 +1,5 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.serializing.jaxb.JsonCqlLibraryReader;
-import org.opencds.cqf.cql.engine.serializing.jaxb.XmlCqlLibraryReader;
-import org.testng.Assert;
-import org.testng.ITest;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Factory;
-import org.testng.annotations.Test;
-
 import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileReader;
@@ -17,6 +8,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.serializing.jaxb.JsonCqlLibraryReader;
+import org.opencds.cqf.cql.engine.serializing.jaxb.XmlCqlLibraryReader;
+import org.testng.Assert;
+import org.testng.ITest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Factory;
+import org.testng.annotations.Test;
 
 public class ElmRegressionTests implements ITest {
     private final String path;

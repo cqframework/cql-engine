@@ -1,13 +1,13 @@
 package org.opencds.cqf.cql.engine.serializing;
 
-import org.cqframework.cql.elm.execution.Library;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+
+import org.cqframework.cql.elm.execution.Library;
 
 public interface CqlLibraryReader {
 
