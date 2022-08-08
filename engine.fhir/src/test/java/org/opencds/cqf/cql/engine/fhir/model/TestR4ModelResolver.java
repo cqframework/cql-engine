@@ -94,7 +94,6 @@ public class TestR4ModelResolver {
         for (DataType type : DataType.values()) {
             // These are abstract types that should never be resolved directly.
             switch (type) {
-                case BACKBONEELEMENT:
                 case ELEMENT:
                 case NULL:
                     continue;
@@ -176,7 +175,6 @@ public class TestR4ModelResolver {
             if (ci != null) {
                 switch (ci.getBaseType()) {
                     // Abstract classes
-                    case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
 
@@ -225,10 +223,8 @@ public class TestR4ModelResolver {
                 }
 
 
-
                 switch (ci.getBaseType()) {
                     // Abstract classes
-                    case "FHIR.BackboneElement":
                     case "FHIR.Element": continue;
                 }
 
