@@ -1,9 +1,9 @@
 package org.opencds.cqf.cql.engine.serializing.jaxb;
 
-import org.cqframework.cql.elm.execution.Library;
-import org.opencds.cqf.cql.engine.serializing.CqlLibraryReader;
-
-import javax.xml.bind.*;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.PropertyException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.transform.Source;
 import java.io.File;
 import java.io.IOException;
@@ -11,6 +11,9 @@ import java.io.InputStream;
 import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
+
+import org.cqframework.cql.elm.execution.Library;
+import org.opencds.cqf.cql.engine.serializing.CqlLibraryReader;
 
 public class JsonCqlLibraryReader implements CqlLibraryReader {
     private static Unmarshaller unmarshaller;

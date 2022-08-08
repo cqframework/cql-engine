@@ -1,5 +1,11 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+
+import java.math.BigDecimal;
+import java.util.Arrays;
+
 import org.opencds.cqf.cql.engine.elm.execution.AnyTrueEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.AvgEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.EquivalentEvaluator;
@@ -9,12 +15,6 @@ import org.opencds.cqf.cql.engine.runtime.Quantity;
 import org.opencds.cqf.cql.engine.runtime.Time;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
-import java.util.Arrays;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 public class CqlAggregateFunctionsTest extends CqlExecutionTestBase {
 

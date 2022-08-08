@@ -9,7 +9,7 @@ import org.cqframework.cql.elm.execution.CqlToElmBase;
 import org.cqframework.cql.elm.execution.Element;
 import org.cqframework.cql.elm.execution.Expression;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
-import org.opencds.cqf.cql.engine.elm.execution.*;
+import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.serializing.jackson.mixins.*;
 
 public class JsonCqlMapper {
