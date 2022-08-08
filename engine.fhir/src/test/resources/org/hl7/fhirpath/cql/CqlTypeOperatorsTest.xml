@@ -3,11 +3,11 @@
 	name="CqlTypeOperatorsTest" reference="https://cql.hl7.org/09-b-cqlreference.html#type-operators-1">
 	<group name="As">
 		<test name="AsQuantity">
-			<expression>45.5 'g' as Quantity</expression>
+			<expression>45.5 'g' as System.Quantity</expression>
 			<output>45.5 'g'</output>
 		</test>
 		<test name="CastAsQuantity">
-			<expression>cast 45.5 'g' as Quantity</expression>
+			<expression>cast 45.5 'g' as System.Quantity</expression>
 			<output>45.5 'g'</output>
 		</test>
 		<test name="AsDateTime">
@@ -25,8 +25,8 @@
 			<output>'5'</output>
 		</test>
 		<test name="StringToIntegerError">
-			<expression invalid="true">convert 'foo' to Integer</expression>
-			<!-- EXPECT: Unable to convert given string to Integer -->
+			<expression>convert 'foo' to Integer</expression>
+			<output>null</output>
 		</test>
 		<test name="StringToDateTime">
 			<expression>convert '2014-01-01' to DateTime</expression>
@@ -37,8 +37,8 @@
 			<output>@T14:30:00.000</output>
 		</test>
 		<test name="StringToDateTimeMalformed">
-			<expression invalid="true">convert '2014/01/01' to DateTime</expression>
-			<!-- EXPECT: Invalid format: "2014/01/01" is malformed at "/01/01" -->
+			<expression>convert '2014/01/01' to DateTime</expression>
+			<output>null</output>
 		</test>
 	</group>
 	<group name="Is">
@@ -82,7 +82,7 @@
 		</test>
 		<test name="ToDateTime4">
 			<expression>ToDateTime('2014-01-01T12:05:05.955+01:30')</expression>
-			<output>@2014-01-01T12:05:05.955+01:30</output>
+			<output>@2014-01-01T12:05:05.955</output>
 		</test>
 		<test name="ToDateTime5">
 			<expression>ToDateTime('2014-01-01T12:05:05.955-01:15')</expression>
@@ -93,8 +93,8 @@
 			<output>@2014-01-01T12:05:05.955+00:00</output>
 		</test>
 		<test name="ToDateTimeMalformed">
-			<expression invalid="true">ToDateTime('2014/01/01T12:05:05.955Z')</expression>
-			<!-- EXPECT: Invalid format: "2014/01/01T12:05:05.955" is malformed at "/01/01T12:05:05.955" -->
+			<expression>ToDateTime('2014/01/01T12:05:05.955Z')</expression>
+			<output>null</output>
 		</test>
 	</group>
 	<group name="ToDecimal">
@@ -139,20 +139,18 @@
 			<output>@T14:30:00.000</output>
 		</test>
 		<test name="ToTime2">
-			<expression>ToTime('T14:30:00.0+05:30')</expression>
-			<output>@T14:30:00.000</output>
+			<expression invalid="true">ToTime('T14:30:00.0+05:30')</expression>
 		</test>
 		<test name="ToTime3">
-			<expression>ToTime('T14:30:00.0-05:45')</expression>
-			<output>@T14:30:00.000</output>
+			<expression invalid="true">ToTime('T14:30:00.0-05:45')</expression>
 		</test>
 		<test name="ToTime4">
 			<expression>ToTime('T14:30:00.0Z')</expression>
-			<output>@T14:30:00.000</output>
+			<output>null</output>
 		</test>
 		<test name="ToTimeMalformed">
-			<expression invalid="true">ToTime('T14-30-00.0')</expression>
-			<!-- EXPECT: Invalid format: "T14-30-00.0" is malformed at "-30-00.0" -->
+			<expression>ToTime('T14-30-00.0')</expression>
+			<output>null</output>
 		</test>
 	</group>
 </tests>
