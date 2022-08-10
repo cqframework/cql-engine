@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = ExpressionDefEvaluator.class)
 @JsonSubTypes({
     @Type(value = AbsEvaluator.class, name = "Abs"),
     @Type(value = AddEvaluator.class, name = "Add"),
@@ -67,6 +67,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = ExpandEvaluator.class, name = "Expand"),
     @Type(value = ExpressionDefEvaluator.class, name = "ExpressionDef"),
     @Type(value = ExpressionRefEvaluator.class, name = "ExpressionRef"),
+    // @Type(value = FunctionDef.class, name = "FunctionDef"),
     @Type(value = FilterEvaluator.class, name = "Filter"),
     @Type(value = FirstEvaluator.class, name = "First"),
     @Type(value = FlattenEvaluator.class, name = "Flatten"),

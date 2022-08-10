@@ -34,6 +34,16 @@ public class JsonCqlLibraryReaderTest {
         assertThat(firstDef, instanceOf(ExpressionDefEvaluator.class));
     }
 
+    @Test
+    void readerCreatesExpressionEvaluatorElm() throws UcumException, IOException {
+        Library library = read("FHIR347.json");
+
+        ExpressionDef firstDef = library.getStatements().getDef().stream().filter(x -> x.getName().equals("SDE Race")).findFirst().get();
+
+        assertThat(firstDef, instanceOf(ExpressionDefEvaluator.class));
+    }
+
+
 
     private static Library translate(String file)  throws UcumException, IOException {
         ModelManager modelManager = new ModelManager();
@@ -62,6 +72,11 @@ public class JsonCqlLibraryReaderTest {
         String json = translator.toJson();
 
         return JsonCqlLibraryReader.read(new StringReader(json));
+    }
+
+    private static Library read(String file) throws IOException  {
+        File jsonFile = new File(URLDecoder.decode(CqlMainSuiteTest.class.getResource(file).getFile(), "UTF-8"));
+        return JsonCqlLibraryReader.read(jsonFile);
     }
 
 }
