@@ -7,14 +7,22 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 
+import org.cqframework.cql.elm.execution.CqlToElmBase;
+import org.cqframework.cql.elm.execution.Element;
+import org.cqframework.cql.elm.execution.Expression;
+import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.TypeSpecifier;
+import org.opencds.cqf.cql.engine.elm.serialization.CqlToElmBaseMixIn;
+import org.opencds.cqf.cql.engine.elm.serialization.ElementMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.ExpressionMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.LibraryMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.TypeSpecifierMixin;
+
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
-
-import org.cqframework.cql.elm.execution.*;
-import org.opencds.cqf.cql.engine.elm.execution.*;
 
 public class JsonCqlLibraryReader {
     private static final JsonMapper mapper = JsonMapper.builder()
@@ -23,6 +31,7 @@ public class JsonCqlLibraryReader {
         .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
         .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
         .addModule(new JaxbAnnotationModule())
+        .addMixIn(Library.class, LibraryMixin.class)
         .addMixIn(Element.class, ElementMixin.class)
         .addMixIn(Expression.class, ExpressionMixin.class)
         .addMixIn(TypeSpecifier.class, TypeSpecifierMixin.class)
@@ -33,26 +42,26 @@ public class JsonCqlLibraryReader {
     }
 
     public static Library read(File file) throws IOException {
-        return mapper.readValue(file, LibraryWrapper.class).getLibrary();
+        return mapper.readValue(file, Library.class);
     }
 
     public static Library read(URL url) throws IOException {
-        return mapper.readValue(url, LibraryWrapper.class).getLibrary();
+        return mapper.readValue(url, Library.class);
     }
 
     public static Library read(URI uri) throws IOException {
-        return mapper.readValue(uri.toURL(), LibraryWrapper.class).getLibrary();
+        return mapper.readValue(uri.toURL(), Library.class);
     }
 
     public static Library read(String string) throws IOException {
-        return mapper.readValue(string, LibraryWrapper.class).getLibrary();
+        return mapper.readValue(string, Library.class);
     }
 
     public static Library read(InputStream inputStream) throws IOException {
-        return mapper.readValue(inputStream, LibraryWrapper.class).getLibrary();
+        return mapper.readValue(inputStream, Library.class);
     }
 
     public static Library read(Reader reader) throws IOException {
-        return mapper.readValue(reader, LibraryWrapper.class).getLibrary();
+        return mapper.readValue(reader, Library.class);
     }
 }

@@ -1,10 +1,10 @@
-package org.opencds.cqf.cql.engine.elm.execution;
+package org.opencds.cqf.cql.engine.elm.serialization;
+
+import org.opencds.cqf.cql.engine.elm.execution.*;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-
-import org.cqframework.cql.elm.execution.Expression;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
@@ -194,5 +194,5 @@ import org.cqframework.cql.elm.execution.Expression;
     @Type(value = WidthEvaluator.class, name = "Width"),
     @Type(value = XorEvaluator.class, name = "Xor"),
 })
-public class ExpressionMixin extends Expression {
+public interface ExpressionMixin {
 }
