@@ -1,12 +1,12 @@
-package org.opencds.cqf.cql.engine.elm.execution;
+package org.opencds.cqf.cql.engine.elm.serialization;
+
+import org.opencds.cqf.cql.engine.elm.execution.*;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonSubTypes.Type;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-import org.cqframework.cql.elm.execution.Expression;
-
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", defaultImpl = ExpressionDefEvaluator.class)
 @JsonSubTypes({
     @Type(value = AbsEvaluator.class, name = "Abs"),
     @Type(value = AddEvaluator.class, name = "Add"),
@@ -67,6 +67,7 @@ import org.cqframework.cql.elm.execution.Expression;
     @Type(value = ExpandEvaluator.class, name = "Expand"),
     @Type(value = ExpressionDefEvaluator.class, name = "ExpressionDef"),
     @Type(value = ExpressionRefEvaluator.class, name = "ExpressionRef"),
+    // @Type(value = FunctionDef.class, name = "FunctionDef"),
     @Type(value = FilterEvaluator.class, name = "Filter"),
     @Type(value = FirstEvaluator.class, name = "First"),
     @Type(value = FlattenEvaluator.class, name = "Flatten"),
@@ -194,5 +195,5 @@ import org.cqframework.cql.elm.execution.Expression;
     @Type(value = WidthEvaluator.class, name = "Width"),
     @Type(value = XorEvaluator.class, name = "Xor"),
 })
-public class ExpressionMixin extends Expression {
+public interface ExpressionMixin {
 }
