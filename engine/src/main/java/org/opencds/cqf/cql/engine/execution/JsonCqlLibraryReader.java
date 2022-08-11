@@ -7,12 +7,14 @@ import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 
+import org.cqframework.cql.elm.execution.CodeSystemRef;
 import org.cqframework.cql.elm.execution.CqlToElmBase;
 import org.cqframework.cql.elm.execution.Element;
 import org.cqframework.cql.elm.execution.Expression;
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
+import org.opencds.cqf.cql.engine.elm.serialization.CodeSystemRefMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.CqlToElmBaseMixIn;
 import org.opencds.cqf.cql.engine.elm.serialization.ElementMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.ExpressionDefMixin;
@@ -35,9 +37,10 @@ public class JsonCqlLibraryReader {
         .addModule(new JaxbAnnotationModule())
         .addMixIn(Library.class, LibraryMixin.class)
         // The ordering here of the mix ins for
-        // ExpressionDef -> Expression -> Element matters,
+        // ExpressionDef -> CodeSystemRef ->  Expression -> Element matters,
         // so the mix-ins match most specific to least
         .addMixIn(ExpressionDef.class, ExpressionDefMixin.class)
+        .addMixIn(CodeSystemRef.class, CodeSystemRefMixin.class)
         .addMixIn(Expression.class, ExpressionMixin.class)
         .addMixIn(TypeSpecifier.class, TypeSpecifierMixin.class)
         .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)

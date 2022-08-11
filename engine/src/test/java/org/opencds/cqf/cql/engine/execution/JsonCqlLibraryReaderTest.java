@@ -14,12 +14,14 @@ import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.elm.execution.CodeDef;
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
+import org.opencds.cqf.cql.engine.elm.execution.CodeSystemRefEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.ExpressionDefEvaluator;
 import org.testng.annotations.Test;
 
@@ -43,7 +45,21 @@ public class JsonCqlLibraryReaderTest {
         assertThat(firstDef, instanceOf(ExpressionDefEvaluator.class));
     }
 
+    @Test
+    void readerCreatesCodeSystemRefEvaluatorElm() throws UcumException, IOException {
+        Library library = read("EXM108.json");
 
+        CodeDef firstDef = library.getCodes().getDef().get(0);
+
+        assertThat(firstDef.getCodeSystem(), instanceOf(CodeSystemRefEvaluator.class));
+    }
+
+    @Test
+    void readerCreatesAnnotationsElm() throws UcumException, IOException {
+        Library library = read("ANCFHIRDummy.json");
+
+        assertThat(library.getAnnotation().size(), is(2));
+    }
 
     private static Library translate(String file)  throws UcumException, IOException {
         ModelManager modelManager = new ModelManager();

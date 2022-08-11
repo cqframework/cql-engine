@@ -7,9 +7,20 @@ import java.util.Map;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
+import org.cqframework.cql.elm.execution.CodeSystemRef;
+import org.cqframework.cql.elm.execution.Element;
+import org.cqframework.cql.elm.execution.Expression;
+import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
+import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.hl7.cql_annotations.r1.CqlToElmBase;
+import org.opencds.cqf.cql.engine.elm.serialization.CodeSystemRefMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.CqlToElmBaseMixIn;
+import org.opencds.cqf.cql.engine.elm.serialization.ElementMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.ExpressionDefMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.ExpressionMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.LibraryMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.TypeSpecifierMixin;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -58,7 +69,16 @@ public class TranslatingTestBase {
             .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
             .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
             .addModule(new JaxbAnnotationModule())
+            .addMixIn(Library.class, LibraryMixin.class)
+            // The ordering here of the mix ins for
+            // ExpressionDef -> CodeSystemRef ->  Expression -> Element matters,
+            // so the mix-ins match most specific to least
+            .addMixIn(ExpressionDef.class, ExpressionDefMixin.class)
+            .addMixIn(CodeSystemRef.class, CodeSystemRefMixin.class)
+            .addMixIn(Expression.class, ExpressionMixin.class)
+            .addMixIn(TypeSpecifier.class, TypeSpecifierMixin.class)
             .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
+            .addMixIn(Element.class, ElementMixin.class)
             .build();
 
         return mapper.writeValueAsString(library);
