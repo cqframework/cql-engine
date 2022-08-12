@@ -14,9 +14,11 @@ import org.cqframework.cql.elm.execution.Expression;
 import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
+import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.elm.serialization.CodeSystemRefMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.CqlToElmBaseMixIn;
 import org.opencds.cqf.cql.engine.elm.serialization.ElementMixin;
+import org.opencds.cqf.cql.engine.elm.serialization.ExecutableMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.ExpressionDefMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.ExpressionMixin;
 import org.opencds.cqf.cql.engine.elm.serialization.LibraryMixin;
@@ -45,6 +47,7 @@ public class JsonCqlLibraryReader {
         .addMixIn(TypeSpecifier.class, TypeSpecifierMixin.class)
         .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
         .addMixIn(Element.class, ElementMixin.class)
+        .addMixIn(Executable.class, ExecutableMixin.class)
         .build();
 
     private JsonCqlLibraryReader() {
