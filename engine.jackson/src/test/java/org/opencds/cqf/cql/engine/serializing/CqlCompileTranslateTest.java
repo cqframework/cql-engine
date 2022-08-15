@@ -13,13 +13,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
@@ -30,17 +23,9 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.hl7.cql_annotations.r1.CqlToElmBase;
-import org.hl7.elm.r1.Element;
-import org.hl7.elm.r1.Expression;
-import org.hl7.elm.r1.TypeSpecifier;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.serializing.jackson.XmlCqlLibraryReader;
-import org.opencds.cqf.cql.engine.serializing.jackson.mixins.CqlToElmBaseMixIn;
-import org.opencds.cqf.cql.engine.serializing.jackson.mixins.ElementMixin;
-import org.opencds.cqf.cql.engine.serializing.jackson.mixins.ExpressionMixin;
-import org.opencds.cqf.cql.engine.serializing.jackson.mixins.TypeSpecifierMixin;
 import org.testng.Assert;
 import org.testng.ITest;
 import org.testng.annotations.DataProvider;
@@ -124,25 +109,8 @@ public class CqlCompileTranslateTest implements ITest {
 
         Library xmlLibrary = null;
 
-        // TODO: Replace by new mapper from Translator.
-        XmlMapper mapper = XmlMapper.builder()
-            .defaultUseWrapper(true)
-            .defaultMergeable(true)
-            .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
-            .enable(ToXmlGenerator.Feature.WRITE_XML_1_1)
-            .enable(SerializationFeature.INDENT_OUTPUT)
-            .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-            .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
-            .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
-            .addModule(new JaxbAnnotationModule())
-            .addMixIn(Element.class, ElementMixin.class)
-            .addMixIn(Expression.class, ExpressionMixin.class)
-            .addMixIn(TypeSpecifier.class, TypeSpecifierMixin.class)
-            .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
-            .build();
-
         try {
-            xmlLibrary = new XmlCqlLibraryReader().read(mapper.writeValueAsString(translator.toELM()));
+            xmlLibrary = new XmlCqlLibraryReader().read(translator.toXml());
         }
         catch (Exception e) {
             throw new IllegalArgumentException(String.format("Errors occurred reading ELM from xml %s: %s", fileName, e.getMessage()));

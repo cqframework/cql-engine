@@ -2,15 +2,14 @@ package org.opencds.cqf.cql.engine.execution;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.cqframework.cql.cql2elm.CqlTranslator;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.ModelManager;
-import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
-import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
+import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 
 public class TranslatingTestBase {
@@ -42,10 +41,9 @@ public class TranslatingTestBase {
         return new org.hl7.elm.r1.VersionedIdentifier().withId(name).withVersion(version);
     }
 
-    public String convertToJson(org.hl7.elm.r1.Library library) throws JsonProcessingException {
-        LibraryWrapper wrapper = new LibraryWrapper();
-        wrapper.setLibrary(library);
-
-        return ElmJsonMapper.getMapper().writeValueAsString(wrapper);
+    public String convertToJson(org.hl7.elm.r1.Library library) throws IOException {
+        StringWriter writer = new StringWriter();
+        ElmLibraryWriterFactory.getWriter("application/elm+json").write(library, writer);
+        return writer.getBuffer().toString();
     }
 }

@@ -137,6 +137,7 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
             case "String": return String.class;
             case "Quantity": return Quantity.class;
             case "Interval": return Interval.class;
+            case "Long": return Long.class;
             case "Tuple": return Tuple.class;
             case "DateTime": return DateTime.class;
             case "Date": return Date.class;

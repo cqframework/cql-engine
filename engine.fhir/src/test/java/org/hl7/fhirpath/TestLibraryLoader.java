@@ -2,20 +2,19 @@ package org.hl7.fhirpath;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.cqframework.cql.cql2elm.CqlCompilerException;
 import org.cqframework.cql.cql2elm.CqlTranslatorOptions;
 import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
-import org.cqframework.cql.cql2elm.model.serialization.LibraryWrapper;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.cqframework.cql.elm.serializing.jackson.ElmJsonMapper;
+import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
 import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 
@@ -63,14 +62,12 @@ public class TestLibraryLoader implements LibraryLoader {
                 .withVersion(libraryIdentifier.getVersion());
 
         CompiledLibrary compiledLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
-
-        LibraryWrapper wrapper = new LibraryWrapper();
-        wrapper.setLibrary(compiledLibrary.getLibrary());
-
         String json;
         try {
-            json = ElmJsonMapper.getMapper().writeValueAsString(wrapper);
-        } catch (JsonProcessingException e) {
+            StringWriter writer = new StringWriter();
+            ElmLibraryWriterFactory.getWriter("application/elm+json").write(compiledLibrary.getLibrary(), writer);
+            json = writer.getBuffer().toString();
+        } catch (IOException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }
 

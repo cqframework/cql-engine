@@ -9,7 +9,6 @@ import java.net.URL;
 
 import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.engine.serializing.CqlLibraryReader;
-import org.opencds.cqf.cql.engine.serializing.LibraryWrapper;
 
 public class JsonCqlLibraryReader implements CqlLibraryReader {
 
@@ -17,26 +16,26 @@ public class JsonCqlLibraryReader implements CqlLibraryReader {
     }
 
     public Library read(File file) throws IOException {
-        return JsonCqlMapper.getMapper().readValue(file, LibraryWrapper.class).getLibrary();
+        return JsonCqlMapper.getMapper().readValue(file, Library.class);
     }
 
     public Library read(URL url) throws IOException {
-        return JsonCqlMapper.getMapper().readValue(url, LibraryWrapper.class).getLibrary();
+        return JsonCqlMapper.getMapper().readValue(url, Library.class);
     }
 
     public Library read(URI uri) throws IOException {
-        return JsonCqlMapper.getMapper().readValue(uri.toURL(), LibraryWrapper.class).getLibrary();
+        return JsonCqlMapper.getMapper().readValue(uri.toURL(), Library.class);
     }
 
     public Library read(String string) throws IOException {
-        return JsonCqlMapper.getMapper().readValue(string, LibraryWrapper.class).getLibrary();
+        return JsonCqlMapper.getMapper().readValue(string, Library.class);
     }
 
     public Library read(InputStream inputStream) throws IOException {
-        return JsonCqlMapper.getMapper().readValue(inputStream, LibraryWrapper.class).getLibrary();
+        return JsonCqlMapper.getMapper().readValue(inputStream, Library.class);
     }
 
     public Library read(Reader reader) throws IOException {
-        return JsonCqlMapper.getMapper().readValue(reader, LibraryWrapper.class).getLibrary();
+        return JsonCqlMapper.getMapper().readValue(reader, Library.class);
     }
 }
