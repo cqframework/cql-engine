@@ -93,7 +93,7 @@ public class JsonCqlLibraryReaderTest {
     }
 
     private static Library read(String file) throws IOException  {
-        return new JsonCqlLibraryReader().read(JsonCqlLibraryReaderTest.class.getResource(file).getFile());
+        return new JsonCqlLibraryReader().read(JsonCqlLibraryReaderTest.class.getResourceAsStream(file));
     }
 
 }
