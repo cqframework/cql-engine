@@ -93,8 +93,7 @@ public class JsonCqlLibraryReaderTest {
     }
 
     private static Library read(String file) throws IOException  {
-        File jsonFile = new File(URLDecoder.decode(JsonCqlLibraryReaderTest.class.getResource(file).getFile(), "UTF-8"));
-        return new JsonCqlLibraryReader().read(jsonFile);
+        return new JsonCqlLibraryReader().read(JsonCqlLibraryReaderTest.class.getResource(file).getFile());
     }
 
 }
