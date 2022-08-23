@@ -4,6 +4,7 @@ import org.cqframework.cql.elm.execution.Library;
 import org.opencds.cqf.cql.engine.elm.execution.ExpressionDefEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.RetrieveEvaluator;
 import org.opencds.cqf.cql.engine.elm.execution.SingletonFromEvaluator;
+import org.opencds.cqf.cql.engine.serializing.jaxb.JsonCqlLibraryReader;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -14,7 +15,7 @@ public class ANCFHIRTests {
     @Test
     public void testJsonLibraryLoad() {
         try {
-            Library library = JsonCqlLibraryReader.read(new InputStreamReader(ANCFHIRTests.class.getResourceAsStream("ANCFHIRDummy.json")));
+            Library library = new JsonCqlLibraryReader().read(new InputStreamReader(ANCFHIRTests.class.getResourceAsStream("ANCFHIRDummy.json")));
             Assert.assertTrue(library != null);
             Assert.assertTrue(library.getStatements() != null);
             Assert.assertTrue(library.getStatements().getDef() != null);
@@ -33,7 +34,7 @@ public class ANCFHIRTests {
     @Test
     public void testJsonTerminologyLibraryLoad() {
         try {
-            Library library = JsonCqlLibraryReader.read(new InputStreamReader(ANCFHIRTests.class.getResourceAsStream("ANCFHIRTerminologyDummy.json")));
+            Library library = new JsonCqlLibraryReader().read(new InputStreamReader(ANCFHIRTests.class.getResourceAsStream("ANCFHIRTerminologyDummy.json")));
             Assert.assertTrue(library != null);
         } catch (IOException e) {
             throw new IllegalArgumentException("Error reading ELM: " + e.getMessage());

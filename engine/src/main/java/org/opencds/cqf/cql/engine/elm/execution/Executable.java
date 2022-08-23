@@ -5,7 +5,6 @@ import org.opencds.cqf.cql.engine.debug.DebugAction;
 import org.opencds.cqf.cql.engine.debug.SourceLocator;
 import org.opencds.cqf.cql.engine.exception.CqlException;
 import org.opencds.cqf.cql.engine.execution.Context;
-
 public class Executable
 {
     public Object evaluate(Context context) throws CqlException

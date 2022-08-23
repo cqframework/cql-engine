@@ -2,6 +2,7 @@ package org.hl7.fhirpath;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -13,19 +14,9 @@ import org.cqframework.cql.cql2elm.LibraryManager;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
-import org.hl7.cql_annotations.r1.CqlToElmBase;
-import org.opencds.cqf.cql.engine.elm.serialization.CqlToElmBaseMixIn;
-import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
+import org.cqframework.cql.elm.serializing.ElmLibraryWriterFactory;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
-
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 
 public class TestLibraryLoader implements LibraryLoader {
 
@@ -73,25 +64,16 @@ public class TestLibraryLoader implements LibraryLoader {
         CompiledLibrary compiledLibrary = libraryManager.resolveLibrary(identifier, CqlTranslatorOptions.defaultOptions(), errors);
         String json;
         try {
-            ObjectMapper mapper = JsonMapper.builder()
-                .defaultMergeable(true)
-                .enable(SerializationFeature.WRAP_ROOT_VALUE)
-                .enable(SerializationFeature.INDENT_OUTPUT)
-                .enable(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-                .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
-                .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
-                .addModule(new JaxbAnnotationModule())
-                .addMixIn(CqlToElmBase.class, CqlToElmBaseMixIn.class)
-                .build();
-
-            json = mapper.writeValueAsString(compiledLibrary.getLibrary());
-        } catch (JsonProcessingException e) {
+            StringWriter writer = new StringWriter();
+            ElmLibraryWriterFactory.getWriter("application/elm+json").write(compiledLibrary.getLibrary(), writer);
+            json = writer.getBuffer().toString();
+        } catch (IOException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }
 
         Library library = null;
         try {
-            library = JsonCqlLibraryReader.read(new StringReader(json));
+            library = new JsonCqlLibraryReader().read(new StringReader(json));
         } catch (IOException e) {
             throw new RuntimeException(String.format("Errors encountered while loading library %s: %s", libraryIdentifier.getId(), e.getMessage()));
         }

@@ -7,7 +7,7 @@ import org.cqframework.cql.elm.tracking.TrackBack;
 import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
-import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.execution.LibraryLoader;
 
 import java.io.IOException;
@@ -60,7 +60,7 @@ public class TranslatorHelper {
         String json = translator.toJson();
 
         try {
-            return JsonCqlLibraryReader.read(new StringReader(json));
+            return new JsonCqlLibraryReader().read(new StringReader(json));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

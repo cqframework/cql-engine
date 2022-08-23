@@ -35,6 +35,8 @@
             <artifactId>xpp3_xpath</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Jaxb implementation of choice -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>

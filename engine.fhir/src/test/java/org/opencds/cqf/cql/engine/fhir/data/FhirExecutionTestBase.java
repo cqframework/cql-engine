@@ -11,10 +11,10 @@ import org.fhir.ucum.UcumEssenceService;
 import org.fhir.ucum.UcumException;
 import org.fhir.ucum.UcumService;
 import org.opencds.cqf.cql.engine.data.CompositeDataProvider;
-import org.opencds.cqf.cql.engine.execution.JsonCqlLibraryReader;
 import org.opencds.cqf.cql.engine.fhir.model.*;
 import org.opencds.cqf.cql.engine.fhir.retrieve.RestFhirRetrieveProvider;
 import org.opencds.cqf.cql.engine.fhir.searchparam.SearchParameterResolver;
+import org.opencds.cqf.cql.engine.serializing.jackson.JsonCqlLibraryReader;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 
@@ -106,14 +106,14 @@ public abstract class FhirExecutionTestBase {
                 for (Map.Entry<String, CompiledLibrary> entry : libraryManager.getCompiledLibraries().entrySet()) {
                     String jsonContent = CqlTranslator.convertToJson(entry.getValue().getLibrary());
                     StringReader sr = new StringReader(jsonContent);
-                    libraries.put(entry.getKey(), JsonCqlLibraryReader.read(sr));
+                    libraries.put(entry.getKey(), new JsonCqlLibraryReader().read(sr));
                     if (entry.getKey().equals(fileName)) {
                         library = libraries.get(entry.getKey());
                     }
                 }
 
                 if (library == null) {
-                    library = JsonCqlLibraryReader.read(new StringReader(translator.toJson()));
+                    library = new JsonCqlLibraryReader().read(new StringReader(translator.toJson()));
                     libraries.put(fileName, library);
                 }
             } catch (IOException e) {

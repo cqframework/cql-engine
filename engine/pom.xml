@@ -37,8 +37,8 @@
         </dependency>
 
         <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-jaxb-annotations</artifactId>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
 
         <!-- The Units of Measure  Coding System (UCUM) -->
@@ -166,7 +166,7 @@
                                     <limit>
                                         <counter>LINE</counter>
                                         <value>COVEREDRATIO</value>
-                                        <minimum>0.50</minimum>
+                                        <minimum>0.02</minimum>
                                     </limit>
                                 </limits>
                             </rule>
