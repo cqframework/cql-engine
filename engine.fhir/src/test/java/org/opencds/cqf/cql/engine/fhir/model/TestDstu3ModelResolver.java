@@ -11,7 +11,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.Model;
-import org.hl7.elm.r1.VersionedIdentifier;
+import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
 import org.hl7.fhir.dstu3.model.Enumeration;
@@ -109,7 +109,7 @@ public class TestDstu3ModelResolver {
     public void resolveModelInfoTests() {
         ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
         ModelManager mm = new ModelManager();
-        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("3.0.0"));
+        Model m = mm.resolveModel(new ModelIdentifier().withId("FHIR").withVersion("3.0.0"));
 
         List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
 
