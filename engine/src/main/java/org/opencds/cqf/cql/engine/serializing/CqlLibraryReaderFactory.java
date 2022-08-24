@@ -19,6 +19,6 @@ public class CqlLibraryReaderFactory {
         if (providers(false).hasNext()) {
             return providers(false).next().create(contentType);
         }
-        throw new RuntimeException("No ElmLibraryReaderProviders found");
+        throw new RuntimeException("No ElmLibraryReaderProviders found for " + contentType);
     }
 }
