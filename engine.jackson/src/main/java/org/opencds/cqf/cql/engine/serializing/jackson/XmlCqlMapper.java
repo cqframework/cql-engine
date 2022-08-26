@@ -1,10 +1,13 @@
 package org.opencds.cqf.cql.engine.serializing.jackson;
 
+import com.ctc.wstx.stax.WstxInputFactory;
+import com.ctc.wstx.stax.WstxOutputFactory;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.dataformat.xml.XmlFactory;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
@@ -19,7 +22,11 @@ import org.opencds.cqf.cql.engine.serializing.jackson.mixins.*;
 import org.opencds.cqf.cql.engine.serializing.jackson.modules.QNameFixerXMLMapperModifier;
 
 public class XmlCqlMapper {
-    private static final XmlMapper mapper = XmlMapper.builder()
+    private static final XmlMapper mapper = XmlMapper
+            // TODO: Remove new XmlFactory(new WstxInputFactory(), new WstxOutputFactory()) in the future when Android
+            //  receives an implementation of javax.xml.stream.XMLInputFactory.newFactory ('xml-apis:xml-apis:1.4.01')
+            // Fixes ClinicalQualityLanguage#768: Forces the use of Woodstock for Android users.
+            .builder(new XmlFactory(new WstxInputFactory(), new WstxOutputFactory()))
             .defaultUseWrapper(true)
             .defaultMergeable(true)
             .enable(ToXmlGenerator.Feature.WRITE_XML_DECLARATION)
