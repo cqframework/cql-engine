@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.dataformat.xml.ser.ToXmlGenerator;
 import com.fasterxml.jackson.module.jaxb.JaxbAnnotationModule;
@@ -15,6 +16,7 @@ import org.cqframework.cql.elm.execution.ExpressionDef;
 import org.cqframework.cql.elm.execution.TypeSpecifier;
 import org.opencds.cqf.cql.engine.elm.execution.Executable;
 import org.opencds.cqf.cql.engine.serializing.jackson.mixins.*;
+import org.opencds.cqf.cql.engine.serializing.jackson.modules.QNameFixerXMLMapperModifier;
 
 public class XmlCqlMapper {
     private static final XmlMapper mapper = XmlMapper.builder()
@@ -27,6 +29,8 @@ public class XmlCqlMapper {
             .enable(MapperFeature.USE_BASE_TYPE_AS_DEFAULT_IMPL)
             .defaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_NULL, JsonInclude.Include.NON_NULL))
             .addModule(new JaxbAnnotationModule())
+            // Jackson's base QName deserializer does not unpack the namespace. This Modifier fixes it.
+            .addModule(new SimpleModule().setDeserializerModifier(new QNameFixerXMLMapperModifier()))
             //.addMixIn(Library.class, LibraryMixin.class) // Some case sensitivity issue in the name [L]ibrary
             // The ordering here of the mix ins for
             // ExpressionDef -> CodeSystemRef ->  Expression -> Element matters,
