@@ -21,6 +21,7 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
 
             if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(libraryId, this.getName())) {
                 context.addExpressionToCache(libraryId, this.getName(), result);
+                context.clearEvaluatedResources();
             }
 
             return result;
