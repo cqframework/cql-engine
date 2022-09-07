@@ -266,7 +266,9 @@ public class Context {
             this.expressions.put(libraryId, constructLibraryExpressionHashMap());
         }
 
-        this.expressions.get(libraryId).put(name, ExpressionResult.newInstance(result, getEvaluatedResources()));
+        this.expressions.get(libraryId).put(name, ExpressionResult.newInstance()
+            .withResult(result)
+            .withEvaluatedResource(getEvaluatedResources()));
     }
 
     public Object getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
@@ -277,7 +279,7 @@ public class Context {
         return this.expressions.get(libraryId).get(name).getResult();
     }
 
-    public Object getExpressionEvaluatedResourceFromCache(VersionedIdentifier libraryId, String name) {
+    public List<Object> getExpressionEvaluatedResourceFromCache(VersionedIdentifier libraryId, String name) {
         if (!this.expressions.containsKey(libraryId)) {
             this.expressions.put(libraryId, constructLibraryExpressionHashMap());
         }

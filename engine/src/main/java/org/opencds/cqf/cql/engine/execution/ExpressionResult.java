@@ -1,13 +1,18 @@
 package org.opencds.cqf.cql.engine.execution;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ExpressionResult {
     Object result;
     List<Object> evaluatedResource;
 
-    public static ExpressionResult newInstance(Object result, List<Object> er) {
-        return new ExpressionResult().withResult(result).withEvaluatedResource(er);
+    public ExpressionResult() {
+        evaluatedResource = new ArrayList<>();
+    }
+
+    public static ExpressionResult newInstance() {
+        return new ExpressionResult();
     }
     public Object getResult() {
         return result;
@@ -23,7 +28,7 @@ public class ExpressionResult {
     }
 
     public ExpressionResult withEvaluatedResource(List<Object> evaluatedResource) {
-        this.evaluatedResource = evaluatedResource;
+        this.evaluatedResource.addAll(evaluatedResource);
         return this;
     }
 }

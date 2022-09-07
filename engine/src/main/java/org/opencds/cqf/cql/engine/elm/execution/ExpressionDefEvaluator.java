@@ -13,6 +13,7 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
         try {
             VersionedIdentifier libraryId = context.getCurrentLibrary().getIdentifier();
             if (context.isExpressionCachingEnabled() && context.isExpressionInCache(libraryId, this.getName())) {
+                context.getEvaluatedResources().addAll(context.getExpressionEvaluatedResourceFromCache(libraryId, this.getName()));
                 return context.getExpressionResultFromCache(libraryId, this.getName());
             }
 
