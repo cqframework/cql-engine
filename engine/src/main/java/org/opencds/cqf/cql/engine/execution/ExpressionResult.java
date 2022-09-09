@@ -2,12 +2,15 @@ package org.opencds.cqf.cql.engine.execution;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ExpressionResult {
     Object result;
     List<Object> evaluatedResource;
+    UUID id;
 
     public ExpressionResult() {
+        id = UUID.randomUUID();
         evaluatedResource = new ArrayList<>();
     }
 
@@ -30,5 +33,9 @@ public class ExpressionResult {
     public ExpressionResult withEvaluatedResource(List<Object> evaluatedResource) {
         this.evaluatedResource.addAll(evaluatedResource);
         return this;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }

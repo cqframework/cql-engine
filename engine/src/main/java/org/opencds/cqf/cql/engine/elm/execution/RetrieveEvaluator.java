@@ -63,9 +63,12 @@ public class RetrieveEvaluator extends org.cqframework.cql.elm.execution.Retriev
         // append list results to evaluatedResources list
         if (result instanceof List) {
             for (Object element : (List<?>) result) {
+                System.out.println("Retrieve element add:" + element);
                 context.getEvaluatedResources().add(element);
             }
         } else {
+            System.out.println("Retrieve add:" + result);
+
             context.getEvaluatedResources().add(result);
         }
 

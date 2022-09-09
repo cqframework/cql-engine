@@ -80,6 +80,8 @@ public class Context {
         };
     }
 
+    private EvaluatedResourceSubscriptionContext subscriptionContext = new EvaluatedResourceSubscriptionContext();
+
     private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
         return evaluatedResources;
@@ -141,6 +143,10 @@ public class Context {
 
     public void clearExpressions() {
         this.expressions.clear();
+    }
+
+    public EvaluatedResourceSubscriptionContext getSubscriptionContext() {
+        return subscriptionContext;
     }
 
     public void logDebugResult(Executable node, Object result, DebugAction action) {
@@ -261,22 +267,22 @@ public class Context {
         return this.enableExpressionCache;
     }
 
-    public void addExpressionToCache(VersionedIdentifier libraryId, String name, Object result) {
+    public void addExpressionToCache(VersionedIdentifier libraryId, String name, ExpressionResult er) {
+        System.out.println("Adding expression to cache:"+ libraryId + " | " + name);
+        System.out.println("Evaluated resources:" + getEvaluatedResources());
         if (!this.expressions.containsKey(libraryId)) {
             this.expressions.put(libraryId, constructLibraryExpressionHashMap());
         }
 
-        this.expressions.get(libraryId).put(name, ExpressionResult.newInstance()
-            .withResult(result)
-            .withEvaluatedResource(getEvaluatedResources()));
+        this.expressions.get(libraryId).put(name, er);
     }
 
-    public Object getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
+    public ExpressionResult getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
         if (!this.expressions.containsKey(libraryId)) {
             this.expressions.put(libraryId, constructLibraryExpressionHashMap());
         }
 
-        return this.expressions.get(libraryId).get(name).getResult();
+        return this.expressions.get(libraryId).get(name);
     }
 
     public List<Object> getExpressionEvaluatedResourceFromCache(VersionedIdentifier libraryId, String name) {
@@ -285,6 +291,10 @@ public class Context {
         }
 
         return this.expressions.get(libraryId).get(name).getEvaluatedResource();
+    }
+
+    public LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, ExpressionResult>> getExpressions() {
+        return expressions;
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
