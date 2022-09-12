@@ -84,11 +84,29 @@ public class Context {
 
     private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
-        return evaluatedResources;
+        return this.evaluatedResourceStack.peek();
     }
 
     public void clearEvaluatedResources() {
-        this.evaluatedResources.clear();
+        this.evaluatedResourceStack.clear();
+    }
+
+    private Stack<List<Object>> evaluatedResourceStack = new Stack<>();
+
+    public void pushEvaluatedResourceStack() {
+        evaluatedResourceStack.push(new ArrayList<>());
+    }
+
+    public void popEvaluatedResourceStack() {
+        if (evaluatedResourceStack.empty()) {
+            return;
+        }
+        List<Object> objects = evaluatedResourceStack.pop();
+        if (evaluatedResourceStack.empty()) {
+            this.evaluatedResourceStack.push(objects);
+        } else {
+            this.evaluatedResourceStack.peek().addAll(objects);
+        }
     }
 
     private Map<String, Object> parameters = new HashMap<>();

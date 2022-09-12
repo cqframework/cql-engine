@@ -12,31 +12,25 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
             context.enterContext(this.getContext());
         }
         try {
+            context.pushEvaluatedResourceStack();
             VersionedIdentifier libraryId = context.getCurrentLibrary().getIdentifier();
-
-            ExpressionResult er = null;
-
-            if (!context.isExpressionInCache(libraryId, this.getName())) {
-                er = ExpressionResult.newInstance();
-                context.getSubscriptionContext().addSubscriber(er.getId(), er);
-            } else {
-                er = context.getExpressionResultFromCache(libraryId, this.getName());
-                context.getEvaluatedResources().addAll(er.getEvaluatedResource());
-                context.getSubscriptionContext().notifySubscribers(er.getEvaluatedResource());
-                context.clearEvaluatedResources();
-                return er.getResult();
+            if (context.isExpressionCachingEnabled() && context.isExpressionInCache(libraryId, this.getName())) {
+                context.getEvaluatedResources().addAll(
+                    context.getExpressionEvaluatedResourceFromCache(libraryId, this.getName()));
+                return context.getExpressionResultFromCache(libraryId, this.getName()).getResult();
             }
 
             Object result = this.getExpression().evaluate(context);
 
-            if (!context.isExpressionInCache(libraryId, this.getName())) {
-                context.addExpressionToCache(libraryId, this.getName(), er.withResult(result));
-                context.getSubscriptionContext().notifySubscribers(context.getEvaluatedResources());
-                context.clearEvaluatedResources();
+            if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(libraryId, this.getName())) {
+                ExpressionResult er = ExpressionResult.newInstance();
+                er = er.withResult(result).withEvaluatedResource(context.getEvaluatedResources());
+                context.addExpressionToCache(libraryId, this.getName(), er);
             }
-            context.getSubscriptionContext().removeSubscriber(er.getId());
+
             return result;
         } finally {
+            context.popEvaluatedResourceStack();
             if (this.getContext() != null) {
                 context.exitContext();
             }
