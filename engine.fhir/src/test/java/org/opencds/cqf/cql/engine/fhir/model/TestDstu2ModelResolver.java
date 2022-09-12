@@ -5,6 +5,7 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,8 +18,7 @@ import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
 
-import org.hl7.fhir.dstu2.model.EnumFactory;
-import org.hl7.fhir.dstu2.model.Enumeration;
+import org.hl7.fhir.dstu2.model.*;
 import org.hl7.fhir.dstu2.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.dstu2.model.Enumerations.AgeUnits;
 import org.hl7.fhir.dstu2.model.Enumerations.BindingStrength;
@@ -33,7 +33,6 @@ import org.hl7.fhir.dstu2.model.Enumerations.RemittanceOutcome;
 import org.hl7.fhir.dstu2.model.Enumerations.ResourceType;
 import org.hl7.fhir.dstu2.model.Enumerations.SearchParamType;
 import org.hl7.fhir.dstu2.model.Enumerations.SpecialValues;
-import org.hl7.fhir.dstu2.model.Patient;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
@@ -234,6 +233,20 @@ public class TestDstu2ModelResolver {
         Patient p = new Patient();
 
         Object result = resolver.resolvePath(p, "not-a-path");
+        assertNull(result);
+    }
+
+
+    //@Test
+    public void resolveNullEnumerationReturnsNull() {
+        FhirModelResolver<Base,?,?,SimpleQuantity,?,?,?,?> resolver = new Dstu2FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU2));
+
+        Quantity q = new Quantity();
+        q.setValue(new BigDecimal("10.0"));
+        q.setUnit("1");
+        SimpleQuantity sq = resolver.castToSimpleQuantity(q);
+
+        Object result = resolver.resolvePath(sq, "comparator");
         assertNull(result);
     }
 }

@@ -415,6 +415,16 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
             return null;
         }
 
+        // If the instance is a primitive (including (or even especially an enumeration), and it has no value, return null
+        if (child instanceof RuntimeChildPrimitiveDatatypeDefinition) {
+            IBase value = values.get(0);
+            if (value instanceof IPrimitiveType) {
+                if (!((IPrimitiveType<?>)value).hasValue()) {
+                    return null;
+                }
+            }
+        }
+
         if (child instanceof RuntimeChildChoiceDefinition && !child.getElementName().equalsIgnoreCase(path)) {
             if (!values.get(0).getClass().getSimpleName()
                     .equalsIgnoreCase(child.getChildByName(path).getImplementingClass().getSimpleName())) {
