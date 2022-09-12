@@ -80,8 +80,6 @@ public class Context {
         };
     }
 
-    private EvaluatedResourceSubscriptionContext subscriptionContext = new EvaluatedResourceSubscriptionContext();
-
     private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
         return this.evaluatedResourceStack.peek();
@@ -161,10 +159,6 @@ public class Context {
 
     public void clearExpressions() {
         this.expressions.clear();
-    }
-
-    public EvaluatedResourceSubscriptionContext getSubscriptionContext() {
-        return subscriptionContext;
     }
 
     public void logDebugResult(Executable node, Object result, DebugAction action) {
