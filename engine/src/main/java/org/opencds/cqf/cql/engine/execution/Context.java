@@ -72,7 +72,7 @@ public class Context {
 
     @SuppressWarnings("serial")
     private LinkedHashMap<String, ExpressionResult> constructLibraryExpressionHashMap() {
-        return  new LinkedHashMap<String, ExpressionResult>(15, 0.9f, true) {
+        return new LinkedHashMap<String, ExpressionResult>(15, 0.9f, true) {
             @Override
             protected boolean removeEldestEntry(Map.Entry<String, ExpressionResult> eldestEntry) {
                 return size() > 15;
@@ -268,8 +268,6 @@ public class Context {
     }
 
     public void addExpressionToCache(VersionedIdentifier libraryId, String name, ExpressionResult er) {
-        System.out.println("Adding expression to cache:"+ libraryId + " | " + name);
-        System.out.println("Evaluated resources:" + getEvaluatedResources());
         if (!this.expressions.containsKey(libraryId)) {
             this.expressions.put(libraryId, constructLibraryExpressionHashMap());
         }

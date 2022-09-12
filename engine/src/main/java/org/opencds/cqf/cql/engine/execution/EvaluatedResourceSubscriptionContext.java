@@ -23,9 +23,7 @@ public class EvaluatedResourceSubscriptionContext {
     }
 
     public void notifySubscribers(List<Object> resources) {
-        System.out.println("notify subscriber:" + resources);
         subscribers.values().forEach(expressionResult -> {
-            System.out.println("Adding to expressionResult: " + expressionResult.getId());
             expressionResult.getEvaluatedResource().addAll(resources);
         });
     }
