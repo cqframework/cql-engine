@@ -82,7 +82,7 @@ public class Context {
 
     public List<Object> getEvaluatedResources() {
         if(this.evaluatedResourceStack.empty()) {
-            return new ArrayList<>();
+            pushEvaluatedResourceStack();
         }
         return this.evaluatedResourceStack.peek();
     }
