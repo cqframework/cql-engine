@@ -80,8 +80,10 @@ public class Context {
         };
     }
 
-    private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
+        if(this.evaluatedResourceStack.empty()) {
+            return new ArrayList<>();
+        }
         return this.evaluatedResourceStack.peek();
     }
 
@@ -95,14 +97,13 @@ public class Context {
         evaluatedResourceStack.push(new ArrayList<>());
     }
 
+    //serves pop and merge to the down
     public void popEvaluatedResourceStack() {
         if (evaluatedResourceStack.empty()) {
             return;
         }
-        List<Object> objects = evaluatedResourceStack.pop();
-        if (evaluatedResourceStack.empty()) {
-            this.evaluatedResourceStack.push(objects);
-        } else {
+        if (evaluatedResourceStack.size() > 1) {
+            List<Object> objects = evaluatedResourceStack.pop();
             this.evaluatedResourceStack.peek().addAll(objects);
         }
     }
