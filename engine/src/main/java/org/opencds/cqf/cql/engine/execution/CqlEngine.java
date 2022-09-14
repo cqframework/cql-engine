@@ -189,7 +189,8 @@ public class CqlEngine {
 
             context.enterContext(def.getContext());
             Object object = def.evaluate(context);
-            result.expressionResults.put(expression, object);
+            result.expressionResults.put(expression,
+                new ExpressionResult(object, context.getEvaluatedResources()));
         }
 
         result.setDebugResult(context.getDebugResult());

@@ -63,30 +63,54 @@ public class Context {
     private boolean enableExpressionCache = false;
 
     @SuppressWarnings("serial")
-    private LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>> expressions = new LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, Object>>(10, 0.9f, true) {
+    private LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, ExpressionResult>> expressions = new LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, ExpressionResult>>(10, 0.9f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<VersionedIdentifier, LinkedHashMap<String, Object>> eldestEntry) {
+        protected boolean removeEldestEntry(Map.Entry<VersionedIdentifier, LinkedHashMap<String, ExpressionResult>> eldestEntry) {
             return size() > 10;
         }
     };
 
     @SuppressWarnings("serial")
-    private LinkedHashMap<String, Object> constructLibraryExpressionHashMap() {
-        return  new LinkedHashMap<String, Object>(15, 0.9f, true) {
+    private LinkedHashMap<String, ExpressionResult> constructLibraryExpressionHashMap() {
+        return new LinkedHashMap<String, ExpressionResult>(15, 0.9f, true) {
             @Override
-            protected boolean removeEldestEntry(Map.Entry<String, Object> eldestEntry) {
+            protected boolean removeEldestEntry(Map.Entry<String, ExpressionResult> eldestEntry) {
                 return size() > 15;
             }
         };
     }
 
-    private List<Object> evaluatedResources = new ArrayList<>();
     public List<Object> getEvaluatedResources() {
-        return evaluatedResources;
+        if (evaluatedResourceStack.empty()) {
+            throw new IllegalStateException("Attempted to get the evaluatedResource stack when it's empty");
+        }
+
+        return this.evaluatedResourceStack.peek();
     }
 
     public void clearEvaluatedResources() {
-        this.evaluatedResources.clear();
+        this.evaluatedResourceStack.clear();
+        this.pushEvaluatedResourceStack();
+    }
+
+    private Stack<List<Object>> evaluatedResourceStack = new Stack<>();
+
+    public void pushEvaluatedResourceStack() {
+        evaluatedResourceStack.push(new ArrayList<>());
+    }
+
+    //serves pop and merge to the down
+    public void popEvaluatedResourceStack() {
+        if (evaluatedResourceStack.empty()) {
+            throw new IllegalStateException("Attempted to pop the evaluatedResource stack when it's empty");
+        }
+
+        if (evaluatedResourceStack.size() == 1) {
+            throw new IllegalStateException("Attempted to pop the evaluatedResource stack when only the root remains");
+        }
+
+        List<Object> objects = evaluatedResourceStack.pop();
+        this.evaluatedResourceStack.peek().addAll(objects);
     }
 
     private Map<String, Object> parameters = new HashMap<>();
@@ -198,8 +222,10 @@ public class Context {
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
 
-        if (library.getIdentifier() != null)
+        if (library.getIdentifier() != null) {
             libraries.put(library.getIdentifier().getId(), library);
+        }
+
         currentLibrary.push(library);
 
         if (ucumService != null) {
@@ -208,6 +234,8 @@ public class Context {
         else {
             this.ucumService = getSharedUcumService();
         }
+
+        this.pushEvaluatedResourceStack();
     }
 
     private void setEvaluationDateTime(ZonedDateTime evaluationZonedDateTime) {
@@ -249,32 +277,25 @@ public class Context {
         this.enableExpressionCache = yayOrNay;
     }
 
-    public boolean isExpressionInCache(VersionedIdentifier libraryId, String name) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
+    protected Map<String, ExpressionResult> getCacheForLibrary(VersionedIdentifier libraryId) {
+        return this.expressions
+            .computeIfAbsent(libraryId, k-> constructLibraryExpressionHashMap());
+    }
 
-        return this.expressions.get(libraryId).containsKey(name);
+    public boolean isExpressionCached(VersionedIdentifier libraryId, String name) {
+        return getCacheForLibrary(libraryId).containsKey(name);
     }
 
     public boolean isExpressionCachingEnabled() {
         return this.enableExpressionCache;
     }
 
-    public void addExpressionToCache(VersionedIdentifier libraryId, String name, Object result) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
-
-        this.expressions.get(libraryId).put(name, result);
+    public void cacheExpression(VersionedIdentifier libraryId, String name, ExpressionResult er) {
+        getCacheForLibrary(libraryId).put(name, er);
     }
 
-    public Object getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
-
-        return this.expressions.get(libraryId).get(name);
+    public ExpressionResult getCachedExpression(VersionedIdentifier libraryId, String name) {
+        return getCacheForLibrary(libraryId).get(name);
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
@@ -749,6 +770,7 @@ public class Context {
         if (hasContextValueChanged(context, contextValue)) {
             clearExpressions();
         }
+
         contextValues.put(context, contextValue);
     }
 

@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.elm.execution;
 
 import org.cqframework.cql.elm.execution.VersionedIdentifier;
 import org.opencds.cqf.cql.engine.execution.Context;
+import org.opencds.cqf.cql.engine.execution.ExpressionResult;
 
 public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.ExpressionDef {
 
@@ -11,20 +12,25 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
             context.enterContext(this.getContext());
         }
         try {
+            context.pushEvaluatedResourceStack();
             VersionedIdentifier libraryId = context.getCurrentLibrary().getIdentifier();
-            if (context.isExpressionCachingEnabled() && context.isExpressionInCache(libraryId, this.getName())) {
-                return context.getExpressionResultFromCache(libraryId, this.getName());
+            if (context.isExpressionCachingEnabled() && context.isExpressionCached(libraryId, name)) {
+                var er = context.getCachedExpression(libraryId, name);
+                context.getEvaluatedResources().addAll(er.evaluatedResources());
+                return er.value();
             }
 
-            Object result = this.getExpression().evaluate(context);
+            Object value = this.getExpression().evaluate(context);
 
-            if (context.isExpressionCachingEnabled() && !context.isExpressionInCache(libraryId, this.getName())) {
-                context.addExpressionToCache(libraryId, this.getName(), result);
+            if (context.isExpressionCachingEnabled()) {
+                var er = new ExpressionResult(value, context.getEvaluatedResources());
+                context.cacheExpression(libraryId, name, er);
             }
 
-            return result;
-        }
-        finally {
+            return value;
+
+        } finally {
+            context.popEvaluatedResourceStack();
             if (this.getContext() != null) {
                 context.exitContext();
             }
