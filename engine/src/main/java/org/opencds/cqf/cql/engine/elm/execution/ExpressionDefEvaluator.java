@@ -14,21 +14,21 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
         try {
             context.pushEvaluatedResourceStack();
             VersionedIdentifier libraryId = context.getCurrentLibrary().getIdentifier();
-            if (context.isExpressionCachingEnabled() && context.isExpressionInCache(libraryId, this.getName())) {
-                context.getEvaluatedResources().addAll(
-                    context.getExpressionEvaluatedResourceFromCache(libraryId, this.getName()));
-                return context.getExpressionResultFromCache(libraryId, this.getName()).getResult();
+            if (context.isExpressionCachingEnabled() && context.isExpressionCached(libraryId, this.getName())) {
+                var er = context.getCachedExpression(libraryId, name);
+                context.getEvaluatedResources().addAll(er.evaluatedResources());
+                return er.value();
             }
 
-            Object result = this.getExpression().evaluate(context);
+            Object value = this.getExpression().evaluate(context);
 
-            if (!context.isExpressionInCache(libraryId, this.getName())) {
-                ExpressionResult er = ExpressionResult.newInstance();
-                er = er.withResult(result).withEvaluatedResource(context.getEvaluatedResources());
-                context.addExpressionToCache(libraryId, this.getName(), er);
+            if (context.isExpressionCachingEnabled()) {
+                var er = new ExpressionResult(value, context.getEvaluatedResources());
+                context.cacheExpression(libraryId, this.getName(), er);
             }
 
-            return result;
+            return value;
+
         } finally {
             context.popEvaluatedResourceStack();
             if (this.getContext() != null) {

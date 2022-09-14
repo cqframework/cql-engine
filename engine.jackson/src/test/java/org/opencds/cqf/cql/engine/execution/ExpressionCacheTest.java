@@ -20,7 +20,7 @@ public class ExpressionCacheTest extends CqlExecutionTestBase {
         assertNotNull(result);
         assertThat(result, is(5));
 
-        assertTrue(context.isExpressionInCache(library.getIdentifier(), "Expression"));
+        assertTrue(context.isExpressionCached(library.getIdentifier(), "Expression"));
 
         // The included library also has a define called "Expression" Previously it'd return 5 since
         // the expressions were cached only by name. This is the behavior that was broken.
@@ -30,7 +30,7 @@ public class ExpressionCacheTest extends CqlExecutionTestBase {
         assertNotNull(result);
         assertThat(result, is(3));
 
-        assertTrue(context.isExpressionInCache(commonId, "Expression"));
+        assertTrue(context.isExpressionCached(commonId, "Expression"));
 
         context.exitLibrary(enteredLibrary);
         result = context.resolveExpressionRef("Expression").evaluate(context);

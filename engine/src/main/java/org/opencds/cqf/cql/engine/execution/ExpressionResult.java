@@ -1,34 +1,21 @@
 package org.opencds.cqf.cql.engine.execution;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ExpressionResult {
-    Object result;
-    List<Object> evaluatedResource;
+    protected Object value;
+    protected List<Object> evaluatedResources;
 
-    public ExpressionResult() {
-        evaluatedResource = new ArrayList<>();
+    public ExpressionResult(Object value, List<Object> evaluatedResources) {
+        this.value = value;
+        this.evaluatedResources = evaluatedResources;
     }
 
-    public static ExpressionResult newInstance() {
-        return new ExpressionResult();
-    }
-    public Object getResult() {
-        return result;
+    public Object value() {
+        return value;
     }
 
-    public ExpressionResult withResult(Object result) {
-        this.result = result;
-        return this;
-    }
-
-    public List<Object> getEvaluatedResource() {
-        return evaluatedResource;
-    }
-
-    public ExpressionResult withEvaluatedResource(List<Object> evaluatedResource) {
-        this.evaluatedResource.addAll(evaluatedResource);
-        return this;
+    public List<Object> evaluatedResources() {
+        return  this.evaluatedResources;
     }
 }

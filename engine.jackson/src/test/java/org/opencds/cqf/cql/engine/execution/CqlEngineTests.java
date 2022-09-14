@@ -41,9 +41,9 @@ public class CqlEngineTests extends TranslatingTestBase {
         EvaluationResult result = engine.evaluate("Test");
 
 
-        Object expResult = result.forExpression("X");
+        ExpressionResult expResult = result.forExpression("X");
 
-        assertThat(expResult, is(10));
+        assertThat(expResult.value(), is(10));
     }
 
     @Test
@@ -58,9 +58,9 @@ public class CqlEngineTests extends TranslatingTestBase {
         parameters.put("IntValue", 10);
 
         EvaluationResult result = engine.evaluate("Test", parameters);
-        Object expResult = result.forExpression("X");
+        ExpressionResult expResult = result.forExpression("X");
 
-        assertThat(expResult, is(10));
+        assertThat(expResult.value(), is(10));
     }
 
 
@@ -87,11 +87,11 @@ public class CqlEngineTests extends TranslatingTestBase {
 
         assertNotNull(result);
 
-        Object expResult = result.forExpression("X");
-        assertThat(expResult, is(10));
+        ExpressionResult expResult = result.forExpression("X");
+        assertThat(expResult.value(), is(10));
 
         expResult = result.forExpression("Y");
-        assertThat(expResult, is(4));
+        assertThat(expResult.value(), is(4));
     }
 
     @Test
@@ -106,8 +106,8 @@ public class CqlEngineTests extends TranslatingTestBase {
 
         assertNotNull(result);
 
-        Object expResult = result.forExpression("Y");
-        assertThat(expResult, is(4));
+        ExpressionResult expResult = result.forExpression("Y");
+        assertThat(expResult.value(), is(4));
     }
 
     @Test
@@ -132,10 +132,10 @@ public class CqlEngineTests extends TranslatingTestBase {
         EvaluationResult result = engine.evaluate("Test", new HashSet<>(Arrays.asList("X", "Y", "W")));
 
         assertNotNull(result);
-        assertEquals(3, result.expressionResults.size());
-        assertThat(result.forExpression("X"), is(10));
-        assertThat(result.forExpression("Y"), is(4));
-        assertThat(result.forExpression("W"), is(15));
+        assertEquals(result.expressionResults.size(), 3);
+        assertThat(result.forExpression("X").value(), is(10));
+        assertThat(result.forExpression("Y").value(), is(4));
+        assertThat(result.forExpression("W").value(), is(15));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)

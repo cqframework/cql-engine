@@ -268,44 +268,25 @@ public class Context {
         this.enableExpressionCache = yayOrNay;
     }
 
-    public boolean isExpressionInCache(VersionedIdentifier libraryId, String name) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
+    protected Map<String, ExpressionResult> cacheForLibrary(VersionedIdentifier libraryId) {
+        return this.expressions
+            .computeIfAbsent(libraryId, k-> constructLibraryExpressionHashMap());
+    }
 
-        return this.expressions.get(libraryId).containsKey(name);
+    public boolean isExpressionCached(VersionedIdentifier libraryId, String name) {
+        return cacheForLibrary(libraryId).containsKey(name);
     }
 
     public boolean isExpressionCachingEnabled() {
         return this.enableExpressionCache;
     }
 
-    public void addExpressionToCache(VersionedIdentifier libraryId, String name, ExpressionResult er) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
-
-        this.expressions.get(libraryId).put(name, er);
+    public void cacheExpression(VersionedIdentifier libraryId, String name, ExpressionResult er) {
+        cacheForLibrary(libraryId).put(name, er);
     }
 
-    public ExpressionResult getExpressionResultFromCache(VersionedIdentifier libraryId, String name) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
-
-        return this.expressions.get(libraryId).get(name);
-    }
-
-    public List<Object> getExpressionEvaluatedResourceFromCache(VersionedIdentifier libraryId, String name) {
-        if (!this.expressions.containsKey(libraryId)) {
-            this.expressions.put(libraryId, constructLibraryExpressionHashMap());
-        }
-
-        return this.expressions.get(libraryId).get(name).getEvaluatedResource();
-    }
-
-    public LinkedHashMap<VersionedIdentifier, LinkedHashMap<String, ExpressionResult>> getExpressions() {
-        return expressions;
+    public ExpressionResult getCachedExpression(VersionedIdentifier libraryId, String name) {
+        return cacheForLibrary(libraryId).get(name);
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {
@@ -780,6 +761,7 @@ public class Context {
         if (hasContextValueChanged(context, contextValue)) {
             clearExpressions();
         }
+
         contextValues.put(context, contextValue);
     }
 
