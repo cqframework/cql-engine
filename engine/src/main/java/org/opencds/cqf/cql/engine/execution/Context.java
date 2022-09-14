@@ -81,14 +81,16 @@ public class Context {
     }
 
     public List<Object> getEvaluatedResources() {
-        if(this.evaluatedResourceStack.empty()) {
-            pushEvaluatedResourceStack();
+        if (evaluatedResourceStack.empty()) {
+            throw new IllegalStateException("Attempted to get the evaluatedResource stack when it's empty");
         }
+
         return this.evaluatedResourceStack.peek();
     }
 
     public void clearEvaluatedResources() {
         this.evaluatedResourceStack.clear();
+        this.pushEvaluatedResourceStack();
     }
 
     private Stack<List<Object>> evaluatedResourceStack = new Stack<>();
@@ -100,12 +102,15 @@ public class Context {
     //serves pop and merge to the down
     public void popEvaluatedResourceStack() {
         if (evaluatedResourceStack.empty()) {
-            return;
+            throw new IllegalStateException("Attempted to pop the evaluatedResource stack when it's empty");
         }
-        if (evaluatedResourceStack.size() > 1) {
-            List<Object> objects = evaluatedResourceStack.pop();
-            this.evaluatedResourceStack.peek().addAll(objects);
+
+        if (evaluatedResourceStack.size() == 1) {
+            throw new IllegalStateException("Attempted to pop the evaluatedResource stack when only the root remains");
         }
+
+        List<Object> objects = evaluatedResourceStack.pop();
+        this.evaluatedResourceStack.peek().addAll(objects);
     }
 
     private Map<String, Object> parameters = new HashMap<>();
@@ -217,8 +222,10 @@ public class Context {
         registerDataProvider("urn:hl7-org:elm-types:r1", systemDataProvider);
         libraryLoader = new DefaultLibraryLoader();
 
-        if (library.getIdentifier() != null)
+        if (library.getIdentifier() != null) {
             libraries.put(library.getIdentifier().getId(), library);
+        }
+
         currentLibrary.push(library);
 
         if (ucumService != null) {
@@ -227,6 +234,8 @@ public class Context {
         else {
             this.ucumService = getSharedUcumService();
         }
+
+        this.pushEvaluatedResourceStack();
     }
 
     private void setEvaluationDateTime(ZonedDateTime evaluationZonedDateTime) {
@@ -268,13 +277,13 @@ public class Context {
         this.enableExpressionCache = yayOrNay;
     }
 
-    protected Map<String, ExpressionResult> cacheForLibrary(VersionedIdentifier libraryId) {
+    protected Map<String, ExpressionResult> getCacheForLibrary(VersionedIdentifier libraryId) {
         return this.expressions
             .computeIfAbsent(libraryId, k-> constructLibraryExpressionHashMap());
     }
 
     public boolean isExpressionCached(VersionedIdentifier libraryId, String name) {
-        return cacheForLibrary(libraryId).containsKey(name);
+        return getCacheForLibrary(libraryId).containsKey(name);
     }
 
     public boolean isExpressionCachingEnabled() {
@@ -282,11 +291,11 @@ public class Context {
     }
 
     public void cacheExpression(VersionedIdentifier libraryId, String name, ExpressionResult er) {
-        cacheForLibrary(libraryId).put(name, er);
+        getCacheForLibrary(libraryId).put(name, er);
     }
 
     public ExpressionResult getCachedExpression(VersionedIdentifier libraryId, String name) {
-        return cacheForLibrary(libraryId).get(name);
+        return getCacheForLibrary(libraryId).get(name);
     }
 
     public void registerLibraryLoader(LibraryLoader libraryLoader) {

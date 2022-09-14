@@ -14,7 +14,7 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
         try {
             context.pushEvaluatedResourceStack();
             VersionedIdentifier libraryId = context.getCurrentLibrary().getIdentifier();
-            if (context.isExpressionCachingEnabled() && context.isExpressionCached(libraryId, this.getName())) {
+            if (context.isExpressionCachingEnabled() && context.isExpressionCached(libraryId, name)) {
                 var er = context.getCachedExpression(libraryId, name);
                 context.getEvaluatedResources().addAll(er.evaluatedResources());
                 return er.value();
@@ -24,7 +24,7 @@ public class ExpressionDefEvaluator extends org.cqframework.cql.elm.execution.Ex
 
             if (context.isExpressionCachingEnabled()) {
                 var er = new ExpressionResult(value, context.getEvaluatedResources());
-                context.cacheExpression(libraryId, this.getName(), er);
+                context.cacheExpression(libraryId, name, er);
             }
 
             return value;
