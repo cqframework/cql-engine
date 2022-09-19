@@ -8,7 +8,7 @@ public class CqlLibraryReaderFactory {
     private CqlLibraryReaderFactory() {
     }
 
-    public static synchronized Iterator<CqlLibraryReaderProvider> providers(boolean refresh) {
+    public static Iterator<CqlLibraryReaderProvider> providers(boolean refresh) {
         var loader = ServiceLoader
                 .load(CqlLibraryReaderProvider.class);
         if (refresh) {
