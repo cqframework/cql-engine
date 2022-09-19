@@ -51,7 +51,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.13.2</jackson.version>
         <jackson-databind.version>2.13.2.1</jackson-databind.version>
-        <cqframework.version>2.1.0</cqframework.version>
+        <cqframework.version>2.2.0-SNAPSHOT</cqframework.version>
         <hapi.version>6.0.1</hapi.version>
         <slf4j.version>1.7.29</slf4j.version>
         <surefire.version>3.0.0-M7</surefire.version>
@@ -154,10 +154,6 @@
                         <groupId>xpp3</groupId>
                         <artifactId>xpp3</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>xpp3</groupId>
-                        <artifactId>xpp3_xpath</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -186,48 +182,12 @@
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-structures-r4</artifactId>
                 <version>${hapi.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xpp3</groupId>
-                        <artifactId>xpp3</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xpp3</groupId>
-                        <artifactId>xpp3_xpath</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>ca.uhn.hapi.fhir</groupId>
                 <artifactId>hapi-fhir-structures-r5</artifactId>
                 <version>${hapi.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xpp3</groupId>
-                        <artifactId>xpp3</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>xpp3</groupId>
-                        <artifactId>xpp3_xpath</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
-
-            <!-- These break the engine in certain environments due to the
-            fact that they include the javax.xml.namespace package, which creates
-            a split package. We may need to filter or exclude them at some point
-            in the future.-->
-            <dependency>
-                <groupId>xpp3</groupId>
-                <artifactId>xpp3</artifactId>
-                <version>1.1.4c</version>
-            </dependency>
-            <dependency>
-                <groupId>xpp3</groupId>
-                <artifactId>xpp3_xpath</artifactId>
-                <version>1.1.4c</version>
-            </dependency>
-
 
             <!-- Testing dependencies -->
 
@@ -279,7 +239,7 @@
             <dependency>
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
-                <version>7.6.0</version>
+                <version>7.6.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -445,6 +405,8 @@
                     <version>3.4.0</version>
                     <configuration>
                         <source>11</source>
+                        <doclint>-missing</doclint>
+                        <quiet>true</quiet>
                     </configuration>
                     <executions>
                         <execution>
