@@ -1,13 +1,16 @@
 package org.opencds.cqf.cql.engine.serializing;
 
+import static java.util.concurrent.CompletableFuture.allOf;
+import static java.util.concurrent.CompletableFuture.runAsync;
+import static java.util.stream.IntStream.range;
 import static org.testng.AssertJUnit.assertNotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
 import org.cqframework.cql.cql2elm.LibraryContentType;
 import org.testng.annotations.Test;
+
 
 public class ServiceLoaderTest {
     @Test
@@ -18,12 +21,10 @@ public class ServiceLoaderTest {
 
     @Test
     void multiThreadedServiceLoader() {
-        var futures = new ArrayList<CompletableFuture<Void>>();
-        for (int i = 0; i < 10; i++) {
-            futures.add(CompletableFuture.runAsync(this::loadReader));
-        }
+        var futures = range(0,10)
+            .mapToObj(x -> runAsync(this::loadReader));
 
-        CompletableFuture.allOf(futures.toArray(new CompletableFuture[futures.size()])).join();
+        allOf(futures.toArray(CompletableFuture[]::new)).join();
     }
 
     void loadReader() {
