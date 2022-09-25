@@ -6,13 +6,13 @@ import java.util.Map;
 import org.opencds.cqf.cql.engine.debug.DebugResult;
 
 public class EvaluationResult {
-    public Map<String, Object> expressionResults;
+    public Map<String, ExpressionResult> expressionResults;
 
     public EvaluationResult() {
         this.expressionResults = new LinkedHashMap<>();
     }
 
-    public Object forExpression(String expressionName) {
+    public ExpressionResult forExpression(String expressionName) {
         return this.expressionResults.get(expressionName);
     }
 

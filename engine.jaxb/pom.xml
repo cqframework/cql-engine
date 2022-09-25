@@ -24,18 +24,6 @@
             <version>2.1.0-SNAPSHOT</version>
         </dependency>
 
-        <!-- This depedency adds to the javax.xml.namespace package which is not valid in Java 9+-->
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>xpp3</groupId>
-            <artifactId>xpp3_xpath</artifactId>
-            <scope>test</scope>
-        </dependency>
-
         <!-- Jaxb implementation of choice -->
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
