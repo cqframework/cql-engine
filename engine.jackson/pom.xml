@@ -77,6 +77,16 @@
             <artifactId>elm-jackson</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- dependencies required for Android -->
+        <!-- required to add due to the special QName Processor -->
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+            <version>2.12.2</version>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
     <build>
         <pluginManagement>
@@ -110,6 +120,18 @@
                                 </limits>
                             </rule>
                         </rules>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>animal-sniffer-maven-plugin</artifactId>
+                    <version>1.22</version>
+                    <configuration>
+                        <signature>
+                            <groupId>net.sf.androidscents.signature</groupId>
+                            <artifactId>android-api-level-26</artifactId>
+                            <version>8.0.0_r2</version>
+                        </signature>
                     </configuration>
                 </plugin>
             </plugins>
