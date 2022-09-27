@@ -648,6 +648,10 @@ public abstract class FhirModelResolver<BaseType, BaseDateTimeType, TimeType, Si
      */
 
     public Object toJavaPrimitive(Object result, Object source) {
+        if (source instanceof IPrimitiveType<?> && !((IPrimitiveType<?>)source).hasValue()) {
+            return null;
+        }
+
         String simpleName = source.getClass().getSimpleName();
         switch (simpleName) {
             case "InstantType":

@@ -41,6 +41,10 @@ public class SystemDataProvider extends BaseModelResolver implements DataProvide
             Field field = clazz.getDeclaredField(path);
             return field;
         } catch (NoSuchFieldException e) {
+            if (clazz.getSuperclass() != null) {
+                Field field = getProperty(clazz.getSuperclass(), path);
+                return field;
+            }
             throw new IllegalArgumentException(String.format("Could not determine field for path %s of type %s", path, clazz.getSimpleName()));
         }
     }

@@ -277,4 +277,14 @@ public class TestDstu3ModelResolver {
         Object result = resolver.resolvePath(sq, "comparator");
         assertNull(result);
     }
+
+    @Test
+    public void resolveNullPrimitiveReturnsNull() {
+        FhirModelResolver<Base,BaseDateTimeType,?,?,?,?,?,?> resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
+
+        DateTimeType dt = new DateTimeType();
+
+        Object result = resolver.resolvePath(dt, "value");
+        assertNull(result);
+    }
 }
