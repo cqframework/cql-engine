@@ -6,7 +6,7 @@
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>1.5.10-SNAPSHOT</version>
+    <version>1.5.10</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
@@ -50,7 +50,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.13.2</jackson.version>
         <jackson-databind.version>2.13.2.1</jackson-databind.version>
-        <cqframework.version>1.5.12-SNAPSHOT</cqframework.version>
+        <cqframework.version>1.5.12</cqframework.version>
         <hapi.version>5.6.3</hapi.version>
         <slf4j.version>1.7.29</slf4j.version>
     </properties>
