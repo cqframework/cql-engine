@@ -6,6 +6,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -16,8 +17,7 @@ import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.elm.r1.VersionedIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
-import org.hl7.fhir.r4.model.DateTimeType;
-import org.hl7.fhir.r4.model.Enumeration;
+import org.hl7.fhir.r4.model.*;
 import org.hl7.fhir.r4.model.Enumerations.AbstractType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Enumerations.AgeUnits;
@@ -40,9 +40,6 @@ import org.hl7.fhir.r4.model.Enumerations.RequestResourceType;
 import org.hl7.fhir.r4.model.Enumerations.ResourceType;
 import org.hl7.fhir.r4.model.Enumerations.SearchParamType;
 import org.hl7.fhir.r4.model.Enumerations.SpecialValues;
-import org.hl7.fhir.r4.model.IdType;
-import org.hl7.fhir.r4.model.Patient;
-import org.hl7.fhir.r4.model.VisionPrescription;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
@@ -164,7 +161,7 @@ public class TestR4ModelResolver {
     public void modelInfo400Tests() {
         ModelResolver resolver = new R4FhirModelResolver();
         ModelManager mm = new ModelManager();
-        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.0"));
+        Model m = mm.resolveModel(new VersionedIdentifier().withId("FHIR").withVersion("4.0.1"));
 
         List<TypeInfo> typeInfos = m.getModelInfo().getTypeInfo();
 
@@ -377,5 +374,28 @@ public class TestR4ModelResolver {
         Object result = resolver.resolvePath(vp, "dateWritten");
         assertNotNull(result);
         assertThat(result, is(dateTimeType));
+    }
+
+    @Test
+    public void resolveNullEnumerationReturnsNull() {
+        FhirModelResolver<Base,?,?,SimpleQuantity,?,?,?,?> resolver = new R4FhirModelResolver();
+
+        Quantity q = new Quantity();
+        q.setValue(new BigDecimal("10.0"));
+        q.setUnit("1");
+        SimpleQuantity sq = resolver.castToSimpleQuantity(q);
+
+        Object result = resolver.resolvePath(sq, "comparator");
+        assertNull(result);
+    }
+
+    @Test
+    public void resolveNullPrimitiveReturnsNull() {
+        FhirModelResolver<Base,BaseDateTimeType,?,?,?,?,?,?> resolver = new R4FhirModelResolver();
+
+        DateTimeType dt = new DateTimeType();
+
+        Object result = resolver.resolvePath(dt, "value");
+        assertNull(result);
     }
 }
