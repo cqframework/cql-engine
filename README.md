@@ -17,7 +17,7 @@ This repository uses stable trunk methodology:
 |v12|CQL 1.2 Engine|Obsolete| 1.2.20   |
 |v13|CQL 1.3 Engine|Obselete| 1.3.12.2 |
 |v14|CQL 1.4 Engine|Maintenance| 1.4.0    |
-|master|CQL 1.5 Engine|Active Development| 1.5.7    |
+|master|CQL 1.5 Engine|Active Development| 1.5.12   |
 
 ## Commit Policy
 
@@ -50,8 +50,8 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.7 - Critical fix for FHIRPath now() and today() support
 * 1.5.8 - Critical fix for evaluator parameter passing
 * 1.5.9 - Improved support for dynamic model info loading, version manifest usage, improved test coverage, improved testing and debug capabilities
-* 1.5.10 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
-* 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
+* 1.5.10 - Enhanced retrieve: profile-retrieve
+* 1.5.N - Context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
 
 ## Getting Help
 
