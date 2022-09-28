@@ -6,11 +6,11 @@
     <parent>
         <groupId>org.opencds.cqf.cql</groupId>
         <artifactId>engine.shared</artifactId>
-        <version>2.1.0-SNAPSHOT</version>
+        <version>2.1.0</version>
     </parent>
 
     <artifactId>engine</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>2.1.0</version>
     <packaging>jar</packaging>
 
     <name>engine</name>
@@ -18,8 +18,8 @@
     <url>https://github.com/DBCG/cql_engine/tree/master/engine</url>
 
     <dependencies>
-         <!-- Logging Services -->
-         <dependency>
+        <!-- Logging Services -->
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
@@ -46,6 +46,18 @@
             <groupId>org.fhir</groupId>
             <artifactId>ucum</artifactId>
         </dependency>
+
+        <!-- dependencies to substitute for excluded ucum dependency "xpp3". Downstream users should add their own
+            pull parser impementations and relevant APIS -->
+        <dependency>
+            <groupId>xpp3</groupId>
+            <artifactId>xpp3_min</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xmlpull</groupId>
+            <artifactId>xmlpull</artifactId>
+        </dependency>
+
 
         <dependency>
             <groupId>info.cqframework</groupId>
@@ -77,7 +89,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-javadoc-plugin</artifactId>
                     <configuration>
-                        <!-- TODO: Figure out what java doc does not respect source file exclusions when linting-->
+                        <!-- TODO: Figure out why java doc does not respect source file exclusions when linting-->
                         <!-- <excludePackageNames>org.cqframework.cql.elm.execution</excludePackageNames>
                         <sourceFileExcludes>
                             <exclude>**/org/cqframework/cql/elm/execution/*.java</exclude>
