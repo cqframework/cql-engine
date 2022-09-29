@@ -6,7 +6,7 @@
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>1.5.10</version>
+    <version>1.5.11-SNAPSHOT</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
