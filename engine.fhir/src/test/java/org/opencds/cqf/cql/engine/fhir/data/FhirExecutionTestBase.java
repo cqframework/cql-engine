@@ -3,7 +3,7 @@ package org.opencds.cqf.cql.engine.fhir.data;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.*;
-import org.cqframework.cql.cql2elm.fhir.r4.FhirLibrarySourceProvider;
+import org.cqframework.cql.cql2elm.quick.FhirLibrarySourceProvider;
 import org.cqframework.cql.cql2elm.model.CompiledLibrary;
 import org.cqframework.cql.elm.execution.Library;
 import org.cqframework.cql.elm.tracking.TrackBack;
