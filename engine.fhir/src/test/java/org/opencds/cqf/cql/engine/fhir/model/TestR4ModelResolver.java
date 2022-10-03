@@ -2,6 +2,7 @@ package org.opencds.cqf.cql.engine.fhir.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -307,25 +308,25 @@ public class TestR4ModelResolver {
 
         path = (String)resolver.getContextPath("Patient", "Condition");
         assertNotNull(path);
-        assertTrue(path.equals("subject"));
+        assertEquals(path, "subject");
 
         path = (String)resolver.getContextPath("Patient", "Appointment");
         assertNotNull(path);
-        assertTrue(path.equals("participant.actor"));
+        assertEquals(path, "participant.actor");
 
         path = (String)resolver.getContextPath("Patient", "Account");
         assertNotNull(path);
-        assertTrue(path.equals("subject"));
+        assertEquals(path, "subject");
 
         path = (String)resolver.getContextPath("Patient", "Encounter");
         assertNotNull(path);
-        assertTrue(path.equals("subject"));
+        assertEquals(path, "subject");
 
         path = (String)resolver.getContextPath("Patient", "ValueSet");
         assertNull(path);
 
         path = (String)resolver.getContextPath("Patient", "MedicationStatement");
-        assertTrue(path.equals("subject"));
+        assertEquals(path, "subject");
 
         // Issue 527 - https://github.com/DBCG/cql_engine/issues/527
         path = (String)resolver.getContextPath("Unfiltered", "MedicationStatement");
