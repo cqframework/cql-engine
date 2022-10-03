@@ -356,6 +356,10 @@ public class R4FhirModelResolver extends FhirModelResolver<Base, BaseDateTimeTyp
             return "subject";
         }
 
+        if (contextType.equals("Patient") && targetType.equals("Task")) {
+            return "for";
+        }
+
         return super.getContextPath(contextType, targetType);
     }
 }

@@ -318,6 +318,10 @@ public class Dstu3FhirModelResolver extends
             return "subject";
         }
 
+        if (contextType.equals("Patient") && targetType.equals("Task")) {
+            return "for";
+        }
+
         return super.getContextPath(contextType, targetType);
     }
 }

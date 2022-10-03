@@ -248,6 +248,9 @@ public class TestDstu3ModelResolver {
         path = (String) resolver.getContextPath("Patient", "MedicationStatement");
         assertEquals(path, "subject");
 
+        path = (String) resolver.getContextPath("Patient", "Task");
+        assertEquals(path, "for");
+
         // Issue 527 - https://github.com/DBCG/cql_engine/issues/527
         path = (String) resolver.getContextPath("Unfiltered", "MedicationStatement");
         assertNull(path);
