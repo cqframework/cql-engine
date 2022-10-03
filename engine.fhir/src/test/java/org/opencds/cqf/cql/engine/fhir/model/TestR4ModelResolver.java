@@ -291,7 +291,7 @@ public class TestR4ModelResolver {
 
     @Test
     public void contextPathTests() {
-        ModelResolver resolver = new Dstu3FhirModelResolver(FhirContext.forCached(FhirVersionEnum.DSTU3));
+        ModelResolver resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
 
         String path = (String)resolver.getContextPath("Patient", "Patient");
         assertNotNull(path);
