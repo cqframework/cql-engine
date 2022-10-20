@@ -1,5 +1,6 @@
 package org.opencds.cqf.cql.engine.serializing.jackson.mixins;
 
+import org.cqframework.cql.elm.execution.ExpandValueSet;
 import org.opencds.cqf.cql.engine.elm.execution.*;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
@@ -66,6 +67,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = ExistsEvaluator.class, name = "Exists"),
     @Type(value = ExpEvaluator.class, name = "Exp"),
     @Type(value = ExpandEvaluator.class, name = "Expand"),
+    @Type(value = ExpandValueSetEvaluator.class, name = "ExpandValueSet"),
     @Type(value = ExpressionDefEvaluator.class, name = "ExpressionDef"),
     @Type(value = ExpressionRefEvaluator.class, name = "ExpressionRef"),
     // @Type(value = FunctionDef.class, name = "FunctionDef"),
