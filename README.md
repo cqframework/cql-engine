@@ -17,7 +17,9 @@ This repository uses stable trunk methodology:
 |v12|CQL 1.2 Engine|Obsolete| 1.2.20   |
 |v13|CQL 1.3 Engine|Obselete| 1.3.12.2 |
 |v14|CQL 1.4 Engine|Maintenance| 1.4.0    |
-|master|CQL 1.5 Engine|Active Development| 1.5.7    |
+|v15|CQL 1.5 Engine|Maintenance| 1.5.7    |
+|v20|CQL 2.0 Engine|Maintenance| 2.0.0    |
+|master|CQL 2.1.0 Engine|Active Development| 2.1.0    |
 
 ## Commit Policy
 
@@ -52,6 +54,8 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.9 - Improved support for dynamic model info loading, version manifest usage, improved test coverage, improved testing and debug capabilities
 * 1.5.10 - Enhanced retrieve: profile-retrieve, context-based retrieves, includes, search parameters, inferred expression support, FHIRPath test suite, improved debugging capabilities, code coverage, date filter support for data providers
 * 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
+* 2.0.0 - Start using  Translator 2.1.0
+* 2.1.0 - Start using  Translator 2.2.0, maintain expression wise evaluated resources state
 
 ## Getting Help
 

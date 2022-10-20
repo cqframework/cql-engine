@@ -6,7 +6,7 @@
 
     <groupId>org.opencds.cqf.cql</groupId>
     <artifactId>engine.shared</artifactId>
-    <version>2.1.0-SNAPSHOT</version>
+    <version>2.2.0-SNAPSHOT</version>
 
     <name>engine.shared</name>
     <description>CQL Engine Project</description>
@@ -51,7 +51,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <jackson.version>2.13.2</jackson.version>
         <jackson-databind.version>2.13.2.1</jackson-databind.version>
-        <cqframework.version>2.2.0-SNAPSHOT</cqframework.version>
+        <cqframework.version>2.2.0</cqframework.version>
         <hapi.version>6.0.1</hapi.version>
         <slf4j.version>1.7.29</slf4j.version>
         <surefire.version>3.0.0-M7</surefire.version>
@@ -149,12 +149,41 @@
                 <groupId>org.fhir</groupId>
                 <artifactId>ucum</artifactId>
                 <version>1.0.3</version>
+                <!-- This exclusion must not be removed until the ucum service makes xpp3 optional
+                or removes the dependency completely.
+
+                The xpp3:xpp3 artifact includes the following components:
+
+                    xmlpull API: (e.g. org.xmlpull.v1.XmlPullParserFactory)
+                    javax.xml API: (e.g javax.xml.namespace.QName)
+                    xpp3 pull parser (e.g. xpp3_min)
+
+                Because it's a single module that includes multiple packagenames it
+                breaks on Java 9+. Additionally, Android provides its own xml pull parser.
+
+                In the dependencies below xpp_min (includes xpp3 only) and
+                xmlpull (includes the xmlpull api) are substituted instead -->
                 <exclusions>
                     <exclusion>
                         <groupId>xpp3</groupId>
                         <artifactId>xpp3</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <!-- dependencies to substitute for excluded ucum dependencies. Downstream users should add their own
+            pull parser impementations and relevant APIS -->
+            <dependency>
+                <groupId>xpp3</groupId>
+                <artifactId>xpp3_min</artifactId>
+                <version>1.1.4c</version>
+                <optional>true</optional>
+            </dependency>
+            <dependency>
+                <groupId>xmlpull</groupId>
+                <artifactId>xmlpull</artifactId>
+                <version>1.1.3.1</version>
+                <optional>true</optional>
             </dependency>
 
             <!-- HAPI Fhir dependencies -->
@@ -307,6 +336,7 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -380,8 +410,6 @@
                         <failOnWarning>false</failOnWarning>
                         <compilerArgs>
                             <arg>-Xlint:all</arg>
-                            <!-- This fixes a boostrapclass path warning which the "release" property fixes on Java 9+ -->
-                            <arg>-Xlint:-options</arg>
                             <arg>-Werror</arg>
                         </compilerArgs>
                     </configuration>
@@ -665,25 +693,6 @@
                         <artifactId>nexus-staging-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>java-11</id>
-            <activation>
-                <jdk>[11,)</jdk>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.apache.maven.plugins</groupId>
-                            <artifactId>maven-compiler-plugin</artifactId>
-                            <configuration>
-                                <release>11</release>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
             </build>
         </profile>
     </profiles>
