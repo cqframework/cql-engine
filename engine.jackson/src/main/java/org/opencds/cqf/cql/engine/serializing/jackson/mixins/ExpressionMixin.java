@@ -1,6 +1,5 @@
 package org.opencds.cqf.cql.engine.serializing.jackson.mixins;
 
-import org.cqframework.cql.elm.execution.ExpandValueSet;
 import org.opencds.cqf.cql.engine.elm.execution.*;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
