@@ -66,6 +66,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @Type(value = ExistsEvaluator.class, name = "Exists"),
     @Type(value = ExpEvaluator.class, name = "Exp"),
     @Type(value = ExpandEvaluator.class, name = "Expand"),
+    @Type(value = ExpandValueSetEvaluator.class, name = "ExpandValueSet"),
     @Type(value = ExpressionDefEvaluator.class, name = "ExpressionDef"),
     @Type(value = ExpressionRefEvaluator.class, name = "ExpressionRef"),
     // @Type(value = FunctionDef.class, name = "FunctionDef"),
