@@ -394,4 +394,14 @@ public class TestR4ModelResolver {
         Object result = resolver.resolvePath(sq, "comparator");
         assertNull(result);
     }
+
+    @Test
+    public void resolveNullPrimitiveReturnsNull() {
+        FhirModelResolver<Base,BaseDateTimeType,?,?,?,?,?,?> resolver = new R4FhirModelResolver(FhirContext.forCached(FhirVersionEnum.R4));
+
+        DateTimeType dt = new DateTimeType();
+
+        Object result = resolver.resolvePath(dt, "value");
+        assertNull(result);
+    }
 }

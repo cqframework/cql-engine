@@ -4,9 +4,9 @@
 set -euxo pipefail
 bash -n "$0"
 
-if [[ "$TRAVIS_BRANCH" != "master" && -z "$TRAVIS_TAG" ]]
+if [[ "$TRAVIS_BRANCH" != "master" && "$TRAVIS_BRANCH" != "v15" && -z "$TRAVIS_TAG" ]]
 then
-  echo "Not on the master branch or a git tag. Skipping deploy."
+  echo "Not on the master or v15 branches or a git tag. Skipping deploy."
   exit 0
 fi
 
