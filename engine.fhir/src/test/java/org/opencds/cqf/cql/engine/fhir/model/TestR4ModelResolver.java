@@ -13,14 +13,15 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import ca.uhn.fhir.context.FhirContext;
-import ca.uhn.fhir.context.FhirVersionEnum;
 import org.cqframework.cql.cql2elm.ModelManager;
 import org.cqframework.cql.cql2elm.model.Model;
 import org.hl7.cql.model.ModelIdentifier;
 import org.hl7.elm_modelinfo.r1.ClassInfo;
 import org.hl7.elm_modelinfo.r1.TypeInfo;
-import org.hl7.fhir.r4.model.*;
+import org.hl7.fhir.r4.model.Base;
+import org.hl7.fhir.r4.model.BaseDateTimeType;
+import org.hl7.fhir.r4.model.DateTimeType;
+import org.hl7.fhir.r4.model.Enumeration;
 import org.hl7.fhir.r4.model.Enumerations.AbstractType;
 import org.hl7.fhir.r4.model.Enumerations.AdministrativeGender;
 import org.hl7.fhir.r4.model.Enumerations.AgeUnits;
@@ -43,9 +44,17 @@ import org.hl7.fhir.r4.model.Enumerations.RequestResourceType;
 import org.hl7.fhir.r4.model.Enumerations.ResourceType;
 import org.hl7.fhir.r4.model.Enumerations.SearchParamType;
 import org.hl7.fhir.r4.model.Enumerations.SpecialValues;
+import org.hl7.fhir.r4.model.IdType;
+import org.hl7.fhir.r4.model.Patient;
+import org.hl7.fhir.r4.model.Quantity;
+import org.hl7.fhir.r4.model.SimpleQuantity;
+import org.hl7.fhir.r4.model.VisionPrescription;
 import org.opencds.cqf.cql.engine.fhir.exception.UnknownType;
 import org.opencds.cqf.cql.engine.model.ModelResolver;
 import org.testng.annotations.Test;
+
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.context.FhirVersionEnum;
 
 public class TestR4ModelResolver {
 
@@ -330,6 +339,10 @@ public class TestR4ModelResolver {
 
         path = (String)resolver.getContextPath("Patient", "Task");
         assertEquals(path, "for");
+
+
+        path = (String)resolver.getContextPath("Patient", "Coverage");
+        assertEquals(path, "beneficiary");
 
         // Issue 527 - https://github.com/DBCG/cql_engine/issues/527
         path = (String)resolver.getContextPath("Unfiltered", "MedicationStatement");

@@ -1,14 +1,14 @@
 package org.opencds.cqf.cql.engine.fhir.model;
 
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import org.hl7.fhir.dstu3.model.Age;
 import org.hl7.fhir.dstu3.model.AnnotatedUuidType;
@@ -320,6 +320,10 @@ public class Dstu3FhirModelResolver extends
 
         if (contextType.equals("Patient") && targetType.equals("Task")) {
             return "for";
+        }
+
+        if (contextType.equals("Patient") && targetType.equals("Coverage")) {
+            return "beneficiary";
         }
 
         return super.getContextPath(contextType, targetType);
