@@ -19,7 +19,7 @@ This repository uses stable trunk methodology:
 |v14|CQL 1.4 Engine|Maintenance| 1.4.0    |
 |v15|CQL 1.5 Engine|Maintenance| 1.5.7    |
 |v20|CQL 2.0 Engine|Maintenance| 2.0.0    |
-|master|CQL 2.1.0 Engine|Active Development| 2.1.0    |
+|master|CQL 2.3.0 Engine|Active Development| 2.3.0    |
 
 ## Commit Policy
 
@@ -56,6 +56,8 @@ This project uses [Semantic Versioning](http://semver.org), with the caveat that
 * 1.5.N - Support for concept mapping with versioned manifest usage and/or concept map configuration, CQL specification test suite, data provenance propagation, result meta-data tagging
 * 2.0.0 - Start using  Translator 2.1.0
 * 2.1.0 - Start using  Translator 2.2.0, maintain expression wise evaluated resources state
+* 2.2.0 - Start using  Translator 2.3.0, fix Jackson error for Expand ValueSet operators, fix primary context path between Task and Patient to the field `for` in R4 and DSTU3
+* 2.3.0 - Start using  Translator 2.4.0
 
 ## Getting Help
 
