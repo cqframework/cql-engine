@@ -77,7 +77,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         return valueSet;
     }
 
-    private DataRequirement getCodeFilteredViaValueSetDataRequirement(String resourceType, String path, ValueSet valueSet) {
+    private DataRequirement getCodeFilteredDataRequirement(String resourceType, String path, ValueSet valueSet) {
         DataRequirement dataRequirement = new DataRequirement();
         dataRequirement.setType(resourceType);
         DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
@@ -88,42 +88,6 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
         return dataRequirement;
     }
-
-//    private DataRequirement getCodeFilteredViaCodeableConceptDataRequirement(String resourceType, String path, ValueSet valueSet) {
-//        DataRequirement dataRequirement = new DataRequirement();
-//        dataRequirement.setType(resourceType);
-//        DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
-//        categoryCodeFilter.setPath(path);
-//        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
-//        categoryCodeFilter.setValueSet(valueSetReference);
-//        dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
-//
-//        return dataRequirement;
-//    }
-//
-//    private DataRequirement getCodeFilteredViaCodingDataRequirement(String resourceType, String path, ValueSet valueSet) {
-//        DataRequirement dataRequirement = new DataRequirement();
-//        dataRequirement.setType(resourceType);
-//        DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
-//        categoryCodeFilter.setPath(path);
-//        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
-//        categoryCodeFilter.setValueSet(valueSetReference);
-//        dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
-//
-//        return dataRequirement;
-//    }
-//
-//    private DataRequirement getCodeFilteredViaCodeDataRequirement(String resourceType, String path, ValueSet valueSet) {
-//        DataRequirement dataRequirement = new DataRequirement();
-//        dataRequirement.setType(resourceType);
-//        DataRequirement.DataRequirementCodeFilterComponent categoryCodeFilter = new DataRequirement.DataRequirementCodeFilterComponent();
-//        categoryCodeFilter.setPath(path);
-//        org.hl7.fhir.dstu3.model.Reference valueSetReference = new org.hl7.fhir.dstu3.model.Reference(valueSet.getUrl());
-//        categoryCodeFilter.setValueSet(valueSetReference);
-//        dataRequirement.setCodeFilter(java.util.Arrays.asList(categoryCodeFilter));
-//
-//        return dataRequirement;
-//    }
 
     @Test
     void testGetFhirQueriesObservation() {
@@ -138,7 +102,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
         mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
 
-        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
+        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
         this.contextValues.put("Patient", "{{context.patientId}}");
         java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
@@ -162,7 +126,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
 
         mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
 
-        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
+        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
         this.contextValues.put("Patient", "{{context.patientId}}");
@@ -252,7 +216,7 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
         mockFhirRead("/ValueSet/MyValueSet/$expand", valueSet);
 
-        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
+        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
 
         this.generator.setMaxCodesPerQuery(4);
         this.generator.setExpandValueSets(true);
@@ -268,35 +232,66 @@ public class TestDstu3FhirQueryGenerator extends Dstu3FhirTest {
         assertEquals(actual.get(1), expectedQuery2);
     }
 
-//    @Test
-//    void testCodesExceedMaxUriLength() {
-//        ValueSet valueSet = getTestValueSet("MyValueSet", 200);
-//
-//        org.hl7.fhir.dstu3.model.Bundle valueSetBundle = new org.hl7.fhir.dstu3.model.Bundle();
-//        valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
-//
-//        Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
-//        entry.setResource(valueSet);
-//        valueSetBundle.addEntry(entry);
-//
-//        mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
-//        mockFhirRead("/ValueSet/MyValueSet/$expand", valueSet);
-//
-//        DataRequirement dataRequirement = getCodeFilteredViaValueSetDataRequirement("Observation", "category", valueSet);
-//
-//        this.generator.setMaxCodesPerQuery(400);
-//        this.generator.setMaxUriLength(20);
-//        this.generator.setExpandValueSets(true);
-//        this.engineContext.enterContext("Patient");
-//        this.engineContext.setContextValue("Patient", "{{context.patientId}}");
-//        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.engineContext, null);
-//
-//        String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3&patient=Patient/{{context.patientId}}";
-//        String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code4,http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7&patient=Patient/{{context.patientId}}";
-//
-//        assertNotNull(actual);
-//        assertEquals(actual.size(), 2);
-//        assertEquals(actual.get(0), expectedQuery1);
-//        assertEquals(actual.get(1), expectedQuery2);
-//    }
+    @Test
+    void testMaxQueryThresholdExceeded() {
+        ValueSet valueSet = getTestValueSet("MyValueSet", 21);
+
+        Bundle valueSetBundle = new Bundle();
+        valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
+
+        Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
+        entry.setResource(valueSet);
+        valueSetBundle.addEntry(entry);
+
+        mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
+        mockFhirRead("/ValueSet/MyValueSet/$expand", valueSet);
+
+        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
+
+        this.generator.setMaxCodesPerQuery(4);
+        this.generator.setExpandValueSets(true);
+        this.generator.setQueryBatchThreshold(5);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
+
+        assertNotNull(actual);
+        assertEquals(actual.size(), 1);
+    }
+
+    @Test
+    void testMaxQueryThreshold() {
+        ValueSet valueSet = getTestValueSet("MyValueSet", 21);
+
+        Bundle valueSetBundle = new Bundle();
+        valueSetBundle.setType(Bundle.BundleType.SEARCHSET);
+
+        Bundle.BundleEntryComponent entry = new Bundle.BundleEntryComponent();
+        entry.setResource(valueSet);
+        valueSetBundle.addEntry(entry);
+
+        mockFhirRead("/ValueSet?url=http%3A%2F%2Fmyterm.com%2Ffhir%2FValueSet%2FMyValueSet", valueSetBundle);
+        mockFhirRead("/ValueSet/MyValueSet/$expand", valueSet);
+
+        DataRequirement dataRequirement = getCodeFilteredDataRequirement("Observation", "category", valueSet);
+
+        this.generator.setMaxCodesPerQuery(5);
+        this.generator.setExpandValueSets(true);
+        this.generator.setQueryBatchThreshold(5);
+        this.contextValues.put("Patient", "{{context.patientId}}");
+        java.util.List<String> actual = this.generator.generateFhirQueries(dataRequirement, this.evaluationDateTime, this.contextValues, this.parameters, null);
+
+        String expectedQuery1 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code0,http://myterm.com/fhir/CodeSystem/MyValueSet|code1,http://myterm.com/fhir/CodeSystem/MyValueSet|code2,http://myterm.com/fhir/CodeSystem/MyValueSet|code3,http://myterm.com/fhir/CodeSystem/MyValueSet|code4&patient=Patient/{{context.patientId}}";
+        String expectedQuery2 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code5,http://myterm.com/fhir/CodeSystem/MyValueSet|code6,http://myterm.com/fhir/CodeSystem/MyValueSet|code7,http://myterm.com/fhir/CodeSystem/MyValueSet|code8,http://myterm.com/fhir/CodeSystem/MyValueSet|code9&patient=Patient/{{context.patientId}}";
+        String expectedQuery3 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code10,http://myterm.com/fhir/CodeSystem/MyValueSet|code11,http://myterm.com/fhir/CodeSystem/MyValueSet|code12,http://myterm.com/fhir/CodeSystem/MyValueSet|code13,http://myterm.com/fhir/CodeSystem/MyValueSet|code14&patient=Patient/{{context.patientId}}";
+        String expectedQuery4 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code15,http://myterm.com/fhir/CodeSystem/MyValueSet|code16,http://myterm.com/fhir/CodeSystem/MyValueSet|code17,http://myterm.com/fhir/CodeSystem/MyValueSet|code18,http://myterm.com/fhir/CodeSystem/MyValueSet|code19&patient=Patient/{{context.patientId}}";
+        String expectedQuery5 = "Observation?category=http://myterm.com/fhir/CodeSystem/MyValueSet|code20&patient=Patient/{{context.patientId}}";
+
+        assertNotNull(actual);
+        assertEquals(actual.size(), 5);
+        assertEquals(actual.get(0), expectedQuery1);
+        assertEquals(actual.get(1), expectedQuery2);
+        assertEquals(actual.get(2), expectedQuery3);
+        assertEquals(actual.get(3), expectedQuery4);
+        assertEquals(actual.get(4), expectedQuery5);
+    }
 }

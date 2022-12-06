@@ -45,13 +45,16 @@ public class FhirQueryGeneratorFactory {
      */
     public static BaseFhirQueryGenerator create(ModelResolver modelResolver, SearchParameterResolver searchParameterResolver,
                                          TerminologyProvider terminologyProvider, Boolean shouldExpandValueSets,
-                                         Integer maxCodesPerQuery, Integer pageSize) throws FhirVersionMisMatchException {
+                                         Integer maxCodesPerQuery, Integer pageSize, Integer queryBatchThreshold) throws FhirVersionMisMatchException {
         BaseFhirQueryGenerator baseFhirQueryGenerator = create(modelResolver, searchParameterResolver, terminologyProvider);
         if (shouldExpandValueSets != null) {
             baseFhirQueryGenerator.setExpandValueSets(shouldExpandValueSets);
         }
         if (maxCodesPerQuery != null) {
             baseFhirQueryGenerator.setMaxCodesPerQuery(maxCodesPerQuery);
+        }
+        if (queryBatchThreshold != null) {
+            baseFhirQueryGenerator.setQueryBatchThreshold(queryBatchThreshold);
         }
         if (pageSize != null) {
             baseFhirQueryGenerator.setPageSize(pageSize);
