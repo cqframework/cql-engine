@@ -14,7 +14,6 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import ca.uhn.fhir.context.FhirContext;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
-    
     protected FhirContext fhirContext;
     protected SearchParameterResolver searchParameterResolver;
     protected Integer pageSize;
