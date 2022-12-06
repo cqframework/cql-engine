@@ -71,7 +71,7 @@ public class TestRestFhirRetrieveProvider extends R4FhirTest {
         Integer expected = 100;
         provider.setPageSize(expected);
         BaseFhirQueryGenerator fhirQueryGenerator = FhirQueryGeneratorFactory.create(getModelResolver(CLIENT.getFhirContext().getVersion().getVersion()),
-            provider.searchParameterResolver, provider.getTerminologyProvider(), null, null, expected);
+            provider.searchParameterResolver, provider.getTerminologyProvider(), null, null, expected, null);
 
         SearchParameterMap map = fhirQueryGenerator.getBaseMap(null, null, null, null);
         assertEquals(map.getCount(), expected);

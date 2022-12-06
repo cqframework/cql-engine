@@ -1,11 +1,6 @@
 package org.opencds.cqf.cql.engine.fhir.retrieve;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.hl7.fhir.instance.model.api.IBaseConformance;
@@ -33,7 +28,6 @@ import ca.uhn.fhir.rest.param.TokenParam;
 import ca.uhn.fhir.rest.param.TokenParamModifier;
 
 public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChecker {
-    protected static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
     protected static final boolean DEFAULT_SHOULD_EXPAND_VALUESETS = false;
 
     protected FhirContext fhirContext;
@@ -47,21 +41,32 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
         return this.pageSize;
     }
     public void setPageSize(Integer value) {
-        if( value == null || value < 1 ) {
+        if ( value == null || value < 1 ) {
             throw new IllegalArgumentException("value must be a non-null integer > 0");
         }
         this.pageSize = value;
     }
 
-    private int maxCodesPerQuery;
-    public int getMaxCodesPerQuery() {
+    private Integer maxCodesPerQuery;
+    public Integer getMaxCodesPerQuery() {
         return this.maxCodesPerQuery;
     }
-    public void setMaxCodesPerQuery(int value) {
-        if (value < 1) {
-            throw new IllegalArgumentException("value must be > 0");
+    public void setMaxCodesPerQuery(Integer value) {
+        if (value == null || value < 1) {
+            throw new IllegalArgumentException("value must be non-null integer > 0");
         }
         this.maxCodesPerQuery = value;
+    }
+
+    private Integer queryBatchThreshold;
+    public Integer getQueryBatchThreshold() {
+        return this.queryBatchThreshold;
+    }
+    public void setQueryBatchThreshold(Integer value) {
+        if (value == null || value < 1) {
+            throw new IllegalArgumentException("value must be non-null integer > 0");
+        }
+        this.queryBatchThreshold = value;
     }
 
     // TODO: Think about how to best handle the decision to expand value sets... Should it be part of the
@@ -79,8 +84,7 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
         this.searchParameterResolver = searchParameterResolver;
         this.terminologyProvider = terminologyProvider;
         this.modelResolver = modelResolver;
-        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
-        this.expandValueSets = DEFAULT_SHOULD_EXPAND_VALUESETS;
+        this.setExpandValueSets(DEFAULT_SHOULD_EXPAND_VALUESETS);
 
         this.fhirContext = fhirContext;
         validateFhirVersionIntegrity(fetchFhirVersionEnum(this.fhirContext));
@@ -193,16 +197,16 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
     // "dataType.codePath in ValueSet"
     protected List<TokenOrListParam> getCodeParams(Iterable<Code> codes, String valueSet) {
         if (valueSet != null) {
-            if (this.isExpandValueSets()) {
-                if (this.terminologyProvider == null) {
+            if (!isExpandValueSets()) {
+                return Collections.singletonList(new TokenOrListParam()
+                    .addOr(new TokenParam(valueSet).setModifier(TokenParamModifier.IN)));
+            } else {
+                if (terminologyProvider == null) {
                     throw new IllegalArgumentException(
                         "Expand value sets cannot be used without a terminology provider and no terminology provider is set.");
                 }
                 ValueSetInfo valueSetInfo = new ValueSetInfo().withId(valueSet);
-                codes = this.terminologyProvider.expand(valueSetInfo);
-            } else {
-                return Collections.singletonList(new TokenOrListParam()
-                    .addOr(new TokenParam(valueSet).setModifier(TokenParamModifier.IN)));
+                codes = terminologyProvider.expand(valueSetInfo);
             }
         }
 
@@ -210,13 +214,25 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
             return Collections.emptyList();
         }
 
+        // If the number of queries generated as a result of the code list size and maxCodesPerQuery constraint would
+        // result in a number of queries that is greater than the queryBatchThreshold value, then codeParams will
+        // be omitted altogether.
+        if (getMaxCodesPerQuery() != null && getQueryBatchThreshold() != null) {
+            if ((getIterableSize(codes) / (float) getMaxCodesPerQuery()) > getQueryBatchThreshold()) {
+                return Collections.emptyList();
+            }
+        }
+
         List<TokenOrListParam> codeParamsList = new ArrayList<>();
-
         TokenOrListParam codeParams = null;
-
         int codeCount = 0;
         for (Object code : codes) {
-            if (codeCount % this.getMaxCodesPerQuery() == 0) {
+            if (getMaxCodesPerQuery() == null) {
+                if (codeCount == 0 && codeParams == null) {
+                    codeParams = new TokenOrListParam();
+                }
+            }
+            else if (codeCount % getMaxCodesPerQuery() == 0) {
                 if (codeParams != null) {
                     codeParamsList.add(codeParams);
                 }
@@ -233,7 +249,6 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
                 String s = (String)code;
                 codeParams.addOr(new TokenParam(s));
             }
-
         }
 
         if (codeParams != null) {
@@ -264,11 +279,6 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
             for (CodeFilter cf : codeFilters) {
                 Pair<String, List<TokenOrListParam>> codeParams = this.getCodeParams(dataType, cf.getCodePath(), cf.getCodes(), cf.getValueSet());
 
-                // In the case we filtered to a valueSet without codes, there are no possible results.
-                // TODO: Isn't this assuming in-line expansion? If we have a value set we expect the server to support, isn't that okay?
-                if (cf.getValueSet() != null && (codeParams == null || codeParams.getValue().isEmpty())) {
-                    return Collections.emptyList();
-                }
                 if (codeParams != null) {
                     codeParamList.add(codeParams);
                 }
@@ -355,5 +365,17 @@ public abstract class BaseFhirQueryGenerator implements FhirVersionIntegrityChec
         }
 
         return baseMap;
+    }
+
+    private static int getIterableSize(Iterable<?> iterable) {
+        if (iterable instanceof Collection) {
+            return ((Collection<?>) iterable).size();
+        }
+
+        int counter = 0;
+        for (Object i : iterable) {
+            counter++;
+        }
+        return counter;
     }
 }

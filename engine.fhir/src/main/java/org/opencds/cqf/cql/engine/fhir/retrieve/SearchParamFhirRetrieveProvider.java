@@ -14,20 +14,18 @@ import org.opencds.cqf.cql.engine.runtime.Interval;
 import ca.uhn.fhir.context.FhirContext;
 
 public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRetrieveProvider {
-
-    private static final int DEFAULT_MAX_CODES_PER_QUERY = 64;
-
+    
     protected FhirContext fhirContext;
     protected SearchParameterResolver searchParameterResolver;
     protected Integer pageSize;
-    protected int maxCodesPerQuery;
+    protected Integer maxCodesPerQuery;
+    protected Integer queryBatchThreshold;
     private BaseFhirQueryGenerator fhirQueryGenerator;
     private ModelResolver modelResolver;
 
     protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver) {
         this.searchParameterResolver = searchParameterResolver;
         this.fhirContext = searchParameterResolver.getFhirContext();
-        this.maxCodesPerQuery = DEFAULT_MAX_CODES_PER_QUERY;
     }
 
     protected SearchParamFhirRetrieveProvider(SearchParameterResolver searchParameterResolver, ModelResolver modelResolver) {
@@ -47,37 +45,47 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
         return this.pageSize;
     }
 
-    public BaseFhirQueryGenerator getFhirQueryGenerator() {
-        return fhirQueryGenerator;
-    }
-
     public void setFhirQueryGenerator(BaseFhirQueryGenerator fhirQueryGenerator) {
         this.fhirQueryGenerator = fhirQueryGenerator;
     }
 
-    public ModelResolver getModelResolver() {
-        return modelResolver;
+    public BaseFhirQueryGenerator getFhirQueryGenerator() {
+        return fhirQueryGenerator;
     }
 
     public void setModelResolver(ModelResolver modelResolver) {
         this.modelResolver = modelResolver;
     }
 
-    public void setMaxCodesPerQuery(int value) {
+    public ModelResolver getModelResolver() {
+        return modelResolver;
+    }
 
-        if (value < 1) {
-            throw new IllegalArgumentException("value must be > 0");
+    public void setMaxCodesPerQuery(Integer value) {
+        if (value == null || value < 1) {
+            throw new IllegalArgumentException("value must be a non-null integer > 0");
         }
 
         this.maxCodesPerQuery = value;
     }
 
-    public int getMaxCodesPerQuery() {
+    public Integer getMaxCodesPerQuery() {
         return this.maxCodesPerQuery;
     }
 
-    protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
+    public void setQueryBatchThreshold(Integer value) {
+        if (value == null || value < 1) {
+            throw new IllegalArgumentException("value must be a non-null integer > 0");
+        }
 
+        this.queryBatchThreshold = value;
+    }
+
+    public Integer getQueryBatchThreshold() {
+        return this.queryBatchThreshold;
+    }
+
+    protected abstract Iterable<Object> executeQueries(String dataType, List<SearchParameterMap> queries);
 
     @Override
     public Iterable<Object> retrieve(String context, String contextPath, Object contextValue, String dataType,
@@ -98,10 +106,15 @@ public abstract class SearchParamFhirRetrieveProvider extends TerminologyAwareRe
             }
         }
         if (fhirQueryGenerator != null) {
-            fhirQueryGenerator.setExpandValueSets(this.expandValueSets);
-            fhirQueryGenerator.setMaxCodesPerQuery(maxCodesPerQuery);
-            if (pageSize != null) {
-                fhirQueryGenerator.setPageSize(pageSize);
+            fhirQueryGenerator.setExpandValueSets(isExpandValueSets());
+            if (getMaxCodesPerQuery() != null && getMaxCodesPerQuery() > 0) {
+                fhirQueryGenerator.setMaxCodesPerQuery(getMaxCodesPerQuery());
+            }
+            if (getQueryBatchThreshold() != null && getQueryBatchThreshold() > 0) {
+                fhirQueryGenerator.setQueryBatchThreshold(getQueryBatchThreshold());
+            }
+            if (getPageSize() != null && getPageSize() > 0) {
+                fhirQueryGenerator.setPageSize(getPageSize());
             }
 
             queries = fhirQueryGenerator.setupQueries(context, contextPath, contextValue, dataType,

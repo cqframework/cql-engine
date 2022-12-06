@@ -28,7 +28,8 @@ import org.opencds.cqf.cql.engine.terminology.TerminologyProvider;
 
 
 public class R4FhirQueryGenerator extends BaseFhirQueryGenerator {
-    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider, ModelResolver modelResolver) throws FhirVersionMisMatchException {
+    public R4FhirQueryGenerator(SearchParameterResolver searchParameterResolver, TerminologyProvider terminologyProvider,
+                                ModelResolver modelResolver) throws FhirVersionMisMatchException {
         super(searchParameterResolver, terminologyProvider, modelResolver, searchParameterResolver.getFhirContext());
     }
 
