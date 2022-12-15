@@ -1,0 +1,6 @@
+rootProject.name = 'cql-all'
+
+include(':engine')
+include(':engine.jackson')
+include(':engine.fhir')
+include(':engine.jaxb')
