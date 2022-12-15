@@ -17,3 +17,5 @@ heapdump.*
 javacore.*
 Snap.*
 **/test-output
+.gradle
+test-output
