@@ -1,3 +1,8 @@
+# :rotating_light::rotating_light: This project has moved! :rotating_light::rotating_light: #
+
+The code from the cql-engine project has been merged into the [Clinical Quality Language](https://github.com/cqframework/clinical_quality_language) repository. [Source Code](https://github.com/cqframework/clinical_quality_language/tree/master/Src/java)
+
+
 # CQL Evaluation Engine
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.opencds.cqf.cql/engine/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.opencds.cqf.cql/engine) [![Build Status](https://www.travis-ci.com/DBCG/cql_engine.svg?branch=master)](https://www.travis-ci.com/DBCG/cql_engine) [![project chat](https://img.shields.io/badge/zulip-join_chat-brightgreen.svg)](https://chat.fhir.org/#narrow/stream/179220-cql)
